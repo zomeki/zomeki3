@@ -1,66 +1,74 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.17'
+# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
+gem 'rails', '4.0.4'
 
-# Bundle edge Rails instead:
-# gem 'rails', :git => 'git://github.com/rails/rails.git'
-
+# Use mysql as the database for Active Record
 gem 'mysql2'
+
+# Use SCSS for stylesheets
+gem 'sass-rails', '~> 4.0.2'
+
+# Use Uglifier as compressor for JavaScript assets
+gem 'uglifier', '>= 1.3.0'
+
+# Use CoffeeScript for .js.coffee assets and views
+gem 'coffee-rails', '~> 4.0.0'
+
+# See https://github.com/sstephenson/execjs#readme for more supported runtimes
+# gem 'therubyracer', platforms: :ruby
+
+# Use jquery as the JavaScript library
+gem 'jquery-rails'
+
+# Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
+gem 'turbolinks'
+
+# Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
+gem 'jbuilder', '~> 1.2'
+
+group :doc do
+  # bundle exec rake doc:rails generates the API under doc/api.
+  gem 'sdoc', require: false
+end
+
+# Use ActiveModel has_secure_password
+# gem 'bcrypt', '~> 3.1.7'
+
+# Use unicorn as the app server
+# gem 'unicorn'
+
+# Use Capistrano for deployment
+# gem 'capistrano', group: :development
+
+# Use debugger
+# gem 'debugger', group: [:development, :test]
 
 gem 'delayed_job_active_record', '~> 4.0.0'
 gem 'dynamic_form', '~> 1.1.4'
-gem 'galetahub-simple_captcha', '~> 0.1.5', :require => 'simple_captcha'
-gem 'garb', '~> 0.9.1'
+gem 'garb', '~> 0.9.8'
 gem 'httpclient', '~> 2.3.4.1'
-gem 'jpmobile', '~> 3.0.7'
+gem 'jpmobile', '~> 4.0.0'
 gem 'mail-iso-2022-jp', '~> 2.0.2'
 gem 'moji', '~> 1.6'
-gem 'nokogiri', '~> 1.5.9'
-gem 'omniauth-facebook', '~> 1.5.1'
+gem 'nokogiri', '~> 1.6.1'
+gem 'omniauth-facebook', '~> 1.6.0'
 gem 'omniauth-twitter', '~> 1.0.1'
-gem 'rails_autolink', '~> 1.1.0'
+gem 'rails_autolink', '~> 1.1.5'
 gem 'render_component_vho', '~> 3.2.1'
 gem 'rest-more', '~> 2.0.4'
 gem 'rmagick', '~> 2.13.2'
-gem 'will_paginate', '~> 3.0.4'
+gem 'simple_captcha2', '~> 0.2.1', :require => 'simple_captcha'
+gem 'will_paginate', '~> 3.0.5'
 gem 'whenever', :require => false
 
 gem 'hpricot', '0.8.6'
 gem 'tamtam', '0.0.3'
 
-# Gems used only for assets and not required
-# in production environments by default.
-group :assets do
-  gem 'sass-rails',   '~> 3.2.3'
-  gem 'coffee-rails', '~> 3.2.1'
-
-  # See https://github.com/sstephenson/execjs#readme for more supported runtimes
-  # gem 'therubyracer', :platforms => :ruby
-
-  gem 'uglifier', '>= 1.0.3'
-end
-
-gem 'jquery-rails'
-
-# To use ActiveModel has_secure_password
-# gem 'bcrypt-ruby', '~> 3.0.0'
-
-# To use Jbuilder templates for JSON
-# gem 'jbuilder'
-
-# Use unicorn as the app server
-# gem 'unicorn'
-
-# Deploy with Capistrano
-# gem 'capistrano'
-
-# To use debugger
-# gem 'debugger'
-
 group :development, :test do
-  gem 'rspec-rails', '~> 2.13'
-  gem 'factory_girl_rails', '~> 4.2.1', require: false
-  gem 'email_spec', '~> 1.4.0'
+  gem 'rspec-rails', '~> 2.14.2'
+  gem 'factory_girl_rails', '~> 4.4.1', require: false
+  gem 'email_spec', '~> 1.5.0'
 end
 
 group :development do
