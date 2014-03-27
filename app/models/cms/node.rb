@@ -28,7 +28,7 @@ class Cms::Node < ActiveRecord::Base
   validates_presence_of :parent_id, :state, :model, :name, :title
   validates_uniqueness_of :name, :scope => [:site_id, :parent_id],
     :if => %Q(!replace_page?)
-  validates_format_of :name, :with=> /^[0-9A-Za-z@\.\-_\+\s]+$/, :message=> :not_a_filename,
+  validates_format_of :name, :with=> /\A[0-9A-Za-z@\.\-_\+\s]+\z/, :message=> :not_a_filename,
     :if => %Q(parent_id != 0)
 
   after_initialize :set_defaults
