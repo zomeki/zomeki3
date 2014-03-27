@@ -6,12 +6,12 @@ ZomekiCMS::Application.routes.draw do
     resources(:threads,
       :controller => 'admin/threads',
       :path       => ':content/threads') do
-      match 'file_contents/:file.:format' => 'admin/threads/files#download'
+      get 'file_contents/:file.:format' => 'admin/threads/files#download'
       resources :files,
         :controller => 'admin/threads/files'
       resources(:responses,
         :controller => 'admin/responses') do
-        match 'file_contents/:file.:format' => 'admin/responses/files#download'
+        get 'file_contents/:file.:format' => 'admin/responses/files#download'
         resources :files,
           :controller => 'admin/responses/files'
       end
@@ -48,23 +48,23 @@ ZomekiCMS::Application.routes.draw do
 
   ## public
   scope "_public/#{mod}", :module => mod, :as => '' do
-    match 'node_threads/index.:format' => 'public/node/threads#index'
+    get 'node_threads/index.:format' => 'public/node/threads#index'
     resources(:node_threads,
       :controller => 'public/node/threads') do
-      match 'file_contents/:file.:format' => 'public/node/threads/files#download'
+      get 'file_contents/:file.:format' => 'public/node/threads/files#download'
       resources :files,
         :controller => 'public/node/threads/files'
       resources(:responses,
         :controller => 'public/node/responses') do
-        match 'file_contents/:file.:format' => 'public/node/responses/files#download'
+        get 'file_contents/:file.:format' => 'public/node/responses/files#download'
         resources :files,
           :controller => 'public/node/responses/files'
       end
     end
-    match 'node_recent_threads(/index.:format)' => 'public/node/recent_threads#index'
-    match 'node_tag_threads/index.:format'      => 'public/node/tag_threads#index'
-    match 'node_tag_threads/:tag'               => 'public/node/tag_threads#index'
-    match 'node_categories/:name(/:file.:format)' => 'public/node/categories#show'
-    match 'node_categories/index.:format'       => 'public/node/categories#index'
+    get 'node_recent_threads(/index.:format)' => 'public/node/recent_threads#index'
+    get 'node_tag_threads/index.:format'      => 'public/node/tag_threads#index'
+    get 'node_tag_threads/:tag'               => 'public/node/tag_threads#index'
+    get 'node_categories/:name(/:file.:format)' => 'public/node/categories#show'
+    get 'node_categories/index.:format'       => 'public/node/categories#index'
   end
 end

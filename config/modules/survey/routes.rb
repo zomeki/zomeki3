@@ -37,8 +37,8 @@ ZomekiCMS::Application.routes.draw do
 
   ## public
   scope "_public/#{mod}", :module => mod, :as => '' do
-    match 'node_forms(/index)' => 'public/node/forms#index'      # for end with slash
-    match 'node_forms/:id(/index)' => 'public/node/forms#show'   # for end with slash
+    get 'node_forms(/index)' => 'public/node/forms#index'      # for end with slash
+    get 'node_forms/:id(/index)' => 'public/node/forms#show'   # for end with slash
     resources(:node_forms, :only => [:index, :show],
       :controller => 'public/node/forms') do
       member do

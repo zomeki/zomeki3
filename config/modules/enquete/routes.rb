@@ -28,11 +28,11 @@ ZomekiCMS::Application.routes.draw do
   
   ## public
   scope "_public/#{mod}", :module => mod, :as => "" do
-    match "node_forms/index"     => "public/node/forms#index",
+    get "node_forms/index"     => "public/node/forms#index",
       :as => nil
-    match "node_forms/:id/index" => "public/node/forms#show",
+    get "node_forms/:id/index" => "public/node/forms#show",
       :as => nil
-    match "node_forms/:id/sent"  => "public/node/forms#sent",
+    get "node_forms/:id/sent"  => "public/node/forms#sent",
       :as => nil
   end
 end

@@ -26,13 +26,13 @@ ZomekiCMS::Application.routes.draw do
   
   ## public
   scope "_public/#{mod}", :module => mod, :as => "" do
-    match "node_threads/(index.:format)"         => "public/node/threads#index",
+    get "node_threads/(index.:format)"         => "public/node/threads#index",
       :as => nil
-    match "node_threads/new"                     => "public/node/threads#new",
+    get "node_threads/new"                     => "public/node/threads#new",
       :as => nil
-    match "node_threads/delete"                  => "public/node/threads#delete",
+    get "node_threads/delete"                  => "public/node/threads#delete",
       :as => nil
-    match "node_threads/:thread/(index.:format)" => "public/node/threads#show",
+    get "node_threads/:thread/(index.:format)" => "public/node/threads#show",
       :as => nil
   end
 end

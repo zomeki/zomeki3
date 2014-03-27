@@ -14,7 +14,7 @@ ZomekiCMS::Application.routes.draw do
     resources(:docs,
       :controller => 'admin/docs',
       :path       => ':content/docs') do
-      match 'file_contents/:basename.:extname' => 'admin/docs/files#content'
+      get 'file_contents/:basename.:extname' => 'admin/docs/files#content'
       member do
         post :approve
         post :passback
@@ -54,14 +54,14 @@ ZomekiCMS::Application.routes.draw do
 
   ## public
   scope "_public/#{mod}", :module => mod, :as => '' do
-    match 'node_docs(/(index))' => 'public/node/docs#index'
+    get 'node_docs(/(index))' => 'public/node/docs#index'
     get 'node_docs/:name/comments/new' => 'public/node/comments#new', :format => false
     post 'node_docs/:name/comments/confirm' => 'public/node/comments#confirm', :format => false
     post 'node_docs/:name/comments' => 'public/node/comments#create', :format => false
-    match 'node_docs/:name/preview/:id/file_contents/:basename.:extname' => 'public/node/docs#file_content'
-    match 'node_docs/:name/preview/:id(/(:filename_base.:format))' => 'public/node/docs#show'
-    match 'node_docs/:name/file_contents/:basename.:extname' => 'public/node/docs#file_content'
-    match 'node_docs/:name(/(:filename_base.:format))' => 'public/node/docs#show'
+    get 'node_docs/:name/preview/:id/file_contents/:basename.:extname' => 'public/node/docs#file_content'
+    get 'node_docs/:name/preview/:id(/(:filename_base.:format))' => 'public/node/docs#show'
+    get 'node_docs/:name/file_contents/:basename.:extname' => 'public/node/docs#file_content'
+    get 'node_docs/:name(/(:filename_base.:format))' => 'public/node/docs#show'
     get 'node_archives/:year(/(index))' => 'public/node/archives#index'
     get 'node_archives/:year/:month(/(index))' => 'public/node/archives#index'
   end

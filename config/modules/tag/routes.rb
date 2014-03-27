@@ -27,7 +27,7 @@ ZomekiCMS::Application.routes.draw do
 
   ## public
   scope "_public/#{mod}", :module => mod, :as => '' do
-    match 'node_tags(/index.:format)' => 'public/node/tags#index'
-    match 'node_tags/:word(/index.:format)' => 'public/node/tags#show'
+    get 'node_tags(/index.:format)' => 'public/node/tags#index'
+    get 'node_tags/:word(/index.:format)' => 'public/node/tags#show'
   end
 end

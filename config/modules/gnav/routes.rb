@@ -29,7 +29,7 @@ ZomekiCMS::Application.routes.draw do
 
   ## public
   scope "_public/#{mod}", :module => mod, :as => '' do
-    match 'node_menu_items(/index.:format)' => 'public/node/menu_items#index'
-    match 'node_menu_items/:name(/index.:format)' => 'public/node/menu_items#show'
+    get 'node_menu_items(/index.:format)' => 'public/node/menu_items#index'
+    get 'node_menu_items/:name(/index.:format)' => 'public/node/menu_items#show'
   end
 end

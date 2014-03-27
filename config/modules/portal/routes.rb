@@ -50,10 +50,10 @@ ZomekiCMS::Application.routes.draw do
 
   ## public
   scope "_public/#{mod}", :module => mod, :as => "" do
-    match "node_feed_entries/index.:format"               => "public/node/feed_entries#index"
-    match "node_event_entries/:year/:month/index.:format" => "public/node/event_entries#month"
-    match "node_event_entries/index.:format"              => "public/node/event_entries#month"
-    match "node_categories/:name/:file.:format"           => "public/node/categories#show"
-    match "node_categories/index.:format"                 => "public/node/categories#index"
+    get "node_feed_entries/index.:format"               => "public/node/feed_entries#index"
+    get "node_event_entries/:year/:month/index.:format" => "public/node/event_entries#month"
+    get "node_event_entries/index.:format"              => "public/node/event_entries#month"
+    get "node_categories/:name/:file.:format"           => "public/node/categories#show"
+    get "node_categories/index.:format"                 => "public/node/categories#index"
   end
 end

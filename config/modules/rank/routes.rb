@@ -50,9 +50,9 @@ ZomekiCMS::Application.routes.draw do
 
   ## public
   scope "_public/#{mod}", :module => mod, :as => '' do
-    match 'node_previous_days(/index.:format)' => 'public/node/previous_days#index'
-    match 'node_last_weeks(/index.:format)' => 'public/node/last_weeks#index'
-    match 'node_last_months(/index.:format)' => 'public/node/last_months#index'
-    match 'node_this_weeks(/index.:format)' => 'public/node/this_weeks#index'
+    get 'node_previous_days(/index.:format)' => 'public/node/previous_days#index'
+    get 'node_last_weeks(/index.:format)' => 'public/node/last_weeks#index'
+    get 'node_last_months(/index.:format)' => 'public/node/last_months#index'
+    get 'node_this_weeks(/index.:format)' => 'public/node/this_weeks#index'
   end
 end

@@ -28,11 +28,11 @@ ZomekiCMS::Application.routes.draw do
   
   ## public
   scope "_public/#{mod}", :module => mod, :as => "" do
-    match "node_events/index"              => "public/node/events#index",
+    get "node_events/index"              => "public/node/events#index",
       :as => nil
-    match "node_events/:year/index"        => "public/node/events#index_yearly",
+    get "node_events/:year/index"        => "public/node/events#index_yearly",
       :as => nil
-    match "node_events/:year/:month/index" => "public/node/events#index_monthly",
+    get "node_events/:year/:month/index" => "public/node/events#index_monthly",
       :as => nil
   end
 end

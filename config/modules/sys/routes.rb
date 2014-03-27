@@ -2,15 +2,15 @@ ZomekiCMS::Application.routes.draw do
   mod = "sys"
   
   ## script
-  match "/_script/#{mod}/run/*path" => "#{mod}/script/runner#run"
+  get "/_script/#{mod}/run/*path" => "#{mod}/script/runner#run"
   
   ## admin
   scope "#{ZomekiCMS::ADMIN_URL_PREFIX}/#{mod}", :module => mod, :as => mod do
-    match "tests" => "admin/tests#index",
+    get "tests" => "admin/tests#index",
       :as => :tests
-    match "tests_mail" => "admin/tests/mail#index",
+    get "tests_mail" => "admin/tests/mail#index",
       :as => :tests_mail
-    match "tests_link_check" => "admin/tests/link_check#index",
+    get "tests_link_check" => "admin/tests/link_check#index",
       :as => :tests_link_check
     
     resources :maintenances,
@@ -68,5 +68,5 @@ ZomekiCMS::Application.routes.draw do
       end
   end
   
-  match "#{ZomekiCMS::ADMIN_URL_PREFIX}/#{mod}/:parent/inline_files/files/:name.:format" => 'sys/admin/inline/files#download'
+  get "#{ZomekiCMS::ADMIN_URL_PREFIX}/#{mod}/:parent/inline_files/files/:name.:format" => 'sys/admin/inline/files#download'
 end

@@ -22,7 +22,7 @@ ZomekiCMS::Application.routes.draw do
 
   ## public
   scope "_public/#{mod}", :module => mod, :as => "" do
-    match "node_docs/:name/:file.:format" => "public/node/docs#show"
-    match "node_docs/index.:format"       => "public/node/docs#index"
+    get "node_docs/:name/:file.:format" => "public/node/docs#show"
+    get "node_docs/index.:format"       => "public/node/docs#index"
   end
 end

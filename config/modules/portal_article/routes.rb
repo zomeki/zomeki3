@@ -69,24 +69,24 @@ ZomekiCMS::Application.routes.draw do
       :controller  => "admin/piece/archives"
 
     ## tool
-    match "tool_import_uri"  => "admin/tool/import_uri#import"
-    match "tool_import_html" => "admin/tool/import_html#import"
+    get "tool_import_uri"  => "admin/tool/import_uri#import"
+    get "tool_import_html" => "admin/tool/import_html#import"
   end
 
   ## public
   scope "_public/#{mod}", :module => mod, :as => "" do
-    match "node_docs/:name/(index.:format)"            => "public/node/docs#show"
-    match "node_docs/:name/files/:file.:format"        => "public/node/doc/files#show"
-    match "node_docs/index.:format"                    => "public/node/docs#index"
-    match "node_recent_docs/index.:format"             => "public/node/recent_docs#index"
-    match "node_event_docs/:year/:month/index.:format" => "public/node/event_docs#month"
-    match "node_event_docs/index.:format"              => "public/node/event_docs#month"
-    match "node_tag_docs/index.:format"                => "public/node/tag_docs#index"
-    match "node_tag_docs/:tag"                         => "public/node/tag_docs#index"
-    match "node_categories/:name/:attr/index.:format"  => "public/node/categories#show_attr"
-    match "node_categories/:name/:file.:format"        => "public/node/categories#show"
-    match "node_categories/index.:format"              => "public/node/categories#index"
-    match "node_archives/:year/:month/index.:format"   => "public/node/archives#index"
-    match "node_archives/index.:format"                => "public/node/archives#index"
+    get "node_docs/:name/(index.:format)"            => "public/node/docs#show"
+    get "node_docs/:name/files/:file.:format"        => "public/node/doc/files#show"
+    get "node_docs/index.:format"                    => "public/node/docs#index"
+    get "node_recent_docs/index.:format"             => "public/node/recent_docs#index"
+    get "node_event_docs/:year/:month/index.:format" => "public/node/event_docs#month"
+    get "node_event_docs/index.:format"              => "public/node/event_docs#month"
+    get "node_tag_docs/index.:format"                => "public/node/tag_docs#index"
+    get "node_tag_docs/:tag"                         => "public/node/tag_docs#index"
+    get "node_categories/:name/:attr/index.:format"  => "public/node/categories#show_attr"
+    get "node_categories/:name/:file.:format"        => "public/node/categories#show"
+    get "node_categories/index.:format"              => "public/node/categories#index"
+    get "node_archives/:year/:month/index.:format"   => "public/node/archives#index"
+    get "node_archives/index.:format"                => "public/node/archives#index"
   end
 end

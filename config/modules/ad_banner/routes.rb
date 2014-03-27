@@ -32,8 +32,8 @@ ZomekiCMS::Application.routes.draw do
 
   ## public
   scope "_public/#{mod}", :module => mod, :as => '' do
-    match 'node_banners(/index.:format)' => 'public/node/banners#index'
-    match 'node_banners/:file_base.:file_ext' => 'public/node/banners#index'
-    match 'node_banners/:token' => 'public/node/banners#index'
+    get 'node_banners(/index.:format)' => 'public/node/banners#index'
+    get 'node_banners/:file_base.:file_ext' => 'public/node/banners#index'
+    get 'node_banners/:token' => 'public/node/banners#index'
   end
 end
