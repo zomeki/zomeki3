@@ -17,13 +17,13 @@ class Cms::Site < ActiveRecord::Base
     :class_name => 'Sys::Base::Status'
   belongs_to :portal_group, :foreign_key => :portal_group_id,
     :class_name => 'PortalGroup::Content::Group'
-  has_many   :concepts, :foreign_key => :site_id, :order => 'name, id',
+  has_many :concepts, -> { order('name, id') }, :foreign_key => :site_id,
     :class_name => 'Cms::Concept', :dependent => :destroy
-  has_many   :contents, :foreign_key => :site_id, :order => 'name, id',
+  has_many :contents, -> { order('name, id') }, :foreign_key => :site_id,
     :class_name => 'Cms::Content'
-  has_many   :settings, :foreign_key => :site_id, :order => 'name, sort_no',
+  has_many :settings, -> { order('name, sort_no') }, :foreign_key => :site_id,
     :class_name => 'Cms::SiteSetting'
-  has_many   :basic_auth_users, :foreign_key => :site_id, :order => 'name',
+  has_many :basic_auth_users, -> { order('name') }, :foreign_key => :site_id,
     :class_name => 'Cms::SiteBasicAuthUser'
   has_many :site_belongings, :dependent => :destroy, :class_name => 'Cms::SiteBelonging'
   has_many :groups, :through => :site_belongings, :class_name => 'Sys::Group'
@@ -102,18 +102,24 @@ class Cms::Site < ActiveRecord::Base
   def site_image_uri
     cms_data_file_uri(:site_image, :site_id => id)
   end
-  
-  def self.find_by_script_uri(script_uri)
-    base = script_uri.gsub(/^([a-z]+:\/\/[^\/]+\/).*/, '\1')
-    item = Cms::Site.new.public
-    cond = Condition.new do |c|
-      c.or :full_uri, 'LIKE', "#{base}%"
-      c.or :mobile_full_uri, 'LIKE', "#{base}%"
-    end
-    item.and cond
-    return item.find(:first, :order => :id)
+
+  def self.all_with_full_uri(full_uri)
+    parsed_uri = URI.parse(full_uri)
+    parsed_uri.path = '/'
+
+    parsed_uri.scheme = 'http'
+    http_base = parsed_uri.to_s
+    parsed_uri.scheme = 'https'
+    https_base = parsed_uri.to_s
+
+    sites = self.arel_table
+    self.where(sites[:full_uri].matches("#{http_base}%")
+               .or(sites[:full_uri].matches("#{https_base}%"))
+               .or(sites[:mobile_full_uri].matches("#{http_base}%"))
+               .or(sites[:mobile_full_uri].matches("#{https_base}%")))
+        .order(:id)
   end
-  
+
   def self.make_virtual_hosts_config
     conf = '';
     find(:all, :order => :id).each do |site|

@@ -225,6 +225,6 @@ private
   end
 
   def self.find_site_by_script_uri(uri)
-    Cms::Site.find_by_script_uri(uri) || Cms::Site.find_by_script_uri(uri.sub(/^https:/, 'http:'))
+    Cms::Site.all_with_full_uri(uri).first
   end
 end
