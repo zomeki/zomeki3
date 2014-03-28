@@ -16,7 +16,8 @@ class GpCategory::TemplateModule < ActiveRecord::Base
                                         ['自カテゴリ直下のカテゴリ+1階層目カテゴリ表示（カテゴリで分類）', 'docs_8']]}
   MODULE_TYPE_FEATURE_OPTIONS = [['全記事', ''], ['新着記事', 'feature_1'], ['記事', 'feature_2']]
 
-  attr_accessible :name, :title, :module_type, :module_type_feature, :wrapper_tag, :doc_style, :num_docs
+  #TODO: migrate to strong_parameters
+  #attr_accessible :name, :title, :module_type, :module_type_feature, :wrapper_tag, :doc_style, :num_docs
 
   belongs_to :content, :foreign_key => :content_id, :class_name => 'GpCategory::Content::CategoryType'
   validates_presence_of :content_id

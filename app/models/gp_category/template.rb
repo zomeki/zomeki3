@@ -2,7 +2,8 @@ class GpCategory::Template < ActiveRecord::Base
   include Sys::Model::Base
   include Cms::Model::Auth::Content
 
-  attr_accessible :name, :title, :body
+  #TODO: migrate to strong_parameters
+  #attr_accessible :name, :title, :body
 
   belongs_to :content, :foreign_key => :content_id, :class_name => 'GpCategory::Content::CategoryType'
   validates_presence_of :content_id

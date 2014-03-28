@@ -12,7 +12,7 @@ class Cms::Layout < ActiveRecord::Base
   
   validates_presence_of :state, :name, :title
   validates_uniqueness_of :name, :scope => :concept_id
-  validates_format_of :name, :with => /^[0-9a-zA-Z\-_]+$/, :if => "!name.blank?",
+  validates_format_of :name, :with => /\A[0-9a-zA-Z\-_]+\z/, :if => "!name.blank?",
     :message => "は半角英数字、ハイフン、アンダースコアで入力してください。"
   
   after_destroy :remove_css_files
