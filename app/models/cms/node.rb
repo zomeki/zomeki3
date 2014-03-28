@@ -19,12 +19,12 @@ class Cms::Node < ActiveRecord::Base
   belongs_to :status,   :foreign_key => :state,      :class_name => 'Sys::Base::Status'
   belongs_to :parent,   :foreign_key => :parent_id,  :class_name => 'Cms::Node'
   belongs_to :layout,   :foreign_key => :layout_id,  :class_name => 'Cms::Layout'
-  
-  has_many   :children, :foreign_key => :parent_id,  :class_name => 'Cms::Node',
-    :order => 'sitemap_sort_no IS NULL, sitemap_sort_no, name', :dependent => :destroy
-  has_many   :children_in_route, :foreign_key => :route_id,  :class_name => 'Cms::Node',
-    :order => 'sitemap_sort_no IS NULL, sitemap_sort_no, name', :dependent => :destroy
-  
+
+  has_many :children, -> { order('sitemap_sort_no IS NULL, sitemap_sort_no, name') },
+    :foreign_key => :parent_id, :class_name => 'Cms::Node', :dependent => :destroy
+  has_many :children_in_route, -> { order('sitemap_sort_no IS NULL, sitemap_sort_no, name') },
+    :foreign_key => :route_id,  :class_name => 'Cms::Node', :dependent => :destroy
+
   validates_presence_of :parent_id, :state, :model, :name, :title
   validates_uniqueness_of :name, :scope => [:site_id, :parent_id],
     :if => %Q(!replace_page?)
@@ -34,7 +34,7 @@ class Cms::Node < ActiveRecord::Base
   after_initialize :set_defaults
   after_destroy :remove_file
 
-  scope :public, where(state: 'public')
+  scope :public, -> { where(state: 'public') }
 
   def validate
     errors.add :parent_id, :invalid if id != nil && id == parent_id

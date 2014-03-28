@@ -1,19 +1,12 @@
-# encoding: utf-8
 module Rack
-  module Session
-    module Abstract
-      class OptionsHash < Hash #:nodoc:
-        def initialize(by, env, default_options)
-          ::Core.initialize(env)
-          ::Core.recognize_path(env["PATH_INFO"])
-          env["PATH_INFO"] = ::Core.internal_uri
+  class Request
+    def initialize_with_internal(env)
+      Core.initialize(env)
+      Core.recognize_path(env['PATH_INFO'])
+      env['PATH_INFO'] = Core.internal_uri
 
-          @by = by
-          @env = env
-          @session_id_loaded = false
-          merge!(default_options)
-        end
-      end
+      initialize_without_internal(env)
     end
+    alias_method_chain :initialize, :internal
   end
 end

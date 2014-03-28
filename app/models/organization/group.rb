@@ -4,9 +4,10 @@ class Organization::Group < ActiveRecord::Base
   include Sys::Model::Rel::Creator
   include Cms::Model::Auth::Content
 
-  attr_accessible :state, :name, :sys_group_code, :sitemap_state, :docs_order, :sort_no,
-                  :business_outline, :contact_information,
-                  :concept_id, :layout_id, :more_layout_id, :in_creator
+  #TODO: migrate to strong_parameters
+  #attr_accessible :state, :name, :sys_group_code, :sitemap_state, :docs_order, :sort_no,
+  #                :business_outline, :contact_information,
+  #                :concept_id, :layout_id, :more_layout_id, :in_creator
 
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
   SITEMAP_STATE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]

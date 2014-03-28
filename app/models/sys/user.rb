@@ -101,15 +101,15 @@ class Sys::User < ActiveRecord::Base
   end
   
   def in_group_id
-    if read_attribute(:in_group_id).nil?
-      write_attribute(:in_group_id, (group ? group.id : nil))
+    unless @in_group_id
+      @in_group_id = group.try(:id)
     end
-    read_attribute(:in_group_id)
+    @in_group_id
   end
   
   def in_group_id=(value)
     @_in_group_id_changed = true
-    write_attribute(:in_group_id, value.to_s)
+    @in_group_id = value
   end
   
   def has_auth?(name)

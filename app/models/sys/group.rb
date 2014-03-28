@@ -13,10 +13,11 @@ class Sys::Group < ActiveRecord::Base
   belongs_to :web_status, :foreign_key => :web_state, :class_name => 'Sys::Base::Status'
   belongs_to :parent    , :foreign_key => :parent_id, :class_name => 'Sys::Group'
   belongs_to :layout    , :foreign_key => :layout_id, :class_name => 'Cms::Layout'
-  
-  has_many   :children  , :foreign_key => :parent_id, :class_name => 'Sys::Group', :order => :code, :dependent => :destroy
-  has_and_belongs_to_many :users, :class_name => 'Sys::User',
-    :join_table => 'sys_users_groups', :order => '(sys_users.id)'
+
+  has_many :children, -> { order('code') },
+    :foreign_key => :parent_id, :class_name => 'Sys::Group', :dependent => :destroy
+  has_and_belongs_to_many :users, -> { order('sys_users.id') },
+    :class_name => 'Sys::User', :join_table => 'sys_users_groups'
 
   has_many :site_belongings, :dependent => :destroy, :class_name => 'Cms::SiteBelonging'
   has_many :sites, :through => :site_belongings, :class_name => 'Cms::Site'

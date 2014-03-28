@@ -21,7 +21,7 @@ module Sys::Model::Rel::UnidRelation
   
   def replace_page?
     cond = {:unid => unid, :rel_type => "replace"}
-    Sys::UnidRelation.find(:first, :conditions => cond) ? true : nil
+    !!Sys::UnidRelation.where(cond).first
   end
   
   def replaced_page?

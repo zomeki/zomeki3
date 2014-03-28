@@ -77,6 +77,7 @@ module Sys::Model::ConditionBuilder
   end
   
   def find(*args)
+    ActiveSupport::Deprecation.warn("Replace condition_builder with arel (#{caller[0..4].join("\n")})")
     scope   = args.slice!(0)
     options = args.slice!(0) || {}
     options[:conditions] = cb_condition_where   unless options[:conditions]

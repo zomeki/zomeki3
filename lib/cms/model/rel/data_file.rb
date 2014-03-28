@@ -23,7 +23,7 @@ module Cms::Model::Rel::DataFile
       :concept_id => 0,
       :name       => "#{self.class}/#{id}"
     }
-    node = Cms::DataFileNode.find(:first, :conditions => cond)
+    node = Cms::DataFileNode.where(cond).first
     if !node
       node = Cms::DataFileNode.new(cond)
       node.title = node.name

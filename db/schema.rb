@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140314012931) do
+ActiveRecord::Schema.define(version: 20140327074529) do
 
   create_table "ad_banner_banners", force: true do |t|
     t.string   "name"
@@ -1636,7 +1636,7 @@ ActiveRecord::Schema.define(version: 20140314012931) do
     t.datetime "reset_password_token_expires_at"
   end
 
-  create_table "sys_users_groups", id: false, force: true do |t|
+  create_table "sys_users_groups", force: true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
