@@ -10,14 +10,14 @@ class Cms::Concept < ActiveRecord::Base
   
   belongs_to :status, :foreign_key => :state,
     :class_name => 'Sys::Base::Status'
-  has_many :children, :foreign_key => :parent_id, :order => :name,
-    :class_name => 'Cms::Concept', :dependent => :destroy
-  has_many :layouts , :foreign_key => :concept_id, :order => :name,
-    :class_name => 'Cms::Layout', :dependent => :destroy
-  has_many :pieces  , :foreign_key => :concept_id, :order => :name,
-    :class_name => 'Cms::Piece', :dependent => :destroy
-  has_many :contents , :foreign_key => :concept_id,
-    :class_name => 'Cms::Content', :dependent => :destroy, :order => :name
+  has_many :children, -> { order(:name) },
+    :foreign_key => :parent_id, :class_name => 'Cms::Concept', :dependent => :destroy
+  has_many :layouts, -> { order(:name) },
+    :foreign_key => :concept_id, :class_name => 'Cms::Layout', :dependent => :destroy
+  has_many :pieces, -> { order(:name) },
+    :foreign_key => :concept_id, :class_name => 'Cms::Piece', :dependent => :destroy
+  has_many :contents, -> { order(:name) },
+    :foreign_key => :concept_id, :class_name => 'Cms::Content', :dependent => :destroy
   has_many :data_files , :foreign_key => :concept_id,
     :class_name => 'Cms::DataFile', :dependent => :destroy
   has_many :data_file_nodes , :foreign_key => :concept_id,

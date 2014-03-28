@@ -105,7 +105,7 @@ class Cms::Node < ActiveRecord::Base
     parents_tree.each do |r|
       layout_id = r.layout_id if r.layout_id
     end unless layout_id
-    Cms::Layout.find(:first, :conditions => {:id => layout_id})
+    Cms::Layout.where(id: layout_id).first
   end
   
   def all_nodes_with_level

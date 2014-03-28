@@ -8,8 +8,8 @@ class Cms::Content < ActiveRecord::Base
   include Cms::Model::Rel::Concept
   include Cms::Model::Auth::Concept
 
-  has_many :settings, :foreign_key => :content_id, :class_name => 'Cms::ContentSetting',
-    :dependent => :destroy, :order => :sort_no
+  has_many :settings, -> { order(:sort_no) },
+    :foreign_key => :content_id, :class_name => 'Cms::ContentSetting', :dependent => :destroy
   has_many :pieces, :foreign_key => :content_id, :class_name => 'Cms::Piece',
     :dependent => :destroy
   has_many :nodes, :foreign_key => :content_id, :class_name => 'Cms::Node',
@@ -65,7 +65,7 @@ class Cms::Content < ActiveRecord::Base
   end
 
   def setting_value(name, default_value = nil)
-    st = settings.find(:first, :conditions => {:name => name.to_s})
+    st = settings.where(name: name).first
     return default_value unless st
     return st.value.blank? ? default_value : st.value
   end
