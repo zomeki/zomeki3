@@ -74,6 +74,7 @@ end
 group :development do
   gem 'bullet'
   gem 'i18n_generators'
+  gem 'puma'
   gem 'rails_best_practices'
   gem 'spring'
 end
