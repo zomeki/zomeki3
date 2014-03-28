@@ -19,6 +19,8 @@ class GpArticle::Doc < ActiveRecord::Base
   include GpArticle::Model::Rel::Doc::Rel
   include GpTemplate::Model::Rel::Template
 
+  include StateText
+
   STATE_OPTIONS = [['下書き保存', 'draft'], ['承認依頼', 'approvable'], ['即時公開', 'public']]
   TARGET_OPTIONS = [['無効', ''], ['同一ウィンドウ', '_self'], ['別ウィンドウ', '_blank'], ['添付ファイル', 'attached_file']]
   EVENT_STATE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
@@ -40,9 +42,6 @@ class GpArticle::Doc < ActiveRecord::Base
 
   # Page
   belongs_to :concept, :foreign_key => :concept_id, :class_name => 'Cms::Concept'
-
-  # Proper
-  belongs_to :status, :foreign_key => :state, :class_name => 'Sys::Base::Status'
 
   belongs_to :prev_edition, :class_name => self.name
   has_one :next_edition, :foreign_key => :prev_edition_id, :class_name => self.name
