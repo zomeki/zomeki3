@@ -1,7 +1,5 @@
 # encoding: utf-8
 module Sys::Model::Rel::EditableGroup
-  attr_accessor :in_editable_groups
-  
   def self.included(mod)
     mod.belongs_to :editable_group, :foreign_key => 'unid', :class_name => 'Sys::EditableGroup',
       :dependent => :destroy
@@ -10,12 +8,12 @@ module Sys::Model::Rel::EditableGroup
   end
   
   def in_editable_groups
-    unless val = read_attribute(:in_editable_groups)
+    unless val = @in_editable_groups
       val = []
       val = editable_group.group_ids.to_s.split(' ').uniq if editable_group
-      write_attribute(:in_editable_groups, val)
+      @in_editable_groups = val
     end
-    read_attribute(:in_editable_groups)
+    @in_editable_groups
   end
   
   def in_editable_groups=(ids)

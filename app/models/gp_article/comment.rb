@@ -1,12 +1,13 @@
 class GpArticle::Comment < ActiveRecord::Base
   include Sys::Model::Base
 
-  attr_accessible :state,
-                  :author_name,
-                  :author_email,
-                  :author_url,
-                  :body,
-                  :posted_at
+  #TODO: migrate to strong_parameters
+  #attr_accessible :state,
+  #                :author_name,
+  #                :author_email,
+  #                :author_url,
+  #                :body,
+  #                :posted_at
 
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
 

@@ -372,13 +372,10 @@ class GpArticle::Doc < ActiveRecord::Base
     new_doc.in_editable_groups = editable_group.group_ids.split if editable_group
 
     inquiries.each_with_index do |inquiry, i|
-      if i == 0
-        attrs = inquiry.attributes
-        attrs[:group_id] = Core.user.group_id
-        new_doc.inquiries.build(inquiry.attributes)
-      else
-        new_doc.inquiries.build(inquiry.attributes)
-      end
+      attrs = inquiry.attributes
+      attrs[:id] = nil
+      attrs[:group_id] = Core.user.group_id if i.zero?
+      new_doc.inquiries.build(attrs)
     end
 
     unless maps.empty?
@@ -408,7 +405,9 @@ class GpArticle::Doc < ActiveRecord::Base
     new_doc.save!
 
     files.each do |f|
-      Sys::File.new(f.attributes).tap do |new_file|
+      new_attributes = f.attributes
+      new_attributes[:id] = nil
+      Sys::File.new(new_attributes).tap do |new_file|
         new_file.file = Sys::Lib::File::NoUploadedFile.new(f.upload_path)
         new_file.unid = nil
         new_file.parent_unid = new_doc.unid

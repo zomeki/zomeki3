@@ -1,14 +1,10 @@
 module Sys::Model::Rel::Task
-  attr_accessor :in_tags
-  
   def self.included(mod)
     mod.has_many :tasks, :primary_key => 'unid', :foreign_key => 'unid', :class_name => 'Sys::Task',
       :dependent => :destroy
       
     mod.after_save :save_tasks
   end
-  
-  attr_accessor :_tasks
   
   def find_task_by_name(name)
     return nil if tasks.size == 0
@@ -19,12 +15,12 @@ module Sys::Model::Rel::Task
   end
   
   def in_tasks
-    unless val = read_attribute(:in_tasks)
+    unless val = @in_tasks
       val = {}
       tasks.each {|task| val[task.name] = task.process_at.strftime('%Y-%m-%d %H:%M') if task.process_at }
-      write_attribute(:in_tasks, val)
+      @in_tasks = val
     end
-    read_attribute(:in_tasks)
+    @in_tasks
   end
   
   def in_tasks=(values)

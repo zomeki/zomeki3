@@ -1,7 +1,8 @@
 class GpCategory::Publisher < ActiveRecord::Base
   include Sys::Model::Base
 
-  attr_accessible :category_id
+  #TODO: migrate to strong_parameters
+  #attr_accessible :category_id
 
   belongs_to :category
 

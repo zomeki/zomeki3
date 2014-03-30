@@ -6,20 +6,18 @@ module Cms::Model::Rel::Map
     mod.after_save :save_maps
   end
   
-  attr_accessor :in_maps
-  
   def in_maps
-    unless val = read_attribute(:in_maps)
+    unless val = @in_maps
       val = []
       maps.each {|map| val << map.in_attributes}
-      write_attribute(:in_maps, val)
+      @in_maps = val
     end
-    read_attribute(:in_maps)
+    @in_maps
   end
 
   def in_maps=(values)
     @maps = values
-    write_attribute(:in_maps, @maps)
+    @in_maps = @maps
   end
   
   def default_map_position

@@ -155,7 +155,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
                                         : {action: 'edit'}
     new_state = params.keys.detect{|k| k =~ /^commit_/ }.try(:sub, /^commit_/, '')
 
-    @item.attributes = params[:item]
+    @item.attributes = doc_params
 
     @item.validate_word_dictionary #replace validate word 
     @item.ignore_accessibility_check = params[:ignore_accessibility_check]
@@ -438,5 +438,17 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
       GpCategory::Publisher.register_categories(@old_category_ids | @new_category_ids)
       GpCategory::Publisher.delay(queue: 'publish_category_pages').publish_categories
     end
+  end
+
+  private
+
+  def doc_params
+    params.require(:item).permit(:body, :body_more, :body_more_link_text, :display_published_at,
+                                 :display_updated_at, :event_ended_on, :event_started_on, :event_state,
+                                 :feature_1, :feature_2, :filename_base, :href, :in_creator, :in_editable_groups,
+                                 :in_maps, :in_tasks, :inquiries_attributes, :list_image, :marker_state,
+                                 :meta_description, :meta_keywords, :mobile_body, :mobile_title, :name,
+                                 :og_description, :og_image, :og_title, :og_type, :share_to_sns_with, :subtitle,
+                                 :summary, :target, :terminal_mobile, :terminal_pc_or_smart_phone, :title)
   end
 end

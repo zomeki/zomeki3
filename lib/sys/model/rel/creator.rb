@@ -1,6 +1,4 @@
 module Sys::Model::Rel::Creator
-  attr_accessor :in_creator
-  
   def self.included(mod)
     mod.belongs_to :creator, :foreign_key => 'unid', :class_name => 'Sys::Creator',
       :dependent => :destroy
@@ -9,20 +7,20 @@ module Sys::Model::Rel::Creator
   end
   
   def in_creator
-    unless val = read_attribute(:in_creator)
+    unless val = @in_creator
       val = {}
       creator.attributes.each do |k,v|
         val[k.to_s] = v
       end if creator
-      write_attribute(:in_creator, val)
+      @in_creator = val
     end
-    read_attribute(:in_creator)
+    @in_creator
   end
   
   def in_creator=(values)
     @creator_ids = values
     @creator_ids.each {|k,v| @creator_ids[k] = nil if v.blank? }
-    write_attribute(:in_creator, @creator_ids)
+    @in_creator = @creator_ids
   end
   
   def join_creator
