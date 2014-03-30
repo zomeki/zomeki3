@@ -59,8 +59,8 @@ class GpArticle::Admin::Docs::FilesController < Cms::Controller::Admin::Base
       end
     end
 
-    flash.now[:notice] = "#{success}件の登録処理が完了しました。（#{I18n.l Time.now}）" if success != 0
-    flash.now[:alert]  = "#{failure}件の登録処理に失敗しました。" if failure != 0
+    flash[:notice] = "#{success}件の登録処理が完了しました。（#{I18n.l Time.now}）" if success != 0
+    flash[:alert]  = "#{failure}件の登録処理に失敗しました。" if failure != 0
 
     @items = Sys::File.where(tmp_id: @tmp_unid, parent_unid: @doc.try(:unid)).paginate(page: params[:page], per_page: 20).order(:name)
     redirect_to url_for(:action => :index)

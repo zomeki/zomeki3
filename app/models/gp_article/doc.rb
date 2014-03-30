@@ -47,18 +47,18 @@ class GpArticle::Doc < ActiveRecord::Base
   has_one :next_edition, :foreign_key => :prev_edition_id, :class_name => self.name
 
   has_many :categorizations, :class_name => 'GpCategory::Categorization', :as => :categorizable, :dependent => :destroy
-  has_many :categories, :class_name => 'GpCategory::Category', :through => :categorizations,
-           :conditions => ["#{GpCategory::Categorization.table_name}.categorized_as = ?", self.name],
+  has_many :categories, -> { where("#{GpCategory::Categorization.table_name}.categorized_as", self.name) },
+           :class_name => 'GpCategory::Category', :through => :categorizations,
            :after_add => proc {|d, c|
              d.categorizations.where(category_id: c.id, categorized_as: nil).first.update_column(:categorized_as, d.class.name)
            }
-  has_many :event_categories, :class_name => 'GpCategory::Category', :through => :categorizations,
-           :source => :category, :conditions => ["#{GpCategory::Categorization.table_name}.categorized_as = ?", 'GpCalendar::Event'],
+  has_many :event_categories, -> { where("#{GpCategory::Categorization.table_name}.categorized_as", 'GpCalendar::Event') },
+           :class_name => 'GpCategory::Category', :through => :categorizations, :source => :category,
            :after_add => proc {|d, c|
              d.categorizations.where(category_id: c.id, categorized_as: nil).first.update_column(:categorized_as, 'GpCalendar::Event')
            }
-  has_many :marker_categories, :class_name => 'GpCategory::Category', :through => :categorizations,
-           :source => :category, :conditions => ["#{GpCategory::Categorization.table_name}.categorized_as = ?", 'Map::Marker'],
+  has_many :marker_categories, -> { where("#{GpCategory::Categorization.table_name}.categorized_as", 'Map::Marker') },
+           :class_name => 'GpCategory::Category', :through => :categorizations, :source => :category,
            :after_add => proc {|d, c|
              d.categorizations.where(category_id: c.id, categorized_as: nil).first.update_column(:categorized_as, 'Map::Marker')
            }

@@ -196,7 +196,7 @@ class Sys::User < ActiveRecord::Base
     in_password = Util::String::Crypt.decrypt(in_password, crypt_pass) if encrypted
     
     user = nil
-    self.new.enabled.find(:all, :conditions => {:account => in_account, :state => 'enabled'}).each do |u|
+    self.where(state: 'enabled', account: in_account).each do |u|
       if u.ldap == 1
         ## LDAP Auth
         next unless ou1 = u.groups[0]
