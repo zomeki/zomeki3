@@ -67,7 +67,7 @@ gem 'tamtam', '0.0.3'
 
 group :development, :test do
   gem 'rspec-rails', '~> 2.14.2'
-  gem 'factory_girl_rails', '~> 4.4.1', require: false
+  gem 'factory_girl_rails', '~> 4.4.1'
   gem 'email_spec', '~> 1.5.0'
 end
 
@@ -80,4 +80,5 @@ end
 
 group :test do
   gem 'database_cleaner', '~> 1.2.0'
+  gem 'faker', '~> 1.3.0'
 end
