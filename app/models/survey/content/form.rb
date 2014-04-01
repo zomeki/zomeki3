@@ -3,7 +3,7 @@ class Survey::Content::Form < Cms::Content
   APPROVAL_RELATION_OPTIONS = [['使用する', 'enabled'], ['使用しない', 'disabled']]
   CAPTCHA_OPTIONS = [['使用する', 'enabled'], ['使用しない', 'disabled']]
 
-  default_scope where(model: 'Survey::Form')
+  default_scope { where(model: 'Survey::Form') }
 
   has_many :forms, :foreign_key => :content_id, :class_name => 'Survey::Form', :dependent => :destroy
 

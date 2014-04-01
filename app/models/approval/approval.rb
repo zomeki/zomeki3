@@ -1,7 +1,7 @@
 class Approval::Approval < ActiveRecord::Base
   include Sys::Model::Base
 
-  default_scope order("#{self.table_name}.approval_flow_id, #{self.table_name}.index")
+  default_scope { order("#{self.table_name}.approval_flow_id, #{self.table_name}.index") }
 
   belongs_to :approval_flow
   validates_presence_of :approval_flow_id

@@ -7,7 +7,7 @@ class Survey::Question < ActiveRecord::Base
                        ['選択/単数回答（プルダウン）', 'select'], ['選択/単数回答（ラジオボタン）', 'radio_button'], ['選択/複数回答（チェックボックス）', 'check_box']]
   REQUIRED_OPTIONS = [['必須', true], ['任意', false]]
 
-  default_scope order("#{self.table_name}.sort_no IS NULL, #{self.table_name}.sort_no")
+  default_scope { order("#{self.table_name}.sort_no IS NULL, #{self.table_name}.sort_no") }
 
   belongs_to :form
   validates_presence_of :form_id
@@ -20,7 +20,7 @@ class Survey::Question < ActiveRecord::Base
 
   after_initialize :set_defaults
 
-  scope :public, where(state: 'public')
+  scope :public, -> { where(state: 'public') }
 
   def content
     form.content

@@ -3,7 +3,7 @@ class Survey::FormAnswer < ActiveRecord::Base
 
   apply_simple_captcha
 
-  default_scope order("#{self.table_name}.created_at DESC")
+  default_scope { order("#{self.table_name}.created_at DESC") }
 
   belongs_to :form
   validates_presence_of :form_id

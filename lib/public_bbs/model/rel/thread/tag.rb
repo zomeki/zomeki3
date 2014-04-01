@@ -2,9 +2,10 @@ module PublicBbs::Model::Rel::Thread::Tag
   attr_accessor :in_tags
   
   def self.included(mod)
-    mod.has_many :tags, :primary_key => 'unid', :foreign_key => 'unid', :class_name => 'PublicBbs::Tag',
-      :order => :name, :dependent => :destroy
-      
+    mod.has_many :tags, -> { order(:name) },
+      :primary_key => 'unid',
+      :foreign_key => 'unid', :class_name => 'PublicBbs::Tag', :dependent => :destroy
+
     mod.after_save :save_tags
   end
   

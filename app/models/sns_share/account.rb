@@ -4,7 +4,7 @@ class SnsShare::Account < ActiveRecord::Base
 
   SUPPORTED_PROVIDERS = ['facebook', 'twitter']
 
-  default_scope order("#{self.table_name}.provider IS NULL, #{self.table_name}.provider")
+  default_scope { order("#{self.table_name}.provider IS NULL, #{self.table_name}.provider") }
 
   has_many :shares, :dependent => :destroy
 

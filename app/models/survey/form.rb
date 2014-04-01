@@ -12,7 +12,7 @@ class Survey::Form < ActiveRecord::Base
   CONFIRMATION_OPTIONS = [['あり', true], ['なし', false]]
   SITEMAP_STATE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
 
-  default_scope order("#{self.table_name}.sort_no IS NULL, #{self.table_name}.sort_no")
+  default_scope { order("#{self.table_name}.sort_no IS NULL, #{self.table_name}.sort_no") }
 
   # Content
   belongs_to :content, :foreign_key => :content_id, :class_name => 'Survey::Content::Form'
@@ -25,14 +25,14 @@ class Survey::Form < ActiveRecord::Base
   has_many :form_answers, :dependent => :destroy
   has_many :approval_requests, :class_name => 'Approval::ApprovalRequest', :as => :approvable, :dependent => :destroy
 
-  validates :name, :presence => true, :uniqueness => true, :format => {with: /^[-\w]*$/}
+  validates :name, :presence => true, :uniqueness => true, :format => { with: /\A[-\w]*\z/ }
   validates :title, :presence => true
 
   validate :open_period
 
   after_initialize :set_defaults
 
-  scope :public, where(state: 'public')
+  scope :public, -> { where(state: 'public') }
 
   def self.all_with_content_and_criteria(content, criteria)
     forms = self.arel_table

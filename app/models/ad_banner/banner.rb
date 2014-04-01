@@ -8,7 +8,7 @@ class AdBanner::Banner < ActiveRecord::Base
 
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
 
-  default_scope order(:sort_no)
+  default_scope { order(:sort_no) }
 
   banners = self.arel_table
   scope :published, -> {

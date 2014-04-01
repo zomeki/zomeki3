@@ -123,7 +123,7 @@ class Cms::Content < ActiveRecord::Base
 protected
   def save_settings
     in_settings.each do |name, value|
-      st = settings.find(:first, :conditions => {:name => name}) || new_setting(name)
+      st = settings.where(name: name).first || new_setting(name)
       st.value = value
       st.save if st.changed?
     end
