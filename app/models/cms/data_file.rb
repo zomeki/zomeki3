@@ -10,6 +10,8 @@ class Cms::DataFile < ActiveRecord::Base
 
   include StateText
 
+  scope :public, -> { where(state: 'public') }
+
   belongs_to :concept, :foreign_key => :concept_id, :class_name => 'Cms::Concept'
   belongs_to :site   , :foreign_key => :site_id   , :class_name => 'Cms::Site'
   belongs_to :node   , :foreign_key => :node_id   , :class_name => 'Cms::DataFileNode'
@@ -30,12 +32,7 @@ class Cms::DataFile < ActiveRecord::Base
   def public_full_uri
     "#{site.full_uri}#{public_uri.sub(/^\//, '')}"
   end
-  
-  def public
-    self.and :state, 'public'
-    self
-  end
-  
+
   def publishable?
     return false unless editable?
     return !public? 

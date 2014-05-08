@@ -45,7 +45,7 @@ class Cms::Admin::Data::FilesController < Cms::Controller::Admin::Base
   end
 
   def create
-    @item = Cms::DataFile.new(params[:item])
+    @item = Cms::DataFile.new(data_file_params)
     @item.site_id = Core.site.id
     @item.state   = 'public'
     _create @item do
@@ -54,15 +54,15 @@ class Cms::Admin::Data::FilesController < Cms::Controller::Admin::Base
   end
 
   def update
-    @item = Cms::DataFile.new.find(params[:id])
-    @item.attributes = params[:item]
+    @item = Cms::DataFile.find(params[:id])
+    @item.attributes = data_file_params
     @item.node_id    = nil if @item.concept_id_changed?
     @item.skip_upload
     _update @item
   end
 
   def destroy
-    @item = Cms::DataFile.new.find(params[:id])
+    @item = Cms::DataFile.find(params[:id])
     _destroy @item
   end
 
@@ -72,5 +72,11 @@ class Cms::Admin::Data::FilesController < Cms::Controller::Admin::Base
     return error_auth unless @file = item.find(:first)
     
     send_file @file.upload_path, :type => @file.mime_type, :filename => @file.name, :disposition => 'inline'
+  end
+
+  private
+
+  def data_file_params
+    params.require(:item).permit(:concept_id, :node_id, :file, :name, :title)
   end
 end

@@ -4,12 +4,10 @@ class Cms::Public::FilesController < ApplicationController
     return http_error(404) if params[:path] !~ /^[^\/]+\/[^\/]+$/
     id   = params[:path].gsub(/\/.*/, '')
     name = params[:path].gsub(/.*\//, '') + '.' + params[:format].to_s
-    
-    item = Cms::DataFile.new.public
-    item.and :id, id.gsub(/.$/, '')
-    item.and :name, name
-    return http_error(404) unless item = item.find(:first, :order => :id)
-    
+
+    item = Cms::DataFile.public.where(id: id.gsub(/.\z/, ''), name: name).first
+    return http_error(404) unless item
+
     path = item.public_path
     return http_error(404) unless FileTest.exist?(path)
     
