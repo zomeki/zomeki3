@@ -16,7 +16,7 @@ class GpTemplate::Item < ActiveRecord::Base
   validates_presence_of :state
 
   validates :title, :presence => true
-  validates :name, :presence => true, :uniqueness => {:scope => :template_id}, :format => {:with => /^[-\w]*$/}
+  validates :name, :presence => true, :uniqueness => {:scope => :template_id}, :format => {:with => /\A[-\w]*\z/}
   validates :item_type, :presence => true
 
   after_initialize :set_defaults

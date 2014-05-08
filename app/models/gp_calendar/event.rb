@@ -24,7 +24,7 @@ class GpCalendar::Event < ActiveRecord::Base
   before_save :set_name
 
   validates_presence_of :started_on, :ended_on, :title
-  validates :name, :uniqueness => true, :format => {with: /^[\-\w]*$/ }
+  validates :name, :uniqueness => true, :format => {with: /\A[\-\w]*\z/ }
 
   validate :dates_range
 
