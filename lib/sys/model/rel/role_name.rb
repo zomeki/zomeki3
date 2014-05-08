@@ -4,21 +4,19 @@ module Sys::Model::Rel::RoleName
     mod.after_save :save_user_roles
   end
 
-  attr_accessor :in_role_name_ids
-  
   def in_role_name_ids
-    unless read_attribute(:in_role_name_ids)
+    unless @in_role_name_ids
       value = role_names ? role_names.collect{|c| c.id}.join(' ') : ''
-      write_attribute(:in_role_name_ids, value.to_s)
+      @in_role_name_ids = value.to_s
     end
-    read_attribute(:in_role_name_ids)
+    @in_role_name_ids
   end
-  
+
   def in_role_name_ids=(value)
     @_in_role_name_ids_changed = true
-    write_attribute(:in_role_name_ids, value.to_s)
+    @in_role_name_ids = value.to_s
   end
-  
+
 private
   def save_user_roles
     return true unless @_in_role_name_ids_changed

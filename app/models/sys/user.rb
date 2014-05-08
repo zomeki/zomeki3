@@ -6,8 +6,8 @@ class Sys::User < ActiveRecord::Base
   include Sys::Model::Rel::RoleName
   include Sys::Model::Auth::Manager
 
-  belongs_to :status,     :foreign_key => :state,
-    :class_name => 'Sys::Base::Status'
+  include StateText
+
   has_many   :group_rels, :foreign_key => :user_id,
     :class_name => 'Sys::UsersGroup'  , :primary_key => :id
 #  has_and_belongs_to_many :groups,
