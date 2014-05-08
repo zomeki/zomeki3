@@ -13,10 +13,11 @@ class Cms::Node < ActiveRecord::Base
   include Cms::Model::Rel::Concept
   include Cms::Model::Rel::Content
   include Cms::Model::Auth::Concept
+
+  include StateText
   
   SITEMAP_STATE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
 
-  belongs_to :status,   :foreign_key => :state,      :class_name => 'Sys::Base::Status'
   belongs_to :parent,   :foreign_key => :parent_id,  :class_name => 'Cms::Node'
   belongs_to :layout,   :foreign_key => :layout_id,  :class_name => 'Cms::Layout'
 

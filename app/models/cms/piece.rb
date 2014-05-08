@@ -10,7 +10,8 @@ class Cms::Piece < ActiveRecord::Base
   include Cms::Model::Rel::Content
   include Cms::Model::Auth::Concept
 
-  belongs_to :status,   :foreign_key => :state,      :class_name => 'Sys::Base::Status'
+  include StateText
+
   has_many   :settings, :foreign_key => :piece_id,   :class_name => 'Cms::PieceSetting',
     :order => :sort_no, :dependent => :destroy
 
