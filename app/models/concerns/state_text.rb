@@ -40,11 +40,19 @@ module StateText
     Responder.new(self, :web_state)
   end
 
+  def portal_group_status
+    Responder.new(self, :portal_group_state)
+  end
+
   def state_text
     Responder.state_text(self.state)
   end
 
   def web_state_text
     Responder.state_text(self.web_state)
+  end
+
+  def portal_group_state_text
+    Responder.state_text(self.portal_group_state)
   end
 end

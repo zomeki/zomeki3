@@ -10,11 +10,9 @@ class Cms::Site < ActiveRecord::Base
   include PortalGroup::Model::Rel::Site::Business
   include PortalGroup::Model::Rel::Site::Attribute
   include PortalGroup::Model::Rel::Site::Area
-  
-  belongs_to :status, :foreign_key => :state,
-    :class_name => 'Sys::Base::Status'
-  belongs_to :portal_group_status, :foreign_key => :portal_group_state,
-    :class_name => 'Sys::Base::Status'
+
+  include StateText
+
   belongs_to :portal_group, :foreign_key => :portal_group_id,
     :class_name => 'PortalGroup::Content::Group'
   has_many :concepts, -> { order('name, id') }, :foreign_key => :site_id,
