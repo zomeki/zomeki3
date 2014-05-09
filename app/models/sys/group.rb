@@ -8,9 +8,9 @@ class Sys::Group < ActiveRecord::Base
   include Sys::Model::Rel::Unid
   include Sys::Model::Tree
   include Sys::Model::Auth::Manager
-  
-  belongs_to :status    , :foreign_key => :state    , :class_name => 'Sys::Base::Status'
-  belongs_to :web_status, :foreign_key => :web_state, :class_name => 'Sys::Base::Status'
+
+  include StateText
+
   belongs_to :parent    , :foreign_key => :parent_id, :class_name => 'Sys::Group'
   belongs_to :layout    , :foreign_key => :layout_id, :class_name => 'Cms::Layout'
 

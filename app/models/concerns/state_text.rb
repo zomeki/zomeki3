@@ -22,12 +22,13 @@ module StateText
       end
     end
 
-    def initialize(stateable)
+    def initialize(stateable, attribute_name=:state)
       @stateable = stateable
+      @attribute_name = attribute_name
     end
 
     def name
-      self.class.state_text(@stateable.state)
+      self.class.state_text(@stateable.send(@attribute_name))
     end
   end
 
@@ -35,7 +36,15 @@ module StateText
     Responder.new(self)
   end
 
+  def web_status
+    Responder.new(self, :web_state)
+  end
+
   def state_text
     Responder.state_text(self.state)
+  end
+
+  def web_state_text
+    Responder.state_text(self.web_state)
   end
 end
