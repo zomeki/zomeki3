@@ -1,11 +1,9 @@
 module PortalGroup::Model::Rel::Site::Business
-  attr_accessor :in_portal_business_ids
-  
   def in_portal_business_ids
-    unless val = read_attribute(:in_portal_business_ids)
-      write_attribute(:in_portal_business_ids, portal_business_ids.to_s.split(' ').uniq)
+    unless @in_portal_business_ids
+      @in_portal_business_ids = portal_business_ids.to_s.split(' ').uniq
     end
-    read_attribute(:in_portal_business_ids)
+    @in_portal_business_ids
   end
   
   def in_portal_business_ids=(ids)

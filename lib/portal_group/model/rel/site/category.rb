@@ -1,11 +1,9 @@
 module PortalGroup::Model::Rel::Site::Category
-  attr_accessor :in_portal_category_ids
-  
   def in_portal_category_ids
-    unless val = read_attribute(:in_portal_category_ids)
-      write_attribute(:in_portal_category_ids, portal_category_ids.to_s.split(' ').uniq)
+    unless @in_portal_category_ids
+      @in_portal_category_ids = portal_category_ids.to_s.split(' ').uniq
     end
-    read_attribute(:in_portal_category_ids)
+    @in_portal_category_ids
   end
   
   def in_portal_category_ids=(ids)
