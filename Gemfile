@@ -44,6 +44,7 @@ end
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 
+gem 'actionpack-action_caching', '~> 1.1.1'
 gem 'delayed_job_active_record', '~> 4.0.0'
 gem 'dynamic_form', '~> 1.1.4'
 gem 'garb', '~> 0.9.8'
