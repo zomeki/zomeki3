@@ -127,7 +127,8 @@ ZomekiCMS::Application.routes.draw do
   end
 
   scope "#{ZomekiCMS::ADMIN_URL_PREFIX}/#{mod}", :module => mod, :as => '' do
-    get 'tool_rebuild' => 'admin/tool/rebuild#index', as: 'tool_rebuild'
+    post 'tool_rebuild_contents' => 'admin/tool/rebuild#rebuild_contents'
+    match 'tool_rebuild' => 'admin/tool/rebuild#index', as: 'tool_rebuild', via: [:get, :post]
     get 'tool_search' => 'admin/tool/search#index', as: 'tool_search'
     get 'tool_link_check' => 'admin/tool/link_check#index', as: 'tool_link_check'
     get 'tool_convert' => 'admin/tool/convert#index', as: 'tool_convert'
