@@ -1,13 +1,11 @@
 module PortalGroup::Model::Rel::Site::Attribute
-  attr_accessor :in_portal_attribute_ids
-  
   def in_portal_attribute_ids
-    unless val = read_attribute(:in_portal_attribute_ids)
-      write_attribute(:in_portal_attribute_ids, portal_attribute_ids.to_s.split(' ').uniq)
+    unless @in_portal_attribute_ids
+      @in_portal_attribute_ids = portal_attribute_ids.to_s.split(' ').uniq
     end
-    read_attribute(:in_portal_attribute_ids)
+    @in_portal_attribute_ids
   end
-  
+
   def in_portal_attribute_ids=(ids)
     _ids = []
     if ids.class == Array

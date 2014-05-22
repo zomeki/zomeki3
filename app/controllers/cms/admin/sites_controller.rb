@@ -43,7 +43,7 @@ class Cms::Admin::SitesController < Cms::Controller::Admin::Base
 
     @sns_apps = {}
 
-    @item = Cms::Site.new(params[:item])
+    @item = Cms::Site.new(site_params)
     @item.state = 'public'
     @item.portal_group_state = 'visible'
     _create(@item) do
@@ -61,7 +61,7 @@ class Cms::Admin::SitesController < Cms::Controller::Admin::Base
   
   def update
     @item = Cms::Site.new.find(params[:id])
-    @item.attributes = params[:item]
+    @item.attributes = site_params
     _update @item do
       make_node(@item)
       make_files(@item)
@@ -247,5 +247,9 @@ protected
         warn_log "Failed to save twitter apps: #{e.message}"
       end
     end
+  end
+
+  def site_params
+    params.require(:item).permit(:body, :full_uri, :in_creator, :in_portal_area_ids, :in_portal_attribute_ids, :in_portal_business_ids, :in_portal_category_ids, :mobile_full_uri, :name, :portal_group_id, :related_site)
   end
 end
