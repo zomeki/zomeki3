@@ -2,6 +2,8 @@ class Organization::Group < ActiveRecord::Base
   include Sys::Model::Base
   include Sys::Model::Rel::Unid
   include Sys::Model::Rel::Creator
+  include Cms::Model::Base::Page::Publisher
+
   include Cms::Model::Auth::Content
 
   #TODO: migrate to strong_parameters
@@ -111,6 +113,12 @@ class Organization::Group < ActiveRecord::Base
     end
 
     Cms::Lib::BreadCrumbs.new(crumbs)
+  end
+
+  def rebuild(content, options={})
+    return false unless self.public?
+    @save_mode = :publish
+    publish_page(content, options)
   end
 
   private
