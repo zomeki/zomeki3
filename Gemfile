@@ -59,6 +59,7 @@ gem 'rails_autolink', '~> 1.1.5'
 gem 'render_component_vho', '~> 3.2.1'
 gem 'rest-more', '~> 2.0.4'
 gem 'rmagick', '~> 2.13.2'
+gem 'rsync', '~> 1.0.8'
 gem 'simple_captcha2', '~> 0.2.1', :require => 'simple_captcha'
 gem 'will_paginate', '~> 3.0.5'
 gem 'whenever', :require => false
