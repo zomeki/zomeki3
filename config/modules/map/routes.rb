@@ -46,6 +46,7 @@ ZomekiCMS::Application.routes.draw do
 
   ## public
   scope "_public/#{mod}", :module => mod, :as => '' do
+    get 'node_markers/index_:escaped_category' => 'public/node/markers#index'
     get 'node_markers(/index)' => 'public/node/markers#index'
     get 'node_markers/:name/file_contents/:basename.:extname' => 'public/node/markers#file_content', :format => false
     get 'node_navigations(/index)' => 'public/node/navigations#index'
