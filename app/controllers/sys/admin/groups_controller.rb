@@ -63,9 +63,9 @@ class Sys::Admin::GroupsController < Cms::Controller::Admin::Base
       :web_state  => 'public'
     })
   end
-  
+
   def create
-    @item = Sys::Group.new(params[:item])
+    @item = Sys::Group.new(group_params)
     @item.parent_id = @parent.id
     parent = Sys::Group.find_by_id(@item.parent_id)
     @item.level_no = parent ? parent.level_no + 1 : 1
@@ -73,10 +73,10 @@ class Sys::Admin::GroupsController < Cms::Controller::Admin::Base
       @item.sites << Core.site unless Core.user.root?
     end
   end
-  
+
   def update
     @item = Sys::Group.new.find(params[:id])
-    @item.attributes = params[:item]
+    @item.attributes = group_params
     parent = Sys::Group.find_by_id(@item.parent_id)
     @item.level_no = parent ? parent.level_no + 1 : 1
     _update @item
@@ -85,5 +85,12 @@ class Sys::Admin::GroupsController < Cms::Controller::Admin::Base
   def destroy
     @item = Sys::Group.new.find(params[:id])
     _destroy @item
+  end
+
+  private
+
+  def group_params
+    params.require(:item).permit(:address, :code, :email, :fax, :ldap, :name, :name_en, :note,
+                                 :parent_id, {site_ids: []}, :sort_no, :state, :tel, :tel_attend)
   end
 end
