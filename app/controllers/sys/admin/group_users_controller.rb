@@ -3,7 +3,6 @@ class Sys::Admin::GroupUsersController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
   
   def pre_dispatch
-    params_for_strong_parameters(:user)
     return error_auth unless Core.user.has_auth?(:manager)
     return redirect_to(request.env['PATH_INFO']) if params[:reset]
     
