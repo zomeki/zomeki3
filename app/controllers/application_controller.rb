@@ -131,4 +131,17 @@ private
     user_agent = 'DoCoMo/2.0 ISIM0808(c500;TB;W24H16)'
     env['rack.jpmobile'] = Jpmobile::Mobile::AbstractMobile.carrier('HTTP_USER_AGENT' => user_agent)
   end
+
+  ## Helpers for Rails migration 3.2 to 4.0
+  def params_for_strong_parameters(model_name, item_name='item')
+    item = params[item_name]
+    return unless item
+
+    log = <<-EOL
+def #{model_name}_params
+  params.require(:#{item_name}).permit(#{item.keys.map{|k| ":#{k}" }.sort.join(', ')})
+end
+    EOL
+    info_log "\n#{log}"
+  end
 end
