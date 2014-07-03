@@ -1,7 +1,7 @@
 # encoding: utf-8
 Cms::Lib::Modules::ModuleSet.draw :portal_group, 'ポータル記事分類' do |mod|
   ## contents
-  mod.content :groups, 'ポータル記事分類'
+#  mod.content :groups, 'ポータル記事分類'
   
   ## directory
 #  mod.directory :docs, '記事一覧，記事ページ'

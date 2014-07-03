@@ -1,7 +1,7 @@
 # encoding: utf-8
 Cms::Lib::Modules::ModuleSet.draw :portal, '新着記事ポータル' do |mod|
   ## contents
-  mod.content :feeds, '新着記事ポータル'
+#  mod.content :feeds, '新着記事ポータル'
 
   ## directory
   mod.directory :feed_entries, '新着記事一覧'

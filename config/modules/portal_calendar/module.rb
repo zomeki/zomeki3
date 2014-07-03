@@ -1,7 +1,7 @@
 # encoding: utf-8
 Cms::Lib::Modules::ModuleSet.draw :portal_calendar, 'ポータルカレンダーDB' do |mod|
   ## contents
-  mod.content :events, 'ポータルカレンダー'
+#  mod.content :events, 'ポータルカレンダー'
   
   ## directory
   mod.directory :events, "月間イベントカレンダー"

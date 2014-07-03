@@ -1,7 +1,7 @@
 # encoding: utf-8
 Cms::Lib::Modules::ModuleSet.draw :calendar, 'カレンダーDB' do |mod|
   ## contents
-  mod.content :events, 'カレンダー'
+#  mod.content :events, 'カレンダー'
   
   ## directory
   mod.directory :events, "イベント一覧"
