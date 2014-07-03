@@ -24,8 +24,6 @@ module ZomekiCMS
     # config.i18n.default_locale = :de
     config.i18n.default_locale = :ja
 
-    # Custom directories with classes and modules you want to be autoloadable.
-    # config.autoload_paths += %W(#{config.root}/extras)
     config.autoload_paths += %W(#{config.root}/lib)
 
     config.generators do |g|

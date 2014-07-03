@@ -9,4 +9,4 @@
 
 # Make sure your secret_key_base is kept private
 # if you're sharing your code publicly.
-ZomekiCMS::Application.config.secret_key_base = 'bf06a31e2be8342e204b34fd1591815964070ff7b4631280baee570ec69790610c4d0ba9fe2cd0f8baacbcdb273a9f15773c5f48dedf33224cbdc157d6c5d351'
+ZomekiCMS::Application.config.secret_key_base = '9bdfc8eeefae4bbc2a638d73b97fd8e27053b257a4b27a21a0228ea57885bbd2bd66c84c3c935877f6cdc3941d9c3ec557f874f714e2709f82fdae11243dff0d'
