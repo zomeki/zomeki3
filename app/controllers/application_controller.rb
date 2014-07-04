@@ -138,9 +138,11 @@ private
     return unless item
 
     log = <<-EOL
-def #{model_name}_params
-  params.require(:#{item_name}).permit(#{item.keys.map{|k| ":#{k}" }.sort.join(', ')})
-end
+  private
+
+  def #{model_name}_params
+    params.require(:#{item_name}).permit(#{item.keys.map{|k| ":#{k}" }.sort.join(', ')})
+  end
     EOL
     info_log "\n#{log}"
   end
