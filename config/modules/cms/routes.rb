@@ -101,12 +101,12 @@ ZomekiCMS::Application.routes.draw do
     resources :tool_convert_downloads,
       :controller  => "admin/tool/convert_downloads",
       :path        => "tool_convert_downloads"
-    resources :tool_convert_files,
-      :controller  => "admin/tool/convert_files",
-      :path        => "tool_convert_files"
     match "tool_convert_files(/:site_url(/*path))" => "admin/tool/convert_files#index",
       :format => false, :constraints => { :site_url => /[^\/]+/ },
       via: [:get, :post]
+    resources :tool_convert_files,
+      :controller  => "admin/tool/convert_files",
+      :path        => "tool_convert_files"
     resources :tool_convert_settings,
       :controller  => "admin/tool/convert_settings",
       :path        => "tool_convert_settings"

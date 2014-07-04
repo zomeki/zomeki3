@@ -4,12 +4,12 @@ class Cms::Admin::Tool::ConvertDownloadsController < Cms::Controller::Admin::Bas
 
   def pre_dispatch
     return error_auth unless Core.user.root?
-    @item = Tool::ConvertDownload.find(params[:id]) if params[:id].present?
-    @items = Tool::ConvertDownload.order('created_at desc').paginate(page: params[:page], per_page: 10)
+    @item = ::Tool::ConvertDownload.find(params[:id]) if params[:id].present?
+    @items = ::Tool::ConvertDownload.order('created_at desc').paginate(page: params[:page], per_page: 10)
   end
 
   def index
-    @item = Tool::ConvertDownload.new(params[:item])
+    @item = Tool::ConvertDownload.new(convert_download_params)
     _index @items
   end
 
@@ -18,7 +18,7 @@ class Cms::Admin::Tool::ConvertDownloadsController < Cms::Controller::Admin::Bas
   end
 
   def create
-    @item = Tool::ConvertDownload.new(params[:item])
+    @item = Tool::ConvertDownload.new(convert_download_params)
     if @item.creatable? && @item.save
       @item.download
       redirect_to url_for(:action => :index), :notice => "ダウンロード処理が終了しました。"
@@ -30,5 +30,11 @@ class Cms::Admin::Tool::ConvertDownloadsController < Cms::Controller::Admin::Bas
   def destroy
     _destroy @item
   end
-end
 
+  private
+
+  def convert_download_params
+    return {} unless params[:item]
+    params.require(:item).permit(:include_dir, :remark, :site_url)
+  end
+end
