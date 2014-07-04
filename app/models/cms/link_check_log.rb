@@ -1,8 +1,6 @@
 class Cms::LinkCheckLog < ActiveRecord::Base
   include Sys::Model::Base
 
-  attr_accessible :link_checkable, :title, :body, :url
-
   belongs_to :link_check
   belongs_to :link_checkable, :polymorphic => true
 
