@@ -32,7 +32,7 @@ class Cms::Admin::EmergenciesController < Cms::Controller::Admin::Base
   end
 
   def create
-    @item = Cms::SiteSetting::EmergencyLayout.new(params[:item])
+    @item = Cms::SiteSetting::EmergencyLayout.new(emergency_layout_params)
     @item.site_id = Core.site.id
     @item.name    = 'emergency_layout'
     _create @item
@@ -40,7 +40,7 @@ class Cms::Admin::EmergenciesController < Cms::Controller::Admin::Base
 
   def update
     @item = Cms::SiteSetting::EmergencyLayout.new.current_site.find(params[:id])
-    @item.attributes = params[:item]
+    @item.attributes = emergency_layout_params
     _update @item
   end
 
@@ -80,5 +80,11 @@ class Cms::Admin::EmergenciesController < Cms::Controller::Admin::Base
         format.xml  { render(:xml => @item.errors, :status => :unprocessable_entity) }
       end
     end
+  end
+
+  private
+
+  def emergency_layout_params
+    params.require(:item).permit(:sort_no, :value)
   end
 end
