@@ -21,7 +21,8 @@ module GpArticle::GpArticleHelper
   end
 
   def large_flash(flash, key: nil, value: nil)
-    raise ArgumentError.new('flash required.') unless flash.kind_of?(ActionDispatch::Flash::FlashHash)
+    fail ArgumentError.new("flash required. (was #{flash.class.name})") if !flash.kind_of?(ActionDispatch::Flash::FlashHash) &&
+                                                                           !flash.kind_of?(Hash)
 
     if value.nil?
       v = flash[key]
