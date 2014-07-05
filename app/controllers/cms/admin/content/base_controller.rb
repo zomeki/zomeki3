@@ -39,7 +39,7 @@ class Cms::Admin::Content::BaseController < Cms::Controller::Admin::Base
   
   def update
     @item = model.new.find(params[:id])
-    @item.attributes = params[:item]
+    @item.attributes = base_params
     
     _update @item do
       respond_to do |format|
@@ -55,5 +55,11 @@ class Cms::Admin::Content::BaseController < Cms::Controller::Admin::Base
         format.html { return redirect_to(cms_contents_path) }
       end
     end
+  end
+
+  private
+
+  def base_params
+    params.require(:item).permit(:code, :concept_id, :in_creator, :name, :note)
   end
 end

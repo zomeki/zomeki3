@@ -51,9 +51,9 @@ class Cms::Admin::ContentsController < Cms::Controller::Admin::Base
 
   def create
     begin
-      @item = params[:item][:model].split('::').join('::Content::').constantize.new(params[:item])
+      @item = params[:item][:model].split('::').join('::Content::').constantize.new(content_params)
     rescue
-      @item = Cms::Content.new(params[:item])
+      @item = Cms::Content.new(content_params)
     end
     @item.state   = 'public'
     @item.site_id = Core.site.id
@@ -62,12 +62,18 @@ class Cms::Admin::ContentsController < Cms::Controller::Admin::Base
 
   def update
     @item = Cms::Content.new.find(params[:id])
-    @item.attributes = params[:item]
+    @item.attributes = content_params
     _update @item
   end
   
   def destroy
     @item = Cms::Content.new.find(params[:id])
     _destroy @item
+  end
+
+  private
+
+  def content_params
+    params.require(:item).permit(:code, :concept_id, :in_creator, :model, :name, :note)
   end
 end

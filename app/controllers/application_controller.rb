@@ -6,7 +6,10 @@ class ApplicationController < ActionController::Base
   protect_from_forgery # :secret => '1f0d667235154ecf25eaf90055d99e99'
   before_filter :initialize_application
 #  rescue_from Exception, :with => :rescue_exception
-  
+
+#TODO: あとで消す
+  prepend_before_action :params_for_strong_parameters
+
   def initialize_application
     if Core.publish
       Page.mobile = false
@@ -133,17 +136,19 @@ private
   end
 
   ## Helpers for Rails migration 3.2 to 4.0
-  def params_for_strong_parameters(model_name, item_name='item')
+  def params_for_strong_parameters(model_name=nil, item_name='item')
+    model_name ||= controller_name.singularize
     item = params[item_name]
     return unless item
 
     log = <<-EOL
+
   private
 
   def #{model_name}_params
     params.require(:#{item_name}).permit(#{item.keys.map{|k| ":#{k}" }.sort.join(', ')})
   end
     EOL
-    info_log "\n#{log}"
+    info_log "params method!\n#{log}"
   end
 end
