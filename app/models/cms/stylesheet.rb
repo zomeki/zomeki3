@@ -6,7 +6,7 @@ class Cms::Stylesheet < Sys::Model::ValidationModel::Base
   attr_accessor :new_directory, :new_file, :new_upload
   
   validates_presence_of :name
-  validates_format_of :name, :with=> /^[0-9A-Za-z@\.\-\_]+$/, :message=> :not_a_filename
+  validates_format_of :name, :with=> /\A[0-9A-Za-z@\.\-\_]+\z/, :message=> :not_a_filename
   
   def initialize(full_path, params = {})
     @full_path  = full_path
