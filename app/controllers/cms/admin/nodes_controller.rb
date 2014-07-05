@@ -57,7 +57,7 @@ class Cms::Admin::NodesController < Cms::Controller::Admin::Base
   end
 
   def create
-    @item = Cms::Node.new(params[:item])
+    @item = Cms::Node.new(node_params)
     @item.site_id      = Core.site.id
     #@item.parent_id    = @parent.id
     @item.state        = 'closed'
@@ -137,5 +137,11 @@ class Cms::Admin::NodesController < Cms::Controller::Admin::Base
     respond_to do |format|
       format.html { render :layout => false }
     end
+  end
+
+  private
+
+  def node_params
+    params.require(:item).permit(:concept_id, :content_id, :in_creator, :layout_id, :model, :parent_id, :route_id, :sitemap_sort_no, :sitemap_state)
   end
 end

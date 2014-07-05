@@ -41,7 +41,7 @@ class Cms::Admin::Node::BaseController < Cms::Controller::Admin::Base
   
   def update
     @item = model.new.find(params[:id])
-    @item.attributes = params[:item]
+    @item.attributes = base_params
     @item.state      = params[:commit_public] ? 'public' : 'closed'
     
     _update @item do
@@ -59,5 +59,11 @@ class Cms::Admin::Node::BaseController < Cms::Controller::Admin::Base
         format.html { return redirect_to(cms_nodes_path) }
       end
     end
+  end
+
+  private
+
+  def base_params
+    params.require(:item).permit(:concept_id, :in_creator, :layout_id, :name, :parent_id, :route_id, :sitemap_sort_no, :sitemap_state, :title)
   end
 end
