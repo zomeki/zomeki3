@@ -9,6 +9,8 @@ class GpCategory::Category < ActiveRecord::Base
   include Cms::Model::Base::Page::Publisher
   include Cms::Model::Base::Page::TalkTask
 
+  include StateText
+
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
   SITEMAP_STATE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
   DOCS_ORDER_OPTIONS = [['公開日（降順）', 'display_published_at DESC, published_at DESC'], ['公開日（昇順）', 'display_published_at ASC, published_at ASC']]
@@ -20,9 +22,6 @@ class GpCategory::Category < ActiveRecord::Base
   belongs_to :layout,  :foreign_key => :layout_id,  :class_name => 'Cms::Layout'
   belongs_to :template
 
-  # Proper
-  belongs_to :status, :foreign_key => :state, :class_name => 'Sys::Base::Status'
-
   belongs_to :category_type, :foreign_key => :category_type_id, :class_name => 'GpCategory::CategoryType'
   validates_presence_of :category_type_id
 
@@ -31,6 +30,7 @@ class GpCategory::Category < ActiveRecord::Base
 
   validates :name, :presence => true, :uniqueness => {:scope => [:category_type_id, :parent_id]}
   validates :title, :presence => true
+  validates :state, :presence => true
 
   has_and_belongs_to_many :events, :class_name => 'GpCalendar::Event', :join_table => 'gp_calendar_events_gp_category_categories', :order => 'started_on, ended_on'
 

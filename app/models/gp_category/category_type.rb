@@ -7,6 +7,8 @@ class GpCategory::CategoryType < ActiveRecord::Base
   include Cms::Model::Base::Page::Publisher
   include Cms::Model::Base::Page::TalkTask
 
+  include StateText
+
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
   SITEMAP_STATE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
   DOCS_ORDER_OPTIONS = [['公開日（降順）', 'display_published_at DESC, published_at DESC'], ['公開日（昇順）', 'display_published_at ASC, published_at ASC']]
@@ -23,13 +25,11 @@ class GpCategory::CategoryType < ActiveRecord::Base
   belongs_to :template
   belongs_to :internal_category_type, :class_name => self.name
 
-  # Proper
-  belongs_to :status, :foreign_key => :state, :class_name => 'Sys::Base::Status'
-
   has_many :categories, :foreign_key => :category_type_id, :class_name => 'GpCategory::Category', :dependent => :destroy
 
   validates :name, :presence => true, :uniqueness => {:scope => :content_id}
   validates :title, :presence => true
+  validates :state, :presence => true
 
   after_initialize :set_defaults
 
