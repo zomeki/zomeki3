@@ -32,7 +32,7 @@ class GpCategory::Admin::CategoriesController < Cms::Controller::Admin::Base
   end
 
   def create
-    @item = @category_type.categories.build(params[:item])
+    @item = @category_type.categories.build(category_params)
     @item.parent = @parent_category if @parent_category
     _create @item
   end
@@ -43,12 +43,18 @@ class GpCategory::Admin::CategoriesController < Cms::Controller::Admin::Base
 
   def update
     @item = @category_type.categories.find(params[:id])
-    @item.attributes = params[:item]
+    @item.attributes = category_params
     _update @item
   end
 
   def destroy
     @item = @category_type.categories.find(params[:id])
     _destroy @item
+  end
+
+  private
+
+  def category_params
+    params.require(:item).permit(:concept_id, :description, :docs_order, :in_creator, :layout_id, :name, :sitemap_state, :sort_no, :state, :template_id, :title)
   end
 end

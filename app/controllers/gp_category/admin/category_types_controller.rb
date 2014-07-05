@@ -29,7 +29,7 @@ class GpCategory::Admin::CategoryTypesController < Cms::Controller::Admin::Base
   end
 
   def create
-    @item = GpCategory::CategoryType.new(params[:item])
+    @item = GpCategory::CategoryType.new(category_type_params)
     @item.concept = @content.concept
     @item.content = @content
     @item.in_creator = {'group_id' => Core.user_group.id, 'user_id' => Core.user.id}
@@ -42,12 +42,18 @@ class GpCategory::Admin::CategoryTypesController < Cms::Controller::Admin::Base
 
   def update
     @item = GpCategory::CategoryType.find(params[:id])
-    @item.attributes = params[:item]
+    @item.attributes = category_type_params
     _update @item
   end
 
   def destroy
     @item = GpCategory::CategoryType.find(params[:id])
     _destroy @item
+  end
+
+  private
+
+  def category_type_params
+    params.require(:item).permit(:concept_id, :docs_order, :in_creator, :internal_category_type_id, :layout_id, :name, :sitemap_state, :sort_no, :state, :template_id, :title)
   end
 end
