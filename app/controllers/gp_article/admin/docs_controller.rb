@@ -95,7 +95,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
                                         : {action: 'new'}
     new_state = params.keys.detect{|k| k =~ /^commit_/ }.try(:sub, /^commit_/, '')
 
-    @item = @content.docs.build(params[:item])
+    @item = @content.docs.build(doc_params)
 
     @item.validate_word_dictionary # replace validate word
     @item.ignore_accessibility_check = params[:ignore_accessibility_check]
