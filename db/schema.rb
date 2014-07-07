@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140704102711) do
+ActiveRecord::Schema.define(version: 20140707061405) do
 
   create_table "ad_banner_banners", force: true do |t|
     t.string   "name"
@@ -1435,6 +1435,19 @@ ActiveRecord::Schema.define(version: 20140704102711) do
   end
 
   add_index "sys_cache_sweepers", ["model", "uri"], name: "model", length: {"model"=>20, "uri"=>30}, using: :btree
+
+  create_table "sys_closers", force: true do |t|
+    t.integer  "unid"
+    t.string   "dependent",      limit: 64
+    t.string   "path"
+    t.string   "content_hash"
+    t.datetime "published_at"
+    t.datetime "republished_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "sys_closers", ["unid", "dependent"], name: "index_sys_closers_on_unid_and_dependent", using: :btree
 
   create_table "sys_creators", force: true do |t|
     t.datetime "created_at"
