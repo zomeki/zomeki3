@@ -20,7 +20,7 @@ class GpCategory::Admin::TemplatesController < Cms::Controller::Admin::Base
   end
 
   def create
-    @item = @content.templates.build(params[:item])
+    @item = @content.templates.build(template_params)
     _create @item
   end
 
@@ -28,11 +28,17 @@ class GpCategory::Admin::TemplatesController < Cms::Controller::Admin::Base
   end
 
   def update
-    @item.attributes = params[:item]
+    @item.attributes = template_params
     _update @item
   end
 
   def destroy
     _destroy @item
+  end
+
+  private
+
+  def template_params
+    params.require(:item).permit(:body, :name, :title)
   end
 end
