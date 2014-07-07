@@ -53,6 +53,6 @@ class Sys::Model::ValidationModel::Base
     nil
   end
   
+  include ActiveRecord::Reflection
   include ActiveRecord::Validations
-  include ActiveRecord::Validations::ClassMethods
 end

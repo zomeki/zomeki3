@@ -37,7 +37,7 @@ class Cms::Admin::Piece::BaseController < Cms::Controller::Admin::Base
   
   def update
     @item = model.new.find(params[:id])
-    @item.attributes = params[:item]
+    @item.attributes = base_params
     
     _update @item do
       respond_to do |format|
@@ -59,5 +59,9 @@ class Cms::Admin::Piece::BaseController < Cms::Controller::Admin::Base
 
   def find_piece
     model.new.readable.find(params[:id])
+  end
+
+  def base_params
+    params.require(:item).permit(:body, :concept_id, :in_creator, :name, :state, :title, :view_title)
   end
 end

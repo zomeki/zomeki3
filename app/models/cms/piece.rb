@@ -15,17 +15,15 @@ class Cms::Piece < ActiveRecord::Base
   has_many   :settings, :foreign_key => :piece_id,   :class_name => 'Cms::PieceSetting',
     :order => :sort_no, :dependent => :destroy
 
-  attr_accessor :in_settings
-  
   validates_presence_of :state, :model, :name, :title
   validates_uniqueness_of :name, :scope => :concept_id
   validates_format_of :name, :with => /\A[0-9a-zA-Z\-_]+\z/, :if => "!name.blank?",
     :message => "は半角英数字、ハイフン、アンダースコアで入力してください。"
   
   after_save :save_settings
-  
+
   def in_settings
-    unless read_attribute(:in_settings)
+    unless @in_settings
       values = {}
       settings.each do |st|
         if st.sort_no
@@ -35,15 +33,15 @@ class Cms::Piece < ActiveRecord::Base
           values[st.name] = st.value
         end
       end
-      write_attribute(:in_settings, values)
+      @in_settings = values
     end
-    read_attribute(:in_settings).with_indifferent_access
+    @in_settings.with_indifferent_access
   end
-  
+
   def in_settings=(values)
-    write_attribute(:in_settings, values)
+    @in_settings = values
   end
-  
+
   def locale(name)
     model = self.class.to_s.underscore
     label = ''

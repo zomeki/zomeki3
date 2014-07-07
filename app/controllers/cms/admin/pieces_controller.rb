@@ -29,7 +29,7 @@ class Cms::Admin::PiecesController < Cms::Controller::Admin::Base
   end
   
   def create
-    @item = Cms::Piece.new(params[:item])
+    @item = Cms::Piece.new(piece_params)
     @item.site_id = Core.site.id
     
     @contents = content_options(false)
@@ -101,5 +101,11 @@ class Cms::Admin::PiecesController < Cms::Controller::Admin::Base
     respond_to do |format|
       format.html { render :layout => false }
     end
+  end
+
+  private
+
+  def piece_params
+    params.require(:item).permit(:concept_id, :content_id, :in_creator, :model, :name, :state, :title, :view_title)
   end
 end
