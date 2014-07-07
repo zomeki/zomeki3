@@ -7,8 +7,9 @@ class Cms::DataText < ActiveRecord::Base
   include Cms::Model::Rel::Site
   include Cms::Model::Rel::Concept
   include Cms::Model::Auth::Concept
-  
-  belongs_to :status,  :foreign_key => :state,      :class_name => 'Sys::Base::Status'
+
+  include StateText
+
   belongs_to :concept, :foreign_key => :concept_id, :class_name => 'Cms::Concept'
   
   validates_presence_of :state, :name, :title, :body

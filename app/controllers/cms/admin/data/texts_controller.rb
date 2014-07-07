@@ -29,19 +29,25 @@ class Cms::Admin::Data::TextsController < Cms::Controller::Admin::Base
   end
   
   def create
-    @item = Cms::DataText.new(params[:item])
+    @item = Cms::DataText.new(text_params)
     @item.site_id = Core.site.id
     _create @item
   end
   
   def update
     @item = Cms::DataText.new.find(params[:id])
-    @item.attributes = params[:item]
+    @item.attributes = text_params
     _update @item
   end
   
   def destroy
     @item = Cms::DataText.new.find(params[:id])
     _destroy @item
+  end
+
+  private
+
+  def text_params
+    params.require(:item).permit(:body, :concept_id, :in_creator, :name, :state, :title)
   end
 end

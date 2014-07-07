@@ -33,14 +33,14 @@ class Cms::Admin::Data::FileNodesController < Cms::Controller::Admin::Base
   end
 
   def create
-    @item = Cms::DataFileNode.new(params[:item])
+    @item = Cms::DataFileNode.new(file_node_params)
     @item.site_id = Core.site.id
     _create @item
   end
 
   def update
     @item = Cms::DataFileNode.new.find(params[:id])
-    @item.attributes = params[:item]
+    @item.attributes = file_node_params
     @old_concept_id  = @item.concept_id_was
     
     _update(@item) do
@@ -54,5 +54,11 @@ class Cms::Admin::Data::FileNodesController < Cms::Controller::Admin::Base
   def destroy
     @item = Cms::DataFileNode.new.find(params[:id])
     _destroy @item
+  end
+
+  private
+
+  def file_node_params
+    params.require(:item).permit(:concept_id, :name, :title)
   end
 end
