@@ -6,7 +6,7 @@ class Bbs::Public::Node::ThreadsController < Cms::Controller::Public::Base
     @node     = Page.current_node
     @node_uri = @node.public_uri
     return http_error(404) unless @content = @node.content
-    return http_error(404) if params[:thread] && params[:thread] !~ /^[0-9]+$/
+    return http_error(404) if params[:thread] && params[:thread] !~ /\A[0-9]+\z/
     
     @admin_password  = @content.setting_value(:admin_password)
     @link_entry_form = @content.setting_value(:link_entry_form) == "1"
@@ -73,7 +73,7 @@ class Bbs::Public::Node::ThreadsController < Cms::Controller::Public::Base
   
 protected
   def create
-    @item.attributes   = params[:item]
+    @item.attributes   = thread_params
     @item.content_id   = @content.id
     @item.parent_id    = 0
     @item.state        = "public"
@@ -95,7 +95,7 @@ protected
   end
   
   def create_res
-    @item.attributes   = params[:item]
+    @item.attributes   = thread_params
     @item.content_id   = @content.id
     @item.parent_id    = @thread.id
     @item.thread_id    = @thread.id
@@ -140,5 +140,11 @@ protected
     end
     
     return true
+  end
+
+  private
+
+  def thread_params
+    params.require(:item).permit(:body, :name, :parent_id, :thread_id, :title)
   end
 end

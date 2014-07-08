@@ -14,13 +14,13 @@ class Bbs::Item < ActiveRecord::Base
     :class_name => 'Bbs::Item', :conditions => "parent_id != 0"
   
   validates_presence_of :name, :title, :body
-  validates_format_of :email, :with => /^(([A-Za-z0-9]+_+)|([A-Za-z0-9]+-+)|([A-Za-z0-9]+.+)|([A-Za-z0-9]+\++))*[A-Za-z0-9]+@((\w+-+)|(\w+.))*\w{1,63}.[a-zA-Z]{2,6}$/ix,
+  validates_format_of :email, :with => /\A(([A-Za-z0-9]+_+)|([A-Za-z0-9]+-+)|([A-Za-z0-9]+.+)|([A-Za-z0-9]+\++))*[A-Za-z0-9]+@((\w+-+)|(\w+.))*\w{1,63}.[a-zA-Z]{2,6}\z/ix,
     :if => %Q(!email.blank?)
   validates_length_of :name, :title, :uri, :email,
     :maximum => 50, :allow_nil => true
   validates_length_of :body,
     :maximum => 100000, :allow_nil => true
-  validates_format_of :body, :with => /^((?!(http|https):\/\/).)*$/i,
+  validates_format_of :body, :with => /\A((?!(http|https):\/\/).)*\z/i,
     :if => %Q(block_uri), :message => "にURLを含めることはできません。"
   validate :validate_block_word
   validate :validate_block_ipaddr
@@ -52,7 +52,7 @@ protected
   def validate_block_ipaddr
     block_ipaddr.to_s.split(/(\r\n|\n|\t| |　)+/).uniq.each do |w|
       next if w.strip.blank?
-      reg = Regexp.new("^" + Regexp.quote(w).gsub('\\*', '[0-9]+') + "$")
+      reg = Regexp.new("\A" + Regexp.quote(w).gsub('\\*', '[0-9]+') + "\z")
       if ipaddr =~ reg
         errors.add_to_base "ご利用の環境からの投稿は禁止されています。"
         return false

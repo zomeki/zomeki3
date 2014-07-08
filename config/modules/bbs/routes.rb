@@ -26,13 +26,9 @@ ZomekiCMS::Application.routes.draw do
   
   ## public
   scope "_public/#{mod}", :module => mod, :as => "" do
-    get "node_threads/(index.:format)"         => "public/node/threads#index",
-      :as => nil
-    get "node_threads/new"                     => "public/node/threads#new",
-      :as => nil
-    get "node_threads/delete"                  => "public/node/threads#delete",
-      :as => nil
-    get "node_threads/:thread/(index.:format)" => "public/node/threads#show",
-      :as => nil
+    match "node_threads/(index.:format)" => "public/node/threads#index", via: [:get, :post]
+    get "node_threads/new" => "public/node/threads#new"
+    get "node_threads/delete" => "public/node/threads#delete"
+    get "node_threads/:thread/(index.:format)" => "public/node/threads#show"
   end
 end
