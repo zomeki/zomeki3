@@ -53,7 +53,7 @@ class Survey::Admin::FormsController < Cms::Controller::Admin::Base
   def create
     new_state = params.keys.detect{|k| k =~ /^commit_/ }.try(:sub, /^commit_/, '')
 
-    @item = @content.forms.build(params[:item])
+    @item = @content.forms.build(form_params)
 
     @item.state = new_state if new_state.present? && @item.class::STATE_OPTIONS.any?{|v| v.last == new_state }
 
@@ -71,7 +71,7 @@ class Survey::Admin::FormsController < Cms::Controller::Admin::Base
   def update
     new_state = params.keys.detect{|k| k =~ /^commit_/ }.try(:sub, /^commit_/, '')
 
-    @item.attributes = params[:item]
+    @item.attributes = form_params
 
     @item.state = new_state if new_state.present? && @item.class::STATE_OPTIONS.any?{|v| v.last == new_state }
 
@@ -156,5 +156,9 @@ class Survey::Admin::FormsController < Cms::Controller::Admin::Base
                         end
 
     @item.errors.add(:base, '承認フローを選択してください。') if approval_flow_ids.empty?
+  end
+
+  def form_params
+    params.require(:item).permit(:closed_at, :confirmation, :description, :in_creator, :index_link, :name, :opened_at, :receipt, :sitemap_state, :sort_no, :summary, :title)
   end
 end

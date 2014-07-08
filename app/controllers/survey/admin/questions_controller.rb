@@ -23,18 +23,24 @@ class Survey::Admin::QuestionsController < Cms::Controller::Admin::Base
   end
 
   def create
-    @item = @form.questions.build(params[:item])
+    @item = @form.questions.build(question_params)
     _create @item
   end
 
   def update
     @item = @form.questions.find(params[:id])
-    @item.attributes = params[:item]
+    @item.attributes = question_params
     _update @item
   end
 
   def destroy
     @item = @form.questions.find(params[:id])
     _destroy @item
+  end
+
+  private
+
+  def question_params
+    params.require(:item).permit(:description, :form_options, :form_text_max_length, :form_type, :required, :sort_no, :state, :style_attribute, :title)
   end
 end

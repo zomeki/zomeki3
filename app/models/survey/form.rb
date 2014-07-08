@@ -8,6 +8,8 @@ class Survey::Form < ActiveRecord::Base
   include Cms::Model::Auth::Concept
   include Sys::Model::Auth::EditableGroup
 
+  include StateText
+
   STATE_OPTIONS = [['下書き保存', 'draft'], ['承認依頼', 'approvable'], ['即時公開', 'public']]
   CONFIRMATION_OPTIONS = [['あり', true], ['なし', false]]
   SITEMAP_STATE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
@@ -19,7 +21,6 @@ class Survey::Form < ActiveRecord::Base
   belongs_to :content, :foreign_key => :content_id, :class_name => 'Survey::Content::Form'
   validates_presence_of :content_id
 
-  belongs_to :status, :foreign_key => :state, :class_name => 'Sys::Base::Status'
   validates_presence_of :state
 
   has_many :questions, :dependent => :destroy

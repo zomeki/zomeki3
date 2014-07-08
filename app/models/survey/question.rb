@@ -2,6 +2,8 @@ class Survey::Question < ActiveRecord::Base
   include Sys::Model::Base
   include Cms::Model::Auth::Content
 
+  include StateText
+
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
   FORM_TYPE_OPTIONS = [['入力/1行（テキストフィールド）', 'text_field'], ['入力/複数行（テキストエリア）', 'text_area'],
                        ['選択/単数回答（プルダウン）', 'select'], ['選択/単数回答（ラジオボタン）', 'radio_button'], ['選択/複数回答（チェックボックス）', 'check_box']]
@@ -12,7 +14,6 @@ class Survey::Question < ActiveRecord::Base
   belongs_to :form
   validates_presence_of :form_id
 
-  belongs_to :status, :foreign_key => :state, :class_name => 'Sys::Base::Status'
   validates_presence_of :state
 
   validates :title, :presence => true
