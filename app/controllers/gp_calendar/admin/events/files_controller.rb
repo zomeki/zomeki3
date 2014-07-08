@@ -27,13 +27,13 @@ class GpCalendar::Admin::Events::FilesController < Cms::Controller::Admin::Base
   end
 
   def create
-    @item = Sys::File.new(params[:item])
+    @item = Sys::File.new(file_params)
     @item.tmp_id = @tmp_unid
     @item.parent_unid = @event.try(:unid)
 
     if (duplicated = @item.duplicated)
       @item = duplicated
-      @item.attributes = params[:item]
+      @item.attributes = file_params
     end
 
     @item.allowed_type = 'gif,jpg,png'
@@ -43,7 +43,7 @@ class GpCalendar::Admin::Events::FilesController < Cms::Controller::Admin::Base
 
   def update
     @item = Sys::File.find(params[:id])
-    @item.attributes = params[:item]
+    @item.attributes = file_params
     @item.allowed_type = 'gif,jpg,png'
     @item.image_resize = params[:image_resize]
     @item.skip_upload
@@ -64,5 +64,11 @@ class GpCalendar::Admin::Events::FilesController < Cms::Controller::Admin::Base
     else
       http_error(404)
     end
+  end
+
+  private
+
+  def file_params
+    params.require(:item).permit(:file, :name, :title)
   end
 end

@@ -46,7 +46,7 @@ class GpCalendar::Admin::EventsController < Cms::Controller::Admin::Base
   end
 
   def create
-    @item = @content.events.build(params[:item])
+    @item = @content.events.build(event_params)
     _create(@item) do
       set_categories
       @item.fix_tmp_files(params[:_tmp])
@@ -55,7 +55,7 @@ class GpCalendar::Admin::EventsController < Cms::Controller::Admin::Base
 
   def update
     @item = @content.events.find(params[:id])
-    @item.attributes = params[:item]
+    @item.attributes = event_params
     _update(@item) do
       set_categories
     end
@@ -75,5 +75,9 @@ class GpCalendar::Admin::EventsController < Cms::Controller::Admin::Base
                      []
                    end
     @item.category_ids = category_ids
+  end
+
+  def event_params
+    params.require(:item).permit(:description, :ended_on, :href, :in_creator, :started_on, :state, :target, :title)
   end
 end
