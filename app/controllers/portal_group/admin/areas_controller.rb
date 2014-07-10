@@ -38,7 +38,7 @@ class PortalGroup::Admin::AreasController < Cms::Controller::Admin::Base
   end
   
   def create
-    @item = PortalGroup::Area.new(params[:item])
+    @item = PortalGroup::Area.new(area_params)
     @item.site_id    = Core.site.id
     @item.parent_id  = @parent.id
     @item.content_id = @content.id
@@ -48,12 +48,18 @@ class PortalGroup::Admin::AreasController < Cms::Controller::Admin::Base
   
   def update
     @item = PortalGroup::Area.new.find(params[:id])
-    @item.attributes = params[:item]
+    @item.attributes = area_params
     _update @item
   end
   
   def destroy
     @item = PortalGroup::Area.new.find(params[:id])
     _destroy @item
+  end
+
+  private
+
+  def area_params
+    params.require(:item).permit(:address, :concept_id, :in_creator, :layout_id, :name, :site_uri, :sort_no, :state, :tel, :title, :zip_code)
   end
 end

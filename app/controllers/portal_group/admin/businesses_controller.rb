@@ -38,7 +38,7 @@ class PortalGroup::Admin::BusinessesController < Cms::Controller::Admin::Base
   end
   
   def create
-    @item = PortalGroup::Business.new(params[:item])
+    @item = PortalGroup::Business.new(business_params)
     @item.site_id    = Core.site.id
     @item.content_id = @content.id
     @item.parent_id  = @parent.id
@@ -48,12 +48,18 @@ class PortalGroup::Admin::BusinessesController < Cms::Controller::Admin::Base
   
   def update
     @item = PortalGroup::Business.new.find(params[:id])
-    @item.attributes = params[:item]
+    @item.attributes = business_params
     _update @item
   end
   
   def destroy
     @item = PortalGroup::Business.new.find(params[:id])
     _destroy @item
+  end
+
+  private
+
+  def business_params
+    params.require(:item).permit(:concept_id, :in_creator, :layout_id, :name, :sort_no, :state, :title)
   end
 end

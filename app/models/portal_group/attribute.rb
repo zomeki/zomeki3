@@ -8,8 +8,9 @@ class PortalGroup::Attribute < ActiveRecord::Base
   include Sys::Model::Rel::Creator
   include Cms::Model::Rel::Concept
   include Cms::Model::Auth::Content
-  
-  belongs_to :status,  :foreign_key => :state,      :class_name => 'Sys::Base::Status'
+
+  include StateText
+
   belongs_to :content,  :foreign_key => :content_id, :class_name => 'Cms::Content'
   belongs_to :layout,  :foreign_key => :layout_id,  :class_name => "Cms::Layout"
   

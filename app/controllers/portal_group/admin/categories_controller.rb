@@ -38,7 +38,7 @@ class PortalGroup::Admin::CategoriesController < Cms::Controller::Admin::Base
   end
   
   def create
-    @item = PortalGroup::Category.new(params[:item])
+    @item = PortalGroup::Category.new(category_params)
     @item.site_id    = Core.site.id
     @item.content_id = @content.id
     @item.parent_id  = @parent.id
@@ -48,12 +48,18 @@ class PortalGroup::Admin::CategoriesController < Cms::Controller::Admin::Base
   
   def update
     @item = PortalGroup::Category.new.find(params[:id])
-    @item.attributes = params[:item]
+    @item.attributes = category_params
     _update @item
   end
   
   def destroy
     @item = PortalGroup::Category.new.find(params[:id])
     _destroy @item
+  end
+
+  private
+
+  def category_params
+    params.require(:item).permit(:concept_id, :in_creator, :layout_id, :name, :sort_no, :state, :title)
   end
 end

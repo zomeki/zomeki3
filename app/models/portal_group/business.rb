@@ -9,8 +9,9 @@ class PortalGroup::Business < ActiveRecord::Base
   include Sys::Model::Rel::Creator
   include Cms::Model::Rel::Concept
   include Cms::Model::Auth::Content
+
+  include StateText
   
-  belongs_to :status,  :foreign_key => :state,      :class_name => 'Sys::Base::Status'
   belongs_to :parent,  :foreign_key => :parent_id,  :class_name => "#{self}"
   belongs_to :content,  :foreign_key => :content_id, :class_name => 'Cms::Content'
   belongs_to :layout,  :foreign_key => :layout_id,  :class_name => "Cms::Layout"

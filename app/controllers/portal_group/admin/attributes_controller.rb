@@ -29,7 +29,7 @@ class PortalGroup::Admin::AttributesController < Cms::Controller::Admin::Base
   end
   
   def create
-    @item = PortalGroup::Attribute.new(params[:item])
+    @item = PortalGroup::Attribute.new(attribute_params)
     @item.site_id    = Core.site.id
     @item.content_id = @content.id
     _create @item
@@ -37,12 +37,18 @@ class PortalGroup::Admin::AttributesController < Cms::Controller::Admin::Base
   
   def update
     @item = PortalGroup::Attribute.new.find(params[:id])
-    @item.attributes = params[:item]
+    @item.attributes = attribute_params
     _update @item
   end
   
   def destroy
     @item = PortalGroup::Attribute.new.find(params[:id])
     _destroy @item
+  end
+
+  private
+
+  def attribute_params
+    params.require(:item).permit(:concept_id, :in_creator, :layout_id, :name, :sort_no, :state, :title)
   end
 end
