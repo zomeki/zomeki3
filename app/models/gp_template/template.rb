@@ -5,6 +5,8 @@ class GpTemplate::Template < ActiveRecord::Base
   include Sys::Model::Rel::Creator
   include Cms::Model::Auth::Content
 
+  include StateText
+
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
 
   default_scope { order("#{self.table_name}.sort_no IS NULL, #{self.table_name}.sort_no") }
@@ -12,7 +14,6 @@ class GpTemplate::Template < ActiveRecord::Base
   belongs_to :content, :foreign_key => :content_id, :class_name => 'GpTemplate::Content::Template'
   validates_presence_of :content_id
 
-  belongs_to :status, :foreign_key => :state, :class_name => 'Sys::Base::Status'
   validates_presence_of :state
 
   has_many :items, :dependent => :destroy

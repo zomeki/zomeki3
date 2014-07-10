@@ -30,12 +30,12 @@ class GpTemplate::Admin::TemplatesController < Cms::Controller::Admin::Base
   end
 
   def create
-    @item = @content.templates.build(params[:item])
+    @item = @content.templates.build(template_params)
     _create @item
   end
 
   def update
-    @item.attributes = params[:item]
+    @item.attributes = template_params
     _update @item
   end
 
@@ -46,5 +46,11 @@ class GpTemplate::Admin::TemplatesController < Cms::Controller::Admin::Base
   def form
     @template_values = params[:item] && params[:item][:template_values] ? params[:item][:template_values] : {}
     render 'form', :layout => false
+  end
+
+  private
+
+  def template_params
+    params.require(:item).permit(:body, :in_creator, :sort_no, :state, :title)
   end
 end

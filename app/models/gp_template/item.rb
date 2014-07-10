@@ -3,6 +3,8 @@ class GpTemplate::Item < ActiveRecord::Base
   include Sys::Model::Base
   include Cms::Model::Auth::Content
 
+  include StateText
+
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
   ITEM_TYPE_OPTIONS = [['入力/1行（テキストフィールド）', 'text_field'], ['入力/複数行（テキストエリア）', 'text_area'], ['入力/フリー（エディタ付）', 'rich_text'],
                        ['選択/単数回答（プルダウン）', 'select'], ['選択/単数回答（ラジオボタン）', 'radio_button'], ['添付ファイル', 'attachment_file']]
@@ -12,7 +14,6 @@ class GpTemplate::Item < ActiveRecord::Base
   belongs_to :template
   validates_presence_of :template_id
 
-  belongs_to :status, :foreign_key => :state, :class_name => 'Sys::Base::Status'
   validates_presence_of :state
 
   validates :title, :presence => true

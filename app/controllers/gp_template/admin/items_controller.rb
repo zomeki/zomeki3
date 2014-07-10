@@ -23,18 +23,24 @@ class GpTemplate::Admin::ItemsController < Cms::Controller::Admin::Base
   end
 
   def create
-    @item = @template.items.build(params[:item])
+    @item = @template.items.build(item_params)
     _create @item
   end
 
   def update
     @item = @template.items.find(params[:id])
-    @item.attributes = params[:item]
+    @item.attributes = item_params
     _update @item
   end
 
   def destroy
     @item = @template.items.find(params[:id])
     _destroy @item
+  end
+
+  private
+
+  def item_params
+    params.require(:item).permit(:item_options, :item_type, :name, :sort_no, :state, :style_attribute, :title)
   end
 end
