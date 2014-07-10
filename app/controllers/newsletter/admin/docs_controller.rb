@@ -37,7 +37,7 @@ class Newsletter::Admin::DocsController < Cms::Controller::Admin::Base
   end
 
   def create
-    @item = Newsletter::Doc.new(params[:item])
+    @item = Newsletter::Doc.new(doc_params)
     @item.delivery_state = 'yet'
     @item.content_id = @content.id
 
@@ -46,7 +46,7 @@ class Newsletter::Admin::DocsController < Cms::Controller::Admin::Base
 
   def update
     @item = Newsletter::Doc.new.find(params[:id])
-    @item.attributes = params[:item]
+    @item.attributes = doc_params
 
     _update(@item)
   end
@@ -211,5 +211,11 @@ protected
     users ||= item.members
     users.each {|user| send_mail(mail_fr, user.email, item.mail_title(user.mobile?), item.mail_body(user.mobile?)) }
     return true
+  end
+
+  private
+
+  def doc_params
+    params.require(:item).permit(:body, :in_creator, :mobile_body, :mobile_title, :state, :title)
   end
 end

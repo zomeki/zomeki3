@@ -9,7 +9,8 @@ class Newsletter::Doc < ActiveRecord::Base
   include Cms::Model::Auth::Concept
   include Newsletter::Model::Base::Delivery
 
-  belongs_to :status,           :foreign_key => :state,           :class_name => 'Sys::Base::Status'
+  include StateText
+
   belongs_to :content,          :foreign_key => :content_id,      :class_name => 'Newsletter::Content::Base'
   has_many   :logs,             :foreign_key => :doc_id,          :class_name => 'Newsletter::DeliveryLog',
                                 :order => :updated_at, :dependent => :destroy
