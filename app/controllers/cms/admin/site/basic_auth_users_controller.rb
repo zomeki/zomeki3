@@ -27,7 +27,7 @@ class Cms::Admin::Site::BasicAuthUsersController < Cms::Controller::Admin::Base
   end
 
   def create
-    @item = Cms::SiteBasicAuthUser.new(params[:item])
+    @item = Cms::SiteBasicAuthUser.new(basic_auth_user_params)
     @item.site_id = @site.id
     _create @item do
     end
@@ -35,7 +35,7 @@ class Cms::Admin::Site::BasicAuthUsersController < Cms::Controller::Admin::Base
 
   def update
     @item = Cms::SiteBasicAuthUser.new.find(params[:id])
-    @item.attributes = params[:item]
+    @item.attributes = basic_auth_user_params
     _update @item do
     end
   end
@@ -58,5 +58,11 @@ class Cms::Admin::Site::BasicAuthUsersController < Cms::Controller::Admin::Base
 
     flash[:notice] = "Basic認証を無効にしました。"
     redirect_to cms_site_basic_auth_users_path(@site.id)
+  end
+
+  private
+
+  def basic_auth_user_params
+    params.require(:item).permit(:in_creator, :name, :password, :state)
   end
 end

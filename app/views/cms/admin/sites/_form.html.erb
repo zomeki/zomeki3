@@ -96,11 +96,11 @@ areas      = PortalGroup::Area.root_items(cond)
     <td><%= text_field_tag 'sns_apps[facebook_app_secret]', @sns_apps['facebook_app_secret'], style: 'width: 400px;' %></td>
   </tr>
   <tr>
-    <th><%= label_tag 'sns_apps[twitter_consumer_key]', 'Twitter Consumer key' %></th>
+    <th><%= label_tag 'sns_apps[twitter_consumer_key]', 'Twitter API key' %></th>
     <td><%= text_field_tag 'sns_apps[twitter_consumer_key]', @sns_apps['twitter_consumer_key'], style: 'width: 400px;' %></td>
   </tr>
   <tr>
-    <th><%= label_tag 'sns_apps[twitter_consumer_secret]', 'Twitter Consumer secret' %></th>
+    <th><%= label_tag 'sns_apps[twitter_consumer_secret]', 'Twitter API secret' %></th>
     <td><%= text_field_tag 'sns_apps[twitter_consumer_secret]', @sns_apps['twitter_consumer_secret'], style: 'width: 400px;' %></td>
   </tr>
 </table>
