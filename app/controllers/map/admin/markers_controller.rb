@@ -22,7 +22,7 @@ class Map::Admin::MarkersController < Cms::Controller::Admin::Base
   end
 
   def create
-    @item = @content.markers.build(params[:item])
+    @item = @content.markers.build(marker_params)
     _create(@item) do
       set_categories
       set_file
@@ -31,7 +31,7 @@ class Map::Admin::MarkersController < Cms::Controller::Admin::Base
 
   def update
     @item = @content.markers.find(params[:id])
-    @item.attributes = params[:item]
+    @item.attributes = marker_params
     _update(@item) do
       set_categories
       set_file
@@ -76,5 +76,9 @@ class Map::Admin::MarkersController < Cms::Controller::Admin::Base
       file.allowed_type = 'gif,jpg,png'
       file.save
     end
+  end
+
+  def marker_params
+    params.require(:item).permit(:latitude, :longitude, :state, :title, :window_text)
   end
 end

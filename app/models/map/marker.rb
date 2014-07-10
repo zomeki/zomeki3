@@ -5,6 +5,8 @@ class Map::Marker < ActiveRecord::Base
   include Sys::Model::Rel::File
   include Cms::Model::Auth::Content
 
+  include StateText
+
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
 
   # Content
@@ -12,7 +14,7 @@ class Map::Marker < ActiveRecord::Base
   validates_presence_of :content_id
 
   # Proper
-  belongs_to :status, :foreign_key => :state, :class_name => 'Sys::Base::Status'
+  validates_presence_of :state
 
   has_many :categorizations, :class_name => 'GpCategory::Categorization', :as => :categorizable, :dependent => :destroy
   has_many :categories, :class_name => 'GpCategory::Category', :through => :categorizations
