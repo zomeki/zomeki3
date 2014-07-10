@@ -29,7 +29,7 @@ class Gnav::Admin::MenuItemsController < Cms::Controller::Admin::Base
   end
 
   def create
-    @item = @content.menu_items.build(params[:item])
+    @item = @content.menu_items.build(menu_item_params)
     _create(@item) do
       save_category_sets
     end
@@ -37,7 +37,7 @@ class Gnav::Admin::MenuItemsController < Cms::Controller::Admin::Base
 
   def update
     @item = @content.menu_items.find(params[:id])
-    @item.attributes = params[:item]
+    @item.attributes = menu_item_params
     _update(@item) do
       save_category_sets
     end
@@ -64,5 +64,9 @@ class Gnav::Admin::MenuItemsController < Cms::Controller::Admin::Base
       end
       @item.category_sets.find(category_set_ids).each {|cs| cs.destroy }
     end
+  end
+
+  def menu_item_params
+    params.require(:item).permit(:concept_id, :in_creator, :layout_id, :name, :sitemap_state, :sort_no, :state, :title)
   end
 end

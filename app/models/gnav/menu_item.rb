@@ -5,6 +5,8 @@ class Gnav::MenuItem < ActiveRecord::Base
   include Cms::Model::Auth::Content
   include Cms::Model::Base::Page
 
+  include StateText
+
   SITEMAP_STATE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
 
   default_scope order(:sort_no)
@@ -16,9 +18,6 @@ class Gnav::MenuItem < ActiveRecord::Base
   # Page
   belongs_to :concept, :foreign_key => :concept_id, :class_name => 'Cms::Concept'
   belongs_to :layout,  :foreign_key => :layout_id,  :class_name => 'Cms::Layout'
-
-  # Proper
-  belongs_to :status, :foreign_key => :state, :class_name => 'Sys::Base::Status'
 
   has_many :category_sets
 
