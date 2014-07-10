@@ -22,18 +22,24 @@ class AdBanner::Admin::GroupsController < Cms::Controller::Admin::Base
   end
 
   def create
-    @item = @content.groups.build(params[:item])
+    @item = @content.groups.build(group_params)
     _create @item
   end
 
   def update
     @item = @content.groups.find(params[:id])
-    @item.attributes = params[:item]
+    @item.attributes = group_params
     _update @item
   end
 
   def destroy
     @item = @content.groups.find(params[:id])
     _destroy @item
+  end
+
+  private
+
+  def group_params
+    params.require(:item).permit(:in_creator, :name, :sort_no, :title)
   end
 end

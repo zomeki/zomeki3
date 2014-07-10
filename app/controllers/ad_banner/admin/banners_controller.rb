@@ -33,13 +33,13 @@ class AdBanner::Admin::BannersController < Cms::Controller::Admin::Base
   end
 
   def create
-    @item = @content.banners.build(params[:item])
+    @item = @content.banners.build(banner_params)
     _create @item
   end
 
   def update
     @item = @content.banners.find(params[:id])
-    @item.attributes = params[:item]
+    @item.attributes = banner_params
     @item.skip_upload if @item.file.blank? && @item.file_exist?
     _update @item
   end
@@ -55,5 +55,11 @@ class AdBanner::Admin::BannersController < Cms::Controller::Admin::Base
     type, disposition = (mt =~ %r!^image/|^application/pdf$! ? [mt, 'inline'] : [mt, 'attachment'])
     disposition = 'attachment' if request.env['HTTP_USER_AGENT'] =~ /Android/
     send_file item.upload_path, :type => type, :filename => item.name, :disposition => disposition
+  end
+
+  private
+
+  def banner_params
+    params.require(:item).permit(:advertiser_contact, :advertiser_email, :advertiser_name, :advertiser_phone, :closed_at, :file, :group_id, :in_creator, :name, :published_at, :sort_no, :state, :title, :url)
   end
 end

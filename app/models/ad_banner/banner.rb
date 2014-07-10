@@ -6,6 +6,8 @@ class AdBanner::Banner < ActiveRecord::Base
   include Sys::Model::Rel::Creator
   include Cms::Model::Auth::Content
 
+  include StateText
+
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
 
   default_scope { order(:sort_no) }
@@ -29,7 +31,6 @@ class AdBanner::Banner < ActiveRecord::Base
   validates_presence_of :content_id
 
   # Proper
-  belongs_to :status, :foreign_key => :state, :class_name => 'Sys::Base::Status'
   validates_presence_of :state
 
   belongs_to :group, :foreign_key => :group_id, :class_name => 'AdBanner::Group'
