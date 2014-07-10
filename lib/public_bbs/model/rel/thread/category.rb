@@ -1,25 +1,23 @@
 # encoding: utf-8
 
 module PublicBbs::Model::Rel::Thread::Category
-  attr_accessor :in_category_ids
-  
   def in_category_ids
-    unless val = read_attribute(:in_category_ids)
-      write_attribute(:in_category_ids, category_ids.to_s.split(' ').uniq)
+    unless (val = @in_category_ids)
+      @in_category_ids = category_ids.to_s.split(' ').uniq
     end
-    read_attribute(:in_category_ids)
+    @in_category_ids
   end
   
   def in_category_ids=(ids)
     _ids = []
     if ids.class == Array
       ids.each {|val| _ids << val}
-      write_attribute(:category_ids, _ids.join(' '))
+      @category_ids = _ids.join(' ')
     elsif ids.class == Hash || ids.class == HashWithIndifferentAccess
       ids.each {|key, val| _ids << val}
-      write_attribute(:category_ids, _ids.join(' '))
+      @category_ids = _ids.join(' ')
     else
-      write_attribute(:category_ids, ids)
+      @category_ids = ids
     end
   end
   

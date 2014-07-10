@@ -2,22 +2,22 @@ module PortalGroup::Model::Rel::Thread::Area
   attr_accessor :in_portal_area_ids
   
   def in_portal_area_ids
-    unless val = read_attribute(:in_portal_area_ids)
-      write_attribute(:in_portal_area_ids, portal_area_ids.to_s.split(' ').uniq)
+    unless (val = @in_portal_area_ids)
+      @in_portal_area_ids = portal_area_ids.to_s.split(' ').uniq
     end
-    read_attribute(:in_portal_area_ids)
+    @in_portal_area_ids
   end
   
   def in_portal_area_ids=(ids)
     _ids = []
     if ids.class == Array
       ids.each {|val| _ids << val}
-      write_attribute(:portal_area_ids, _ids.join(' '))
+      @portal_area_ids = _ids.join(' ')
     elsif ids.class == Hash || ids.class == HashWithIndifferentAccess
       ids.each {|key, val| _ids << val}
-      write_attribute(:portal_area_ids, _ids.join(' '))
+      @portal_area_ids = _ids.join(' ')
     else
-      write_attribute(:portal_area_ids, ids)
+      @portal_area_ids = ids
     end
   end
   

@@ -1,23 +1,21 @@
 module PortalGroup::Model::Rel::Thread::Category
-  attr_accessor :in_portal_category_ids
-  
   def in_portal_category_ids
-    unless val = read_attribute(:in_portal_category_ids)
-      write_attribute(:in_portal_category_ids, portal_category_ids.to_s.split(' ').uniq)
+    unless (val = @in_portal_category_ids)
+      @in_portal_category_ids = portal_category_ids.to_s.split(' ').uniq
     end
-    read_attribute(:in_portal_category_ids)
+    @in_portal_category_ids
   end
   
   def in_portal_category_ids=(ids)
     _ids = []
     if ids.class == Array
       ids.each {|val| _ids << val}
-      write_attribute(:portal_category_ids, _ids.join(' '))
+      @portal_category_ids = _ids.join(' ')
     elsif ids.class == Hash || ids.class == HashWithIndifferentAccess
       ids.each {|key, val| _ids << val}
-      write_attribute(:portal_category_ids, _ids.join(' '))
+      @portal_category_ids = _ids.join(' ')
     else
-      write_attribute(:portal_category_ids, ids)
+      @portal_category_ids = ids
     end
   end
   

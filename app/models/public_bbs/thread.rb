@@ -12,9 +12,10 @@ class PublicBbs::Thread < ActiveRecord::Base
   include PortalGroup::Model::Rel::Thread::Attribute
   include PortalGroup::Model::Rel::Thread::Area
 
+  include StateText
+
   belongs_to :content,      :foreign_key => :content_id,      :class_name => 'PublicBbs::Content::Thread'
   belongs_to :portal_group, :foreign_key => :portal_group_id, :class_name => 'PortalGroup::Content::Group'
-  belongs_to :status,       :foreign_key => :state,           :class_name => 'Sys::Base::Status'
   belongs_to :user,         :foreign_key => :user_id,         :class_name => 'Cms::OAuthUser'
 
   has_many :responses, :dependent => :destroy

@@ -8,10 +8,11 @@ class PublicBbs::Category < ActiveRecord::Base
   include Cms::Model::Rel::Concept
   include Cms::Model::Auth::Content
 
+  include StateText
+
   belongs_to :content, :foreign_key => :content_id, :class_name => 'PublicBbs::Content::Thread'
   belongs_to :layout,  :foreign_key => :layout_id,  :class_name => 'Cms::Layout'
   belongs_to :parent,  :foreign_key => :parent_id,  :class_name => self.name
-  belongs_to :status,  :foreign_key => :state,      :class_name => 'Sys::Base::Status'
 
   validates :parent_id, :presence => true
   validates :state,     :presence => true

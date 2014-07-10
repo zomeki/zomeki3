@@ -1,6 +1,4 @@
 module PublicBbs::Model::Rel::Thread::Tag
-  attr_accessor :in_tags
-  
   def self.included(mod)
     mod.has_many :tags, -> { order(:name) },
       :primary_key => 'unid',
@@ -18,12 +16,12 @@ module PublicBbs::Model::Rel::Thread::Tag
   end
   
   def in_tags
-    unless val = read_attribute(:in_tags)
+    unless (val = @in_tags)
       val = []
       tags.each {|tag| val << tag.word }
-      write_attribute(:in_tags, val)
+      @in_tags = val
     end
-    read_attribute(:in_tags)
+    @in_tags
   end
   
   def in_tags=(words)

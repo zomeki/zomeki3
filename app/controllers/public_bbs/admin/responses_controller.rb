@@ -32,7 +32,7 @@ class PublicBbs::Admin::ResponsesController < Cms::Controller::Admin::Base
   end
 
   def create
-    @item = @thread.responses.build(params[:item])
+    @item = @thread.responses.build(response_params)
     @item.content = @content
     _create(@item) do
       @item.fix_tmp_files(params[:_tmp])
@@ -41,7 +41,7 @@ class PublicBbs::Admin::ResponsesController < Cms::Controller::Admin::Base
 
   def update
     @item = PublicBbs::Response.new.find(params[:id])
-    @item.update_attributes(params[:item])
+    @item.update_attributes(response_params)
     _update @item
   end
 
@@ -55,5 +55,11 @@ class PublicBbs::Admin::ResponsesController < Cms::Controller::Admin::Base
     thread.and :content_id, @content.id
     thread.and :id, params[:thread_id]
     return http_error(404) unless @thread = thread.find(:first)
+  end
+
+  private
+
+  def response_params
+    params.require(:item).permit(:body, :state, :title, :user_id)
   end
 end

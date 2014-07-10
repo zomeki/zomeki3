@@ -34,7 +34,7 @@ class PublicBbs::Admin::ThreadsController < Cms::Controller::Admin::Base
   end
 
   def create
-    @item = PublicBbs::Thread.new(params[:item])
+    @item = PublicBbs::Thread.new(thread_params)
     @item.content      = @content
     @item.portal_group = @content.portal_group
     _create(@item) do
@@ -44,12 +44,18 @@ class PublicBbs::Admin::ThreadsController < Cms::Controller::Admin::Base
 
   def update
     @item = PublicBbs::Thread.new.find(params[:id])
-    @item.update_attributes(params[:item])
+    @item.update_attributes(thread_params)
     _update @item
   end
 
   def destroy
     @item = PublicBbs::Thread.new.find(params[:id])
     _destroy @item
+  end
+
+  private
+
+  def thread_params
+    params.require(:item).permit(:body, :in_category_ids, :in_portal_area_ids, :in_portal_attribute_ids, :in_portal_business_ids, :in_portal_category_ids, :in_tags, :res_creation, :state, :title, :user_id)
   end
 end

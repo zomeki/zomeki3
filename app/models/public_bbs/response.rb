@@ -5,8 +5,9 @@ class PublicBbs::Response < ActiveRecord::Base
   include Sys::Model::Rel::File
   include Sys::Model::Auth::Free
 
+  include StateText
+
   belongs_to :content, :foreign_key => :content_id, :class_name => 'PublicBbs::Content::Thread'
-  belongs_to :status,  :foreign_key => :state,      :class_name => 'Sys::Base::Status'
   belongs_to :thread,  :foreign_key => :thread_id,  :class_name => 'PublicBbs::Thread'
   belongs_to :user,    :foreign_key => :user_id,    :class_name => 'Cms::OAuthUser'
 

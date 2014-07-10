@@ -33,7 +33,7 @@ class PublicBbs::Admin::CategoriesController < Cms::Controller::Admin::Base
   end
 
   def create
-    @item = PublicBbs::Category.new(params[:item])
+    @item = PublicBbs::Category.new(category_params)
     @item.content  = @content
     @item.parent   = @parent
     @item.level_no = @parent.level_no + 1
@@ -42,12 +42,18 @@ class PublicBbs::Admin::CategoriesController < Cms::Controller::Admin::Base
 
   def update
     @item = PublicBbs::Category.new.find(params[:id])
-    @item.attributes = params[:item]
+    @item.attributes = category_params
     _update @item
   end
 
   def destroy
     @item = PublicBbs::Category.new.find(params[:id])
     _destroy @item
+  end
+
+  private
+
+  def category_params
+    params.require(:item).permit(:concept_id, :in_creator, :layout_id, :name, :sort_no, :state, :title)
   end
 end
