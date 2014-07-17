@@ -8,11 +8,9 @@ class Cms::Admin::ContentsController < Cms::Controller::Admin::Base
   
   def index
     return show_htaccess if params.key?(:htaccess)
-    
-    item = Cms::Content.new.readable
-    item.page  params[:page], params[:limit]
-    item.order params[:sort], 'name, id'
-    @items = item.find(:all)
+
+    @items = Cms::Content.readable.order('name, id')
+                         .paginate(page: params[:page], per_page: params[:limit])
     _index @items
   end
   

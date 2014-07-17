@@ -1,4 +1,24 @@
+require 'active_support/concern'
+
 module Cms::Model::Auth::Concept
+  extend ActiveSupport::Concern
+
+  included do
+    scope :readable, -> {
+      rel = Core.site ? where(site_id: Core.site.id)
+                      : where(site_id: nil)
+      if Core.concept
+        if Core.user.has_priv?(:read, item: Core.concept)
+          rel.where(concept_id: Core.concept.id)
+        else
+          rel.none
+        end
+      else
+        rel.where(concept_id: nil)
+      end
+    }
+  end
+
   def readable
     if Core.site
       self.and :site_id, Core.site.id
