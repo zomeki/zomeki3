@@ -22,7 +22,7 @@ class GpCalendar::Holiday < ActiveRecord::Base
 
   validates_presence_of :title
 
-  scope :public, where(state: 'public')
+  scope :public, -> { where(state: 'public') }
 
   def self.all_with_content_and_criteria(content, criteria)
     holidays = self.arel_table

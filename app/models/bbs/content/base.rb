@@ -2,9 +2,8 @@
 class Bbs::Content::Base < Cms::Content
   def thread_node
     return @thread_node if @thread_node
-    item = Cms::Node.new.public
-    item.and :content_id, id
-    item.and :model, 'Bbs::Thread'
-    @thread_node = item.find(:first, :order => :id)
+    @thread_node = Cms::Node.public.where(content_id: id)
+                                   .where(model: 'Bbs::Thread')
+                                   .order(:id).first
   end
 end

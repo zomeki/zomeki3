@@ -9,7 +9,7 @@ class Gnav::MenuItem < ActiveRecord::Base
 
   SITEMAP_STATE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
 
-  default_scope order(:sort_no)
+  default_scope { order(:sort_no) }
 
   # Content
   belongs_to :content, :foreign_key => :content_id, :class_name => 'Gnav::Content::MenuItem'

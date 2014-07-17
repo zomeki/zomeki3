@@ -1,5 +1,5 @@
 class SnsShare::Content::Account < Cms::Content
-  default_scope where(model: 'SnsShare::Account')
+  default_scope { where(model: 'SnsShare::Account') }
 
   has_many :accounts, :foreign_key => :content_id, :class_name => 'SnsShare::Account', :dependent => :destroy
 

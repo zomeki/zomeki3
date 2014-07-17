@@ -15,11 +15,9 @@ class PublicBbs::Admin::ThreadsController < Cms::Controller::Admin::Base
   end
 
   def index
-    item = PublicBbs::Thread.new
-    item.and :content_id, @content.id
-    item.page  params[:page], params[:limit]
-    item.order params[:sort], 'updated_at DESC'
-    @items = item.find(:all)
+    @items = PublicBbs::Thread.where(content_id: @content.id)
+                              .order(params[:sort] || 'updated_at DESC')
+                              .paginate(page: params[:page], per_page: params[:limit])
     _index @items
   end
 

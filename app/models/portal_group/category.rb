@@ -15,10 +15,9 @@ class PortalGroup::Category < ActiveRecord::Base
   belongs_to :parent,  :foreign_key => :parent_id,  :class_name => "#{self}"
   belongs_to :content,  :foreign_key => :content_id, :class_name => 'Cms::Content'
   belongs_to :layout,  :foreign_key => :layout_id,  :class_name => "Cms::Layout"
-  
-  has_many   :children, :foreign_key => :parent_id , :class_name => "#{self}",
-    :order => :sort_no, :dependent => :destroy
-    
+
+  has_many :children, -> { order :sort_no }, :foreign_key => :parent_id, :class_name => name, :dependent => :destroy
+
   validates_presence_of :state, :parent_id, :name, :title
   validates_uniqueness_of :name, :scope => [:content_id]
   

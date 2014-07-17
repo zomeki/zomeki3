@@ -1,8 +1,8 @@
 # encoding: utf-8
 class Gnav::Content::MenuItem < Cms::Content
-  default_scope where(model: 'Gnav::MenuItem')
+  default_scope { where(model: 'Gnav::MenuItem') }
 
-  has_many :menu_items, :foreign_key => :content_id, :class_name => 'Gnav::MenuItem', :order => :sort_no, :dependent => :destroy
+  has_many :menu_items, -> { order :sort_no }, :foreign_key => :content_id, :class_name => 'Gnav::MenuItem', :dependent => :destroy
 
   before_create :set_default_settings
 

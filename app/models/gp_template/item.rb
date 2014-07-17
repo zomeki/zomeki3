@@ -9,7 +9,7 @@ class GpTemplate::Item < ActiveRecord::Base
   ITEM_TYPE_OPTIONS = [['入力/1行（テキストフィールド）', 'text_field'], ['入力/複数行（テキストエリア）', 'text_area'], ['入力/フリー（エディタ付）', 'rich_text'],
                        ['選択/単数回答（プルダウン）', 'select'], ['選択/単数回答（ラジオボタン）', 'radio_button'], ['添付ファイル', 'attachment_file']]
 
-  default_scope order("#{self.table_name}.sort_no IS NULL, #{self.table_name}.sort_no")
+  default_scope { order("#{self.table_name}.sort_no IS NULL, #{self.table_name}.sort_no") }
 
   belongs_to :template
   validates_presence_of :template_id
@@ -22,7 +22,7 @@ class GpTemplate::Item < ActiveRecord::Base
 
   after_initialize :set_defaults
 
-  scope :public, where(state: 'public')
+  scope :public, -> { where(state: 'public') }
 
   def state_public?
     state == 'public'

@@ -3,7 +3,7 @@ class Map::Content::Marker < Cms::Content
   IMAGE_STATE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
   MARKER_ORDER_OPTIONS = [['投稿日（昇順）', 'time_asc'], ['投稿日（降順）', 'time_desc'], ['カテゴリ順', 'category']]
 
-  default_scope where(model: 'Map::Marker')
+  default_scope { where(model: 'Map::Marker') }
 
   has_many :markers, :foreign_key => :content_id, :class_name => 'Map::Marker', :dependent => :destroy
 

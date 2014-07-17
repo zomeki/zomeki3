@@ -14,14 +14,12 @@ class PortalGroup::Admin::CategoriesController < Cms::Controller::Admin::Base
       @parent = PortalGroup::Category.new.find(params[:parent])
     end
   end
-  
+
   def index
-    item = PortalGroup::Category.new#.readable
-    item.and :parent_id, @parent
-    item.and :content_id, @content
-    item.page  params[:page], params[:limit]
-    item.order params[:sort], :sort_no
-    @items = item.find(:all)
+    @items = PortalGroup::Category.where(parent_id: @parent.id)
+                                  .where(content_id: @content.id)
+                                  .order(params[:sort] || :sort_no)
+                                  .paginate(page: params[:page], per_page: params[:limit])
     _index @items
   end
   

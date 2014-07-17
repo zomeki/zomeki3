@@ -2,7 +2,7 @@
 class GpCalendar::Content::Event < Cms::Content
   IMAGE_STATE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
 
-  default_scope where(model: 'GpCalendar::Event')
+  default_scope { where(model: 'GpCalendar::Event') }
 
   has_many :events, :foreign_key => :content_id, :class_name => 'GpCalendar::Event', :dependent => :destroy
   has_many :holidays, :foreign_key => :content_id, :class_name => 'GpCalendar::Holiday', :dependent => :destroy

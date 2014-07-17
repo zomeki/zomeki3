@@ -12,8 +12,7 @@ class Newsletter::Doc < ActiveRecord::Base
   include StateText
 
   belongs_to :content,          :foreign_key => :content_id,      :class_name => 'Newsletter::Content::Base'
-  has_many   :logs,             :foreign_key => :doc_id,          :class_name => 'Newsletter::DeliveryLog',
-                                :order => :updated_at, :dependent => :destroy
+  has_many :logs, -> { order :updated_at }, :foreign_key => :doc_id, :class_name => 'Newsletter::DeliveryLog', :dependent => :destroy
 
   validates_presence_of :state, :title, :body
 

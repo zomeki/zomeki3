@@ -1,7 +1,7 @@
 class Organization::Content::Group < Cms::Content
   ARTICLE_RELATION_OPTIONS = [['使用する', 'enabled'], ['使用しない', 'disabled']]
 
-  default_scope where(model: 'Organization::Group')
+  default_scope { where(model: 'Organization::Group') }
 
   has_many :groups, :foreign_key => :content_id, :class_name => 'Organization::Group', :dependent => :destroy
 

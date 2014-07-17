@@ -29,7 +29,7 @@ class GpCalendar::Event < ActiveRecord::Base
 
   validate :dates_range
 
-  scope :public, where(state: 'public')
+  scope :public, -> { where(state: 'public') }
 
   def self.all_with_content_and_criteria(content, criteria)
     events = self.arel_table
