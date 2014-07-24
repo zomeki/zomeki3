@@ -46,6 +46,8 @@ class GpArticle::Doc < ActiveRecord::Base
   belongs_to :prev_edition, :class_name => self.name
   has_one :next_edition, :foreign_key => :prev_edition_id, :class_name => self.name
 
+  belongs_to :marker_icon_category, :class_name => 'GpCategory::Category'
+
   has_many :categorizations, :class_name => 'GpCategory::Categorization', :as => :categorizable, :dependent => :destroy
   has_many :categories, -> { where("#{GpCategory::Categorization.table_name}.categorized_as", self.name) },
            :class_name => 'GpCategory::Category', :through => :categorizations,
