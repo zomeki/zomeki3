@@ -22,7 +22,7 @@ first_group = Sys::Group.create!(
   :name_en   => 'top'
 )
 
-zomeki_group = Sys::Group.create!(
+cms_group = Sys::Group.create!(
   :parent_id => first_group.id,
   :level_no  => 2,
   :sort_no   => 2,
@@ -31,7 +31,7 @@ zomeki_group = Sys::Group.create!(
   :ldap      => 0,
   :code      => '001',
   :name      => 'ぞめき',
-  :name_en   => 'zomeki'
+  :name_en   => 'cms'
 )
 
 first_user = Sys::User.create!(
@@ -43,21 +43,21 @@ first_user = Sys::User.create!(
   :password => 'zomeki'
 )
 
-Sys::UsersGroup.create!(group: zomeki_group, user: first_user)
+Sys::UsersGroup.create!(group: cms_group, user: first_user)
 
-Core.user_group = zomeki_group
+Core.user_group = cms_group
 Core.user       = first_user
 
 awa = Sys::User.create!(state: 'enabled', ldap: 0, auth_no: 2, name: '阿波 ぞめき', name_en: 'awa zomeki', account: 'awa', password: 'awa')
-Sys::UsersGroup.create!(group: zomeki_group, user: awa)
+Sys::UsersGroup.create!(group: cms_group, user: awa)
 hachisuka = Sys::User.create!(state: 'enabled', ldap: 0, auth_no: 4, name: '蜂須賀 太郎', name_en: 'hachisuka taro', account: 'hachisuka', password: 'hachisuka')
-Sys::UsersGroup.create!(group: zomeki_group, user: hachisuka)
+Sys::UsersGroup.create!(group: cms_group, user: hachisuka)
 ebisu = Sys::User.create!(state: 'enabled', ldap: 0, auth_no: 2, name: '恵比寿 花子', name_en: 'ebisu hanako', account: 'ebisu', password: 'ebisu')
-Sys::UsersGroup.create!(group: zomeki_group, user: ebisu)
+Sys::UsersGroup.create!(group: cms_group, user: ebisu)
 ukiyo = Sys::User.create!(state: 'enabled', ldap: 0, auth_no: 2, name: '浮世 蓮', name_en: 'ukiyo ren', account: 'ukiyo', password: 'ukiyo')
-Sys::UsersGroup.create!(group: zomeki_group, user: ukiyo)
+Sys::UsersGroup.create!(group: cms_group, user: ukiyo)
 sasa = Sys::User.create!(state: 'enabled', ldap: 0, auth_no: 2, name: '笹 みやび', name_en: 'sasa miyabi', account: 'sasa', password: 'sasa')
-Sys::UsersGroup.create!(group: zomeki_group, user: sasa)
+Sys::UsersGroup.create!(group: cms_group, user: sasa)
 
 ## ---------------------------------------------------------
 ## cms
@@ -78,7 +78,7 @@ site = Cms::Site.create!(
   :portal_group_state => 'visible'
 )
 site.groups << first_group
-site.groups << zomeki_group
+site.groups << cms_group
 
 concept = Cms::Concept.create!(
   :parent_id => 0,
@@ -113,7 +113,7 @@ Cms::Node.create!(
   :model        => 'Cms::Page',
   :name         => 'index.html',
   :title        => core_title,
-  :body         => 'ZOMEKI'
+  :body         => 'CMS'
 )
 
 puts 'Imported base data.'

@@ -1,11 +1,11 @@
-ZomekiCMS::Application.routes.draw do
+CmsCMS::Application.routes.draw do
   mod = "cms"
 
   get "/_preview/:site/(*path)" => "cms/admin/preview#index",
     :as => :cms_preview
 
   ## admin
-  scope "#{ZomekiCMS::ADMIN_URL_PREFIX}/#{mod}", :module => mod, :as => mod do
+  scope "#{CmsCMS::ADMIN_URL_PREFIX}/#{mod}", :module => mod, :as => mod do
     resources :navi_concepts,
       :controller  => "admin/navi/concepts"
     resources :navi_sites,
@@ -135,7 +135,7 @@ ZomekiCMS::Application.routes.draw do
           post :import
         end
       end
-      
+
     ## node
     resources :node_directories,
       :controller  => "admin/node/directories",
@@ -163,7 +163,7 @@ ZomekiCMS::Application.routes.draw do
       :controller  => "admin/piece/sns_parts"
   end
 
-  scope "#{ZomekiCMS::ADMIN_URL_PREFIX}/#{mod}", :module => mod, :as => '' do
+  scope "#{CmsCMS::ADMIN_URL_PREFIX}/#{mod}", :module => mod, :as => '' do
     post 'tool_rebuild_contents' => 'admin/tool/rebuild#rebuild_contents'
     post 'tool_rebuild_nodes' => 'admin/tool/rebuild#rebuild_nodes'
     match 'tool_rebuild' => 'admin/tool/rebuild#index', as: 'tool_rebuild', via: [:get, :post]

@@ -1,28 +1,28 @@
 # encoding: utf-8
-module Zomeki
+module Cms
   def self.version
     "2.0.0"
   end
-  
+
   def self.default_config
     { "application" => {
-      "sys.crypt_pass"                => "zomeki",
+      "sys.crypt_pass"                => "cms",
       "sys.recognizers_include_admin" => false,
       "sys.auto_link_check"           => true,
       "cms.publish_more_pages"        => 0
     }}
   end
-  
+
   def self.config
-    $zomeki_config ||= {}
-    Zomeki::Config
+    $cms_config ||= {}
+    Cms::Config
   end
-  
-  class Zomeki::Config
+
+  class Cms::Config
     def self.application
-      return $zomeki_config[:imap_settings] if $zomeki_config[:imap_settings]
-      
-      config = Zomeki.default_config["application"]
+      return $cms_config[:imap_settings] if $cms_config[:imap_settings]
+
+      config = Cms.default_config["application"]
       file   = "#{Rails.root}/config/application.yml"
       if ::File.exist?(file)
         yml = YAML.load_file(file)
@@ -32,7 +32,7 @@ module Zomeki
           end if values
         end if yml
       end
-      $zomeki_config[:application] = config
+      $cms_config[:application] = config
     end
   end
 end

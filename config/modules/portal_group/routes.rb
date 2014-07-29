@@ -1,8 +1,8 @@
-ZomekiCMS::Application.routes.draw do
+CmsCMS::Application.routes.draw do
   mod = "portal_group"
-  
+
   ## admin
-  scope "#{ZomekiCMS::ADMIN_URL_PREFIX}/#{mod}", :module => mod, :as => mod do
+  scope "#{CmsCMS::ADMIN_URL_PREFIX}/#{mod}", :module => mod, :as => mod do
     resources :groups,
       :controller  => "admin/groups",
       :path        => ":content/groups" do
@@ -25,14 +25,14 @@ ZomekiCMS::Application.routes.draw do
     resources :areas,
       :controller  => "admin/areas",
       :path        => ":content/:parent/areas"
-    
+
     ## content
     resources :content_base,
       :controller => "admin/content/base"
     resources :content_settings,
       :controller => "admin/content/settings",
       :path        => ":content/content_settings"
-    
+
     ## node
     resources :node_recent_docs,
       :controller  => "admin/node/recent_docs",
@@ -85,7 +85,7 @@ ZomekiCMS::Application.routes.draw do
     resources :node_thread_areas,
       :controller  => "admin/node/thread_areas",
       :path        => ":parent/node_thread_areas"
-    
+
     ## piece
     resources :piece_recent_docs,
       :controller  => "admin/piece/recent_docs"
@@ -115,7 +115,7 @@ ZomekiCMS::Application.routes.draw do
     resources :piece_site_areas,
       :controller  => "admin/piece/site_areas"
   end
-    
+
   ## public
   scope "_public/#{mod}", :module => mod, :as => "" do
     get "node_docs/index.:format"                        => "public/node/docs#index"

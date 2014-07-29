@@ -1,19 +1,19 @@
-ZomekiCMS::Application.routes.draw do
+CmsCMS::Application.routes.draw do
   mod = "laby"
-  
+
   ## admin
-  scope "#{ZomekiCMS::ADMIN_URL_PREFIX}/#{mod}", :module => mod, :as => mod do
+  scope "#{CmsCMS::ADMIN_URL_PREFIX}/#{mod}", :module => mod, :as => mod do
     resources :docs,
       :controller  => "admin/docs",
       :path        => ":content/docs"
-    
+
     ## content
     resources :content_base,
       :controller => "admin/content/base"
     resources :content_settings,
       :controller => "admin/content/settings",
       :path        => ":content/content_settings"
-    
+
     ## node
     resources :node_docs,
       :controller  => "admin/node/docs",

@@ -816,7 +816,7 @@ class GpArticle::Doc < ActiveRecord::Base
   end
 
   def validate_accessibility_check
-    return unless Zomeki.config.application['cms.enable_accessibility_check']
+    return unless Cms.config.application['cms.enable_accessibility_check']
     check_results = Util::AccessibilityChecker.check body
 
     if check_results != [] && !ignore_accessibility_check
@@ -825,7 +825,7 @@ class GpArticle::Doc < ActiveRecord::Base
   end
 
   def body_limit_for_mobile
-    limit = Zomeki.config.application['gp_article.body_limit_for_mobile'].to_i
+    limit = Cms.config.application['gp_article.body_limit_for_mobile'].to_i
     current_size = self.body_for_mobile.bytesize
     if current_size > limit
       target = self.mobile_body.present? ? :mobile_body : :body

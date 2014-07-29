@@ -74,14 +74,14 @@ FactoryGirl.define do
     site_image_id nil
   end
 
-  factory :cms_site_zomeki_example_com, :class => 'Cms::Site' do
+  factory :cms_site_cms_example_com, :class => 'Cms::Site' do
     id 4
     unid 40
     state 'public'
     created_at '2014-03-01 17:16:02'
     updated_at '2014-03-01 17:16:02'
     name 'ぞめき'
-    full_uri 'http://zomeki.example.com/'
+    full_uri 'http://cms.example.com/'
     mobile_full_uri ''
     node_id 1
     related_site ''

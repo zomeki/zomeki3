@@ -1,4 +1,4 @@
-ZomekiCMS::Application.routes.draw do
+CmsCMS::Application.routes.draw do
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
@@ -74,15 +74,15 @@ ZomekiCMS::Application.routes.draw do
   get "*path.html.r.m3u"       => "cms/public/talk#down_m3u"
 
   # Admin
-  get "#{ZomekiCMS::ADMIN_URL_PREFIX}"         => 'sys/admin/front#index'
-  match "#{ZomekiCMS::ADMIN_URL_PREFIX}/login" => 'sys/admin/account#login',  :as => :admin_login, via: [:get, :post]
-  get "#{ZomekiCMS::ADMIN_URL_PREFIX}/logout"  => 'sys/admin/account#logout', :as => :admin_logout
-  get "#{ZomekiCMS::ADMIN_URL_PREFIX}/account" => 'sys/admin/account#info',   :as => :admin_account
+  get "#{CmsCMS::ADMIN_URL_PREFIX}"         => 'sys/admin/front#index'
+  match "#{CmsCMS::ADMIN_URL_PREFIX}/login" => 'sys/admin/account#login',  :as => :admin_login, via: [:get, :post]
+  get "#{CmsCMS::ADMIN_URL_PREFIX}/logout"  => 'sys/admin/account#logout', :as => :admin_logout
+  get "#{CmsCMS::ADMIN_URL_PREFIX}/account" => 'sys/admin/account#info',   :as => :admin_account
 
-  get  "#{ZomekiCMS::ADMIN_URL_PREFIX}/password_reminders/new" => 'sys/admin/account#new_password_reminder',    :as => :new_admin_password_reminder
-  post "#{ZomekiCMS::ADMIN_URL_PREFIX}/password_reminders"     => 'sys/admin/account#create_password_reminder', :as => :admin_password_reminders
-  get  "#{ZomekiCMS::ADMIN_URL_PREFIX}/password/edit"          => 'sys/admin/account#edit_password',            :as => :edit_admin_password
-  put  "#{ZomekiCMS::ADMIN_URL_PREFIX}/password"               => 'sys/admin/account#update_password',          :as => :admin_password
+  get  "#{CmsCMS::ADMIN_URL_PREFIX}/password_reminders/new" => 'sys/admin/account#new_password_reminder',    :as => :new_admin_password_reminder
+  post "#{CmsCMS::ADMIN_URL_PREFIX}/password_reminders"     => 'sys/admin/account#create_password_reminder', :as => :admin_password_reminders
+  get  "#{CmsCMS::ADMIN_URL_PREFIX}/password/edit"          => 'sys/admin/account#edit_password',            :as => :edit_admin_password
+  put  "#{CmsCMS::ADMIN_URL_PREFIX}/password"               => 'sys/admin/account#update_password',          :as => :admin_password
 
   # Modules
   Dir::entries("#{Rails.root}/config/modules").each do |mod|

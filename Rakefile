@@ -4,4 +4,4 @@
 
 require File.expand_path('../config/application', __FILE__)
 
-ZomekiCMS::Application.load_tasks
+CmsCMS::Application.load_tasks
