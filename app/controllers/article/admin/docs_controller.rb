@@ -69,7 +69,7 @@ class Article::Admin::DocsController < Cms::Controller::Admin::Base
       @checker.check_link @item.body
       return render :action => :new
     elsif @item.state =~ /(recognize|public)/
-      if Zomeki.config.application["sys.auto_link_check"] == true && params[:link_check] != "0"
+      if Cms.config.application["sys.auto_link_check"] == true && params[:link_check] != "0"
         @item.link_checker = @checker
       end
     end
@@ -96,7 +96,7 @@ class Article::Admin::DocsController < Cms::Controller::Admin::Base
       @checker.check_link @item.body
       return render :action => :edit
     elsif @item.state =~ /(recognize|public)/
-      if Zomeki.config.application["sys.auto_link_check"] == true && params[:link_check] != "0"
+      if Cms.config.application["sys.auto_link_check"] == true && params[:link_check] != "0"
         @item.link_checker = @checker
       end
     end

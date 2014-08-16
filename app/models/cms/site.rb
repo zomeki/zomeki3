@@ -189,7 +189,7 @@ class Cms::Site < ActiveRecord::Base
     ac_file = "#{::File.dirname(public_path)}/.htaccess"
     pw_file = "#{::File.dirname(public_path)}/.htpasswd"
 
-    conf  = %Q(<FilesMatch "^(?!#{ZomekiCMS::ADMIN_URL_PREFIX})">\n)
+    conf  = %Q(<FilesMatch "^(?!#{CmsCMS::ADMIN_URL_PREFIX})">\n)
     conf += %Q(    AuthUserFile #{pw_file}\n)
     conf += %Q(    AuthGroupFile /dev/null\n)
     conf += %Q(    AuthName "Please enter your ID and password"\n)
@@ -204,7 +204,7 @@ class Cms::Site < ActiveRecord::Base
     #conf += %Q(</FilesMatch>\n)
     Util::File.put(ac_file, :data => conf)
 
-    salt = Zomeki.config.application['sys.crypt_pass']
+    salt = Cms.config.application['sys.crypt_pass']
     conf = ""
     basic_auth_users.each do |user|
       conf += %Q(#{user.name}:#{user.password.crypt(salt)}\n)

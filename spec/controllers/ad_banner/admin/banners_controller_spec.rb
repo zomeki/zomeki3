@@ -7,7 +7,7 @@ describe AdBanner::Admin::BannersController do
 
   describe 'GET #index' do
     describe 'routes' do
-      subject { {get: "/#{ZomekiCMS::ADMIN_URL_PREFIX}/ad_banner/1/banners"} }
+      subject { {get: "/#{CmsCMS::ADMIN_URL_PREFIX}/ad_banner/1/banners"} }
       it { should route_to(controller: 'ad_banner/admin/banners', action: 'index', content: '1') }
     end
 
@@ -16,7 +16,7 @@ describe AdBanner::Admin::BannersController do
         Core.initialize
         login_as(fg_find_or_create(:sys_user_site_admin).account)
         fg_find_or_create(:cms_site_first_example_com)
-        Core.recognize_path("/#{ZomekiCMS::ADMIN_URL_PREFIX}/ad_banner/1/banners")
+        Core.recognize_path("/#{CmsCMS::ADMIN_URL_PREFIX}/ad_banner/1/banners")
       end
 
       it 'has banner content' do

@@ -1,8 +1,8 @@
-ZomekiCMS::Application.routes.draw do
+CmsCMS::Application.routes.draw do
   mod = 'public_bbs'
 
   ## admin
-  scope "#{ZomekiCMS::ADMIN_URL_PREFIX}/#{mod}", :module => mod, :as => mod do
+  scope "#{CmsCMS::ADMIN_URL_PREFIX}/#{mod}", :module => mod, :as => mod do
     resources(:threads,
       :controller => 'admin/threads',
       :path       => ':content/threads') do

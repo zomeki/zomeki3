@@ -1,8 +1,8 @@
-ZomekiCMS::Application.routes.draw do
+CmsCMS::Application.routes.draw do
   mod = "enquete"
-  
+
   ## admin
-  scope "#{ZomekiCMS::ADMIN_URL_PREFIX}/#{mod}", :module => mod, :as => mod do
+  scope "#{CmsCMS::ADMIN_URL_PREFIX}/#{mod}", :module => mod, :as => mod do
     resources :forms,
       :controller  => "admin/forms",
       :path        => ":content/forms"
@@ -12,20 +12,20 @@ ZomekiCMS::Application.routes.draw do
     resources :form_answers,
       :controller  => "admin/form_answers",
       :path        => ":content/:form/form_answers"
-    
+
     ## content
     resources :content_base,
       :controller => "admin/content/base"
     resources :content_settings,
       :controller  => "admin/content/settings",
       :path        => ":content/content_settings"
-    
+
     ## node
     resources :node_forms,
       :controller  => "admin/node/forms",
       :path        => ":parent/node_forms"
   end
-  
+
   ## public
   scope "_public/#{mod}", :module => mod, :as => "" do
     get "node_forms/index"     => "public/node/forms#index",

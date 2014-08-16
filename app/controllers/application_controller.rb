@@ -22,16 +22,16 @@ class ApplicationController < ActionController::Base
     return false if Core.dispatched?
     return Core.dispatched
   end
-  
+
   def query(params = nil)
     Util::Http::QueryString.get_query(params)
   end
-  
+
   def send_mail(fr_addr, to_addr, subject, body)
     return false if fr_addr.blank? || to_addr.blank?
     CommonMailer.plain(from: fr_addr, to: to_addr, subject: subject, body: body).deliver
   end
-  
+
   def send_download
     #
   end
@@ -45,26 +45,26 @@ private
       super
     end
   end
-  
+
   ## Production && local
   def rescue_action_in_public(exception)
     http_error(500, nil)
   end
-  
+
   def http_error(status, message = nil)
     self.response_body = nil
     Page.error = status
-    
+
     if status == 404
       message ||= "ページが見つかりません。"
     end
-    
+
     name    = Rack::Utils::HTTP_STATUS_CODES[status]
     name    = " #{name}" if name
     message = " ( #{message} )" if message
     message = "#{status}#{name}#{message}"
-    
-    mode_regexp = Regexp.new("^(#{ZomekiCMS::ADMIN_URL_PREFIX.sub(/^_/, '')}|script)$")
+
+    mode_regexp = Regexp.new("^(#{CmsCMS::ADMIN_URL_PREFIX.sub(/^_/, '')}|script)$")
     if Core.mode =~ mode_regexp && status != 404
       error_log("#{status} #{request.env['REQUEST_URI']}") if status != 404
       render :status => status, :text => "<p>#{message}</p>", :layout => "admin/cms/error"
@@ -74,7 +74,7 @@ private
 #        format.xml  { render :status => status, :xml => "<errors><error>#{message}</error></errors>" }
 #      end
     end
-    
+
     ## Render
     html = nil
     if Page.mobile
@@ -95,19 +95,19 @@ private
     else
       html = "<html>\n<head></head>\n<body>\n<p>#{message}</p>\n</body>\n</html>\n"
     end
-    
+
     render :status => status, :inline => html
 #    return respond_to do |format|
 #      format.html { render :status => status, :inline => html }
 #      format.xml  { render :status => status, :xml => "<errors><error>#{message}</error></errors>" }
 #    end
   end
-  
+
 #  def rescue_exception(exception)
 #    log  = exception.to_s
 #    log += "\n" + exception.backtrace.join("\n") if Rails.env.to_s == 'production'
 #    error_log(log)
-#    
+#
 #    if Core.mode =~ /^(admin|script)$/
 #      html  = %Q(<div style="padding: 0px 20px 10px; color: #e00; font-weight: bold; line-height: 1.8;">)
 #      html += %Q(エラーが発生しました。<br />#{exception} &lt;#{exception.class}&gt;)

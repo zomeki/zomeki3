@@ -2,7 +2,7 @@
 require 'digest/md5'
 class Cms::Script::TalkTasksController < Cms::Controller::Script::Publication
   def exec
-    if !Zomeki.config.application['cms.use_kana']
+    if !Cms.config.application['cms.use_kana']
       Script.log "use_kana is disabled (application.yml)"
       return render(:text => "OK")
     end

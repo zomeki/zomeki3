@@ -1,12 +1,12 @@
-ZomekiCMS::Application.routes.draw do
+CmsCMS::Application.routes.draw do
   mod = "portal_calendar"
-  
+
   ## admin
-  scope "#{ZomekiCMS::ADMIN_URL_PREFIX}/#{mod}", :module => mod, :as => mod do
+  scope "#{CmsCMS::ADMIN_URL_PREFIX}/#{mod}", :module => mod, :as => mod do
     resources :events,
       :controller  => "admin/events",
       :path        => ":content/events"
-    
+
     ## content
     resources :content_base,
       :controller => "admin/content/base"
@@ -16,7 +16,7 @@ ZomekiCMS::Application.routes.draw do
     resources :genres,
       :controller  => "admin/genres",
       :path        => ":content/genres"
-		
+
     ## node
     resources :node_events,
       :controller  => "admin/node/events",
@@ -30,14 +30,14 @@ ZomekiCMS::Application.routes.draw do
     resources :node_genres,
       :controller  => "admin/node/genres",
       :path        => ":parent/node_genres"
-    
+
     ## piece
     resources :piece_event_links,
       :controller  => "admin/piece/event_links"
     resources :piece_calendars,
       :controller  => "admin/piece/calendars"
   end
-  
+
   ## public
   scope "_public/#{mod}", :module => mod, :as => "" do
     get "node_lists/index"              => "public/node/lists#index", :as => nil

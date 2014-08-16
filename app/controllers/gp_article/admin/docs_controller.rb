@@ -100,7 +100,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     @item.validate_word_dictionary # replace validate word
     @item.ignore_accessibility_check = params[:ignore_accessibility_check]
 
-    if Zomeki.config.application['cms.enable_accessibility_check']
+    if Cms.config.application['cms.enable_accessibility_check']
       if params[:accessibility_check_modify] && params[:ignore_accessibility_check].nil?
         @item.body = Util::AccessibilityChecker.modify @item.body
       end
@@ -113,7 +113,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
       return render(failed_template) if params[:link_check_in_body]
     end
 
-    if Zomeki.config.application['cms.enable_accessibility_check']
+    if Cms.config.application['cms.enable_accessibility_check']
       if params[:accessibility_check] || ((new_state == 'public' || new_state == 'approvable') && params[:ignore_accessibility_check].nil?)
         check_results = Util::AccessibilityChecker.check @item.body
         self.class.helpers.large_flash(flash, :key => :accessibility_check_result,
@@ -164,7 +164,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     @item.validate_word_dictionary #replace validate word
     @item.ignore_accessibility_check = params[:ignore_accessibility_check]
 
-    if Zomeki.config.application['cms.enable_accessibility_check']
+    if Cms.config.application['cms.enable_accessibility_check']
       if params[:accessibility_check_modify] && params[:ignore_accessibility_check].nil?
         @item.body = Util::AccessibilityChecker.modify @item.body
       end
@@ -177,7 +177,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
       return render(failed_template) if params[:link_check_in_body]
     end
 
-    if Zomeki.config.application['cms.enable_accessibility_check']
+    if Cms.config.application['cms.enable_accessibility_check']
       if params[:accessibility_check] || ((new_state == 'public' || new_state == 'approvable') && params[:ignore_accessibility_check].nil?)
         check_results = Util::AccessibilityChecker.check @item.body
         self.class.helpers.large_flash(flash, :key => :accessibility_check_result,
@@ -296,7 +296,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     mail_from = 'noreply'
 
     item.backlinked_docs.each do |doc|
-      subject = "【#{doc.content.site.name.presence || 'ZOMEKI'}】リンク切れ通知"
+      subject = "【#{doc.content.site.name.presence || 'CMS'}】リンク切れ通知"
 
       body = <<-EOT
 「#{doc.title}」からリンクしている「#{item.title}」が削除されました。

@@ -1,14 +1,14 @@
 development:
-  title: ZOMEKI
-  uri: http://zomeki.example.com/
+  title: CMS
+  uri: http://cms.example.com/
   proxy:
 
 test:
-  title: ZOMEKI
-  uri: http://zomeki.example.com/
+  title: CMS
+  uri: http://cms.example.com/
   proxy:
 
 production:
-  title: ZOMEKI
-  uri: http://zomeki.example.com/
+  title: CMS
+  uri: http://cms.example.com/
   proxy:

@@ -1,5 +1,5 @@
 <% inline_id = @item.unid %>
-<%= init_ckeditor :baseHref => "#{request.base_url}/#{ZomekiCMS::ADMIN_URL_PREFIX}/sys/#{inline_id}/inline_files/", :readOnly => true %>
+<%= init_ckeditor :baseHref => "#{request.base_url}/#{CmsCMS::ADMIN_URL_PREFIX}/sys/#{inline_id}/inline_files/", :readOnly => true %>
 
 <% if rep = @item.replace_page %>
 <div class="noticeBox">更新用の記事が作成されています ： <%= link_to h(rep.title), portal_article_doc_path(@content.id, rep.id) %></div>

@@ -13,13 +13,13 @@ describe Cms::Admin::SitesController do
   context "when user doesn't have site_creatable" do
     describe 'GET #new' do
       describe 'routes' do
-        subject { {get: "/#{ZomekiCMS::ADMIN_URL_PREFIX}/cms/sites/new"} }
+        subject { {get: "/#{CmsCMS::ADMIN_URL_PREFIX}/cms/sites/new"} }
         it { should route_to(controller: 'cms/admin/sites', action: 'new') }
       end
 
       describe 'response' do
         before do
-          Core.recognize_path("/#{ZomekiCMS::ADMIN_URL_PREFIX}/cms/sites/new")
+          Core.recognize_path("/#{CmsCMS::ADMIN_URL_PREFIX}/cms/sites/new")
           get 'new'
         end
 

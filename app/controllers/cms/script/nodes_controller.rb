@@ -2,7 +2,7 @@ class Cms::Script::NodesController < Cms::Controller::Script::Publication
   include Sys::Lib::File::Transfer
 
   def publish
-    @transfer_to_publish = Zomeki.config.application['sys.transfer_to_publish']
+    @transfer_to_publish = Cms.config.application['sys.transfer_to_publish']
 
     @ids = {}
 
