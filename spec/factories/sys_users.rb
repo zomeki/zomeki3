@@ -12,8 +12,8 @@ FactoryGirl.define do
     auth_no 5
     name 'システム管理者'
     name_en nil
-    account 'zomeki'
-    password 'zomeki'
+    account 'cms'
+    password 'cms'
     email nil
     remember_token nil
     remember_token_expires_at nil

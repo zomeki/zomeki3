@@ -10,13 +10,13 @@ CKEDITOR.editorConfig = function( config ) {
 
   // ツールバーの設定
   // http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.config.html#.toolbar_Full
-  if (zomeki && zomeki.Page && zomeki.Page.smart_phone) {
+  if (cms && cms.Page && cms.Page.smart_phone) {
     config.toolbar = [
       { name: 'styles',      items : [ 'Format' ] },
       { name: 'basicstyles', items : [ 'TextColor','Bold','Italic','Underline','Strike' ] },
       '/',
       { name: 'paragraph',   items : [ 'NumberedList','BulletedList','-','JustifyLeft','JustifyCenter','JustifyRight' ] },
-      { name: 'links',       items : [ 'ZomekiLink','ZomekiUnlink' ] },
+      { name: 'links',       items : [ 'CmsLink','CmsUnlink' ] },
       { name: 'insert',      items : [ 'Image' ] }
     ];
   } else {
@@ -29,7 +29,7 @@ CKEDITOR.editorConfig = function( config ) {
       '/',
       { name: 'basicstyles', items : [ 'TextColor','Bold','Italic','Underline','Strike','Subscript','Superscript','-','RemoveFormat' ] },
       { name: 'paragraph',   items : [ 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock' ] },
-      { name: 'links',       items : [ 'ZomekiLink','ZomekiUnlink','ZomekiAnchor' ] },
+      { name: 'links',       items : [ 'CmsLink','CmsUnlink','CmsAnchor' ] },
       { name: 'insert',      items : [ 'Image','Table','HorizontalRule','SpecialChar','PageBreak','Flash','Iframe','Youtube','Audio','Video' ] }
     ];
   }
@@ -37,7 +37,7 @@ CKEDITOR.editorConfig = function( config ) {
   // 外部CSSを読み込み
   var css = [config.contentsCss];
   css.push(css[0].substring(0, css[0].lastIndexOf('/')+1) + 'file_icons.css');
-  css.push(css[0].substring(0, css[0].lastIndexOf('/')+1) + 'zomeki_contents.css');
+  css.push(css[0].substring(0, css[0].lastIndexOf('/')+1) + 'cms_contents.css');
   config.contentsCss = css;
 
   // フォントサイズをパーセンテージに変更
@@ -47,8 +47,8 @@ CKEDITOR.editorConfig = function( config ) {
   config.format_tags = 'p;h2;h3;h4;h5;h6;pre;address;div';
 
   // 使用するテンプレート
-  config.templates_files = [ '/_common/js/ckeditor/plugins/templates/templates/zomeki_template.js' ];
-  config.templates = 'zomeki';
+  config.templates_files = [ '/_common/js/ckeditor/plugins/templates/templates/cms_template.js' ];
+  config.templates = 'cms';
 
   // インデント
   config.indentOffset = 1;
@@ -64,7 +64,7 @@ CKEDITOR.editorConfig = function( config ) {
   config.templates_replaceContent = false;
 
   // プラグイン
-  config.extraPlugins = 'youtube,audio,video,zomekilink';
+  config.extraPlugins = 'youtube,audio,video,cmslink';
 
   // tagの許可
   config.allowedContent = true;

@@ -3,7 +3,7 @@
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
-CKEDITOR.dialog.add( 'zomekianchor', function( editor ) {
+CKEDITOR.dialog.add( 'cmsanchor', function( editor ) {
 	// Function called in onShow to load selected element.
 	var loadElements = function( element ) {
 			this._.selectedElement = element;

@@ -1,12 +1,12 @@
 (function (window, undefined) {
-  if (window.zomeki !== undefined) {
+  if (window.cms !== undefined) {
     return;
   }
 
-  var zomeki = {
+  var cms = {
     Core: {},
     Page: {}
   };
 
-  window.zomeki = zomeki;
+  window.cms = cms;
 })(window);

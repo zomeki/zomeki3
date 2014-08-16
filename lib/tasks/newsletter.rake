@@ -1,6 +1,6 @@
 require 'csv'
 
-namespace :zomeki do
+namespace :cms do
   namespace :newsletter do
     desc 'Import newsletter members from csv.'
     task(:import_newsletter_members => :environment) do

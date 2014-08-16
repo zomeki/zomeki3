@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-namespace :zomeki do
+namespace :cms do
   namespace :gp_category do
     namespace :load do
       desc 'Load categories.'

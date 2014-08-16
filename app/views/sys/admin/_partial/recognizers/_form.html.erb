@@ -4,7 +4,7 @@ users = []
 users << Core.user if Core.user.has_auth?(:manager)
 Sys::User.find_managers.each do |u|
   users << u
-end if Zomeki.config.application["sys.recognizers_include_admin"]
+end if Cms.config.application["sys.recognizers_include_admin"]
 Core.user_group.users.each do |u|
   next unless u.state == 'enabled'
   next if u.id == Core.user.id

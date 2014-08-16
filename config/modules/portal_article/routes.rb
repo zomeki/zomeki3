@@ -1,8 +1,8 @@
-ZomekiCMS::Application.routes.draw do
+CmsCMS::Application.routes.draw do
   mod = "portal_article"
 
   ## admin
-  scope "#{ZomekiCMS::ADMIN_URL_PREFIX}/#{mod}", :module => mod, :as => mod do
+  scope "#{CmsCMS::ADMIN_URL_PREFIX}/#{mod}", :module => mod, :as => mod do
     resources :categories,
       :controller  => "admin/categories",
       :path        => ":content/:parent/categories"

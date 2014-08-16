@@ -1,11 +1,11 @@
-ZomekiCMS::Application.routes.draw do
+CmsCMS::Application.routes.draw do
   mod = 'map'
 
   ## script
   get "/_script/#{mod}/script/markers/publish" => "#{mod}/script/markers#publish"
 
   ## admin
-  scope "#{ZomekiCMS::ADMIN_URL_PREFIX}/#{mod}", :module => mod, :as => mod do
+  scope "#{CmsCMS::ADMIN_URL_PREFIX}/#{mod}", :module => mod, :as => mod do
     resources :content_base,
       :controller => 'admin/content/base'
 

@@ -91,7 +91,7 @@ function importUri() {
 <% end %>
 
 <% inline_id = @item.unid || params[:_tmp] %>
-<%= init_ckeditor :baseHref => "#{request.base_url}/#{ZomekiCMS::ADMIN_URL_PREFIX}/sys/#{inline_id}/inline_files/" %>
+<%= init_ckeditor :baseHref => "#{request.base_url}/#{CmsCMS::ADMIN_URL_PREFIX}/sys/#{inline_id}/inline_files/" %>
 
 <span class="note">※は必須項目です。</span>
 
