@@ -206,7 +206,7 @@ class Cms::Site < ActiveRecord::Base
 
     salt = Cms.config.application['sys.crypt_pass']
     conf = ""
-    basic_auth_users.each do |user|
+    basic_auth_users.where(state: 'enabled').each do |user|
       conf += %Q(#{user.name}:#{user.password.crypt(salt)}\n)
     end
     Util::File.put(pw_file, :data => conf)
@@ -217,8 +217,8 @@ class Cms::Site < ActiveRecord::Base
   def disable_basic_auth
     ac_file = "#{::File.dirname(public_path)}/.htaccess"
     pw_file = "#{::File.dirname(public_path)}/.htpasswd"
-    FileUtils.rm(ac_file)
-    FileUtils.rm(pw_file)
+    FileUtils.rm_f(ac_file)
+    FileUtils.rm_f(pw_file)
 
     return true
   end
