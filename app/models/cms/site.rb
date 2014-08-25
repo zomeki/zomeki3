@@ -138,12 +138,12 @@ class Cms::Site < ActiveRecord::Base
       c.or :mobile_full_uri, 'LIKE', "#{base}%"
     end
     item.and cond
-    return item.find(:first, :order => :id)
+    return item.order(:id).first
   end
 
   def self.make_virtual_hosts_config
     conf = '';
-    find(:all, :order => :id).each do |site|
+    order(:id).each do |site|
       next unless ::File.exist?(site.public_path)
       next unless ::File.exist?(site.config_path + "/rewrite.conf")
 
