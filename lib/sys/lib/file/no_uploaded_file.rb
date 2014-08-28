@@ -12,7 +12,7 @@ class Sys::Lib::File::NoUploadedFile
     when String
       if File.exist?(path)
         @data = ::File.read(path)
-        @mime_type = MIME::Types.type_for(path)[0].to_s
+        @mime_type = options[:mime_type] || MIME::Types.type_for(path)[0].to_s
 
         `type file > /dev/null 2>&1`
         if $?.exitstatus == 0
