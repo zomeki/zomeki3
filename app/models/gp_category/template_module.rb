@@ -17,7 +17,8 @@ class GpCategory::TemplateModule < ActiveRecord::Base
   MODULE_TYPE_FEATURE_OPTIONS = [['全記事', ''], ['新着記事', 'feature_1'], ['記事', 'feature_2']]
 
   #TODO: migrate to strong_parameters
-  #attr_accessible :name, :title, :module_type, :module_type_feature, :wrapper_tag, :doc_style, :num_docs
+  #attr_accessible :name, :title, :module_type, :module_type_feature, :wrapper_tag, :doc_style, :num_docs,
+  #                :upper_text, :lower_text
 
   belongs_to :content, :foreign_key => :content_id, :class_name => 'GpCategory::Content::CategoryType'
   validates_presence_of :content_id
