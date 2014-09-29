@@ -3,6 +3,8 @@ CmsCMS::Application.routes.draw do
 
   get "/_preview/:site/(*path)" => "cms/admin/preview#index",
     :as => :cms_preview
+  match  "/_ssl/:site/(*path)" => "cms/public/common_ssl#index",
+    :as => :cms_common_ssl, :via => [:get, :post]
 
   ## admin
   scope "#{CmsCMS::ADMIN_URL_PREFIX}/#{mod}", :module => mod, :as => mod do
