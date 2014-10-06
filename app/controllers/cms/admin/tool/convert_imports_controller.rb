@@ -12,7 +12,7 @@ class Cms::Admin::Tool::ConvertImportsController < Cms::Controller::Admin::Base
     @item = Tool::ConvertImport.new
     _index @items
   end
-  
+
   def create
     site_filenames = []
     none_specified = false
