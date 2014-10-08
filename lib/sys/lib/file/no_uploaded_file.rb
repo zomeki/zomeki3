@@ -1,5 +1,6 @@
 require 'mime/types'
 require 'RMagick'
+require 'shellwords'
 
 class Sys::Lib::File::NoUploadedFile
   def initialize(path, options = {})
@@ -10,16 +11,11 @@ class Sys::Lib::File::NoUploadedFile
       options = path
       @data = options[:data]
     when String
-      if File.exist?(path)
-        @data = ::File.read(path)
-        @mime_type = options[:mime_type] || MIME::Types.type_for(path)[0].to_s
-
-        `type file > /dev/null 2>&1`
-        if $?.exitstatus == 0
-          not_image = `file #{path}` !~ /GIF|JPEG|PNG/
-        end
-      else
-        not_image = true
+      @data = ::File.read(path)
+      @mime_type = options[:mime_type] || MIME::Types.type_for(path)[0].to_s
+      `type file > /dev/null 2>&1`
+      if $?.exitstatus == 0
+        not_image = `file #{path.shellescape}` !~ /GIF|JPEG|PNG/
       end
     end
 
