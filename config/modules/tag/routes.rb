@@ -1,6 +1,9 @@
 CmsCMS::Application.routes.draw do
   mod = 'tag'
 
+  ## script
+  get "/_script/#{mod}/script/tags/publish" => "#{mod}/script/tags#publish"
+
   ## admin
   scope "#{CmsCMS::ADMIN_URL_PREFIX}/#{mod}", :module => mod, :as => mod do
     resources :content_base,
