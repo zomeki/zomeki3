@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141002060748) do
+ActiveRecord::Schema.define(version: 20141008043119) do
 
   create_table "ad_banner_banners", force: true do |t|
     t.string   "name"
@@ -1795,6 +1795,7 @@ ActiveRecord::Schema.define(version: 20141002060748) do
     t.text     "include_dir"
     t.datetime "start_at"
     t.datetime "end_at"
+    t.integer  "recursive_level"
     t.string   "remark"
     t.text     "message"
     t.datetime "created_at"
