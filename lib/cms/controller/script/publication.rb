@@ -40,6 +40,9 @@ class Cms::Controller::Script::Publication < ApplicationController
 
     ## ruby html
     return true unless Cms.config.application['cms.use_kana']
+    ids = Cms.config.application['cms.use_kana_exclude_site_ids'] || []
+    return true if ids.include?(site.id)
+
     uri = params[:uri]
     if uri =~ /\.html$/
       uri += ".r"
