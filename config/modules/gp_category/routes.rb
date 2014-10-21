@@ -3,6 +3,7 @@ CmsCMS::Application.routes.draw do
 
   ## script
   get "/_script/#{mod}/script/category_types/publish" => "#{mod}/script/category_types#publish"
+  get "/_script/#{mod}/script/docs/publish" => "#{mod}/script/docs#publish"
 
   ## admin
   scope "#{CmsCMS::ADMIN_URL_PREFIX}/#{mod}", :module => mod, :as => mod do
