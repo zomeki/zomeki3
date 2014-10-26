@@ -1,6 +1,9 @@
 CmsCMS::Application.routes.draw do
   mod = 'organization'
 
+  ## script
+  get "/_script/#{mod}/script/groups/publish" => "#{mod}/script/groups#publish"
+
   ## admin
   scope "#{CmsCMS::ADMIN_URL_PREFIX}/#{mod}", :module => mod, :as => mod do
     resources :content_base,
