@@ -96,6 +96,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     new_state = params.keys.detect{|k| k =~ /^commit_/ }.try(:sub, /^commit_/, '')
 
     @item = @content.docs.build(doc_params)
+    @item.set_inquiry_group if Core.user.root?
 
     @item.validate_word_dictionary # replace validate word
     @item.ignore_accessibility_check = params[:ignore_accessibility_check]
@@ -160,6 +161,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     new_state = params.keys.detect{|k| k =~ /^commit_/ }.try(:sub, /^commit_/, '')
 
     @item.attributes = doc_params
+    @item.set_inquiry_group if Core.user.root?
 
     @item.validate_word_dictionary #replace validate word
     @item.ignore_accessibility_check = params[:ignore_accessibility_check]
