@@ -187,6 +187,9 @@ class PortalArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
 protected
   def send_recognition_request_mail(item, users = nil)
+    d = Zomeki.config.application['sys.core_domain']
+    _core_uri = (d == 'core') ? Core.full_uri : Core.site.full_uri;
+
     mail_fr = Core.user.email
     mail_to = nil
     subject = "#{item.content.name}（#{item.content.site.name}）：承認依頼メール"
@@ -194,7 +197,7 @@ protected
       "次の手順により，承認作業を行ってください。\n\n" +
       "１．PC用記事のプレビューにより文書を確認\n#{item.preview_uri(:params => {:doc_id => item.id})}\n\n" +
       "２．次のリンクから承認を実施\n" +
-      "#{Core.site.full_uri}#{url_for(:action => :show, :id => item, :only_path => true).sub(/^\//, '')}\n"
+      "#{_core_uri}#{url_for(:action => :show, :id => item, :only_path => true).sub(/^\//, '')}\n"
 
     users ||= item.recognizers
     users.each {|user| send_mail(mail_fr, user.email, subject, message) }
@@ -205,13 +208,16 @@ protected
     return true unless item.recognition.user
     return true if item.recognition.user.email.blank?
 
+    d = Zomeki.config.application['sys.core_domain']
+    _core_uri = (d == 'core') ? Core.full_uri : Core.site.full_uri;
+
     mail_fr = Core.user.email
     mail_to = item.recognition.user.email
 
     subject = "#{item.content.name}（#{item.content.site.name}）：最終承認完了メール"
     message = "「#{item.title}」についての承認が完了しました。\n" +
       "次のＵＲＬをクリックして公開処理を行ってください。\n\n" +
-      "#{Core.site.full_uri}#{url_for(:action => :show, :id => item.id, :only_path => true).sub(/^\//, '')}"
+      "#{_core_uri}#{url_for(:action => :show, :id => item.id, :only_path => true).sub(/^\//, '')}"
 
     send_mail(mail_fr, mail_to, subject, message)
   end
