@@ -497,6 +497,7 @@ class GpArticle::Doc < ActiveRecord::Base
   end
 
   def backlinks
+    return self.class.none unless state_public?
     links.engine.where(links.table[:url].matches("%#{self.public_uri(without_filename: true).sub(/\/$/, '')}%"))
   end
 
@@ -838,8 +839,6 @@ class GpArticle::Doc < ActiveRecord::Base
   end
 
   def save_links
-    return unless state_public?
-
     lib = links_in_body
     links.each do |link|
       link.destroy unless lib.detect {|l| l[:body] == link.body && l[:url] == link.url }
