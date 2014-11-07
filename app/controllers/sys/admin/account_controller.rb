@@ -69,7 +69,8 @@ class Sys::Admin::AccountController < Sys::Controller::Admin::Base
       return
     end
 
-    user = Sys::User.where(account: params[:account], email: params[:email]).first
+    sender = Sys::Setting.value(:pass_reminder_mail_sender)
+    user   = Sys::User.where(account: params[:account], email: params[:email]).first
 
     if (email = user.try(:email))
       token = Util::String::Token.generate_unique_token(Sys::User, :reset_password_token)
@@ -82,7 +83,7 @@ class Sys::Admin::AccountController < Sys::Controller::Admin::Base
 #{edit_admin_password_url(token: token)}
       EOT
 
-      send_mail('noreply', email, "【#{Core.site.try(:name).presence || 'CMS'}】パスワード再設定", body)
+      send_mail(sender, email, "【#{Core.site.try(:name).presence || 'CMS'}】パスワード再設定", body)
     end
 
     redirect_to admin_login_url, notice: 'メールにてパスワード再設定手順をお送りしました。'
