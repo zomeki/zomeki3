@@ -1,7 +1,7 @@
 # encoding: utf-8
 Cms::Lib::Modules::ModuleSet.draw :bbs, '掲示板' do |mod|
   ## contents
-  mod.content :items, '掲示板'
+#  mod.content :items, '掲示板'
   
   ## directory
   mod.directory :threads, '投稿一覧/レス表示形式'
