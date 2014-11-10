@@ -65,8 +65,8 @@ ActiveRecord::Schema.define(version: 20141008043119) do
     t.string   "title"
     t.integer  "group_id"
     t.integer  "sort_no"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "approval_approval_request_histories", force: true do |t|
@@ -74,8 +74,8 @@ ActiveRecord::Schema.define(version: 20141008043119) do
     t.integer  "user_id"
     t.string   "reason"
     t.text     "comment"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "approval_approval_request_histories", ["request_id"], name: "index_approval_approval_request_histories_on_request_id", using: :btree
@@ -87,23 +87,23 @@ ActiveRecord::Schema.define(version: 20141008043119) do
     t.integer  "approvable_id"
     t.string   "approvable_type"
     t.integer  "current_index"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "approval_approvals", force: true do |t|
     t.integer  "approval_flow_id"
     t.integer  "index"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "approval_assignments", force: true do |t|
     t.integer  "assignable_id"
     t.string   "assignable_type"
     t.integer  "user_id"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.datetime "approved_at"
     t.integer  "or_group_id"
   end
@@ -409,15 +409,15 @@ ActiveRecord::Schema.define(version: 20141008043119) do
     t.integer  "status"
     t.string   "reason"
     t.boolean  "result"
-    t.datetime "created_at",          null: false
-    t.datetime "updated_at",          null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "cms_link_checks", force: true do |t|
     t.boolean  "in_progress"
     t.boolean  "checked"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "cms_map_markers", force: true do |t|
@@ -592,7 +592,6 @@ ActiveRecord::Schema.define(version: 20141008043119) do
     t.integer  "portal_area_ids"
     t.text     "body"
     t.integer  "site_image_id"
-    t.string   "portal_group_state"
   end
 
   create_table "cms_talk_tasks", force: true do |t|
@@ -616,8 +615,8 @@ ActiveRecord::Schema.define(version: 20141008043119) do
     t.datetime "failed_at"
     t.string   "locked_by"
     t.string   "queue"
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
@@ -711,8 +710,8 @@ ActiveRecord::Schema.define(version: 20141008043119) do
     t.string   "user_agent"
     t.text     "body"
     t.datetime "posted_at"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "gp_article_comments", ["doc_id"], name: "index_gp_article_comments_on_doc_id", using: :btree
@@ -749,12 +748,12 @@ ActiveRecord::Schema.define(version: 20141008043119) do
     t.string   "meta_keywords"
     t.string   "list_image"
     t.integer  "prev_edition_id"
+    t.integer  "template_id"
+    t.text     "template_values"
     t.string   "og_type"
     t.string   "og_title"
     t.text     "og_description"
     t.string   "og_image"
-    t.integer  "template_id"
-    t.text     "template_values"
     t.string   "share_to_sns_with"
     t.text     "body_more"
     t.string   "body_more_link_text"
@@ -776,16 +775,16 @@ ActiveRecord::Schema.define(version: 20141008043119) do
     t.integer  "holdable_id"
     t.string   "holdable_type"
     t.integer  "user_id"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "gp_article_links", force: true do |t|
     t.integer  "doc_id"
     t.string   "body"
     t.string   "url"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "gp_calendar_events", force: true do |t|
@@ -799,8 +798,8 @@ ActiveRecord::Schema.define(version: 20141008043119) do
     t.string   "href"
     t.string   "target"
     t.text     "description"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "gp_calendar_events_gp_category_categories", id: false, force: true do |t|
@@ -816,8 +815,8 @@ ActiveRecord::Schema.define(version: 20141008043119) do
     t.date     "date"
     t.text     "description"
     t.string   "kind"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.boolean  "repeat"
   end
 
@@ -851,8 +850,8 @@ ActiveRecord::Schema.define(version: 20141008043119) do
     t.integer  "categorizable_id"
     t.string   "categorizable_type"
     t.integer  "category_id"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "sort_no"
     t.string   "categorized_as"
   end
@@ -880,8 +879,8 @@ ActiveRecord::Schema.define(version: 20141008043119) do
 
   create_table "gp_category_publishers", force: true do |t|
     t.integer  "category_id"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "gp_category_publishers", ["category_id"], name: "index_gp_category_publishers_on_category_id", using: :btree
@@ -895,8 +894,8 @@ ActiveRecord::Schema.define(version: 20141008043119) do
     t.string   "wrapper_tag"
     t.text     "doc_style"
     t.integer  "num_docs"
-    t.datetime "created_at",          null: false
-    t.datetime "updated_at",          null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.text     "upper_text"
     t.text     "lower_text"
   end
@@ -908,8 +907,8 @@ ActiveRecord::Schema.define(version: 20141008043119) do
     t.string   "name"
     t.string   "title"
     t.text     "body"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "gp_category_templates", ["content_id"], name: "index_gp_category_templates_on_content_id", using: :btree
@@ -923,8 +922,8 @@ ActiveRecord::Schema.define(version: 20141008043119) do
     t.text     "item_options"
     t.string   "style_attribute"
     t.integer  "sort_no"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "gp_template_items", ["template_id"], name: "index_gp_template_items_on_template_id", using: :btree
@@ -936,8 +935,8 @@ ActiveRecord::Schema.define(version: 20141008043119) do
     t.string   "title"
     t.text     "body"
     t.integer  "sort_no"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "gp_template_templates", ["content_id"], name: "index_gp_template_templates_on_content_id", using: :btree
@@ -1057,8 +1056,8 @@ ActiveRecord::Schema.define(version: 20141008043119) do
     t.integer  "sort_no"
     t.text     "business_outline"
     t.text     "contact_information"
-    t.datetime "created_at",          null: false
-    t.datetime "updated_at",          null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "more_layout_id"
   end
 
@@ -1105,7 +1104,6 @@ ActiveRecord::Schema.define(version: 20141008043119) do
     t.text     "mobile_body",          limit: 2147483647
     t.string   "event_state"
     t.date     "event_date"
-    t.string   "portal_group_state"
   end
 
   create_table "portal_article_tags", force: true do |t|
@@ -1302,8 +1300,8 @@ ActiveRecord::Schema.define(version: 20141008043119) do
     t.integer  "content_id"
     t.string   "page_path"
     t.integer  "category_id"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "rank_ranks", force: true do |t|
@@ -1314,8 +1312,8 @@ ActiveRecord::Schema.define(version: 20141008043119) do
     t.date     "date"
     t.integer  "pageviews"
     t.integer  "visitors"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "rank_totals", force: true do |t|
@@ -1326,15 +1324,15 @@ ActiveRecord::Schema.define(version: 20141008043119) do
     t.string   "page_path"
     t.integer  "pageviews"
     t.integer  "visitors"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "simple_captcha_data", force: true do |t|
     t.string   "key",        limit: 40
     t.string   "value",      limit: 6
-    t.datetime "created_at",            null: false
-    t.datetime "updated_at",            null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "simple_captcha_data", ["key"], name: "idx_key", using: :btree
@@ -1352,8 +1350,8 @@ ActiveRecord::Schema.define(version: 20141008043119) do
     t.string   "credential_secret"
     t.text     "facebook_page_options"
     t.string   "facebook_page"
-    t.datetime "created_at",            null: false
-    t.datetime "updated_at",            null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "sns_share_accounts", ["content_id"], name: "index_sns_share_accounts_on_content_id", using: :btree
@@ -1362,8 +1360,8 @@ ActiveRecord::Schema.define(version: 20141008043119) do
     t.integer  "sharable_id"
     t.string   "sharable_type"
     t.integer  "account_id"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "sns_share_shares", ["sharable_type", "sharable_id"], name: "index_sns_share_shares_on_sharable_type_and_sharable_id", using: :btree
@@ -1372,8 +1370,8 @@ ActiveRecord::Schema.define(version: 20141008043119) do
     t.integer  "form_answer_id"
     t.integer  "question_id"
     t.text     "content"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "survey_answers", ["form_answer_id"], name: "index_survey_answers_on_form_answer_id", using: :btree
@@ -1384,8 +1382,8 @@ ActiveRecord::Schema.define(version: 20141008043119) do
     t.string   "answered_url"
     t.string   "remote_addr"
     t.string   "user_agent"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "answered_url_title"
   end
 
@@ -1397,8 +1395,8 @@ ActiveRecord::Schema.define(version: 20141008043119) do
     t.string   "state"
     t.string   "name"
     t.string   "title"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.datetime "opened_at"
     t.datetime "closed_at"
     t.integer  "sort_no"
@@ -1422,8 +1420,8 @@ ActiveRecord::Schema.define(version: 20141008043119) do
     t.boolean  "required"
     t.string   "style_attribute"
     t.integer  "sort_no"
-    t.datetime "created_at",           null: false
-    t.datetime "updated_at",           null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "form_text_max_length"
   end
 
@@ -1568,8 +1566,8 @@ ActiveRecord::Schema.define(version: 20141008043119) do
     t.string   "loggable_type"
     t.integer  "user_id"
     t.string   "operation"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "user_name"
     t.string   "ipaddr"
     t.string   "uri"
@@ -1654,8 +1652,8 @@ ActiveRecord::Schema.define(version: 20141008043119) do
 
   create_table "sys_temp_texts", force: true do |t|
     t.text     "content"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "sys_transferable_files", force: true do |t|
@@ -1781,8 +1779,8 @@ ActiveRecord::Schema.define(version: 20141008043119) do
     t.string   "page_updated_at"
     t.string   "page_group_code"
     t.datetime "published_at"
-    t.datetime "created_at",                         null: false
-    t.datetime "updated_at",                         null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "tool_convert_docs", ["content_id"], name: "index_tool_convert_docs_on_content_id", using: :btree
@@ -1845,8 +1843,8 @@ ActiveRecord::Schema.define(version: 20141008043119) do
     t.text     "creator_group_url_relations"
     t.text     "category_tag"
     t.text     "category_regexp"
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "tool_convert_settings", ["site_url"], name: "index_tool_convert_settings_on_site_url", using: :btree
