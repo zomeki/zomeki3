@@ -44,7 +44,7 @@ protected
       admin_uri.path = '/'
     else
       #admin_uri = public_uri
-      d = Zomeki.config.application['sys.core_domain']
+      d = Cms.config.application['sys.core_domain']
       admin_uri = (d == 'core') ? Core.full_uri.to_s : public_uri;
     end
 

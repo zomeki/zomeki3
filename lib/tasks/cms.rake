@@ -43,7 +43,7 @@ namespace :cms do
 
       desc 'Clean excluded talk tasks'
       task(:clean_excluded_tasks => :environment) do
-        ids = Zomeki.config.application['cms.use_kana_exclude_site_ids'] || []
+        ids = Cms.config.application['cms.use_kana_exclude_site_ids'] || []
         Cms::TalkTask.find_each{|t| t.destroy if ids.include?(t.site_id) }
       end
     end

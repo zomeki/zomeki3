@@ -32,7 +32,7 @@ module Cms::Model::Base::Page::TalkTask
       task.path         = pub.path
       task.content_hash = pub.content_hash
 
-      ids = Zomeki.config.application['cms.use_kana_exclude_site_ids'] || []
+      ids = Cms.config.application['cms.use_kana_exclude_site_ids'] || []
       unless ids.include?(task.site_id)
         task.save if task.changed?
       end
