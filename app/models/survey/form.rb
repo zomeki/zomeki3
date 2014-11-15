@@ -125,8 +125,7 @@ class Survey::Form < ActiveRecord::Base
 
   def send_approval_request_mail
 
-    d = Cms.config.application['sys.core_domain']
-    _core_uri = (d == 'core') ? Core.full_uri : content.site.full_uri;
+    _core_uri = Cms::SiteSetting::AdminProtocol.core_domain content.site, content.site.full_uri
 
     approve_url = "#{_core_uri.sub(/\/+$/, '')}#{Rails.application.routes.url_helpers.survey_form_path(content: content, id: id)}"
     preview_url = self.preview_uri
@@ -142,8 +141,7 @@ class Survey::Form < ActiveRecord::Base
 
   def send_approved_notification_mail
 
-    d = Cms.config.application['sys.core_domain']
-    _core_uri = (d == 'core') ? Core.full_uri : content.site.full_uri;
+    _core_uri = Cms::SiteSetting::AdminProtocol.core_domain content.site, content.site.full_uri
 
     publish_url = "#{_core_uri.sub(/\/+$/, '')}#{Rails.application.routes.url_helpers.survey_form_path(content: content, id: id)}"
 
@@ -233,8 +231,9 @@ class Survey::Form < ActiveRecord::Base
     site ||= ::Page.site
     params = params.map{|k, v| "#{k}=#{v}" }.join('&')
     path = "_preview/#{format('%08d', site.id)}#{mobile ? 'm' : ''}#{public_uri}#{params.present? ? "?#{params}" : ''}"
-    d = Cms.config.application['sys.core_domain']
-    d == 'core' ? "#{Core.full_uri}#{path}" : "#{site.full_uri}#{path}";
+
+    d = Cms::SiteSetting::AdminProtocol.core_domain site, site.full_uri, :freeze_protocol => true
+    "#{d}#{path}"
   end
 
   def sitemap_visible?

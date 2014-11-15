@@ -7,6 +7,7 @@ class Cms::Site < ActiveRecord::Base
   include Sys::Model::Auth::Manager
   include Cms::Model::Rel::DataFile
   include Sys::Model::Rel::FileTransfer
+  include Cms::Model::Rel::SiteSetting
 
   include StateText
 
@@ -37,6 +38,9 @@ class Cms::Site < ActiveRecord::Base
 
   ## file transfer
   after_save { save_file_transfer(:site_id => id) }
+
+  ## site settings
+  after_save { save_site_settings(:site_id => id) }
 
   before_destroy :block_last_deletion
 
