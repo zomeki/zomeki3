@@ -15,36 +15,42 @@ describe AdBanner::Banner do
   it 'is invalid without a name' do
     banner = FactoryGirl.build(:ad_banner_banner_1, name: nil)
     banner.skip_upload
-    expect(banner).to have(1).error_on(:name)
+    expect(banner).not_to be_valid
+    expect(banner.errors[:name].size).to eq(1)
   end
 
   it 'is invalid without a title' do
     banner = FactoryGirl.build(:ad_banner_banner_1, title: nil)
     banner.skip_upload
-    expect(banner).to have(1).error_on(:title)
+    expect(banner).not_to be_valid
+    expect(banner.errors[:title].size).to eq(1)
   end
 
   it 'is invalid without a content' do
     banner = FactoryGirl.build(:ad_banner_banner_1, content: nil)
     banner.skip_upload
-    expect(banner).to have(1).error_on(:content_id)
+    expect(banner).not_to be_valid
+    expect(banner.errors[:content_id].size).to eq(1)
   end
 
   it 'is invalid without a state' do
     banner = FactoryGirl.build(:ad_banner_banner_1, state: nil)
     banner.skip_upload
-    expect(banner).to have(1).error_on(:state)
+    expect(banner).not_to be_valid
+    expect(banner.errors[:state].size).to eq(1)
   end
 
   it 'is invalid without an advertiser name' do
     banner = FactoryGirl.build(:ad_banner_banner_1, advertiser_name: nil)
     banner.skip_upload
-    expect(banner).to have(1).error_on(:advertiser_name)
+    expect(banner).not_to be_valid
+    expect(banner.errors[:advertiser_name].size).to eq(1)
   end
 
   it 'is invalid without an url' do
     banner = FactoryGirl.build(:ad_banner_banner_1, url: nil)
     banner.skip_upload
-    expect(banner).to have(1).error_on(:url)
+    expect(banner).not_to be_valid
+    expect(banner.errors[:url].size).to eq(1)
   end
 end

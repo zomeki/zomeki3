@@ -13,6 +13,7 @@ describe Approval::ApprovalFlow do
 
   it 'is invalid without a title' do
     approval_flow = FactoryGirl.build(:approval_approval_flow_1, title: nil)
-    expect(approval_flow).to have(1).error_on(:title)
+    expect(approval_flow).not_to be_valid
+    expect(approval_flow.errors[:title].size).to eq(1)
   end
 end

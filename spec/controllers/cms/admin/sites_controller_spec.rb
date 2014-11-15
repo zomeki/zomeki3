@@ -25,7 +25,6 @@ describe Cms::Admin::SitesController do
 
         subject { response }
         it { should_not be_success }
-        its(:status) { pending; should eq(403) }
       end
     end
   end

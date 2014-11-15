@@ -8,7 +8,7 @@ describe Util::Sequencer do
           foo_1 = Util::Sequencer.next_id(:foo)
           foo_2 = Util::Sequencer.next_id(:foo)
 
-          Util::Sequencer.next_id(:foo).should eq(foo_1 + 2)
+          expect(Util::Sequencer.next_id(:foo)).to eq(foo_1 + 2)
         end
 
         context 'and same versions' do
@@ -16,7 +16,7 @@ describe Util::Sequencer do
             foo_1 = Util::Sequencer.next_id(:foo, version: 1)
             foo_2 = Util::Sequencer.next_id(:foo, version: 1)
 
-            Util::Sequencer.next_id(:foo, version: 1).should eq(foo_1 + 2)
+            expect(Util::Sequencer.next_id(:foo, version: 1)).to eq(foo_1 + 2)
           end
         end
 
@@ -25,8 +25,8 @@ describe Util::Sequencer do
             foo_1 = Util::Sequencer.next_id(:foo, version: 1)
             foo_2 = Util::Sequencer.next_id(:foo, version: 2)
 
-            Util::Sequencer.next_id(:foo, version: 1).should eq(foo_1 + 1)
-            Util::Sequencer.next_id(:foo, version: 2).should eq(foo_2 + 1)
+            expect(Util::Sequencer.next_id(:foo, version: 1)).to eq(foo_1 + 1)
+            expect(Util::Sequencer.next_id(:foo, version: 2)).to eq(foo_2 + 1)
           end
         end
       end
@@ -36,8 +36,8 @@ describe Util::Sequencer do
           foo = Util::Sequencer.next_id(:foo)
           bar = Util::Sequencer.next_id(:bar)
 
-          Util::Sequencer.next_id(:foo).should eq(foo + 1)
-          Util::Sequencer.next_id(:bar).should eq(bar + 1)
+          expect(Util::Sequencer.next_id(:foo)).to eq(foo + 1)
+          expect(Util::Sequencer.next_id(:bar)).to eq(bar + 1)
         end
 
         context 'and same versions' do
@@ -45,8 +45,8 @@ describe Util::Sequencer do
             foo = Util::Sequencer.next_id(:foo, version: 1)
             bar = Util::Sequencer.next_id(:bar, version: 1)
 
-            Util::Sequencer.next_id(:foo, version: 1).should eq(foo + 1)
-            Util::Sequencer.next_id(:bar, version: 1).should eq(bar + 1)
+            expect(Util::Sequencer.next_id(:foo, version: 1)).to eq(foo + 1)
+            expect(Util::Sequencer.next_id(:bar, version: 1)).to eq(bar + 1)
           end
         end
 
@@ -55,8 +55,8 @@ describe Util::Sequencer do
             foo = Util::Sequencer.next_id(:foo, version: 1)
             bar = Util::Sequencer.next_id(:bar, version: 2)
 
-            Util::Sequencer.next_id(:foo, version: 1).should eq(foo + 1)
-            Util::Sequencer.next_id(:bar, version: 2).should eq(bar + 1)
+            expect(Util::Sequencer.next_id(:foo, version: 1)).to eq(foo + 1)
+            expect(Util::Sequencer.next_id(:bar, version: 2)).to eq(bar + 1)
           end
         end
       end
@@ -67,8 +67,8 @@ describe Util::Sequencer do
         foo_1 = Util::Sequencer.next_id(:foo)
         foo_2 = Util::Sequencer.next_id(:foo, md5: true)
 
-        foo_2.should be_kind_of(Digest::MD5)
-        foo_2.should eq(Digest::MD5.new.update((foo_1 + 1).to_s))
+        expect(foo_2).to be_kind_of(Digest::MD5)
+        expect(foo_2).to eq(Digest::MD5.new.update((foo_1 + 1).to_s))
       end
     end
   end

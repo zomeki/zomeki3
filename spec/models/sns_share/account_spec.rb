@@ -13,6 +13,7 @@ describe SnsShare::Account do
 
   it 'is invalid without a provider' do
     account = FactoryGirl.build(:sns_share_account_2, provider: nil)
-    expect(account).to have(1).error_on(:provider)
+    expect(account).not_to be_valid
+    expect(account.errors[:provider].size).to eq(1)
   end
 end

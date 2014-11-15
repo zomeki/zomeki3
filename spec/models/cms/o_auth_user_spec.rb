@@ -30,18 +30,26 @@ describe Cms::OAuthUser do
 
   context 'when build' do
     describe 'with valid arguments' do
-      subject { FactoryGirl.build(:valid_o_auth_user) }
-      it { should be_valid }
+      it do
+        user = FactoryGirl.build(:valid_o_auth_user)
+        expect(user).to be_valid
+      end
     end
 
     describe 'without provider' do
-      subject { FactoryGirl.build(:valid_o_auth_user, :provider => nil) }
-      it { should have(1).error_on(:provider) }
+      it do
+        user = FactoryGirl.build(:valid_o_auth_user, provider: nil)
+        expect(user).not_to be_valid
+        expect(user.errors[:provider].size).to eq(1)
+      end
     end
 
     describe 'without uid' do
-      subject { FactoryGirl.build(:valid_o_auth_user, :uid => nil) }
-      it { should have(1).error_on(:uid) }
+      it do
+        user = FactoryGirl.build(:valid_o_auth_user, uid: nil)
+        expect(user).not_to be_valid
+        expect(user.errors[:uid].size).to eq(1)
+      end
     end
   end
 end

@@ -7,7 +7,7 @@ class AdBanner::Group < ActiveRecord::Base
 
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
 
-  default_scope order(:sort_no)
+  default_scope -> { order(:sort_no) }
 
   # Content
   belongs_to :content, :foreign_key => :content_id, :class_name => 'AdBanner::Content::Banner'

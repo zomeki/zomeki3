@@ -13,6 +13,7 @@ describe Survey::Form do
 
   it 'is invalid without a title' do
     form = FactoryGirl.build(:survey_form_1, title: nil)
-    expect(form).to have(1).error_on(:title)
+    expect(form).not_to be_valid
+    expect(form.errors[:title].size).to eq(1)
   end
 end

@@ -27,7 +27,7 @@ class Survey::Form < ActiveRecord::Base
   has_many :form_answers, :dependent => :destroy
   has_many :approval_requests, :class_name => 'Approval::ApprovalRequest', :as => :approvable, :dependent => :destroy
 
-  validates :name, :presence => true, :uniqueness => {:scope => :content_id}, :format => {with: /^[-\w]*$/}
+  validates :name, :presence => true, :uniqueness => {:scope => :content_id}, :format => {with: /\A[-\w]*\z/}
   validates :title, :presence => true
 
   validate :open_period

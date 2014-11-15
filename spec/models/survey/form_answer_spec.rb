@@ -13,6 +13,7 @@ describe Survey::FormAnswer do
 
   it 'is invalid without a form' do
     answer = FactoryGirl.build(:survey_form_answer_1, form_id: nil)
-    expect(answer).to have(1).error_on(:form_id)
+    expect(answer).not_to be_valid
+    expect(answer.errors[:form_id].size).to eq(1)
   end
 end

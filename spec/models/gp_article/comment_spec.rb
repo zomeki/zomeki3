@@ -8,11 +8,13 @@ describe GpArticle::Comment do
 
   it 'is invalid without a doc' do
     comment = FactoryGirl.build(:gp_article_comment_1, doc: nil)
-    expect(comment).to have(1).error_on(:doc_id)
+    expect(comment).not_to be_valid
+    expect(comment.errors[:doc_id].size).to eq(1)
   end
 
   it 'is invalid without a state' do
     comment = FactoryGirl.build(:gp_article_comment_1, state: nil)
-    expect(comment).to have(1).error_on(:state)
+    expect(comment).not_to be_valid
+    expect(comment.errors[:state].size).to eq(1)
   end
 end

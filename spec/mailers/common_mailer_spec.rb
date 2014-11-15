@@ -8,13 +8,13 @@ describe CommonMailer do
                                     body: 'World!') }
 
     it 'renders the headers' do
-      mail.should deliver_from('from@example.com')
-      mail.should deliver_to('to@example.org')
-      mail.should have_subject('Hello!')
+      expect(mail).to deliver_from('from@example.com')
+      expect(mail).to deliver_to('to@example.org')
+      expect(mail).to have_subject('Hello!')
     end
 
     it 'renders the body' do
-      mail.should have_body_text(/World!/)
+      expect(mail).to have_body_text(/World!/)
     end
   end
 end

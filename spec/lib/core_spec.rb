@@ -15,7 +15,7 @@ describe Core do
 
     describe '.get_site_by_cookie' do
       it 'returns site by the id' do
-        Core.send(:get_site_by_cookie).should eq(@site)
+        expect(Core.send(:get_site_by_cookie)).to eq(@site)
       end
     end
   end
@@ -23,7 +23,7 @@ describe Core do
   context 'when no site_id exist in cookie' do
     describe '.get_site_by_cookie' do
       it 'returns no site' do
-        Core.send(:get_site_by_cookie).should be_nil
+        expect(Core.send(:get_site_by_cookie)).to be_nil
       end
     end
   end

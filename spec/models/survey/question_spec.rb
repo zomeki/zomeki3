@@ -13,11 +13,13 @@ describe Survey::Question do
 
   it 'is invalid without a title' do
     question = FactoryGirl.build(:survey_question_1, title: nil)
-    expect(question).to have(1).error_on(:title)
+    expect(question).not_to be_valid
+    expect(question.errors[:title].size).to eq(1)
   end
 
   it 'is invalid without a sort_no' do
     question = FactoryGirl.build(:survey_question_1, sort_no: nil)
-    expect(question).to have(1).error_on(:sort_no)
+    expect(question).not_to be_valid
+    expect(question.errors[:sort_no].size).to eq(1)
   end
 end

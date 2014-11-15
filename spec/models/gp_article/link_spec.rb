@@ -8,11 +8,13 @@ describe GpArticle::Link do
 
   it 'is invalid without a doc' do
     link = FactoryGirl.build(:gp_article_link_1, doc: nil)
-    expect(link).to have(1).error_on(:doc_id)
+    expect(link).not_to be_valid
+    expect(link.errors[:doc_id].size).to eq(1)
   end
 
   it 'is invalid without a url' do
     link = FactoryGirl.build(:gp_article_link_1, url: nil)
-    expect(link).to have(1).error_on(:url)
+    expect(link).not_to be_valid
+    expect(link.errors[:url].size).to eq(1)
   end
 end

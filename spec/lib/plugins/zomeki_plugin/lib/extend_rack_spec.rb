@@ -4,10 +4,10 @@ require 'spec_helper'
 
 describe Rack::Session::Abstract::ID do
   before do
-    Core.user = FactoryGirl.create(:sys_user_system_admin)
+    Core.user = fg_find_or_create :sys_user_system_admin
     Core.user_group = Core.user.group
-    FactoryGirl.create(:cms_site_cms_example_com)
-    FactoryGirl.create(:cms_node_1)
+    fg_find_or_create :cms_site_cms_example_com
+    fg_find_or_create :cms_node_1
   end
 
   describe '#call' do

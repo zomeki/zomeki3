@@ -60,27 +60,26 @@ gem 'render_component_vho', '~> 3.2.1'
 gem 'rest-more', '~> 2.0.4'
 gem 'rmagick', '~> 2.13.2'
 gem 'rsync', '~> 1.0.8'
-gem 'simple_captcha2', '~> 0.2.1', :require => 'simple_captcha'
+gem 'simple_captcha2', '~> 0.2.1', require: 'simple_captcha'
 gem 'will_paginate', '~> 3.0.5'
-gem 'whenever', :require => false
+gem 'whenever', require: false
 
 gem 'hpricot', '0.8.6'
 gem 'tamtam', '0.0.3'
 
 group :development, :test do
-  gem 'rspec-rails', '~> 2.14.2'
-  gem 'factory_girl_rails', '~> 4.4.1', require: false
-  gem 'email_spec', '~> 1.5.0'
+  gem 'rspec-rails', '~> 3.1.0'
+  gem 'factory_girl_rails', '~> 4.4.1'
+  gem 'email_spec', '~> 1.6.0'
 end
 
 group :development do
   gem 'bullet'
   gem 'i18n_generators'
   gem 'rails_best_practices'
-  gem 'spring'
 end
 
 group :test do
-  gem 'database_cleaner', '~> 1.2.0'
-  gem 'faker', '~> 1.3.0'
+  gem 'database_cleaner', '~> 1.3.0'
+  gem 'faker', '~> 1.4.3'
 end

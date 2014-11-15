@@ -17,7 +17,6 @@ FactoryGirl.define do
     related_site ''
     map_key nil
     portal_group_id nil
-    portal_group_state 'visible'
     portal_category_ids nil
     portal_business_ids nil
     portal_attribute_ids nil
@@ -41,7 +40,6 @@ FactoryGirl.define do
     related_site ''
     map_key nil
     portal_group_id nil
-    portal_group_state 'visible'
     portal_category_ids nil
     portal_business_ids nil
     portal_attribute_ids nil
@@ -65,7 +63,6 @@ FactoryGirl.define do
     related_site ''
     map_key nil
     portal_group_id nil
-    portal_group_state 'visible'
     portal_category_ids nil
     portal_business_ids nil
     portal_attribute_ids nil
@@ -87,7 +84,6 @@ FactoryGirl.define do
     related_site ''
     map_key nil
     portal_group_id nil
-    portal_group_state 'visible'
     portal_category_ids nil
     portal_business_ids nil
     portal_attribute_ids nil
