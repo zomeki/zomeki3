@@ -1,7 +1,7 @@
 # encoding: utf-8
-Cms::Lib::Modules::ModuleSet.draw :gp_calendar, '汎用カレンダー' do |mod|
+Cms::Lib::Modules::ModuleSet.draw :gp_calendar, 'カレンダー' do |mod|
   ## contents
-  mod.content :events, '汎用カレンダー'
+  mod.content :events, 'カレンダー'
 
   ## directories
   mod.directory :events, 'イベント一覧'
@@ -11,6 +11,6 @@ Cms::Lib::Modules::ModuleSet.draw :gp_calendar, '汎用カレンダー' do |mod|
   ## pieces
   mod.piece :monthly_links, '月別リンク'
   mod.piece :daily_links, '日別リンク'
-  mod.piece :category_types, '汎用カテゴリ一覧'
+  mod.piece :category_types, 'カテゴリ一覧'
   mod.piece :near_future_events, '本日と明日のイベント'
 end

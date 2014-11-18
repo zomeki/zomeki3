@@ -7,7 +7,7 @@ Cms::Lib::Modules::ModuleSet.draw :organization, '組織' do |mod|
 
   ## pieces
   mod.piece :all_groups, '組織一覧'
-  mod.piece :categorized_docs, '汎用カテゴリ記事一覧'
+  mod.piece :categorized_docs, 'カテゴリ記事一覧'
   mod.piece :business_outlines, '業務内容'
   mod.piece :contact_informations, '連絡先'
 end

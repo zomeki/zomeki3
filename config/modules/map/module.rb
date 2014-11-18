@@ -8,5 +8,5 @@ Cms::Lib::Modules::ModuleSet.draw :map, 'マップ' do |mod|
   mod.directory :navigations, '周辺検索'
 
   ## pieces
-  mod.piece :category_types, '汎用カテゴリ一覧'
+  mod.piece :category_types, 'カテゴリ一覧'
 end

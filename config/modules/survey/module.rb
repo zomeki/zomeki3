@@ -1,7 +1,7 @@
 # encoding: utf-8
-Cms::Lib::Modules::ModuleSet.draw :survey, '汎用アンケート' do |mod|
+Cms::Lib::Modules::ModuleSet.draw :survey, 'アンケート' do |mod|
   ## contents
-  mod.content :forms, '汎用アンケート'
+  mod.content :forms, 'アンケート'
 
   ## directories
   mod.directory :forms, 'フォーム一覧'
