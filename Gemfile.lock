@@ -78,7 +78,7 @@ GEM
     hpricot (0.8.6)
     http-cookie (1.0.2)
       domain_name (~> 0.5)
-    httpclient (2.3.4.1)
+    httpclient (2.5.3.3)
     i18n (0.6.11)
     i18n_generators (1.2.1)
       mechanize
@@ -183,8 +183,8 @@ GEM
       httpclient
       mime-types
       timers (>= 4.0.1)
-    rest-more (2.0.4)
-      rest-core (>= 2.0.3)
+    rest-more (3.3.1)
+      rest-core (>= 3.3.0)
     rmagick (2.13.3)
     rspec-core (3.1.7)
       rspec-support (~> 3.1.0)
@@ -265,7 +265,6 @@ DEPENDENCIES
   faker (~> 1.4.3)
   garb (~> 0.9.8)
   hpricot (= 0.8.6)
-  httpclient (~> 2.3.4.1)
   i18n_generators
   jbuilder (~> 1.2)
   jpmobile (~> 4.0.0)
@@ -280,7 +279,7 @@ DEPENDENCIES
   rails_autolink (~> 1.1.5)
   rails_best_practices
   render_component_vho (~> 3.2.1)
-  rest-more (~> 2.0.4)
+  rest-more (~> 3.3.1)
   rmagick (~> 2.13.2)
   rspec-rails (~> 3.1.0)
   rsync (~> 1.0.8)
