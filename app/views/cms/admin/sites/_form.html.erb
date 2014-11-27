@@ -1,18 +1,3 @@
-<%
-
-item = Cms::Content.new
-item.and :state, "public"
-item.and :model, "PortalGroup::Group"
-items = item.find(:all, :order => "site_id, name")
-portal_groups = items.collect{|c| ["#{c.site.name} : #{c.name}", c.id] }
-
-cond = {:content_id => @item.portal_group_id}
-categories = PortalGroup::Category.root_items(cond)
-businesses = PortalGroup::Business.root_items(cond)
-attributes = PortalGroup::Attribute.find(:all, :conditions => cond, :order => "content_id, sort_no").collect{|c| [c.title, c.id]}
-areas      = PortalGroup::Area.root_items(cond)
-
-%>
 <span class="note">※は必須項目です。</span>
 
 <p class="form">基本情報</p>
@@ -51,36 +36,6 @@ areas      = PortalGroup::Area.root_items(cond)
   </tr><tr>
     <th><%= @item.locale(:body) %></th>
     <td><%= f.text_area :body, :class => 'head' %></td>
-  </tr>
-</table>
-
-<br />
-<p class="form">ポータル設定</p>
-
-<table class="show">
-  <tr>
-    <th><%= @item.locale(:portal_group_id) %></th>
-    <td><%= f.select :portal_group_id, portal_groups, :include_blank => "" %></td>
-  </tr><tr>
-    <th><%= @item.locale(:portal_group_category_ids) %></th>
-    <td>
-      <%= f.select_with_tree 'in_portal_category_ids[0]', categories, :label => :title, :include_blank => true %>
-    </td>
-  </tr><tr>
-    <th><%= @item.locale(:portal_group_business_ids) %></th>
-    <td>
-      <%= f.select_with_tree 'in_portal_business_ids[0]', businesses, :label => :title, :include_blank => true %>
-    </td>
-  </tr><tr>
-    <th><%= @item.locale(:portal_group_attribute_ids) %></th>
-    <td>
-      <%= f.array_select 'in_portal_attribute_ids[0]', attributes, :label => :title, :include_blank => true %>
-    </td>
-  </tr><tr>
-    <th><%= @item.locale(:portal_group_area_ids) %></th>
-    <td>
-      <%= f.select_with_tree 'in_portal_area_ids[0]', areas, :label => :title, :include_blank => true %>
-    </td>
   </tr>
 </table>
 
@@ -133,14 +88,5 @@ areas      = PortalGroup::Area.root_items(cond)
     <td><%= f.text_field :in_setting_transfer_dest_domain, :class => 'url' %></td>
   </tr>
 </table>
-
-<%= observe_field(:item_portal_group_id, :update => :item_in_portal_category_ids_0,
-      :with => :item_portal_group_id, :on => 'change', :url => categories_portal_group_groups_path(0)) %>
-<%= observe_field(:item_portal_group_id, :update => :item_in_portal_business_ids_0,
-      :with => :item_portal_group_id, :on => 'change', :url => businesses_portal_group_groups_path(0)) %>
-<%= observe_field(:item_portal_group_id, :update => :item_in_portal_attribute_ids_0,
-      :with => :item_portal_group_id, :on => 'change', :url => attributes_portal_group_groups_path(0)) %>
-<%= observe_field(:item_portal_group_id, :update => :item_in_portal_area_ids_0,
-      :with => :item_portal_group_id, :on => 'change', :url => areas_portal_group_groups_path(0)) %>
 
 <%= creator_form f %>

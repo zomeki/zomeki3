@@ -30,39 +30,6 @@
 </table>
 
 <br />
-<p class="form">ポータル設定</p>
-
-<div class="actionMenu">
-  <% if @item.portal_group_state == "hidden" %>
-  <%= link_to "ポータル公開", show_portal_cms_site_path(@item.id), :confirm => "ポータルに公開してよろしいですか？" %>
-  <% else %>
-  <%= link_to "ポータル非公開", hide_portal_cms_site_path(@item.id), :confirm => "ポータル公開を終了してよろしいですか？" %>
-  <% end %>
-</div>
-
-<table class="show">
-  <tr>
-    <th><%= @item.locale(:portal_group_state) %></th>
-    <td><%= @item.portal_group_status.name %></td>
-  </tr><tr>
-    <th><%= @item.locale(:portal_group_id) %></th>
-    <td><% if group = @item.portal_group %><%= safe{"#{group.site.name} : #{group.name}"} %><% end %></td>
-  </tr><tr>
-    <th><%= @item.locale(:portal_group_category_ids) %></th>
-    <td><%= @item.portal_category_items.collect {|c| h(c.title) }.join('， ') %></td>
-  </tr><tr>
-    <th><%= @item.locale(:portal_group_business_ids) %></th>
-    <td><%= @item.portal_business_items.collect {|c| h(c.title) }.join('， ') %></td>
-  </tr><tr>
-    <th><%= @item.locale(:portal_group_attribute_ids) %></th>
-    <td><%= @item.portal_attribute_items.collect {|c| h(c.title) }.join('， ') %></td>
-  </tr><tr>
-    <th><%= @item.locale(:portal_group_area_ids) %></th>
-    <td><%= @item.portal_area_items.collect {|c| h(c.title) }.join('， ') %></td>
-  </tr>
-</table>
-
-<br />
 <p class="form">管理画面設定</p>
 
 <table class="show">
