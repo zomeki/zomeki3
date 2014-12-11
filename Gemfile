@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.0.11'
+gem 'rails', '4.0.12'
 
 # Use mysql as the database for Active Record
 gem 'mysql2'
@@ -45,22 +45,22 @@ end
 # gem 'debugger', group: [:development, :test]
 
 gem 'actionpack-action_caching', '~> 1.1.1'
-gem 'delayed_job_active_record', '~> 4.0.0'
+gem 'delayed_job_active_record', '~> 4.0.2'
 gem 'dynamic_form', '~> 1.1.4'
 gem 'garb', '~> 0.9.8'
-gem 'jpmobile', '~> 4.0.0'
-gem 'mail-iso-2022-jp', '~> 2.0.2'
+gem 'jpmobile', '~> 4.0.1'
+gem 'mail-iso-2022-jp', '~> 2.0.3'
 gem 'moji', '~> 1.6'
-gem 'nokogiri', '~> 1.6.1'
-gem 'omniauth-facebook', '~> 1.6.0'
-gem 'omniauth-twitter', '~> 1.0.1'
-gem 'rails_autolink', '~> 1.1.5'
+gem 'nokogiri', '~> 1.6.5'
+gem 'omniauth-facebook', '~> 2.0.0'
+gem 'omniauth-twitter', '~> 1.1.0'
+gem 'rails_autolink', '~> 1.1.6'
 gem 'render_component_vho', '~> 3.2.1'
 gem 'rest-more', '~> 3.3.1'
-gem 'rmagick', '~> 2.13.2'
-gem 'rsync', '~> 1.0.8'
-gem 'simple_captcha2', '~> 0.2.1', require: 'simple_captcha'
-gem 'will_paginate', '~> 3.0.5'
+gem 'rmagick', '~> 2.13.4'
+gem 'rsync', '~> 1.0.9'
+gem 'simple_captcha2', '~> 0.2.2', require: 'simple_captcha'
+gem 'will_paginate', '~> 3.0.7'
 gem 'whenever', require: false
 
 gem 'hpricot', '0.8.6'
@@ -68,7 +68,7 @@ gem 'tamtam', '0.0.3'
 
 group :development, :test do
   gem 'rspec-rails', '~> 3.1.0'
-  gem 'factory_girl_rails', '~> 4.4.1'
+  gem 'factory_girl_rails', '~> 4.5.0'
   gem 'email_spec', '~> 1.6.0'
 end
 
