@@ -22,7 +22,6 @@ ol,ul,dl
 
 /* templates
 ----------------------------------------------- */
-
 .temp1, temp2, .temp3, .temp4 {
   clear: both;
   margin-bottom: 30px;
@@ -34,6 +33,9 @@ ol,ul,dl
 .temp2 .thumb {
   float: right;
   margin-left: 30px;
+}
+.temp1 p, temp2 p {
+  margin: 0 0 1em;
 }
 .temp3 dl, .temp4 dl {
   float: left;
@@ -59,17 +61,40 @@ table.temp5 {
 .temp7 p {
   margin: 0 0 10px 0;
 }
-
+.temp8 .thumb {
+  float: left;
+  margin-right: 18px;
+  margin-bottom: 10px;
+}
+.temp8 .text {
+  float: left;
+  width: 530px;
+}
+.temp8 dl {
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid #000;
+}
+.temp8 dl dt,
+.temp8 dl dd {
+  display: inline-block;
+  /display: inline;
+  zoom: 1;
+  vertical-align: middle;
+}
+.temp8 dl dt {
+  font-size: 110%;
+  font-weight: bold;
+}
 
 /* clearfix
 ---------------------- */
+.clearfix:before, .clearfix:after {
+  content: "";
+  display: table;
+}
 .clearfix:after {
-  content: ".";
-  display: block;
-  height: 0;
   clear: both;
-  font-size: 0;
-  visibility: hidden;
 }
 .clearfix {
   zoom: 1;
