@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141204145358) do
+ActiveRecord::Schema.define(version: 20141209090411) do
 
   create_table "ad_banner_banners", force: true do |t|
     t.string   "name"
@@ -87,8 +87,9 @@ ActiveRecord::Schema.define(version: 20141204145358) do
     t.integer  "approvable_id"
     t.string   "approvable_type"
     t.integer  "current_index"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+    t.text     "select_assignments"
   end
 
   create_table "approval_approvals", force: true do |t|
@@ -96,6 +97,7 @@ ActiveRecord::Schema.define(version: 20141204145358) do
     t.integer  "index"
     t.datetime "created_at",       null: false
     t.datetime "updated_at",       null: false
+    t.text     "approval_type"
   end
 
   create_table "approval_assignments", force: true do |t|
