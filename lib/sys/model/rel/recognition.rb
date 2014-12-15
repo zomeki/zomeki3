@@ -7,20 +7,15 @@ module Sys::Model::Rel::Recognition
     mod.after_save :save_recognition
   end
 
-  attr_accessor :in_recognizer_ids
-  
   def in_recognizer_ids
-    unless read_attribute(:in_recognizer_ids)
-      write_attribute(:in_recognizer_ids, recognizer_ids.to_s)
-    end
-    read_attribute(:in_recognizer_ids)
+    @in_recognizer_ids ||= recognizer_ids.to_s
   end
-  
+
   def in_recognizer_ids=(ids)
     @_in_recognizer_ids_changed = true
-    write_attribute(:in_recognizer_ids, ids.to_s)
+    @in_recognizer_ids = ids.to_s
   end
-  
+
   def recognizer_ids
     recognition ? recognition.recognizer_ids : ''
   end
