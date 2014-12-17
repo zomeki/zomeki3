@@ -43,7 +43,7 @@ class Cms::Admin::KanaDictionariesController < Cms::Controller::Admin::Base
   def create
     return test if params[:do] == 'test'
 
-    @item = Cms::KanaDictionary.new(params[:item])
+    @item = Cms::KanaDictionary.new(kana_dictionary_params)
     @item.site_id = Core.site.id
     _create @item
   end
@@ -52,7 +52,7 @@ class Cms::Admin::KanaDictionariesController < Cms::Controller::Admin::Base
     @item = Cms::KanaDictionary.new.find(params[:id])
     return error_auth unless @item.site_id == Core.site.id
 
-    @item.attributes = params[:item]
+    @item.attributes = kana_dictionary_params
     _update @item
   end
 
@@ -87,5 +87,11 @@ class Cms::Admin::KanaDictionariesController < Cms::Controller::Admin::Base
       file = jtalk.output
       send_file(file[:path], :type => file[:path], :filename => 'sound.mp3', :disposition => 'inline')
     end
+  end
+
+  private
+
+  def kana_dictionary_params
+    params.require(:item).permit(:body, :in_creator, :name)
   end
 end
