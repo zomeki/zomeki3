@@ -2,7 +2,7 @@
 module LinkHelper
   def action_menu(type, link = nil, options = {})
     action = params[:action]
-    
+
     if action =~ /index/
       return '' if [:index, :show, :edit, :destroy].index(type)
     elsif action =~ /(show|destroy)/
@@ -12,24 +12,26 @@ module LinkHelper
     elsif action =~ /(edit|update)/
       return '' unless [:index, :show].index(type)
     end
-    
-    params = {}
-    
+
+    args = {}
+
     if type == :destroy
-      params[:confirm] = '削除してよろしいですか？'
-      params[:method]  = :delete
+      data = args[:data] || {}
+      data[:confirm] = '削除してよろしいですか？'
+      args[:data] = data
+      args[:method] = :delete
     end
-    
+
     if link.class == String
-      return link_to(type, link, params)
+      return link_to(type, link, args)
     elsif link.class == Array
-      return link_to(link[0], link[1], params)
+      return link_to(link[0], link[1], args)
     else
-      return link_to(type, url_for(:action => type), params)
+      return link_to(type, url_for(:action => type), args)
     end
   end
   
-  def link_to(*params)
+  def link_to(*args)
     labels = {
       :up        => '上へ',
       :index     => '一覧',
@@ -48,8 +50,8 @@ module LinkHelper
       :publish   => '公開',
       :close     => '非公開'
     }
-    params[0] = labels[params[0]] if labels.key?(params[0])
-    super(*params)
+    args[0] = labels[args[0]] if labels.key?(args[0])
+    super(*args)
   end
   
   ## E-mail to entity
