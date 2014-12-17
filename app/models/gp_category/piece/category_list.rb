@@ -3,7 +3,7 @@ class GpCategory::Piece::CategoryList < Cms::Piece
   LAYER_OPTIONS = [['下層のカテゴリすべて', 'descendants'], ['該当カテゴリのみ', 'self']]
   SETTING_OPTIONS = [['無効', 'disabled'], ['有効', 'enabled']]
 
-  default_scope where(model: 'GpCategory::CategoryList')
+  default_scope { where(model: 'GpCategory::CategoryList') }
 
   def layer
     setting_value(:layer).presence || LAYER_OPTIONS.first.last
