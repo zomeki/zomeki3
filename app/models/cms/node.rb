@@ -349,15 +349,12 @@ protected
 #      end
 
       inquiries.each_with_index do |inquiry, i|
-        if i == 0
-          attrs = inquiry.attributes
-          attrs[:group_id] = Core.user.group_id
-          item.inquiries.build(attrs)
-        else
-          item.inquiries.build(inquiry.attributes)
-        end
+        attrs = inquiry.attributes
+        attrs[:id] = nil
+        attrs[:group_id] = Core.user.group_id if i.zero?
+        item.inquiries.build(attrs)
       end
-      
+
       return false unless item.save(:validate => false)
       
       if rel_type == :replace
