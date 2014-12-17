@@ -7,9 +7,9 @@ class Cms::Concept < ActiveRecord::Base
   include Sys::Model::Tree
   include Sys::Model::Base::Page
   include Sys::Model::Auth::Manager
-  
-  belongs_to :status, :foreign_key => :state,
-    :class_name => 'Sys::Base::Status'
+
+  include StateText
+
   has_many :children, -> { order(:name) },
     :foreign_key => :parent_id, :class_name => 'Cms::Concept', :dependent => :destroy
   has_many :layouts, -> { order(:name) },
