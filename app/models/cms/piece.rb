@@ -89,10 +89,9 @@ class Cms::Piece < ActiveRecord::Base
   def new_setting(name = nil)
     Cms::PieceSetting.new({:piece_id => id, :name => name.to_s})
   end
-  
+
   def setting_value(name)
-    st = settings.find(:first, :conditions => {:name => name.to_s})
-    st ? st.value : nil
+    settings.find_by(name: name).try(:value)
   end
 
   def setting_extra_values(name)
