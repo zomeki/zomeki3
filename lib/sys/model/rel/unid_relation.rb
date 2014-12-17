@@ -16,30 +16,30 @@ module Sys::Model::Rel::UnidRelation
     else
       cond = ["unid = ? OR rel_unid = ?", unid, unid]
     end
-    Sys::UnidRelation.find(:first, :conditions => cond) ? true : nil
+    Sys::UnidRelation.where(cond).count.nonzero?
   end
-  
+
   def replace_page?
     cond = {:unid => unid, :rel_type => "replace"}
-    !!Sys::UnidRelation.where(cond).first
+    Sys::UnidRelation.where(cond).count.nonzero?
   end
-  
+
   def replaced_page?
     cond = {:rel_unid => unid, :rel_type => "replace"}
-    Sys::UnidRelation.find(:first, :conditions => cond) ? true : nil
+    Sys::UnidRelation.where(cond).count.nonzero?
   end
   
   def replace_page
     return nil unless replaced_page?
     cond = {:rel_unid => unid, :rel_type => "replace"}
-    rel = Sys::UnidRelation.find(:first, :conditions => cond)
+    rel = Sys::UnidRelation.where(cond).first
     self.class.find_by_unid(rel.unid)
   end
   
   def replaced_page
     return nil unless replace_page?
     cond = {:unid => unid, :rel_type => "replace"}
-    rel = Sys::UnidRelation.find(:first, :conditions => cond)
+    rel = Sys::UnidRelation.where(cond).first
     self.class.find_by_unid(rel.rel_unid)
   end
  end
