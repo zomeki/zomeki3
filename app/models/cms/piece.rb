@@ -16,6 +16,8 @@ class Cms::Piece < ActiveRecord::Base
   has_many   :settings, :foreign_key => :piece_id,   :class_name => 'Cms::PieceSetting',
     :order => :sort_no, :dependent => :destroy
 
+  attr_accessor :setting_save_skip
+
   validates_presence_of :state, :model, :name, :title
   validates_uniqueness_of :name, :scope => :concept_id, :if => %Q(!replace_page?)
   validates_format_of :name, :with => /\A[0-9a-zA-Z\-_]+\z/, :if => "!name.blank?",
