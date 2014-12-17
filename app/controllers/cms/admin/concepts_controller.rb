@@ -40,7 +40,7 @@ class Cms::Admin::ConceptsController < Cms::Controller::Admin::Base
   end
   
   def create
-    @item = Cms::Concept.new(params[:item])
+    @item = Cms::Concept.new(concept_params)
     @item.parent_id = 0 unless @item.parent_id
     @item.site_id   = Core.site.id
     @item.level_no  = @parent.level_no + 1
@@ -49,7 +49,7 @@ class Cms::Admin::ConceptsController < Cms::Controller::Admin::Base
   
   def update
     @item = Cms::Concept.new.find(params[:id])
-    @item.attributes = params[:item]
+    @item.attributes = concept_params
     @item.parent_id  = 0 unless @item.parent_id
     @item.level_no   = @parent.level_no + 1
     
@@ -90,5 +90,11 @@ class Cms::Admin::ConceptsController < Cms::Controller::Admin::Base
     respond_to do |format|
       format.html { render :layout => false }
     end
+  end
+
+  private
+
+  def concept_params
+    params.require(:item).permit(:in_creator, :name, :parent_id, :sort_no, :state)
   end
 end
