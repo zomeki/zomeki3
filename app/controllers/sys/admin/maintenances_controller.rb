@@ -29,18 +29,24 @@ class Sys::Admin::MaintenancesController < Cms::Controller::Admin::Base
   end
   
   def create
-    @item = Sys::Maintenance.new(params[:item])
+    @item = Sys::Maintenance.new(maintenance_params)
     _create @item
   end
   
   def update
     @item = Sys::Maintenance.new.find(params[:id])
-    @item.attributes = params[:item]
+    @item.attributes = maintenance_params
     _update @item
   end
   
   def destroy
     @item = Sys::Maintenance.new.find(params[:id])
     _destroy @item
+  end
+
+  private
+
+  def maintenance_params
+    params.require(:item).permit(:body, :published_at, :state, :title)
   end
 end

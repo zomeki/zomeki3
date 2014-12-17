@@ -29,18 +29,24 @@ class Sys::Admin::MessagesController < Cms::Controller::Admin::Base
   end
   
   def create
-    @item = Sys::Message.new(params[:item])
+    @item = Sys::Message.new(message_params)
     _create @item
   end
   
   def update
     @item = Sys::Message.new.find(params[:id])
-    @item.attributes = params[:item]
+    @item.attributes = message_params
     _update @item
   end
   
   def destroy
     @item = Sys::Message.new.find(params[:id])
     _destroy @item
+  end
+
+  private
+
+  def message_params
+    params.require(:item).permit(:body, :published_at, :state, :title)
   end
 end
