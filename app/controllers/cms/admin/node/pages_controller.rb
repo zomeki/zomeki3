@@ -15,7 +15,7 @@ class Cms::Admin::Node::PagesController < Cms::Admin::Node::BaseController
   
   def update
     @item = model.new.find(params[:id])
-    @item.attributes = params[:item]
+    @item.attributes = page_params
     @item.state      = "draft"
     @item.state      = "recognize" if params[:commit_recognize]
     @item.state      = "public"    if params[:commit_public]
@@ -129,5 +129,12 @@ protected
       "#{url_for(:action => :show, :id => item.id)}"
     
     send_mail(mail_fr, mail_to, subject, message)
+  end
+
+
+  private
+
+  def page_params
+    params.require(:item).permit(:body, :concept_id, :in_creator, :in_recognizer_ids, :in_tasks, :inquiries_attributes, :layout_id, :mobile_body, :mobile_title, :name, :parent_id, :published_at, :route_id, :sitemap_sort_no, :sitemap_state, :title)
   end
 end
