@@ -20,9 +20,9 @@ class Cms::Admin::Piece::BaseController < Cms::Controller::Admin::Base
   def index
     exit
   end
-  
+
   def show
-    @item = model.new.find(params[:id])
+    @item = model.find(params[:id])
     return error_auth unless @item.readable?
     _show @item
   end
@@ -34,11 +34,11 @@ class Cms::Admin::Piece::BaseController < Cms::Controller::Admin::Base
   def create
     exit
   end
-  
+
   def update
-    @item = model.new.find(params[:id])
+    @item = model.find(params[:id])
     @item.attributes = base_params
-    
+
     _update @item do
       Core.set_concept(session, @item.concept_id)
       respond_to do |format|
@@ -48,7 +48,7 @@ class Cms::Admin::Piece::BaseController < Cms::Controller::Admin::Base
   end
   
   def destroy
-    @item = model.new.find(params[:id])
+    @item = model.find(params[:id])
     _destroy @item do
       respond_to do |format|
         format.html { return redirect_to(cms_pieces_path) }
@@ -91,7 +91,7 @@ class Cms::Admin::Piece::BaseController < Cms::Controller::Admin::Base
   private
 
   def find_piece
-    model.new.readable.find(params[:id])
+    model.readable.find(params[:id])
   end
 
   def base_params

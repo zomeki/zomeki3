@@ -5,15 +5,13 @@ class Cms::Admin::PiecesController < Cms::Controller::Admin::Base
   def pre_dispatch
     return error_auth unless Core.user.has_auth?(:designer)
   end
-  
+
   def index
-    item = Cms::Piece.new.readable
-    item.page  params[:page], params[:limit]
-    item.order params[:sort], 'name, id'
-    @items = item.find(:all)
+    @items = Cms::Piece.readable.order('name, id')
+                       .paginate(page: params[:page], per_page: params[:limit])
     _index @items
   end
-  
+
   def show
     exit
   end
