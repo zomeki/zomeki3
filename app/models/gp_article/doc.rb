@@ -42,6 +42,7 @@ class GpArticle::Doc < ActiveRecord::Base
 
   # Page
   belongs_to :concept, :foreign_key => :concept_id, :class_name => 'Cms::Concept'
+  belongs_to :layout, :foreign_key => :layout_id, :class_name => 'Cms::Layout'
 
   belongs_to :prev_edition, :class_name => self.name
   has_one :next_edition, :foreign_key => :prev_edition_id, :class_name => self.name
