@@ -34,6 +34,6 @@ class Organization::Admin::GroupsController < Cms::Controller::Admin::Base
   private
 
   def group_params
-    params.require(:item).permit(:business_outline, :concept_id, :contact_information, :docs_order, :in_creator, :layout_id, :more_layout_id, :sitemap_state, :sort_no, :state)
+    params.require(:item).permit(:outline, :business_outline, :concept_id, :contact_information, :docs_order, :in_creator, :layout_id, :more_layout_id, :sitemap_state, :sort_no, :state)
   end
 end
