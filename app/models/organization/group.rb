@@ -10,7 +10,7 @@ class Organization::Group < ActiveRecord::Base
 
   #TODO: migrate to strong_parameters
   #attr_accessible :state, :name, :sys_group_code, :sitemap_state, :docs_order, :sort_no,
-  #                :business_outline, :contact_information,
+  #                :business_outline, :contact_information, :group_outline,
   #                :concept_id, :layout_id, :more_layout_id, :in_creator
 
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
