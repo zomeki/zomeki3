@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150108050917) do
+ActiveRecord::Schema.define(version: 20150116023258) do
 
   create_table "ad_banner_banners", force: true do |t|
     t.string   "name"
@@ -1473,6 +1473,14 @@ ActiveRecord::Schema.define(version: 20150108050917) do
     t.datetime "updated_at"
     t.text     "group_ids"
     t.boolean  "all"
+  end
+
+  create_table "sys_editors", force: true do |t|
+    t.integer  "parent_unid"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "user_id"
+    t.integer  "group_id"
   end
 
   create_table "sys_files", force: true do |t|
