@@ -41,8 +41,8 @@ CmsCMS::Application.routes.draw do
   ## public
   scope "_public/#{mod}", :module => mod, :as => "" do
     match "node_places/index"              => "public/node/places#index",
-      :as => nil
+      :as => nil, :via => [:get, :post]
     match "node_places/:name/index"        => "public/node/places#show",
-      :as => nil
+      :as => nil, :via => [:get, :post]
   end
 end
