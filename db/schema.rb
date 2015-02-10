@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150202073640) do
+ActiveRecord::Schema.define(version: 20150210025140) do
 
   create_table "ad_banner_banners", force: true do |t|
     t.string   "name"
@@ -227,6 +227,11 @@ ActiveRecord::Schema.define(version: 20150202073640) do
     t.date     "end_date"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "end_type"
+    t.integer  "end_times"
+    t.integer  "repeat_interval"
+    t.text     "repeat_week"
+    t.text     "repeat_criterion"
   end
 
   create_table "biz_calendar_bussiness_hours", force: true do |t|
@@ -242,6 +247,11 @@ ActiveRecord::Schema.define(version: 20150202073640) do
     t.time     "business_hours_end_time"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "end_type"
+    t.integer  "end_times"
+    t.integer  "repeat_interval"
+    t.text     "repeat_week"
+    t.text     "repeat_criterion"
   end
 
   create_table "biz_calendar_exception_holidays", force: true do |t|
