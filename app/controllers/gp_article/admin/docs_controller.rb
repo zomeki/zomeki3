@@ -151,9 +151,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
       publish_related_pages(@item) if @item.state_public?
 
-      if @content.calendar_related? && (calendar_content = @content.gp_calendar_content_event)
-        gp_calendar_sync_events_export(doc_or_event: @item, event_content: calendar_content) if calendar_content.event_sync_export?
-      end
+      sync_events_export
     end
   end
 
@@ -223,9 +221,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
       publish_related_pages(@item) if @item.state_public?
 
-      if @content.calendar_related? && (calendar_content = @content.gp_calendar_content_event)
-        gp_calendar_sync_events_export(doc_or_event: @item, event_content: calendar_content) if calendar_content.event_sync_export?
-      end
+      sync_events_export
     end
   end
 
@@ -235,9 +231,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     _destroy(@item) do
       send_broken_link_notification(@item) if @content.notify_broken_link? && @item.backlinks.present?
       publish_related_pages(@item)
-      if @content.calendar_related? && (calendar_content = @content.gp_calendar_content_event)
-        gp_calendar_sync_events_export(doc_or_event: @item, event_content: calendar_content) if calendar_content.event_sync_export?
-      end
+      sync_events_export
     end
   end
 
@@ -262,6 +256,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
       @item.rebuild(render_public_as_string(@item.public_uri, jpmobile: envs_to_request_as_smart_phone),
                     :path => @item.public_smart_phone_path, :dependent => :smart_phone)
       publish_related_pages(@item)
+      sync_events_export
     end
   end
 
@@ -281,8 +276,9 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     _close(@item) do
       @old_category_ids = @item.categories.inject([]){|ids, category| ids | category.ancestors.map(&:id) }
       @new_category_ids = []
-      publish_related_pages(@item)
       send_broken_link_notification(@item) if @content.notify_broken_link? && @item.backlinks.present?
+      publish_related_pages(@item)
+      sync_events_export
     end
   end
 
@@ -479,6 +475,12 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
         new_body = new_body.gsub("file_contents/#{value}", "file_contents/#{file.name}")
       end
       @item.update_column(:body, new_body) unless @item.body == new_body
+    end
+  end
+
+  def sync_events_export
+    if @content.calendar_related? && (calendar_content = @content.gp_calendar_content_event)
+      gp_calendar_sync_events_export(doc_or_event: @item, event_content: calendar_content) if calendar_content.event_sync_export?
     end
   end
 
