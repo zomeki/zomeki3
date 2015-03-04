@@ -78,6 +78,14 @@ class GpCalendar::Holiday < ActiveRecord::Base
     GpCalendar::Holiday.public.all_with_content_and_criteria(content, criteria).first.title rescue nil
   end
 
+  def publish!
+    update_attribute(:state, 'public')
+  end
+
+  def close!
+    update_attribute(:state, 'closed')
+  end
+
   private
 
   def set_defaults
