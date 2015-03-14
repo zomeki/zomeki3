@@ -1,7 +1,8 @@
 module Sys::Model::Rel::Editor
   def self.included(mod)
-    mod.has_many :editors, :foreign_key => 'parent_unid', :class_name => 'Sys::Editor',
-      :primary_key => 'unid', :dependent => :destroy, :order => 'updated_at DESC, created_at DESC'
+    mod.has_many :editors, -> { order('updated_at DESC, created_at DESC') },
+      :foreign_key => 'parent_unid', :class_name => 'Sys::Editor',
+      :primary_key => 'unid', :dependent => :destroy
     
     mod.after_save :save_editor
   end

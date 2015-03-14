@@ -32,9 +32,10 @@ class GpCategory::Category < ActiveRecord::Base
   validates :title, :presence => true
   validates :state, :presence => true
 
-  has_and_belongs_to_many :events, :class_name => 'GpCalendar::Event', :join_table => 'gp_calendar_events_gp_category_categories', :order => 'started_on, ended_on'
+  has_and_belongs_to_many :events, -> { order('started_on, ended_on') },
+                          class_name: 'GpCalendar::Event', join_table: 'gp_calendar_events_gp_category_categories'
 
-  has_many :categorizations, :dependent => :destroy
+  has_many :categorizations, -> { where(categorized_as: 'GpArticle::Doc') }, :dependent => :destroy
   has_many :docs, :through => :categorizations, :source => :categorizable, :source_type => 'GpArticle::Doc'
   has_many :markers, :through => :categorizations, :source => :categorizable, :source_type => 'Map::Marker'
   has_many :publishers, :dependent => :destroy
@@ -46,8 +47,7 @@ class GpCategory::Category < ActiveRecord::Base
 
   before_validation :set_attributes_from_parent
 
-  scope :public, ->(name) { where(state: 'public') }
-  scope :none, -> { where("#{self.table_name}.id IS ?", nil).where("#{self.table_name}.id IS NOT ?", nil) }
+  scope :public, -> { where(state: 'public') }
 
   def content
     category_type.content
@@ -103,13 +103,6 @@ class GpCategory::Category < ActiveRecord::Base
 
     Cms::Lib::BreadCrumbs.new(crumbs)
   end
-
-  def docs_with_categorization
-    # There are 3 way to categorize (GpArticle::Doc, GpCalendar::Event, Map::Marker)
-    t = categorizations.table
-    docs_without_categorization.where(t[:categorized_as].eq('GpArticle::Doc'))
-  end
-  alias_method_chain :docs, :categorization
 
   def public_docs
     docs.order(inherited_docs_order).mobile(::Page.mobile?).public
