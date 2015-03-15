@@ -892,8 +892,8 @@ ActiveRecord::Schema.define(version: 20150312142645) do
     t.integer  "sync_source_content_id"
     t.string   "sync_source_id"
     t.string   "sync_source_source_class"
-    t.string   "sync_exported"
     t.string   "will_sync"
+    t.string   "sync_exported"
   end
 
   create_table "gp_calendar_events_gp_category_categories", id: false, force: true do |t|
