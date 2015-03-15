@@ -35,11 +35,6 @@ class GpCalendar::Event < ActiveRecord::Base
     events = self.arel_table
 
     rel = self.where(events[:content_id].eq(content.id))
-    rel = if criteria[:imported]
-            rel.where(events[:sync_source_host].not_eq(nil))
-          else
-            rel.where(events[:sync_source_host].eq(nil))
-          end
     rel = rel.where(events[:name].matches("%#{criteria[:name]}%")) if criteria[:name].present?
     rel = rel.where(events[:title].matches("%#{criteria[:title]}%")) if criteria[:title].present?
     rel = rel.where(events[:started_on].lteq(criteria[:date])
@@ -107,22 +102,6 @@ class GpCalendar::Event < ActiveRecord::Base
 
   def close!
     update_attribute(:state, 'closed')
-  end
-
-  def will_sync?
-    will_sync == 'yes'
-  end
-
-  def will_sync_text
-    WILL_SYNC_OPTIONS.detect{|o| o.last == will_sync }.try(:first).to_s
-  end
-
-  def sync_exported?
-    sync_exported == 'yes'
-  end
-
-  def sync_exported_text
-    sync_exported? ? '同期済' : '未同期'
   end
 
   private
