@@ -82,7 +82,7 @@ class GpCalendar::Event < ActiveRecord::Base
     return rel
   end
 
-  belongs_to :doc, :class_name => 'GpArticle::Doc' # Not saved to database
+  attr_accessor :doc # Not saved to database
 
   def holiday
     criteria = {date: started_on, kind: 'holiday'}
