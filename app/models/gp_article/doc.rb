@@ -68,8 +68,10 @@ class GpArticle::Doc < ActiveRecord::Base
            :after_add => proc {|d, c|
              d.categorizations.where(category_id: c.id, categorized_as: nil).first.update_column(:categorized_as, 'Map::Marker')
            }
-  has_and_belongs_to_many :tags, -> { self.content.try(:tag_content_tag) ? ['content_id = ?', self.content.tag_content_tag.id] : 'FALSE' },
-                          class_name: 'Tag::Tag', join_table: 'gp_article_docs_tag_tags'
+  has_and_belongs_to_many :tags, ->(doc) {
+                              c = doc.content
+                              c && c.tag_related? && c.tag_content_tag ? where(content_id: c.tag_content_tag.id) : where(id: nil)
+                            }, class_name: 'Tag::Tag', join_table: 'gp_article_docs_tag_tags'
 
   has_many :holds, :as => :holdable, :dependent => :destroy
   has_many :links, :dependent => :destroy
