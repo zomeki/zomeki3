@@ -18,6 +18,7 @@ module StateText
       when 'closed'; '非公開'
       when 'completed'; '完了'
       when 'archived'; '履歴'
+      when 'synced'; '同期済'
       else ''
       end
     end

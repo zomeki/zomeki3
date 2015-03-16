@@ -9,7 +9,7 @@ class GpCalendar::Event < ActiveRecord::Base
   include StateText
   include GpCalendar::EventSync
 
-  STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
+  STATE_OPTIONS = [['公開中', 'public'], ['非公開', 'closed']]
   TARGET_OPTIONS = [['同一ウィンドウ', '_self'], ['別ウィンドウ', '_blank']]
   ORDER_OPTIONS = [['作成日時（降順）', 'created_at_desc'], ['作成日時（昇順）', 'created_at_asc']]
 
@@ -31,6 +31,13 @@ class GpCalendar::Event < ActiveRecord::Base
   validate :dates_range
 
   scope :public, -> { where(state: 'public') }
+
+  def self.state_options(synced: nil)
+    so = []
+    so << ['同期済', 'synced'] if synced
+    so += STATE_OPTIONS.dup
+    so
+  end
 
   def self.all_with_content_and_criteria(content, criteria)
     events = self.arel_table
@@ -69,6 +76,8 @@ class GpCalendar::Event < ActiveRecord::Base
                         .and(events[:ended_on].gteq(start_date)))
       end
     end
+
+    rel = rel.where(events[:state].eq(criteria[:state])) if criteria[:state].present?
 
     return rel
   end
@@ -115,7 +124,7 @@ class GpCalendar::Event < ActiveRecord::Base
   def set_defaults
     self.state ||= STATE_OPTIONS.first.last if self.has_attribute?(:state)
     self.target ||= TARGET_OPTIONS.first.last if self.has_attribute?(:target)
-    self.will_sync ||= WILL_SYNC_OPTIONS.first.last if self.has_attribute?(:will_sync)
+    self.will_sync ||= content.event_sync_default_will_sync if self.has_attribute?(:will_sync)
   end
 
   def set_name
