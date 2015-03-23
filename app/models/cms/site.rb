@@ -11,6 +11,8 @@ class Cms::Site < ActiveRecord::Base
 
   include StateText
 
+  OGP_TYPE_OPTIONS = [['article', 'article'], ['place', 'place'], ['product', 'product'], ['profile', 'profile']]
+
   belongs_to :status, :foreign_key => :state,
     :class_name => 'Sys::Base::Status'
   has_many :concepts, -> { order('name, id') }, :foreign_key => :site_id,
@@ -236,6 +238,10 @@ class Cms::Site < ActiveRecord::Base
 
   def groups_for_option
     groups.where(level_no: 2).map{|g| g.descendants_for_option }.flatten(1)
+  end
+
+  def og_type_text
+    OGP_TYPE_OPTIONS.detect{|o| o.last == self.og_type }.try(:first).to_s
   end
 
 protected
