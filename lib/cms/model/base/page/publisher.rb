@@ -91,14 +91,13 @@ module Cms::Model::Base::Page::Publisher
 
     content = content.gsub(%r!zdel_.+?/!i, '')
 
-    path = (options[:path] || public_path).gsub(/\/$/, '/index.html')
+    path = (options[:path] || public_path).gsub(/\/\z/, '/index.html')
     hash = Digest::MD5.new.update(content).to_s
 
-    cond = options[:dependent] ? ['dependent = ?', options[:dependent].to_s] : ['dependent IS NULL']
-    pub  = publishers.find(:first, :conditions => cond)
+    pub = publishers.where(dependent: options[:dependent] ? options[:dependent].to_s : nil).first
 
     return true if mobile_page?
-    if options[:dependent].to_s =~ /ruby$/i
+    if options[:dependent].to_s =~ /ruby\z/i
       return true if !Cms.config.application['cms.use_kana']
     end
     return true if hash && pub && hash == pub.content_hash && ::File.exist?(path)

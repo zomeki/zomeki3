@@ -11,12 +11,11 @@ class Sys::Model::Base::Setting < ActiveRecord::Base
   def self.configs
     @@configs[self].collect {|c| config(c[:id])}
   end
-  
+
   def self.config(name)
-    cond = {:name => name.to_s}
-    self.find(:first, :conditions => cond) || self.new(cond)
+    find_or_initialize_by(name: name)
   end
-  
+
   def self.value(name, default_value = nil)
     st = config(name)
     return nil unless st

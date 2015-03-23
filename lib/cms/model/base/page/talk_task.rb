@@ -9,10 +9,9 @@ module Cms::Model::Base::Page::TalkTask
   
   def publish_page(content, options = {})
     return false unless super
-    cond = options[:dependent] ? ['dependent = ?', options[:dependent].to_s] : ['dependent IS NULL']
-    pub  = publishers.find(:first, :conditions => cond)
+    pub = publishers.where(dependent: options[:dependent] ? options[:dependent].to_s : nil).first
     return true unless pub
-    return true if pub.path !~ /\.html$/
+    return true if pub.path !~ /\.html\z/
     #return true if !published? && ::File.exist?("#{pub.path}.mp3")
     
     path = "#{pub.path}.mp3"
@@ -24,11 +23,10 @@ module Cms::Model::Base::Page::TalkTask
     elsif ::File.stat(path).mtime < Cms::KanaDictionary.dic_mtime
       talk = true
     end
-    
+
     if talk
-      task = talk_tasks.find(:first, :conditions => cond) || Cms::TalkTask.new
+      task = talk_tasks.find_or_initialize_by(dependent: pub.dependent)
       task.unid         = pub.unid
-      task.dependent    = pub.dependent
       task.path         = pub.path
       task.content_hash = pub.content_hash
 
