@@ -10,8 +10,8 @@ class Approval::ApprovalRequest < ActiveRecord::Base
 
   has_many :current_assignments, :class_name => 'Approval::Assignment', :as => :assignable, :dependent => :destroy
   has_many :current_approvers, :through => :current_assignments, :source => :user
-  has_many :histories, :foreign_key => :request_id, :class_name => 'Approval::ApprovalRequestHistory', :dependent => :destroy,
-           :order => 'updated_at DESC, created_at DESC'
+  has_many :histories, -> { order('updated_at DESC, created_at DESC') },
+           foreign_key: :request_id, class_name: 'Approval::ApprovalRequestHistory', dependent: :destroy
 
   after_initialize :set_defaults
 
