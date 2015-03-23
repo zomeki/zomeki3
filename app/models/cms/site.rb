@@ -11,7 +11,7 @@ class Cms::Site < ActiveRecord::Base
 
   include StateText
 
-  OGP_TYPE_OPTIONS = [['article', 'article'], ['place', 'place'], ['product', 'product'], ['profile', 'profile']]
+  OGP_TYPE_OPTIONS = [['article', 'article'], ['product', 'product'], ['profile', 'profile']]
 
   belongs_to :status, :foreign_key => :state,
     :class_name => 'Sys::Base::Status'
