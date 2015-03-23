@@ -22,28 +22,25 @@ module Cms::Lib::Layout
     concepts.each_with_index {|c, i| order += " WHEN #{c.id} THEN #{i}"}
     order += ' ELSE 100 END, id'
   end
-  
+
   def self.find_design_pieces(html, concepts)
-    names = []
-    #html.scan(/\[\[piece\/([0-9a-zA-Z\._-]+)\]\]/) {|name| names << name[0]}
-    html.scan(/\[\[piece\/([^\]]+)\]\]/) {|name| names << name[0]}
-    
+    names = html.scan(/\[\[piece\/([^\]]+)\]\]/).map{|n| n[0] }.uniq
+
     items = {}
-    names.uniq.each do |name|
-      item = Cms::Piece.new
-      item.and :state, 'public'
-      if name =~ /#[0-9]+$/ ## [[piece/name#id]]
-        item.and :id, name.gsub(/.*#/, '')
-        item.and :name, name.gsub(/#.*/, '')
-      else ## [[piece/name]]
-        item.and :name, name
-        cond = Condition.new do |c|
-          c.or :concept_id, 'IS', nil
-          c.or :concept_id, 'IN', concepts
-        end
-        item.and cond
+    names.each do |name|
+      rel = Cms::Piece.where(state: 'public')
+      name_array = name.split('#')
+      rel = if name_array.size > 1 # [[piece/name#id]]
+              rel.where(id: name_array[1], name: name_array[0])
+            else                   # [[piece/name]]
+              concept_ids = concepts.map(&:id)
+              concept_ids << nil
+              rel.where(name: name_array[0])
+                 .where(concept_id: concept_ids)
+            end
+      if item = rel.order(concepts_order(concepts)).first
+        items[name] = item
       end
-      items[name] = item if item = item.find(:first, :order => concepts_order(concepts))
     end
     return items
   end
