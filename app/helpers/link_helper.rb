@@ -51,6 +51,18 @@ module LinkHelper
       :close     => '非公開'
     }
     args[0] = labels[args[0]] if labels.key?(args[0])
+
+    if args.size > 2 && (opts = args[2]).kind_of?(Hash)
+      if value = opts.delete(:disable_with)
+        opts[:data] ||= {}
+        opts[:data][:disable_with] = value
+      end
+      if value = opts.delete(:confirm)
+        opts[:data] ||= {}
+        opts[:data][:confirm] = value
+      end
+    end
+
     super(*args)
   end
   

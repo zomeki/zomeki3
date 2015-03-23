@@ -33,7 +33,7 @@
         <th><%= @item.locale :title %></th>
         <td><%= @item.title %></td>
         <th>タイトル設定</th>
-        <td><%= link_to_function '開く▼', "toggle_form(this, '#title_settings')" %></td>
+        <td><%= link_to '開く▼', 'javascript:void(0);', 'data-toggle-form' => '#title_settings' %></td>
       </tr>
     </table>
 

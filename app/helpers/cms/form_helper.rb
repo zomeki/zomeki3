@@ -140,6 +140,10 @@ function toggle_form(link, target, open_label, close_label, quick) {
     t.slideToggle();
   }
 }
+
+$('a[data-toggle-form]').on('click', function (e) {
+  toggle_form(this, $(this).data('toggle-form'));
+});
     EOS
     f.html_safe
   end
