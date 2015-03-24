@@ -20,34 +20,25 @@ class Cms::Admin::Data::FilesController < Cms::Controller::Admin::Base
       parent_id = params['s_node_id'] == '' ? 0 : params['s_node_id']
       return redirect_to(url_for(:action => "index", :parent => parent_id, :s_keyword => params[:s_keyword], :s_target => params[:s_target], :s_sort => params[:s_sort]))
     end
-    
-    @nodes = Cms::DataFileNode.find(:all, :conditions => {:concept_id => Core.concept(:id)}, :order => :name)
-    
-    order = (params[:s_sort] == 'updated_at') ? 'updated_at desc, id' : 'name, id'
 
-    item = Cms::DataFile.new
-    unless Core.user.has_auth?(:manager) || params[:s_target] == "current"
-      item.readable
-    else
-      if Core.site
-        item.and :site_id, Core.site.id
-      else
-        item.and :site_id, 'IS', nil
-      end
-      item.and :concept_id, Core.concept.id if params[:s_target] != "all"
-    end
-    item.and 'node_id', @parent.id if @parent.id != 0
-    item.page  params[:page], params[:limit]
-    item.order params[:sort], order
-    @items = item.find(:all)
+    @nodes = Cms::DataFileNode.where(concept_id: Core.concept(:id)).order(:name)
+
+    rel = Cms::DataFile.order(params[:s_sort] == 'updated_at' ? 'updated_at DESC, id' : 'name, id')
+    rel = rel.where(node_id: @parent.id) unless @parent.id.zero?
+    rel = unless Core.user.has_auth?(:manager) || params[:s_target] == 'current'
+            rel.readable
+          else
+            rel = rel.where(concept_id: Core.concept.id) unless params[:s_target] == 'all'
+            rel.where(site_id: Core.site.try(:id))
+          end
+
+    @items = rel.paginate(page: params[:page], per_page: params[:limit])
     _index @items
   end
 
   def show
-    item = Cms::DataFile.new.readable
-    @item = item.find(params[:id])
+    @item = Cms::DataFile.readable.find_by(id: params[:id])
     return error_auth unless @item.readable?
-
     _show @item
   end
 
