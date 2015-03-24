@@ -4,20 +4,15 @@ class Cms::Admin::Data::TextsController < Cms::Controller::Admin::Base
   def pre_dispatch
     return error_auth unless Core.user.has_auth?(:designer)
   end
-  
+
   def index
-    item = Cms::DataText.new.readable
-    item.page  params[:page], params[:limit]
-    item.order params[:sort], 'name, id'
-    @items = item.find(:all)
-    _index @items
+    @items = Cms::DataText.readable.order(params[:sort] || 'name, id')
+                          .paginate(page: params[:page], per_page: params[:limit])
   end
-  
+
   def show
-    item = Cms::DataText.new.readable
-    @item = item.find(params[:id])
+    @item = Cms::DataText.readable.find_by(id: params[:id])
     return error_auth unless @item.readable?
-    
     _show @item
   end
 
@@ -35,13 +30,13 @@ class Cms::Admin::Data::TextsController < Cms::Controller::Admin::Base
   end
   
   def update
-    @item = Cms::DataText.new.find(params[:id])
+    @item = Cms::DataText.find(params[:id])
     @item.attributes = text_params
     _update @item
   end
   
   def destroy
-    @item = Cms::DataText.new.find(params[:id])
+    @item = Cms::DataText.find(params[:id])
     _destroy @item
   end
 

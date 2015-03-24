@@ -36,14 +36,21 @@ class Cms::Concept < ActiveRecord::Base
   end
 
   def readable_children
-    item = Cms::Concept.new
-    item.has_priv(:read, :user => Core.user)
-    item.and :parent_id, (id || 0)
-    item.and :site_id, Core.site.id
-    item.and :state, 'public'
-    item.find(:all, :order => :sort_no)
+    site = Core.site
+    user = Core.user
+    rel = self.class.where(state: 'public', site_id: site.id, parent_id: id.to_i)
+
+    unless user.has_auth?(:manager)
+      priv_name = 'read'
+      sql = "SELECT role_id FROM #{Sys::UsersRole.table_name} WHERE user_id = '#{user.id}'"
+      sql = "SELECT * FROM sys_object_privileges WHERE action = '#{priv_name}' AND role_id IN (#{sql})"
+      sql = "INNER JOIN (#{sql}) AS sys_object_privileges ON sys_object_privileges.item_unid = #{self.class.table_name}.unid"
+      rel = rel.joins(sql)
+    end
+
+    rel.order(:sort_no)
   end
-  
+
   def parent
     self.class.find_by_id(parent_id)
   end
