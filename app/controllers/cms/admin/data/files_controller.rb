@@ -23,7 +23,10 @@ class Cms::Admin::Data::FilesController < Cms::Controller::Admin::Base
 
     @nodes = Cms::DataFileNode.where(concept_id: Core.concept(:id)).order(:name)
 
+    files = Cms::DataFile.arel_table
+
     rel = Cms::DataFile.order(params[:s_sort] == 'updated_at' ? 'updated_at DESC, id' : 'name, id')
+    rel = rel.where(files[:name].matches("%#{params[:s_keyword]}%")) if params[:s_keyword].present?
     rel = rel.where(node_id: @parent.id) unless @parent.id.zero?
     rel = unless Core.user.has_auth?(:manager) || params[:s_target] == 'current'
             rel.readable
