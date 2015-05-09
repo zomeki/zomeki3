@@ -309,7 +309,7 @@ protected
     def rebuild(content, options={})
       if options[:dependent] == :smart_phone &&
          !(self.site.publish_all_for_smart_phone? ||
-            (self.site.publish_only_top_for_smart_phone? && item.respond_to?(:top_page?) && item.top_page?))
+            (self.site.publish_only_top_for_smart_phone? && top_page?))
         return false
       end
 
