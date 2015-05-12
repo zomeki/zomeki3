@@ -96,7 +96,15 @@ class Cms::Admin::Piece::BaseController < Cms::Controller::Admin::Base
 
   def base_params
     params.require(:item).permit(:body, :concept_id, :name, :state, :title, :view_title,
-                                 in_creator: [:group_id, :user_id],
-                                 in_settings: [:head_css, :lower_text, :target_form_id, :upper_text])
+                                 in_creator: base_params_item_in_creator,
+                                 in_settings: base_params_item_in_settings)
+  end
+
+  def base_params_item_in_creator
+    [:group_id, :user_id]
+  end
+
+  def base_params_item_in_settings
+    []
   end
 end
