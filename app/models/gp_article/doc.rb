@@ -414,13 +414,10 @@ class GpArticle::Doc < ActiveRecord::Base
     new_doc.in_editable_groups = editable_group.group_ids.split if editable_group
 
     inquiries.each_with_index do |inquiry, i|
-      if i == 0
-        attrs = inquiry.attributes
-        attrs[:group_id] = Core.user.group_id
-        new_doc.inquiries.build(attrs)
-      else
-        new_doc.inquiries.build(inquiry.attributes)
-      end
+      attrs = inquiry.attributes
+      attrs[:id] = nil
+      attrs[:group_id] = Core.user.group_id if i == 0
+      new_doc.inquiries.build(attrs)
     end
 
     unless maps.empty?
