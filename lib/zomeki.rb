@@ -1,5 +1,5 @@
 # encoding: utf-8
-module Cms
+module Zomeki
   def self.version
     "2.0.0"
   end
@@ -15,14 +15,14 @@ module Cms
 
   def self.config
     $cms_config ||= {}
-    Cms::Config
+    Zomeki::Config
   end
 
-  class Cms::Config
+  class Zomeki::Config
     def self.application
       return $cms_config[:imap_settings] if $cms_config[:imap_settings]
 
-      config = Cms.default_config["application"]
+      config = Zomeki.default_config["application"]
       file   = "#{Rails.root}/config/application.yml"
       if ::File.exist?(file)
         yml = YAML.load_file(file)

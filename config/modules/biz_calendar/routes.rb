@@ -1,8 +1,8 @@
-CmsCMS::Application.routes.draw do
+ZomekiCMS::Application.routes.draw do
   mod = "biz_calendar"
   
   ## admin
-  scope "#{CmsCMS::ADMIN_URL_PREFIX}/#{mod}", :module => mod, :as => mod do
+  scope "#{ZomekiCMS::ADMIN_URL_PREFIX}/#{mod}", :module => mod, :as => mod do
     resources(:places,
       :controller  => "admin/places",
       :path        => ":content/places") do

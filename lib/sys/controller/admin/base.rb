@@ -11,7 +11,7 @@ class Sys::Controller::Admin::Base < ApplicationController
     @@current_user = false
     if authenticate
       return false unless current_user
-      crypt_pass         = Cms.config.application["sys.crypt_pass"]
+      crypt_pass         = Zomeki.config.application["sys.crypt_pass"]
       Core.user          = current_user
       Core.user.password = Util::String::Crypt.decrypt(session[PASSWD_KEY], crypt_pass)
       Core.user_group    = current_user.groups[0]
@@ -34,13 +34,13 @@ class Sys::Controller::Admin::Base < ApplicationController
 private
   def authenticate
     return true  if logged_in?
-    return false if request.env['PATH_INFO'] =~ Regexp.new("^/#{CmsCMS::ADMIN_URL_PREFIX}/login")
-    return false if request.env['PATH_INFO'] =~ Regexp.new("^/#{CmsCMS::ADMIN_URL_PREFIX}/password")
+    return false if request.env['PATH_INFO'] =~ Regexp.new("^/#{ZomekiCMS::ADMIN_URL_PREFIX}/login")
+    return false if request.env['PATH_INFO'] =~ Regexp.new("^/#{ZomekiCMS::ADMIN_URL_PREFIX}/password")
     uri  = request.env['PATH_INFO']
     uri += "?#{request.env['QUERY_STRING']}" if !request.env['QUERY_STRING'].blank?
     cookies[:sys_login_referrer] = uri
     respond_to do |format|
-      format.html { redirect_to("/#{CmsCMS::ADMIN_URL_PREFIX}/login") }
+      format.html { redirect_to("/#{ZomekiCMS::ADMIN_URL_PREFIX}/login") }
       format.xml  { http_error 500, 'This is a secure page.' }
     end
     return false

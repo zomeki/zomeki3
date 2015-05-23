@@ -192,7 +192,7 @@ class Sys::User < ActiveRecord::Base
 
   ## Authenticates a user by their account name and unencrypted password.  Returns the user or nil.
   def self.authenticate(in_account, in_password, encrypted = false)
-    crypt_pass  = Cms.config.application["sys.crypt_pass"]
+    crypt_pass  = Zomeki.config.application["sys.crypt_pass"]
     in_password = Util::String::Crypt.decrypt(in_password, crypt_pass) if encrypted
 
     user = nil
@@ -216,7 +216,7 @@ class Sys::User < ActiveRecord::Base
 
   def encrypt_password
     return if password.blank?
-    crypt_pass  = Cms.config.application["sys.crypt_pass"]
+    crypt_pass  = Zomeki.config.application["sys.crypt_pass"]
     Util::String::Crypt.encrypt(password, crypt_pass)
   end
 

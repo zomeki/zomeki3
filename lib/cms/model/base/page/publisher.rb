@@ -98,7 +98,7 @@ module Cms::Model::Base::Page::Publisher
 
     return true if mobile_page?
     if options[:dependent].to_s =~ /ruby\z/i
-      return true if !Cms.config.application['cms.use_kana']
+      return true if !Zomeki.config.application['cms.use_kana']
     end
     return true if hash && pub && hash == pub.content_hash && ::File.exist?(path)
 

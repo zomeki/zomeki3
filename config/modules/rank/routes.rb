@@ -1,4 +1,4 @@
-CmsCMS::Application.routes.draw do
+ZomekiCMS::Application.routes.draw do
   mod = 'rank'
 
   ## script
@@ -8,7 +8,7 @@ CmsCMS::Application.routes.draw do
   get "/_script/#{mod}/script/this_weeks/publish" => "#{mod}/script/this_weeks#publish"
 
   ## admin
-  scope "#{CmsCMS::ADMIN_URL_PREFIX}/#{mod}", :module => mod, :as => mod do
+  scope "#{ZomekiCMS::ADMIN_URL_PREFIX}/#{mod}", :module => mod, :as => mod do
     resources :content_base,
       :controller  => "admin/content/base"
 

@@ -1,11 +1,11 @@
-CmsCMS::Application.routes.draw do
+ZomekiCMS::Application.routes.draw do
   mod = "sys"
 
   ## script
   get "/_script/#{mod}/run/*path" => "#{mod}/script/runner#run"
 
   ## admin
-  scope "#{CmsCMS::ADMIN_URL_PREFIX}/#{mod}", :module => mod, :as => mod do
+  scope "#{ZomekiCMS::ADMIN_URL_PREFIX}/#{mod}", :module => mod, :as => mod do
     get "tests" => "admin/tests#index",
       :as => :tests
     get "tests_mail" => "admin/tests/mail#index",
@@ -87,5 +87,5 @@ CmsCMS::Application.routes.draw do
       :controller  => "admin/processes"
   end
 
-  get "#{CmsCMS::ADMIN_URL_PREFIX}/#{mod}/:parent/inline_files/files/:name.:format" => 'sys/admin/inline/files#download'
+  get "#{ZomekiCMS::ADMIN_URL_PREFIX}/#{mod}/:parent/inline_files/files/:name.:format" => 'sys/admin/inline/files#download'
 end

@@ -47,8 +47,8 @@ class Cms::Controller::Script::Publication < ApplicationController
     ::Script.success if item.published?
 
     ## ruby html
-    return true unless Cms.config.application['cms.use_kana']
-    ids = Cms.config.application['cms.use_kana_exclude_site_ids'] || []
+    return true unless Zomeki.config.application['cms.use_kana']
+    ids = Zomeki.config.application['cms.use_kana_exclude_site_ids'] || []
     return true if ids.include?(site.id)
 
     uri = params[:uri]
@@ -109,7 +109,7 @@ class Cms::Controller::Script::Publication < ApplicationController
 
   def publish_more(item, params = {})
     stopp = nil
-    limit = params[:limit] || Cms.config.application["cms.publish_more_pages"].to_i rescue 0
+    limit = params[:limit] || Zomeki.config.application["cms.publish_more_pages"].to_i rescue 0
     limit = (limit < 1 ? 1 : 1 + limit)
     file  = params[:file] || 'index'
     first = params[:first] || 1

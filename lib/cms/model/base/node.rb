@@ -42,7 +42,7 @@ module Cms::Model::Base::Node
 
   def admin_uri
     controller = model.underscore.pluralize.gsub(/^(.*?\/)/, "\\1#{parent_id}/node_")
-    return "#{Core.uri}#{CmsCMS::ADMIN_URL_PREFIX}/#{controller}/#{id}"
+    return "#{Core.uri}#{ZomekiCMS::ADMIN_URL_PREFIX}/#{controller}/#{id}"
   end
 
   def edit_admin_uri

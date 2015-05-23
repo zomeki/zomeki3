@@ -25,7 +25,7 @@ module Cms::Model::Base::Piece
 
   def admin_uri
     controller = model.to_s.underscore.pluralize.gsub(/^(.*?)\//, "\\1/piece_") + "/#{id}"
-    "#{Core.uri}#{CmsCMS::ADMIN_URL_PREFIX}/#{controller}"
+    "#{Core.uri}#{ZomekiCMS::ADMIN_URL_PREFIX}/#{controller}"
   end
 
   def edit_admin_uri

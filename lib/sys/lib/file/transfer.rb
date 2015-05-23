@@ -123,10 +123,10 @@ module Sys::Lib::File::Transfer
 
 protected
   def load_transfer_settings
-    @opts             = Cms.config.application['sys.transfer_opts']
-    @opt_exclude      = Cms.config.application['sys.transfer_opt_exclude']
-    @opt_include      = Cms.config.application['sys.transfer_opt_include']
-    @opt_remote_shell = Cms.config.application['sys.transfer_opt_remote_shell']
+    @opts             = Zomeki.config.application['sys.transfer_opts']
+    @opt_exclude      = Zomeki.config.application['sys.transfer_opt_exclude']
+    @opt_include      = Zomeki.config.application['sys.transfer_opt_include']
+    @opt_remote_shell = Zomeki.config.application['sys.transfer_opt_remote_shell']
   end
 
   def get_transfer_site_settings(site)

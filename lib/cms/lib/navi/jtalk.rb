@@ -67,13 +67,13 @@ class Cms::Lib::Navi::Jtalk
 
   def make(*args)
     ## settings
-    sox         = Cms.config.application['cms.sox_bin']
-    lame        = Cms.config.application['cms.lame_bin']
-    talk_bin    = Cms.config.application['cms.talk_bin']
-    talk_voice  = Cms.config.application['cms.talk_voice']
-    talk_dic    = Cms.config.application['cms.talk_dic']
-    talk_opts   = Cms.config.application['cms.talk_opts']
-    talk_strlen = Cms.config.application['cms.talk_strlen'].to_i
+    sox         = Zomeki.config.application['cms.sox_bin']
+    lame        = Zomeki.config.application['cms.lame_bin']
+    talk_bin    = Zomeki.config.application['cms.talk_bin']
+    talk_voice  = Zomeki.config.application['cms.talk_voice']
+    talk_dic    = Zomeki.config.application['cms.talk_dic']
+    talk_opts   = Zomeki.config.application['cms.talk_opts']
+    talk_strlen = Zomeki.config.application['cms.talk_strlen'].to_i
 
     text    = nil
     options = {}

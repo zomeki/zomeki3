@@ -32,27 +32,27 @@ end
 
 # 記事の公開/非公開処理を行います。
 every '0-45/15 * * * *' do
-  rake 'cms:sys:tasks:exec'
+  rake 'zomeki:sys:tasks:exec'
 end
 
 # トップページや中間ページを静的ファイルとして書き出します。
 every '3-48/15 * * * *' do
-  rake 'cms:cms:nodes:publish'
+  rake 'zomeki:cms:nodes:publish'
 end
 
 # 音声ファイルを静的ファイルとして書き出します。
 every '6-51/15 * * * *' do
-  rake 'cms:cms:talks:exec'
+  rake 'zomeki:cms:talks:exec'
 end
 
 # 新着記事ポータルで設定したAtomフィードを取り込みます。
 every :hour do
-  rake 'cms:cms:feeds:read'
+  rake 'zomeki:cms:feeds:read'
 end
 
 # アクセスランキングデータを取り込みます。
 every :day, at: '3:00 am' do
-  rake 'cms:rank:ranks:exec'
+  rake 'zomeki:rank:ranks:exec'
 end
 
 # 汎用アンケートの回答データを取り込みます。

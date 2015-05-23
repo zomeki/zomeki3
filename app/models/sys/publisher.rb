@@ -17,7 +17,7 @@ class Sys::Publisher < ActiveRecord::Base
     FileUtils.rm(up_path) if FileTest.exist?(up_path)
     FileUtils.rm("#{up_path}.mp3") if FileTest.exist?("#{up_path}.mp3")
     FileUtils.rmdir(::File.dirname(path)) rescue nil
-    transcribe self, options  if Cms.config.application['sys.log_closed_page']
+    transcribe self, options  if Zomeki.config.application['sys.log_closed_page']
     return true
   end
 

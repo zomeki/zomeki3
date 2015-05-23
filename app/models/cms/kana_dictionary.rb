@@ -89,8 +89,8 @@ class Cms::KanaDictionary < ActiveRecord::Base
   end
 
   def self.make_dic_file(_site_id=nil)
-    mecab_index = Cms.config.application['cms.mecab_index']
-    mecab_dic   = Cms.config.application['cms.mecab_dic']
+    mecab_index = Zomeki.config.application['cms.mecab_index']
+    mecab_dic   = Zomeki.config.application['cms.mecab_dic']
 
     errors = []
     data   = []

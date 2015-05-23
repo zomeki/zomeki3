@@ -14,7 +14,7 @@ class Cms::Controller::Admin::Base < Sys::Controller::Admin::Base
         site_id = Core.user.site_ids.first unless Core.user.site_ids.include?(site_id.to_i)
       end
       cookies[:cms_site] = {:value => site_id, :path => '/', :expires => expires}
-      return redirect_to "/#{CmsCMS::ADMIN_URL_PREFIX}"
+      return redirect_to "/#{ZomekiCMS::ADMIN_URL_PREFIX}"
     end
 
     if cookies[:cms_site] && !Core.site
@@ -23,7 +23,7 @@ class Cms::Controller::Admin::Base < Sys::Controller::Admin::Base
     end
 
     if Core.user
-      if Core.request_uri == "/#{CmsCMS::ADMIN_URL_PREFIX}"
+      if Core.request_uri == "/#{ZomekiCMS::ADMIN_URL_PREFIX}"
         Core.set_concept(session, 0)
       else
         Core.set_concept(session)

@@ -2,7 +2,7 @@
 class Cms::Lib::Navi::Kana
 
   def self.convert(str, site_id=nil)
-    return nil unless Cms.config.application['cms.use_kana']
+    return nil unless Zomeki.config.application['cms.use_kana']
 
     require 'MeCab'
 

@@ -10,7 +10,7 @@ module Helpers
 
     # See Sys::Controller::Admin::Base#initialize_application
     Core.user = user
-    Core.user.password = Util::String::Crypt.decrypt(user.encrypt_password, Cms.config.application['sys.crypt_pass'])
+    Core.user.password = Util::String::Crypt.decrypt(user.encrypt_password, Zomeki.config.application['sys.crypt_pass'])
     Core.user_group = user.group
     return user
   end

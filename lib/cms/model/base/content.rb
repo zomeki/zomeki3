@@ -27,11 +27,11 @@ module Cms::Model::Base::Content
 
   def admin_uri
     controller = model.underscore.pluralize.gsub(/^(.*?\/)/, "\\1#{id}/")
-    "#{Core.uri}#{CmsCMS::ADMIN_URL_PREFIX}/#{controller}"
+    "#{Core.uri}#{ZomekiCMS::ADMIN_URL_PREFIX}/#{controller}"
   end
 
   def admin_content_uri
     controller = model.to_s.underscore.pluralize.gsub(/^(.*?)\/.*/, "\\1/content_base") + "/#{id}"
-    "#{Core.uri}#{CmsCMS::ADMIN_URL_PREFIX}/#{controller}"
+    "#{Core.uri}#{ZomekiCMS::ADMIN_URL_PREFIX}/#{controller}"
   end
 end

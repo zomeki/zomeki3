@@ -1,6 +1,6 @@
 <ul id="naviSites">
   <% @sites.each do |site| %>
   <% cls = (Core.site && Core.site.id == site.id) ? "current" : "" %>
-  <li><%= link_to "#{site.name}", "/#{CmsCMS::ADMIN_URL_PREFIX}?cms_navi[site]=#{site.id}", :class => cls %></li>
+  <li><%= link_to "#{site.name}", "/#{ZomekiCMS::ADMIN_URL_PREFIX}?cms_navi[site]=#{site.id}", :class => cls %></li>
   <% end %>
 </ul>

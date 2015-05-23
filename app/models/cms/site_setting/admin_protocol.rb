@@ -6,7 +6,7 @@ class Cms::SiteSetting::AdminProtocol < Cms::SiteSetting
   validates_uniqueness_of :value, :scope => :name
 
   def self.core_domain(site, default_uri=nil, options={})
-    mode = Cms.config.application['sys.core_domain']
+    mode = Zomeki.config.application['sys.core_domain']
     d = (mode == 'core') ? Core.full_uri : default_uri;
     return d if options[:freeze_protocol] && options[:freeze_protocol] == true
 

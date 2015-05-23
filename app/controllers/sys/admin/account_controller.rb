@@ -1,7 +1,7 @@
 # encoding: utf-8
 class Sys::Admin::AccountController < Sys::Controller::Admin::Base
   def login
-    admin_uri = "/#{CmsCMS::ADMIN_URL_PREFIX}"
+    admin_uri = "/#{ZomekiCMS::ADMIN_URL_PREFIX}"
 
     return redirect_to(admin_uri) if logged_in?
 
