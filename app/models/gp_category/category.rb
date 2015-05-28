@@ -194,7 +194,7 @@ class GpCategory::Category < ActiveRecord::Base
 
   def publish_ancestor_pages
     Delayed::Job.where(queue: 'publish_category_pages').destroy_all
-    GpCategory::Publisher.register_categories(ancestors.map(&:id))
+    GpCategory::Publisher.register_categories(ancestors)
     GpCategory::Publisher.delay(queue: 'publish_category_pages').publish_categories
   end
 
