@@ -49,7 +49,7 @@ def centos
   system "ln -s #{zomeki_conf} /etc/httpd/conf.d/zomeki.conf"
   system 'service mysqld start'
   sleep 1 until system 'mysqladmin ping' # Not required to connect
-  system "su - zomeki -c 'cd /var/share/zomeki && bundle exec rake db:setup RAILS_ENV=production'"
+  system "su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/share/zomeki && bundle exec rake db:setup RAILS_ENV=production'"
   system 'service mysqld stop'
 end
 

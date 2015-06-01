@@ -24,7 +24,7 @@ centos() {
 
   git clone https://github.com/zomeki/zomeki2-development.git /var/share/zomeki
   chown -R zomeki:zomeki /var/share/zomeki
-  su - zomeki -c 'cd /var/share/zomeki && bundle install --path vendor/bundle --without development test'
+  su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/share/zomeki && bundle install --path vendor/bundle --without development test'
 
   cp /var/share/zomeki/config/samples/zomeki_logrotate /etc/logrotate.d/.
 

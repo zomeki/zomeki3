@@ -13,7 +13,7 @@ ubuntu() {
 centos() {
   echo "It's CentOS!"
 
-  su - zomeki -c 'cd /var/share/zomeki && bundle exec whenever --update-crontab'
+  su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/share/zomeki && bundle exec whenever --update-crontab'
 }
 
 others() {

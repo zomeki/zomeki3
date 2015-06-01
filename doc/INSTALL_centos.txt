@@ -78,7 +78,7 @@ ZOMEKIをインストールします。
 
   # git clone https://github.com/zomeki/zomeki2-development.git /var/share/zomeki
   # chown -R zomeki:zomeki /var/share/zomeki
-  # su - zomeki -c 'cd /var/share/zomeki && bundle install --path vendor/bundle --without development test'
+  # su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/share/zomeki && bundle install --path vendor/bundle --without development test'
 
   # cp /var/share/zomeki/config/samples/zomeki_logrotate /etc/logrotate.d/.
 
@@ -187,7 +187,7 @@ MySQLをインストールします
 必要なデータベースを作ります。
 
   # service mysqld start
-  # su - zomeki -c 'cd /var/share/zomeki && bundle exec rake db:setup RAILS_ENV=production'
+  # su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/share/zomeki && bundle exec rake db:setup RAILS_ENV=production'
   # service mysqld stop
 
 **********************************************************************
@@ -256,7 +256,7 @@ MeCab-Rubyをインストールします。
 
 ユーザzomekiのcronに処理を追加します。
 
-  # su - zomeki -c 'cd /var/share/zomeki && bundle exec whenever --update-crontab'
+  # su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/share/zomeki && bundle exec whenever --update-crontab'
 
 **********************************************************************
  13 動作確認
