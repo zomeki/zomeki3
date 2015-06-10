@@ -8,10 +8,10 @@ ZomekiCMS::Application.routes.draw do
   scope "#{ZomekiCMS::ADMIN_URL_PREFIX}/#{mod}", :module => mod, :as => mod do
     get "tests" => "admin/tests#index",
       :as => :tests
-    get "tests_mail" => "admin/tests/mail#index",
-      :as => :tests_mail
-    get "tests_link_check" => "admin/tests/link_check#index",
-      :as => :tests_link_check
+    match "tests_mail" => "admin/tests/mail#index",
+      :as => :tests_mail, via: [:get, :post]
+    match "tests_link_check" => "admin/tests/link_check#index",
+      :as => :tests_link_check, via: [:get, :post]
 
     resources :settings,
       :controller  => "admin/settings"
