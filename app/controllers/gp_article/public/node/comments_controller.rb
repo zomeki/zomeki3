@@ -26,7 +26,7 @@ class GpArticle::Public::Node::CommentsController < Cms::Controller::Public::Bas
 
   def confirm
     if @confirmation_required
-      @comment = @doc.comments.build(params[:comment])
+      @comment = @doc.comments.build(comment_params)
       render :new unless @comment.valid?
     else
       create
@@ -34,7 +34,7 @@ class GpArticle::Public::Node::CommentsController < Cms::Controller::Public::Bas
   end
 
   def create
-    @comment = @doc.comments.build(params[:comment])
+    @comment = @doc.comments.build(comment_params)
 
     return render(:new) if params[:edit_comment]
 
@@ -58,5 +58,9 @@ class GpArticle::Public::Node::CommentsController < Cms::Controller::Public::Bas
         render :new
       end
     end
+  end
+
+  def comment_params
+    params.require(:comment).permit(:author_name, :author_email, :author_url, :body)
   end
 end

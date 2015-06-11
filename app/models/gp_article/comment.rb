@@ -9,6 +9,8 @@ class GpArticle::Comment < ActiveRecord::Base
   #                :body,
   #                :posted_at
 
+  include StateText
+  
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
 
   scope :public, -> { where(state: 'public') }
@@ -16,7 +18,6 @@ class GpArticle::Comment < ActiveRecord::Base
   belongs_to :doc
   validates_presence_of :doc_id
 
-  belongs_to :status, :foreign_key => :state, :class_name => 'Sys::Base::Status'
   validates_presence_of :state
 
   after_initialize :set_defaults
