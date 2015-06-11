@@ -13,7 +13,7 @@ class Cms::Admin::Tool::ImportController < Cms::Controller::Admin::Base
     @item = Cms::Model::Tool::Import.new
     return unless request.post?
     
-    @item.attributes = params[:item]
+    @item.attributes = params.require(:item).permit(:file, :concept_id)
     return unless @item.valid?
     
     ## concept

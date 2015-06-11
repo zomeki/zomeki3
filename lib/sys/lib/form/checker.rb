@@ -25,7 +25,7 @@ class Sys::Lib::Form::Checker
     options = {
       :proxy => Core.proxy,
       :progress_proc => lambda {|size| raise ok_code },
-      'User-Agent' => "CMS/#{Cms.version}"
+      'User-Agent' => "CMS/#{Zomeki.version}"
     }
 
     begin
