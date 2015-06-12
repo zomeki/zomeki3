@@ -57,6 +57,14 @@ class Cms::Layout < ActiveRecord::Base
   
   def head_tag(request)
     tag = head_tag_with_request(request)
+
+    concepts = Cms::Lib::Layout.inhertited_concepts
+    Cms::Lib::Layout.find_data_texts(tag, concepts).each do |name, item|
+      data = item.body
+      tag.gsub!("[[text/#{name}]]", data)
+    end
+
+
     tag = tag.gsub(/<link [^>]+>/i, '').gsub(/(\r\n|\n)+/, "\n") if request.mobile?
     tag.html_safe
   end
