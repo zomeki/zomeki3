@@ -68,7 +68,6 @@ class Cms::Admin::Tool::ImportController < Cms::Controller::Admin::Base
     if !item_changed?(item)
       #
     elsif item.save
-      item.put_css_files if item.state == "public"
       key = exists ? :update : :create
       @count[key] += 1
       #@results << "#{name} #{action}" 

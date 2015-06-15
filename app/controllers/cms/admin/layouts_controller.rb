@@ -34,9 +34,7 @@ class Cms::Admin::LayoutsController < Cms::Controller::Admin::Base
     @item = Cms::Layout.new(layout_params)
     @item.site_id = Core.site.id
     @item.state   = 'public'
-    _create @item do
-      @item.put_css_files
-    end
+    _create @item
   end
   
   def update
@@ -44,7 +42,6 @@ class Cms::Admin::LayoutsController < Cms::Controller::Admin::Base
     @item.attributes = layout_params
     _update(@item, :location => url_for(:action => :edit)) do
       Core.set_concept(session, @item.concept_id)
-      @item.put_css_files
     end
   end
   

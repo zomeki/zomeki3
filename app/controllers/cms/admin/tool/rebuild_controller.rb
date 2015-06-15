@@ -13,7 +13,7 @@ class Cms::Admin::Tool::RebuildController < Cms::Controller::Admin::Base
   end
   
   def index
-    @item = Cms::Node.new(params[:item])
+    @item = Cms::Node.new(rebuild_params)
     if params[:do] == 'content'
       Core.messages << "再構築： コンテンツ"
       
@@ -37,26 +37,6 @@ class Cms::Admin::Tool::RebuildController < Cms::Controller::Admin::Base
         end
       end
       
-    elsif params[:do] == 'styleseet'
-      Core.messages << "再構築： スタイルシート"
-      
-      results = [0, 0]
-      item = Cms::Layout.new
-      item.and :site_id, Core.site.id
-      item.and :concept_id, @item.concept_id if !@item.concept_id.blank?
-      items = item.find(:all)
-      items.each do |item|
-        begin
-          if item.put_css_files
-            results[0] += 1
-          end
-        rescue => e
-          results[1] += 1
-        end
-      end
-      
-      Core.messages << "-- 成功 #{results[0]}件"
-      Core.messages << "-- 失敗 #{results[1]}件"
     end
     
     if !Core.messages.empty?
@@ -142,5 +122,9 @@ class Cms::Admin::Tool::RebuildController < Cms::Controller::Admin::Base
     end
 
     redirect_to url_for(action: 'index'), notice: notice_message.html_safe
+  end
+
+  def rebuild_params
+    params.permit(:target_node_ids, :target_content_ids)
   end
 end

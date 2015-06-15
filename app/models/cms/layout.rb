@@ -15,8 +15,6 @@ class Cms::Layout < ActiveRecord::Base
   validates_format_of :name, :with => /\A[0-9a-zA-Z\-_]+\z/, :if => "!name.blank?",
     :message => "は半角英数字、ハイフン、アンダースコアで入力してください。"
   
-  after_destroy :remove_css_files
-  
   def states
     [['公開','public']]
   end
@@ -72,10 +70,6 @@ class Cms::Layout < ActiveRecord::Base
   def head_tag_with_request(request)
     tags = []
     
-    if uri = stylesheet_uri(request)
-      tags << %Q(<link href="#{uri}" media="all" rel="stylesheet" type="text/css" />)
-    end
-    
     if request.mobile? && !mobile_head.blank?
       tags << mobile_head
     elsif request.smart_phone? && !smart_phone_head.blank?
@@ -96,28 +90,6 @@ class Cms::Layout < ActiveRecord::Base
     else
       body.html_safe
     end
-  end
-  
-  def stylesheet_uri(request)
-    return nil unless id
-    dir = site.uri + '_layouts/' + Util::String::CheckDigit.check(format('%07d', id))
-    
-    if request.mobile? && !mobile_stylesheet.blank?
-      dir + '/mobile.css'
-    elsif request.smart_phone? && !smart_phone_stylesheet.blank?
-      dir + '/smart_phone.css'
-    else
-      dir + '/style.css' 
-    end
-  end
-  
-  def stylesheet_path
-    return nil unless id
-    dir = Util::String::CheckDigit.check(format('%07d', id))
-    dir = dir.gsub(/(\d\d)(\d\d)(\d\d)(\d\d)/, '\1/\2/\3/\4/\1\2\3\4')
-    dir = site.public_path + '/_layouts/' + dir
-    
-    return dir + '/style.css'
   end
   
   def public_path
@@ -143,7 +115,6 @@ class Cms::Layout < ActiveRecord::Base
     tag.scan(/<link [^>]*?rel="stylesheet"[^>]*?>/i) do |m|
       css += %Q(@import "#{m.gsub(/.*href="(.*?)".*/, '\1')}";\n)
     end
-    css += mobile_stylesheet if !mobile_stylesheet.blank?
     
     4.times do
       css = convert_css_for_tamtam(css)
@@ -196,33 +167,6 @@ class Cms::Layout < ActiveRecord::Base
       end
     end
     css
-  end
-  
-  def put_css_files
-    path = stylesheet_path
-    Util::File.put(path, :data => stylesheet.to_s, :mkdir => true)
-    
-    path = ::File.dirname(path) + '/mobile.css'
-    Util::File.put(path, :data => mobile_stylesheet.to_s, :mkdir => true)
-    
-    path = ::File.dirname(path) + '/smart_phone.css'
-    Util::File.put(path, :data => smart_phone_stylesheet.to_s, :mkdir => true)
-    
-    return true
-  end
-  
-  def remove_css_files
-    path = stylesheet_path
-    FileUtils.rm_f(path)
-    
-    path = ::File.dirname(path) + '/mobile.css'
-    FileUtils.rm_f(path)
-    
-    path = ::File.dirname(path) + '/smart_phone.css'
-    FileUtils.rm_f(path)
-    
-    FileUtils.rmdir(::File.dirname(path)) rescue nil
-    return true
   end
   
   def duplicate(rel_type = nil)
