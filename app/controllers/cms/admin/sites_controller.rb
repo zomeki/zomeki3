@@ -10,12 +10,11 @@ class Cms::Admin::SitesController < Cms::Controller::Admin::Base
   def index
     @item = Cms::Site.new # for search
 
-    item = Cms::Site.new
+    @items = Cms::Site.order(:id)
     # システム管理者以外は所属サイトしか操作できない
-    item.and :id, current_user.site_ids unless current_user.root?
-    item.page  params[:page], params[:limit]
-    item.order params[:sort], :id
-    @items = item.find(:all)
+    @items = @items.where(id: current_user.site_ids) unless current_user.root?
+    @items = @items.paginate(page: params[:page], per_page: params[:limit])
+
     _index @items
   end
 
