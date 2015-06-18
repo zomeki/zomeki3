@@ -15,7 +15,7 @@ class Cms::Admin::NodesController < Cms::Controller::Admin::Base
                      .order('sitemap_sort_no IS NULL, sitemap_sort_no, name')
                      .includes(:site)
 
-    @pages = Cms::Node.where(site_id: Core.site.id, parent_id: @parent.id, directory: 0)
+    @pages = Cms::Node.where(site_id: Core.site.id, parent_id: @parent.id, directory: [nil, 0])
                       .order('sitemap_sort_no IS NULL, sitemap_sort_no, name')
                       .includes(:site)
     _index @pages
