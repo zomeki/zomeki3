@@ -19,7 +19,7 @@ class Cms::Admin::SitesController < Cms::Controller::Admin::Base
   end
 
   def show
-    @item = Cms::Site.new.find(params[:id])
+    @item = Cms::Site.find(params[:id])
     return error_auth unless @item.readable?
 
     load_sns_apps
@@ -60,7 +60,7 @@ class Cms::Admin::SitesController < Cms::Controller::Admin::Base
   end
 
   def update
-    @item = Cms::Site.new.find(params[:id])
+    @item = Cms::Site.find(params[:id])
     @item.attributes = site_params
 
     @sns_apps = params[:sns_apps]
@@ -75,7 +75,7 @@ class Cms::Admin::SitesController < Cms::Controller::Admin::Base
   end
 
   def destroy
-    @item = Cms::Site.new.find(params[:id])
+    @item = Cms::Site.find(params[:id])
     _destroy(@item) do
       cookies.delete(:cms_site)
       update_config
@@ -84,7 +84,7 @@ class Cms::Admin::SitesController < Cms::Controller::Admin::Base
   end
 
   def show_portal
-    @item = Cms::Site.new.find(params[:id])
+    @item = Cms::Site.find(params[:id])
     @item.portal_group_state = "visible"
     @item.save(:validate => false)
 
@@ -99,7 +99,7 @@ class Cms::Admin::SitesController < Cms::Controller::Admin::Base
   end
 
   def hide_portal
-    @item = Cms::Site.new.find(params[:id])
+    @item = Cms::Site.find(params[:id])
     @item.portal_group_state = "hidden"
     @item.save(:validate => false)
 
