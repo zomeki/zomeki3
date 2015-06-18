@@ -62,7 +62,6 @@ class Cms::Admin::NodesController < Cms::Controller::Admin::Base
     #@item.parent_id    = @parent.id
     @item.state        = 'closed'
     @item.published_at = Core.now
-    @item.directory    = (@item.model_type == :directory)
     @item.name         = "tmp" # for validation
     @item.title        = @item.model_name.to_s.gsub(/.*\//, '')
     

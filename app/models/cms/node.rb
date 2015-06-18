@@ -382,6 +382,7 @@ protected
 
   def set_defaults
     self.sitemap_state ||= SITEMAP_STATE_OPTIONS.first.last if self.has_attribute?(:sitemap_state)
+    self.directory = (model_type == :directory) if self.has_attribute?(:directory) && directory.nil?
   end
 
   def extract_links(html, all)
