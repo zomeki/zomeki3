@@ -258,6 +258,6 @@ protected
   end
 
   def site_params
-    params.require(:item).permit(:body, :full_uri, :in_creator, :in_portal_area_ids, :in_portal_attribute_ids, :in_portal_business_ids, :in_portal_category_ids, :mobile_full_uri, :name, :portal_group_id, :related_site)
+    params.require(:item).permit(:body, :full_uri, :in_creator, :in_setting_site_admin_protocol, :in_setting_transfer_dest_dir, :in_setting_transfer_dest_domain, :in_setting_transfer_dest_host, :in_setting_transfer_dest_user, :mobile_full_uri, :name, :og_description, :og_image, :og_title, :og_type, :related_site, :smart_phone_publication, :spp_target)
   end
 end
