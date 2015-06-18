@@ -3,7 +3,7 @@
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
-CKEDITOR.plugins.add( 'cmslink', {
+CKEDITOR.plugins.add( 'zomekilink', {
 	requires: 'dialog,fakeobjects',
 	lang: 'af,ar,bg,bn,bs,ca,cs,cy,da,de,el,en,en-au,en-ca,en-gb,eo,es,et,eu,fa,fi,fo,fr,fr-ca,gl,gu,he,hi,hr,hu,id,is,it,ja,ka,km,ko,ku,lt,lv,mk,mn,ms,nb,nl,no,pl,pt,pt-br,ro,ru,si,sk,sl,sq,sr,sr-latn,sv,th,tr,ug,uk,vi,zh,zh-cn', // %REMOVE_LINE_CORE%
 	icons: 'anchor,anchor-rtl,link,unlink', // %REMOVE_LINE_CORE%
@@ -58,7 +58,7 @@ CKEDITOR.plugins.add( 'cmslink', {
 			allowed = allowed.replace( ']', ',target,onclick]' );
 
 		// Add the link and unlink buttons.
-		editor.addCommand( 'link', new CKEDITOR.dialogCommand( 'cmslink', {
+		editor.addCommand( 'link', new CKEDITOR.dialogCommand( 'zomekilink', {
 			allowedContent: allowed,
 			requiredContent: required
 		} ) );
@@ -92,7 +92,7 @@ CKEDITOR.plugins.add( 'cmslink', {
 			});
 		}
 
-		CKEDITOR.dialog.add( 'cmslink', this.path + 'dialogs/link.js' );
+		CKEDITOR.dialog.add( 'zomekilink', this.path + 'dialogs/link.js' );
 		CKEDITOR.dialog.add( 'cmsanchor', this.path + 'dialogs/anchor.js' );
 
 		editor.on( 'doubleclick', function( evt ) {
@@ -100,7 +100,7 @@ CKEDITOR.plugins.add( 'cmslink', {
 
 			if ( !element.isReadOnly() ) {
 				if ( element.is( 'a' ) ) {
-					evt.data.dialog = ( element.getAttribute( 'name' ) && ( !element.getAttribute( 'href' ) || !element.getChildCount() ) ) ? 'cmsanchor' : 'cmslink';
+					evt.data.dialog = ( element.getAttribute( 'name' ) && ( !element.getAttribute( 'href' ) || !element.getChildCount() ) ) ? 'cmsanchor' : 'zomekilink';
 					editor.getSelection().selectElement( element );
 				} else if ( CKEDITOR.plugins.link.tryRestoreFakeAnchor( editor, element ) ) {
 					evt.data.dialog = 'cmsanchor';

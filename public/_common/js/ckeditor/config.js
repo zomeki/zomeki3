@@ -64,7 +64,7 @@ CKEDITOR.editorConfig = function( config ) {
   config.templates_replaceContent = false;
 
   // プラグイン
-  config.extraPlugins = 'youtube,audio,video,cmslink';
+  config.extraPlugins = 'youtube,audio,video,zomekilink';
 
   // tagの許可
   config.allowedContent = true;
