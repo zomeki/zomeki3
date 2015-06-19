@@ -11,7 +11,7 @@ class Cms::Admin::Tool::ExportController < Cms::Controller::Admin::Base
     @item = Cms::Model::Tool::Export.new
     return unless request.post?
     
-    @item.attributes = params.require(:item).permit(:concept_id, :target)
+    @item.attributes = params.require(:item).permit(:concept_id, target: [:layout, :piece])
     return unless @item.valid?
     
     ## concept
