@@ -3,6 +3,10 @@ class Cms::Controller::Admin::Base < Sys::Controller::Admin::Base
   helper Cms::FormHelper
   layout  'admin/cms'
 
+  def default_url_options
+    Core.concept ? { :concept => Core.concept.id } : {}
+  end
+
   def initialize_application
     return false unless super
 
@@ -14,6 +18,7 @@ class Cms::Controller::Admin::Base < Sys::Controller::Admin::Base
         site_id = Core.user.site_ids.first unless Core.user.site_ids.include?(site_id.to_i)
       end
       cookies[:cms_site] = {:value => site_id, :path => '/', :expires => expires}
+      Core.set_concept(session, 0)
       return redirect_to "/#{ZomekiCMS::ADMIN_URL_PREFIX}"
     end
 
@@ -23,7 +28,9 @@ class Cms::Controller::Admin::Base < Sys::Controller::Admin::Base
     end
 
     if Core.user
-      if Core.request_uri == "/#{ZomekiCMS::ADMIN_URL_PREFIX}"
+      if params[:concept]
+        Core.set_concept(session, params[:concept])
+      elsif Core.request_uri == "/#{ZomekiCMS::ADMIN_URL_PREFIX}"
         Core.set_concept(session, 0)
       else
         Core.set_concept(session)

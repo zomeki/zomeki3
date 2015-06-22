@@ -2,9 +2,9 @@ ZomekiCMS::Application.routes.draw do
   mod = "cms"
 
   get "/_preview/:site/(*path)" => "cms/admin/preview#index",
-    :as => :cms_preview
+    :as => :cms_preview, :defaults => { :concept => nil }
   match  "/_ssl/:site/(*path)" => "cms/public/common_ssl#index",
-    :as => :cms_common_ssl, :via => [:get, :post]
+    :as => :cms_common_ssl, :defaults => { :concept => nil }, :via => [:get, :post]
 
   ## admin
   scope "#{ZomekiCMS::ADMIN_URL_PREFIX}/#{mod}", :module => mod, :as => mod do
@@ -13,8 +13,6 @@ ZomekiCMS::Application.routes.draw do
     resources :navi_sites,
       :controller  => "admin/navi/sites"
       # :as => :cms_navi_concepts
-    match "stylesheets/(*path)" => "admin/stylesheets#index",
-      :as => :stylesheets, :format => false, via: [:get, :post, :put]
 
     resources :tests,
       :controller  => "admin/tests"
@@ -41,50 +39,6 @@ ZomekiCMS::Application.routes.draw do
           get :disable_auth
         end
       end
-    resources :contents,
-      :controller  => "admin/contents"
-    resource :contents_rewrite,
-      :controller  => "admin/content/rewrite"
-    resources :nodes,
-      :controller  => "admin/nodes",
-      :path        => ":parent/nodes" do
-        collection do
-          get  :search
-          get  :content_options
-          get  :model_options
-        end
-      end
-    resources :layouts,
-      :controller  => "admin/layouts"
-    resources :pieces,
-      :controller  => "admin/pieces" do
-        collection do
-          get  :content_options
-          get  :model_options
-        end
-      end
-    resources :data_texts,
-      :controller  => "admin/data/texts"
-    resources :data_files,
-      :controller  => "admin/data/files",
-      :path        => ":parent/data_files" do
-        member do
-          get :download
-        end
-      end
-    resources :data_file_nodes,
-      :controller  => "admin/data/file_nodes",
-      :path        => ":parent/data_file_nodes"
-    resources :inline_data_files,
-      :controller  => "admin/inline/data_files",
-      :path        => ":parent/inline_data_files" do
-        member do
-          get :download
-        end
-      end
-    resources :inline_data_file_nodes,
-      :controller  => "admin/inline/data_file_nodes",
-      :path        => ":parent/inline_data_file_nodes"
     resources :kana_dictionaries,
       :controller  => "admin/kana_dictionaries" do
         collection do
@@ -137,6 +91,71 @@ ZomekiCMS::Application.routes.draw do
           post :import
         end
       end
+  end
+
+  scope "#{ZomekiCMS::ADMIN_URL_PREFIX}/#{mod}", :module => mod, :as => '' do
+    post 'tool_rebuild_contents' => 'admin/tool/rebuild#rebuild_contents'
+    post 'tool_rebuild_nodes' => 'admin/tool/rebuild#rebuild_nodes'
+    match 'tool_rebuild' => 'admin/tool/rebuild#index', as: 'tool_rebuild', via: [:get, :post]
+    match 'tool_search' => 'admin/tool/search#index', as: 'tool_search', via: [:get, :post]
+    match 'tool_link_check' => 'admin/tool/link_check#index', as: 'tool_link_check', via: [:get, :post]
+#    match 'tool_convert' => 'admin/tool/convert#index', as: 'tool_convert', via: [:get, :post]
+#    match "tool_convert_file_list(/:site_url(/*path))" => "admin/tool/convert#file_list",
+#      as: 'tool_convert_file_list', :format => false, :constraints => { :site_url => /[^\/]+/ }, via: [:get, :post]
+#    match "tool_convert_setting" => "admin/tool/convert#convert_setting", as: 'tool_convert_setting', via: [:get, :post]
+#    match "tool_convert_import_site" => "admin/tool/convert#import_site", as: 'tool_convert_import_site', via: [:get, :post]
+    match "tool_export"  => "admin/tool/export#index", via: [:get, :post]
+    match "tool_import"  => "admin/tool/import#index", via: [:get, :post]
+    match 'tool_uri_check' => 'admin/tool/uri_check#index', via: [:get, :post]
+  end
+
+  scope "#{ZomekiCMS::ADMIN_URL_PREFIX}/#{mod}/c:concept", :module => mod, :as => mod do
+    match "stylesheets/(*path)" => "admin/stylesheets#index",
+      :as => :stylesheets, :format => false, via: [:get, :post, :put]
+    resources :contents,
+      :controller  => "admin/contents"
+    resource :contents_rewrite,
+      :controller  => "admin/content/rewrite"
+    resources :nodes,
+      :controller  => "admin/nodes",
+      :path        => ":parent/nodes" do
+        collection do
+          get  :search
+          get  :content_options
+          get  :model_options
+        end
+      end
+    resources :layouts,
+      :controller  => "admin/layouts"
+    resources :pieces,
+      :controller  => "admin/pieces" do
+        collection do
+          get  :content_options
+          get  :model_options
+        end
+      end
+    resources :data_texts,
+      :controller  => "admin/data/texts"
+    resources :data_files,
+      :controller  => "admin/data/files",
+      :path        => ":parent/data_files" do
+        member do
+          get :download
+        end
+      end
+    resources :data_file_nodes,
+      :controller  => "admin/data/file_nodes",
+      :path        => ":parent/data_file_nodes"
+    resources :inline_data_files,
+      :controller  => "admin/inline/data_files",
+      :path        => ":parent/inline_data_files" do
+        member do
+          get :download
+        end
+      end
+    resources :inline_data_file_nodes,
+      :controller  => "admin/inline/data_file_nodes",
+      :path        => ":parent/inline_data_file_nodes"
 
     ## node
     resources :node_directories,
@@ -168,22 +187,6 @@ ZomekiCMS::Application.routes.draw do
       resources :docs,
         :controller => 'admin/piece/pickup_docs/docs'
     end
-  end
-
-  scope "#{ZomekiCMS::ADMIN_URL_PREFIX}/#{mod}", :module => mod, :as => '' do
-    post 'tool_rebuild_contents' => 'admin/tool/rebuild#rebuild_contents'
-    post 'tool_rebuild_nodes' => 'admin/tool/rebuild#rebuild_nodes'
-    match 'tool_rebuild' => 'admin/tool/rebuild#index', as: 'tool_rebuild', via: [:get, :post]
-    match 'tool_search' => 'admin/tool/search#index', as: 'tool_search', via: [:get, :post]
-    match 'tool_link_check' => 'admin/tool/link_check#index', as: 'tool_link_check', via: [:get, :post]
-#    match 'tool_convert' => 'admin/tool/convert#index', as: 'tool_convert', via: [:get, :post]
-#    match "tool_convert_file_list(/:site_url(/*path))" => "admin/tool/convert#file_list",
-#      as: 'tool_convert_file_list', :format => false, :constraints => { :site_url => /[^\/]+/ }, via: [:get, :post]
-#    match "tool_convert_setting" => "admin/tool/convert#convert_setting", as: 'tool_convert_setting', via: [:get, :post]
-#    match "tool_convert_import_site" => "admin/tool/convert#import_site", as: 'tool_convert_import_site', via: [:get, :post]
-    match "tool_export"  => "admin/tool/export#index", via: [:get, :post]
-    match "tool_import"  => "admin/tool/import#index", via: [:get, :post]
-    match 'tool_uri_check' => 'admin/tool/uri_check#index', via: [:get, :post]
   end
 
   ## public
