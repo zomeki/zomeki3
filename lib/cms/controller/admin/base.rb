@@ -29,7 +29,12 @@ class Cms::Controller::Admin::Base < Sys::Controller::Admin::Base
 
     if Core.user
       if params[:concept]
-        Core.set_concept(session, params[:concept])
+        concept = Cms::Concept.find_by_id(params[:concept])
+        if concept && Core.site.id != concept.site_id
+          Core.set_concept(session, 0)
+        else
+          Core.set_concept(session, params[:concept])
+        end
       elsif Core.request_uri == "/#{ZomekiCMS::ADMIN_URL_PREFIX}"
         Core.set_concept(session, 0)
       else
