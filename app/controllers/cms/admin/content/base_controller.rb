@@ -60,6 +60,6 @@ class Cms::Admin::Content::BaseController < Cms::Controller::Admin::Base
   private
 
   def base_params
-    params.require(:item).permit(:code, :concept_id, :in_creator, :name, :note)
+    params.require(:item).permit(:code, :concept_id, :in_creator, :name, :note, :sort_no)
   end
 end
