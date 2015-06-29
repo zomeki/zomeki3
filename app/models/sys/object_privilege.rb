@@ -13,20 +13,20 @@ class Sys::ObjectPrivilege < ActiveRecord::Base
   attr_accessor :in_actions
   
   def in_actions
-    if read_attribute(:in_actions).nil?
-      write_attribute(:in_actions, actions)
+    unless @in_actions
+      @in_actions = actions
     end
-    read_attribute(:in_actions)
+    @in_actions
   end
   
   def in_actions=(values)
     @_in_actions_changed = true
     _values = []
-    if values.class == Hash || values.class == HashWithIndifferentAccess
+    unless values.blank?
       values.each {|key, val| _values << key unless val.blank? }
-      write_attribute(:in_actions, _values)
+      @in_actions = _values
     else
-      write_attribute(:in_actions, values)
+      @in_actions = values
     end
   end
   
