@@ -8,8 +8,6 @@ class Cms::Content < ActiveRecord::Base
   include Cms::Model::Rel::Concept
   include Cms::Model::Auth::Concept
 
-  default_scope { order(:sort_no) }
-
   has_many :settings, -> { order(:sort_no) },
     :foreign_key => :content_id, :class_name => 'Cms::ContentSetting', :dependent => :destroy
   has_many :pieces, :foreign_key => :content_id, :class_name => 'Cms::Piece',

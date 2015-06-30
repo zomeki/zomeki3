@@ -9,7 +9,7 @@ class Cms::Admin::ContentsController < Cms::Controller::Admin::Base
   def index
     return show_htaccess if params.key?(:htaccess)
 
-    @items = Cms::Content.readable.order('sort_no, name, id')
+    @items = Cms::Content.readable.order('sort_no IS NULL, sort_no, name, id')
                          .paginate(page: params[:page], per_page: params[:limit])
     _index @items
   end
