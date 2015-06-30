@@ -61,7 +61,7 @@ class Cms::Layout < ActiveRecord::Base
       data = item.body
       tag.gsub!("[[text/#{name}]]", data)
     end
-
+    tag.gsub!(/\[\[text\/[^\]]+\]\]/, '')
 
     tag = tag.gsub(/<link [^>]+>/i, '').gsub(/(\r\n|\n)+/, "\n") if request.mobile?
     tag.html_safe
