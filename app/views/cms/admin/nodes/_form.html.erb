@@ -1,7 +1,7 @@
 <p class="form">基本情報</p>
 
 <table class="show">
-  <%= concept_and_layout_form f %>
+  <%= concept_and_layout_form f, includ_blank: false %>
   <tr>
     <th><%= @item.locale(:content_id) %></th>
     <td><%= f.select :content_id, @contents, {} %></td>
