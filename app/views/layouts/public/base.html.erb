@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <title><%= Page.window_title %></title>
+  <script src="/_common/js/jquery.min.js"></script>
+  <script src="/_common/js/jquery-migrate.min.js" async defer></script>
+  <script src="/_common/js/jquery_ujs.js" async defer></script>
   <%- if Page.current_node.content.class.in?([Survey::Content::Form]) -%>
   <%= csrf_meta_tags %>
   <%- end -%>
