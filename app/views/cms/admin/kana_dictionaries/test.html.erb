@@ -45,7 +45,7 @@ function writePreview(data) {
 }
 function previewKana() {
   $.ajax({
-    url: '<%= cms_kana_dictionaries_path %>/test',
+    url: '<%= test_cms_kana_dictionaries_path %>',
     type: 'POST',
     data: {
       yomi_kana: true,
@@ -57,7 +57,7 @@ function previewKana() {
 }
 function previewTalk() {
   $.ajax({
-    url: '<%= cms_kana_dictionaries_path %>/test',
+    url: '<%= test_cms_kana_dictionaries_path %>',
     type: 'POST',
     data: {
       talk_kana: true,
