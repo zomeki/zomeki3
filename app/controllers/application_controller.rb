@@ -191,5 +191,7 @@ private
   end
     EOL
     info_log "params method!\n#{log}"
+    info_log "in_creator: #{item[:in_creator].inspect}" if item[:in_creator]
+    info_log "in_settings: #{item[:in_settings].inspect}" if item[:in_settings]
   end
 end
