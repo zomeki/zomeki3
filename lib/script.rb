@@ -32,7 +32,7 @@ class Script
   end
 
   def self.run(path, options = {})
-    @@kill     = 3600 # sec
+    @@kill     = 10800 # sec
     @@path     = path
     @@proc     = nil
     @@time     = nil
