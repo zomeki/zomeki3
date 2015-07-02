@@ -17,8 +17,10 @@ class Sys::Admin::Groups::ImportController < Cms::Controller::Admin::Base
 
     @results = [0, 0, 0]
 
+    import_params = params.require(:item).permit(:file)
+
     require 'nkf'
-    csv = NKF.nkf('-w', params[:item][:file].read)
+    csv = NKF.nkf('-w', import_params[:file].read)
 
     if params[:do] == 'groups'
       Core.messages << "インポート： グループ"
