@@ -11,4 +11,10 @@ class Gnav::Admin::Piece::CategoryTypesController < Cms::Admin::Piece::BaseContr
 
     _show @item
   end
+
+  private
+
+  def base_params_item_in_settings
+    [:category_id, :category_type_id, :layer]
+  end
 end
