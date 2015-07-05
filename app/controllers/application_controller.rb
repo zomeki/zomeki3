@@ -183,15 +183,14 @@ private
     return unless item
 
     log = <<-EOL
-
   private
 
   def #{model_name}_params
     params.require(:#{item_name}).permit(#{item.keys.map{|k| ":#{k}" }.sort.join(', ')})
   end
     EOL
-    info_log "params method!\n#{log}"
-    info_log "in_creator: #{item[:in_creator].inspect}" if item[:in_creator]
-    info_log "in_settings: #{item[:in_settings].inspect}" if item[:in_settings]
+    log << "\nin_creator: #{item[:in_creator]}\n  #{item[:in_creator].keys.sort.map(&:to_sym)}" if item[:in_creator]
+    log << "\nin_settings: #{item[:in_settings]}\n  #{item[:in_settings].keys.sort.map(&:to_sym)}" if item[:in_settings]
+    info_log "\n----------\nPARAMS METHOD!\n#{log}\n----------"
   end
 end
