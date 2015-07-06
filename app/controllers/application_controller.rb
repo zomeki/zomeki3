@@ -176,21 +176,32 @@ private
     env['rack.jpmobile'] = Jpmobile::Mobile::AbstractMobile.carrier('HTTP_USER_AGENT' => user_agent)
   end
 
-  ## Helpers for Rails migration 3.2 to 4.0
+  # Helpers for Rails migration 3.2 to 4.0
   def params_for_strong_parameters(model_name=nil, item_name='item')
     model_name ||= controller_name.singularize
     item = params[item_name]
     return unless item
 
+    keys = []
+    nested = []
+    item.keys.each do |k|
+      if k =~ /\Ain_/
+        nested << k
+      else
+        keys << k
+      end
+    end
+    keys = keys.sort + nested.sort
+
     log = <<-EOL
   private
 
   def #{model_name}_params
-    params.require(:#{item_name}).permit(#{item.keys.map{|k| ":#{k}" }.sort.join(', ')})
+    params.require(:#{item_name}).permit(#{keys.map{|k| ":#{k}" }.join(', ')})
   end
     EOL
-    log << "\nin_creator: #{item[:in_creator]}\n  #{item[:in_creator].keys.sort.map(&:to_sym)}" if item[:in_creator]
-    log << "\nin_settings: #{item[:in_settings]}\n  #{item[:in_settings].keys.sort.map(&:to_sym)}" if item[:in_settings]
+    log << "\nin_creator: #{item[:in_creator]}\n  #{item[:in_creator].keys.map(&:to_sym).sort}" if item[:in_creator]
+    log << "\nin_settings: #{item[:in_settings]}\n  #{item[:in_settings].keys.map(&:to_sym).sort}" if item[:in_settings]
     info_log "\n----------\nPARAMS METHOD!\n#{log}\n----------"
   end
 end
