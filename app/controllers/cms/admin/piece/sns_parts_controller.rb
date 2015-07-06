@@ -12,4 +12,8 @@ class Cms::Admin::Piece::SnsPartsController < Cms::Admin::Piece::BaseController
   def find_piece
     model.new.readable.find(params[:id])
   end
+
+  def base_params_item_in_settings
+    [:fb_like, :g_plusone, :line, :mixi, :mixi_data_key, :twitter]
+  end
 end

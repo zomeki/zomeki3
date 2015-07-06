@@ -95,9 +95,13 @@ class Cms::Admin::Piece::BaseController < Cms::Controller::Admin::Base
   end
 
   def base_params
-    params.require(:item).permit(:concept_id, :name, :state, :title, :view_title,
-                                 in_creator: base_params_item_in_creator,
-                                 in_settings: base_params_item_in_settings)
+    nested = {in_creator: base_params_item_in_creator,
+              in_settings: base_params_item_in_settings}
+    params.require(:item).permit(*base_params_item, nested)
+  end
+
+  def base_params_item
+    [:concept_id, :name, :state, :title, :view_title]
   end
 
   def base_params_item_in_creator
