@@ -45,11 +45,6 @@ every '6-51/15 * * * *' do
   rake 'zomeki:cms:talks:exec'
 end
 
-# 新着記事ポータルで設定したAtomフィードを取り込みます。
-every :hour do
-  rake 'zomeki:cms:feeds:read'
-end
-
 # アクセスランキングデータを取り込みます。
 every :day, at: '3:00 am' do
   rake 'zomeki:rank:ranks:exec'

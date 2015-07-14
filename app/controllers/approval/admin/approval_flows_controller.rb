@@ -22,7 +22,7 @@ class Approval::Admin::ApprovalFlowsController < Cms::Controller::Admin::Base
   end
 
   def create
-    @item = @content.approval_flows.build(params[:item])
+    @item = @content.approval_flows.build(approval_params)
     _create(@item) do
       set_approvals
     end
@@ -30,7 +30,7 @@ class Approval::Admin::ApprovalFlowsController < Cms::Controller::Admin::Base
 
   def update
     @item = @content.approval_flows.find(params[:id])
-    @item.attributes = params[:item]
+    @item.attributes = approval_params
     _update(@item) do
       set_approvals
     end
@@ -61,5 +61,9 @@ class Approval::Admin::ApprovalFlowsController < Cms::Controller::Admin::Base
         end
       end
     end
+  end
+
+  def approval_params
+    params.require(:item).permit(:title, :group_id, :sort_no, :approval_types, :approvals)
   end
 end
