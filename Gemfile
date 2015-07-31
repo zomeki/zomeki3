@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.0.13'
+gem 'rails', '4.2.3'
 
 # Use mysql as the database for Active Record
 gem 'mysql2'
@@ -45,7 +45,7 @@ end
 # gem 'debugger', group: [:development, :test]
 
 gem 'actionpack-action_caching', '~> 1.1.1'
-gem 'delayed_job_active_record', '~> 4.0.2'
+gem 'delayed_job_active_record', '~> 4.0.3'
 gem 'dynamic_form', '~> 1.1.4'
 gem 'garb', '~> 0.9.8'
 gem 'jpmobile', '~> 4.0.1'
@@ -60,7 +60,7 @@ gem 'rest-more', '~> 3.3.1'
 gem 'rmagick', '~> 2.13.4'
 gem 'rqrcode_png', '~> 0.1.5'
 gem 'rsync', '~> 1.0.9'
-gem 'simple_captcha2', '~> 0.2.2', require: 'simple_captcha'
+gem 'simple_captcha2', '~> 0.3.4', require: 'simple_captcha'
 gem 'will_paginate', '~> 3.0.7'
 gem 'whenever', require: false
 
