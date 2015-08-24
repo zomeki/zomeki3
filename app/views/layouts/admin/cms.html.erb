@@ -61,10 +61,10 @@
             <% end %>
           </div>
           <div id="contentBody">
-            <%- request.flash.discard(:notice) -%>
             <% if flash[:notice] %><div class="notice"><%= flash[:notice] %></div><% end %>
-            <%- request.flash.discard(:alert) -%>
+            <%- flash[:notice] = nil -%>
             <% if flash[:alert] %><div class="alert"><%= flash[:alert] %></div><% end %>
+            <%- flash[:alert] = nil -%>
             <%= yield %>
           </div>
           <div id="contentFooter"></div>

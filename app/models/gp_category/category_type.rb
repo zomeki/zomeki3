@@ -33,8 +33,8 @@ class GpCategory::CategoryType < ActiveRecord::Base
 
   after_initialize :set_defaults
 
-  scope :public, -> { where(state: 'public') }
-  scope :none, -> { where("#{self.table_name}.id IS ?", nil).where("#{self.table_name}.id IS NOT ?", nil) }
+  # scope :public, -> { where(state: 'public') }
+  # scope :none, -> { where("#{self.table_name}.id IS ?", nil).where("#{self.table_name}.id IS NOT ?", nil) }
 
   after_save :clean_published_files
   after_destroy :clean_published_files

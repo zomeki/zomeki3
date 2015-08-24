@@ -2,7 +2,7 @@
 
 @parent ||= 0
 cond   = {:site_id => Core.site.id, :parent_id => 0, :level_no => 1, :state => 'public'}
-root   = Cms::Concept.find(:all, :conditions => cond, :order => :sort_no)
+root   = Cms::Concept.where(site_id: Core.site.id, parent_id: 0, level_no: 1, state: 'public').order(:sort_no).all
 
 %><p class="form">デザイン</p>
 

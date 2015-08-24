@@ -35,7 +35,7 @@ class Cms::Node < ActiveRecord::Base
   after_initialize :set_defaults
   after_destroy :remove_file
 
-  scope :public, -> { where(state: 'public') }
+  scope :public_state, -> { where(state: 'public') }
 
   def validate
     errors.add :parent_id, :invalid if id != nil && id == parent_id
@@ -104,7 +104,7 @@ class Cms::Node < ActiveRecord::Base
         concept_id = r.concept_id if r.concept_id
       end unless concept_id
       return nil unless concept_id
-      return nil unless @_inherited_concept = Cms::Concept.find(:first, :conditions => {:id => concept_id})
+      return nil unless @_inherited_concept = Cms::Concept.where(id: concept_id).first
     end
     key.nil? ? @_inherited_concept : @_inherited_concept.send(key)
   end
@@ -171,12 +171,12 @@ class Cms::Node < ActiveRecord::Base
       choiced[p.id] = true
       
       choices << [('　　' * i) + p.title, p.id]
-      self.class.find(:all, eval("{#{args2}}")).each do |c|
+      self.class.new.find(:all, eval("{#{args2}}")).each do |c|
         down.call(c, i + 1)
       end
     end
     
-    self.class.find(:all, eval("{#{args1}}")).each {|item| down.call(item, 0) }
+    self.class.new.find(:all, eval("{#{args1}}")).each {|item| down.call(item, 0) }
     return choices
   end
   

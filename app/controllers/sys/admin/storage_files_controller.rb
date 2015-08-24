@@ -11,7 +11,7 @@ class Sys::Admin::StorageFilesController < Cms::Controller::Admin::Base
   def pre_dispatch
     return error_auth unless Core.user.has_auth?(:designer)
     
-    sites   = Cms::Site.find(:all, :order => :id)
+    sites   = Cms::Site.order(:id).all
     @roots  = []
     @roots << ["sites", "sites"]
     @roots << ["public", "public"] if Core.user.root?

@@ -6,8 +6,8 @@ class Cms::Admin::EmergenciesController < Cms::Controller::Admin::Base
     return error_auth unless Core.user.has_auth?(:designer)
 
     @parent   = Core.site.root_node
-    @node     = @parent.children.find(:first, :conditions => {:name => 'index.html'})
-    @node   ||= @parent.children.find(:first, :conditions => {:name => 'index.htm'})
+    @node     = @parent.children.where(name: 'index.html').first
+    @node   ||= @parent.children.where(name: 'index.htm').first
   end
 
   def index

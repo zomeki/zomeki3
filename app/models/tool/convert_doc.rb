@@ -23,7 +23,7 @@ class Tool::ConvertDoc < ActiveRecord::Base
   def self.search_with_criteria(criteria = {})
     criteria ||= {}
 
-    rel = scoped
+    rel = all
     if criteria[:keyword].present?
       words = criteria[:keyword].split(/[ 　]+/)
       conds = [:title, :uri_path, :doc_name, :doc_public_uri, :body].map do |field|

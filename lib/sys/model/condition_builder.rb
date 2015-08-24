@@ -36,7 +36,7 @@ module Sys::Model::ConditionBuilder
       cond.or do |c|
         words.to_s.split(/[ 　]+/).uniq.each_with_index do |w, i|
           break if i >= 10
-          qw = connection.quote_string(w).gsub(/([_%])/, '\\\\\1')
+          qw = ActiveRecord::Base.connection.quote_string(w).gsub(/([_%])/, '\\\\\1')
           c.and col, 'LIKE', "%#{qw}%"
         end
       end
@@ -84,12 +84,27 @@ module Sys::Model::ConditionBuilder
     options[:joins]      = cb_extention[:joins] unless options[:joins]
     options[:order]      = cb_extention[:order] unless options[:order]
     
+    c = self.class
+    c = c.where(options[:conditions]) if options[:conditions]
+    c = c.joins(options[:joins])      if options[:joins]
+    c = c.order(options[:order])      if options[:order]
+
     ext = cb_extention
-    return self.class.find(scope, options) unless ext[:page]
+    unless ext[:page]
+      if scope == :first
+        c = c.first
+      elsif scope == :all
+        c = c.all
+      else
+        c = c.find(scope)
+      end
+      return c
+    end
     
     options[:page]     = ext[:page]
     options[:per_page] = ext[:limit]
-    return self.class.paginate(options)
+    
+    return c.paginate(page: ext[:page], per_page: ext[:limit])
   end
   
   def count(*args)

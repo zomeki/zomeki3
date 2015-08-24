@@ -1,3 +1,4 @@
+# encoding: utf-8
 class Cms::Admin::Piece::BaseController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
   
@@ -38,6 +39,12 @@ class Cms::Admin::Piece::BaseController < Cms::Controller::Admin::Base
   def update
     @item = model.find(params[:id])
     @item.attributes = base_params
+    
+    #TODO: 文字化け暫定対応
+    @item.attributes.each do |k, v|
+      next if @item[k].class.name != 'String'
+      @item[k] = @item[k].force_encoding('UTF-8') unless @item[k].encoding.name == 'UTF-8'
+    end
 
     _update @item do
       Core.set_concept(session, @item.concept_id)

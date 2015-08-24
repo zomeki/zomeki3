@@ -10,7 +10,7 @@ class Cms::Admin::Tool::ConvertDocsController < Cms::Controller::Admin::Base
   end
 
   def index
-    @items = Tool::ConvertDoc.search_with_criteria(params[:criteria]).order('updated_at desc').paginate(page: params[:page], per_page: 30)
+    @items = ::Tool::ConvertDoc.search_with_criteria(params[:criteria]).order('updated_at desc').paginate(page: params[:page], per_page: 30)
     _index @items
   end
 

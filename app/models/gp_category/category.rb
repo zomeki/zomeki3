@@ -47,7 +47,7 @@ class GpCategory::Category < ActiveRecord::Base
 
   before_validation :set_attributes_from_parent
 
-  scope :public, -> { where(state: 'public') }
+  # scope :public, -> { where(state: 'public') }
 
   after_save :publish_ancestor_pages
   after_update :move_published_files

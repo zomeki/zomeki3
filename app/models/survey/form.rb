@@ -34,7 +34,7 @@ class Survey::Form < ActiveRecord::Base
 
   after_initialize :set_defaults
 
-  scope :public, -> { where(state: 'public') }
+  # scope :public, -> { where(state: 'public') }
 
   def self.all_with_content_and_criteria(content, criteria)
     forms = self.arel_table

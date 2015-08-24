@@ -22,7 +22,7 @@ class Survey::Question < ActiveRecord::Base
 
   after_initialize :set_defaults
 
-  scope :public, -> { where(state: 'public') }
+  # scope :public, -> { where(state: 'public') }
 
   def content
     form.content

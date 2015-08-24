@@ -8,7 +8,8 @@ class Sys::Admin::GroupsController < Cms::Controller::Admin::Base
     return error_auth unless Core.user.has_auth?(:manager)
 
     id      = params[:parent] == '0' ? 1 : params[:parent]
-    @parent = Sys::Group.new.find(id)
+
+    @parent = Sys::Group.find(id)
 
     return error_auth unless @parent.id == 1 || @parent.site_ids.include?(Core.site.id)
 

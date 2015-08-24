@@ -8,11 +8,11 @@ class Cms::Admin::Tool::ConvertFilesController < Cms::Controller::Admin::Base
 
   def index
     @site_url  = params[:site_url] || ""
-    @root      = "#{Tool::Convert::SITE_BASE_DIR}/#{@site_url}"
+    @root      = "#{::Tool::Convert::SITE_BASE_DIR}/#{@site_url}"
     @path      = params[:path].to_s
     @full_path = "#{@root}/#{@path}"
     @rel_path  = "#{@site_url}/#{@path}"
-    @base_uri  = ["#{Tool::Convert::SITE_BASE_DIR}/", "/"]
+    @base_uri  = ["#{::Tool::Convert::SITE_BASE_DIR}/", "/"]
 
     @item = Tool::SiteContent.new(@site_url, @full_path, :root => @root, :base_uri => @base_uri)
 

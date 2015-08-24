@@ -407,7 +407,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
           in_editing_from = (hold.updated_at.today? ? I18n.l(hold.updated_at, :format => :short_ja) : I18n.l(hold.updated_at, :format => :default_ja))
           "#{hold.user.group.name}#{hold.user.name}さんが#{in_editing_from}から編集中です。"
         end
-      flash[:alert] = "<ul><li>#{alerts.join('</li><li>')}</li></ul>".html_safe
+      flash[:alert] = "<ul><li>#{alerts.join('</li><li>')}</li></ul>".html_safe unless alerts.blank?
     end
     @item.holds.create(user: Core.user)
   end

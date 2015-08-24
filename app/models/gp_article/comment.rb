@@ -13,7 +13,7 @@ class GpArticle::Comment < ActiveRecord::Base
   
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
 
-  scope :public, -> { where(state: 'public') }
+  # scope :public, -> { where(state: 'public') }
 
   belongs_to :doc
   validates_presence_of :doc_id
