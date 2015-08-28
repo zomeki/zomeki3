@@ -18,17 +18,17 @@ class Cms::KanaDictionary < ActiveRecord::Base
   def self.user_dic(_site_id=nil)
     mecab_dir = "#{Rails.root}/config/mecab/"
     if _site_id.blank?
-      dic = ::File.join(mecab_dir, "cms.dic")
+      dic = ::File.join(mecab_dir, "zomeki.dic")
     else
       site_dir  = ::File.join("#{mecab_dir}", "sites", format('%08d', _site_id).gsub(/((..)(..)(..)(..))/, '\\2/\\3/\\4/\\5/\\1'))
-      dic = ::File.join(site_dir, "cms.dic")
+      dic = ::File.join(site_dir, "zomeki.dic")
     end
 
     if ::File.exists?(dic)
       return dic
     else
       ::FileUtils.mkdir_p(site_dir) if !_site_id.blank? && !::File.exists?(site_dir)
-      FileUtils.cp("#{mecab_dir}cms.dic.original", dic)
+      FileUtils.cp("#{mecab_dir}zomeki.dic.original", dic)
     end
     return dic
   end
@@ -49,7 +49,7 @@ class Cms::KanaDictionary < ActiveRecord::Base
       ::FileUtils.mkdir_p(site_dir) if !_site_id.blank? && !::File.exists?(site_dir)
       originalrc = "#{mecab_dir}mecabrc"
       f = ::File.read(originalrc)
-      data = f.gsub(/cms\.dic/, "#{site_dir}/cms.dic")
+      data = f.gsub(/zomeki\.dic/, "#{site_dir}/zomeki.dic")
       ::File.write(rc, data)
     end
     return rc

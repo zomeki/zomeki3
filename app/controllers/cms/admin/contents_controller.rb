@@ -9,7 +9,7 @@ class Cms::Admin::ContentsController < Cms::Controller::Admin::Base
   def index
     return show_htaccess if params.key?(:htaccess)
 
-    @items = Cms::Content.readable.order('name, id')
+    @items = Cms::Content.readable.order('sort_no IS NULL, sort_no, name, id')
                          .paginate(page: params[:page], per_page: params[:limit])
     _index @items
   end
@@ -44,6 +44,7 @@ class Cms::Admin::ContentsController < Cms::Controller::Admin::Base
     @item = Cms::Content.new({
       :concept_id => Core.concept(:id),
       :state      => 'public',
+      :sort_no    => 10,
     })
   end
 
@@ -72,6 +73,6 @@ class Cms::Admin::ContentsController < Cms::Controller::Admin::Base
   private
 
   def content_params
-    params.require(:item).permit(:code, :concept_id, :in_creator, :model, :name, :note)
+    params.require(:item).permit(:code, :concept_id, :in_creator, :model, :name, :note, :sort_no)
   end
 end

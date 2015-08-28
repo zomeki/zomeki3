@@ -5,15 +5,13 @@ module Rank::Controller::Rank
 
   def get_access(content, start_date)
 
-    if content.setting_value(:username).blank? ||
-       content.setting_value(:password).blank? ||
-       content.setting_value(:web_property_id).blank?
-      flash[:alert] = "ユーザー・パスワード・トラッキングIDを設定してください。"
+    if content.setting_value(:web_property_id).blank?
+      flash[:alert] = "トラッキングIDを設定してください。"
       return
     end
 
     begin
-      Garb::Session.login(content.setting_value(:username), content.setting_value(:password))
+      Garb::Session.access_token = content.access_token
       profile = Garb::Management::Profile.all.detect {|p| p.web_property_id == content.setting_value(:web_property_id)}
 
       limit = 1000
@@ -45,13 +43,13 @@ module Rank::Controller::Rank
         end
       end
 
-      logger.info "Success: #{content.id}: #{content.setting_value(:username)}: #{content.setting_value(:web_property_id)}"
+      logger.info "Success: #{content.id}: #{content.setting_value(:web_property_id)}"
       flash[:notice] = "取り込みが完了しました。 （取り込み開始日は #{Date.parse(first_date).to_s} です）"
     rescue Garb::AuthError => e
-      logger.warn "Error  : #{content.id}: #{content.setting_value(:username)}: #{content.setting_value(:web_property_id)}: #{e}"
-      flash[:alert] = "認証エラーです。 （#{content.setting_value(:username)}）"
+      logger.warn "Error  : #{content.id}: #{content.setting_value(:web_property_id)}: #{e}"
+      flash[:alert] = "認証エラーです。"
     rescue => e
-      logger.warn "Error  : #{content.id}: #{content.setting_value(:username)}: #{content.setting_value(:web_property_id)}: #{e}"
+      logger.warn "Error  : #{content.id}: #{content.setting_value(:web_property_id)}: #{e}"
       flash[:alert] = "取り込みに失敗しました。"
     end
   end

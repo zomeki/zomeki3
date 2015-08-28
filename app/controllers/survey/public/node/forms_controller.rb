@@ -11,6 +11,12 @@ class Survey::Public::Node::FormsController < Cms::Controller::Public::Base
     return http_error(404) unless @content
 
     @ssl_full_uri = Sys::Setting.use_common_ssl? && @content.use_common_ssl? ? "#{Page.site.full_ssl_uri.sub(/\/\z/, '')}" : ''
+    @piece = Survey::Piece::Form.find_by_id(params[:piece])
+
+    @current_url = (params[:u] || params[:current_url]).to_s
+    @current_url = CGI.unescape(@current_url) if @current_url.start_with?('%')
+    @current_url_title = (params[:t] || params[:current_url_title]).to_s
+    @current_url_title = CGI.unescape(@current_url_title) if @current_url_title.start_with?('%')
   end
 
   def index
@@ -65,7 +71,7 @@ class Survey::Public::Node::FormsController < Cms::Controller::Public::Base
   end
 
   def call_render_public_layout
-    render_public_layout unless params[:piece]
+    render_public_layout unless @piece
   end
 
   def build_answer
@@ -85,25 +91,26 @@ class Survey::Public::Node::FormsController < Cms::Controller::Public::Base
     CommonMailer.survey_auto_reply(form_answer: @form_answer, from: @content.mail_from, to: @form_answer.reply_to)
             .deliver if @content.auto_reply? && @content.mail_from.present? && @form_answer.reply_to.present?
 
+    prms = "?piece=#{@piece.try(:id)}&u=#{CGI.escape @current_url}&t=#{CGI.escape @current_url_title}"
     if Core.request_uri =~ /^\/_ssl\/([0-9]+).*/
-      redirect_to ::File.join(Page.site.full_ssl_uri, "#{@node.public_uri}#{@form_answer.form.name}/finish?piece=#{params[:piece]}")
+      redirect_to ::File.join(Page.site.full_ssl_uri, "#{@node.public_uri}#{@form_answer.form.name}/finish#{prms}")
     else
-      redirect_to "#{@node.public_uri}#{@form_answer.form.name}/finish?piece=#{params[:piece]}"
+      redirect_to "#{@node.public_uri}#{@form_answer.form.name}/finish#{prms}"
     end
   end
 
   def render_survey_layout(action = action_name)
-    @piece = Survey::Piece::Form.find_by_id(params[:piece])
     return render action: action unless @piece
 
-    Page.layout = Cms::Layout.new({
-      head:             @piece.try(:head_css) || '',
-      mobile_head:      @piece.try(:head_css) || '',
-      smart_phone_head: @piece.try(:head_css) || '',
+    head_css = @piece.head_css.to_s
+    Page.layout = Cms::Layout.new(
+      head:             head_css,
+      mobile_head:      head_css,
+      smart_phone_head: head_css,
       body:             '[[content]]',
       mobile_body:      '[[content]]',
       smart_phone_body: '[[content]]'
-    })
+    )
     render action: action, layout: 'layouts/public/base'
   end
 end

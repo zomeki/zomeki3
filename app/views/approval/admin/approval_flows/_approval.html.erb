@@ -1,6 +1,6 @@
 <%-
   common_attrs = {id: nil}
-  if approval
+  if defined?(approval) && approval
     index = approval.index
     type = approval.approval_type
     assignments_by_ogid = approval.assignments.group_by{|g| g.or_group_id }

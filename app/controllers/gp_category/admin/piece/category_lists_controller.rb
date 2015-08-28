@@ -17,4 +17,10 @@ class GpCategory::Admin::Piece::CategoryListsController < Cms::Admin::Piece::Bas
 
     _show @item
   end
+
+  private
+
+  def base_params_item_in_settings
+    [:category_id, :category_type_id, :layer, :setting_state]
+  end
 end
