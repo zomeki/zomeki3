@@ -4,7 +4,7 @@ class BizCalendar::Piece::BussinessHoliday < Cms::Piece
   PAGE_FILTER_OPTIONS = [['絞り込む', 'filter'], ['絞り込まない', 'through']]
   PLACE_LINK_OPTIONS = [['あり', 'enabled'], ['なし', 'disabled']]
 
-  default_scope where(model: 'BizCalendar::BussinessHoliday')
+  default_scope { where(model: 'BizCalendar::BussinessHoliday') }
 
   after_initialize :set_default_settings
 

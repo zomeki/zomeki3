@@ -3,7 +3,7 @@ class AdBanner::Piece::Banner < Cms::Piece
   SORT_OPTIONS = [['表示順', 'ordered'], ['ランダム', 'random']]
   IMPL_OPTIONS = [['動的', 'dynamic'], ['静的', 'static']]
 
-  default_scope where(model: 'AdBanner::Banner')
+  default_scope { where(model: 'AdBanner::Banner') }
 
   after_initialize :set_default_settings
 

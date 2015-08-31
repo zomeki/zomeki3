@@ -1,7 +1,7 @@
 class GpArticle::Piece::Comment < Cms::Piece
   AUTHORS_VISIBILITY_OPTIONS = [['表示する', 'visible'], ['表示しない', 'hidden']]
 
-  default_scope where(model: 'GpArticle::Comment')
+  default_scope { where(model: 'GpArticle::Comment') }
 
   validate :validate_settings
 

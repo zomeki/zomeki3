@@ -4,7 +4,7 @@ class GpCategory::Piece::Doc < Cms::Piece
   LAYER_OPTIONS = [['下層のカテゴリすべて', 'descendants'], ['該当カテゴリのみ', 'self']]
   PAGE_FILTER_OPTIONS = [['絞り込む', 'filter'], ['絞り込まない', 'through']]
 
-  default_scope where(model: 'GpCategory::Doc')
+  default_scope { where(model: 'GpCategory::Doc') }
 
   after_initialize :set_default_settings
 
