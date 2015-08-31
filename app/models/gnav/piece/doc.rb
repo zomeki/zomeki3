@@ -1,6 +1,6 @@
 # encoding: utf-8
 class Gnav::Piece::Doc < Cms::Piece
-  default_scope where(model: 'Gnav::Doc')
+  default_scope { where(model: 'Gnav::Doc') }
 
   after_initialize :set_default_settings
 

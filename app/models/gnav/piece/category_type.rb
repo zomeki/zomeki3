@@ -2,7 +2,7 @@
 class Gnav::Piece::CategoryType < Cms::Piece
   LAYER_OPTIONS = [['下層のカテゴリすべて', 'descendants'], ['該当カテゴリのみ', 'self']]
 
-  default_scope where(model: 'Gnav::CategoryType')
+  default_scope { where(model: 'Gnav::CategoryType') }
 
   def layer
     setting_value(:layer).presence || LAYER_OPTIONS.first.last

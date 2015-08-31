@@ -1,7 +1,7 @@
 class GpArticle::Piece::MonthlyArchive < Cms::Piece
   NUM_DOCS_VISIBILITY_OPTIONS = [['表示する', 'visible'], ['表示しない', 'hidden']]
 
-  default_scope where(model: 'GpArticle::MonthlyArchive')
+  default_scope { where(model: 'GpArticle::MonthlyArchive') }
 
   def num_docs_visibility
     setting_value(:num_docs_visibility).to_s

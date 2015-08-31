@@ -1,6 +1,6 @@
 # encoding: utf-8
 class GpCategory::Piece::RecentTab < Cms::Piece
-  default_scope where(model: 'GpCategory::RecentTab')
+  default_scope { where(model: 'GpCategory::RecentTab') }
 
   validate :validate_settings
 
