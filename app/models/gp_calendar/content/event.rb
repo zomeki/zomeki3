@@ -11,7 +11,7 @@ class GpCalendar::Content::Event < Cms::Content
   before_create :set_default_settings
 
   def public_nodes
-    nodes.public
+    nodes.public_state
   end
 
   def public_node
@@ -19,11 +19,11 @@ class GpCalendar::Content::Event < Cms::Content
   end
 
   def public_events
-    events.public
+    events.public_state
   end
 
   def public_holidays
-    holidays.public
+    holidays.public_state
   end
 
   def categories
@@ -37,7 +37,7 @@ class GpCalendar::Content::Event < Cms::Content
   end
 
   def public_categories
-    categories.public
+    categories.public_state
   end
 
   def category_types

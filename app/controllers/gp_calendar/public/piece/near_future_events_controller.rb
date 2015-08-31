@@ -9,8 +9,8 @@ class GpCalendar::Public::Piece::NearFutureEventsController < GpCalendar::Public
 
   def index
     today = Date.today
-    @todays_events = GpCalendar::Event.public.all_with_content_and_criteria(@piece.content, date: today)
-    @tomorrows_events = GpCalendar::Event.public.all_with_content_and_criteria(@piece.content, date: today.tomorrow)
+    @todays_events = GpCalendar::Event.public_state.all_with_content_and_criteria(@piece.content, date: today)
+    @tomorrows_events = GpCalendar::Event.public_state.all_with_content_and_criteria(@piece.content, date: today.tomorrow)
 
     merge_docs_into_events(event_docs(today, today), @todays_events)
     merge_docs_into_events(event_docs(today.tomorrow, today.tomorrow), @tomorrows_events)

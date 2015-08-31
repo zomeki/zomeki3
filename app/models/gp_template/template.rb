@@ -22,11 +22,10 @@ class GpTemplate::Template < ActiveRecord::Base
 
   after_initialize :set_defaults
 
-  # scope :public, -> { where(state: 'public') }
-  # scope :none, -> { where("#{self.table_name}.id IS ?", nil).where("#{self.table_name}.id IS NOT ?", nil) }
+  scope :public_state, -> { where(state: 'public') }
 
   def public_items
-    items.public
+    items.public_state
   end
 
   def state_public?

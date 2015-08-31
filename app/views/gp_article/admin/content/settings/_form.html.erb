@@ -183,7 +183,7 @@ $(document).ready(function () {
 
 <%- if @item.name == 'gp_template_content_template_id'
       content = GpTemplate::Content::Template.find_by_id(@item.value)
-      templates = content ? content.templates.public : []
+      templates = content ? content.templates.public_state : []
       template_ids = @item.extra_values[:template_ids] || []
       templates_for_option = content ? content.templates.map {|t| [t.title, t.id] } : []
     -%>

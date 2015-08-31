@@ -22,7 +22,7 @@ class GpTemplate::Item < ActiveRecord::Base
 
   after_initialize :set_defaults
 
-  scope :public, -> { where(state: 'public') }
+  scope :public_state, -> { where(state: 'public') }
 
   def state_public?
     state == 'public'

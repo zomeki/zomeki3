@@ -33,14 +33,13 @@ class GpCategory::CategoryType < ActiveRecord::Base
 
   after_initialize :set_defaults
 
-  # scope :public, -> { where(state: 'public') }
-  # scope :none, -> { where("#{self.table_name}.id IS ?", nil).where("#{self.table_name}.id IS NOT ?", nil) }
+  scope :public_state, -> { where(state: 'public') }
 
   after_save :clean_published_files
   after_destroy :clean_published_files
 
   def public_categories
-    categories.public
+    categories.public_state
   end
 
   def root_categories
@@ -52,7 +51,7 @@ class GpCategory::CategoryType < ActiveRecord::Base
   end
 
   def public_root_categories
-    root_categories.public
+    root_categories.public_state
   end
 
   def categories_for_option

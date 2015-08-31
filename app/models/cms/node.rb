@@ -235,11 +235,11 @@ class Cms::Node < ActiveRecord::Base
   end
 
   def public_children
-    children.public
+    children.public_state
   end
 
   def public_children_in_route
-    children_in_route.public
+    children_in_route.public_state
   end
   
   def set_inquiry_group

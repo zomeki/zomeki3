@@ -15,7 +15,7 @@ class BizCalendar::ExceptionHoliday < ActiveRecord::Base
   
   after_initialize :set_defaults
 
-  scope :public, where(state: 'public')
+  scope :public_state, ->{ where(state: 'public') }
 
   def self.all_with_place_and_criteria(place, criteria)
     holidays = self.arel_table

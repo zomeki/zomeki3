@@ -6,8 +6,6 @@ class Cms::LinkCheckLog < ActiveRecord::Base
 
   after_initialize :set_defaults
 
-  # scope :none, -> { where("#{self.table_name}.id IS ?", nil).where("#{self.table_name}.id IS NOT ?", nil) }
-
   private
 
   def set_defaults

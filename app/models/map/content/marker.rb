@@ -10,7 +10,7 @@ class Map::Content::Marker < Cms::Content
   after_initialize :set_default_settings
 
   def public_nodes
-    nodes.public
+    nodes.public_state
   end
 
   def public_node
@@ -24,7 +24,7 @@ class Map::Content::Marker < Cms::Content
   end
 
   def public_markers
-    markers.public
+    markers.public_state
   end
 
   def latitude
@@ -46,7 +46,7 @@ class Map::Content::Marker < Cms::Content
   end
 
   def public_categories
-    categories.public
+    categories.public_state
   end
 
   def category_types

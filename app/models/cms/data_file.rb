@@ -10,7 +10,7 @@ class Cms::DataFile < ActiveRecord::Base
 
   include StateText
 
-  # scope :public, -> { where(state: 'public') }
+  scope :public_state, -> { where(state: 'public') }
 
   belongs_to :concept, :foreign_key => :concept_id, :class_name => 'Cms::Concept'
   belongs_to :site   , :foreign_key => :site_id   , :class_name => 'Cms::Site'

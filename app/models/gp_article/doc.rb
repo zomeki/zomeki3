@@ -34,9 +34,8 @@ class GpArticle::Doc < ActiveRecord::Base
   EVENT_WILL_SYNC_OPTIONS = [['同期する', 'enabled'], ['同期しない', 'disabled']]
 
   default_scope { where("#{self.table_name}.state != 'archived'") }
-  # scope :public, -> { where(state: 'public') }
+  scope :public_state, -> { where(state: 'public') }
   scope :mobile, ->(m) { m ? where(terminal_mobile: true) : where(terminal_pc_or_smart_phone: true) }
-  # scope :none, -> { where("#{self.table_name}.id IS ?", nil).where("#{self.table_name}.id IS NOT ?", nil) }
   scope :display_published_after, ->(date) { where(arel_table[:display_published_at].gteq(date)) }
 
   # Content
@@ -201,7 +200,7 @@ class GpArticle::Doc < ActiveRecord::Base
   end
 
   def public_comments
-    comments.public
+    comments.public_state
   end
 
   def prev_edition
@@ -364,7 +363,7 @@ class GpArticle::Doc < ActiveRecord::Base
   def bread_crumbs(doc_node)
     crumbs = []
 
-    categories.public.each do |category|
+    categories.public_state.each do |category|
       category_type = category.category_type
       if (node = category.content.category_type_node)
         crumb = node.bread_crumbs.crumbs.first

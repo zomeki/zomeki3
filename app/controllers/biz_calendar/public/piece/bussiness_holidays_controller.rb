@@ -33,7 +33,7 @@ class BizCalendar::Public::Piece::BussinessHolidaysController < BizCalendar::Pub
       @places.each do |place|
         @holidays[place.id] = Hash.new()
         holidays = []
-        place.holidays.public.each do |h|
+        place.holidays.public_state.each do |h|
           if h.enable_holiday?(start_date, end_date)
             holidays << h
           end

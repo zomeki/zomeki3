@@ -26,7 +26,7 @@ class Map::Marker < ActiveRecord::Base
   after_initialize :set_defaults
   before_save :set_name
 
-  scope :public, -> { where(state: 'public') }
+  scope :public_state, -> { where(state: 'public') }
 
   belongs_to :icon_category, :class_name => 'GpCategory::Category'
   belongs_to :doc, :class_name => 'GpArticle::Doc' # Not saved to database

@@ -6,7 +6,7 @@ class Rank::Content::Rank < Cms::Content
   has_many :ranks, foreign_key: :content_id, class_name: 'Rank::Total', dependent: :destroy
 
   def public_nodes
-    nodes.public
+    nodes.public_state
   end
 
   def public_node

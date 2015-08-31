@@ -47,7 +47,7 @@ class GpCategory::Category < ActiveRecord::Base
 
   before_validation :set_attributes_from_parent
 
-  # scope :public, -> { where(state: 'public') }
+  scope :public_state, -> { where(state: 'public') }
 
   after_save :publish_ancestor_pages
   after_update :move_published_files
@@ -111,7 +111,7 @@ class GpCategory::Category < ActiveRecord::Base
   end
 
   def public_docs
-    docs.order(inherited_docs_order).mobile(::Page.mobile?).public
+    docs.order(inherited_docs_order).mobile(::Page.mobile?).public_state
   end
 
   def copy_from_group(group)
@@ -130,7 +130,7 @@ class GpCategory::Category < ActiveRecord::Base
   end
 
   def public_children
-    children.public
+    children.public_state
   end
 
   def sitemap_visible?

@@ -24,7 +24,7 @@ class BizCalendar::Place < ActiveRecord::Base
   
   after_initialize :set_defaults
 
-  scope :public, where(state: 'public')
+  scope :public_state, -> { where(state: 'public') }
 
   def get_bussines_time(date=Date.today)
     hour = BizCalendar::BussinessHour.arel_table
@@ -40,7 +40,7 @@ class BizCalendar::Place < ActiveRecord::Base
 
     where2 = where2.and(end_type_rel)
 
-    _hours =  hours.public.where(hour.grouping(where1).or(hour.grouping(where2))).all
+    _hours =  hours.public_state.where(hour.grouping(where1).or(hour.grouping(where2))).all
     
     date_hours = []
     _hours.each do |h|
@@ -59,10 +59,10 @@ class BizCalendar::Place < ActiveRecord::Base
   end
 
   def next_holiday(sdate=Date.today)
-    return '' if holidays.public.blank?
+    return '' if holidays.public_state.blank?
     next_holiday = nil
 
-    self.holidays.public.each do |h|
+    self.holidays.public_state.each do |h|
       if h.repeat_type.blank?
         next if h.holiday_end_date < sdate
       elsif !h.repeat_type.blank? && h.end_type == 2
