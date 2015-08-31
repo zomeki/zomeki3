@@ -31,7 +31,7 @@ class GpCategory::Piece::CategoryList < Cms::Piece
   end
 
   def public_category_types
-    category_types.public
+    category_types.public_state
   end
 
   def category_types_for_option

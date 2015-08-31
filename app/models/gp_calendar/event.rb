@@ -30,7 +30,7 @@ class GpCalendar::Event < ActiveRecord::Base
 
   validate :dates_range
 
-  scope :public, -> { where(state: 'public') }
+  scope :public_state, -> { where(state: 'public') }
 
   def self.state_options(synced: nil)
     so = []
@@ -88,7 +88,7 @@ class GpCalendar::Event < ActiveRecord::Base
 
   def holiday
     criteria = {date: started_on, kind: 'holiday'}
-    GpCalendar::Holiday.public.all_with_content_and_criteria(content, criteria).first.title rescue nil
+    GpCalendar::Holiday.public_state.all_with_content_and_criteria(content, criteria).first.title rescue nil
   end
 
   def public_path

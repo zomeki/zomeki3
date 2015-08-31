@@ -37,7 +37,7 @@ class GpArticle::Content::Doc < Cms::Content
 
   # public
   def public_docs
-    docs.mobile(::Page.mobile?).public
+    docs.mobile(::Page.mobile?).public_state
   end
 
   def public_node
@@ -49,7 +49,7 @@ class GpArticle::Content::Doc < Cms::Content
   end
 
   def public_nodes
-    Cms::Node.public.where(content_id: id)
+    Cms::Node.public_state.where(content_id: id)
   end
 
 #TODO: DEPRECATED
@@ -242,7 +242,7 @@ class GpArticle::Content::Doc < Cms::Content
 
   def public_comments
     docs = GpArticle::Doc.arel_table
-    comments.where(docs[:state].eq('public')).public
+    comments.where(docs[:state].eq('public')).public_state
   end
 
   def organization_content_group

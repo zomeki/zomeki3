@@ -30,6 +30,6 @@ class Gnav::Public::Piece::DocsController < Sys::Controller::Public::Base
   private
 
   def find_public_docs_by_category_ids(category_ids)
-    GpArticle::Doc.all_with_content_and_criteria(nil, category_id: category_ids).mobile(::Page.mobile?).public
+    GpArticle::Doc.all_with_content_and_criteria(nil, category_id: category_ids).mobile(::Page.mobile?).public_state
   end
 end

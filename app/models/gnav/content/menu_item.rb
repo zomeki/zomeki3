@@ -7,7 +7,7 @@ class Gnav::Content::MenuItem < Cms::Content
   before_create :set_default_settings
 
   def public_nodes
-    nodes.public
+    nodes.public_state
   end
 
   def public_node

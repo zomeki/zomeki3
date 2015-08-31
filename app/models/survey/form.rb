@@ -34,7 +34,7 @@ class Survey::Form < ActiveRecord::Base
 
   after_initialize :set_defaults
 
-  # scope :public, -> { where(state: 'public') }
+  # scope :public_state, -> { where(state: 'public') }
 
   def self.all_with_content_and_criteria(content, criteria)
     forms = self.arel_table
@@ -78,7 +78,7 @@ class Survey::Form < ActiveRecord::Base
   end
 
   def public_questions
-    questions.public
+    questions.public_state
   end
 
   def automatic_reply?

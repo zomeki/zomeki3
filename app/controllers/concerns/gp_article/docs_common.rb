@@ -46,7 +46,7 @@ module GpArticle::DocsCommon
 
   def publish_related_pages(item)
     Delayed::Job.where(queue: 'publish_top_page').destroy_all
-    if (root_node = item.content.site.nodes.public.where(parent_id: 0).first) &&
+    if (root_node = item.content.site.nodes.public_state.where(parent_id: 0).first) &&
        (top_page = root_node.children.where(name: 'index.html').first)
       ::Script.delay(queue: 'publish_top_page')
               .run("cms/script/nodes/publish?target_module=cms&target_node_id=#{top_page.id}", force: true)

@@ -24,7 +24,7 @@ class Cms::Script::NodesController < Cms::Controller::Script::Publication
         end
       end
     else
-      Cms::Node.public.where(parent_id: 0).order('name, id').each do |node|
+      Cms::Node.public_state.where(parent_id: 0).order('name, id').each do |node|
         publish_node(node)
       end
     end

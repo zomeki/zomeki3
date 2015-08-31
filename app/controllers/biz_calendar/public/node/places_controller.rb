@@ -35,11 +35,11 @@ class BizCalendar::Public::Node::PlacesController < BizCalendar::Public::Node::B
     @exception_holidays = Hash.new()
     @places.each do |place|
       criteria = {repeat_type: '', start_year_month: started.strftime('%Y%m'), end_year_month: ended.strftime('%Y%m')}
-      @holidays[place.id]           = BizCalendar::BussinessHoliday.public.all_with_place_and_criteria(place, criteria).order(:holiday_start_date)
-      @exception_holidays[place.id] = BizCalendar::ExceptionHoliday.public.all_with_place_and_criteria(place, criteria).order(:start_date)
+      @holidays[place.id]           = BizCalendar::BussinessHoliday.public_state.all_with_place_and_criteria(place, criteria).order(:holiday_start_date)
+      @exception_holidays[place.id] = BizCalendar::ExceptionHoliday.public_state.all_with_place_and_criteria(place, criteria).order(:start_date)
 
       criteria[:repeat_type] = 'not_null'
-      @repeat_holidays[place.id] = BizCalendar::BussinessHoliday.public.all_with_place_and_criteria(place, criteria).order(:holiday_start_date)
+      @repeat_holidays[place.id] = BizCalendar::BussinessHoliday.public_state.all_with_place_and_criteria(place, criteria).order(:holiday_start_date)
     end
   end
 
@@ -77,11 +77,11 @@ class BizCalendar::Public::Node::PlacesController < BizCalendar::Public::Node::B
     @exception_holidays = Hash.new()
     
     criteria = {repeat_type: '', start_year_month: started.strftime('%Y%m'), end_year_month: ended.strftime('%Y%m')}
-    @holidays[@place.id]           = BizCalendar::BussinessHoliday.public.all_with_place_and_criteria(@place, criteria).order(:holiday_start_date)
-    @exception_holidays[@place.id] = BizCalendar::ExceptionHoliday.public.all_with_place_and_criteria(@place, criteria).order(:start_date)
+    @holidays[@place.id]           = BizCalendar::BussinessHoliday.public_state.all_with_place_and_criteria(@place, criteria).order(:holiday_start_date)
+    @exception_holidays[@place.id] = BizCalendar::ExceptionHoliday.public_state.all_with_place_and_criteria(@place, criteria).order(:start_date)
 
     criteria[:repeat_type] = 'not_null'
-    @repeat_holidays[@place.id] = BizCalendar::BussinessHoliday.public.all_with_place_and_criteria(@place, criteria).order(:holiday_start_date)
+    @repeat_holidays[@place.id] = BizCalendar::BussinessHoliday.public_state.all_with_place_and_criteria(@place, criteria).order(:holiday_start_date)
   end
 
 
@@ -108,14 +108,14 @@ class BizCalendar::Public::Node::PlacesController < BizCalendar::Public::Node::B
         @bussiness_times[place.id] = place.get_bussines_time(today)
 
         criteria = {repeat_type: '', start_date: today, end_date: today}
-        @exception_holidays[place.id] = BizCalendar::ExceptionHoliday.public.all_with_place_and_criteria(place, criteria).order(:start_date)
-        holidays = BizCalendar::BussinessHoliday.public.all_with_place_and_criteria(place, criteria).order(:holiday_start_date)
+        @exception_holidays[place.id] = BizCalendar::ExceptionHoliday.public_state.all_with_place_and_criteria(place, criteria).order(:start_date)
+        holidays = BizCalendar::BussinessHoliday.public_state.all_with_place_and_criteria(place, criteria).order(:holiday_start_date)
 
         @holidays[place.id] = Hash.new()
         holidays.each{ |h| @holidays[place.id][h.type.id] = [h.type.name, h.type.title] }
 
         criteria[:repeat_type] = 'not_null'
-        repeat_holidays = BizCalendar::BussinessHoliday.public.all_with_place_and_criteria(place, criteria)
+        repeat_holidays = BizCalendar::BussinessHoliday.public_state.all_with_place_and_criteria(place, criteria)
         repeat_holidays.each{ |h| @holidays[place.id][h.type.id] = [h.type.name, h.type.title] if h.check(today) }
 
         @holidays[place.id] = @holidays[place.id].sort

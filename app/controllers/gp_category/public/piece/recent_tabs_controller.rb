@@ -35,9 +35,9 @@ class GpCategory::Public::Piece::RecentTabsController < Sys::Controller::Public:
         else
           doc_ids = []
         end
-        docs = GpArticle::Doc.mobile(::Page.mobile?).public.where(id: doc_ids).order('display_published_at DESC, published_at DESC').limit(@piece.list_count)
+        docs = GpArticle::Doc.mobile(::Page.mobile?).public_state.where(id: doc_ids).order('display_published_at DESC, published_at DESC').limit(@piece.list_count)
       else
-        docs = GpArticle::Doc.mobile(::Page.mobile?).public.order('display_published_at DESC, published_at DESC').limit(@piece.list_count)
+        docs = GpArticle::Doc.mobile(::Page.mobile?).public_state.order('display_published_at DESC, published_at DESC').limit(@piece.list_count)
       end
 
       content_ids = GpArticle::Content::Setting.where(name: 'gp_category_content_category_type_id',

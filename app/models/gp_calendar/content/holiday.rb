@@ -7,7 +7,7 @@ class GpCalendar::Content::Holiday < Cms::Content
   has_many :holidays, :foreign_key => :content_id, :class_name => 'GpCalendar::Holiday', :dependent => :destroy
 
   def public_nodes
-    nodes.public
+    nodes.public_state
   end
 
   def public_node

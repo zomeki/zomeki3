@@ -20,7 +20,7 @@
 <div class="location">
   <div class="name"><%= place.title %></div>
   <ul>
-    <% place.hours.public.each do |hour| %>
+    <% place.hours.public_state.each do |hour| %>
     <li><span class="date"><%= safe{hour.target_date_label(@content.date_style)} %></span>：
       <span class="time"><%= safe{"#{hour.business_hours_start_time.strftime(localize_ampm(@piece.time_style, hour.business_hours_start_time))}～#{hour.business_hours_end_time.strftime(localize_ampm(@piece.time_style, hour.business_hours_end_time))}"} %></span></li>
     <% end %>
