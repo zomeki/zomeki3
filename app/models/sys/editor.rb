@@ -6,9 +6,7 @@ class Sys::Editor < ActiveRecord::Base
   
   before_save :set_user
   before_save :set_group
-  
-  #validates_presence_of :unid
-  
+
   def set_user
     #self.user_id = Core.user.id unless user_id
     unless user_id

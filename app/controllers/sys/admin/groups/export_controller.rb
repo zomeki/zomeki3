@@ -22,19 +22,8 @@ class Sys::Admin::Groups::ExportController < Cms::Controller::Admin::Base
     end
   end
 
-  def all_groups(parent_id = 1)
-    groups = []
-
-    item = Sys::Group.new
-    site_restriction = {
-           joins: ['JOIN cms_site_belongings AS csb ON csb.group_id = sys_groups.id'],
-      conditions: ['csb.site_id = ? AND sys_groups.parent_id = ?', Core.site.id, parent_id]
-    }
-    item.find(:all, site_restriction, :order => :sort_no).each do |g|
-      groups << g
-      groups += all_groups(g.id)
-    end
-    groups
+  def all_groups
+    Sys::Group.root.descendants_in_site(Core.site).drop(1)
   end
 
   def export_groups
@@ -77,12 +66,7 @@ class Sys::Admin::Groups::ExportController < Cms::Controller::Admin::Base
         :group_code]
       end
 
-      item = Sys::User.new
-      item.join ['JOIN sys_users_groups AS sug ON sug.user_id = sys_users.id',
-                 'JOIN cms_site_belongings AS csb ON csb.group_id = sug.group_id'].join(' ')
-      item.and 'csb.site_id', Core.site.id
-
-      item.find(:all, :order => :id).each do |user|
+      Core.site.users.order(:id).each do |user|
         next unless user.groups[0]
         row = []
         row << user.account

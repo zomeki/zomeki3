@@ -50,7 +50,7 @@ class Sys::Admin::Groups::ImportController < Cms::Controller::Admin::Base
         next
       end
 
-      unless parent = Sys::Group.find_by_code(parent_code)
+      unless parent = Sys::Group.find_by(code: parent_code)
         @results[2] += 1
         next
       end
@@ -60,7 +60,7 @@ class Sys::Admin::Groups::ImportController < Cms::Controller::Admin::Base
         next
       end
 
-      group = Sys::Group.find_by_code(code) || Sys::Group.new({:code => code})
+      group = Sys::Group.find_by(code: code) || Sys::Group.new(code: code)
 
       if !group.new_record? && !group.site_ids.include?(Core.site.id)
         @results[2] += 1
@@ -104,7 +104,7 @@ class Sys::Admin::Groups::ImportController < Cms::Controller::Admin::Base
         next
       end
 
-      unless group = Sys::Group.find_by_code(group_code)
+      unless group = Sys::Group.find_by(code: group_code)
         @results[2] += 1
         next
       end
@@ -114,7 +114,7 @@ class Sys::Admin::Groups::ImportController < Cms::Controller::Admin::Base
         next
       end
 
-      user = Sys::User.find_by_account(account) || Sys::User.new({:account => account})
+      user = Sys::User.find_by(account: account) || Sys::User.new(account: account)
       user.state        = data[:state]
       user.ldap         = data[:ldap]
       user.ldap_version = data[:ldap_version]

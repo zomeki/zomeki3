@@ -26,7 +26,7 @@ private
     in_ids = []
     in_role_name_ids.split(' ').uniq.each{|id| in_ids << id.to_i if !id.blank?}
     
-    Sys::UsersRole.find(:all, :conditions => {:user_id => id}).each do |rel|
+    Sys::UsersRole.where(user_id: id).each do |rel|
       if in_ids.index(rel.role_id)
         in_ids.delete(rel.role_id)
       else
@@ -35,10 +35,10 @@ private
     end
     
     in_ids.each do |role_id|
-      Sys::UsersRole.new({
+      Sys::UsersRole.new(
         :user_id => self.id,
         :role_id => role_id,
-      }).save
+      ).save
     end
     
     role_names(true)

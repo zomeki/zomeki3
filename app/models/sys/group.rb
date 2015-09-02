@@ -11,25 +11,27 @@ class Sys::Group < ActiveRecord::Base
 
   include StateText
 
-  belongs_to :parent    , :foreign_key => :parent_id, :class_name => 'Sys::Group'
-  belongs_to :layout    , :foreign_key => :layout_id, :class_name => 'Cms::Layout'
+  belongs_to :parent, :foreign_key => :parent_id, :class_name => 'Sys::Group'
+  belongs_to :layout, :foreign_key => :layout_id, :class_name => 'Cms::Layout'
 
-  has_many :children, -> { order('code') },
+  has_many :children, -> { order(:sort_no, :code) },
     :foreign_key => :parent_id, :class_name => 'Sys::Group', :dependent => :destroy
-  has_and_belongs_to_many :users, -> { order('sys_users.id') },
-    :class_name => 'Sys::User', :join_table => 'sys_users_groups'
+  has_many :users_groups, :class_name => 'Sys::UsersGroup'
+  has_many :users, -> { order(:id) }, :through => :users_groups
 
   has_many :site_belongings, :dependent => :destroy, :class_name => 'Cms::SiteBelonging'
   has_many :sites, :through => :site_belongings, :class_name => 'Cms::Site'
 
-  validates_presence_of :state, :level_no, :code, :name, :ldap
-  validates_uniqueness_of :code
-
-  validates :name_en, :presence => true, :uniqueness => {:scope => :parent_id}, :format => /\A[0-9A-Za-z\._-]*\z/i
+  validates :state, :level_no, :name, :ldap, presence: true
+  validates :code, presence: true, uniqueness: true
+  validates :name_en, presence: true, uniqueness: {scope: :parent_id}, format: /\A[0-9A-Za-z\._-]*\z/i
 
   before_destroy :before_destroy
   after_save :copy_name_en_as_url_name
-  
+
+  scope :in_site, ->(site) { joins(:site_belongings).where(cms_site_belongings: {site_id: site.id}) }
+  scope :in_group, ->(group) { where(parent_id: group.id) }
+
   def readable
     self
   end
@@ -73,8 +75,19 @@ class Sys::Group < ActiveRecord::Base
     n
   end
 
+  def tree_name(opts = {})
+    opts.reverse_merge!(prefix: '　　', depth: 0)
+    opts[:prefix] * [level_no - 1 + opts[:depth], 0].max + name
+  end
+
+  def descendants_in_site(site, items = [])
+    items << self
+    children.in_site(site).each {|c| c.descendants_in_site(site, items) }
+    items
+  end
+
   def descendants_for_option(groups=[])
-    groups << ["#{'　　' * (level_no - 2)}#{name}", id]
+    groups << [tree_name(depth: -1), id]
     children.map {|g| g.descendants_for_option(groups) } unless children.empty?
     return groups
   end
@@ -83,7 +96,7 @@ private
   def before_destroy
     users.each do |user|
       if user.groups.size == 1
-        u = Sys::User.find_by_id(user.id)
+        u = Sys::User.find_by(id: user.id)
         u.state = 'disabled'
         u.save
       end

@@ -6,7 +6,7 @@ class Sys::Language < ActiveRecord::Base
 
   include StateText
 
-  validates_presence_of :state, :name, :title
+  validates :state, :name, :title, presence: true
 
   def states
     [['有効','enabled'],['無効','disabled']]

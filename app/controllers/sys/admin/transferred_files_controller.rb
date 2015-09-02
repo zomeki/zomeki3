@@ -11,18 +11,14 @@ class Sys::Admin::TransferredFilesController < Cms::Controller::Admin::Base
   end
 
   def index
-    item = Sys::TransferredFile.new
-    item.and :site_id, @site.id
-    item.search params
-    item.page  params[:page], params[:limit]
-    item.order params[:sort], 'version DESC, id'
-    @items = item.find(:all)
+    @items = @site.transferred_files.search_with_params(params).order(version: :desc, id: :asc)
+      .paginate(page: params[:page], per_page: params[:limit])
 
     _index @items
   end
 
   def show
-    @item = Sys::TransferredFile.new.find(params[:id])
+    @item = @site.transferred_files.find(params[:id])
     _show @item
   end
 
