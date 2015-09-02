@@ -3,6 +3,18 @@ require 'render_component'
 
 module RenderComponent
   module Components
+    module ClassMethods
+      # Track parent controller to identify component requests
+      def process_with_components(request, action, parent_controller = nil) #:nodoc:
+        controller = new
+        controller.parent_controller = parent_controller
+        #-- start patch
+        status, headers, body = controller.dispatch(action, request)
+        return status, headers, controller.response
+        #-- end patch
+      end
+    end
+
     module InstanceMethods
 
       protected
@@ -14,7 +26,9 @@ module RenderComponent
               redirect_to response.redirect_url
             else
               render :text => response.body, :status => response.status
+              #-- start patch
               response
+              #-- end patch
             end
           end
         end
@@ -24,10 +38,12 @@ module RenderComponent
           options[:controller] = options[:controller].to_s if options[:controller] && options[:controller].is_a?(Symbol)
           klass = component_class(options)
           component_request  = request_for_component(klass.controller_path, options)
+          #-- start patch
           if jpmobile = options[:jpmobile]
             component_request.env['HTTP_USER_AGENT'] = jpmobile['HTTP_USER_AGENT']
             component_request.env['rack.jpmobile'] = jpmobile['rack.jpmobile']
           end
+          #-- end patch
           # needed ???
           #if reuse_response
             #component_request.env["action_controller.instance"].instance_variable_set :@_response, request.env["action_controller.instance"].instance_variable_get(:@_response)
