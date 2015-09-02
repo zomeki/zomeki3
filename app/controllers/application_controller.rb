@@ -29,7 +29,7 @@ class ApplicationController < ActionController::Base
 
   def send_mail(fr_addr, to_addr, subject, body)
     return false if fr_addr.blank? || to_addr.blank?
-    CommonMailer.plain(from: fr_addr, to: to_addr, subject: subject, body: body).deliver
+    CommonMailer.plain(from: fr_addr, to: to_addr, subject: subject, body: body).deliver_now
   end
 
   def send_download
