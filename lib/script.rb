@@ -53,7 +53,7 @@ class Script
     self.log "[#{start.strftime('%Y-%m-%d %H:%M:%S')}] script:#{@@path} ... start"
 
     ## dispatch
-    app = ActionController::Integration::Session.new(Rails.application)
+    app = ActionDispatch::Integration::Session.new(Rails.application)
     app.get "/_script/sys/run/#{path}"
     self.log "success " + "#{@@proc.success}" + (@@proc.total ? "/#{@@proc.total}" : "")
 

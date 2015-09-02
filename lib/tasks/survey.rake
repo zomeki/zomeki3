@@ -1,4 +1,4 @@
-namespace :cms do
+namespace :zomeki do
   namespace :survey do
     namespace :answers do
       desc 'Fetch survey answers'

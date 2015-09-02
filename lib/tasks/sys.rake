@@ -1,6 +1,5 @@
 # encoding: utf-8
-
-namespace :cms do
+namespace :zomeki do
   namespace :sys do
     desc 'Delete duplicated values. (leave only latest values.)'
     task(:clean_sequence => :environment) do
