@@ -1,8 +1,10 @@
 module Sys::Model::Base
+  extend ActiveSupport::Concern
+  include Sys::Model::Scope
   include Sys::Model::ConditionBuilder
 
-  def self.included(mod)
-    mod.table_name = mod.to_s.underscore.gsub('/', '_').downcase.pluralize
+  included do
+    self.table_name = self.to_s.underscore.gsub('/', '_').downcase.pluralize
   end
 
   def locale(name)
@@ -41,5 +43,11 @@ module Sys::Model::Base
     rs = self.class.connection.execute("SELECT LAST_INSERT_ID() AS id FROM #{table}")
     return rs.first[0] if rs.class.to_s =~ /^Mysql2/
     return rs.fetch_row[0]
+  end
+
+  module ClassMethods
+    def escape_like(s)
+      s.gsub(/[\\%_]/) {|r| "\\#{r}"}
+    end
   end
 end
