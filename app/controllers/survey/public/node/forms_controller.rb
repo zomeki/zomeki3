@@ -85,11 +85,11 @@ class Survey::Public::Node::FormsController < Cms::Controller::Public::Base
   def send_mail_and_redirect_to_finish
     ## send mail to admin
     CommonMailer.survey_receipt(form_answer: @form_answer, from: @content.mail_from, to: @content.mail_to)
-                .deliver if @content.mail_from.present? && @content.mail_to.present?
+                .deliver_now if @content.mail_from.present? && @content.mail_to.present?
 
     ## send mail to answer
     CommonMailer.survey_auto_reply(form_answer: @form_answer, from: @content.mail_from, to: @form_answer.reply_to)
-            .deliver if @content.auto_reply? && @content.mail_from.present? && @form_answer.reply_to.present?
+            .deliver_now if @content.auto_reply? && @content.mail_from.present? && @form_answer.reply_to.present?
 
     prms = "?piece=#{@piece.try(:id)}&u=#{CGI.escape @current_url}&t=#{CGI.escape @current_url_title}"
     if Core.request_uri =~ /^\/_ssl\/([0-9]+).*/

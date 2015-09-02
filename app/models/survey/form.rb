@@ -134,7 +134,7 @@ class Survey::Form < ActiveRecord::Base
       approval_request.current_assignments.map{|a| a.user unless a.approved_at }.compact.each do |approver|
         next if approval_request.requester.email.blank? || approver.email.blank?
         CommonMailer.approval_request(approval_request: approval_request, preview_url: preview_url, approve_url: approve_url,
-                                      from: approval_request.requester.email, to: approver.email).deliver
+                                      from: approval_request.requester.email, to: approver.email).deliver_now
       end
     end
   end
@@ -151,7 +151,7 @@ class Survey::Form < ActiveRecord::Base
       approver = approval_request.current_assignments.reorder('approved_at DESC').first.user
       next if approver.email.blank? || approval_request.requester.email.blank?
       CommonMailer.approved_notification(approval_request: approval_request, publish_url: publish_url,
-                                         from: Core.user.email, to: approval_request.requester.email).deliver
+                                         from: Core.user.email, to: approval_request.requester.email).deliver_now
     end
   end
 

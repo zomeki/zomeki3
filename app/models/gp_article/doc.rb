@@ -544,7 +544,7 @@ class GpArticle::Doc < ActiveRecord::Base
       approval_request.current_assignments.map{|a| a.user unless a.approved_at }.compact.each do |approver|
         next if !assginments.blank? && !assginments.include?(approver.id.to_s)
         next if approval_request.requester.email.blank? || approver.email.blank?
-        CommonMailer.plain(from: approval_request.requester.email, to: approver.email, subject: subject, body: body).deliver
+        CommonMailer.plain(from: approval_request.requester.email, to: approver.email, subject: subject, body: body).deliver_now
       end
     end
   end
@@ -565,7 +565,7 @@ class GpArticle::Doc < ActiveRecord::Base
 
       approver = approval_request.current_assignments.reorder('approved_at DESC').first.user
       next if approver.email.blank? || approval_request.requester.email.blank?
-      CommonMailer.plain(from: Core.user.email, to: approval_request.requester.email, subject: subject, body: body).deliver
+      CommonMailer.plain(from: Core.user.email, to: approval_request.requester.email, subject: subject, body: body).deliver_now
     end
   end
 
@@ -576,7 +576,7 @@ class GpArticle::Doc < ActiveRecord::Base
     detail_url = "#{_core_uri.sub(/\/+$/, '')}#{Rails.application.routes.url_helpers.gp_article_doc_path(content: content, id: id, active_tab: 'approval')}"
 
     CommonMailer.passbacked_notification(approval_request: approval_request, approver: approver, comment: comment, detail_url: detail_url,
-                                         from: approver.email, to: approval_request.requester.email).deliver
+                                         from: approver.email, to: approval_request.requester.email).deliver_now
   end
 
   def send_pullbacked_notification_mail(approval_request: nil, comment: '')
@@ -587,7 +587,7 @@ class GpArticle::Doc < ActiveRecord::Base
     approval_request.current_approvers.each do |approver|
       next if approver.email.blank? || approval_request.requester.email.blank?
       CommonMailer.pullbacked_notification(approval_request: approval_request, comment: comment, detail_url: detail_url,
-                                           from: approval_request.requester.email, to: approver.email).deliver
+                                           from: approval_request.requester.email, to: approver.email).deliver_now
     end
   end
 
