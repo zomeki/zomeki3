@@ -44,12 +44,11 @@ end
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 
-gem 'actionpack-action_caching', '~> 1.1.1'
 gem 'delayed_job_active_record', '~> 4.0.3'
 gem 'dynamic_form', '~> 1.1.4'
 gem 'garb', '~> 0.9.8'
 gem 'google-oauth2-installed', '0.0.3'
-gem 'jpmobile', '~> 4.0.1'
+gem 'jpmobile', '~> 4.2.0'
 gem 'mail-iso-2022-jp', '~> 2.0.3'
 gem 'moji', '~> 1.6'
 gem 'nokogiri', '~> 1.6.5'
