@@ -36,6 +36,13 @@ class ApplicationController < ActionController::Base
     #
   end
 
+  def send_data(data, options = {})
+    if options.include?(:filename)
+      options[:filename] = URI::escape(options[:filename]) if request.user_agent =~ /(MSIE|Trident)/
+    end
+    super(data, options)
+  end
+
 private
   def rescue_action(error)
     case error
