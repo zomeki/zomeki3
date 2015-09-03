@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
   helper  FormHelper
   helper  LinkHelper
   protect_from_forgery # :secret => '1f0d667235154ecf25eaf90055d99e99'
-  before_filter :initialize_application
+  before_action :initialize_application
 #  rescue_from Exception, :with => :rescue_exception
 
 #TODO: あとで消す
@@ -34,6 +34,13 @@ class ApplicationController < ActionController::Base
 
   def send_download
     #
+  end
+
+  def send_data(data, options = {})
+    if options.include?(:filename)
+      options[:filename] = URI::escape(options[:filename]) if request.user_agent =~ /(MSIE|Trident)/
+    end
+    super(data, options)
   end
 
 private

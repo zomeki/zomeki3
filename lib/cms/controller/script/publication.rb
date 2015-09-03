@@ -1,7 +1,7 @@
 require 'timeout'
 class Cms::Controller::Script::Publication < ApplicationController
   include Cms::Controller::Layout
-  before_filter :initialize_publication
+  before_action :initialize_publication
 
   def self.publishable?
     true

@@ -2,7 +2,7 @@
 class Cms::Admin::Content::BaseController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
   
-  before_filter :pre_dispatch_content
+  before_action :pre_dispatch_content
   
   def pre_dispatch_content
     @content = Cms::Content.new.find(params[:id])

@@ -1,6 +1,6 @@
 # encoding: utf-8
 class AdBanner::Public::Node::BannersController < Cms::Controller::Public::Base
-  skip_filter :render_public_layout, :only => :index
+  skip_action_callback :render_public_layout, :only => :index
 
   def pre_dispatch
     @content = AdBanner::Content::Banner.find_by_id(Page.current_node.content.id)

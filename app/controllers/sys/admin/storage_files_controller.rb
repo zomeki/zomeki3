@@ -2,7 +2,7 @@
 class Sys::Admin::StorageFilesController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
   
-  before_filter :validate_path
+  before_action :validate_path
   
   @root  = nil
   @roots = []
