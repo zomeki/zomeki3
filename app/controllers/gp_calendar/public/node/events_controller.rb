@@ -1,6 +1,6 @@
 # encoding: utf-8
 class GpCalendar::Public::Node::EventsController < GpCalendar::Public::Node::BaseController
-  skip_filter :render_public_layout, :only => [:file_content]
+  skip_action_callback :render_public_layout, :only => [:file_content]
 
   def index
     http_error(404) if params[:page]

@@ -2,7 +2,7 @@
 class Cms::Admin::Piece::BaseController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
   
-  before_filter :pre_dispatch_piece
+  before_action :pre_dispatch_piece
   
   def pre_dispatch_piece
     return error_auth unless Core.user.has_auth?(:designer)

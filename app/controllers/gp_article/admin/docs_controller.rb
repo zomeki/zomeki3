@@ -6,8 +6,8 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   include Cms::ApiGpCalendar
   include GpArticle::DocsCommon
 
-  before_filter :hold_document, :only => [ :edit ]
-  before_filter :check_intercepted, :only => [ :update ]
+  before_action :hold_document, :only => [ :edit ]
+  before_action :check_intercepted, :only => [ :update ]
 
   def pre_dispatch
     return http_error(404) unless @content = GpArticle::Content::Doc.find_by_id(params[:content])

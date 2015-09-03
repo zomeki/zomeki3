@@ -1,6 +1,6 @@
 # encoding: utf-8
 class BizCalendar::Public::Node::PlacesController < BizCalendar::Public::Node::BaseController
-  skip_filter :render_public_layout, :only => [:bussiness_times, :bussiness_holidays]
+  skip_action_callback :render_public_layout, :only => [:bussiness_times, :bussiness_holidays]
 
   def index
     http_error(404) if params[:page]

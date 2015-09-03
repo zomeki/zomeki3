@@ -4,7 +4,7 @@ class Cms::Public::ApiController < Cms::Controller::Public::Base
   include Cms::ApiGpCalendar
   include Cms::ApiRank
 
-  skip_filter :render_public_layout
+  skip_action_callback :render_public_layout
 
   def receive
     return render_404 if (api_path = params[:api_path].to_s).blank? ||

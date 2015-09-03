@@ -2,7 +2,7 @@
 class GpCategory::Admin::DocsController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 
-  before_filter :find_doc, :only => [ :show, :edit, :update ]
+  before_action :find_doc, :only => [ :show, :edit, :update ]
 
   def pre_dispatch
     return error_auth unless @content = GpCategory::Content::CategoryType.find_by_id(params[:content])
