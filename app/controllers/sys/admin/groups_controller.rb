@@ -2,73 +2,41 @@
 class Sys::Admin::GroupsController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 
-# TODO: サイトの絞り込み処理が分散してしまっているのでまとめる
-  
   def pre_dispatch
     return error_auth unless Core.user.has_auth?(:manager)
 
-    id      = params[:parent] == '0' ? 1 : params[:parent]
+    id = params[:parent] == '0' ? 1 : params[:parent]
 
     @parent = Sys::Group.find(id)
-
     return error_auth unless @parent.id == 1 || @parent.site_ids.include?(Core.site.id)
 
-    item = Sys::Group.new.readable
-    item.order params[:sort], 'sort_no, code, id'
-
-    site_restriction = {
-           joins: ['JOIN cms_site_belongings AS csb ON csb.group_id = sys_groups.id'],
-      conditions: ['csb.site_id = ? AND sys_groups.parent_id = ?', Core.site.id, @parent.id]
-    }
-
-    @groups = item.find(:all, site_restriction)
-
-    item = Sys::User.new.readable
-    item.order params[:sort], "LPAD(account, 15, '0')"
-
-    site_restriction = {
-           joins: ['JOIN sys_users_groups AS sug ON sug.user_id = sys_users.id',
-                   'JOIN cms_site_belongings AS csb ON csb.group_id = sug.group_id'],
-      conditions: ['csb.site_id = ? AND sug.group_id = ?', Core.site.id, @parent.id]
-    }
-
-    @users = item.find(:all, site_restriction)
+    @groups = Core.site.groups.in_group(@parent).order(:sort_no, :code, :id).all
+    @users = Core.site.users.in_group(@parent).order(:account).all
   end
   
   def index
-    item = Sys::Group.new.readable
-    item.and :parent_id, @parent.id
-    item.page  params[:page], params[:limit]
-    item.order params[:sort], :id
-
-    site_restriction = {
-           joins: ['JOIN cms_site_belongings AS csb ON csb.group_id = sys_groups.id'],
-      conditions: ['csb.site_id = ?', Core.site.id]
-    }
-
-    @items = item.find(:all, site_restriction)
-    _index @items
+    _index @groups
   end
   
   def show
-    @item = Sys::Group.new.find(params[:id])
+    @item = Sys::Group.find(params[:id])
     return error_auth unless @item.readable?
     _show @item
   end
 
   def new
-    @item = Sys::Group.new({
+    @item = Sys::Group.new(
       :state      => 'enabled',
       :parent_id  => @parent.id,
       :ldap       => 0,
       :web_state  => 'public'
-    })
+    )
   end
 
   def create
     @item = Sys::Group.new(group_params)
     @item.parent_id = @parent.id
-    parent = Sys::Group.find_by_id(@item.parent_id)
+    parent = Sys::Group.find_by(id: @item.parent_id)
     @item.level_no = parent ? parent.level_no + 1 : 1
     _create(@item) do
       @item.sites << Core.site if @item.sites.empty?
@@ -76,9 +44,9 @@ class Sys::Admin::GroupsController < Cms::Controller::Admin::Base
   end
 
   def update
-    @item = Sys::Group.new.find(params[:id])
+    @item = Sys::Group.find(params[:id])
     @item.attributes = group_params
-    parent = Sys::Group.find_by_id(@item.parent_id)
+    parent = Sys::Group.find_by(id: @item.parent_id)
     @item.level_no = parent ? parent.level_no + 1 : 1
     _update(@item) do
       @item.sites << Core.site if @item.sites.empty?
@@ -86,7 +54,7 @@ class Sys::Admin::GroupsController < Cms::Controller::Admin::Base
   end
   
   def destroy
-    @item = Sys::Group.new.find(params[:id])
+    @item = Sys::Group.find(params[:id])
     _destroy @item
   end
 
@@ -94,6 +62,6 @@ class Sys::Admin::GroupsController < Cms::Controller::Admin::Base
 
   def group_params
     params.require(:item).permit(:address, :code, :email, :fax, :ldap, :name, :name_en, :note,
-                                 :parent_id, {site_ids: []}, :sort_no, :state, :tel, :tel_attend)
+                                 :parent_id, :sort_no, :state, :tel, :tel_attend, :site_ids => [])
   end
 end

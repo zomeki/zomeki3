@@ -11,6 +11,29 @@ class Sys::OperationLog < ActiveRecord::Base
   validates :loggable, :presence => true
   validates :user, :presence => true
 
+  scope :search_with_params, ->(params = {}) {
+    rel = all
+    params.each do |n, v|
+      next if v.to_s == ''
+      case n
+      when 's_id'
+        rel.where!(id: v)
+      when 's_user_id'
+        rel.where!(user_id: v)
+      when 's_action'
+        rel.where!(action: v == 'recognize' ? ['recognize', 'approve'] : v)
+      when 's_keyword'
+        rel = rel.search_with_text(:item_unid, :item_name, :item_model, v)
+      when 'start_date'
+        rel.where!(arel_table[:created_at].gteq(v))
+      when 'close_date'
+        date = Date.strptime(params[:close_date], "%Y-%m-%d") + 1.days rescue nil
+        rel.where!(arel_table[:created_at].lteq(date)) if date
+      end
+    end
+    rel
+  }
+
   def action_text
     ACTION_OPTIONS.detect{|o| o.last == action }.try(:first).to_s
   end
@@ -71,28 +94,4 @@ class Sys::OperationLog < ActiveRecord::Base
     end
     log.save(:validate => false)
   end
-
-  def search(params)
-    params.each do |n, v|
-      next if v.to_s == ''
-
-      case n
-      when 's_id'
-        self.and :id, v
-      when 's_user_id'
-        self.and :user_id, v
-      when 's_action'
-        if v == 'recognize'
-          self.and :action, ['recognize', 'approve']
-        else
-          self.and :action, v
-        end
-      when 's_keyword'
-        self.and_keywords v, :item_unid, :item_name, :item_model
-      end
-    end if params.size != 0
-
-    return self
-  end
-
 end

@@ -8,25 +8,21 @@ class Sys::Admin::RoleNamesController < Cms::Controller::Admin::Base
   end
   
   def index
-    item = Sys::RoleName.new#.readable
-    item.and :site_id, Core.site.id
-    item.search(params)
-    item.page  params[:page], params[:limit]
-    item.order params[:sort], :name
-    @items = item.find(:all)
+    @items = Sys::RoleName.where(site_id: Core.site.id).search_with_params(params).order(:name)
+      .paginate(page: params[:page], per_page: params[:limit])
+
     _index @items
   end
   
   def show
-    @item = Sys::RoleName.new.find(params[:id])
+    @item = Sys::RoleName.find(params[:id])
     #return error_auth unless @item.readable?
     return error_auth unless @item.site_id == Core.site.id
     _show @item
   end
 
   def new
-    @item = Sys::RoleName.new({
-    })
+    @item = Sys::RoleName.new
   end
   
   def create
@@ -36,14 +32,14 @@ class Sys::Admin::RoleNamesController < Cms::Controller::Admin::Base
   end
   
   def update
-    @item = Sys::RoleName.new.find(params[:id])
+    @item = Sys::RoleName.find(params[:id])
     return error_auth unless @item.site_id == Core.site.id
     @item.attributes = role_params
     _update @item
   end
   
   def destroy
-    @item = Sys::RoleName.new.find(params[:id])
+    @item = Sys::RoleName.find(params[:id])
     return error_auth unless @item.site_id == Core.site.id
     _destroy @item
   end

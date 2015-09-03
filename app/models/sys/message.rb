@@ -7,5 +7,5 @@ class Sys::Message < ActiveRecord::Base
 
   include StateText
 
-  validates_presence_of :state, :published_at, :title, :body
+  validates :state, :published_at, :title, :body, presence: true
 end

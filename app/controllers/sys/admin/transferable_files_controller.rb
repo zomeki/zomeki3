@@ -12,14 +12,9 @@ class Sys::Admin::TransferableFilesController < Cms::Controller::Admin::Base
   end
 
   def index
-    item = Sys::TransferableFile.new
-    item.and :site_id, @site.id
-    item.and :user_id, Core.user.id
-    item.and :file_type, 'file'
-    item.search params
-    item.page  params[:page], 200 #params[:limit]
-    item.order params[:sort], 'id'
-    @items = item.find(:all)
+    @items = @site.transferable_files.where(user_id: Core.user.id, file_type: 'file')
+      .search_with_params(params).order(:id)
+      .paginate(page: params[:page], per_page: 200)
 
     _index @items
   end
@@ -55,7 +50,7 @@ class Sys::Admin::TransferableFilesController < Cms::Controller::Admin::Base
   end
 
   def show
-    @item = Sys::TransferableFile.new.find(params[:id])
+    @item = Sys::TransferableFile.find(params[:id])
     _show @item
   end
 

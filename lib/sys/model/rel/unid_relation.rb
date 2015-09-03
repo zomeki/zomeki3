@@ -33,13 +33,13 @@ module Sys::Model::Rel::UnidRelation
     return nil unless replaced_page?
     cond = {:rel_unid => unid, :rel_type => "replace"}
     rel = Sys::UnidRelation.where(cond).first
-    self.class.find_by_unid(rel.unid)
+    self.class.find_by(unid: rel.unid)
   end
   
   def replaced_page
     return nil unless replace_page?
     cond = {:unid => unid, :rel_type => "replace"}
     rel = Sys::UnidRelation.where(cond).first
-    self.class.find_by_unid(rel.rel_unid)
+    self.class.find_by(unid: rel.rel_unid)
   end
- end
+end

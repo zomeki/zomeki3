@@ -11,21 +11,19 @@ class Cms::Admin::KanaDictionariesController < Cms::Controller::Admin::Base
     return test if params[:do] == 'test'
     return make_dictionary if params[:do] == 'make_dictionary'
 
-    @items = Cms::KanaDictionary.where(site_id: Core.site.id).order(:id)
-                                .paginate(page: params[:page], per_page: params[:limit])
+    @items = Core.site.kana_dictionaries.order(:id).paginate(page: params[:page], per_page: params[:limit])
     _index @items
   end
 
   def show
-    @item = Cms::KanaDictionary.new.find(params[:id])
+    @item = Core.site.kana_dictionaries.find(params[:id])
     return error_auth unless @item.readable?
-    return error_auth unless @item.site_id == Core.site.id
 
     _show @item
   end
 
   def new
-    @item = Cms::KanaDictionary.new({
+    @item = Core.site.kana_dictionaries.build(
       :body => "" +
         "# コメント ... 先頭に「#」\n" +
         "# 辞書には登録されません。\n\n" +
@@ -34,29 +32,24 @@ class Cms::Admin::KanaDictionariesController < Cms::Controller::Admin::Base
         "単語, タンゴ\n\n" +
         "# 英字例 ... 「英字, カタカナ」\n" +
         "CMS, シーエムエス\n"
-    })
+    )
   end
 
   def create
     return test if params[:do] == 'test'
 
-    @item = Cms::KanaDictionary.new(kana_dictionary_params)
-    @item.site_id = Core.site.id
+    @item = Core.site.kana_dictionaries.build(kana_dictionary_params)
     _create @item
   end
 
   def update
-    @item = Cms::KanaDictionary.new.find(params[:id])
-    return error_auth unless @item.site_id == Core.site.id
-
+    @item = Core.site.kana_dictionaries.find(params[:id])
     @item.attributes = kana_dictionary_params
     _update @item
   end
 
   def destroy
-    @item = Cms::KanaDictionary.new.find(params[:id])
-    return error_auth unless @item.site_id == Core.site.id
-
+    @item = Core.site.kana_dictionaries.find(params[:id])
     _destroy @item
   end
 
@@ -89,6 +82,6 @@ class Cms::Admin::KanaDictionariesController < Cms::Controller::Admin::Base
   private
 
   def kana_dictionary_params
-    params.require(:item).permit(:body, :in_creator, :name)
+    params.require(:item).permit(:body, :name, :in_creator => [:group_id, :user_id])
   end
 end

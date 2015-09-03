@@ -6,8 +6,8 @@ module Sys::Model::Base::File
                           ['1600px', '1600'], ['1920px', '1920']]
 
   def self.included(mod)
-    mod.validates_presence_of :file, :unless => :skip_upload?
-    mod.validates_presence_of :name, :title
+    mod.validates :file, presence: true, unless: :skip_upload?
+    mod.validates :name, :title, presence: true
     mod.validate :validate_file_name
     mod.validate :validate_file_type
     mod.validate :validate_upload_file

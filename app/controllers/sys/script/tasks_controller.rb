@@ -16,7 +16,7 @@ class Sys::Script::TasksController < ApplicationController
         end
         
         model = unid.model.underscore.pluralize
-        item  = eval(unid.model).find_by_unid(unid.id)
+        item  = eval(unid.model).find_by(unid: unid.id)
         
         model = "cms/nodes" if model == "cms/model/node/pages" # for v1.1.7
         ctl   = model.gsub(/^(.*?)\//, '\1/script/')

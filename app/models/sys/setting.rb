@@ -8,7 +8,7 @@ class Sys::Setting < Sys::Model::Base::Setting
   set_config :pass_reminder_mail_sender, :name => "パスワード変更メール送信元アドレス", :default => 'noreply'
   set_config :file_upload_max_size, :name => "添付ファイル最大サイズ", :comment => 'MB', :default => 50
 
-  validates_presence_of :name
+  validates :name, presence: true
 
   def self.use_common_ssl?
     return false if Sys::Setting.value(:common_ssl) != 'enabled'

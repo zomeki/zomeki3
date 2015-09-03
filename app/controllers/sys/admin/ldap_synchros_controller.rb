@@ -8,27 +8,21 @@ class Sys::Admin::LdapSynchrosController < Cms::Controller::Admin::Base
   end
   
   def index
-    item = Sys::LdapSynchro.new#.readable
-    item.page  params[:page], params[:limit]
-    item.order params[:sort], 'version DESC'
-    @items = item.find(:all, :group => :version)
+    @items = Sys::LdapSynchro.group(:version).order(version: :desc)
+      .paginate(page: params[:page], per_page: params[:limit])
     _index @items
   end
   
   def show
     @version = params[:id]
-    
-    item = Sys::LdapSynchro.new
-    item.and :version, @version
-    item.and :parent_id, 0
-    item.and :entry_type, 'group'
-    @items = item.find(:all, :order => 'sort_no, code')
+
+    @items = Sys::LdapSynchro.where(version: @version, parent_id: 0, entry_type: 'group').order(:sort_no, :code)
 
     _show @items
   end
 
   def new
-    @item = Sys::LdapSynchro.new({})
+    @item = Sys::LdapSynchro.new
   end
   
   def create
@@ -62,7 +56,7 @@ class Sys::Admin::LdapSynchrosController < Cms::Controller::Admin::Base
   end
   
   def destroy
-    Sys::LdapSynchro.delete_all(['version = ?', params[:id]])
+    Sys::LdapSynchro.where(version: params[:id]).delete_all
     flash[:notice] = "削除処理が完了しました。"
     redirect_to url_for(:action => :index)
   end
@@ -70,24 +64,20 @@ class Sys::Admin::LdapSynchrosController < Cms::Controller::Admin::Base
   def synchronize
     @version = params[:id]
     
-    item = Sys::LdapSynchro.new
-    item.and :version, @version
-    item.and :parent_id, 0
-    item.and :entry_type, 'group'
-    @items = item.find(:all, :order => 'sort_no, code')
+    @items = Sys::LdapSynchro.where(version: @version, parent_id: 0, entry_type: 'group').order(:sort_no, :code)
     
-    unless parent = Sys::Group.find_by_parent_id(0)
+    unless parent = Sys::Group.find_by(parent_id: 0)
       return render :inline => "グループのRootが見つかりません。", :layout => true
     end
     
-    Sys::Group.update_all("ldap_version = NULL")
-    Sys::User.update_all("ldap_version = NULL")
+    Sys::Group.update_all(ldap_version: nil)
+    Sys::User.update_all(ldap_version: nil)
     
     @results = {:group => 0, :gerr => 0, :user => 0, :uerr => 0}
     @items.each {|group| do_synchro(group, parent)}
     
-    @results[:udel] = Sys::User.destroy_all("ldap = 1 AND ldap_version IS NULL").size
-    @results[:gdel] = Sys::Group.destroy_all("parent_id != 0 AND ldap = 1 AND ldap_version IS NULL").size
+    @results[:udel] = Sys::User.where(ldap: 1, ldap_version: nil).destroy_all.size
+    @results[:gdel] = Sys::Group.where.not(parent_id: 0).where(ldap: 1, ldap_version: nil).destroy_all.size
     
     messages = ["同期処理が完了しました。<br />"]
     messages << "グループ"
@@ -106,7 +96,7 @@ class Sys::Admin::LdapSynchrosController < Cms::Controller::Admin::Base
 protected
   def do_synchro(group, parent = nil)
     ## group
-    sg                = Sys::Group.find_by_code(group.code) || Sys::Group.new
+    sg                = Sys::Group.find_by(code: group.code) || Sys::Group.new
     sg.code           = group.code
     sg.parent_id      = parent.id
     sg.state        ||= 'enabled'
@@ -131,7 +121,7 @@ protected
     ## users
     if group.users.size > 0
       group.users.each do |user|
-        su                = Sys::User.find_by_account(user.code) || Sys::User.new
+        su                = Sys::User.find_by(account: user.code) || Sys::User.new
         su.account        = user.code
         su.state        ||= 'enabled'
         su.auth_no      ||= 2

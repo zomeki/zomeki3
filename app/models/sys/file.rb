@@ -3,9 +3,7 @@ class Sys::File < ActiveRecord::Base
   include Sys::Model::Base::File
   include Sys::Model::Rel::Unid
   include Sys::Model::Rel::Creator
-  
-  #validates_presence_of :name
-  
+
   ## garbage collect
   def self.garbage_collect
     conditions = Condition.new

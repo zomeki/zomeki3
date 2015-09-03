@@ -8,12 +8,6 @@ class Sys::User < ActiveRecord::Base
 
   include StateText
 
-  has_many   :group_rels, :foreign_key => :user_id,
-    :class_name => 'Sys::UsersGroup'  , :primary_key => :id
-#  has_and_belongs_to_many :groups,
-#    :class_name => 'Sys::Group', :join_table => 'sys_users_groups'
-#  has_and_belongs_to_many :role_names, :association_foreign_key => :role_id,
-#    :class_name => 'Sys::RoleName', :join_table => 'sys_users_roles'
   has_many :users_groups, :foreign_key => :user_id,
     :class_name => 'Sys::UsersGroup'
   has_many :groups, :through => :users_groups,
@@ -26,15 +20,39 @@ class Sys::User < ActiveRecord::Base
 
   attr_accessor :in_group_id
 
-  validates_uniqueness_of :account
-  validates_presence_of :state, :account, :name, :ldap
-  validates_presence_of :in_group_id, :if => %Q(in_group_id == '')
-
+  validates :account, uniqueness: true
+  validates :state, :account, :name, :ldap, presence: true
+  validates :in_group_id, presence: true, if: %Q(in_group_id == '')
   validate :admin_auth_no_fixation
 
   after_save :save_group, :if => %Q(@_in_group_id_changed)
 
   before_destroy :block_root_deletion
+
+  scope :in_site, ->(site) { joins(:users_groups => :site_belongings).where(cms_site_belongings: {site_id: site.id}) }
+  scope :in_group, ->(group) { joins(:users_groups).where(sys_users_groups: {group_id: group.id}) }
+
+  scope :search_with_params, ->(params = {}) {
+    rel = all
+    params.each do |n, v|
+      next if v.to_s == ''
+      case n
+      when 's_id'
+        rel.where!(id: v)
+      when 's_state'
+        rel.where!(state: v)
+      when 's_account'
+        rel.where!(arel_table[:account].matches("%#{escape_like(v)}%"))
+      when 's_name'
+        rel.where!(arel_table[:name].matches("%#{escape_like(v)}%"))
+      when 's_email'
+        rel.where!(arel_table[:email].matches("%#{escape_like(v)}%"))
+      when 's_group_id'
+        rel.joins!(:groups).where!(sys_groups: {id: v == 'no_group' ? nil : v})
+      end
+    end
+    rel
+  }
 
   def readable
     self
@@ -132,59 +150,21 @@ class Sys::User < ActiveRecord::Base
     return nil unless options[:item]
 
     item = options[:item]
-    if item.kind_of?(ActiveRecord::Base)
-      item = item.unid
-    end
+    item = item.unid if item.kind_of?(ActiveRecord::Base)
 
-    cond = {:action => action.to_s, :item_unid => item}
-    roles = Sys::ObjectPrivilege.find(:all, :conditions => cond)
-    return false if roles.size == 0
+    role_ids = Sys::ObjectPrivilege.where(action: action.to_s, item_unid: item).pluck(:role_id)
+    return false if role_ids.size == 0
 
-    cond = Condition.new do |c|
-      c.and :user_id, id
-      c.and :role_id, 'ON', roles.collect{|i| i.role_id}
-    end
-    Sys::UsersRole.find(:first, :conditions => cond.where)
+    users_roles.where(role_id: role_ids).exists?
   end
 
   def delete_group_relations
-    Sys::UsersGroup.delete_all(:user_id => id)
+    Sys::UsersGroup.where(user_id: id).delete_all
     return true
   end
 
-  def search(params)
-    params.each do |n, v|
-      next if v.to_s == ''
-
-      case n
-      when 's_id'
-        self.and :id, v
-      when 's_state'
-        self.and 'sys_users.state', v
-      when 's_account'
-        self.and 'sys_users.account', 'LIKE', "%#{v.gsub(/([%_])/, '\\\\\1')}%"
-      when 's_name'
-        self.and 'sys_users.name', 'LIKE', "%#{v.gsub(/([%_])/, '\\\\\1')}%"
-      when 's_email'
-        self.and 'sys_users.email', 'LIKE', "%#{v.gsub(/([%_])/, '\\\\\1')}%"
-      when 's_group_id'
-        if v == 'no_group'
-          self.join 'LEFT OUTER JOIN sys_users_groups ON sys_users_groups.user_id = sys_users.id' +
-            ' LEFT OUTER JOIN sys_groups ON sys_users_groups.group_id = sys_groups.id'
-          self.and 'sys_groups.id',  'IS', nil
-        else
-          self.join :groups
-          self.and 'sys_groups.id', v
-        end
-      end
-    end if params.size != 0
-
-    return self
-  end
-
   def self.find_managers
-    cond = {:state => 'enabled', :auth_no => 5}
-    self.find(:all, :conditions => cond, :order => :account)
+    self.where(state: 'enabled', auth_no: 5).order(:account)
   end
 
   ## -----------------------------------
@@ -255,26 +235,24 @@ protected
   end
 
   def save_group
-    exists = (group_rels.size > 0)
+    exists = (users_groups.size > 0)
 
-    group_rels.each_with_index do |rel, idx|
+    users_groups.each_with_index do |rel, idx|
       if idx == 0 && !in_group_id.blank?
         if rel.group_id != in_group_id
-          cond = {:user_id => rel.user_id, :group_id => rel.group_id}
-          rel.class.update_all({:group_id => in_group_id}, cond)
+          rel.class.where(user_id: rel.user_id, group_id: rel.group_id).update_all(group_id: in_group_id)
           rel.group_id = in_group_id
         end
       else
-        cond = {:user_id => rel.user_id, :group_id => rel.group_id}
-        rel.class.delete_all(cond)
+        rel.class.where(user_id: rel.user_id, group_id: rel.group_id).delete_all
       end
     end
 
     if !exists && !in_group_id.blank?
-      rel = Sys::UsersGroup.create({
+      rel = Sys::UsersGroup.create(
         :user_id  => id,
         :group_id => in_group_id
-      })
+      )
     end
 
     return true

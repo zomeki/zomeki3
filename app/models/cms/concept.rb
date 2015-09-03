@@ -10,8 +10,9 @@ class Cms::Concept < ActiveRecord::Base
 
   include StateText
 
-  has_many :children, -> { order(:name) },
+  has_many :children, -> { order(:sort_no) },
     :foreign_key => :parent_id, :class_name => 'Cms::Concept', :dependent => :destroy
+  belongs_to :parent, :foreign_key => :parent_id, :class_name => 'Cms::Concept'
   has_many :layouts, -> { order(:name) },
     :foreign_key => :concept_id, :class_name => 'Cms::Layout', :dependent => :destroy
   has_many :pieces, -> { order(:name) },
@@ -23,14 +24,19 @@ class Cms::Concept < ActiveRecord::Base
   has_many :data_file_nodes , :foreign_key => :concept_id,
     :class_name => 'Cms::DataFileNode', :dependent => :destroy
   
-  validates_presence_of :site_id, :state, :level_no, :name
+  validates :site_id, :state, :level_no, :name, presence: true
   
   def validate
     if id != nil && id == parent_id
       errors.add :parent_id, :invalid
     end
   end
-  
+
+  def tree_name(opts = {})
+    opts.reverse_merge!(prefix: '　　', depth: 0)
+    opts[:prefix] * [level_no - 1 + opts[:depth], 0].max + name
+  end
+
   def targets
     [['現在のコンセプトから','current'], ['すべてのコンセプトから','all']]
   end
@@ -51,10 +57,6 @@ class Cms::Concept < ActiveRecord::Base
     rel.order(:sort_no)
   end
 
-  def parent
-    self.class.find_by_id(parent_id)
-  end
-  
   def self.find_by_path(path)
     return nil if path.to_s == ''
     parent_id = 0
