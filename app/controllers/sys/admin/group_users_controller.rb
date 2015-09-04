@@ -11,7 +11,7 @@ class Sys::Admin::GroupUsersController < Cms::Controller::Admin::Base
   end
   
   def index
-    if params.permit(:options)
+    if params[:options]
       render 'index_options', :layout => false
     else
       redirect_to(sys_groups_path(@parent))
