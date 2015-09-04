@@ -1,9 +1,9 @@
 class Cms::Controller::Public::Base < Sys::Controller::Public::Base
   include Cms::Controller::Layout
 
-  before_filter :initialize_params
-  after_filter :render_public_variables
-  after_filter :render_public_layout
+  before_action :initialize_params
+  after_action :render_public_variables
+  after_action :render_public_layout
 
   def initialize_params
     if m = Page.uri.match(/\.p(\d+)\.html(\.r)?\z/)

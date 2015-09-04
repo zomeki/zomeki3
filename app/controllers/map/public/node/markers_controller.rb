@@ -3,7 +3,7 @@
 require 'will_paginate/array'
 
 class Map::Public::Node::MarkersController < Cms::Controller::Public::Base
-  skip_filter :render_public_layout, :only => [:file_content]
+  skip_action_callback :render_public_layout, :only => [:file_content]
 
   def pre_dispatch
     @node = Page.current_node

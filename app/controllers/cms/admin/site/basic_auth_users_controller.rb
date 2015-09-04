@@ -2,7 +2,7 @@
 class Cms::Admin::Site::BasicAuthUsersController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 
-  after_filter :refresh_auth, only: [:create, :update, :destroy]
+  after_action :refresh_auth, only: [:create, :update, :destroy]
 
   def pre_dispatch
     return error_auth unless Core.user.has_auth?(:manager)

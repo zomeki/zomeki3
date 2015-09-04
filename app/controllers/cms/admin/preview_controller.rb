@@ -1,6 +1,6 @@
 # encoding: utf-8
 class Cms::Admin::PreviewController < Cms::Controller::Admin::Base
-  after_filter :replace_preview_data
+  after_action :replace_preview_data
 
   def index
     path = Core.request_uri.gsub(/^#{Regexp.escape(cms_preview_path)}/, "")

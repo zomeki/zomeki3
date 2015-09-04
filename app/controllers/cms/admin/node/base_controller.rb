@@ -3,8 +3,8 @@ class Cms::Admin::Node::BaseController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Recognition
   include Sys::Controller::Scaffold::Publication
 
-  before_filter :pre_dispatch_node
-
+  before_action :pre_dispatch_node
+ 
   @@_models = {}
 
   def self.set_model(model)

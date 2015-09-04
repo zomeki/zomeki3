@@ -2,7 +2,7 @@ require 'will_paginate/array'
 
 class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
   include GpArticle::Controller::Feed
-  skip_filter :render_public_layout, :only => [:file_content]
+  skip_action_callback :render_public_layout, :only => [:file_content]
 
   def pre_dispatch
     if (organization_content = Page.current_node.content).kind_of?(Organization::Content::Group)

@@ -1,9 +1,9 @@
 # encoding: utf-8
 class Survey::Public::Node::FormsController < Cms::Controller::Public::Base
   include SimpleCaptcha::ControllerHelpers
-  before_filter :set_form, only: [:show, :confirm_answers, :send_answers, :finish]
-  skip_filter :render_public_layout
-  after_filter :call_render_public_layout
+  before_action :set_form, only: [:show, :confirm_answers, :send_answers, :finish]
+  skip_action_callback :render_public_layout
+  after_action :call_render_public_layout
 
   def pre_dispatch
     @node = Page.current_node

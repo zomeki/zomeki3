@@ -1,9 +1,8 @@
 # encoding: utf-8
 class Cms::Admin::Content::BaseController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
-
-  before_filter :pre_dispatch_content
-
+  before_action :pre_dispatch_content
+  
   def pre_dispatch_content
     @content = Cms::Content.find(params[:id])
     return error_auth if params[:action] != 'show' && !Core.user.has_auth?(:designer)
