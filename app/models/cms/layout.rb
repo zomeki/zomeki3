@@ -10,10 +10,9 @@ class Cms::Layout < ActiveRecord::Base
 
   belongs_to :status,  :foreign_key => :state, :class_name => 'Sys::Base::Status'
   
-  validates_presence_of :state, :name, :title
-  validates_uniqueness_of :name, :scope => :concept_id
-  validates_format_of :name, :with => /\A[0-9a-zA-Z\-_]+\z/, :if => "!name.blank?",
-    :message => "は半角英数字、ハイフン、アンダースコアで入力してください。"
+  validates :state, :title, presence: true
+  validates :name, presence: true, uniqueness: { scope: :concept_id },
+    format: { with: /\A[0-9a-zA-Z\-_]+\z/, if: "name.present?", message: "は半角英数字、ハイフン、アンダースコアで入力してください。" }
   
   def states
     [['公開','public']]
@@ -24,7 +23,7 @@ class Cms::Layout < ActiveRecord::Base
   end
   
   def node_is(node)
-    node = Cms::Node.find(:first, :conditions => {:id => node}) if node.class != Cms::Node
+    node = Cms::Node.find_by(id: node) if node.class != Cms::Node
     self.and :id, node.inherited_layout.id if node
   end
   
@@ -40,13 +39,13 @@ class Cms::Layout < ActiveRecord::Base
     pieces = []
     piece_names.each do |name|
       if concept
-        piece = Cms::Piece.find(:first, :conditions => {:name => name, :concept_id => concept}, :order => :id)
+        piece = Cms::Piece.where(name: name, concept_id: concept).order(:id).first
       end
       unless piece
-        piece = Cms::Piece.find(:first, :conditions => {:name => name, :concept_id => self.concept}, :order => :id)
+        piece = Cms::Piece.where(name: name, concept_id: self.concept).order(:id).first
       end
       unless piece
-        piece = Cms::Piece.find(:first, :conditions => {:name => name, :concept_id => nil}, :order => :id)
+        piece = Cms::Piece.where(name: name, concept_id: nil).order(:id).first
       end
       pieces << piece if piece
     end

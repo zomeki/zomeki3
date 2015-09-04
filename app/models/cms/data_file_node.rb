@@ -10,8 +10,7 @@ class Cms::DataFileNode < ActiveRecord::Base
   
   has_many :files, :foreign_key => :node_id, :class_name => 'Cms::DataFile', :primary_key => :id
   
-  validates_presence_of :name
-  validates_uniqueness_of :name, :scope => :concept_id
+  validates :name, presence: true, uniqueness: { scope: :concept_id }
   validate :validate_name
   
   after_destroy :remove_files

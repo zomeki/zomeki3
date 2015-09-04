@@ -44,10 +44,4 @@ module Sys::Model::Base
     return rs.first[0] if rs.class.to_s =~ /^Mysql2/
     return rs.fetch_row[0]
   end
-
-  module ClassMethods
-    def escape_like(s)
-      s.gsub(/[\\%_]/) {|r| "\\#{r}"}
-    end
-  end
 end

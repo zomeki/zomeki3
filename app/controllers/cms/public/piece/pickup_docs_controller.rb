@@ -1,6 +1,6 @@
 class Cms::Public::Piece::PickupDocsController < Sys::Controller::Public::Base
   def pre_dispatch
-    @piece = Cms::Piece::PickupDoc.find_by_id(Page.current_piece.id)
+    @piece = Cms::Piece::PickupDoc.find_by(id: Page.current_piece.id)
     render :text => '' unless @piece
   end
 
@@ -10,7 +10,5 @@ class Cms::Public::Piece::PickupDocsController < Sys::Controller::Public::Base
       next if doc.doc.blank?
       @docs << doc.doc
     end
-
-
   end
 end

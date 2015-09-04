@@ -36,7 +36,7 @@ class Cms::Map < ActiveRecord::Base
   
   def markers
     if new_marker_format?
-      return Cms::MapMarker.find(:all, :conditions => {:map_id => id}, :order => :sort_no)
+      return Cms::MapMarker.where(map_id: id).order(:sort_no)
     end
     
     newMarker = lambda do |i|

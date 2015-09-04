@@ -18,10 +18,9 @@ class Cms::Piece < ActiveRecord::Base
 
   attr_accessor :setting_save_skip
 
-  validates_presence_of :state, :model, :name, :title
-  validates_uniqueness_of :name, :scope => :concept_id, :if => %Q(!replace_page?)
-  validates_format_of :name, :with => /\A[0-9a-zA-Z\-_]+\z/, :if => "!name.blank?",
-    :message => "は半角英数字、ハイフン、アンダースコアで入力してください。"
+  validates :state, :model, :name, :title, presence: true
+  validates :name, uniqueness: { scope: :concept_id, if: %Q(!replace_page?) },
+    format: { with: /\A[0-9a-zA-Z\-_]+\z/, if: "name.present?", message: "は半角英数字、ハイフン、アンダースコアで入力してください。" }
 
   after_save :save_settings
   after_save :replace_new_piece
@@ -65,8 +64,8 @@ class Cms::Piece < ActiveRecord::Base
   end
   
   def node_is(node)
-  	layout = nil
-    node = Cms::Node.find(:first, :conditions => {:id => node}) if node.class != Cms::Node
+    layout = nil
+    node = Cms::Node.find_by(id: node) if node.class != Cms::Node
     layout = node.inherited_layout if node
     self.and :id, 'IN', layout.pieces if layout
   end
@@ -95,7 +94,7 @@ class Cms::Piece < ActiveRecord::Base
   end
 
   def setting_extra_values(name)
-    settings.find_by_name(name).try(:extra_values) || {}.with_indifferent_access
+    settings.find_by(name: name).try(:extra_values) || {}.with_indifferent_access
   end
 
   def setting_extra_value(name, extra_name)
@@ -149,14 +148,14 @@ protected
       name = name.to_s
       
       if !value.is_a?(Hash)
-        st = settings.find(:first, :conditions => ["name = ?", name]) || new_setting(name)
+        st = settings.find_by(name: name) || new_setting(name)
         st.value   = value
         st.sort_no = nil
         st.save if st.changed?
         next
       end
       
-      _settings = settings.find(:all, :conditions => ["name = ?", name])
+      _settings = settings.where(name: name).to_a
       value.each_with_index do |data, idx|
         st = _settings[idx] || new_setting(name)
         st.sort_no = data[0]

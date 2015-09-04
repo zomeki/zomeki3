@@ -1,15 +1,14 @@
 # encoding: utf-8
 class Cms::Admin::Piece::BaseController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
-  
+
   before_action :pre_dispatch_piece
-  
+
   def pre_dispatch_piece
     return error_auth unless Core.user.has_auth?(:designer)
     return error_auth unless @piece = find_piece
-    #default_url_options[:piece] = @piece
   end
-  
+
   def model
     return @model_class if @model_class
     mclass = self.class.to_s.gsub(/^(\w+)::Admin/, '\1').gsub(/Controller$/, '').singularize
@@ -17,7 +16,7 @@ class Cms::Admin::Piece::BaseController < Cms::Controller::Admin::Base
   rescue
     @model_class = Cms::Piece
   end
-  
+
   def index
     exit
   end
@@ -31,7 +30,7 @@ class Cms::Admin::Piece::BaseController < Cms::Controller::Admin::Base
   def new
     exit
   end
-  
+
   def create
     exit
   end
@@ -39,12 +38,6 @@ class Cms::Admin::Piece::BaseController < Cms::Controller::Admin::Base
   def update
     @item = model.find(params[:id])
     @item.attributes = base_params
-    
-    #TODO: 文字化け暫定対応
-    @item.attributes.each do |k, v|
-      next if @item[k].class.name != 'String'
-      @item[k] = @item[k].force_encoding('UTF-8') unless @item[k].encoding.name == 'UTF-8'
-    end
 
     _update @item do
       Core.set_concept(session, @item.concept_id)
@@ -53,7 +46,7 @@ class Cms::Admin::Piece::BaseController < Cms::Controller::Admin::Base
       end
     end
   end
-  
+
   def destroy
     @item = model.find(params[:id])
     _destroy @item do

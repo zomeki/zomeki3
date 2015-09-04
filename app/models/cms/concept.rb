@@ -25,12 +25,10 @@ class Cms::Concept < ActiveRecord::Base
     :class_name => 'Cms::DataFileNode', :dependent => :destroy
   
   validates :site_id, :state, :level_no, :name, presence: true
-  
-  def validate
-    if id != nil && id == parent_id
-      errors.add :parent_id, :invalid
-    end
-  end
+
+  validate {
+    errors.add :parent_id, :invalid if id != nil && id == parent_id
+  }
 
   def tree_name(opts = {})
     opts.reverse_merge!(prefix: '　　', depth: 0)
@@ -62,8 +60,7 @@ class Cms::Concept < ActiveRecord::Base
     parent_id = 0
     item = nil
     path.split('/').each do |name|
-      cond = {:parent_id => parent_id, :name => name}
-      unless item = self.find(:first, :conditions => cond, :order => :id)
+      unless item = self.where(parent_id: parent_id, name: name).order(:id).first
         return nil
       end
       parent_id = item.id
@@ -75,7 +72,7 @@ class Cms::Concept < ActiveRecord::Base
     path = name
     id = self.parent_id
     lo = 0
-    while item = Cms::Concept.find_by_id(id) do
+    while item = Cms::Concept.find_by(id: id) do
       id = item.parent_id
       path = item.name + '/' + path
       lo += 1
@@ -87,30 +84,10 @@ class Cms::Concept < ActiveRecord::Base
     path
   end
   
-  def make_candidates(args1, args2)
-    choiced = []
-    choices = []
-    down    = lambda do |p, i|
-      next if choiced[p.id] != nil
-      choiced[p.id] = true
-      
-      choices << [('　　' * i) + p.name, p.id]
-      self.class.find(:all, eval("{#{args2}}")).each do |c|
-        down.call(c, i + 1)
-      end
-    end
-    
-    self.class.find(:all, eval("{#{args1}}")).each {|item| down.call(item, 0) }
-    return choices
-  end
-  
   def candidate_parents
-    args1  = %Q( :conditions => ["id != ? AND site_id = ? AND level_no = 1", id, Core.site.id], )
-    args1  = %Q( :conditions => ["site_id = ? AND level_no = 1", Core.site.id], ) unless id
-    args1 += %Q( :order => :sort_no)
-    args2  = %Q( :conditions => ["id != ? AND parent_id = ?", id, p.id], )
-    args2  = %Q( :conditions => ["parent_id = ?", p.id], ) if new_record?
-    args2 += %Q( :order => :sort_no)
-    make_candidates(args1, args2)
+    concepts = Core.site.root_concepts
+    concepts = concepts.where.not(id: id) if id
+    concepts = concepts.map{|c| c.descendants{|child| child.where.not(id: id) if id } }.flatten(1)
+    concepts.map{|c| [c.tree_name, c.id] }
   end
 end

@@ -7,7 +7,7 @@ module Cms::Model::Rel::SiteSetting
   end
 
   def setting_site_admin_protocol
-    setting = Cms::SiteSetting::AdminProtocol.where(:site_id => id, :name => 'admin_protocol').first
+    setting = Cms::SiteSetting::AdminProtocol.where(site_id: id).first
     setting ? setting.value : nil;
   end
 

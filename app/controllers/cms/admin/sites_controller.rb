@@ -34,9 +34,9 @@ class Cms::Admin::SitesController < Cms::Controller::Admin::Base
 
     @sns_apps = {}
 
-    @item = Cms::Site.new({
+    @item = Cms::Site.new(
       :state      => 'public',
-    })
+    )
   end
 
   def create
@@ -83,46 +83,16 @@ class Cms::Admin::SitesController < Cms::Controller::Admin::Base
     end
   end
 
-  def show_portal
-    @item = Cms::Site.find(params[:id])
-    @item.portal_group_state = "visible"
-    @item.save(:validate => false)
-
-    @item.contents.each do |content|
-      query    = {:portal_group_state => "visible"}
-      criteria = {:content_id => content.id}
-      PortalArticle::Doc.update_all(query, criteria)
-    end
-
-    flash[:notice] = "ポータルに公開しました。"
-    redirect_to :action => :show
-  end
-
-  def hide_portal
-    @item = Cms::Site.find(params[:id])
-    @item.portal_group_state = "hidden"
-    @item.save(:validate => false)
-
-    @item.contents.each do |content|
-      query    = {:portal_group_state => "hidden"}
-      criteria = {:content_id => content.id}
-      PortalArticle::Doc.update_all(query, criteria)
-    end
-
-    flash[:notice] = "ポータル公開を終了しました。"
-    redirect_to :action => :show
-  end
-
 protected
   def make_concept(item)
-    concept = Cms::Concept.new({
+    concept = Cms::Concept.new(
       :parent_id => 0,
       :site_id   => item.id,
       :state     => 'public',
       :level_no  => 1,
       :sort_no   => 1,
       :name      => item.name
-    })
+    )
     concept.save
   end
 
@@ -135,7 +105,7 @@ protected
       return true
     end
 
-    node = Cms::Node.new({
+    node = Cms::Node.new(
       :site_id      => item.id,
       :state        => 'public',
       :published_at => Core.now,
@@ -145,10 +115,10 @@ protected
       :directory    => 1,
       :name         => '/',
       :title        => item.name
-    })
+    )
     node.save(:validate => false)
 
-    top = Cms::Node.new({
+    top = Cms::Node.new(
       :site_id      => item.id,
       :state        => 'public',
       :published_at => Core.now,
@@ -158,7 +128,7 @@ protected
       :directory    => 0,
       :name         => 'index.html',
       :title        => item.name
-    })
+    )
     top.save(:validate => false)
 
     item.node_id = node.id
@@ -260,7 +230,7 @@ protected
   def site_params
     params.require(:item).permit(:body, :full_uri, :in_setting_site_admin_protocol, :in_setting_transfer_dest_dir,
       :in_setting_transfer_dest_domain, :in_setting_transfer_dest_host, :in_setting_transfer_dest_user,
-      :mobile_full_uri, :name, :og_description, :og_image, :og_title, :og_type,
-      :related_site, :smart_phone_publication, :spp_target, :in_creator => [:group_id, :user_id])
+      :mobile_full_uri, :name, :og_description, :og_image, :og_title, :og_type, :related_site,
+      :smart_phone_publication, :spp_target, :site_image, :del_site_image, :in_creator => [:group_id, :user_id])
   end
 end

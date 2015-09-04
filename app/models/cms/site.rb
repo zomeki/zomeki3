@@ -17,9 +17,9 @@ class Cms::Site < ActiveRecord::Base
 
   belongs_to :status, :foreign_key => :state,
     :class_name => 'Sys::Base::Status'
-  has_many :concepts, -> { order(:sort_no) }, :foreign_key => :site_id,
+  has_many :concepts, -> { order(:sort_no, :name, :id) }, :foreign_key => :site_id,
     :class_name => 'Cms::Concept', :dependent => :destroy
-  has_many :contents, -> { order(:sort_no) }, :foreign_key => :site_id,
+  has_many :contents, -> { order(:sort_no, :name, :id) }, :foreign_key => :site_id,
     :class_name => 'Cms::Content'
   has_many :settings, -> { order(:name, :sort_no) }, :foreign_key => :site_id,
     :class_name => 'Cms::SiteSetting'
@@ -38,8 +38,9 @@ class Cms::Site < ActiveRecord::Base
   belongs_to :root_node, foreign_key: :node_id, class_name: 'Cms::Node'
 
   # conditional relations
-  has_many :root_concepts, -> { where(level_no: 1).order(:sort_no) }, foreign_key: :site_id,
-    class_name: 'Cms::Concept'
+  has_many :root_concepts, -> { where(level_no: 1).order(:sort_no, :name, :id) }, class_name: 'Cms::Concept'
+  has_many :admin_protocol_settings, class_name: 'Cms::SiteSetting::AdminProtocol'
+  has_many :emergency_layout_settings, class_name: 'Cms::SiteSetting::EmergencyLayout'
 
   validates :state, :name, :full_uri, presence: true
   validates :full_uri, uniqueness: true

@@ -6,37 +6,33 @@ class Cms::Admin::ConceptsController < Cms::Controller::Admin::Base
     #return error_auth unless Core.user.has_auth?(:manager)
     return error_auth unless Core.user.has_auth?(:designer)#observe_field
     
-    unless @parent = Cms::Concept.find_by_id(params[:parent])
-      @parent = Cms::Concept.new({
+    unless @parent = Cms::Concept.find_by(id: params[:parent])
+      @parent = Cms::Concept.new(
         :name     => 'コンセプト',
         :level_no => 0
-      })
+      )
       @parent.id = 0
     end
-    #default_url_options[:parent] = @parent.id
   end
   
   def index
-    item = Cms::Concept.new
-    item.and :parent_id, @parent.id
-    item.and :site_id, Core.site.id
-    item.order params[:sort], :sort_no
-    @items = item.find(:all)
+    @items = Cms::Concept.where(site_id: Core.site.id, parent_id: @parent.id).order(:sort_no)
+
     _index @items
   end
   
   def show
-    @item = Cms::Concept.new.find(params[:id])
+    @item = Cms::Concept.find(params[:id])
     return error_auth unless @item.readable?
     _show @item
   end
 
   def new
-    @item = Cms::Concept.new({
+    @item = Cms::Concept.new(
       :parent_id  => @parent.id,
       :state      => 'public',
       :sort_no    => 0
-    })
+    )
   end
   
   def create
@@ -48,19 +44,19 @@ class Cms::Admin::ConceptsController < Cms::Controller::Admin::Base
   end
   
   def update
-    @item = Cms::Concept.new.find(params[:id])
+    @item = Cms::Concept.find(params[:id])
     @item.attributes = concept_params
     @item.parent_id  = 0 unless @item.parent_id
     @item.level_no   = @parent.level_no + 1
     
-    parent = Cms::Concept.find_by_id(@item.parent_id)
+    parent = Cms::Concept.find_by(id: @item.parent_id)
     @item.level_no = (parent ? parent.level_no + 1 : 1)
     
     _update @item
   end
   
   def destroy
-    @item = Cms::Concept.new.find(params[:id])
+    @item = Cms::Concept.find(params[:id])
     _destroy @item do
       respond_to do |format|
         format.html { return redirect_to cms_concepts_path(@parent) }
@@ -72,9 +68,9 @@ class Cms::Admin::ConceptsController < Cms::Controller::Admin::Base
     layouts = []
 
     concept = if params[:concept_id].to_i > 0
-                Cms::Concept.find_by_id(params[:concept_id])
+                Cms::Concept.find_by(id: params[:concept_id])
               elsif params[:parent].to_i > 0
-                if node = Cms::Node.find_by_id(params[:parent])
+                if node = Cms::Node.find_by(id: params[:parent])
                   node.inherited_concept
                 end
               end
@@ -93,6 +89,6 @@ class Cms::Admin::ConceptsController < Cms::Controller::Admin::Base
   private
 
   def concept_params
-    params.require(:item).permit(:in_creator, :name, :parent_id, :sort_no, :state)
+    params.require(:item).permit(:name, :parent_id, :sort_no, :state, :in_creator => [:group_id, :user_id])
   end
 end

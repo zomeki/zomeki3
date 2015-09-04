@@ -24,7 +24,7 @@ class Sys::Group < ActiveRecord::Base
 
   validates :state, :level_no, :name, :ldap, presence: true
   validates :code, presence: true, uniqueness: true
-  validates :name_en, presence: true, uniqueness: {scope: :parent_id}, format: /\A[0-9A-Za-z\._-]*\z/i
+  validates :name_en, presence: true, uniqueness: { scope: :parent_id }, format: { with: /\A[0-9A-Za-z\._-]*\z/i }
 
   before_destroy :before_destroy
   after_save :copy_name_en_as_url_name

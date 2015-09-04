@@ -2,7 +2,7 @@
 class Cms::TalkTask < ActiveRecord::Base
   include Sys::Model::Base
   
-  validates_presence_of :path
+  validates :path, presence: true
 
   def site_id
     if s = self.path.match(/\/sites\/[\d]{2}\/[\d]{2}\/[\d]{2}\/[\d]{2}\/([\d]{8})\//)

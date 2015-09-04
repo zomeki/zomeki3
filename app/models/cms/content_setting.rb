@@ -6,7 +6,7 @@ class Cms::ContentSetting < ActiveRecord::Base
   
   belongs_to :content, :foreign_key => :content_id, :class_name => 'Cms::Content'
 
-  validates_presence_of :content_id, :name
+  validates :content_id, :name, presence: true
   
   def self.set_config(id, params = {})
     @@configs ||= {}
@@ -23,8 +23,7 @@ class Cms::ContentSetting < ActiveRecord::Base
   end
   
   def self.config(content, name)
-    cond = {:content_id => content.id, :name => name.to_s}
-    self.find(:first, :conditions => cond) || self.new(cond)
+    self.where(content_id: content.id, name: name.to_s).first_or_initialize
   end
   
   def editable?
