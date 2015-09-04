@@ -55,8 +55,8 @@
 $(document).ready(function () {
   (function () {
     $("#site_url").change(function(){
-      $( "#site_url option:selected" ).each(function() {
-        window.location = "<%= "#{cms_tool_convert_settings_path}?item[site_url]=" %>" + $(this).text();
+      $("#site_url option:selected").each(function() {
+        window.location = "<%= cms_tool_convert_settings_path(item: {site_url: '__URL__'}) %>".replace(/__URL__/, $(this).text());
         return false;
       });
     });

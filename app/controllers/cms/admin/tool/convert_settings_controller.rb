@@ -33,7 +33,7 @@ class Cms::Admin::Tool::ConvertSettingsController < Cms::Controller::Admin::Base
         flash[:alert] = '更新処理に失敗しました。'
       end
     end
-    redirect_to cms_tool_convert_settings_path("item[site_url]" => @item.site_url)
+    redirect_to cms_tool_convert_settings_path(item: {site_url: @item.site_url})
   end
 
   def destroy
