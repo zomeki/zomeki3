@@ -8,7 +8,6 @@ class Sys::Admin::GroupUsersController < Cms::Controller::Admin::Base
     
     id      = params[:parent] == '0' ? 1 : params[:parent]
     @parent = Sys::Group.find(id)
-    #default_url_options[:parent] = @parent
   end
   
   def index

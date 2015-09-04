@@ -80,16 +80,9 @@ class Cms::DataFile < ActiveRecord::Base
   end
 
   def duplicated?
-    file = self.class.new
-    file.and :id, "!=", id if id
-    file.and :concept_id, concept_id
-    file.and :name, name
-    if node_id
-      file.and :node_id, node_id
-    else
-      file.and :node_id, 'IS', nil
-    end
-    return file.find(:first) != nil
+    file = self.class.where(concept_id: concept_id, name: name).where(node_id: node_id ? node_id : nil)
+    file = file.where.not(id: id) if id
+    file.exists?
   end
 
   def search(params)

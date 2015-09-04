@@ -14,7 +14,7 @@ class Cms::OAuthUser < ActiveRecord::Base
       url:      auth[:info_url]
     }
 
-    if (user = self.find_by_provider_and_uid(auth[:provider], auth[:uid]))
+    if (user = self.find_by(provider: auth[:provider], uid: auth[:uid]))
       user.update_attributes!(attrs)
     else
       user = self.create!(attrs.merge(provider: auth[:provider], uid: auth[:uid]))

@@ -35,6 +35,6 @@ class Cms::Admin::Tool::ConvertDownloadsController < Cms::Controller::Admin::Bas
 
   def convert_download_params
     return {} unless params[:item]
-    params.require(:item).permit(:include_dir, :remark, :site_url)
+    params.require(:item).permit(:include_dir, :remark, :site_url, :recursive_level)
   end
 end

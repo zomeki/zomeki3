@@ -10,7 +10,8 @@ class Cms::Admin::Tool::ConvertDocsController < Cms::Controller::Admin::Base
   end
 
   def index
-    @items = ::Tool::ConvertDoc.search_with_criteria(params[:criteria]).order('updated_at desc').paginate(page: params[:page], per_page: 30)
+    @items = ::Tool::ConvertDoc.search_with_criteria(params[:criteria]).order(updated_at: :desc)
+      .paginate(page: params[:page], per_page: 30)
     _index @items
   end
 
@@ -28,7 +29,7 @@ class Cms::Admin::Tool::ConvertDocsController < Cms::Controller::Admin::Base
   end
 
   def export
-    @items = Tool::ConvertDoc.order('created_at desc')
+    @items = Tool::ConvertDoc.order(created_at: :desc)
     @org_node_name = Cms::Node.where(model: 'Organization::Group').first.try(:name)
 
     csv_string = CSV.generate do |csv|

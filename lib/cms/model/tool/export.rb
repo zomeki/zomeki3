@@ -5,7 +5,7 @@ class Cms::Model::Tool::Export < ActiveRecord::Base
   attr_accessor :concept_id
   attr_accessor :target
   
-  validates_presence_of :concept_id
+  validates :concept_id, presence: true
   
   # empty methods
   def seve; end

@@ -8,11 +8,11 @@ class Cms::Feed < ActiveRecord::Base
   include Cms::Model::Rel::Concept
   include Cms::Model::Auth::Concept
 
-  belongs_to :status,         :foreign_key => :state,           :class_name => 'Sys::Base::Status'
-  has_many   :entries,        :foreign_key => :feed_id,         :class_name => 'Cms::FeedEntry',
+  belongs_to :status,  :foreign_key => :state,   :class_name => 'Sys::Base::Status'
+  has_many   :entries, :foreign_key => :feed_id, :class_name => 'Cms::FeedEntry',
     :dependent => :destroy
 
-  validates_presence_of :name, :uri, :title
+  validates :name, :uri, :title, presence: true
 
   def public
     self.and "#{self.class.table_name}.state", 'public'
@@ -72,8 +72,7 @@ class Cms::Feed < ActiveRecord::Base
         entry_id      = e.elements['id'].text
         entry_updated = e.elements['updated'].text
 
-        cond  = {:feed_id => self.id, :entry_id => entry_id}
-        if entry = Cms::FeedEntry.find(:first, :conditions => cond)
+        if entry = Cms::FeedEntry.find_by(feed_id: self.id, entry_id: entry_id)
           #arr = ParseDate::parsedate(entry_updated)
           arr = Date._parse(entry_updated, false).values_at(:year, :mon, :mday, :hour, :min, :sec, :zone, :wday)
 
@@ -138,10 +137,7 @@ class Cms::Feed < ActiveRecord::Base
     end
 
     if latest.size > 0
-      cond = Condition.new
-      cond.and "NOT id", "IN", latest
-      cond.and :feed_id, self.id
-      Cms::FeedEntry.destroy_all(cond.where)
+      Cms::FeedEntry.where.not(id: latest).where(feed_id: self.id).destroy_all
     end
     return errors.size == 0
 

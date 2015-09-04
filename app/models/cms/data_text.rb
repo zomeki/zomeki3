@@ -12,8 +12,7 @@ class Cms::DataText < ActiveRecord::Base
 
   belongs_to :concept, :foreign_key => :concept_id, :class_name => 'Cms::Concept'
   
-  validates_presence_of :state, :name, :title, :body
-  validates_uniqueness_of :name, :scope => :concept_id
-  validates_format_of :name, :with => /\A[0-9a-zA-Z\-_]+\z/, :if => "!name.blank?",
-    :message => "は半角英数字、ハイフン、アンダースコアで入力してください。"
+  validates :state, :title, :body, presence: true
+  validates :name, presence: true, uniqueness: { scope: :concept_id },
+    format: { with: /\A[0-9a-zA-Z\-_]+\z/, if: "name.present?", message: "は半角英数字、ハイフン、アンダースコアで入力してください。" }
 end

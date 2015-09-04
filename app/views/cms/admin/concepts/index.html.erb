@@ -21,7 +21,7 @@
 
   <table class="index">
   <tr>
-    <th><%= Cms::Content.new.locale(:name) %></th>
+    <th><%= Cms::Content.human_attribute_name(:name) %></th>
   </tr>
   <% @parent.contents.each do |item| %>
   <tr class="<%= cycle '', 'cycle' %>">
@@ -35,8 +35,8 @@
   
   <table class="index">
   <tr>
-    <th style="width: 240px;"><%= Cms::Layout.new.locale(:name) %></th>
-    <th><%= Cms::Layout.new.locale(:title) %></th>
+    <th style="width: 240px;"><%= Cms::Layout.human_attribute_name(:name) %></th>
+    <th><%= Cms::Layout.human_attribute_name(:title) %></th>
   </tr>
   <% @parent.layouts.each do |item| %>
   <tr class="<%= cycle '', 'cycle' %>">
@@ -51,8 +51,8 @@
   
   <table class="index">
   <tr>
-    <th style="width: 240px;"><%= Cms::Piece.new.locale(:name) %></th>
-    <th><%= Cms::Piece.new.locale(:title) %></th>
+    <th style="width: 240px;"><%= Cms::Piece.human_attribute_name(:name) %></th>
+    <th><%= Cms::Piece.human_attribute_name(:title) %></th>
   </tr>
   <% @parent.pieces.each do |item| %>
   <tr class="<%= cycle '', 'cycle' %>">
