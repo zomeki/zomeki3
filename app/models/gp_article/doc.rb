@@ -94,55 +94,12 @@ class GpArticle::Doc < ActiveRecord::Base
   validates :state, :presence => true
   validates :filename_base, :presence => true
 
-
-  validate {
-    if prev_edition
-      self.name = prev_edition.name
-    else
-      errors.add(:name, :invalid) if self.name && self.name !~ /^[\-\w]*$/
-      if (doc = self.class.where(name: self.name, state: self.state, content_id: self.content.id).first)
-        unless doc.id == self.id || state_archived?
-          errors.add(:name, :taken) unless state_public? && prev_edition.try(:state_public?)
-        end
-      end
-    end
-  }
-  validate {
-    unless content.doc_node
-      case state
-      when 'public'
-        errors.add(:base, '記事コンテンツのディレクトリが作成されていないため、即時公開が行えません。')
-      when 'approvable'
-        errors.add(:base, '記事コンテンツのディレクトリが作成されていないため、承認依頼が行えません。')
-      end
-    end
-  }
-  validate {
-    if self.event_started_on.present? && self.event_ended_on.present?
-      self.event_started_on = self.event_ended_on if self.event_started_on.blank?
-      self.event_ended_on = self.event_started_on if self.event_ended_on.blank?
-      errors.add(:event_ended_on, "が#{self.class.human_attribute_name :event_started_on}を過ぎています。") if self.event_ended_on < self.event_started_on
-    end
-  }
-  validate {
-    errors.add(:base, 'リンクチェック結果を確認してください。') if !state_draft? && broken_link_exists?
-  }
-
-  validate {
-    if !state_draft? && check_results != [] && !ignore_accessibility_check
-     errors.add(:base, 'アクセシビリティチェック結果を確認してください')
-    end
-  }
-
-  validate {
-    limit = Zomeki.config.application['gp_article.body_limit_for_mobile'].to_i
-    current_size = self.body_for_mobile.bytesize
-    if current_size > limit
-      target = self.mobile_body.present? ? :mobile_body : :body
-      errors.add(target, "が携帯向け容量制限#{limit}バイトを超えています。（現在#{current_size}バイト）")
-    end
-  }
-
+  validate :name_validity
+  validate :node_existence
+  validate :event_dates_range
+  validate :broken_link_existence, :unless => :state_draft?
+  validate :body_limit_for_mobile
+  validate :validate_accessibility_check, :unless => :state_draft?
 
   after_initialize :set_defaults
   after_save :set_tags
