@@ -81,15 +81,11 @@ class Sys::Group < ActiveRecord::Base
   end
 
   def descendants_in_site(site, items = [])
-    items << self
-    children.in_site(site).each {|c| c.descendants_in_site(site, items) }
-    items
+    descendants {|child| child.in_site(site) }
   end
 
   def descendants_for_option(groups=[])
-    groups << [tree_name(depth: -1), id]
-    children.map {|g| g.descendants_for_option(groups) } unless children.empty?
-    return groups
+    descendants.map {|g| [g.tree_name(depth: -1), g.id] }
   end
 
 private

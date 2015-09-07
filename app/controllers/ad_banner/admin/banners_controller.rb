@@ -3,12 +3,12 @@ class AdBanner::Admin::BannersController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 
   def pre_dispatch
-    return error_auth unless @content = AdBanner::Content::Banner.find_by_id(params[:content])
+    return error_auth unless @content = AdBanner::Content::Banner.find_by(id: params[:content])
     return error_auth unless Core.user.has_priv?(:read, :item => @content.concept)
   end
 
   def index
-    items = @content.banners.except(:order).order('created_at DESC')
+    items = @content.banners.except(:order).order(created_at: :desc)
 
     items = if params[:published].present?
               items.published
@@ -60,6 +60,8 @@ class AdBanner::Admin::BannersController < Cms::Controller::Admin::Base
   private
 
   def banner_params
-    params.require(:item).permit(:advertiser_contact, :advertiser_email, :advertiser_name, :advertiser_phone, :closed_at, :file, :group_id, :in_creator, :name, :published_at, :sort_no, :state, :title, :url)
+    params.require(:item).permit(:advertiser_contact, :advertiser_email, :advertiser_name, :advertiser_phone,
+      :closed_at, :file, :group_id, :name, :published_at, :sort_no, :state, :title, :url, :target,
+      :in_creator => [:group_id, :user_id])
   end
 end

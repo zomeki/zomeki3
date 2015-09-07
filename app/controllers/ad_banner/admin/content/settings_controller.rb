@@ -20,14 +20,14 @@ class AdBanner::Admin::Content::SettingsController < Cms::Controller::Admin::Bas
 
   def edit
     @item = AdBanner::Content::Setting.config(@content, params[:id])
-    @item.value = YAML.load(@item.value.presence || '[]') if @item.form_type.in?(:check_boxes, :multiple_select)
+    @item.value = YAML.load(@item.value.presence || '[]') if @item.form_type.in?([:check_boxes, :multiple_select])
     _show @item
   end
 
   def update
     @item = AdBanner::Content::Setting.config(@content, params[:id])
     @item.value = params[:item][:value]
-    if @item.form_type.in?(:check_boxes, :multiple_select)
+    if @item.form_type.in?([:check_boxes, :multiple_select])
       @item.value = YAML.dump(case @item.value
                               when Hash; @item.value.keys
                               when Array; @item.value

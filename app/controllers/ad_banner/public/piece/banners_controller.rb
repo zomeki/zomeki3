@@ -1,7 +1,7 @@
 # encoding: utf-8
 class AdBanner::Public::Piece::BannersController < Sys::Controller::Public::Base
   def pre_dispatch
-    @piece = AdBanner::Piece::Banner.find_by_id(Page.current_piece.id)
+    @piece = AdBanner::Piece::Banner.find_by(id: Page.current_piece.id)
     render :text => '' if @piece.nil? || @piece.content.banner_node.nil?
   end
 

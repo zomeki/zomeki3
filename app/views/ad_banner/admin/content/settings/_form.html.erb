@@ -60,7 +60,7 @@
 </table>
 
 <%- if @item.name == 'gp_category_content_category_type_id'
-      content = GpCategory::Content::CategoryType.find_by_id(@item.value)
+      content = GpCategory::Content::CategoryType.find_by(id: @item.value)
       category_types = content.try(:category_types) || []
       category_types_for_option = content.try(:category_types_for_option) || []
 
@@ -151,7 +151,7 @@ $(document).ready(function () {
 <%- end -%>
 
 <%- if @item.name == 'gp_template_content_template_id'
-      content = GpTemplate::Content::Template.find_by_id(@item.value)
+      content = GpTemplate::Content::Template.find_by(id: @item.value)
       templates = content ? content.templates.public_state : []
       template_ids = @item.extra_values[:template_ids] || []
       templates_for_option = content ? content.templates.map {|t| [t.title, t.id] } : []
