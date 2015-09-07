@@ -135,7 +135,7 @@ class GpArticle::Content::Doc < Cms::Content
     gp_calendar_content_event.try(:category_types) || GpCategory::CategoryType.none
   end
 
-  def event_category_type_categories_for_option(category_type, include_descendants=true)
+  def event_category_type_categories_for_option(category_type, include_descendants: true)
     gp_calendar_content_event.try(:category_type_categories_for_option,
                                   category_type, include_descendants: include_descendants) || []
   end
@@ -152,7 +152,7 @@ class GpArticle::Content::Doc < Cms::Content
     map_content_marker.try(:category_types) || GpCategory::CategoryType.none
   end
 
-  def marker_category_type_categories_for_option(category_type, include_descendants=true)
+  def marker_category_type_categories_for_option(category_type, include_descendants: true)
     map_content_marker.try(:category_type_categories_for_option,
                            category_type, include_descendants: include_descendants) || []
   end
