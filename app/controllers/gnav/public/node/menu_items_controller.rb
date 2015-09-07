@@ -1,6 +1,6 @@
 class Gnav::Public::Node::MenuItemsController < Cms::Controller::Public::Base
   def pre_dispatch
-    @content = Gnav::Content::MenuItem.find_by_id(Page.current_node.content.id)
+    @content = Gnav::Content::MenuItem.find_by(id: Page.current_node.content.id)
     return http_error(404) unless @content
   end
 
@@ -14,7 +14,7 @@ class Gnav::Public::Node::MenuItemsController < Cms::Controller::Public::Base
   def show
     http_error(404) if params[:page]
 
-    @menu_item = @content.menu_items.find_by_name(params[:name])
+    @menu_item = @content.menu_items.find_by(name: params[:name])
     return http_error(404) unless @menu_item
 
     Page.current_item = @menu_item

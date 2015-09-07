@@ -3,7 +3,7 @@ class Gnav::Admin::MenuItemsController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 
   def pre_dispatch
-    return error_auth unless @content = Gnav::Content::MenuItem.find_by_id(params[:content])
+    return error_auth unless @content = Gnav::Content::MenuItem.find_by(id: params[:content])
     return error_auth unless Core.user.has_priv?(:read, :item => @content.concept)
 
     if (gccct = @content.gp_category_content_category_type)

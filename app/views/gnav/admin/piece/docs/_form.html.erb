@@ -25,7 +25,7 @@
   <tr>
     <th><%= @item.locale :list_style %></th>
     <td colspan="3">
-      <%= link_to_function '置き換えテキストを確認する', "$('#doc_style_tags').dialog({width: 400});" %><br />
+      <%= link_to '置き換えテキストを確認する', '#', id: 'show_dialog' %><br />
       <%= f.array_text_field 'in_settings[list_style]', size: 50 %>
     </td>
   </tr>
@@ -35,6 +35,10 @@
 
 <%= javascript_tag do -%>
 $(document).ready(function () {
+  $('#show_dialog').on('click', function() {
+    $('#doc_style_tags').dialog({width: 400});
+    return false;
+  });
   $('#item_in_settings_category_type_id').on('change', function (event) {
     var category_type_id = parseInt(event.target.value);
     if (isNaN(category_type_id)) {
