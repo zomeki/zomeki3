@@ -5,7 +5,7 @@ class Approval::ApprovalFlow < ActiveRecord::Base
 
   # Content
   belongs_to :content, :foreign_key => :content_id, :class_name => 'Approval::Content::ApprovalFlow'
-  validates_presence_of :content_id
+  validates :content_id, presence: true
 
   belongs_to :group, :class_name => 'Sys::Group'
 
