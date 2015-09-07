@@ -94,6 +94,10 @@ class GpArticle::Content::Setting < Cms::ContentSetting
     extra_values[:default_category_id] || 0
   end
 
+  def default_layout_id
+    extra_values[:default_layout_id] || 0
+  end
+
   def template_ids
     extra_values[:template_ids] || []
   end

@@ -38,8 +38,10 @@ function ckeInsertContent(value) {
     <td style="text-align: center;"><%= link_to :show, file_path %></td>
     <td style="text-align: right;"><%= item.id %></td>
     <td style="text-align: center;">
-      <%= link_to_function '添付',
-        %Q(ckeInsertContent('<a href="#{file_content_path}" class="#{item.css_class}">#{h item.united_name}</a>')), id: "link_attach#{item.id}" %>
+      <%=hidden_field_tag "file_content_path[]", file_content_path, :id=>"contentPath#{item.id}"%>
+      <%=hidden_field_tag "css_class[]", item.css_class, :id=>"cssClass#{item.id}"%>
+      <%=hidden_field_tag "united_name[]", item.united_name, :id=> "unitedName#{item.id}"%>
+      <%= link_to '添付', "#", :id => "link_attach#{item.id}", :class=>"insertAttach" %>
     </td>
     <td style="text-align: center;">
       <% if item.image_file? %>
@@ -50,8 +52,8 @@ function ckeInsertContent(value) {
     </td>
     <td style="text-align: center;">
       <% if item.image_file? %>
-        <%= link_to_function '貼付',
-          %Q(ckeInsertContent('<img src="#{file_content_path}" alt="#{item.alt}" title="#{item.alt}" />')), id: "link_image#{item.id}" %>
+        <%=hidden_field_tag "imageAlt[]", item.alt, :id=> "imageAlt#{item.id}"%>
+        <%= link_to '貼付', "#", :id =>"link_image#{item.id}", :class=>"insertImage" %>
       <% end %>
     </td>
     <td><span class="item_name" item_name="<%= item.name %>"><%= item.name %></span></td>
@@ -61,3 +63,24 @@ function ckeInsertContent(value) {
 </table>
 
 <%= paginate @items %>
+<%= javascript_tag do %>
+$(document).ready(function () {
+  $(".insertAttach").on('click', function (event) {
+    event.preventDefault();
+    var fileId = $(this).attr("id").replace(/link_attach/, "");
+    var file_content_path = $("#contentPath" + fileId).val();
+    var css_class         = $("#cssClass" + fileId).val();
+    var united_name         = $("#unitedName" + fileId).val();
+    var insertItem =  '<a href="' + file_content_path + '" class="' + css_class + '">' + united_name + '</a>';
+    ckeInsertContent(insertItem);
+  });
+  $(".insertImage").on('click', function (event) {
+    event.preventDefault();
+    var fileId = $(this).attr("id").replace(/link_image/, "");
+    var file_content_path = $("#contentPath" + fileId).val();
+    var image_alt = $("#imageAlt" + fileId).val();
+    var insertItem =  '<img src="' + file_content_path +'" alt="' + image_alt+'" title="' + image_alt+'" />';
+    ckeInsertContent(insertItem);
+  });
+});
+<% end %>

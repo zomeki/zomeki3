@@ -40,7 +40,7 @@ class GpArticle::Doc < ActiveRecord::Base
 
   # Content
   belongs_to :content, :foreign_key => :content_id, :class_name => 'GpArticle::Content::Doc'
-  validates_presence_of :content_id
+  validates :content_id, :presence => true
 
   # Page
   belongs_to :concept, :foreign_key => :concept_id, :class_name => 'Cms::Concept'
@@ -55,17 +55,17 @@ class GpArticle::Doc < ActiveRecord::Base
   has_many :categories, -> { where("#{GpCategory::Categorization.table_name}.categorized_as", self.name) },
            :class_name => 'GpCategory::Category', :through => :categorizations,
            :after_add => proc {|d, c|
-             d.categorizations.where(category_id: c.id, categorized_as: nil).first.update_column(:categorized_as, d.class.name)
+             d.categorizations.where(category_id: c.id, categorized_as: nil).first.update_columns(categorized_as: d.class.name)
            }
   has_many :event_categories, -> { where("#{GpCategory::Categorization.table_name}.categorized_as", 'GpCalendar::Event') },
            :class_name => 'GpCategory::Category', :through => :categorizations, :source => :category,
            :after_add => proc {|d, c|
-             d.categorizations.where(category_id: c.id, categorized_as: nil).first.update_column(:categorized_as, 'GpCalendar::Event')
+             d.categorizations.where(category_id: c.id, categorized_as: nil).first.update_columns(categorized_as: 'GpCalendar::Event')
            }
   has_many :marker_categories, -> { where("#{GpCategory::Categorization.table_name}.categorized_as", 'Map::Marker') },
            :class_name => 'GpCategory::Category', :through => :categorizations, :source => :category,
            :after_add => proc {|d, c|
-             d.categorizations.where(category_id: c.id, categorized_as: nil).first.update_column(:categorized_as, 'Map::Marker')
+             d.categorizations.where(category_id: c.id, categorized_as: nil).first.update_columns(categorized_as: 'Map::Marker')
            }
   has_and_belongs_to_many :tags, ->(doc) {
                               c = doc.content
@@ -93,18 +93,50 @@ class GpArticle::Doc < ActiveRecord::Base
   validates :mobile_body, :length => {maximum: 300000}
   validates :state, :presence => true
   validates :filename_base, :presence => true
-  validate :name_validity
 
-#  validate :validate_inquiry
 
-  #validate :validate_platform_dependent_characters, :unless => :state_draft?
-  validate :node_existence
-  validate :event_dates_range
-  validate :broken_link_existence, :unless => :state_draft?
-  validate :body_limit_for_mobile
+  validate {
+    if prev_edition
+      self.name = prev_edition.name
+    else
+      errors.add(:name, :invalid) if self.name && self.name !~ /^[\-\w]*$/
+      if (doc = self.class.where(name: self.name, state: self.state, content_id: self.content.id).first)
+        unless doc.id == self.id || state_archived?
+          errors.add(:name, :taken) unless state_public? && prev_edition.try(:state_public?)
+        end
+      end
+    end
+    unless content.doc_node
+      case state
+      when 'public'
+        errors.add(:base, '記事コンテンツのディレクトリが作成されていないため、即時公開が行えません。')
+      when 'approvable'
+        errors.add(:base, '記事コンテンツのディレクトリが作成されていないため、承認依頼が行えません。')
+      end
+    end
+    if self.event_started_on.present? && self.event_ended_on.present?
+      self.event_started_on = self.event_ended_on if self.event_started_on.blank?
+      self.event_ended_on = self.event_started_on if self.event_ended_on.blank?
+      errors.add(:event_ended_on, "が#{self.class.human_attribute_name :event_started_on}を過ぎています。") if self.event_ended_on < self.event_started_on
+    end
+    unless state_draft?
+      errors.add(:base, 'リンクチェック結果を確認してください。') if broken_link_exists?
+      unless Zomeki.config.application['cms.enable_accessibility_check']
+        check_results = Util::AccessibilityChecker.check body
 
-  #validate :validate_word_dictionary, :unless => :state_draft?
-  validate :validate_accessibility_check, :unless => :state_draft?
+        if check_results != [] && !ignore_accessibility_check
+         errors.add(:base, 'アクセシビリティチェック結果を確認してください')
+        end
+      end
+    end
+    limit = Zomeki.config.application['gp_article.body_limit_for_mobile'].to_i
+    current_size = self.body_for_mobile.bytesize
+    if current_size > limit
+      target = self.mobile_body.present? ? :mobile_body : :body
+      errors.add(target, "が携帯向け容量制限#{limit}バイトを超えています。（現在#{current_size}バイト）")
+    end
+  }
+
 
   after_initialize :set_defaults
   after_save :set_tags
@@ -113,7 +145,7 @@ class GpArticle::Doc < ActiveRecord::Base
 
   attr_accessor :ignore_accessibility_check
 
-  def self.all_with_content_and_criteria(content, criteria)
+  scope :content_and_criteria, ->(content, criteria){
     docs = self.arel_table
 
     creators = Sys::Creator.arel_table
@@ -140,11 +172,9 @@ class GpArticle::Doc < ActiveRecord::Base
 
     rel = rel.where(docs[:id].eq(criteria[:id])) if criteria[:id].present?
     rel = rel.where(docs[:state].eq(criteria[:state])) if criteria[:state].present?
-    rel = rel.where(docs[:title].matches("%#{criteria[:title]}%")) if criteria[:title].present?
-    rel = rel.where(docs[:title].matches("%#{criteria[:free_word]}%")
-                    .or(docs[:body].matches("%#{criteria[:free_word]}%"))
-                    .or(docs[:name].matches("%#{criteria[:free_word]}%"))) if criteria[:free_word].present?
-    rel = rel.where(groups[:name].matches("%#{criteria[:group]}%")) if criteria[:group].present?
+    rel = rel.search_with_text(:title, criteria[:title]) if criteria[:title].present?
+    rel = rel.search_with_text(:title, :body, :name, criteria[:free_word]) if criteria[:free_word].present?
+    rel = rel.search_with_text(:name, criteria[:group]) if criteria[:group].present?
     if criteria[:group_id].present?
       rel = rel.where(if criteria[:group_id].kind_of?(Array)
                         groups[:id].in(criteria[:group_id])
@@ -152,13 +182,12 @@ class GpArticle::Doc < ActiveRecord::Base
                         groups[:id].eq(criteria[:group_id])
                       end)
     end
-    rel = rel.where(users[:name].matches("%#{criteria[:user]}%")
-                    .or(users[:name_en].matches("%#{criteria[:user]}%"))) if criteria[:user].present?
+    rel = rel.search_with_text(:name, :name_en, criteria[:user]) if criteria[:user].present?
 
     if criteria[:touched_user_id].present?
       operation_logs = Sys::OperationLog.arel_table
 
-      rel = rel.includes(:operation_logs).where(operation_logs[:user_id].eq(criteria[:touched_user_id])
+      rel = rel.joins(:operation_logs).where(operation_logs[:user_id].eq(criteria[:touched_user_id])
                                                 .or(creators[:user_id].eq(criteria[:touched_user_id])))
     end
 
@@ -166,7 +195,7 @@ class GpArticle::Doc < ActiveRecord::Base
       editable_groups = Sys::EditableGroup.arel_table
 
       rel = unless Core.user.has_auth?(:manager)
-              rel.includes(:editable_group).where(creators[:group_id].eq(Core.user.group.id)
+              rel.joins(:editable_group).where(creators[:group_id].eq(Core.user.group.id)
                                                   .or(editable_groups[:all].eq(true)
                                                   .or(editable_groups[:group_ids].eq(Core.user.group.id.to_s)
                                                   .or(editable_groups[:group_ids].matches("#{Core.user.group.id} %")
@@ -197,7 +226,7 @@ class GpArticle::Doc < ActiveRecord::Base
     end
 
     return rel
-  end
+  }
 
   def public_comments
     comments.public_state
@@ -237,7 +266,7 @@ class GpArticle::Doc < ActiveRecord::Base
     "#{content.public_path}/_smartphone#{public_uri}#{filename_base}.html"
   end
 
-  def public_uri(without_filename: false)
+  def public_uri(without_filename=false)
     return '' unless node = content.public_node
     uri = if (organization_content = content.organization_content_group) &&
               organization_content.article_related? &&
@@ -250,7 +279,7 @@ class GpArticle::Doc < ActiveRecord::Base
     without_filename || filename_base == 'index' ? uri : "#{uri}#{filename_base}.html"
   end
 
-  def public_full_uri(without_filename: false)
+  def public_full_uri(without_filename=false)
     return '' unless node = content.public_node
     uri = if (organization_content = content.organization_content_group) &&
             organization_content.article_related? &&

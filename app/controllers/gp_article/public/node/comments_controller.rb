@@ -6,14 +6,14 @@ class GpArticle::Public::Node::CommentsController < Cms::Controller::Public::Bas
       return http_error(404) unless organization_content.article_related?
       @content = organization_content.related_article_content
     else
-      @content = GpArticle::Content::Doc.find_by_id(Page.current_node.content.id)
+      @content = GpArticle::Content::Doc.find_by(id: Page.current_node.content.id)
     end
 
     return http_error(404) unless @content
 
     return http_error(404) unless @content.blog_functions[:comment]
 
-    @doc = @content.public_docs.find_by_name(params[:name])
+    @doc = @content.public_docs.find_by(name: params[:name])
     return http_error(404) unless @doc
 
     @confirmation_required = false

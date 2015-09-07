@@ -4,7 +4,7 @@ module GpArticle::GpArticleHelper
     if doc.target.present?
       if doc.href.present?
         if doc.target == 'attached_file'
-          if (file = doc.files.find_by_name(doc.href))
+          if (file = doc.files.find_by(name: doc.href))
             ["#{doc.public_uri}file_contents/#{file.name}", target: '_blank']
           else
             nil
@@ -27,9 +27,12 @@ module GpArticle::GpArticleHelper
     if value.nil?
       v = flash[key]
       matched = /^flash:(\d+)$/.match(v)
-      return v unless matched
+      unless matched
+        return v.html_safe  if v.present?
+        return nil
+      end
 
-      if (text = Sys::TempText.find_by_id(matched[1]))
+      if (text = Sys::TempText.find_by(id: matched[1]))
         text.destroy.content
       else
         nil
@@ -37,7 +40,12 @@ module GpArticle::GpArticleHelper
     else
       text = Sys::TempText.create(content: value)
       flash[key] = "flash:#{text.id}"
-      value
+      if value.present?
+        value.html_safe
+      else
+        nil
+      end
+
     end
   end
 

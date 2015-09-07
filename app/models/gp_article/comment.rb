@@ -10,18 +10,28 @@ class GpArticle::Comment < ActiveRecord::Base
   #                :posted_at
 
   include StateText
-  
+
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
 
   scope :public_state, -> { where(state: 'public') }
 
   belongs_to :doc
-  validates_presence_of :doc_id
 
-  validates_presence_of :state
+  validates :doc_id, :presence => true
+  validates :state, :presence => true
 
   after_initialize :set_defaults
   after_save :set_display_attributes
+
+  scope :content_and_criteria, ->(content, criteria){
+    comments = self.arel_table
+    docs = GpArticle::Doc.arel_table
+    rel = all.joins(:doc).readonly(false)
+    rel = rel.where(docs[:content_id].eq(content.id))
+    rel = rel.search_with_text(:body, criteria[:free_word]) if criteria[:free_word].present?
+    rel = rel.search_with_text(:author_name, criteria[:author_name]) if criteria[:author_name].present?
+    rel
+  }
 
   validates :author_name, :presence => true, :length => {maximum: 200}
 
@@ -31,20 +41,6 @@ class GpArticle::Comment < ActiveRecord::Base
 
   def deletable?
     doc.deletable?
-  end
-
-  def self.all_with_content_and_criteria(content, criteria)
-    comments = self.arel_table
-
-    rel = self.joins(:doc).readonly(false)
-
-    docs = GpArticle::Doc.arel_table
-    rel = rel.where(docs[:content_id].eq(content.id))
-
-    rel = rel.where(comments[:body].matches("%#{criteria[:free_word]}%")) if criteria[:free_word].present?
-    rel = rel.where(comments[:author_name].matches("%#{criteria[:author_name]}%")) if criteria[:author_name].present?
-
-    return rel
   end
 
   private

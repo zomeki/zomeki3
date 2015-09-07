@@ -21,7 +21,7 @@
     </div>
     <div>
       <div class="label1">タイトル設定</div>
-      <%= link_to_function '開く▼', "toggle_form(this, '#title_settings')" %>
+      <%= link_to '開く▼', "javascript:void(0);", {:onclick =>"toggle_form(this, '#title_settings')"} %>
     </div>
 
     <div id="title_settings" style="display: none;">
@@ -64,7 +64,7 @@
     <%- if @content.blog_functions_available? -%>
     <p class="form">追記を入力する</p>
 
-    <div><%= link_to_function '開く▼', "toggle_form(this, '#body_more')" %></div>
+    <div><%= link_to '開く▼',"javascript:void(0);", {:onclick => "toggle_form(this, '#body_more')"} %></div>
 
     <div id="body_more" style="display: none;">
       <div>
@@ -80,7 +80,7 @@
 
     <p class="form">添付ファイル</p>
 
-    <div><%= link_to_function '開く▼', "toggle_form(this, '#inline_files')" %></div>
+    <div><%= link_to '開く▼', "javascript:void(0);", {:onclick => "toggle_form(this, '#inline_files')"}%></div>
 
     <div id="inline_files" style="display: none;">
       <%= hidden_field_tag :_tmp, inline_id %>

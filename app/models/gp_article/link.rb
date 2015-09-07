@@ -1,7 +1,7 @@
 class GpArticle::Link < ActiveRecord::Base
   include Sys::Model::Base
 
-  validates_presence_of :doc_id, :url
+  validates :doc_id, :presence => true
 
   belongs_to :doc
 end
