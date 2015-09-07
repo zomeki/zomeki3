@@ -59,11 +59,11 @@ class GpArticle::Content::Doc < Cms::Content
   end
 
   def gp_category_content_category_type
-    GpCategory::Content::CategoryType.find_by_id(setting_value(:gp_category_content_category_type_id))
+    GpCategory::Content::CategoryType.find_by(id: setting_value(:gp_category_content_category_type_id))
   end
 
   def category_types
-    setting = GpArticle::Content::Setting.find_by_id(settings.find_by_name('gp_category_content_category_type_id').try(:id))
+    setting = GpArticle::Content::Setting.find_by(id: settings.find_by(name: 'gp_category_content_category_type_id').try(:id))
     if (cts = gp_category_content_category_type.try(:category_types))
       cts.where(id: setting.try(:category_type_ids))
     else
@@ -76,7 +76,7 @@ class GpArticle::Content::Doc < Cms::Content
   end
 
   def visible_category_types
-    setting = GpArticle::Content::Setting.find_by_id(settings.find_by_name('gp_category_content_category_type_id').try(:id))
+    setting = GpArticle::Content::Setting.find_by(id: settings.find_by(name:  'gp_category_content_category_type_id').try(:id))
     if (cts = gp_category_content_category_type.try(:category_types))
       cts.where(id: setting.try(:visible_category_type_ids))
     else
@@ -85,13 +85,13 @@ class GpArticle::Content::Doc < Cms::Content
   end
 
   def default_category_type
-    setting = GpArticle::Content::Setting.find_by_id(settings.find_by_name('gp_category_content_category_type_id').try(:id))
-    GpCategory::CategoryType.find_by_id(setting.try(:default_category_type_id))
+    setting = GpArticle::Content::Setting.find_by(id: settings.find_by(name: 'gp_category_content_category_type_id').try(:id))
+    GpCategory::CategoryType.find_by(id: setting.try(:default_category_type_id))
   end
 
   def default_category
-    setting = GpArticle::Content::Setting.find_by_id(settings.find_by_name('gp_category_content_category_type_id').try(:id))
-    GpCategory::Category.find_by_id(setting.try(:default_category_id))
+    setting = GpArticle::Content::Setting.find_by(id: settings.find_by(name: 'gp_category_content_category_type_id').try(:id))
+    GpCategory::Category.find_by(id: setting.try(:default_category_id))
   end
 
   def group_category_type
@@ -116,7 +116,7 @@ class GpArticle::Content::Doc < Cms::Content
   end
 
   def tag_content_tag
-    Tag::Content::Tag.find_by_id(setting_extra_value(:tag_relation, :tag_content_tag_id))
+    Tag::Content::Tag.find_by(id: setting_extra_value(:tag_relation, :tag_content_tag_id))
   end
 
   def save_button_states
@@ -128,7 +128,7 @@ class GpArticle::Content::Doc < Cms::Content
   end
 
   def gp_calendar_content_event
-    GpCalendar::Content::Event.find_by_id(setting_extra_value(:calendar_relation, :calendar_content_id))
+    GpCalendar::Content::Event.find_by(id: setting_extra_value(:calendar_relation, :calendar_content_id))
   end
 
   def event_category_types
@@ -145,7 +145,7 @@ class GpArticle::Content::Doc < Cms::Content
   end
 
   def map_content_marker
-    Map::Content::Marker.find_by_id(setting_extra_value(:map_relation, :map_content_id))
+    Map::Content::Marker.find_by(id: setting_extra_value(:map_relation, :map_content_id))
   end
 
   def marker_category_types
@@ -174,7 +174,7 @@ class GpArticle::Content::Doc < Cms::Content
   end
 
   def approval_content_approval_flow
-    Approval::Content::ApprovalFlow.find_by_id(setting_extra_value(:approval_relation, :approval_content_id))
+    Approval::Content::ApprovalFlow.find_by(id: setting_extra_value(:approval_relation, :approval_content_id))
   end
 
   def approval_related?
@@ -182,7 +182,7 @@ class GpArticle::Content::Doc < Cms::Content
   end
 
   def sns_share_content_account
-    SnsShare::Content::Account.find_by_id(setting_extra_value(:sns_share_relation, :sns_share_content_id))
+    SnsShare::Content::Account.find_by(id: setting_extra_value(:sns_share_relation, :sns_share_content_id))
   end
 
   def sns_share_related?
@@ -246,7 +246,7 @@ class GpArticle::Content::Doc < Cms::Content
   end
 
   def organization_content_group
-    Organization::Content::Group.find_by_id(setting_value(:organization_content_group_id))
+    Organization::Content::Group.find_by(id: setting_value(:organization_content_group_id))
   end
 
   def notify_broken_link?

@@ -6,7 +6,7 @@ class GpArticle::Admin::Docs::FilesController < Cms::Controller::Admin::Base
   layout 'admin/files'
 
   def pre_dispatch
-    return http_error(404) unless @content = GpArticle::Content::Doc.find_by_id(params[:content])
+    return http_error(404) unless @content = GpArticle::Content::Doc.find_by(id: params[:content])
 
     if (@doc_id = params[:doc_id]) =~ /^[0-9a-z]{32}$/
       @tmp_unid = @doc_id
@@ -44,12 +44,12 @@ class GpArticle::Admin::Docs::FilesController < Cms::Controller::Admin::Base
       item = Sys::File.new(attrs)
       item.tmp_id = @tmp_unid
       item.parent_unid = @doc.try(:unid)
-  
+
       if (duplicated = item.duplicated)
         item = duplicated
         item.attributes = attrs
       end
-  
+
       item.allowed_type = @content.setting_value(:allowed_attachment_type)
       item.image_resize = params[:image_resize]
       if item.creatable? && item.save
