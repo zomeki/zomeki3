@@ -74,7 +74,7 @@ $(document).ready(function () {
     var fileId = $(this).attr("id").replace(/link_attach/, "");
     var file_content_path = $("#contentPath" + fileId).val();
     var css_class         = $("#cssClass" + fileId).val();
-    var united_name         = $("#unitedName" + fileId).val();
+    var united_name       = $("#unitedName" + fileId).val();
     var insertItem =  '<a href="' + file_content_path + '" class="' + css_class + '">' + united_name + '</a>';
     ckeInsertContent(insertItem);
   });
@@ -82,7 +82,7 @@ $(document).ready(function () {
     event.preventDefault();
     var fileId = $(this).attr("id").replace(/link_image/, "");
     var file_content_path = $("#contentPath" + fileId).val();
-    var image_alt = $("#imageAlt" + fileId).val();
+    var image_alt         = $("#imageAlt" + fileId).val();
     var insertItem =  '<img src="' + file_content_path +'" alt="' + image_alt+'" title="' + image_alt+'" />';
     ckeInsertContent(insertItem);
   });

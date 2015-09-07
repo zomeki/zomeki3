@@ -592,7 +592,7 @@ class GpArticle::Doc < ActiveRecord::Base
   #{_core_uri.sub(/\/+$/, '')}#{Rails.application.routes.url_helpers.gp_article_doc_path(content: content, id: id, active_tab: 'approval')}
       EOT
 
-      approver = approval_request.current_assignments.reorder('approved_at DESC').first.user
+      approver = approval_request.current_assignments.reorder(approved_at: :desc).first.user
       next if approver.email.blank? || approval_request.requester.email.blank?
       CommonMailer.plain(from: Core.user.email, to: approval_request.requester.email, subject: subject, body: body).deliver_now
     end

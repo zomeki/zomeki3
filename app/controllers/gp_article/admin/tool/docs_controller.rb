@@ -1,7 +1,7 @@
 class GpArticle::Admin::Tool::DocsController < Cms::Controller::Admin::Base
   def rebuild
     content = GpArticle::Content::Doc.find(params[:content_id])
-    docs = content.public_docs.order('display_published_at DESC, published_at DESC')
+    docs = content.public_docs.order(display_published_at: :desc, published_at: :desc)
 
     results = {ok: 0, ng: 0}
     errors = []
