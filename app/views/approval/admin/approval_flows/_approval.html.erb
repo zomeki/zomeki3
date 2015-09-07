@@ -22,11 +22,11 @@
     <% end %></span><br />
     <%= select_tag "approvals[#{index || 'N'}]", options_for_select(approvers),
                    common_attrs.merge(multiple: true, style: 'height: 150px; width: 600px;', class: 'approvals', id: "approvals_#{index || 'N'}") %>
-    <%= button_to_function 'ORにする', "make_or(parseInt($(this).closest('div.approval').find('input.index').val()))", common_attrs %>
-    <%= button_to_function 'ORをはずす', "clear_or(parseInt($(this).closest('div.approval').find('input.index').val()))", common_attrs %>
+    <%= button_tag 'ORにする', common_attrs.merge(type: :button, onclick: "make_or(parseInt($(this).closest('div.approval').find('input.index').val()))") %>
+    <%= button_tag 'ORをはずす', common_attrs.merge(type: :button, onclick: "clear_or(parseInt($(this).closest('div.approval').find('input.index').val()))") %>
   </div>
   <div style="margin: 10px;">
-    <span><%= button_to_function '▼次へ', "move_users(parseInt($(this).closest('div.approval').find('input.index').val()), parseInt($(this).closest('div.approval').find('input.index').val()) + 1)", common_attrs %></span>
-    <span><%= button_to_function '▲前へ', "move_users(parseInt($(this).closest('div.approval').find('input.index').val()) + 1, parseInt($(this).closest('div.approval').find('input.index').val()))", common_attrs %></span>
+    <span><%= button_tag '▼次へ', common_attrs.merge(type: :button, onclick: "move_users(parseInt($(this).closest('div.approval').find('input.index').val()), parseInt($(this).closest('div.approval').find('input.index').val()) + 1)") %></span>
+    <span><%= button_tag '▲前へ', common_attrs.merge(type: :button, onclick: "move_users(parseInt($(this).closest('div.approval').find('input.index').val()) + 1, parseInt($(this).closest('div.approval').find('input.index').val()))") %></span>
   </div>
 </div>

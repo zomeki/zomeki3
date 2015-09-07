@@ -2,21 +2,21 @@ class Approval::ApprovalRequest < ActiveRecord::Base
   include Sys::Model::Base
 
   belongs_to :requester, :foreign_key => :user_id, :class_name => 'Sys::User'
-  validates_presence_of :user_id
+  validates :user_id, presence: true
   belongs_to :approvable, :polymorphic => true
-  validates_presence_of :approvable_type, :approvable_id
+  validates :approvable_type, :approvable_id, presence: true
   belongs_to :approval_flow
-  validates_presence_of :approval_flow_id
+  validates :approval_flow_id, presence: true
 
   has_many :current_assignments, :class_name => 'Approval::Assignment', :as => :assignable, :dependent => :destroy
   has_many :current_approvers, :through => :current_assignments, :source => :user
-  has_many :histories, -> { order('updated_at DESC, created_at DESC') },
+  has_many :histories, -> { order(updated_at: :desc, created_at: :desc) },
            foreign_key: :request_id, class_name: 'Approval::ApprovalRequestHistory', dependent: :destroy
 
   after_initialize :set_defaults
 
   def current_approval
-    approval_flow.approvals.find_by_index(current_index)
+    approval_flow.approvals.find_by(index: current_index)
   end
 
   def current_select_assignments
@@ -36,7 +36,7 @@ class Approval::ApprovalRequest < ActiveRecord::Base
 
     transaction do
       histories.create(operator: user, reason: 'approve', comment: '')
-      if assignment = current_assignments.find_by_user_id(user.id)
+      if assignment = current_assignments.find_by(user_id: user.id)
         current_assignments.where(or_group_id: assignment.or_group_id).update_all(approved_at: Time.now)
       end
       current_assignments.reload # flush cache
