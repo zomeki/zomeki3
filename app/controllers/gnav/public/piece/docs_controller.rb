@@ -1,7 +1,7 @@
 # encoding: utf-8
 class Gnav::Public::Piece::DocsController < Sys::Controller::Public::Base
   def pre_dispatch
-    @piece = Gnav::Piece::Doc.find_by_id(Page.current_piece.id)
+    @piece = Gnav::Piece::Doc.find_by(id: Page.current_piece.id)
     render :text => '' unless @piece
 
     @item = Page.current_item
