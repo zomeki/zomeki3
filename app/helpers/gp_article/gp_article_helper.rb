@@ -27,10 +27,7 @@ module GpArticle::GpArticleHelper
     if value.nil?
       v = flash[key]
       matched = /^flash:(\d+)$/.match(v)
-      unless matched
-        return v.html_safe  if v.present?
-        return nil
-      end
+      return v unless matched
 
       if (text = Sys::TempText.find_by(id: matched[1]))
         text.destroy.content
@@ -40,11 +37,7 @@ module GpArticle::GpArticleHelper
     else
       text = Sys::TempText.create(content: value)
       flash[key] = "flash:#{text.id}"
-      if value.present?
-        value.html_safe
-      else
-        nil
-      end
+      value
 
     end
   end

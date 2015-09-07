@@ -106,6 +106,8 @@ class GpArticle::Doc < ActiveRecord::Base
         end
       end
     end
+  }
+  validate {
     unless content.doc_node
       case state
       when 'public'
@@ -114,21 +116,25 @@ class GpArticle::Doc < ActiveRecord::Base
         errors.add(:base, '記事コンテンツのディレクトリが作成されていないため、承認依頼が行えません。')
       end
     end
+  }
+  validate {
     if self.event_started_on.present? && self.event_ended_on.present?
       self.event_started_on = self.event_ended_on if self.event_started_on.blank?
       self.event_ended_on = self.event_started_on if self.event_ended_on.blank?
       errors.add(:event_ended_on, "が#{self.class.human_attribute_name :event_started_on}を過ぎています。") if self.event_ended_on < self.event_started_on
     end
-    unless state_draft?
-      errors.add(:base, 'リンクチェック結果を確認してください。') if broken_link_exists?
-      unless Zomeki.config.application['cms.enable_accessibility_check']
-        check_results = Util::AccessibilityChecker.check body
+  }
+  validate {
+    errors.add(:base, 'リンクチェック結果を確認してください。') if !state_draft? && broken_link_exists?
+  }
 
-        if check_results != [] && !ignore_accessibility_check
-         errors.add(:base, 'アクセシビリティチェック結果を確認してください')
-        end
-      end
+  validate {
+    if !state_draft? && check_results != [] && !ignore_accessibility_check
+     errors.add(:base, 'アクセシビリティチェック結果を確認してください')
     end
+  }
+
+  validate {
     limit = Zomeki.config.application['gp_article.body_limit_for_mobile'].to_i
     current_size = self.body_for_mobile.bytesize
     if current_size > limit
@@ -182,12 +188,14 @@ class GpArticle::Doc < ActiveRecord::Base
                         groups[:id].eq(criteria[:group_id])
                       end)
     end
-    rel = rel.search_with_text(:name, :name_en, criteria[:user]) if criteria[:user].present?
+    rel = rel.where(users[:name].matches("%#{criteria[:user]}%")
+                    .or(users[:name_en].matches("%#{criteria[:user]}%"))) if criteria[:user].present?
 
     if criteria[:touched_user_id].present?
       operation_logs = Sys::OperationLog.arel_table
 
-      rel = rel.joins(:operation_logs).where(operation_logs[:user_id].eq(criteria[:touched_user_id])
+      rel = rel.includes(:operation_logs).references(:operation_logs)
+                                                .where(operation_logs[:user_id].eq(criteria[:touched_user_id])
                                                 .or(creators[:user_id].eq(criteria[:touched_user_id])))
     end
 
@@ -195,7 +203,8 @@ class GpArticle::Doc < ActiveRecord::Base
       editable_groups = Sys::EditableGroup.arel_table
 
       rel = unless Core.user.has_auth?(:manager)
-              rel.joins(:editable_group).where(creators[:group_id].eq(Core.user.group.id)
+              rel.includes(:editable_group).references(:editable_group)
+                                                  .where(creators[:group_id].eq(Core.user.group.id)
                                                   .or(editable_groups[:all].eq(true)
                                                   .or(editable_groups[:group_ids].eq(Core.user.group.id.to_s)
                                                   .or(editable_groups[:group_ids].matches("#{Core.user.group.id} %")
@@ -266,7 +275,7 @@ class GpArticle::Doc < ActiveRecord::Base
     "#{content.public_path}/_smartphone#{public_uri}#{filename_base}.html"
   end
 
-  def public_uri(without_filename=false)
+  def public_uri(without_filename: false)
     return '' unless node = content.public_node
     uri = if (organization_content = content.organization_content_group) &&
               organization_content.article_related? &&
@@ -279,7 +288,7 @@ class GpArticle::Doc < ActiveRecord::Base
     without_filename || filename_base == 'index' ? uri : "#{uri}#{filename_base}.html"
   end
 
-  def public_full_uri(without_filename=false)
+  def public_full_uri(without_filename: false)
     return '' unless node = content.public_node
     uri = if (organization_content = content.organization_content_group) &&
             organization_content.article_related? &&
