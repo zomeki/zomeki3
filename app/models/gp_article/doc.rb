@@ -180,7 +180,7 @@ class GpArticle::Doc < ActiveRecord::Base
     rel = rel.where(docs[:state].eq(criteria[:state])) if criteria[:state].present?
     rel = rel.search_with_text(:title, criteria[:title]) if criteria[:title].present?
     rel = rel.search_with_text(:title, :body, :name, criteria[:free_word]) if criteria[:free_word].present?
-    rel = rel.search_with_text(:name, criteria[:group]) if criteria[:group].present?
+    rel = rel.where(groups[:name].matches("%#{criteria[:group]}%")) if criteria[:group].present?
     if criteria[:group_id].present?
       rel = rel.where(if criteria[:group_id].kind_of?(Array)
                         groups[:id].in(criteria[:group_id])
