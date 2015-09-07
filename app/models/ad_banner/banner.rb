@@ -29,10 +29,10 @@ class AdBanner::Banner < ActiveRecord::Base
 
   # Content
   belongs_to :content, :foreign_key => :content_id, :class_name => 'AdBanner::Content::Banner'
-  validates_presence_of :content_id
+  validates :content_id, presence: true
 
   # Proper
-  validates_presence_of :state
+  validates :state, presence: true
 
   belongs_to :group, :foreign_key => :group_id, :class_name => 'AdBanner::Group'
 

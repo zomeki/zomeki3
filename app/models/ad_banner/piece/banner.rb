@@ -27,7 +27,7 @@ class AdBanner::Piece::Banner < Cms::Piece
   end
 
   def group
-    groups.find_by_id(setting_value(:group_id))
+    groups.find_by(id: setting_value(:group_id))
   end
 
   def banners

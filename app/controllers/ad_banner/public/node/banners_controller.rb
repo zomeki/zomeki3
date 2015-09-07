@@ -3,7 +3,7 @@ class AdBanner::Public::Node::BannersController < Cms::Controller::Public::Base
   skip_action_callback :render_public_layout, :only => :index
 
   def pre_dispatch
-    @content = AdBanner::Content::Banner.find_by_id(Page.current_node.content.id)
+    @content = AdBanner::Content::Banner.find_by(id: Page.current_node.content.id)
     return http_error(404) unless @content
   end
 
@@ -12,7 +12,7 @@ class AdBanner::Public::Node::BannersController < Cms::Controller::Public::Base
     token = params[:token].presence
 
     if (banner_token = params[:i]).present? || filename.present?
-      banner = @content.banners.find_by_token(banner_token) || @content.banners.find_by_name(filename)
+      banner = @content.banners.find_by(token: banner_token) || @content.banners.find_by(name: filename)
       return http_error(404) unless banner
 
       mt = banner.mime_type.presence || Rack::Mime.mime_type(File.extname(banner.name))
@@ -20,7 +20,7 @@ class AdBanner::Public::Node::BannersController < Cms::Controller::Public::Base
       disposition = 'attachment' if request.env['HTTP_USER_AGENT'] =~ /Android/
       send_file banner.upload_path, :type => type, :filename => banner.name, :disposition => disposition
     elsif (banner_token = params[:r]).present? || token.present?
-      @banner = @content.banners.find_by_token(banner_token) || @content.banners.find_by_token(token)
+      @banner = @content.banners.find_by(token: banner_token) || @content.banners.find_by(token: token)
       return http_error(404) unless @banner
 
       clicks = AdBanner::Click.arel_table
