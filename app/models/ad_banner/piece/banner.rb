@@ -15,7 +15,7 @@ class AdBanner::Piece::Banner < Cms::Piece
   end
 
   def content
-    AdBanner::Content::Banner.find(super)
+    AdBanner::Content::Banner.find(super.id)
   end
 
   def groups
