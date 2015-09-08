@@ -9,8 +9,8 @@ class GpCalendar::Public::Node::EventsController < GpCalendar::Public::Node::Bas
 
     criteria = {year_month: year_month}
     events_table = GpCalendar::Event.arel_table
-    @events = GpCalendar::Event.public_state.all_with_content_and_criteria(@content, criteria).order(:started_on)
-                               .where(events_table[:started_on].lteq(@max_date).and(events_table[:ended_on].gteq(@min_date)))
+    @events = GpCalendar::Event.public_state.content_and_criteria(@content, criteria).order(:started_on)
+                               .where(events_table[:started_on].lteq(@max_date).and(events_table[:ended_on].gteq(@min_date))).to_a
 
     start_date, end_date = if @year_only
                              boy = @date.beginning_of_year
@@ -23,7 +23,7 @@ class GpCalendar::Public::Node::EventsController < GpCalendar::Public::Node::Bas
                            end
     merge_docs_into_events(event_docs(start_date, end_date), @events)
 
-    @holidays = GpCalendar::Holiday.public_state.all_with_content_and_criteria(@content, criteria).where(kind: :event)
+    @holidays = GpCalendar::Holiday.public_state.content_and_criteria(@content, criteria).where(kind: :event)
     @holidays.each do |holiday|
       holiday.started_on = @date.year
       @events << holiday if holiday.started_on
@@ -34,9 +34,9 @@ class GpCalendar::Public::Node::EventsController < GpCalendar::Public::Node::Bas
   end
 
   def file_content
-    @event = @content.events.find_by_name(params[:name])
+    @event = @content.events.find_by(name: params[:name])
     return http_error(404) unless @event
-    file = @event.files.find_by_name("#{params[:basename]}.#{params[:extname]}")
+    file = @event.files.find_by(name: "#{params[:basename]}.#{params[:extname]}")
     return http_error(404) unless file
 
     mt = file.mime_type.presence || Rack::Mime.mime_type(File.extname(file.name))

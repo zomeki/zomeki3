@@ -1,7 +1,7 @@
 # encoding: utf-8
 class GpCalendar::Public::Piece::DailyLinksController < GpCalendar::Public::Piece::BaseController
   def pre_dispatch
-    @piece = GpCalendar::Piece::DailyLink.find_by_id(Page.current_piece.id)
+    @piece = GpCalendar::Piece::DailyLink.find_by(id: Page.current_piece.id)
     return render(:text => '') unless @piece
 
     @item = Page.current_item
@@ -35,7 +35,7 @@ class GpCalendar::Public::Piece::DailyLinksController < GpCalendar::Public::Piec
            end
 
     (start_date..end_date).each do |date|
-      unless GpCalendar::Event.public_state.all_with_content_and_criteria(@piece.content, {date: date}).empty?
+      unless GpCalendar::Event.public_state.content_and_criteria(@piece.content, {date: date}).empty?
         days << date unless days.include?(date)
       end
     end
