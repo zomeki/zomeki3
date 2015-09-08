@@ -3,8 +3,8 @@ class BizCalendar::Admin::HoursController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 
   def pre_dispatch
-    return error_auth unless @content = BizCalendar::Content::Place.find_by_id(params[:content])
-    return error_auth unless @place = @content.places.find_by_id(params[:place_id])
+    @content = BizCalendar::Content::Place.find(params[:content])
+    @place = @content.places.find(params[:place_id])
     return error_auth unless Core.user.has_priv?(:read, :item => @content.concept)
   end
 
@@ -23,18 +23,27 @@ class BizCalendar::Admin::HoursController < Cms::Controller::Admin::Base
   end
 
   def create
-    @item = @place.hours.build(params[:item])
+    @item = @place.hours.build(hours_params)
     _create @item
   end
 
   def update
     @item = @place.hours.find(params[:id])
-    @item.attributes = params[:item]
+    @item.attributes = hours_params
     _update @item
   end
 
   def destroy
     @item = @place.hours.find(params[:id])
     _destroy @item
+  end
+
+  private
+
+  def hours_params
+    params.require(:item).permit(:state, :fixed_start_date, :fixed_end_date, :repeat_type, :repeat_interval,
+      :repeat_criterion, :start_date, :end_type, :end_times, :end_date,
+      :business_hours_start_time, :business_hours_end_time,
+      :repeat_week => [:_, :mon, :tue, :wed, :thurs, :fri, :sat, :sun], :in_creator => [:group_id, :user_id])
   end
 end

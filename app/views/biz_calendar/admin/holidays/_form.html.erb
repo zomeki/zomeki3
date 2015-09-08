@@ -1,6 +1,6 @@
 <%
 
-types = @content.visible_types.order("id").collect{|c| [c.title, c.id]}
+types = @content.visible_types.order(:id).collect{|c| [c.title, c.id]}
 
 %><span class="note">※は必須項目です。</span>
 

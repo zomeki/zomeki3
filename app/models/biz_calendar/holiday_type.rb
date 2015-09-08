@@ -5,20 +5,33 @@ class BizCalendar::HolidayType < ActiveRecord::Base
   include Sys::Model::Rel::Creator
   include Cms::Model::Auth::Content
 
+  include StateText
+
   STATE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
 
   # Content
   belongs_to :content, :foreign_key => :content_id, :class_name => 'BizCalendar::Content::Place'
-  validates_presence_of :content_id
+  validates :content_id, presence: true
 
-  belongs_to :status,         :foreign_key => :state,             :class_name => 'Sys::Base::Status'
-
-  validates_presence_of :state, :name, :title
+  validates :state, :name, :title, presence: true
   validate :name_validity
   
   after_initialize :set_defaults
 
-  scope :visible, where(state: 'visible')
+  scope :visible, -> { where(state: 'visible') }
+  scope :search_with_params, ->(params = {}) {
+    rel = all
+    params.each do |n, v|
+      next if v.to_s == ''
+      case n
+      when 's_event_date'
+        rel.where!(event_date: v)
+      when 's_title'
+        rel = rel.search_with_text(:title, v)
+      end
+    end
+    rel
+  }
 
   def state_visible?
     state == 'visible'
@@ -35,20 +48,5 @@ class BizCalendar::HolidayType < ActiveRecord::Base
 
   def set_defaults
     self.state ||= STATE_OPTIONS.first.last if self.has_attribute?(:state)
-  end
-
-  def search(params)
-    params.each do |n, v|
-      next if v.to_s == ''
-
-      case n
-      when 's_event_date'
-        self.and :event_date, v
-      when 's_title'
-        self.and_keywords v, :title
-      end
-    end if params.size != 0
-
-    return self
   end
 end

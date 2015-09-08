@@ -9,7 +9,7 @@ class BizCalendar::Piece::BussinessHoliday < Cms::Piece
   after_initialize :set_default_settings
 
   def content
-    BizCalendar::Content::Place.find(super)
+    BizCalendar::Content::Place.find(super.id)
   end
 
   def target_next?

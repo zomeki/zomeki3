@@ -2,7 +2,7 @@
 class BizCalendar::Public::Node::BaseController < Cms::Controller::Public::Base
   def pre_dispatch
     @node = Page.current_node
-    @content = BizCalendar::Content::Place.find_by_id(@node.content.id)
+    @content = BizCalendar::Content::Place.find_by(id: @node.content.id)
     return http_error(404) unless @content
 
     @today = Date.today
@@ -73,7 +73,7 @@ class BizCalendar::Public::Node::BaseController < Cms::Controller::Public::Base
   def find_category_by_specified_path(path)
     return nil unless path.kind_of?(String)
     category_type_name, category_path = path.split('/', 2)
-    category_type = @content.category_types.find_by_name(category_type_name)
+    category_type = @content.category_types.find_by(name: category_type_name)
     return nil unless category_type
     category_type.find_category_by_path_from_root_category(category_path)
   end

@@ -3,8 +3,8 @@ class BizCalendar::Admin::ExceptionHolidaysController < Cms::Controller::Admin::
   include Sys::Controller::Scaffold::Base
 
   def pre_dispatch
-    return error_auth unless @content = BizCalendar::Content::Place.find_by_id(params[:content])
-    return error_auth unless @place = @content.places.find_by_id(params[:place_id])
+    @content = BizCalendar::Content::Place.find(params[:content])
+    @place = @content.places.find(params[:place_id])
     return error_auth unless Core.user.has_priv?(:read, :item => @content.concept)
   end
 
@@ -23,18 +23,24 @@ class BizCalendar::Admin::ExceptionHolidaysController < Cms::Controller::Admin::
   end
 
   def create
-    @item = @place.exception_holidays.build(params[:item])
+    @item = @place.exception_holidays.build(exception_holiday_params)
     _create @item
   end
 
   def update
     @item = @place.exception_holidays.find(params[:id])
-    @item.attributes = params[:item]
+    @item.attributes = exception_holiday_params
     _update @item
   end
 
   def destroy
     @item = @place.exception_holidays.find(params[:id])
     _destroy @item
+  end
+
+  private
+
+  def exception_holiday_params
+    params.require(:item).permit(:state, :start_date, :end_date, :in_creator => [:group_id, :user_id])
   end
 end
