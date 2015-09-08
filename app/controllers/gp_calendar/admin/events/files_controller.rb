@@ -5,7 +5,7 @@ class GpCalendar::Admin::Events::FilesController < Cms::Controller::Admin::Base
   layout 'admin/files'
 
   def pre_dispatch
-    return http_error(404) unless @content = GpCalendar::Content::Event.find_by_id(params[:content])
+    return http_error(404) unless @content = GpCalendar::Content::Event.find_by(id: params[:content])
 
     if (@event_id = params[:event_id]) =~ /^[0-9a-z]{32}$/
       @tmp_unid = @event_id

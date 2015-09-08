@@ -5,7 +5,7 @@ class GpCalendar::Admin::EventsController < Cms::Controller::Admin::Base
   include Cms::ApiGpCalendar
 
   def pre_dispatch
-    return error_auth unless @content = GpCalendar::Content::Event.find_by_id(params[:content])
+    return error_auth unless @content = GpCalendar::Content::Event.find_by(id: params[:content])
     return error_auth unless Core.user.has_priv?(:read, :item => @content.concept)
     return redirect_to url_for(action: :index) if params[:reset_criteria]
 #    return redirect_to(request.env['REQUEST_PATH']) if params[:reset_criteria]
@@ -16,10 +16,10 @@ class GpCalendar::Admin::EventsController < Cms::Controller::Admin::Base
 
     criteria = params[:criteria] || {}
     criteria[:imported] = params[:imported] || 'no'
-    @items = GpCalendar::Event.all_with_content_and_criteria(@content, criteria)
+    @items = GpCalendar::Event.content_and_criteria(@content, criteria).to_a
 
     criteria[:date] = Date.parse(criteria[:date]) rescue nil
-    @events = GpCalendar::Holiday.all_with_content_and_criteria(@content, criteria).where(kind: :event)
+    @events = GpCalendar::Holiday.content_and_criteria(@content, criteria).where(kind: :event)
     @events.each do |event|
       event.started_on = Time.now.year if event.repeat?
       @items << event if event.started_on

@@ -4,7 +4,7 @@ class GpCalendar::Public::Node::TodaysEventsController < GpCalendar::Public::Nod
     http_error(404) if params[:page]
 
     criteria = {date: @today, kind: :event}
-    @events = GpCalendar::Event.public_state.all_with_content_and_criteria(@content, criteria).order(:started_on)
+    @events = GpCalendar::Event.public_state.content_and_criteria(@content, criteria).order(:started_on).to_a
 
     merge_docs_into_events(event_docs(@today, @today), @events)
 
@@ -14,6 +14,6 @@ class GpCalendar::Public::Node::TodaysEventsController < GpCalendar::Public::Nod
     @event_categories = GpCategory::Category.where(id: category_ids)
 
     criteria = {date: @today, kind: :holiday}
-    @holidays = GpCalendar::Holiday.public_state.all_with_content_and_criteria(@content, criteria)
+    @holidays = GpCalendar::Holiday.public_state.content_and_criteria(@content, criteria)
   end
 end
