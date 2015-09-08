@@ -1,7 +1,7 @@
 # encoding: utf-8
 class GpCategory::Public::Piece::RecentTabsController < Sys::Controller::Public::Base
   def pre_dispatch
-    @piece = GpCategory::Piece::RecentTab.find_by_id(Page.current_piece.id)
+    @piece = GpCategory::Piece::RecentTab.find_by(id: Page.current_piece.id)
     render :text => '' unless @piece
   end
 
@@ -35,9 +35,9 @@ class GpCategory::Public::Piece::RecentTabsController < Sys::Controller::Public:
         else
           doc_ids = []
         end
-        docs = GpArticle::Doc.mobile(::Page.mobile?).public_state.where(id: doc_ids).order('display_published_at DESC, published_at DESC').limit(@piece.list_count)
+        docs = GpArticle::Doc.mobile(::Page.mobile?).public_state.where(id: doc_ids).order(display_published_at: :desc, published_at: :desc).limit(@piece.list_count)
       else
-        docs = GpArticle::Doc.mobile(::Page.mobile?).public_state.order('display_published_at DESC, published_at DESC').limit(@piece.list_count)
+        docs = GpArticle::Doc.mobile(::Page.mobile?).public_state.order(display_published_at: :desc, published_at: :desc).limit(@piece.list_count)
       end
 
       content_ids = GpArticle::Content::Setting.where(name: 'gp_category_content_category_type_id',

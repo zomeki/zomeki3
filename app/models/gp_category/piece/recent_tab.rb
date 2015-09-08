@@ -27,7 +27,7 @@ class GpCategory::Piece::RecentTab < Cms::Piece
   end
 
   def content
-    GpCategory::Content::CategoryType.find(super)
+    GpCategory::Content::CategoryType.find(super.id)
   end
 
   def category_types

@@ -45,7 +45,7 @@ class GpCategory::Piece::Doc < Cms::Piece
   end
 
   def content
-    GpCategory::Content::CategoryType.find(super)
+    GpCategory::Content::CategoryType.find(super.id)
   end
 
   def categories
@@ -72,8 +72,8 @@ class GpCategory::Piece::Doc < Cms::Piece
     value = YAML.load(setting_value(:category_sets).to_s)
     return [] unless value.is_a?(Array)
     value.map {|v|
-      next nil if (v[:category_type] = GpCategory::CategoryType.find_by_id(v[:category_type_id])).nil?
-      next nil if v[:category_id].nonzero? && (v[:category] = GpCategory::Category.find_by_id(v[:category_id])).nil?
+      next nil if (v[:category_type] = GpCategory::CategoryType.find_by(id: v[:category_type_id])).nil?
+      next nil if v[:category_id].nonzero? && (v[:category] = GpCategory::Category.find_by(id: v[:category_id])).nil?
       next v
     }.compact.sort do |a, b|
       next a[:category_type].unique_sort_key <=> b[:category_type].unique_sort_key if a[:category].nil? && b[:category].nil?
@@ -90,7 +90,7 @@ class GpCategory::Piece::Doc < Cms::Piece
   def gp_article_content_docs
     value = YAML.load(setting_value(:gp_article_content_doc_ids).to_s)
     return [] unless value.is_a?(Array)
-    value.map{|v| GpArticle::Content::Doc.find_by_id(v) }.compact
+    value.map{|v| GpArticle::Content::Doc.find_by(id: v) }.compact
   end
 
   private

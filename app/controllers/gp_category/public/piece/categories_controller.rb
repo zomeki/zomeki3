@@ -1,6 +1,6 @@
 class GpCategory::Public::Piece::CategoriesController < Sys::Controller::Public::Base
   def pre_dispatch
-    @piece = GpCategory::Piece::Category.find_by_id(Page.current_piece.id)
+    @piece = GpCategory::Piece::Category.find_by(id: Page.current_piece.id)
     render text: '' unless @piece
   end
 

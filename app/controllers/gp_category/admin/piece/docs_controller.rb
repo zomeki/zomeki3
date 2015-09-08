@@ -39,10 +39,11 @@ class GpCategory::Admin::Piece::DocsController < Cms::Admin::Piece::BaseControll
   private
 
   def find_piece
-    model.new.readable.find(params[:id])
+    model.readable.find(params[:id])
   end
 
   def base_params_item_in_settings
-    [:date_style, :doc_style, :docs_order, :list_count, :more_link_body, :more_link_url, :page_filter]
+    [:date_style, :doc_style, :docs_order, :list_count, :more_link_body, :more_link_url, :page_filter,
+      :category_sets, :gp_article_content_doc_ids]
   end
 end

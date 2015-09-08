@@ -21,10 +21,10 @@ class GpCategory::TemplateModule < ActiveRecord::Base
   #                :upper_text, :lower_text
 
   belongs_to :content, :foreign_key => :content_id, :class_name => 'GpCategory::Content::CategoryType'
-  validates_presence_of :content_id
+  validates :content_id, presence: true
 
-  validates :name, :presence => true, :uniqueness => {:scope => :content_id}
-  validates :title, :presence => true
+  validates :name, presence: true, uniqueness: { scope: :content_id }
+  validates :title, presence: true
 
   after_initialize :set_defaults
 

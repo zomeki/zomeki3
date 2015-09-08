@@ -9,6 +9,6 @@
   </tr>
   <tr>
     <th><%= GpCategory::Categorization.human_attribute_name :sort_no %></th>
-    <td><%= @item.categorizations.find_by_category_id(@category.id).try(:sort_no) %></td>
+    <td><%= @item.categorizations.find_by(category_id: @category.id).try(:sort_no) %></td>
   </tr>
 </table>
