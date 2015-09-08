@@ -11,7 +11,7 @@ class Map::Marker < ActiveRecord::Base
 
   # Content
   belongs_to :content, :foreign_key => :content_id, :class_name => 'Map::Content::Marker'
-  validates_presence_of :content_id
+  validates :content_id, :presence => true
 
   # Proper
   validates_presence_of :state
