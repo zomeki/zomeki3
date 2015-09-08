@@ -125,7 +125,7 @@ module Rank::Controller::Rank
         end
         category_ids = category_ids.flatten.uniq
 
-        docs = GpArticle::Doc.all_with_content_and_criteria(nil, category_id: category_ids).mobile(::Page.mobile?).public_state
+        docs = GpArticle::Doc.content_and_criteria(nil, category_id: category_ids).mobile(::Page.mobile?).public_state
         docs.each do |doc|
           doc.categories.each do |c|
             Rank::Category.where(content_id:  content.id)

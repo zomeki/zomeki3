@@ -36,6 +36,6 @@ class Organization::Public::Piece::CategorizedDocsController < Sys::Controller::
   private
 
   def find_public_docs_with_group_id(group_id)
-    GpArticle::Doc.all_with_content_and_criteria(nil, group_id: group_id).mobile(::Page.mobile?).public_state
+    GpArticle::Doc.content_and_criteria(nil, group_id: group_id).mobile(::Page.mobile?).public_state
   end
 end
