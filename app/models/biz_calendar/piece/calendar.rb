@@ -8,12 +8,12 @@ class BizCalendar::Piece::Calendar < Cms::Piece
   after_initialize :set_default_settings
 
   def content
-    BizCalendar::Content::Place.find(super)
+    BizCalendar::Content::Place.find(super.id)
   end
 
   def place
     return false if place_id.blank?
-    content.public_places.find_by_id(place_id.to_i)
+    content.public_places.find_by(id: place_id.to_i)
   end
 
   def place_id

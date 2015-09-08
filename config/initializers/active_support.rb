@@ -26,4 +26,10 @@ module ActiveSupport #:nodoc:
       value
     end
   end
+
+  class HashWithIndifferentAccess < Hash
+    def to_s
+      to_yaml
+    end
+  end
 end

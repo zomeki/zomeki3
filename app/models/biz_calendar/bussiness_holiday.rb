@@ -6,6 +6,8 @@ class BizCalendar::BussinessHoliday < ActiveRecord::Base
   include Cms::Model::Auth::Content
   include BizCalendar::Model::Base::Date
 
+  include StateText
+
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
   REPEAT_OPTIONS = [['毎日', 'daily'], ['平日（月～金）', 'weekday'], ['土日祝日', 'saturdays'], ['祝日', 'holiday'],
     ['毎週', 'weekly'], ['毎月', 'monthly'], ['毎年', 'yearly']]
@@ -13,11 +15,10 @@ class BizCalendar::BussinessHoliday < ActiveRecord::Base
   REPEAT_CRITERION_OPTIONS = [['日付', 'day'], ['曜日', 'week']]
   END_TYPE_OPTIONS = [['なし', 0], ['回数指定', 1], ['日指定', 2]]
 
-  belongs_to :status, :foreign_key => :state,    :class_name => 'Sys::Base::Status'
   belongs_to :place,  :foreign_key => :place_id, :class_name => 'BizCalendar::Place'
   belongs_to :type,   :foreign_key => :type_id,  :class_name => 'BizCalendar::HolidayType'
 
-  validates_presence_of :state, :type_id
+  validates :state, :type_id, presence: true
   validate :dates_range
   validate :repeat_setting
   validate :ended_setting
@@ -27,6 +28,19 @@ class BizCalendar::BussinessHoliday < ActiveRecord::Base
   attr_accessor :repeat_num
 
   scope :public_state, -> { where(state: 'public') }
+  scope :search_with_params, ->(params = {}) {
+    rel = all
+    params.each do |n, v|
+      next if v.to_s == ''
+      case n
+      when 's_event_date'
+        rel.where!(event_date: v)
+      when 's_title'
+        rel = rel.search_with_text(:title, v)
+      end
+    end
+    rel
+  }
 
   def self.all_with_place_and_criteria(place, criteria)
     holidays = self.arel_table
@@ -397,20 +411,5 @@ class BizCalendar::BussinessHoliday < ActiveRecord::Base
   def set_defaults
     self.state    ||= STATE_OPTIONS.first.last if self.has_attribute?(:state)
     self.end_type ||= END_TYPE_OPTIONS.first.last if self.has_attribute?(:end_type)
-  end
-
-  def search(params)
-    params.each do |n, v|
-      next if v.to_s == ''
-
-      case n
-      when 's_event_date'
-        self.and :event_date, v
-      when 's_title'
-        self.and_keywords v, :title
-      end
-    end if params.size != 0
-
-    return self
   end
 end

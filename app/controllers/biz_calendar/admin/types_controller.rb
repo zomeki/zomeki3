@@ -3,25 +3,22 @@ class BizCalendar::Admin::TypesController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 
   def pre_dispatch
-    return error_auth unless @content = BizCalendar::Content::Place.find_by_id(params[:content])
+    @content = BizCalendar::Content::Place.find(params[:content])
     return error_auth unless Core.user.has_priv?(:read, :item => @content.concept)
     return redirect_to(request.env['PATH_INFO']) if params[:reset]
   end
 
   def index
-    item = BizCalendar::HolidayType.new
-    item.and :content_id, @content.id
-#    item.search params
-    item.page  params[:page], params[:limit]
-    item.order 'updated_at DESC, id DESC'
-    @items = item.find(:all)
+    @items = BizCalendar::HolidayType.where(content_id: @content.id).order(updated_at: :desc, id: :desc)
+      .paginate(page: params[:page], per_page: params[:limit])
+
     _index @items
   end
 
   def show
-    @item = BizCalendar::HolidayType.new.find(params[:id])
+    @item = BizCalendar::HolidayType.find(params[:id])
     #return error_auth unless @item.readable?
-    
+
     _show @item
   end
 
@@ -30,13 +27,13 @@ class BizCalendar::Admin::TypesController < Cms::Controller::Admin::Base
   end
 
   def create
-    @item = @content.types.build(params[:item])
+    @item = @content.types.build(holiday_type_params)
     _create(@item)
   end
 
   def update
     @item = @content.types.find(params[:id])
-    @item.attributes = params[:item]
+    @item.attributes = holiday_type_params
     _update(@item)
   end
 
@@ -45,4 +42,9 @@ class BizCalendar::Admin::TypesController < Cms::Controller::Admin::Base
     _destroy @item
   end
 
+  private
+
+  def holiday_type_params
+    params.require(:item).permit(:state, :title, :name, :in_creator => [:group_id, :user_id])
+  end
 end

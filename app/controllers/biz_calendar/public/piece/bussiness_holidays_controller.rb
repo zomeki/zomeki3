@@ -1,7 +1,7 @@
 # encoding: utf-8
 class BizCalendar::Public::Piece::BussinessHolidaysController < BizCalendar::Public::Piece::BaseController
   def pre_dispatch
-    @piece = BizCalendar::Piece::BussinessHoliday.find_by_id(Page.current_piece.id)
+    @piece = BizCalendar::Piece::BussinessHoliday.find_by(id: Page.current_piece.id)
     return render(:text => '') unless @piece
 
     @item = Page.current_item

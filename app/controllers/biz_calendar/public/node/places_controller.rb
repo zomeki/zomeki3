@@ -86,7 +86,7 @@ class BizCalendar::Public::Node::PlacesController < BizCalendar::Public::Node::B
 
 
   def bussiness_times
-    @piece = BizCalendar::Piece::BussinessTime.find_by_id(params[:piece])
+    @piece = BizCalendar::Piece::BussinessTime.find_by(id: params[:piece])
     return http_error(404) if params[:piece].blank? || @piece.blank?
 
     @places = @content.public_places
@@ -127,7 +127,7 @@ class BizCalendar::Public::Node::PlacesController < BizCalendar::Public::Node::B
   end
 
   def bussiness_holidays
-    @piece = BizCalendar::Piece::BussinessHoliday.find_by_id(params[:piece])
+    @piece = BizCalendar::Piece::BussinessHoliday.find_by(id: params[:piece])
     return http_error(404) if params[:piece].blank? || @piece.blank?
     return http_error(404) unless @piece.target_next?
 
