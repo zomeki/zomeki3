@@ -13,7 +13,7 @@
   <tr>
     <td><%= text_field_tag 'criteria[free_word]', params[:criteria].try('[]', :free_word), :style => 'width: 400px;' %></td>
     <td><%-
-          top = Core.site.groups.find_by_parent_id(0)
+          top = Core.site.groups.root
           options = top ? top.children.inject([]){|r, c| r.concat(c.descendants_for_option) } : []
         -%>
         <%= select_tag 'criteria[group_id]',

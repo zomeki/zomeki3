@@ -2,7 +2,7 @@ class GpCategory::Admin::TemplatesController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 
   def pre_dispatch
-    return http_error(404) unless @content = GpCategory::Content::CategoryType.find_by_id(params[:content])
+    @content = GpCategory::Content::CategoryType.find(params[:content])
     return error_auth unless Core.user.has_priv?(:read, :item => @content.concept)
     @item = @content.templates.find(params[:id]) if params[:id].present?
   end

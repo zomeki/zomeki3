@@ -17,7 +17,7 @@ class GpCategory::CategoryType < ActiveRecord::Base
 
   # Content
   belongs_to :content, :foreign_key => :content_id, :class_name => 'GpCategory::Content::CategoryType'
-  validates_presence_of :content_id
+  validates :content_id, presence: true
 
   # Page
   belongs_to :concept, :foreign_key => :concept_id, :class_name => 'Cms::Concept'
@@ -60,8 +60,8 @@ class GpCategory::CategoryType < ActiveRecord::Base
 
   def find_category_by_path_from_root_category(path_from_root_category)
     category_names = path_from_root_category.split('/')
-    category_names.inject(root_categories.find_by_name(category_names.shift)) {|result, item|
-      result.children.find_by_name(item)
+    category_names.inject(root_categories.find_by(name: category_names.shift)) {|result, item|
+      result.children.find_by(name: item)
     }
   end
 
@@ -115,7 +115,7 @@ class GpCategory::CategoryType < ActiveRecord::Base
         new_state = (group.state == 'disabled' ? 'closed' : 'public')
         category.update_attributes(state: new_state, name: group.name_en, title: group.name, sort_no: group.sort_no)
       else
-        if (old_category = categories.find_by_parent_id_and_name(nil, group.name_en))
+        if (old_category = categories.find_by(parent_id: nil, name: group.name_en))
           old_category.update_column(:name, "#{old_category.name}_#{old_category.id}")
         end
         category = categories.create(parent_id: nil, group_code: group.code, name: group.name_en, title: group.name, sort_no: group.sort_no)

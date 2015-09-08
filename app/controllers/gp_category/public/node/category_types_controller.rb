@@ -9,7 +9,7 @@ class GpCategory::Public::Node::CategoryTypesController < GpCategory::Public::No
 
       vc = view_context
       rendered = template.body.gsub(/\[\[module\/([\w-]+)\]\]/) do |matched|
-          tm = @content.template_modules.find_by_name($1)
+          tm = @content.template_modules.find_by(name: $1)
           next unless tm
 
           case tm.module_type
@@ -34,7 +34,7 @@ class GpCategory::Public::Node::CategoryTypesController < GpCategory::Public::No
               docs = find_public_docs_with_category_id(category_ids)
               docs = docs.where(tm.module_type_feature, true) if docs.columns.any?{|c| c.name == tm.module_type_feature }
 
-              all_docs = docs.order('display_published_at DESC, published_at DESC')
+              all_docs = docs.order(display_published_at: :desc, published_at: :desc)
               docs = all_docs.limit(tm.num_docs)
               vc.send(tm.module_type, template_module: tm,
                       ct_or_c: nil, docs: docs, all_docs: all_docs)
@@ -54,14 +54,14 @@ class GpCategory::Public::Node::CategoryTypesController < GpCategory::Public::No
   end
 
   def show
-    @category_type = @content.public_category_types.find_by_name(params[:name])
+    @category_type = @content.public_category_types.find_by(name: params[:name])
     return http_error(404) unless @category_type
 
-    if params[:format].in?('rss', 'atom')
+    if params[:format].in?(['rss', 'atom'])
       case @content.category_type_style
       when 'all_docs'
         category_ids = @category_type.public_categories.pluck(:id)
-        @docs = find_public_docs_with_category_id(category_ids).order('display_published_at DESC, published_at DESC')
+        @docs = find_public_docs_with_category_id(category_ids).order(display_published_at: :desc, published_at: :desc)
         @docs = @docs.display_published_after(@content.feed_docs_period.to_i.days.ago) if @content.feed_docs_period.present?
         @docs = @docs.paginate(page: params[:page], per_page: @content.feed_docs_number)
         return render_feed(@docs)
@@ -100,7 +100,7 @@ class GpCategory::Public::Node::CategoryTypesController < GpCategory::Public::No
           when 'c'
             return http_error(404) unless @category_type.internal_category_type
 
-            internal_category = @category_type.internal_category_type.public_root_categories.find_by_name(code_or_name)
+            internal_category = @category_type.internal_category_type.public_root_categories.find_by(name: code_or_name)
             return http_error(404) unless internal_category
 
             categorizations = GpCategory::Categorization.where(categorizable_type: 'GpArticle::Doc', categorized_as: 'GpArticle::Doc',
@@ -112,7 +112,7 @@ class GpCategory::Public::Node::CategoryTypesController < GpCategory::Public::No
           end
         end
 
-        @docs = @docs.order('display_published_at DESC, published_at DESC').paginate(page: params[:page], per_page: per_page)
+        @docs = @docs.order(display_published_at: :desc, published_at: :desc).paginate(page: params[:page], per_page: per_page)
         return http_error(404) if @docs.current_page > @docs.total_pages
         render :more
       else
@@ -120,7 +120,7 @@ class GpCategory::Public::Node::CategoryTypesController < GpCategory::Public::No
 
         vc = view_context
         rendered = template.body.gsub(/\[\[module\/([\w-]+)\]\]/) do |matched|
-            tm = @content.template_modules.find_by_name($1)
+            tm = @content.template_modules.find_by(name: $1)
             next unless tm
 
             case tm.module_type
@@ -143,7 +143,7 @@ class GpCategory::Public::Node::CategoryTypesController < GpCategory::Public::No
                 docs = find_public_docs_with_category_id(category_ids)
                 docs = docs.where(tm.module_type_feature, true) if docs.columns.any?{|c| c.name == tm.module_type_feature }
 
-                all_docs = docs.order('display_published_at DESC, published_at DESC')
+                all_docs = docs.order(display_published_at: :desc, published_at: :desc)
                 docs = all_docs.limit(tm.num_docs)
                 vc.send(tm.module_type, template_module: tm,
                         ct_or_c: @category_type, docs: docs, all_docs: all_docs)
@@ -201,7 +201,7 @@ class GpCategory::Public::Node::CategoryTypesController < GpCategory::Public::No
       case @content.category_type_style
       when 'all_docs'
         category_ids = @category_type.public_categories.pluck(:id)
-        @docs = find_public_docs_with_category_id(category_ids).order('display_published_at DESC, published_at DESC')
+        @docs = find_public_docs_with_category_id(category_ids).order(display_published_at: :desc, published_at: :desc)
         @docs = @docs.paginate(page: params[:page], per_page: @content.category_type_docs_number)
         return http_error(404) if @docs.current_page > @docs.total_pages
       else

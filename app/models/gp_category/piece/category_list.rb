@@ -23,7 +23,7 @@ class GpCategory::Piece::CategoryList < Cms::Piece
 
 
   def content
-    GpCategory::Content::CategoryType.find(super)
+    GpCategory::Content::CategoryType.find(super.id)
   end
 
   def category_types
@@ -39,7 +39,7 @@ class GpCategory::Piece::CategoryList < Cms::Piece
   end
 
   def category_type
-    category_types.find_by_id(setting_value(:category_type_id))
+    category_types.find_by(id: setting_value(:category_type_id))
   end
 
   def categories
@@ -51,7 +51,7 @@ class GpCategory::Piece::CategoryList < Cms::Piece
 
     if (category_id = setting_value(:category_id)).present?
       if layer == 'descendants'
-        category_type.categories.find_by_id(category_id).try(:descendants) || []
+        category_type.categories.find_by(id: category_id).try(:descendants) || []
       else
         category_type.categories.where(id: category_id)
       end

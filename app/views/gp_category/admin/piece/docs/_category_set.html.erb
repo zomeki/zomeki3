@@ -22,7 +22,7 @@
   <td class="category_type"><%= select_tag "category_types[#{index || 'N'}]", options_for_select(category_types_for_option, category_type_id), common_attrs.merge(include_blank: true) %></td>
   <th><%= GpCategory::Category.model_name.human %></th>
   <td class="category"><%= select_tag "categories[#{index || 'N'}]", options_for_select(categories_for_option, category_id), common_attrs.merge(include_blank: true) %></td>
-  <td style="text-align: right;"><%= link_to_function '条件設定▼', "toggle_form(this, $(this).closest('tr').next(), '条件設定▼', '条件設定▲', true)" %></td>
+  <td style="text-align: right;"><%= link_to '条件設定▼', "#", onclick: "toggle_form(this, $(this).closest('tr').next(), '条件設定▼', '条件設定▲', true); return false;" %></td>
 </tr>
 <tr style="display: none;">
   <td><%= GpCategory::Category.model_name.human %>階層</td>
