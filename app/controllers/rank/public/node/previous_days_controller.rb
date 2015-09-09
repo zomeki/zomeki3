@@ -5,7 +5,7 @@ class Rank::Public::Node::PreviousDaysController < Cms::Controller::Public::Base
 
   def pre_dispatch
     @node = Page.current_node
-    @content = Rank::Content::Rank.find_by_id(Page.current_node.content.id)
+    @content = Rank::Content::Rank.find_by(id: Page.current_node.content.id)
     return http_error(404) unless @content
   end
 

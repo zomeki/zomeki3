@@ -168,7 +168,7 @@ module Rank::Controller::Rank
     end
 
     if category.to_i > 0
-      category_ids = GpCategory::Category.find_by_id(category.to_i).descendants.map(&:id)
+      category_ids = GpCategory::Category.find_by(id: category.to_i).descendants.map(&:id)
     elsif category_type.to_i > 0
       category_ids = categories(category_type.to_i).map{|ca| [ca.last] }
     elsif gp_category.to_i > 0
@@ -208,7 +208,7 @@ module Rank::Controller::Rank
   end
 
   def category_types(gp_category)
-    GpCategory::Content::CategoryType.find_by_id(gp_category).category_types_for_option
+    GpCategory::Content::CategoryType.find_by(id: gp_category).category_types_for_option
   end
 
   def categories(category_type)
