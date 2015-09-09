@@ -7,7 +7,7 @@ class SnsShare::Content::Account < Cms::Content
 
   def prepare_accounts # keep public
     SnsShare::Account::SUPPORTED_PROVIDERS.each do |provider|
-      accounts.create(provider: provider) unless accounts.find_by_provider(provider)
+      accounts.create(provider: provider) unless accounts.find_by(provider: provider)
     end
   end
 end

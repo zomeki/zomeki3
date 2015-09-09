@@ -9,10 +9,10 @@ class SnsShare::Account < ActiveRecord::Base
   has_many :shares, :dependent => :destroy
 
   belongs_to :content, :foreign_key => :content_id, :class_name => 'SnsShare::Content::Account'
-  validates_presence_of :content_id
+  validates :content_id, presence: true
 
   validate :provider_existence
-  validates :provider, :presence => true, :uniqueness => {:scope => [:content_id]}
+  validates :provider, presence: true, uniqueness: { scope: [:content_id] }
 
   def facebook_page_options=(options)
     write_attribute(:facebook_page_options, YAML.dump(options.kind_of?(Array) ? options : []))
