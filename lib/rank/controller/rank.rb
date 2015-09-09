@@ -87,8 +87,8 @@ module Rank::Controller::Rank
                     .where(content_id: content.id)
                     .where(rank_table[:date].gteq(from.strftime('%F')).and(rank_table[:date].lteq(to.strftime('%F'))))
                     .group(:hostname, :page_path)
-                    .find_all.each do |result|
-            latest_title = Rank::Rank.order('date DESC').where(hostname: result.hostname,
+                    .to_a.each do |result|
+            latest_title = Rank::Rank.order(date: :desc).where(hostname: result.hostname,
                                                                page_path: result.page_path).pluck(:page_title).first
             Rank::Total.create!(content_id:  content.id,
                                 term:        term,
@@ -168,7 +168,7 @@ module Rank::Controller::Rank
     end
 
     if category.to_i > 0
-      category_ids = GpCategory::Category.find_by_id(category.to_i).descendants.map(&:id)
+      category_ids = GpCategory::Category.find_by(id: category.to_i).descendants.map(&:id)
     elsif category_type.to_i > 0
       category_ids = categories(category_type.to_i).map{|ca| [ca.last] }
     elsif gp_category.to_i > 0
@@ -208,7 +208,7 @@ module Rank::Controller::Rank
   end
 
   def category_types(gp_category)
-    GpCategory::Content::CategoryType.find_by_id(gp_category).category_types_for_option
+    GpCategory::Content::CategoryType.find_by(id: gp_category).category_types_for_option
   end
 
   def categories(category_type)
