@@ -40,7 +40,7 @@ class Map::Content::Marker < Cms::Content
   end
 
   def categories
-    setting = Map::Content::Setting.find_by_id(settings.find_by_name('gp_category_content_category_type_id').try(:id))
+    setting = Map::Content::Setting.find_by(id: settings.find_by(name: 'gp_category_content_category_type_id').try(:id))
     return GpCategory::Category.none unless setting
     setting.categories
   end
