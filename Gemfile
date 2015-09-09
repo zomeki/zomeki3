@@ -44,6 +44,7 @@ end
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 
+gem 'addressable', '~> 2.3.8'
 gem 'delayed_job_active_record', '~> 4.0.3'
 gem 'dynamic_form', '~> 1.1.4'
 gem 'garb', '~> 0.9.8'
