@@ -2,7 +2,7 @@ class SnsShare::Admin::AccountsController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 
   def pre_dispatch
-    return error_auth unless @content = SnsShare::Content::Account.find_by_id(params[:content])
+    @content = SnsShare::Content::Account.find(params[:content])
     return error_auth unless Core.user.has_priv?(:read, :item => @content.concept)
     @item = @content.accounts.find(params[:id]) if params[:id].present?
   end
