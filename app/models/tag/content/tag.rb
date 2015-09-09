@@ -2,7 +2,7 @@
 class Tag::Content::Tag < Cms::Content
   default_scope { where(model: 'Tag::Tag') }
 
-  has_many :tags, -> { order 'last_tagged_at DESC' }, :foreign_key => :content_id, :class_name => 'Tag::Tag', :dependent => :destroy
+  has_many :tags, -> { order(last_tagged_at: :desc) }, :foreign_key => :content_id, :class_name => 'Tag::Tag', :dependent => :destroy
 
   before_create :set_default_settings
 

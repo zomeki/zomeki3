@@ -3,7 +3,7 @@ class Tag::Admin::TagsController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 
   def pre_dispatch
-    return error_auth unless @content = Tag::Content::Tag.find_by_id(params[:content])
+    @content = Tag::Content::Tag.find(params[:content])
     return error_auth unless Core.user.has_priv?(:read, :item => @content.concept)
   end
 

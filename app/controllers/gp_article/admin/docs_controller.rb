@@ -507,7 +507,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
       :share_to_sns_with, :subtitle,{:in_rel_doc_ids=>[]},
       :rel_category_type, :rel_category, :rel_doc, :approval_flows,
       :summary, :target, :terminal_mobile, :terminal_pc_or_smart_phone, :title, :concept_id, :layout_id,
-      :template_id
+      :raw_tags, :template_id
     ).tap do |whitelisted|
       whitelisted[:template_values] = template_values if template_values
     end

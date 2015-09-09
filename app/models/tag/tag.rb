@@ -3,10 +3,10 @@ class Tag::Tag < ActiveRecord::Base
 
   # Content
   belongs_to :content, :foreign_key => :content_id, :class_name => 'Tag::Content::Tag'
-  validates_presence_of :content_id
+  validates :content_id, presence: true
 
   # Proper
-  has_and_belongs_to_many :docs, -> { order 'display_published_at DESC, published_at DESC' },
+  has_and_belongs_to_many :docs, -> { order(display_published_at: :desc, published_at: :desc) },
     :class_name => 'GpArticle::Doc', :join_table => 'gp_article_docs_tag_tags',
     :after_add => :update_last_tagged_at, :after_remove => :update_last_tagged_at
 
@@ -28,6 +28,15 @@ class Tag::Tag < ActiveRecord::Base
   def public_smart_phone_path
     return '' if public_uri.blank?
     "#{content.public_path}/_smartphone#{public_uri}"
+  end
+
+  def preview_uri(site: ::Page.site, mobile: ::Page.mobile?, params: {})
+    return nil unless public_uri
+    params = params.map{|k, v| "#{k}=#{v}" }.join('&')
+    path = "_preview/#{format('%08d', site.id)}#{mobile ? 'm' : ''}#{public_uri}#{params.present? ? "?#{params}" : ''}"
+
+    d = Cms::SiteSetting::AdminProtocol.core_domain site, site.full_uri, :freeze_protocol => true
+    "#{d}#{path}"
   end
 
   def bread_crumbs(tag_node)
