@@ -17,7 +17,7 @@ class Organization::Content::Setting < Cms::ContentSetting
   def upper_text
     case name
     when 'doc_style'
-      ActionController::Base.helpers.link_to_function '置き換えテキストを確認する', "$('#doc_style_tags').dialog({width: 400})"
+      ActionController::Base.helpers.link_to '置き換えテキストを確認する', "javascript:void(0);", :onclick=>"$('#doc_style_tags').dialog({width: 400})"
     end
   end
 

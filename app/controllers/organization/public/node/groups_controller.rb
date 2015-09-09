@@ -1,6 +1,6 @@
 class Organization::Public::Node::GroupsController < Cms::Controller::Public::Base
   def pre_dispatch
-    @content = Organization::Content::Group.find_by_id(Page.current_node.content.id)
+    @content = Organization::Content::Group.find_by(id: Page.current_node.content.id)
     return http_error(404) unless @content
     @more = (params[:filename_base] =~ /^more($|_)/i)
   end
