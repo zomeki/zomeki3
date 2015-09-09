@@ -36,13 +36,13 @@ protected
     sql = "SELECT * FROM survey_form_answers WHERE id = #{id}"
     ans_id = nil
     @db.execute(sql).each(:as => :hash) do |ans_row|
-      ans = Survey::FormAnswer.new(ans_row)
+      ans = Survey::FormAnswer.new(ans_row.except("id"))
       ans.save
       ans_id = ans.id
 
       sql = "SELECT * FROM survey_answers WHERE form_answer_id = #{id}"
       @db.execute(sql).each(:as => :hash) do |col_row|
-        col = Survey::Answer.new(col_row)
+        col = Survey::Answer.new(col_row.except("id"))
         col.form_answer_id = ans.id
         col.save
       end
