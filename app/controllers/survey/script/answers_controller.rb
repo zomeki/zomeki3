@@ -52,8 +52,8 @@ protected
     @db.execute("DELETE FROM survey_form_answers WHERE id = #{id}")
 
     begin
-      @form_answer = Survey::FormAnswer.find_by_id(ans_id)
-      @content     = Cms::Content.find_by_id(@form_answer.form.content_id)
+      @form_answer = Survey::FormAnswer.find_by(id: ans_id)
+      @content     = Cms::Content.find_by(id: @form_answer.form.content_id)
 #      send_answer_mail #if @sender == 'script'
     rescue => e
       error_log("メール送信失敗 #{e}")

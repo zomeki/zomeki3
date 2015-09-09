@@ -19,22 +19,21 @@ class Survey::Form < ActiveRecord::Base
 
   # Content
   belongs_to :content, :foreign_key => :content_id, :class_name => 'Survey::Content::Form'
-  validates_presence_of :content_id
-
-  validates_presence_of :state
+  validates :content_id, presence: true
 
   has_many :questions, :dependent => :destroy
   has_many :form_answers, :dependent => :destroy
   has_many :approval_requests, :class_name => 'Approval::ApprovalRequest', :as => :approvable, :dependent => :destroy
 
-  validates :name, :presence => true, :uniqueness => {:scope => :content_id}, :format => {with: /\A[-\w]*\z/}
-  validates :title, :presence => true
+  validates :state, presence: true
+  validates :name, presence: true, uniqueness: { scope: :content_id }, format: { with: /\A[-\w]*\z/ }
+  validates :title, presence: true
 
   validate :open_period
 
   after_initialize :set_defaults
 
-  # scope :public_state, -> { where(state: 'public') }
+  scope :public_state, -> { where(state: 'public') }
 
   def self.all_with_content_and_criteria(content, criteria)
     forms = self.arel_table
@@ -49,14 +48,14 @@ class Survey::Form < ActiveRecord::Base
 
     if criteria[:touched_user_id].present?
       operation_logs = Sys::OperationLog.arel_table
-      rel = rel.includes(:operation_logs).where(operation_logs[:user_id].eq(criteria[:touched_user_id])
+      rel = rel.eager_load(:operation_logs).where(operation_logs[:user_id].eq(criteria[:touched_user_id])
                                                 .or(creators[:user_id].eq(criteria[:touched_user_id])))
     end
 
     if criteria[:editable].present?
       editable_groups = Sys::EditableGroup.arel_table
       rel = unless Core.user.has_auth?(:manager)
-              rel.includes(:editable_group).where(creators[:group_id].eq(Core.user.group.id)
+              rel.eager_load(:editable_group).where(creators[:group_id].eq(Core.user.group.id)
                                                   .or(editable_groups[:group_ids].eq(Core.user.group.id.to_s)
                                                   .or(editable_groups[:group_ids].matches("#{Core.user.group.id} %")
                                                   .or(editable_groups[:group_ids].matches("% #{Core.user.group.id} %")
@@ -148,7 +147,7 @@ class Survey::Form < ActiveRecord::Base
     approval_requests.each do |approval_request|
       next unless approval_request.finished?
 
-      approver = approval_request.current_assignments.reorder('approved_at DESC').first.user
+      approver = approval_request.current_assignments.reorder(approved_at: :desc).first.user
       next if approver.email.blank? || approval_request.requester.email.blank?
       CommonMailer.approved_notification(approval_request: approval_request, publish_url: publish_url,
                                          from: Core.user.email, to: approval_request.requester.email).deliver_now
