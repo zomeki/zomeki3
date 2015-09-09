@@ -23,7 +23,7 @@ class Organization::Group < ActiveRecord::Base
 
   # Content
   belongs_to :content, :foreign_key => :content_id, :class_name => 'Organization::Content::Group'
-  validates_presence_of :content_id
+  validates :content_id, :presence => true
 
   belongs_to :sys_group, :foreign_key => :sys_group_code, :primary_key => :code, :class_name => 'Sys::Group'
 
