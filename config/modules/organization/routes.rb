@@ -5,7 +5,7 @@ ZomekiCMS::Application.routes.draw do
   get "/_script/#{mod}/script/groups/publish" => "#{mod}/script/groups#publish"
 
   ## admin
-  scope "#{ZomekiCMS::ADMIN_URL_PREFIX}/#{mod}/c:concept", :module => mod, :as => mod do
+  scope "#{ZomekiCMS::ADMIN_URL_PREFIX}/#{mod}/c(:concept)", :module => mod, :as => mod do
     resources :content_base,
       :controller => 'admin/content/base'
 

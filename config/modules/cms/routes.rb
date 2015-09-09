@@ -105,7 +105,7 @@ ZomekiCMS::Application.routes.draw do
     match 'tool_uri_check' => 'admin/tool/uri_check#index', via: [:get, :post]
   end
 
-  scope "#{ZomekiCMS::ADMIN_URL_PREFIX}/#{mod}/c:concept", :module => mod, :as => mod do
+  scope "#{ZomekiCMS::ADMIN_URL_PREFIX}/#{mod}/c(:concept)", :module => mod, :as => mod do
     match "stylesheets/(*path)" => "admin/stylesheets#index",
       :as => :stylesheets, :format => false, via: [:get, :post, :put]
     resources :contents,

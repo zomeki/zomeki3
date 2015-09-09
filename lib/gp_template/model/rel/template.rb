@@ -21,7 +21,7 @@ module GpTemplate::Model::Rel::Template
 
   def convert_template_values
     raw_value = self.read_attribute_before_type_cast(:template_values)
-    self.template_values = raw_value.to_unsafe_h.with_indifferent_access if raw_value.is_a?(ActionController::Parameters)
+    self.template_values = raw_value.to_h.with_indifferent_access if raw_value.is_a?(ActionController::Parameters)
   end
 
   def make_template_file_contents_path_relative
