@@ -3,10 +3,10 @@ class Survey::FormAnswer < ActiveRecord::Base
 
   apply_simple_captcha
 
-  default_scope { order("#{self.table_name}.created_at DESC") }
+  default_scope { order(created_at: :desc) }
 
   belongs_to :form
-  validates_presence_of :form_id
+  validates :form_id, presence: true
 
   has_many :answers, :dependent => :destroy
 
@@ -15,7 +15,7 @@ class Survey::FormAnswer < ActiveRecord::Base
   def question_answers=(qa)
     if qa.kind_of?(Hash)
       qa.each do |key, value|
-        next unless question = form.questions.find_by_id(key)
+        next unless question = form.questions.find_by(id: key)
         answers.build(question: question, content: value.kind_of?(Array) ? value.reject{|v| v.blank? }.join(',') : value)
       end
     end

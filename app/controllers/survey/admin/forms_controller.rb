@@ -6,7 +6,7 @@ class Survey::Admin::FormsController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 
   def pre_dispatch
-    return error_auth unless @content = Survey::Content::Form.find_by_id(params[:content])
+    @content = Survey::Content::Form.find(params[:content])
     return error_auth unless Core.user.has_priv?(:read, :item => @content.concept)
     @item = @content.forms.find(params[:id]) if params[:id].present?
   end
@@ -36,8 +36,8 @@ class Survey::Admin::FormsController < Cms::Controller::Admin::Base
       criteria[:editable] = true
     end
 
-    forms = Survey::Form.arel_table
-    @items = Survey::Form.all_with_content_and_criteria(@content, criteria).reorder(forms[:created_at].desc).paginate(page: params[:page], per_page: 30)
+    @items = Survey::Form.all_with_content_and_criteria(@content, criteria).reorder(created_at: :desc)
+      .paginate(page: params[:page], per_page: 30)
 
     _index @items
   end
@@ -109,7 +109,7 @@ class Survey::Admin::FormsController < Cms::Controller::Admin::Base
                 form_answer.remote_addr,
                 form_answer.user_agent]
 
-        @item.questions.each{|q| line << form_answer.answers.find_by_question_id(q.id).try(:content) }
+        @item.questions.each{|q| line << form_answer.answers.find_by(question_id: q.id).try(:content) }
 
         csv << line
       end
@@ -160,7 +160,7 @@ class Survey::Admin::FormsController < Cms::Controller::Admin::Base
                         end
 
     approval_flow_ids.each do |approval_flow_id|
-      request = @item.approval_requests.find_by_approval_flow_id(approval_flow_id)
+      request = @item.approval_requests.find_by(approval_flow_id: approval_flow_id)
 
       assignments = {}.with_indifferent_access
       if params.member?("assignment_ids_#{approval_flow_id}")
@@ -173,7 +173,7 @@ class Survey::Admin::FormsController < Cms::Controller::Admin::Base
 
       unless request
         @item.approval_requests.create(user_id: Core.user.id, approval_flow_id: approval_flow_id)
-        request = @item.approval_requests.find_by_approval_flow_id(approval_flow_id)
+        request = @item.approval_requests.find_by(approval_flow_id: approval_flow_id)
       end
       request.select_assignment = assignments
       request.user_id = Core.user.id
@@ -211,6 +211,7 @@ class Survey::Admin::FormsController < Cms::Controller::Admin::Base
   end
 
   def form_params
-    params.require(:item).permit(:closed_at, :confirmation, :description, :in_creator, :index_link, :name, :opened_at, :receipt, :sitemap_state, :sort_no, :summary, :title)
+    params.require(:item).permit(:closed_at, :confirmation, :description, :index_link, :name, :opened_at,
+      :receipt, :sitemap_state, :sort_no, :summary, :title, :in_creator => [:group_id, :user_id])
   end
 end

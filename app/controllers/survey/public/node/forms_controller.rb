@@ -7,11 +7,11 @@ class Survey::Public::Node::FormsController < Cms::Controller::Public::Base
 
   def pre_dispatch
     @node = Page.current_node
-    @content = Survey::Content::Form.find_by_id(@node.content.id)
+    @content = Survey::Content::Form.find_by(id: @node.content.id)
     return http_error(404) unless @content
 
     @ssl_full_uri = Sys::Setting.use_common_ssl? && @content.use_common_ssl? ? "#{Page.site.full_ssl_uri.sub(/\/\z/, '')}" : ''
-    @piece = Survey::Piece::Form.find_by_id(params[:piece])
+    @piece = Survey::Piece::Form.find_by(id: params[:piece])
 
     @current_url = (params[:u] || params[:current_url]).to_s
     @current_url = CGI.unescape(@current_url) if @current_url.start_with?('%')
@@ -62,7 +62,7 @@ class Survey::Public::Node::FormsController < Cms::Controller::Public::Base
 
   def set_form
     forms = Core.mode == 'preview' ? @content.forms : @content.public_forms
-    @form = forms.find_by_name(params[:id])
+    @form = forms.find_by(name: params[:id])
     return http_error(404) unless @form
     return render(text: '') unless @form.open?
 

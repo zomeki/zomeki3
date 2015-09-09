@@ -13,12 +13,11 @@ class Survey::Question < ActiveRecord::Base
   default_scope { order("#{self.table_name}.sort_no IS NULL, #{self.table_name}.sort_no") }
 
   belongs_to :form
-  validates_presence_of :form_id
+  validates :form_id, presence: true
 
-  validates_presence_of :state
-
-  validates :title, :presence => true
-  validates :sort_no, :presence => true
+  validates :state, presence: true
+  validates :title, presence: true
+  validates :sort_no, presence: true
 
   after_initialize :set_defaults
 
