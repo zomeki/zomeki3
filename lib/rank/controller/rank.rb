@@ -87,8 +87,8 @@ module Rank::Controller::Rank
                     .where(content_id: content.id)
                     .where(rank_table[:date].gteq(from.strftime('%F')).and(rank_table[:date].lteq(to.strftime('%F'))))
                     .group(:hostname, :page_path)
-                    .find_all.each do |result|
-            latest_title = Rank::Rank.order('date DESC').where(hostname: result.hostname,
+                    .to_a.each do |result|
+            latest_title = Rank::Rank.order(date: :desc).where(hostname: result.hostname,
                                                                page_path: result.page_path).pluck(:page_title).first
             Rank::Total.create!(content_id:  content.id,
                                 term:        term,
@@ -187,7 +187,7 @@ module Rank::Controller::Rank
                                         .where(category_id: category_ids).exists)
     end
 
-    ranks = ranks.order('accesses DESC').paginate(page: params[:page], per_page: per_page)
+    ranks = ranks.order(accesses: :desc).paginate(page: params[:page], per_page: per_page)
   end
 
   def ranking_targets
