@@ -495,8 +495,6 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   private
 
   def doc_params
-    template_values = params[:item].delete(:template_values) if params[:item].present?
-
     params.require(:item).permit(:body, :body_more, :body_more_link_text, :display_published_at,
       :display_updated_at, :event_ended_on, :event_started_on, :event_state,:feature_1, :feature_2,
       :filename_base, :href, {:in_creator=>[:group_id,:user_id]},{:in_editable_groups =>[]},
@@ -507,9 +505,6 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
       :share_to_sns_with, :subtitle,{:in_rel_doc_ids=>[]},
       :rel_category_type, :rel_category, :rel_doc, :approval_flows,
       :summary, :target, :terminal_mobile, :terminal_pc_or_smart_phone, :title, :concept_id, :layout_id,
-      :raw_tags, :template_id
-    ).tap do |whitelisted|
-      whitelisted[:template_values] = template_values if template_values
-    end
+      :raw_tags, :template_id, :template_values => params[:item][:template_values].try(:keys))
   end
 end
