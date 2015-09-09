@@ -3,7 +3,7 @@ class GpTemplate::Admin::TemplatesController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 
   def pre_dispatch
-    return error_auth unless @content = GpTemplate::Content::Template.find_by_id(params[:content])
+    @content = GpTemplate::Content::Template.find(params[:content])
     return error_auth unless Core.user.has_priv?(:read, :item => @content.concept)
     @item = @content.templates.find(params[:id]) if params[:id].present?
   end
@@ -67,6 +67,6 @@ class GpTemplate::Admin::TemplatesController < Cms::Controller::Admin::Base
   private
 
   def template_params
-    params.require(:item).permit(:body, :in_creator, :sort_no, :state, :title)
+    params.require(:item).permit(:body, :sort_no, :state, :title, :in_creator => [:group_id, :user_id])
   end
 end

@@ -52,17 +52,17 @@ class GpArticle::Doc < ActiveRecord::Base
   belongs_to :marker_icon_category, :class_name => 'GpCategory::Category'
 
   has_many :categorizations, :class_name => 'GpCategory::Categorization', :as => :categorizable, :dependent => :destroy
-  has_many :categories, -> { where("#{GpCategory::Categorization.table_name}.categorized_as", self.name) },
+  has_many :categories, -> { where(GpCategory::Categorization.arel_table[:categorized_as].eq('GpArticle::Doc')) },
            :class_name => 'GpCategory::Category', :through => :categorizations,
            :after_add => proc {|d, c|
              d.categorizations.where(category_id: c.id, categorized_as: nil).first.update_columns(categorized_as: d.class.name)
            }
-  has_many :event_categories, -> { where("#{GpCategory::Categorization.table_name}.categorized_as", 'GpCalendar::Event') },
+  has_many :event_categories, -> { where(GpCategory::Categorization.arel_table[:categorized_as].eq('GpCalendar::Event')) },
            :class_name => 'GpCategory::Category', :through => :categorizations, :source => :category,
            :after_add => proc {|d, c|
              d.categorizations.where(category_id: c.id, categorized_as: nil).first.update_columns(categorized_as: 'GpCalendar::Event')
            }
-  has_many :marker_categories, -> { where("#{GpCategory::Categorization.table_name}.categorized_as", 'Map::Marker') },
+  has_many :marker_categories, -> { where(GpCategory::Categorization.arel_table[:categorized_as].eq('Map::Marker')) },
            :class_name => 'GpCategory::Category', :through => :categorizations, :source => :category,
            :after_add => proc {|d, c|
              d.categorizations.where(category_id: c.id, categorized_as: nil).first.update_columns(categorized_as: 'Map::Marker')

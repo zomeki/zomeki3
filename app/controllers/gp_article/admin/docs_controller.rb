@@ -495,17 +495,21 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   private
 
   def doc_params
-    params.require(:item)
-    .permit(:body, :body_more, :body_more_link_text, :display_published_at,
-       :display_updated_at, :event_ended_on, :event_started_on, :event_state,:feature_1, :feature_2,
-       :filename_base, :href, {:in_creator=>[:group_id,:user_id]},{:in_editable_groups =>[]},
-       {:in_maps=>[:name,:title,:map_lat,:map_lng, :map_zoom, :markers=>[:name,:lat,:lng],]},
-       {:in_tasks=>[:publish, :close]}, {:inquiries_attributes=>[:id, :state, :_destroy,:group_id]},
-       :list_image, :marker_state,:meta_description, :meta_keywords, :mobile_body,
-       :mobile_title, :name,:og_description, :og_image, :og_title, :og_type,
-       :share_to_sns_with, :subtitle,{:in_rel_doc_ids=>[]},
-       :rel_category_type, :rel_category, :rel_doc, :approval_flows,
-       :summary, :target, :terminal_mobile, :terminal_pc_or_smart_phone, :title)
-  end
+    template_values = params[:item].delete(:template_values) if params[:item].present?
 
+    params.require(:item).permit(:body, :body_more, :body_more_link_text, :display_published_at,
+      :display_updated_at, :event_ended_on, :event_started_on, :event_state,:feature_1, :feature_2,
+      :filename_base, :href, {:in_creator=>[:group_id,:user_id]},{:in_editable_groups =>[]},
+      {:in_maps=>[:name,:title,:map_lat,:map_lng, :map_zoom, :markers=>[:name,:lat,:lng],]},
+      {:in_tasks=>[:publish, :close]}, {:inquiries_attributes=>[:id, :state, :_destroy,:group_id]},
+      :list_image, :marker_state,:meta_description, :meta_keywords, :mobile_body,
+      :mobile_title, :name,:og_description, :og_image, :og_title, :og_type,
+      :share_to_sns_with, :subtitle,{:in_rel_doc_ids=>[]},
+      :rel_category_type, :rel_category, :rel_doc, :approval_flows,
+      :summary, :target, :terminal_mobile, :terminal_pc_or_smart_phone, :title, :concept_id, :layout_id,
+      :template_id
+    ).tap do |whitelisted|
+      whitelisted[:template_values] = template_values if template_values
+    end
+  end
 end

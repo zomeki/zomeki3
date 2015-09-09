@@ -1,10 +1,13 @@
 # encoding: utf-8
 module GpTemplate::Model::Rel::Template
-  def self.included(mod)
-    mod.serialize :template_values
-    mod.belongs_to :template, :class_name => 'GpTemplate::Template'
-    mod.after_initialize :set_template_defaults
-    mod.before_save :make_template_file_contents_path_relative
+  extend ActiveSupport::Concern
+
+  included do
+    serialize :template_values
+    belongs_to :template, :class_name => 'GpTemplate::Template'
+    after_initialize :set_template_defaults
+    before_validation :convert_template_values
+    before_save :make_template_file_contents_path_relative
   end
 
   def set_template_defaults
@@ -12,6 +15,13 @@ module GpTemplate::Model::Rel::Template
       self.template_id ||= content.default_template.id if self.has_attribute?(:template_id) && content && content.default_template
     end
     self.template_values ||= {} if self.has_attribute?(:template_values)
+  end
+
+  private
+
+  def convert_template_values
+    raw_value = self.read_attribute_before_type_cast(:template_values)
+    self.template_values = raw_value.to_unsafe_h.with_indifferent_access if raw_value.is_a?(ActionController::Parameters)
   end
 
   def make_template_file_contents_path_relative

@@ -12,13 +12,13 @@ class GpTemplate::Template < ActiveRecord::Base
   default_scope { order("#{self.table_name}.sort_no IS NULL, #{self.table_name}.sort_no") }
 
   belongs_to :content, :foreign_key => :content_id, :class_name => 'GpTemplate::Content::Template'
-  validates_presence_of :content_id
+  validates :content_id, presence: true
 
-  validates_presence_of :state
+  validates :state, presence: true
 
   has_many :items, :dependent => :destroy
 
-  validates :title, :presence => true
+  validates :title, presence: true
 
   after_initialize :set_defaults
 
