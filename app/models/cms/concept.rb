@@ -46,10 +46,9 @@ class Cms::Concept < ActiveRecord::Base
 
     unless user.has_auth?(:manager)
       priv_name = 'read'
-      sql = "SELECT role_id FROM #{Sys::UsersRole.table_name} WHERE user_id = '#{user.id}'"
-      sql = "SELECT * FROM sys_object_privileges WHERE action = '#{priv_name}' AND role_id IN (#{sql})"
-      sql = "INNER JOIN (#{sql}) AS sys_object_privileges ON sys_object_privileges.item_unid = #{self.class.table_name}.unid"
-      rel = rel.joins(sql)
+      rel = rel.where(unid: Sys::ObjectPrivilege.select(:item_unid).where(
+        action: priv_name, role_id: Sys::UsersRole.select(:role_id).where(user_id: user.id)
+      ))
     end
 
     rel.order(:sort_no)

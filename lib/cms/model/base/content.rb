@@ -20,8 +20,7 @@ module Cms::Model::Base::Content
   end
 
   def public_uri(class_name)
-    cond = {:content_id => id, :model => class_name.to_s}
-    return nil unless node = Cms::Node.find(:first, :conditions => cond, :order => :id)
+    return nil unless node = Cms::Node.where(content_id: id, model: class_name.to_s).order(:id).first
     node.public_uri
   end
 

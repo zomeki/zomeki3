@@ -13,7 +13,7 @@ module Cms::Lib::OAuth
   end
 
   def current_o_auth_user
-    @current_o_auth_user ||= Cms::OAuthUser.find_by_id(o_auth_session[:user_id])
+    @current_o_auth_user ||= Cms::OAuthUser.find_by(id: o_auth_session[:user_id])
   end
 
   def o_auth_user_logged_in?

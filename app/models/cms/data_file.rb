@@ -10,13 +10,13 @@ class Cms::DataFile < ActiveRecord::Base
 
   include StateText
 
-  scope :public_state, -> { where(state: 'public') }
-
   belongs_to :concept, :foreign_key => :concept_id, :class_name => 'Cms::Concept'
   belongs_to :site   , :foreign_key => :site_id   , :class_name => 'Cms::Site'
   belongs_to :node   , :foreign_key => :node_id   , :class_name => 'Cms::DataFileNode'
 
   after_destroy :remove_public_file
+
+  scope :public_state, -> { where(state: 'public') }
 
   def self.find_by_public_path(path)
     path =~ /sites\/.*\/(.*?)\/public\/_files\/.*\/(.*?)\/(.*?)$/i

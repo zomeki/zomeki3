@@ -156,12 +156,12 @@ class Core
 
   def self.set_concept(session, concept_id = nil)
     if concept_id
-      @@concept = Cms::Concept.find_by_id(concept_id)
+      @@concept = Cms::Concept.find_by(id: concept_id)
       @@concept = Cms::Concept.new.readable_children[0] unless @@concept
       session[:cms_concept] = (@@concept ? @@concept.id : nil)
     else
       concept_id = session[:cms_concept]
-      @@concept = Cms::Concept.find_by_id(concept_id) || Cms::Concept.new.readable_children[0]
+      @@concept = Cms::Concept.find_by(id: concept_id) || Cms::Concept.new.readable_children[0]
     end
   end
 
@@ -193,7 +193,7 @@ private
     when 'ssl'
       site_id         = @@request_uri.gsub(/^\/_[a-z]+\/([0-9]+).*/, '\1').to_i
       site_mobile     = @@request_uri =~ /^\/_[a-z]+\/([0-9]+)m/
-      @@site          = Cms::Site.find_by_id(site_id)
+      @@site          = Cms::Site.find_by(id: site_id)
       Page.site       = @@site
       Page.mobile     = site_mobile
       @@internal_uri  = @@request_uri
@@ -228,7 +228,7 @@ private
   end
 
   def self.get_site_by_cookie
-    return Cms::Site.find_by_id(self.get_cookie('cms_site'))
+    return Cms::Site.find_by(id: self.get_cookie('cms_site'))
   end
 
   def self.get_cookie(name)

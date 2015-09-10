@@ -30,11 +30,11 @@ class Tool::Convert::PageParser
       page.group_code = conf.creator_group_url_relations_map[page.group_code] if conf.creator_group_url_relations_map.has_key?(page.group_code)
 
       if conf.relate_url_to_group_name_en?
-        group = Sys::Group.find_by_name_en(page.group_code)
+        group = Sys::Group.find_by(name_en: page.group_code)
       elsif conf.relate_url_to_group_name?
-        group = Sys::Group.find_by_name(page.group_code)
+        group = Sys::Group.find_by(name: page.group_code)
       else
-        group = Sys::Group.find_by_code(page.group_code)
+        group = Sys::Group.find_by(code: page.group_code)
       end
 
       if group
