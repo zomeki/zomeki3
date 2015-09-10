@@ -3,7 +3,7 @@ class GpArticle::Admin::CommentsController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 
   def pre_dispatch
-    return http_error(404) unless @content = GpArticle::Content::Doc.find_by(id: params[:content])
+    @content = GpArticle::Content::Doc.find(params[:content])
     return error_auth unless Core.user.has_priv?(:read, :item => @content.concept)
     return redirect_to(request.env['PATH_INFO']) if params[:reset_criteria]
 
@@ -11,11 +11,8 @@ class GpArticle::Admin::CommentsController < Cms::Controller::Admin::Base
   end
 
   def index
-    criteria = params[:criteria] || {}
-
-    comments = GpArticle::Comment.arel_table
-    @items = GpArticle::Comment.content_and_criteria(@content, criteria)
-                               .order(comments[:posted_at].desc)
+    @items = GpArticle::Comment.content_and_criteria(@content, params[:criteria] || {})
+                               .order(posted_at: :desc)
                                .paginate(page: params[:page], per_page: 30)
   end
 
@@ -27,11 +24,17 @@ class GpArticle::Admin::CommentsController < Cms::Controller::Admin::Base
 
   def update
     @item = GpArticle::Comment.content_and_criteria(@content, {}).find(params[:id])
-    @item.attributes = params[:item]
+    @item.attributes = comment_params
     _update @item
   end
 
   def destroy
     _destroy @item
+  end
+
+  private
+
+  def comment_params
+    params.require(:item).permit(:state, :author_name, :author_email, :author_url, :body, :posted_at)
   end
 end

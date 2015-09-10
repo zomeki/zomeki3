@@ -33,7 +33,7 @@ class GpArticle::Doc < ActiveRecord::Base
   QRCODE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
   EVENT_WILL_SYNC_OPTIONS = [['同期する', 'enabled'], ['同期しない', 'disabled']]
 
-  default_scope { where("#{self.table_name}.state != 'archived'") }
+  default_scope { where.not(state: 'archived') }
   scope :public_state, -> { where(state: 'public') }
   scope :mobile, ->(m) { m ? where(terminal_mobile: true) : where(terminal_pc_or_smart_phone: true) }
   scope :display_published_after, ->(date) { where(arel_table[:display_published_at].gteq(date)) }
@@ -151,22 +151,22 @@ class GpArticle::Doc < ActiveRecord::Base
     if criteria[:touched_user_id].present?
       operation_logs = Sys::OperationLog.arel_table
 
-      rel = rel.includes(:operation_logs).references(:operation_logs)
-                                                .where(operation_logs[:user_id].eq(criteria[:touched_user_id])
-                                                .or(creators[:user_id].eq(criteria[:touched_user_id])))
+      rel = rel.eager_load(:operation_logs)
+                .where(operation_logs[:user_id].eq(criteria[:touched_user_id])
+                .or(creators[:user_id].eq(criteria[:touched_user_id])))
     end
 
     if criteria[:editable].present?
       editable_groups = Sys::EditableGroup.arel_table
 
       rel = unless Core.user.has_auth?(:manager)
-              rel.includes(:editable_group).references(:editable_group)
-                                                  .where(creators[:group_id].eq(Core.user.group.id)
-                                                  .or(editable_groups[:all].eq(true)
-                                                  .or(editable_groups[:group_ids].eq(Core.user.group.id.to_s)
-                                                  .or(editable_groups[:group_ids].matches("#{Core.user.group.id} %")
-                                                  .or(editable_groups[:group_ids].matches("% #{Core.user.group.id} %")
-                                                  .or(editable_groups[:group_ids].matches("% #{Core.user.group.id}")))))))
+              rel.eager_load(:editable_group)
+                  .where(creators[:group_id].eq(Core.user.group.id)
+                  .or(editable_groups[:all].eq(true)
+                  .or(editable_groups[:group_ids].eq(Core.user.group.id.to_s)
+                  .or(editable_groups[:group_ids].matches("#{Core.user.group.id} %")
+                  .or(editable_groups[:group_ids].matches("% #{Core.user.group.id} %")
+                  .or(editable_groups[:group_ids].matches("% #{Core.user.group.id}")))))))
             else
               rel
             end

@@ -65,7 +65,7 @@ $(function() {
     return false;
   });
 });
-+<% end %>
+<% end %>
 <%- if @item.name == 'gp_category_content_category_type_id'
       content = GpCategory::Content::CategoryType.find_by_id(@item.value)
       category_types = content.try(:category_types) || []

@@ -20,7 +20,7 @@ module Cms::Lib::Layout
     table = options.has_key?(:table_name) ? options[:table_name] + '.' : ''
     order = "CASE #{table}concept_id"
     concepts.each_with_index {|c, i| order += " WHEN #{c.id} THEN #{i}"}
-    order += ' ELSE 100 END, id'
+    order += " ELSE 100 END, #{table}id"
   end
 
   def self.find_design_pieces(html, concepts)
@@ -46,51 +46,36 @@ module Cms::Lib::Layout
   end
   
   def self.find_data_texts(html, concepts)
-    names = []
-    html.scan(/\[\[text\/([0-9a-zA-Z\._-]+)\]\]/) {|name| names << name[0]}
+    names = html.scan(/\[\[text\/([0-9a-zA-Z\._-]+)\]\]/).flatten
     
     items = {}
     names.uniq.each do |name|
-      item = Cms::DataText.new
-      item.and :state, 'public'
-      item.and :name, name
-      cond = Condition.new do |c|
-        c.or :concept_id, 'IS', nil
-        c.or :concept_id, 'IN', concepts
-      end
-      item.and cond
-      items[name] = item if item = item.find(:first, :order => concepts_order(concepts))
+      item = Cms::DataText.public_state.where(name: name, concept_id: [nil] + concepts.to_a)
+        .order(concepts_order(concepts)).first
+      items[name] = item if item
     end
     return items
   end
   
   def self.find_data_files(html, concepts)
-    names = []
-    html.scan(/\[\[file\/([^\]]+)\]\]/) {|name| names << name[0]}
+    names = html.scan(/\[\[file\/([^\]]+)\]\]/).flatten
     
     items = {}
     names.uniq.each do |name|
       dirname  = ::File.dirname(name)
       basename = dirname == '.' ? name : ::File.basename(name)
       
-      tab  = Cms::DataFile.table_name
-      item = Cms::DataFile.new.public
-      item.and "#{tab}.name", basename
-      cond = Condition.new do |c|
-        c.or "#{tab}.concept_id", 'IS', nil
-        c.or "#{tab}.concept_id", 'IN', concepts
-      end
-      item.and cond
-      
+      item = Cms::DataFile.public_state.where(name: basename, concept_id: [nil] + concepts.to_a)
+
       if dirname == '.'
-        item.and "#{tab}.node_id", "IS", nil
+        item = item.where(node_id: nil)
       else
-        node_tab = Cms::DataFileNode.table_name
-        item.join "LEFT OUTER JOIN #{node_tab} ON #{node_tab}.id = #{Cms::DataFile.table_name}.node_id"
-        item.and "#{node_tab}.name", dirname
+        nodes = Cms::DataFileNode.arel_table
+        item = item.eager_load(:node).where(nodes[:name].eq(dirname))
       end
-      
-      items[name] = item if item = item.find(:first, :order => concepts_order(concepts, :table_name => tab))
+      item = item.order(concepts_order(concepts, :table_name => Cms::DataFile.table_name)).first
+
+      items[name] = item if item
     end
     return items
   end

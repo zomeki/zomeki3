@@ -15,4 +15,6 @@ class Cms::DataText < ActiveRecord::Base
   validates :state, :title, :body, presence: true
   validates :name, presence: true, uniqueness: { scope: :concept_id },
     format: { with: /\A[0-9a-zA-Z\-_]+\z/, if: "name.present?", message: "は半角英数字、ハイフン、アンダースコアで入力してください。" }
+
+  scope :public_state, -> { where(state: 'public') }
 end
