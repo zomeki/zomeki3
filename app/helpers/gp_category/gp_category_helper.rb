@@ -1,6 +1,6 @@
 module GpCategory::GpCategoryHelper
   def public_docs_with_category_id(category_id)
-    GpArticle::Doc.all_with_content_and_criteria(nil, category_id: category_id).except(:order).mobile(::Page.mobile?).public_state
+    GpArticle::Doc.content_and_criteria(nil, category_id: category_id).except(:order).mobile(::Page.mobile?).public_state
   end
 
   def more_link(*options, template_module: nil, ct_or_c: nil)
@@ -92,7 +92,7 @@ module GpCategory::GpCategoryHelper
             next if cats.empty?
 
             docs = cats.first.categorizable_type.constantize.where(id: cats.pluck(:categorizable_id))
-                                                            .limit(template_module.num_docs).order('display_published_at DESC, published_at DESC')
+                                                            .limit(template_module.num_docs).order(display_published_at: :desc, published_at: :desc)
             html = content_tag(:h2, category.title)
             doc_tags = docs.inject(''){|t, d|
                          t << content_tag(template_module.wrapper_tag,
@@ -125,7 +125,7 @@ module GpCategory::GpCategoryHelper
     content = groups.inject(''){|tags, group|
         tags << content_tag(:section, class: group.code) do
             docs = docs.where(Sys::Group.arel_table[:id].eq(group.id))
-                       .limit(template_module.num_docs).order('display_published_at DESC, published_at DESC')
+                       .limit(template_module.num_docs).order(display_published_at: :desc, published_at: :desc)
 
             html = content_tag(:h2, group.name)
             doc_tags = docs.inject(''){|t, d|
@@ -175,7 +175,7 @@ module GpCategory::GpCategoryHelper
         next if cats.empty?
 
         all_docs = cats.first.categorizable_type.constantize.where(id: cats.pluck(:categorizable_id))
-                                                            .order('display_published_at DESC, published_at DESC')
+                                                            .order(display_published_at: :desc, published_at: :desc)
         docs = all_docs.limit(template_module.num_docs)
 
         html = content_tag(:h2, category.title)
