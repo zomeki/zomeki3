@@ -4,6 +4,10 @@ def dump(data)
   Sys::Lib::Debugger::Dump.dump_log(data)
 end
 
+def debug_log(message)
+  Rails.logger.debug "[#{Time.now.strftime('%Y-%m-%d %H:%M:%S')}] DEBUG  #{message.pretty_inspect}"
+end
+
 def info_log(message)
   Rails.logger.info "[#{Time.now.strftime('%Y-%m-%d %H:%M:%S')}] INFO  #{message}"
 end
