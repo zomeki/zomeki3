@@ -67,6 +67,7 @@ class Gnav::Admin::MenuItemsController < Cms::Controller::Admin::Base
   end
 
   def menu_item_params
-    params.require(:item).permit(:concept_id, :in_creator, :layout_id, :name, :sitemap_state, :sort_no, :state, :title)
+    params.require(:item).permit(:concept_id, :layout_id, :name, :sitemap_state, :sort_no, :state, :title,
+      :in_creator => [:group_id, :user_id])
   end
 end
