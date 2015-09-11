@@ -10,7 +10,7 @@ class Sys::Admin::AccountController < Sys::Controller::Admin::Base
     return unless request.post?
 
     unless new_login(params[:account], params[:password])
-      flash[:alert] = 'ユーザＩＤ・パスワードを正しく入力してください。'
+      flash.now[:alert] = 'ユーザＩＤ・パスワードを正しく入力してください。'
       respond_to do |format|
         format.html { render }
         format.xml  { render(:xml => '<errors />') }
@@ -33,7 +33,7 @@ class Sys::Admin::AccountController < Sys::Controller::Admin::Base
     unless current_user.root? || current_user.sites.include?(Core.site)
       logger.warn %Q!"#{current_user.name}" doesn't belong to "#{Core.site.name}", logged out.!
       logout
-      flash[:alert] = 'ユーザＩＤ・パスワードを正しく入力してください。'
+      flash.now[:alert] = 'ユーザＩＤ・パスワードを正しく入力してください。'
       return
     end
 
