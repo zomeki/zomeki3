@@ -18,9 +18,9 @@ module Sys::Model::Rel::EditableGroup
   
   def in_editable_groups=(ids)
     _ids = []
-    if ids.class == Array
+    if ids.is_a?(Array)
       _ids = ids
-    elsif ids.class == Hash || ids.class == HashWithIndifferentAccess
+    elsif ids.is_a?(Hash)
       ids.each {|key, val| _ids << val unless val.blank? }
     else
       _ids = ids.to_s.split(' ').uniq
