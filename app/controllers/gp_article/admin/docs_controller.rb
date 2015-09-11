@@ -497,7 +497,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   def doc_params
     params.require(:item).permit(
       :template_id, :title, :href, :target, :subtitle, :summary, :list_image, :body, :body_more, :body_more_link_text,
-      :feature_1, :feature_2, :raw_tags, :qrcode_state, :display_published_at, :display_updated_at,
+      :feature_1, :feature_2, :raw_tags, :qrcode_state, :display_published_at, :display_updated_at, :keep_display_updated_at,
       :event_state, :event_started_on, :event_ended_on, :event_will_sync,
       :marker_state, :marker_icon_category_id, :mobile_title, :mobile_body,
       :concept_id, :layout_id, :name, :filename_base, :terminal_pc_or_smart_phone, :terminal_mobile,
