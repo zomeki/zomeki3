@@ -25,7 +25,7 @@ module Sys::Model::Rel::Task
   
   def in_tasks=(values)
     _values = {}
-    if values.class == Hash || values.class == HashWithIndifferentAccess
+    if values.is_a?(Hash)
       values.each {|key, val| _values[key] = val }
     end
     @tasks = _values
