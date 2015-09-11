@@ -18,7 +18,7 @@ $(function() {
   $('#captchaTalk').on('click', function(e) {
     var player = $('#captchaTalkPlayer');
     if (player.html() == '') {
-      var uri = '/_tools/captcha/talk?key=' + $('#captcha_key').val() + '%26time=' + (new Date).getTime();
+      var uri = '/_tools/captcha/talk?key=' + $('input[name="captcha_key"]').val() + '%26time=' + (new Date).getTime();
       var html = '<object type="application/x-shockwave-flash" data="/_common/swf/dewplayer/dewplayer-vol.swf" width="240" height="20" id="dewplayer" name="dewplayer">' +
         '<param name="wmode" value="transparent" />' +
         '<param name="movie" value="/_common/swf/dewplayer/dewplayer-vol.swf" />' +

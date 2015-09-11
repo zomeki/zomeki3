@@ -7,13 +7,13 @@ gem 'rails', '4.2.3'
 gem 'mysql2'
 
 # Use SCSS for stylesheets
-gem 'sass-rails', '~> 4.0.2'
+gem 'sass-rails', '~> 5.0'
 
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 
 # Use CoffeeScript for .js.coffee assets and views
-gem 'coffee-rails', '~> 4.0.0'
+gem 'coffee-rails', '~> 4.1.0'
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
@@ -25,7 +25,7 @@ gem 'jquery-rails'
 gem 'turbolinks'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 1.2'
+gem 'jbuilder', '~> 2.0'
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
@@ -39,7 +39,7 @@ end
 # gem 'unicorn'
 
 # Use Capistrano for deployment
-# gem 'capistrano', group: :development
+# gem 'capistrano-rails', group: :development
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
@@ -52,7 +52,7 @@ gem 'google-oauth2-installed', '0.0.3'
 gem 'jpmobile', '~> 4.2.0'
 gem 'mail-iso-2022-jp', '~> 2.0.3'
 gem 'moji', '~> 1.6'
-gem 'nokogiri', '~> 1.6.5'
+gem 'nokogiri', '~> 1.6.6.2'
 gem 'omniauth-facebook', '~> 2.0.0'
 gem 'omniauth-twitter', '~> 1.1.0'
 gem 'rails_autolink', '~> 1.1.6'
@@ -75,6 +75,11 @@ group :development, :test do
 end
 
 group :development do
+  # Access an IRB console on exception pages or by using <%= console %> in views
+  gem 'web-console', '~> 2.0'
+  # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
+  gem 'spring'
+
   gem 'bullet'
   gem 'i18n_generators'
   gem 'rails_best_practices'
