@@ -26,13 +26,15 @@ class GpArticle::Admin::Content::SettingsController < Cms::Controller::Admin::Ba
 
   def update
     @item = GpArticle::Content::Setting.config(@content, params[:id])
-    @item.value = params[:item][:value]
+    value = params[:item][:value]
     if @item.form_type.in?([:check_boxes, :multiple_select])
-      @item.value = YAML.dump(case @item.value
-                              when Hash; @item.value.keys
-                              when Array; @item.value
+      @item.value = YAML.dump(case value
+                              when Hash; value.keys
+                              when Array; value
                               else []
                               end)
+    else
+      @item.value = value
     end
 
     if @item.name.in?(['gp_category_content_category_type_id', 'calendar_relation', 'map_relation', 'inquiry_setting',

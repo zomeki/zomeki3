@@ -284,6 +284,11 @@ class BizCalendar::BussinessHoliday < ActiveRecord::Base
     repeat_week.collect{|c| c[0]}
   end
 
+  def repeat_week=(value)
+    value = value.to_h.with_indifferent_access.to_yaml if value.is_a?(ActionController::Parameters)
+    self[:repeat_week] = value
+  end
+
   def repeat_week_ary
     return @rw if @rw.present?
     rw_string = self.repeat_week

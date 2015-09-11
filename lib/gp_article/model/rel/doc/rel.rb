@@ -23,13 +23,13 @@ module GpArticle::Model::Rel::Doc::Rel
 
   def in_rel_doc_ids=(ids)
     _ids = []
-    if ids.class == Array
+    if ids.is_a?(Array)
       ids.each {|val| _ids << GpArticle::Doc.find_by(id: val).try(:name) || val}
       write_attribute(:rel_doc_ids, _ids.join(' '))
-    elsif ids.class == Hash || ids.class == HashWithIndifferentAccess
+    elsif ids.is_a?(Hash)
       ids.each {|key, val| _ids << GpArticle::Doc.find_by(id: val).try(:name) || val}
       write_attribute(:rel_doc_ids, _ids.join(' '))
-    elsif ids.kind_of?(String)
+    elsif ids.is_a?(String)
       _ids = ids.split(' ').map{|id| GpArticle::Doc.find_by(id: id).try(:name) || id }.uniq
       write_attribute(:rel_doc_ids, _ids.join(' '))
     else
