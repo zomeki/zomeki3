@@ -13,9 +13,7 @@
 </head>
 <body>
   <% if flash[:notice] %><div class="notice"><%= flash[:notice] %></div><% end %>
-  <%- flash[:notice] = nil -%>
   <% if flash[:alert] %><div class="alert"><%= flash[:alert] %></div><% end %>
-  <%- flash[:alert] = nil -%>
 
   <%= yield %>
 </body>
