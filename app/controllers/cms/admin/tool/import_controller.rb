@@ -17,7 +17,7 @@ class Cms::Admin::Tool::ImportController < Cms::Controller::Admin::Base
     return unless @item.valid?
     
     ## concept
-    @concept = Cms::Concept.find_by_id(@item.concept_id)
+    @concept = Cms::Concept.find_by(id: @item.concept_id)
     return unless @concept
     
     require "json"
@@ -48,8 +48,7 @@ class Cms::Admin::Tool::ImportController < Cms::Controller::Admin::Base
     name   = data['name']
     state  = data[:state]
     
-    cond   = {:name => name, :concept_id => @concept.id}
-    item   = Cms::Layout.find(:first, :conditions => cond) || Cms::Layout.new
+    item   = Cms::Layout.where(name: name, concept_id: @concept.id).first_or_initialize
     exists = item.id ? true : false
     
     data.delete('id')
@@ -83,8 +82,7 @@ class Cms::Admin::Tool::ImportController < Cms::Controller::Admin::Base
     name   = data['name']
     state  = data[:state]
     
-    cond   = {:name => name, :concept_id => @concept.id}
-    piece  = Cms::Piece.find(:first, :conditions => cond) || Cms::Piece.new
+    piece  = Cms::Piece.where(name: name, concept_id: @concept.id).first_or_initialize
     exists = piece.id ? true : false
     
     data.delete('id')
@@ -105,15 +103,13 @@ class Cms::Admin::Tool::ImportController < Cms::Controller::Admin::Base
     if json['content'] && json['content_concepts']
       parent  = 0
       json['content_concepts'].each do |name|
-        cond    = {:parent_id => 0, :name => name}
-        concept = Cms::Concept.find(:first, :conditions => cond)
+        concept = Cms::Concept.find_by(parent_id: 0, name: name)
         break unless concept
         parent  = concept.id
       end
       if concept
         name    = json['content']['name']
-        cond    = {:name => name, :concept_id => concept.id}
-        content = Cms::Content.find(:first, :conditions => cond)
+        content = Cms::Content.find_by(name: name, concept_id: concept.id)
       end
       piece.content_id = content.id if content
     end
@@ -130,8 +126,7 @@ class Cms::Admin::Tool::ImportController < Cms::Controller::Admin::Base
     json['settings'].each do |data|
       next if piece.model == 'Cms::SnsPart' && data['name'] == 'mixi_data_key'
 
-      cond = {:piece_id => piece.id, :name => data['name']}
-      item = Cms::PieceSetting.find(:first, :conditions => cond) || Cms::PieceSetting.new
+      item = Cms::PieceSetting.where(piece_id: piece.id, name: data['name']).first_or_initialize
       item.piece_id    = piece.id
       item.name        = data['name']
       item.value       = data['value']
@@ -145,8 +140,7 @@ class Cms::Admin::Tool::ImportController < Cms::Controller::Admin::Base
     
     ## links
     json['link_items'].each do |data|
-      cond = {:piece_id => piece.id, :name => data['name']}
-      item = Cms::PieceLinkItem.find(:first, :conditions => cond) || Cms::PieceLinkItem.new
+      item = Cms::PieceLinkItem.where(piece_id: piece.id, name: data['name']).first_or_initialize
       item.piece_id  = piece.id
       item.state     = data['state']
       item.name      = data['name']

@@ -7,7 +7,7 @@
     <h3><%= @place.business_hours_title %></h3>
 
     <ul>
-      <% @place.hours.public.each do |hour| %>
+      <% @place.hours.public_state.each do |hour| %>
       <li><span class="date"><%= safe{hour.target_date_label(@content.date_style)} %></span>
         <span class="time"><%= safe{"#{hour.business_hours_start_time.strftime(localize_ampm(@content.time_style, hour.business_hours_start_time))} ～ #{hour.business_hours_end_time.strftime(localize_ampm(@content.time_style, hour.business_hours_end_time))}"} %></span></li>
       <% end %>
@@ -20,7 +20,7 @@
     <h3><%= @place.business_holiday_title %></h3>
 
     <ul>
-      <% @place.holidays.public.each do |holiday| %>
+      <% @place.holidays.public_state.each do |holiday| %>
       <li><span class="date"><%= safe{holiday.target_date_label(@content.date_style)} %></span></li>
       <% end %>
     </ul>

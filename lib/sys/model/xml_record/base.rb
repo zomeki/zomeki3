@@ -106,6 +106,10 @@ class Sys::Model::XmlRecord::Base
     []
   end
   
+  def self._reflect_on_association(association)
+    nil
+  end
+  
   def self.find(key, record, options = {})
     xml = eval("record.#{self.column_name}")
     doc = REXML::Document.new(xml)

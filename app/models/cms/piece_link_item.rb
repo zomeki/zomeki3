@@ -4,10 +4,11 @@ class Cms::PieceLinkItem < ActiveRecord::Base
   include Sys::Model::Base::Page
   include Cms::Model::Auth::Concept
 
-  belongs_to :status,   :foreign_key => :state,      :class_name => 'Sys::Base::Status'
-  belongs_to :piece,    :foreign_key => :piece_id,   :class_name => 'Cms::Piece'
+  include StateText
 
-  validates_presence_of :state, :name, :uri
+  belongs_to :piece,  :foreign_key => :piece_id, :class_name => 'Cms::Piece'
+
+  validates :state, :name, :uri, presence: true
   
   def concept(flag = nil)
     piece.concept(flag)

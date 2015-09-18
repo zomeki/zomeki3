@@ -23,7 +23,7 @@
 <% if @piece.show_holiday? %>
 <div class="businessHoliday">
   <ul>
-    <% @piece.place.holidays.public.each do |holiday| %>
+    <% @piece.place.holidays.public_state.each do |holiday| %>
     <li><span class="date"><%= safe{holiday.target_date_label(@piece.date_style)} %></span></li>
     <% end %>
   </ul>

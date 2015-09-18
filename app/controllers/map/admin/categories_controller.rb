@@ -2,14 +2,14 @@
 class Map::Admin::CategoriesController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 
-  before_filter :get_item_and_setting, :only => [ :edit, :update ]
+  before_action :get_item_and_setting, :only => [ :edit, :update ]
 
   def pre_dispatch
-    return error_auth unless @content = Map::Content::Marker.find_by_id(params[:content])
+    return error_auth unless @content = Map::Content::Marker.find_by(id: params[:content])
     return error_auth unless Core.user.has_priv?(:read, :item => @content.concept)
 
-    return error_auth unless @category_type = @content.category_types.find_by_id(params[:category_type_id])
-    @parent_category = @category_type.categories.find_by_id(params[:category_id])
+    return error_auth unless @category_type = @content.category_types.find_by(id: params[:category_type_id])
+    @parent_category = @category_type.categories.find_by(id: params[:category_id])
   end
 
   def index

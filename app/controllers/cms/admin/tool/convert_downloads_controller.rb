@@ -4,8 +4,8 @@ class Cms::Admin::Tool::ConvertDownloadsController < Cms::Controller::Admin::Bas
 
   def pre_dispatch
     return error_auth unless Core.user.has_auth?(:manager)
-    @item = Tool::ConvertDownload.find(params[:id]) if params[:id].present?
-    @items = Tool::ConvertDownload.order('created_at desc').paginate(page: params[:page], per_page: 10)
+    @item = ::Tool::ConvertDownload.find(params[:id]) if params[:id].present?
+    @items = ::Tool::ConvertDownload.order('created_at desc').paginate(page: params[:page], per_page: 10)
   end
 
   def index
@@ -35,6 +35,6 @@ class Cms::Admin::Tool::ConvertDownloadsController < Cms::Controller::Admin::Bas
 
   def convert_download_params
     return {} unless params[:item]
-    params.require(:item).permit(:include_dir, :remark, :site_url)
+    params.require(:item).permit(:include_dir, :remark, :site_url, :recursive_level)
   end
 end

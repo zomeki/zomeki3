@@ -12,17 +12,17 @@ class GpTemplate::Item < ActiveRecord::Base
   default_scope { order("#{self.table_name}.sort_no IS NULL, #{self.table_name}.sort_no") }
 
   belongs_to :template
-  validates_presence_of :template_id
+  validates :template_id, presence: true
 
-  validates_presence_of :state
+  validates :state, presence: true
 
-  validates :title, :presence => true
-  validates :name, :presence => true, :uniqueness => {:scope => :template_id}, :format => {:with => /\A[-\w]*\z/}
-  validates :item_type, :presence => true
+  validates :title, presence: true
+  validates :name, presence: true, uniqueness: { scope: :template_id }, format: { with: /\A[-\w]*\z/ }
+  validates :item_type, presence: true
 
   after_initialize :set_defaults
 
-  scope :public, -> { where(state: 'public') }
+  scope :public_state, -> { where(state: 'public') }
 
   def state_public?
     state == 'public'

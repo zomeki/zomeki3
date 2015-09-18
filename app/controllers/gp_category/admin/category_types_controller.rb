@@ -3,7 +3,7 @@ class GpCategory::Admin::CategoryTypesController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 
   def pre_dispatch
-    return error_auth unless @content = GpCategory::Content::CategoryType.find_by_id(params[:content])
+    @content = GpCategory::Content::CategoryType.find(params[:content])
   end
 
   def index
@@ -54,6 +54,7 @@ class GpCategory::Admin::CategoryTypesController < Cms::Controller::Admin::Base
   private
 
   def category_type_params
-    params.require(:item).permit(:concept_id, :docs_order, :in_creator, :internal_category_type_id, :layout_id, :name, :sitemap_state, :sort_no, :state, :template_id, :title)
+    params.require(:item).permit(:concept_id, :docs_order, :internal_category_type_id, :layout_id, :name,
+      :sitemap_state, :sort_no, :state, :template_id, :title, :in_creator => [:group_id, :user_id])
   end
 end

@@ -2,7 +2,7 @@
 class GpArticle::Piece::Doc < Cms::Piece
   DOCS_ORDER_OPTIONS = [['公開日（降順）', 'published_at_desc'], ['公開日（昇順）', 'published_at_asc'], ['ランダム', 'random']]
 
-  default_scope where(model: 'GpArticle::Doc')
+  default_scope { where(model: 'GpArticle::Doc') }
 
   after_initialize :set_default_settings
 

@@ -45,7 +45,7 @@ class Tool::Convert::LinkProcessor
     return self unless doc
 
     @clinks.each do |clink|
-      if clink.filename.present? && !doc.files.find_by_name(clink.filename)
+      if clink.filename.present? && !doc.files.find_by(name: clink.filename)
         if file = create_file(doc, clink)
           doc.files.push(file)
         end

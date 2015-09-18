@@ -15,7 +15,7 @@ class GpCategory::Content::CategoryType < Cms::Content
   before_create :set_default_settings
 
   def public_nodes
-    nodes.public
+    nodes.public_state
   end
 
   def public_node
@@ -29,7 +29,7 @@ class GpCategory::Content::CategoryType < Cms::Content
   end
 
   def public_category_types
-    category_types.public
+    category_types.public_state
   end
 
   def category_types_for_option
@@ -41,7 +41,7 @@ class GpCategory::Content::CategoryType < Cms::Content
   end
 
   def group_category_type
-    category_types.find_by_name(group_category_type_name)
+    category_types.find_by(name: group_category_type_name)
   end
 
   def list_style
@@ -105,7 +105,7 @@ class GpCategory::Content::CategoryType < Cms::Content
   end
 
   def index_template
-    templates.find_by_id(setting_value(:index_template_id))
+    templates.find_by(id: setting_value(:index_template_id))
   end
 
   private

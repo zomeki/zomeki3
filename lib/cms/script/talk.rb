@@ -22,7 +22,7 @@ class Cms::Script::Talk
 protected
   def self.lock_process
     lock_key = '#making'
-    if lock = Cms::TalkTask.find_by_path(lock_key)
+    if lock = Cms::TalkTask.find_by(path: lock_key)
       if lock.updated_at.strftime('%s').to_i + (60 * 10) < Time.now.strftime('%s').to_i
         lock.destroy
       else

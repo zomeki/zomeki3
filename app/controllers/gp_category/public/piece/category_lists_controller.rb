@@ -1,7 +1,7 @@
 # encoding: utf-8
 class GpCategory::Public::Piece::CategoryListsController < Sys::Controller::Public::Base
   def pre_dispatch
-    @piece = GpCategory::Piece::CategoryList.find_by_id(Page.current_piece.id)
+    @piece = GpCategory::Piece::CategoryList.find_by(id: Page.current_piece.id)
     render :text => '' unless @piece
 
     @item = Page.current_item
@@ -10,7 +10,7 @@ class GpCategory::Public::Piece::CategoryListsController < Sys::Controller::Publ
   def index
     if @piece.setting_state == 'enabled'
       if @piece.category_type_id && @piece.category_id
-        @category = @piece.category_type.categories.find_by_id(@piece.category_id)
+        @category = @piece.category_type.categories.find_by(id: @piece.category_id)
         render :category
       elsif @piece.category_type_id
         @category_type = @piece.category_type

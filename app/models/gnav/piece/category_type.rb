@@ -2,7 +2,7 @@
 class Gnav::Piece::CategoryType < Cms::Piece
   LAYER_OPTIONS = [['下層のカテゴリすべて', 'descendants'], ['該当カテゴリのみ', 'self']]
 
-  default_scope where(model: 'Gnav::CategoryType')
+  default_scope { where(model: 'Gnav::CategoryType') }
 
   def layer
     setting_value(:layer).presence || LAYER_OPTIONS.first.last
@@ -21,7 +21,7 @@ class Gnav::Piece::CategoryType < Cms::Piece
   end
 
   def category_type
-    category_types.find_by_id(setting_value(:category_type_id)) rescue nil
+    category_types.find_by(id: setting_value(:category_type_id)) rescue nil
   end
 
   def categories
@@ -33,7 +33,7 @@ class Gnav::Piece::CategoryType < Cms::Piece
 
     if (category_id = setting_value(:category_id)).present?
       if layer == 'descendants'
-        category_type.categories.find_by_id(category_id).try(:descendants) || []
+        category_type.categories.find_by(id: category_id).try(:descendants) || []
       else
         category_type.categories.where(id: category_id)
       end
@@ -51,7 +51,7 @@ class Gnav::Piece::CategoryType < Cms::Piece
 
     if (category_id = setting_value(:category_id)).present?
       if layer == 'descendants'
-        category_type.public_categories.find_by_id(category_id).try(:public_descendants) || []
+        category_type.public_categories.find_by(id: category_id).try(:public_descendants) || []
       else
         category_type.public_categories.where(id: category_id)
       end
@@ -64,7 +64,7 @@ class Gnav::Piece::CategoryType < Cms::Piece
     return nil if categories.empty?
 
     if categories.respond_to?(:find_by_id)
-      categories.find_by_id(setting_value(:category_id))
+      categories.find_by(id: setting_value(:category_id))
     else
       categories.detect {|c| c.id.to_s == setting_value(:category_id) }
     end

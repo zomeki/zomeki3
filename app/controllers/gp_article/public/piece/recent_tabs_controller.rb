@@ -1,7 +1,7 @@
 # encoding: utf-8
 class GpArticle::Public::Piece::RecentTabsController < Sys::Controller::Public::Base
   def pre_dispatch
-    @piece = GpArticle::Piece::RecentTab.find_by_id(Page.current_piece.id)
+    @piece = GpArticle::Piece::RecentTab.find_by(id: Page.current_piece.id)
     render :text => '' unless @piece
   end
 

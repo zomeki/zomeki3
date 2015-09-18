@@ -1,7 +1,7 @@
 # encoding: utf-8
 class BizCalendar::Content::Place < Cms::Content
 
-  default_scope where(model: 'BizCalendar::Place')
+  default_scope { where(model: 'BizCalendar::Place') }
 
   has_many :places, :foreign_key => :content_id, :class_name => 'BizCalendar::Place', :dependent => :destroy
   has_many :types, :foreign_key => :content_id, :class_name => 'BizCalendar::HolidayType', :dependent => :destroy
@@ -9,7 +9,7 @@ class BizCalendar::Content::Place < Cms::Content
   before_create :set_default_settings
 
   def public_nodes
-    nodes.public
+    nodes.public_state
   end
 
   def public_node
@@ -17,7 +17,7 @@ class BizCalendar::Content::Place < Cms::Content
   end
 
   def public_places
-    places.public
+    places.public_state
   end
 
   def visible_types

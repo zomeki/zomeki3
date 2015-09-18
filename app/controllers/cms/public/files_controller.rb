@@ -5,7 +5,7 @@ class Cms::Public::FilesController < ApplicationController
     id   = params[:path].gsub(/\/.*/, '')
     name = params[:path].gsub(/.*\//, '') + '.' + params[:format].to_s
 
-    item = Cms::DataFile.public.where(id: id.gsub(/.\z/, ''), name: name).first
+    item = Cms::DataFile.public_state.where(id: id.gsub(/.\z/, ''), name: name).first
     return http_error(404) unless item
 
     path = item.public_path

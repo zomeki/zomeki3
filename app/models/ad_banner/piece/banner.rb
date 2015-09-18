@@ -3,7 +3,7 @@ class AdBanner::Piece::Banner < Cms::Piece
   SORT_OPTIONS = [['表示順', 'ordered'], ['ランダム', 'random']]
   IMPL_OPTIONS = [['動的', 'dynamic'], ['静的', 'static']]
 
-  default_scope where(model: 'AdBanner::Banner')
+  default_scope { where(model: 'AdBanner::Banner') }
 
   after_initialize :set_default_settings
 
@@ -15,7 +15,7 @@ class AdBanner::Piece::Banner < Cms::Piece
   end
 
   def content
-    AdBanner::Content::Banner.find(super)
+    AdBanner::Content::Banner.find(super.id)
   end
 
   def groups
@@ -27,7 +27,7 @@ class AdBanner::Piece::Banner < Cms::Piece
   end
 
   def group
-    groups.find_by_id(setting_value(:group_id))
+    groups.find_by(id: setting_value(:group_id))
   end
 
   def banners

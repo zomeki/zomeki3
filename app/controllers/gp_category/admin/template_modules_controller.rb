@@ -2,7 +2,7 @@ class GpCategory::Admin::TemplateModulesController < Cms::Controller::Admin::Bas
   include Sys::Controller::Scaffold::Base
 
   def pre_dispatch
-    return http_error(404) unless @content = GpCategory::Content::CategoryType.find_by_id(params[:content])
+    @content = GpCategory::Content::CategoryType.find(params[:content])
     return error_auth unless Core.user.has_priv?(:read, :item => @content.concept)
     @item = @content.template_modules.find(params[:id]) if params[:id].present?
   end
@@ -39,6 +39,7 @@ class GpCategory::Admin::TemplateModulesController < Cms::Controller::Admin::Bas
   private
 
   def template_module_params
-    params.require(:item).permit(:doc_style, :module_type, :module_type_feature, :name, :num_docs, :title, :wrapper_tag)
+    params.require(:item).permit(:doc_style, :module_type, :module_type_feature, :name, :num_docs, :title,
+      :wrapper_tag, :upper_text, :lower_text)
   end
 end

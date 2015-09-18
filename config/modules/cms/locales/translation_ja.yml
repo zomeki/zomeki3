@@ -3,6 +3,7 @@ ja:
     models:
       cms/content: "コンテンツ"
       cms/piece: "ピース"
+      cms/layout: "レイアウト"
       cms/site: "サイト"
       tool/convert_download: "ダウンロード"
       tool/convert_setting: "変換設定"

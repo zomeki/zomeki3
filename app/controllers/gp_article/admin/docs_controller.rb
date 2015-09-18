@@ -6,11 +6,11 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   include Cms::ApiGpCalendar
   include GpArticle::DocsCommon
 
-  before_filter :hold_document, :only => [ :edit ]
-  before_filter :check_intercepted, :only => [ :update ]
+  before_action :hold_document, :only => [ :edit ]
+  before_action :check_intercepted, :only => [ :update ]
 
   def pre_dispatch
-    return http_error(404) unless @content = GpArticle::Content::Doc.find_by_id(params[:content])
+    return http_error(404) unless @content = GpArticle::Content::Doc.find_by(id: params[:content])
     return error_auth unless Core.user.has_priv?(:read, :item => @content.concept)
     return redirect_to(request.env['PATH_INFO']) if params[:reset_criteria]
 
@@ -20,7 +20,6 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     @marker_category_types = @content.marker_category_types
 
     @item = @content.docs.find(params[:id]) if params[:id].present?
-
     @params_categories = params[:categories].kind_of?(Hash) ? params[:categories] : {}
     @params_event_categories = params[:event_categories].kind_of?(Hash) ? params[:event_categories] : {}
     @params_marker_categories = params[:marker_categories].kind_of?(Hash) ? params[:marker_categories] : {}
@@ -37,7 +36,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   def index
     if params[:options]
       @items = if params[:category_id]
-                 if (category = GpCategory::Category.find_by_id(params[:category_id]))
+                 if (category = GpCategory::Category.find_by(id: params[:category_id]))
                    params[:public] ? category.public_docs : category.docs
                  else
                    category.docs.none
@@ -95,7 +94,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     end
 
     docs = GpArticle::Doc.arel_table
-    @items = GpArticle::Doc.all_with_content_and_criteria(@content, criteria).order(docs[:updated_at].desc).paginate(page: params[:page], per_page: 30)
+    @items = GpArticle::Doc.content_and_criteria(@content, criteria).order(docs[:updated_at].desc).paginate(page: params[:page], per_page: 30)
 
     _index @items
   end
@@ -113,7 +112,6 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     failed_template = Page.smart_phone? ? {template: "#{controller_path}/new_smart_phone", layout: 'admin/gp_article_smart_phone'}
                                         : {action: 'new'}
     new_state = params.keys.detect{|k| k =~ /^commit_/ }.try(:sub, /^commit_/, '')
-
     @item = @content.docs.build(doc_params)
     @item.set_inquiry_group if Core.user.root?
 
@@ -157,7 +155,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
       @item.approval_requests.each(&:reset) if @item.state_approvable?
       set_approval_requests
-      @item = @content.docs.find_by_id(@item.id)
+      @item = @content.docs.find_by(id: @item.id)
       @item.send_approval_request_mail if @item.state_approvable?
 
       publish_by_update(@item) if @item.state_public?
@@ -177,7 +175,6 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     failed_template = Page.smart_phone? ? {template: "#{controller_path}/edit_smart_phone", layout: 'admin/gp_article_smart_phone'}
                                         : {action: 'edit'}
     new_state = params.keys.detect{|k| k =~ /^commit_/ }.try(:sub, /^commit_/, '')
-
     @item.attributes = doc_params
     @item.set_inquiry_group if Core.user.root?
 
@@ -221,7 +218,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
       @item.approval_requests.each(&:reset) if @item.state_approvable?
       set_approval_requests
-      @item = @content.docs.find_by_id(@item.id)
+      @item = @content.docs.find_by(id: @item.id)
       @item.send_approval_request_mail if @item.state_approvable?
 
       publish_by_update(@item) if @item.state_public?
@@ -360,15 +357,13 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
   def set_categories
     @old_category_ids = @item.categories.inject([]){|ids, category| ids | category.ancestors.map(&:id) }
-
     category_ids = if params[:categories].is_a?(Hash)
                      params[:categories].values.flatten.map{|c| c.to_i if c.present? }.compact.uniq
                    else
                      []
                    end
-
     if @category_types.include?(@content.group_category_type)
-      if (group_category = @content.group_category_type.categories.find_by_group_code(@item.creator.group.code))
+      if (group_category = @content.group_category_type.categories.find_by(group_code: @item.creator.group.code))
         category_ids |= [group_category.id]
       end
     end
@@ -376,7 +371,6 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     if @content.default_category && @category_types.include?(@content.default_category_type)
       category_ids |= [@content.default_category.id]
     end
-
     @item.category_ids = category_ids
 
     @new_category_ids = @item.categories.inject([]){|ids, category| ids | category.ancestors.map(&:id) }
@@ -407,7 +401,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
           in_editing_from = (hold.updated_at.today? ? I18n.l(hold.updated_at, :format => :short_ja) : I18n.l(hold.updated_at, :format => :default_ja))
           "#{hold.user.group.name}#{hold.user.name}さんが#{in_editing_from}から編集中です。"
         end
-      flash[:alert] = "<ul><li>#{alerts.join('</li><li>')}</li></ul>".html_safe
+      flash[:alert] = "<ul><li>#{alerts.join('</li><li>')}</li></ul>".html_safe unless alerts.blank?
     end
     @item.holds.create(user: Core.user)
   end
@@ -432,7 +426,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
                         end
 
     approval_flow_ids.each do |approval_flow_id|
-      request = @item.approval_requests.find_by_approval_flow_id(approval_flow_id)
+      request = @item.approval_requests.find_by(approval_flow_id: approval_flow_id)
 
       assignments = {}.with_indifferent_access
       if params.member?("assignment_ids_#{approval_flow_id}")
@@ -445,7 +439,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
       unless request
         @item.approval_requests.create(user_id: Core.user.id, approval_flow_id: approval_flow_id)
-        request = @item.approval_requests.find_by_approval_flow_id(approval_flow_id)
+        request = @item.approval_requests.find_by(approval_flow_id: approval_flow_id)
       end
       request.select_assignment = assignments
       request.user_id = Core.user.id
@@ -488,7 +482,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
         next if file.nil? || file.name == value
         new_body = new_body.gsub("file_contents/#{value}", "file_contents/#{file.name}")
       end
-      @item.update_column(:body, new_body) unless @item.body == new_body
+      @item.update_columns(body: new_body) unless @item.body == new_body
     end
   end
 
@@ -501,12 +495,19 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   private
 
   def doc_params
-    params.require(:item).permit(:body, :body_more, :body_more_link_text, :display_published_at,
-                                 :display_updated_at, :event_ended_on, :event_started_on, :event_state,
-                                 :feature_1, :feature_2, :filename_base, :href, :in_creator, :in_editable_groups,
-                                 :in_maps, :in_tasks, :inquiries_attributes, :list_image, :marker_state,
-                                 :meta_description, :meta_keywords, :mobile_body, :mobile_title, :name,
-                                 :og_description, :og_image, :og_title, :og_type, :share_to_sns_with, :subtitle,
-                                 :summary, :target, :terminal_mobile, :terminal_pc_or_smart_phone, :title)
+    params.require(:item).permit(
+      :template_id, :title, :href, :target, :subtitle, :summary, :list_image, :body, :body_more, :body_more_link_text,
+      :feature_1, :feature_2, :raw_tags, :qrcode_state, :display_published_at, :display_updated_at, :keep_display_updated_at,
+      :event_state, :event_started_on, :event_ended_on, :event_will_sync,
+      :marker_state, :marker_icon_category_id, :mobile_title, :mobile_body,
+      :concept_id, :layout_id, :name, :filename_base, :terminal_pc_or_smart_phone, :terminal_mobile,
+      :meta_description, :meta_keywords, :share_to_sns_with, :og_type, :og_title, :og_description, :og_image,
+      :template_values => params[:item][:template_values].try(:keys),
+      :in_rel_doc_ids => [],
+      :in_tasks => [:publish, :close],
+      :inquiries_attributes => [:id, :state, :_destroy,:group_id],
+      :in_maps => [:name, :title, :map_lat, :map_lng, :map_zoom, :markers => [:name, :lat, :lng]],
+      :in_creator => [:group_id, :user_id],
+      :in_editable_groups => [])
   end
 end

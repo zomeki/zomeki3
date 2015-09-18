@@ -1,6 +1,6 @@
 # encoding: utf-8
 class Map::Piece::CategoryType < Cms::Piece
-  default_scope where(model: 'Map::CategoryType')
+  default_scope { where(model: 'Map::CategoryType') }
 
   def content
     Map::Content::Marker.find(super)
@@ -25,6 +25,6 @@ class Map::Piece::CategoryType < Cms::Piece
   end
 
   def target_node
-    content.public_nodes.find_by_id(setting_value(:target_node_id))
+    content.public_nodes.find_by(id: setting_value(:target_node_id))
   end
 end

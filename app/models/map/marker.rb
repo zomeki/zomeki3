@@ -11,7 +11,7 @@ class Map::Marker < ActiveRecord::Base
 
   # Content
   belongs_to :content, :foreign_key => :content_id, :class_name => 'Map::Content::Marker'
-  validates_presence_of :content_id
+  validates :content_id, :presence => true
 
   # Proper
   validates_presence_of :state
@@ -26,10 +26,10 @@ class Map::Marker < ActiveRecord::Base
   after_initialize :set_defaults
   before_save :set_name
 
-  scope :public, -> { where(state: 'public') }
+  scope :public_state, -> { where(state: 'public') }
 
   belongs_to :icon_category, :class_name => 'GpCategory::Category'
-  belongs_to :doc, :class_name => 'GpArticle::Doc' # Not saved to database
+  attr_accessor :doc # Not saved to database
 
   def public_uri
     return '' unless content.public_node

@@ -3,7 +3,9 @@ class Cms::SiteSetting::AdminProtocol < Cms::SiteSetting
 
   ADMIN_PROTOCOLS = [['http', 'http'], ['https', 'https']]
 
-  validates_uniqueness_of :value, :scope => :name
+  validates :value, uniqueness: { scope: :name }
+
+  default_scope { where(name: 'admin_protocol') }
 
   def self.core_domain(site, default_uri=nil, options={})
     mode = Zomeki.config.application['sys.core_domain']

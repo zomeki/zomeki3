@@ -1,7 +1,7 @@
 # encoding: utf-8
 class Tag::Public::Piece::TagsController < Sys::Controller::Public::Base
   def pre_dispatch
-    @piece = Tag::Piece::Tag.find_by_id(Page.current_piece.id)
+    @piece = Tag::Piece::Tag.find_by(id: Page.current_piece.id)
     render :text => '' unless @piece
   end
 

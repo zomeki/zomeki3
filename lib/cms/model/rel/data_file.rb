@@ -7,7 +7,7 @@ module Cms::Model::Rel::DataFile
   
   def cms_data_file(name, params)
     file_id  = send("#{name}_id")
-    return file_id ? Cms::DataFile.find_by_id(file_id) : nil
+    return file_id ? Cms::DataFile.find_by(id: file_id) : nil
   end
   
   def cms_data_file_uri(name, params)
@@ -34,7 +34,7 @@ module Cms::Model::Rel::DataFile
       file_id  = send("#{name}_id")
       filename = upload.original_filename.gsub(/^.*?\./, "#{name}.")
       
-      file = file_id ? Cms::DataFile.find_by_id(file_id) : nil
+      file = file_id ? Cms::DataFile.find_by(id: file_id) : nil
       file.remove_public_file if file
       
       file ||= Cms::DataFile.new({
@@ -59,7 +59,7 @@ module Cms::Model::Rel::DataFile
     elsif !send("del_#{name}").blank?
       file_id  = send("#{name}_id")
       if !file_id.blank?
-        file = Cms::DataFile.find_by_id(file_id)
+        file = Cms::DataFile.find_by(id: file_id)
         if file
           return false unless file.destroy
           self.send("#{name}_id=", nil)

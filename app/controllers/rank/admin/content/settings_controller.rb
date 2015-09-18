@@ -3,7 +3,7 @@ class Rank::Admin::Content::SettingsController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
   include Rank::Controller::Rank
 
-#  after_filter :flash_clear
+#  after_action :flash_clear
 
   def pre_dispatch
     return error_auth unless Core.user.has_auth?(:designer)

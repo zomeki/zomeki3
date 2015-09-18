@@ -1,10 +1,10 @@
 class GpCategory::Piece::Category < Cms::Piece
   NUM_DOCS_VISIBILITY_OPTIONS = [['表示する', 'visible'], ['表示しない', 'hidden']]
 
-  default_scope where(model: 'GpCategory::Category')
+  default_scope { where(model: 'GpCategory::Category') }
 
   def content
-    GpCategory::Content::CategoryType.find(super)
+    GpCategory::Content::CategoryType.find(super.id)
   end
 
   def category_types
@@ -16,7 +16,7 @@ class GpCategory::Piece::Category < Cms::Piece
   end
 
   def category_type
-    category_types.find_by_id(setting_value(:category_type_id))
+    category_types.find_by(id: setting_value(:category_type_id))
   end
 
   def num_docs_visibility_text

@@ -2,7 +2,7 @@ ZomekiCMS::Application.routes.draw do
   mod = "biz_calendar"
   
   ## admin
-  scope "#{ZomekiCMS::ADMIN_URL_PREFIX}/#{mod}/c:concept", :module => mod, :as => mod do
+  scope "#{ZomekiCMS::ADMIN_URL_PREFIX}/#{mod}/c(:concept)", :module => mod, :as => mod do
     resources(:places,
       :controller  => "admin/places",
       :path        => ":content/places") do

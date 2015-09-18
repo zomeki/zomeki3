@@ -3,7 +3,7 @@ class GpArticle::Admin::Piece::RecentTabs::TabsController < Cms::Controller::Adm
   include Sys::Controller::Scaffold::Base
 
   def pre_dispatch
-    return error_auth unless @piece = GpArticle::Piece::RecentTab.find_by_id(params[:piece_recent_tab_id])
+    return error_auth unless @piece = GpArticle::Piece::RecentTab.find_by(id: params[:piece_recent_tab_id])
     return error_auth unless @piece.editable?
   end
 

@@ -10,7 +10,7 @@ class Cms::Admin::Piece::SnsPartsController < Cms::Admin::Piece::BaseController
   private
 
   def find_piece
-    model.new.readable.find(params[:id])
+    model.readable.find(params[:id])
   end
 
   def base_params_item_in_settings

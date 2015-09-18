@@ -1,7 +1,7 @@
 # encoding: utf-8
 class BizCalendar::Public::Piece::CalendarsController < BizCalendar::Public::Piece::BaseController
   def pre_dispatch
-    @piece = BizCalendar::Piece::Calendar.find_by_id(Page.current_piece.id)
+    @piece = BizCalendar::Piece::Calendar.find_by(id: Page.current_piece.id)
     return render(:text => '') unless @piece
 
     @item = Page.current_item
@@ -36,11 +36,11 @@ class BizCalendar::Public::Piece::CalendarsController < BizCalendar::Public::Pie
 
     if @place
       criteria = {repeat_type: '', start_year_month: started.strftime('%Y%m'), end_year_month: ended.strftime('%Y%m')}
-      @holidays           = BizCalendar::BussinessHoliday.public.all_with_place_and_criteria(@place, criteria).order(:holiday_start_date)
-      @exception_holidays = BizCalendar::ExceptionHoliday.public.all_with_place_and_criteria(@place, criteria).order(:start_date)
+      @holidays           = BizCalendar::BussinessHoliday.public_state.all_with_place_and_criteria(@place, criteria).order(:holiday_start_date)
+      @exception_holidays = BizCalendar::ExceptionHoliday.public_state.all_with_place_and_criteria(@place, criteria).order(:start_date)
 
       criteria[:repeat_type] = 'not_null'
-      @repeat_holidays = BizCalendar::BussinessHoliday.public.all_with_place_and_criteria(@place, criteria).order(:holiday_start_date)
+      @repeat_holidays = BizCalendar::BussinessHoliday.public_state.all_with_place_and_criteria(@place, criteria).order(:holiday_start_date)
     end
     
   end

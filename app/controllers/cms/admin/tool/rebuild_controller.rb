@@ -17,14 +17,10 @@ class Cms::Admin::Tool::RebuildController < Cms::Controller::Admin::Base
     if params[:do] == 'content'
       Core.messages << "再構築： コンテンツ"
       
-      item = Cms::Content.new
-      item.and :model, 'LIKE', '%::Doc'
-      item.and :model, '!=', 'GpArticle::Doc'
-      item.and :model, '!=', 'Newsletter::Doc'
-      item.and :model, '!=', 'Laby::Doc'
-      item.and :site_id, Core.site.id
-      item.and :id, @item.content_id if !@item.content_id.blank?
-      items = item.find(:all)
+      items = Cms::Content.where(site_id: Core.site.id)
+        .where(Cms::Content.arel_table[:model].matches("%::Doc"))
+        .where.not(model: ['GpArticle::Doc'])
+      items.where!(id: @item.content_id) if @item.content_id.present?
       items.each do |item|
         ctl = item.model.underscore.pluralize.gsub(/^(.*?)\//, '\1/admin/tool/')
         act = 'rebuild'
@@ -125,6 +121,6 @@ class Cms::Admin::Tool::RebuildController < Cms::Controller::Admin::Base
   end
 
   def rebuild_params
-    params.permit(:target_node_ids, :target_content_ids)
+    params.except(:concept).permit(:target_node_ids, :target_content_ids)
   end
 end

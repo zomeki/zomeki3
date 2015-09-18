@@ -15,8 +15,8 @@ class Cms::Content < ActiveRecord::Base
   has_many :nodes, :foreign_key => :content_id, :class_name => 'Cms::Node',
     :dependent => :destroy
 
-  validates_presence_of :concept_id, :state, :model, :name
-  validates :code, :presence => true, :uniqueness => {:scope => [:site_id]}
+  validates :concept_id, :state, :model, :name, presence: true
+  validates :code, presence: true, uniqueness: { scope: [:site_id] }
 
   after_save :save_settings
 
@@ -56,7 +56,7 @@ class Cms::Content < ActiveRecord::Base
   end
 
   def node_is(node)
-    node = Cms::Node.find(:first, :conditions => {:id => node}) if node.class != Cms::Node
+    node = Cms::Node.find_by(id: node) if node.class != Cms::Node
     self.and :id, node.content_id if node
   end
 
@@ -71,7 +71,7 @@ class Cms::Content < ActiveRecord::Base
   end
 
   def setting_extra_values(name)
-    settings.find_by_name(name).try(:extra_values) || {}.with_indifferent_access
+    settings.find_by(name: name).try(:extra_values) || {}.with_indifferent_access
   end
 
   def setting_extra_value(name, extra_name)
@@ -96,10 +96,9 @@ class Cms::Content < ActiveRecord::Base
   end
 
   def self.rewrite_regex(options = {})
-    cond = {:site_id => options[:site_id]}
     conf = []
 
-    Cms::Content.find(:all, :conditions => cond, :order => :id).each do |item|
+    Cms::Content.where(site_id: options[:site_id]).order(:id).each do |item|
       name = item.model.to_s.gsub(/^(.*?::)/, '\\1Content::')
       begin
         eval(name)
@@ -108,7 +107,7 @@ class Cms::Content < ActiveRecord::Base
         model = nil
       end
       next unless model
-      content = model.find_by_id(item.id)
+      content = model.find_by(id: item.id)
       next unless content
       content.rewrite_configs.each do |line|
         val = line.split(/ /)

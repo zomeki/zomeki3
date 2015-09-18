@@ -1,4 +1,4 @@
-namespace :cms do
+namespace :zomeki do
   namespace :rank do
     namespace :ranks do
       desc 'Fetch ranking'

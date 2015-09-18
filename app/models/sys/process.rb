@@ -1,11 +1,10 @@
 # encoding: utf-8
 class Sys::Process < ActiveRecord::Base
-  include Sys::Model::Base
-  
   self.table_name = "sys_processes"
-  
+  include Sys::Model::Base
+
   attr_accessor :title
-  
+
   def status
     labels = {
       "running" => "実行中",
@@ -18,9 +17,7 @@ class Sys::Process < ActiveRecord::Base
   def self.lock(attrs = {})
     raise "lock name is blank." if attrs[:name].blank?
     
-    proc = self.find(:first, :conditions => { :name => attrs[:name] })
-    
-    if proc
+    if proc = self.find_by(name: attrs[:name])
       #if proc.closed_at.nil?
       if proc.state == "running"
         kill = attrs[:time_limit] || 0
@@ -55,7 +52,7 @@ class Sys::Process < ActiveRecord::Base
   
   def interrupted?
     self.class.uncached do
-      item = self.class.find_by_id(id, :select => "interrupt")
+      item = self.class.select(:interrupt).find_by(id: id)
       self.interrupt = item.interrupt
       return item.interrupt.blank? ? nil : item.interrupt
     end

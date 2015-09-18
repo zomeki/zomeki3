@@ -1,7 +1,7 @@
 # encoding: utf-8
 class GpCategory::Public::Piece::DocsController < Sys::Controller::Public::Base
   def pre_dispatch
-    @piece = GpCategory::Piece::Doc.find_by_id(Page.current_piece.id)
+    @piece = GpCategory::Piece::Doc.find_by(id: Page.current_piece.id)
     render :text => '' unless @piece
 
     @item = Page.current_item
@@ -45,9 +45,9 @@ class GpCategory::Public::Piece::DocsController < Sys::Controller::Public::Base
     @docs = GpArticle::Doc.where(id: doc_ids).limit(@piece.list_count)
     @docs = case @piece.docs_order
             when 'published_at_desc'
-              @docs.order('display_published_at DESC, published_at DESC')
+              @docs.order(display_published_at: :desc, published_at: :desc)
             when 'published_at_asc'
-              @docs.order('display_published_at ASC, published_at ASC')
+              @docs.order(display_published_at: :asc, published_at: :asc)
             when 'random'
               @docs.order('RAND()')
             else
@@ -60,18 +60,18 @@ class GpCategory::Public::Piece::DocsController < Sys::Controller::Public::Base
   private
 
   def find_public_doc_ids_with_content_ids(content_ids)
-    GpArticle::Doc.mobile(::Page.mobile?).public.select("#{GpArticle::Doc.table_name}.id").where(content_id: content_ids).pluck(:id)
+    GpArticle::Doc.mobile(::Page.mobile?).public_state.select("#{GpArticle::Doc.table_name}.id").where(content_id: content_ids).pluck(:id)
   end
 
   def find_public_doc_ids_with_content_ids_and_category_ids(content_ids, category_ids)
     categorizations = GpCategory::Categorization.arel_table
-    GpArticle::Doc.mobile(::Page.mobile?).public.select("#{GpArticle::Doc.table_name}.id").where(content_id: content_ids)
+    GpArticle::Doc.mobile(::Page.mobile?).public_state.select("#{GpArticle::Doc.table_name}.id").where(content_id: content_ids)
                   .joins(:categorizations).where(categorizations[:category_id].in(category_ids)).pluck(:id)
   end
 
   def find_public_doc_ids_with_category_ids(category_ids)
     categorizations = GpCategory::Categorization.arel_table
-    GpArticle::Doc.mobile(::Page.mobile?).public.select("#{GpArticle::Doc.table_name}.id")
+    GpArticle::Doc.mobile(::Page.mobile?).public_state.select("#{GpArticle::Doc.table_name}.id")
                   .joins(:categorizations).where(categorizations[:category_id].in(category_ids)).pluck(:id)
   end
 end

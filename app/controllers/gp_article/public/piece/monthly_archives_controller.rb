@@ -1,6 +1,6 @@
 class GpArticle::Public::Piece::MonthlyArchivesController < Sys::Controller::Public::Base
   def pre_dispatch
-    @piece = GpArticle::Piece::MonthlyArchive.find_by_id(Page.current_piece.id)
+    @piece = GpArticle::Piece::MonthlyArchive.find_by(id: Page.current_piece.id)
     return render(text: '') unless @piece
 
     @node = @piece.content.public_archives_node

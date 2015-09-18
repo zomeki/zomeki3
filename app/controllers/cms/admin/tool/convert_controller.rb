@@ -55,8 +55,8 @@ class Cms::Admin::Tool::ConvertController < Cms::Controller::Admin::Base
   # 変換情報の書き込み
   def convert_setting
     @item = Tool::ConvertSetting.new(params[:item])
-    if @item.site_url.present? && Tool::ConvertSetting.find_by_site_url(@item.site_url).present?
-      @item = Tool::ConvertSetting.find_by_site_url(@item.site_url)
+    if @item.site_url.present? && Tool::ConvertSetting.find_by(site_url: @item.site_url).present?
+      @item = Tool::ConvertSetting.find_by(site_url: @item.site_url)
     end
 
     if request.post?
@@ -91,7 +91,7 @@ class Cms::Admin::Tool::ConvertController < Cms::Controller::Admin::Base
       @item.site_url = params[:item][:site_url]
       @item.content_id = params[:item][:content_id]
       if params[:item][:site_url].present? && params[:item][:content_id].present?
-        setting = Tool::ConvertSetting.find_by_site_url(params[:item][:site_url])
+        setting = Tool::ConvertSetting.find_by(site_url: params[:item][:site_url])
         if setting
           Tool::Convert.import_site(params[:item], setting)
           Tool::Convert.process_link

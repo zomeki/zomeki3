@@ -3,7 +3,7 @@ class GpArticle::Piece::Archive < Cms::Piece
   TERM_OPTIONS = [['月別', 'month'], ['年・月別', 'year_month'], ['年別', 'year']]
   ORDER_OPTIONS = [['昇順', 'asc'], ['降順', 'desc']]
 
-  default_scope where(model: 'GpArticle::Archive')
+  default_scope { where(model: 'GpArticle::Archive') }
 
   def num_docs_visibility
     setting_value(:num_docs_visibility).to_s

@@ -23,7 +23,7 @@ class Cms::Admin::Tool::LinkCheckController < Cms::Controller::Admin::Base
         #sleep 3
       #end
 
-      redirect_to tool_link_check_url
+      redirect_to tool_link_check_path
     else
       @logs = (if link_check
                 current = link_check.logs.where(checked: true).count

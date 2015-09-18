@@ -2,12 +2,12 @@
 class GpCategory::Admin::DocsController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 
-  before_filter :find_doc, :only => [ :show, :edit, :update ]
+  before_action :find_doc, :only => [ :show, :edit, :update ]
 
   def pre_dispatch
-    return error_auth unless @content = GpCategory::Content::CategoryType.find_by_id(params[:content])
-    return error_auth unless @category_type = @content.category_types.find_by_id(params[:category_type_id])
-    return error_auth unless @category = @category_type.categories.find_by_id(params[:category_id])
+    @content = GpCategory::Content::CategoryType.find(params[:content])
+    @category_type = @content.category_types.find(params[:category_type_id])
+    @category = @category_type.categories.find(params[:category_id])
     return redirect_to(request.env['PATH_INFO']) if params[:reset_criteria]
   end
 
@@ -24,7 +24,7 @@ class GpCategory::Admin::DocsController < Cms::Controller::Admin::Base
   end
 
   def update
-    if (categorization = @item.categorizations.find_by_category_id(@category.id))
+    if (categorization = @item.categorizations.find_by(category_id: @category.id))
       categorization.sort_no = params[:sort_no]
       if categorization.save
         redirect_to({:action => :index}, notice: '更新処理が完了しました。')
@@ -42,7 +42,7 @@ class GpCategory::Admin::DocsController < Cms::Controller::Admin::Base
   def find_docs
     criteria = params[:criteria] || {}
     criteria[:category_id] = @category.id
-    GpArticle::Doc.all_with_content_and_criteria(nil, criteria)
+    GpArticle::Doc.content_and_criteria(nil, criteria)
   end
 
   def find_doc

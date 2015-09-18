@@ -2,32 +2,30 @@
 class Cms::Admin::LayoutsController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
   include Sys::Controller::Scaffold::Publication
-  
+
   def pre_dispatch
     return error_auth unless Core.user.has_auth?(:designer)
   end
-  
+
   def index
-    item = Cms::Layout.new.readable
-    item.page  params[:page], params[:limit]
-    item.order params[:sort], 'name, id'
-    @items = item.find(:all)
+    @items = Cms::Layout.readable.order(:name, :id).paginate(page: params[:page], per_page: params[:limit])
+
     _index @items
   end
-  
+
   def show
-    @item = Cms::Layout.new.readable.find(params[:id])
+    @item = Cms::Layout.readable.find(params[:id])
     return error_auth unless @item.readable?
-    
+
     _show @item
   end
 
   def new
-    @item = Cms::Layout.new({
+    @item = Cms::Layout.new(
       :concept_id  => Core.concept(:id),
       :state       => 'public',
       :body        => '[[content]]'
-    })
+    )
   end
   
   def create
@@ -36,20 +34,20 @@ class Cms::Admin::LayoutsController < Cms::Controller::Admin::Base
     @item.state   = 'public'
     _create @item
   end
-  
+
   def update
-    @item = Cms::Layout.new.find(params[:id])
+    @item = Cms::Layout.find(params[:id])
     @item.attributes = layout_params
     _update(@item, :location => url_for(:action => :edit)) do
       Core.set_concept(session, @item.concept_id)
     end
   end
-  
+
   def destroy
-    @item = Cms::Layout.new.find(params[:id])
+    @item = Cms::Layout.find(params[:id])
     _destroy @item
   end
-  
+
   def duplicate(item)
     if dupe_item = item.duplicate
       flash[:notice] = '複製処理が完了しました。'
@@ -69,6 +67,8 @@ class Cms::Admin::LayoutsController < Cms::Controller::Admin::Base
   private
 
   def layout_params
-    params.require(:item).permit(:body, :concept_id, :head, :in_creator, :mobile_body, :mobile_head, :mobile_stylesheet, :name, :smart_phone_body, :smart_phone_head, :smart_phone_stylesheet, :stylesheet, :title)
+    params.require(:item).permit(:body, :concept_id, :head, :mobile_body, :mobile_head, :mobile_stylesheet,
+      :name, :smart_phone_body, :smart_phone_head, :smart_phone_stylesheet, :stylesheet, :title,
+      :in_creator => [:group_id, :user_id])
   end
 end

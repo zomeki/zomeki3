@@ -18,47 +18,69 @@ class Cms::Node < ActiveRecord::Base
   
   SITEMAP_STATE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
 
-  belongs_to :parent,   :foreign_key => :parent_id,  :class_name => 'Cms::Node'
-  belongs_to :layout,   :foreign_key => :layout_id,  :class_name => 'Cms::Layout'
+  belongs_to :parent, :foreign_key => :parent_id, :class_name => 'Cms::Node'
+  belongs_to :layout, :foreign_key => :layout_id, :class_name => 'Cms::Layout'
 
   has_many :children, -> { order('sitemap_sort_no IS NULL, sitemap_sort_no, name') },
     :foreign_key => :parent_id, :class_name => 'Cms::Node', :dependent => :destroy
   has_many :children_in_route, -> { order('sitemap_sort_no IS NULL, sitemap_sort_no, name') },
     :foreign_key => :route_id,  :class_name => 'Cms::Node', :dependent => :destroy
 
-  validates_presence_of :parent_id, :state, :model, :name, :title
-  validates_uniqueness_of :name, :scope => [:site_id, :parent_id],
-    :if => %Q(!replace_page?)
-  validates_format_of :name, :with=> /\A[0-9A-Za-z@\.\-_\+\s]+\z/, :message=> :not_a_filename,
-    :if => %Q(parent_id != 0)
+  validates :parent_id, :state, :model, :title, presence: true
+  validates :name, presence: true, uniqueness: {scope: [:site_id, :parent_id], if: %Q(!replace_page?) },
+    format: { with: /\A[0-9A-Za-z@\.\-_\+\s]+\z/, message: :not_a_filename, if: %Q(parent_id != 0) }
+
+  validate {
+    errors.add :parent_id, :invalid if id != nil && id == parent_id
+    errors.add :route_id, :invalid if id != nil && id == route_id
+  }
 
   after_initialize :set_defaults
   after_destroy :remove_file
 
-  scope :public, -> { where(state: 'public') }
+  scope :public_state, -> { where(state: 'public') }
 
-  def validate
-    errors.add :parent_id, :invalid if id != nil && id == parent_id
-    errors.add :route_id, :invalid if id != nil && id == route_id
-  end
-  
+  scope :search_with_params, ->(params) {
+    rel = all
+    params.each do |n, v|
+      next if v.to_s == ''
+      case n
+      when 's_state'
+        rel.where!(state: v)
+      when 's_title'
+        rel = rel.search_with_text(:title, v)
+      when 's_body'
+        rel = rel.search_with_text(:body, v)
+      when 's_directory'
+        rel.where!(directory: v)
+      when 's_keyword'
+        rel = rel.search_with_text(:title, :body, v)
+      end
+    end
+    rel
+  }
+
   def states
     [['公開保存','public'],['非公開保存','closed']]
   end
-  
+
+  def tree_title(opts = {})
+    level_no = ancestors.size
+    opts.reverse_merge!(prefix: '　　', depth: 0)
+    opts[:prefix] * [level_no - 1 + opts[:depth], 0].max + title
+  end
+
   def self.find_by_uri(path, site_id)
     return nil if path.to_s == ''
     
-    cond = {:site_id => site_id, :parent_id => 0, :name => '/'}
-    unless item = self.find(:first, :conditions => cond, :order => :id)
+    unless item = self.where(site_id: site_id, parent_id: 0, name: '/').order(:id).first
       return nil
     end
     return item if path == '/'
     
     path.split('/').each do |p|
       next if p == ''
-      cond = {:site_id => site_id, :parent_id => item.id, :name => p}
-      unless item = self.find(:first, :conditions => cond, :order => :id)
+      unless item = self.where(site_id: site_id, parent_id: item.id, name: p).order(:id).first
         return nil
       end
     end
@@ -104,7 +126,7 @@ class Cms::Node < ActiveRecord::Base
         concept_id = r.concept_id if r.concept_id
       end unless concept_id
       return nil unless concept_id
-      return nil unless @_inherited_concept = Cms::Concept.find(:first, :conditions => {:id => concept_id})
+      return nil unless @_inherited_concept = Cms::Concept.where(id: concept_id).first
     end
     key.nil? ? @_inherited_concept : @_inherited_concept.send(key)
   end
@@ -163,41 +185,24 @@ class Cms::Node < ActiveRecord::Base
     return 'content content' + self.controller.singularize.camelize
   end
   
-  def make_candidates(args1, args2)
-    choiced = []
-    choices = []
-    down    = lambda do |p, i|
-      next if choiced[p.id] != nil
-      choiced[p.id] = true
-      
-      choices << [('　　' * i) + p.title, p.id]
-      self.class.find(:all, eval("{#{args2}}")).each do |c|
-        down.call(c, i + 1)
-      end
-    end
-    
-    self.class.find(:all, eval("{#{args1}}")).each {|item| down.call(item, 0) }
-    return choices
-  end
-  
   def candidate_parents
-    args1  = %Q( :conditions => ["id = ?", Core.site.root_node], )
-    args1 += %Q( :order => :name)
-    args2  = %Q( :conditions => ["id != ? AND parent_id = ? AND directory = 1", id, p.id], )
-    args2  = %Q( :conditions => ["parent_id = ? AND directory = 1", p.id], ) if new_record?
-    args2 += %Q( :order => :name)
-    make_candidates(args1, args2)
+    nodes = Core.site.root_node.descendants do |child|
+      rel = child.where(directory: 1)
+      rel = rel.where.not(id: id) if new_record?
+      rel
+    end
+    nodes.map{|n| [n.tree_title, n.id]}
   end
-  
+
   def candidate_routes
-    args1  = %Q( :conditions => ["id = ?", Core.site.root_node], )
-    args1 += %Q( :order => :name)
-    args2  = %Q( :conditions => ["id != ? AND parent_id = ? AND directory = 1", id, p.id], )
-    args2  = %Q( :conditions => ["parent_id = ? AND directory = 1", p.id], ) if new_record?
-    args2 += %Q( :order => :name)
-    make_candidates(args1, args2)
+    nodes = Core.site.root_node.descendants do |child|
+      rel = child.where(directory: 1)
+      rel = rel.where.not(id: id) if new_record?
+      rel
+    end
+    nodes.map{|n| [n.tree_title, n.id]}
   end
-  
+
   def locale(name)
     model = self.class.to_s.underscore
     label = ''
@@ -209,37 +214,16 @@ class Cms::Node < ActiveRecord::Base
     return label =~ /^translation missing:/ ? name.to_s.humanize : label
   end
   
-  def search(params)
-    params.each do |n, v|
-      next if v.to_s == ''
-
-      case n
-      when 's_state'
-        self.and :state, v
-      when 's_title'
-        self.and_keywords v, :title
-      when 's_body'
-        self.and_keywords v, :body
-      when 's_directory'
-        self.and :directory, v
-      when 's_keyword'
-        self.and_keywords v, :title, :body
-      end
-    end if params.size != 0
-
-    return self
-  end
-
   def sitemap_visible?
     self.sitemap_state == 'visible'
   end
 
   def public_children
-    children.public
+    children.public_state
   end
 
   def public_children_in_route
-    children_in_route.public
+    children_in_route.public_state
   end
   
   def set_inquiry_group

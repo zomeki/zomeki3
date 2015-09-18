@@ -3,7 +3,7 @@ class Cms::Admin::Piece::PickupDocs::DocsController < Cms::Controller::Admin::Ba
   include Sys::Controller::Scaffold::Base
 
   def pre_dispatch
-    return error_auth unless @piece = Cms::Piece::PickupDoc.find_by_id(params[:piece_pickup_doc_id])
+    return error_auth unless @piece = Cms::Piece::PickupDoc.find_by(id: params[:piece_pickup_doc_id])
     return error_auth unless @piece.editable?
   end
 
@@ -36,10 +36,6 @@ class Cms::Admin::Piece::PickupDocs::DocsController < Cms::Controller::Admin::Ba
     return error_auth unless @item
 
     @item.doc_id = @item.doc.id if @item.doc
-
-
-
-
   end
 
   def update
@@ -57,7 +53,7 @@ class Cms::Admin::Piece::PickupDocs::DocsController < Cms::Controller::Admin::Ba
 
   def set_attributes
     unless @item.doc_id.blank?
-      doc = GpArticle::Doc.find_by_id(@item.doc_id)
+      doc = GpArticle::Doc.find_by(id: @item.doc_id)
       @item.doc_name = doc.name
       @item.name = "#{@item.content_id}_#{doc.name}" if @item.name.blank?
     end

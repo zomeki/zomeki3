@@ -30,7 +30,7 @@
   <tr>
     <th><%= @item.class.human_attribute_name :doc_style %></th>
     <td>
-      <%= link_to_function '置き換えテキストを確認する', "$('#doc_style_tags').dialog({width: 400});" %>
+      <%= link_to '置き換えテキストを確認する', '#', class: 'show_dialog' %>
       <pre><code><%= @item.doc_style %></code></pre>
     </td>
   </tr>
@@ -45,3 +45,12 @@
 </table>
 
 <%= render 'gp_article/admin/shared/doc_style_tags' %>
+
+<%= javascript_tag do -%>
+$(document).ready(function () {
+  $('a.show_dialog').on('click', function() {
+    $('#doc_style_tags').dialog({width: 400});
+    return false;
+  });
+});
+<%- end -%>

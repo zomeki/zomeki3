@@ -1,19 +1,19 @@
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.0.13'
+gem 'rails', '4.2.3'
 
 # Use mysql as the database for Active Record
 gem 'mysql2'
 
 # Use SCSS for stylesheets
-gem 'sass-rails', '~> 4.0.2'
+gem 'sass-rails', '~> 5.0'
 
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 
 # Use CoffeeScript for .js.coffee assets and views
-gem 'coffee-rails', '~> 4.0.0'
+gem 'coffee-rails', '~> 4.1.0'
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
@@ -25,7 +25,7 @@ gem 'jquery-rails'
 gem 'turbolinks'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 1.2'
+gem 'jbuilder', '~> 2.0'
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
@@ -39,29 +39,28 @@ end
 # gem 'unicorn'
 
 # Use Capistrano for deployment
-# gem 'capistrano', group: :development
+# gem 'capistrano-rails', group: :development
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 
-gem 'actionpack-action_caching', '~> 1.1.1'
-gem 'delayed_job_active_record', '~> 4.0.2'
+gem 'addressable', '~> 2.3.8'
+gem 'delayed_job_active_record', '~> 4.0.3'
 gem 'dynamic_form', '~> 1.1.4'
 gem 'garb', '~> 0.9.8'
 gem 'google-oauth2-installed', '0.0.3'
-gem 'jpmobile', '~> 4.0.1'
+gem 'jpmobile', '~> 4.2.0'
 gem 'mail-iso-2022-jp', '~> 2.0.3'
 gem 'moji', '~> 1.6'
-gem 'nokogiri', '~> 1.6.5'
+gem 'nokogiri', '~> 1.6.6.2'
 gem 'omniauth-facebook', '~> 2.0.0'
 gem 'omniauth-twitter', '~> 1.1.0'
 gem 'rails_autolink', '~> 1.1.6'
-gem 'render_component_vho', '~> 3.2.1'
 gem 'rest-more', '~> 3.3.1'
 gem 'rmagick', '~> 2.13.4'
 gem 'rqrcode_png', '~> 0.1.5'
 gem 'rsync', '~> 1.0.9'
-gem 'simple_captcha2', '~> 0.2.2', require: 'simple_captcha'
+gem 'simple_captcha2', '~> 0.3.4', require: 'simple_captcha'
 gem 'will_paginate', '~> 3.0.7'
 gem 'whenever', require: false
 
@@ -75,6 +74,11 @@ group :development, :test do
 end
 
 group :development do
+  # Access an IRB console on exception pages or by using <%= console %> in views
+  gem 'web-console', '~> 2.0'
+  # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
+  gem 'spring'
+
   gem 'bullet'
   gem 'i18n_generators'
   gem 'rails_best_practices'

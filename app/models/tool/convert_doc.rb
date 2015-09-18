@@ -6,6 +6,14 @@ class Tool::ConvertDoc < ActiveRecord::Base
   belongs_to :content, :class_name => 'Cms::Content'
   belongs_to :docable, polymorphic: true
 
+  scope :search_with_criteria, ->(criteria = {}) {
+    rel = all
+    if criteria[:keyword].present?
+      rel = rel.search_with_text(:title, :uri_path, :doc_name, :doc_public_uri, :body, criteria[:keyword])
+    end
+    rel
+  }
+
   def doc
     docable
   end
@@ -13,24 +21,10 @@ class Tool::ConvertDoc < ActiveRecord::Base
   def latest_doc
     return nil unless docable_type
     return @latest_doc if @latest_doc
-    @latest_doc = docable_type.constantize.where(name: doc_name).order('updated_at desc').first
+    @latest_doc = docable_type.constantize.where(name: doc_name).order(updated_at: :desc).first
   end
 
   def source_uri
     "http://#{uri_path.to_s.gsub(/.htm.html$/, '.htm')}"
-  end
-
-  def self.search_with_criteria(criteria = {})
-    criteria ||= {}
-
-    rel = scoped
-    if criteria[:keyword].present?
-      words = criteria[:keyword].split(/[ 　]+/)
-      conds = [:title, :uri_path, :doc_name, :doc_public_uri, :body].map do |field|
-        words.map{|w| arel_table[field].matches("%#{w}%")}.inject(&:and)
-      end
-      rel = rel.where(conds.inject(&:or))
-    end
-    rel
   end
 end

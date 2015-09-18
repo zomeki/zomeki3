@@ -36,13 +36,13 @@ protected
     sql = "SELECT * FROM survey_form_answers WHERE id = #{id}"
     ans_id = nil
     @db.execute(sql).each(:as => :hash) do |ans_row|
-      ans = Survey::FormAnswer.new(ans_row)
+      ans = Survey::FormAnswer.new(ans_row.except("id"))
       ans.save
       ans_id = ans.id
 
       sql = "SELECT * FROM survey_answers WHERE form_answer_id = #{id}"
       @db.execute(sql).each(:as => :hash) do |col_row|
-        col = Survey::Answer.new(col_row)
+        col = Survey::Answer.new(col_row.except("id"))
         col.form_answer_id = ans.id
         col.save
       end
@@ -52,8 +52,8 @@ protected
     @db.execute("DELETE FROM survey_form_answers WHERE id = #{id}")
 
     begin
-      @form_answer = Survey::FormAnswer.find_by_id(ans_id)
-      @content     = Cms::Content.find_by_id(@form_answer.form.content_id)
+      @form_answer = Survey::FormAnswer.find_by(id: ans_id)
+      @content     = Cms::Content.find_by(id: @form_answer.form.content_id)
 #      send_answer_mail #if @sender == 'script'
     rescue => e
       error_log("メール送信失敗 #{e}")
@@ -62,7 +62,7 @@ protected
 
   def send_answer_mail
     CommonMailer.survey_receipt(form_answer: @form_answer, from: @content.mail_from, to: @content.mail_to)
-                .deliver if @content.mail_from.present? && @content.mail_to.present?
+                .deliver_now if @content.mail_from.present? && @content.mail_to.present?
   end
 
 end

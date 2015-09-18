@@ -11,7 +11,7 @@
   <tr>
     <th><%= @item.locale :list_style %></th>
     <td colspan="3">
-      <%= link_to_function '置き換えテキストを確認する', "$('#doc_style_tags').dialog({width: 400});" %><br />
+      <%= link_to '置き換えテキストを確認する', '#', id: 'show_dialog' %><br />
       <%= f.array_text_area 'in_settings[list_style]', size: '60x3' %>
     </td>
   </tr>
@@ -20,6 +20,15 @@
     <td colspan="3"><%= f.array_text_field 'in_settings[date_style]', size: 50 %> <%=raw t('comments.date_style') %></td>
   </tr>
 </table>
+
+<%= javascript_tag do %>
+$(function() {
+  $('#show_dialog').on('click', function() {
+    $('#doc_style_tags').dialog({width: 400});
+    return false;
+  });
+});
+<% end %>
 
 <%= creator_form f %>
 

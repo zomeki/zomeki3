@@ -4,11 +4,8 @@ class ApplicationController < ActionController::Base
   helper  FormHelper
   helper  LinkHelper
   protect_from_forgery # :secret => '1f0d667235154ecf25eaf90055d99e99'
-  before_filter :initialize_application
+  before_action :initialize_application
 #  rescue_from Exception, :with => :rescue_exception
-
-#TODO: あとで消す
-  prepend_before_action :params_for_strong_parameters
 
   def initialize_application
     if Core.publish
@@ -29,11 +26,18 @@ class ApplicationController < ActionController::Base
 
   def send_mail(fr_addr, to_addr, subject, body)
     return false if fr_addr.blank? || to_addr.blank?
-    CommonMailer.plain(from: fr_addr, to: to_addr, subject: subject, body: body).deliver
+    CommonMailer.plain(from: fr_addr, to: to_addr, subject: subject, body: body).deliver_now
   end
 
   def send_download
     #
+  end
+
+  def send_data(data, options = {})
+    if options.include?(:filename)
+      options[:filename] = URI::escape(options[:filename]) if request.user_agent =~ /(MSIE|Trident)/
+    end
+    super(data, options)
   end
 
 private
@@ -174,34 +178,5 @@ private
   def request_as_mobile
     user_agent = 'DoCoMo/2.0 ISIM0808(c500;TB;W24H16)'
     env['rack.jpmobile'] = Jpmobile::Mobile::AbstractMobile.carrier('HTTP_USER_AGENT' => user_agent)
-  end
-
-  # Helpers for Rails migration 3.2 to 4.0
-  def params_for_strong_parameters(model_name=nil, item_name='item')
-    model_name ||= controller_name.singularize
-    item = params[item_name]
-    return unless item
-
-    keys = []
-    nested = []
-    item.keys.each do |k|
-      if k =~ /\Ain_/
-        nested << k
-      else
-        keys << k
-      end
-    end
-    keys = keys.sort + nested.sort
-
-    log = <<-EOL
-  private
-
-  def #{model_name}_params
-    params.require(:#{item_name}).permit(#{keys.map{|k| ":#{k}" }.join(', ')})
-  end
-    EOL
-    log << "\nin_creator: #{item[:in_creator]}\n  #{item[:in_creator].keys.map(&:to_sym).sort}" if item[:in_creator]
-    log << "\nin_settings: #{item[:in_settings]}\n  #{item[:in_settings].keys.map(&:to_sym).sort}" if item[:in_settings]
-    info_log "\n----------\nPARAMS METHOD!\n#{log}\n----------"
   end
 end

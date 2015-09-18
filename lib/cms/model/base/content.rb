@@ -8,7 +8,7 @@ module Cms::Model::Base::Content
     [['公開','public'],['非公開','closed']]
   end
 
-  def model_name(option = nil)
+  def module_name(option = nil)
     name = Cms::Lib::Modules.model_name(:content, model)
     return name.to_s.gsub(/.*\//, '') if option == :short
     name
@@ -20,8 +20,7 @@ module Cms::Model::Base::Content
   end
 
   def public_uri(class_name)
-    cond = {:content_id => id, :model => class_name.to_s}
-    return nil unless node = Cms::Node.find(:first, :conditions => cond, :order => :id)
+    return nil unless node = Cms::Node.where(content_id: id, model: class_name.to_s).order(:id).first
     node.public_uri
   end
 

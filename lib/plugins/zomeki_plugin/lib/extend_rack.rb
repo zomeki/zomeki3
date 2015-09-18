@@ -1,3 +1,4 @@
+require 'rack/session/abstract/id'
 module Rack
   module Session
     module Abstract

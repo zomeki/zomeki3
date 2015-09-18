@@ -33,15 +33,14 @@ class GpArticle::Doc < ActiveRecord::Base
   QRCODE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
   EVENT_WILL_SYNC_OPTIONS = [['同期する', 'enabled'], ['同期しない', 'disabled']]
 
-  default_scope { where("#{self.table_name}.state != 'archived'") }
-  scope :public, -> { where(state: 'public') }
+  default_scope { where.not(state: 'archived') }
+  scope :public_state, -> { where(state: 'public') }
   scope :mobile, ->(m) { m ? where(terminal_mobile: true) : where(terminal_pc_or_smart_phone: true) }
-  scope :none, -> { where("#{self.table_name}.id IS ?", nil).where("#{self.table_name}.id IS NOT ?", nil) }
   scope :display_published_after, ->(date) { where(arel_table[:display_published_at].gteq(date)) }
 
   # Content
   belongs_to :content, :foreign_key => :content_id, :class_name => 'GpArticle::Content::Doc'
-  validates_presence_of :content_id
+  validates :content_id, :presence => true
 
   # Page
   belongs_to :concept, :foreign_key => :concept_id, :class_name => 'Cms::Concept'
@@ -53,20 +52,20 @@ class GpArticle::Doc < ActiveRecord::Base
   belongs_to :marker_icon_category, :class_name => 'GpCategory::Category'
 
   has_many :categorizations, :class_name => 'GpCategory::Categorization', :as => :categorizable, :dependent => :destroy
-  has_many :categories, -> { where("#{GpCategory::Categorization.table_name}.categorized_as", self.name) },
+  has_many :categories, -> { where(GpCategory::Categorization.arel_table[:categorized_as].eq('GpArticle::Doc')) },
            :class_name => 'GpCategory::Category', :through => :categorizations,
            :after_add => proc {|d, c|
-             d.categorizations.where(category_id: c.id, categorized_as: nil).first.update_column(:categorized_as, d.class.name)
+             d.categorizations.where(category_id: c.id, categorized_as: nil).first.update_columns(categorized_as: d.class.name)
            }
-  has_many :event_categories, -> { where("#{GpCategory::Categorization.table_name}.categorized_as", 'GpCalendar::Event') },
+  has_many :event_categories, -> { where(GpCategory::Categorization.arel_table[:categorized_as].eq('GpCalendar::Event')) },
            :class_name => 'GpCategory::Category', :through => :categorizations, :source => :category,
            :after_add => proc {|d, c|
-             d.categorizations.where(category_id: c.id, categorized_as: nil).first.update_column(:categorized_as, 'GpCalendar::Event')
+             d.categorizations.where(category_id: c.id, categorized_as: nil).first.update_columns(categorized_as: 'GpCalendar::Event')
            }
-  has_many :marker_categories, -> { where("#{GpCategory::Categorization.table_name}.categorized_as", 'Map::Marker') },
+  has_many :marker_categories, -> { where(GpCategory::Categorization.arel_table[:categorized_as].eq('Map::Marker')) },
            :class_name => 'GpCategory::Category', :through => :categorizations, :source => :category,
            :after_add => proc {|d, c|
-             d.categorizations.where(category_id: c.id, categorized_as: nil).first.update_column(:categorized_as, 'Map::Marker')
+             d.categorizations.where(category_id: c.id, categorized_as: nil).first.update_columns(categorized_as: 'Map::Marker')
            }
   has_and_belongs_to_many :tags, ->(doc) {
                               c = doc.content
@@ -94,17 +93,12 @@ class GpArticle::Doc < ActiveRecord::Base
   validates :mobile_body, :length => {maximum: 300000}
   validates :state, :presence => true
   validates :filename_base, :presence => true
+
   validate :name_validity
-
-#  validate :validate_inquiry
-
-  #validate :validate_platform_dependent_characters, :unless => :state_draft?
   validate :node_existence
   validate :event_dates_range
   validate :broken_link_existence, :unless => :state_draft?
   validate :body_limit_for_mobile
-
-  #validate :validate_word_dictionary, :unless => :state_draft?
   validate :validate_accessibility_check, :unless => :state_draft?
 
   after_initialize :set_defaults
@@ -114,7 +108,7 @@ class GpArticle::Doc < ActiveRecord::Base
 
   attr_accessor :ignore_accessibility_check
 
-  def self.all_with_content_and_criteria(content, criteria)
+  scope :content_and_criteria, ->(content, criteria){
     docs = self.arel_table
 
     creators = Sys::Creator.arel_table
@@ -141,10 +135,8 @@ class GpArticle::Doc < ActiveRecord::Base
 
     rel = rel.where(docs[:id].eq(criteria[:id])) if criteria[:id].present?
     rel = rel.where(docs[:state].eq(criteria[:state])) if criteria[:state].present?
-    rel = rel.where(docs[:title].matches("%#{criteria[:title]}%")) if criteria[:title].present?
-    rel = rel.where(docs[:title].matches("%#{criteria[:free_word]}%")
-                    .or(docs[:body].matches("%#{criteria[:free_word]}%"))
-                    .or(docs[:name].matches("%#{criteria[:free_word]}%"))) if criteria[:free_word].present?
+    rel = rel.search_with_text(:title, criteria[:title]) if criteria[:title].present?
+    rel = rel.search_with_text(:title, :body, :name, criteria[:free_word]) if criteria[:free_word].present?
     rel = rel.where(groups[:name].matches("%#{criteria[:group]}%")) if criteria[:group].present?
     if criteria[:group_id].present?
       rel = rel.where(if criteria[:group_id].kind_of?(Array)
@@ -159,20 +151,22 @@ class GpArticle::Doc < ActiveRecord::Base
     if criteria[:touched_user_id].present?
       operation_logs = Sys::OperationLog.arel_table
 
-      rel = rel.includes(:operation_logs).where(operation_logs[:user_id].eq(criteria[:touched_user_id])
-                                                .or(creators[:user_id].eq(criteria[:touched_user_id])))
+      rel = rel.eager_load(:operation_logs)
+                .where(operation_logs[:user_id].eq(criteria[:touched_user_id])
+                .or(creators[:user_id].eq(criteria[:touched_user_id])))
     end
 
     if criteria[:editable].present?
       editable_groups = Sys::EditableGroup.arel_table
 
       rel = unless Core.user.has_auth?(:manager)
-              rel.includes(:editable_group).where(creators[:group_id].eq(Core.user.group.id)
-                                                  .or(editable_groups[:all].eq(true)
-                                                  .or(editable_groups[:group_ids].eq(Core.user.group.id.to_s)
-                                                  .or(editable_groups[:group_ids].matches("#{Core.user.group.id} %")
-                                                  .or(editable_groups[:group_ids].matches("% #{Core.user.group.id} %")
-                                                  .or(editable_groups[:group_ids].matches("% #{Core.user.group.id}")))))))
+              rel.eager_load(:editable_group)
+                  .where(creators[:group_id].eq(Core.user.group.id)
+                  .or(editable_groups[:all].eq(true)
+                  .or(editable_groups[:group_ids].eq(Core.user.group.id.to_s)
+                  .or(editable_groups[:group_ids].matches("#{Core.user.group.id} %")
+                  .or(editable_groups[:group_ids].matches("% #{Core.user.group.id} %")
+                  .or(editable_groups[:group_ids].matches("% #{Core.user.group.id}")))))))
             else
               rel
             end
@@ -198,10 +192,10 @@ class GpArticle::Doc < ActiveRecord::Base
     end
 
     return rel
-  end
+  }
 
   def public_comments
-    comments.public
+    comments.public_state
   end
 
   def prev_edition
@@ -364,7 +358,7 @@ class GpArticle::Doc < ActiveRecord::Base
   def bread_crumbs(doc_node)
     crumbs = []
 
-    categories.public.each do |category|
+    categories.public_state.each do |category|
       category_type = category.category_type
       if (node = category.content.category_type_node)
         crumb = node.bread_crumbs.crumbs.first
@@ -545,7 +539,7 @@ class GpArticle::Doc < ActiveRecord::Base
       approval_request.current_assignments.map{|a| a.user unless a.approved_at }.compact.each do |approver|
         next if !assginments.blank? && !assginments.include?(approver.id.to_s)
         next if approval_request.requester.email.blank? || approver.email.blank?
-        CommonMailer.plain(from: approval_request.requester.email, to: approver.email, subject: subject, body: body).deliver
+        CommonMailer.plain(from: approval_request.requester.email, to: approver.email, subject: subject, body: body).deliver_now
       end
     end
   end
@@ -564,9 +558,9 @@ class GpArticle::Doc < ActiveRecord::Base
   #{_core_uri.sub(/\/+$/, '')}#{Rails.application.routes.url_helpers.gp_article_doc_path(content: content, id: id, active_tab: 'approval')}
       EOT
 
-      approver = approval_request.current_assignments.reorder('approved_at DESC').first.user
+      approver = approval_request.current_assignments.reorder(approved_at: :desc).first.user
       next if approver.email.blank? || approval_request.requester.email.blank?
-      CommonMailer.plain(from: Core.user.email, to: approval_request.requester.email, subject: subject, body: body).deliver
+      CommonMailer.plain(from: Core.user.email, to: approval_request.requester.email, subject: subject, body: body).deliver_now
     end
   end
 
@@ -577,7 +571,7 @@ class GpArticle::Doc < ActiveRecord::Base
     detail_url = "#{_core_uri.sub(/\/+$/, '')}#{Rails.application.routes.url_helpers.gp_article_doc_path(content: content, id: id, active_tab: 'approval')}"
 
     CommonMailer.passbacked_notification(approval_request: approval_request, approver: approver, comment: comment, detail_url: detail_url,
-                                         from: approver.email, to: approval_request.requester.email).deliver
+                                         from: approver.email, to: approval_request.requester.email).deliver_now
   end
 
   def send_pullbacked_notification_mail(approval_request: nil, comment: '')
@@ -588,7 +582,7 @@ class GpArticle::Doc < ActiveRecord::Base
     approval_request.current_approvers.each do |approver|
       next if approver.email.blank? || approval_request.requester.email.blank?
       CommonMailer.pullbacked_notification(approval_request: approval_request, comment: comment, detail_url: detail_url,
-                                           from: approval_request.requester.email, to: approver.email).deliver
+                                           from: approval_request.requester.email, to: approver.email).deliver_now
     end
   end
 

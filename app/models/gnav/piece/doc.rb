@@ -1,6 +1,6 @@
 # encoding: utf-8
 class Gnav::Piece::Doc < Cms::Piece
-  default_scope where(model: 'Gnav::Doc')
+  default_scope { where(model: 'Gnav::Doc') }
 
   after_initialize :set_default_settings
 
@@ -37,7 +37,7 @@ class Gnav::Piece::Doc < Cms::Piece
   end
 
   def category_type
-    category_types.find_by_id(setting_value(:category_type_id)) rescue nil
+    category_types.find_by(id: setting_value(:category_type_id)) rescue nil
   end
 
   def categories
@@ -58,7 +58,7 @@ class Gnav::Piece::Doc < Cms::Piece
     return nil if categories.empty?
 
     if categories.respond_to?(:find_by_id)
-      categories.find_by_id(setting_value(:category_id))
+      categories.find_by(id: setting_value(:category_id))
     else
       categories.detect {|c| c.id.to_s == setting_value(:category_id) }
     end

@@ -1,6 +1,6 @@
 # encoding: utf-8
 class Cms::Public::CommonSslController < ApplicationController
-#  after_filter :replace_preview_data
+#  after_action :replace_preview_data
   
   def index
     path = Core.request_uri.gsub(/^#{Regexp.escape(cms_common_ssl_path)}/, "")

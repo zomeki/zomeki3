@@ -1,7 +1,7 @@
 # encoding: utf-8
 class Gnav::Public::Piece::DocsController < Sys::Controller::Public::Base
   def pre_dispatch
-    @piece = Gnav::Piece::Doc.find_by_id(Page.current_piece.id)
+    @piece = Gnav::Piece::Doc.find_by(id: Page.current_piece.id)
     render :text => '' unless @piece
 
     @item = Page.current_item
@@ -30,6 +30,6 @@ class Gnav::Public::Piece::DocsController < Sys::Controller::Public::Base
   private
 
   def find_public_docs_by_category_ids(category_ids)
-    GpArticle::Doc.all_with_content_and_criteria(nil, category_id: category_ids).mobile(::Page.mobile?).public
+    GpArticle::Doc.content_and_criteria(nil, category_id: category_ids).mobile(::Page.mobile?).public_state
   end
 end

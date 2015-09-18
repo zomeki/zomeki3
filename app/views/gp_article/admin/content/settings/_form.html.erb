@@ -48,7 +48,7 @@
       <%- else -%>
         <div style="margin: 5px; line-height: 1.2;"><%= @item.upper_text %></div>
         <%- if @item.config[:comment_upper] == 'doc_style_tags' -%>
-        <%= link_to_function '置き換えテキストを確認する', "$('#doc_style_tags').dialog({width: 400});" %>
+        <%= link_to '置き換えテキストを確認する', '#', id: 'show_dialog' %><br />
         <%- else -%>
         <%= @item.config[:comment_upper] %>
         <%- end -%>
@@ -58,7 +58,14 @@
     </td>
   </tr>
 </table>
-
+<%= javascript_tag do %>
+$(function() {
+  $('#show_dialog').on('click', function() {
+    $('#doc_style_tags').dialog({width: 400});
+    return false;
+  });
+});
+<% end %>
 <%- if @item.name == 'gp_category_content_category_type_id'
       content = GpCategory::Content::CategoryType.find_by_id(@item.value)
       category_types = content.try(:category_types) || []
@@ -151,7 +158,7 @@ $(document).ready(function () {
 <%- end -%>
 
 <%- if @item.name == 'basic_setting'
-      layouts = Cms::Layout.find(:all, :conditions => {:site_id => Core.site.id}, :order => "concept_id, name")
+      layouts = Cms::Layout.where(:site_id => Core.site.id).order(:concept_id, :name)
       layouts_for_option = layouts.collect{|i| ["#{i.concept.name} : #{i.title}", i.id]}
     -%>
 <table class="show">
@@ -183,7 +190,7 @@ $(document).ready(function () {
 
 <%- if @item.name == 'gp_template_content_template_id'
       content = GpTemplate::Content::Template.find_by_id(@item.value)
-      templates = content ? content.templates.public : []
+      templates = content ? content.templates.public_state : []
       template_ids = @item.extra_values[:template_ids] || []
       templates_for_option = content ? content.templates.map {|t| [t.title, t.id] } : []
     -%>
@@ -368,11 +375,19 @@ $(document).ready(function () {
   <tr>
     <th>フッター形式</th>
     <td>
-      <%= link_to_function '置き換えテキストを確認する', "$('#doc_style_tags').dialog({width: 400});" %>
+      <%= link_to '置き換えテキストを確認する', '#', id: 'show_dialog' %><br />
       <%= text_area_tag :footer_style, @item.extra_values[:footer_style], size: '100x10' %>
     </td>
   </tr>
 </table>
+<%= javascript_tag do %>
+$(function() {
+  $('#show_dialog').on('click', function() {
+    $('#doc_style_tags').dialog({width: 400});
+    return false;
+  });
+});
+<% end %>
 <%- end -%>
 
 <%- if @item.name == 'feature_settings' -%>

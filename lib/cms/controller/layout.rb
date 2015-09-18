@@ -193,7 +193,7 @@ module Cms::Controller::Layout
 
     # フォームへのリンクをhttpsに、その他はhttpに変換
     form_nodes = Cms::Node.where(model: 'Survey::Form', site_id: Page.site.id)
-    form_nodes = form_nodes.select {|f| Survey::Content::Form.find_by_id(f.content.id).use_common_ssl? }
+    form_nodes = form_nodes.select {|f| Survey::Content::Form.find_by(id: f.content.id).use_common_ssl? }
     form_nodes = form_nodes.map{|f| f.public_uri }
     unless form_nodes.blank?
       body_doc = Nokogiri::HTML.fragment(body)

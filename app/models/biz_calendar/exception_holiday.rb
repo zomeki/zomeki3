@@ -5,17 +5,31 @@ class BizCalendar::ExceptionHoliday < ActiveRecord::Base
   include Sys::Model::Rel::Creator
   include Cms::Model::Auth::Content
 
+  include StateText
+
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
 
-  belongs_to :status, :foreign_key => :state,    :class_name => 'Sys::Base::Status'
   belongs_to :place,  :foreign_key => :place_id, :class_name => 'BizCalendar::Place'
 
-  validates_presence_of :state, :start_date, :end_date
+  validates :state, :start_date, :end_date, presence: true
   validate :dates_range
   
   after_initialize :set_defaults
 
-  scope :public, where(state: 'public')
+  scope :public_state, ->{ where(state: 'public') }
+  scope :search_with_params, ->(params = {}) {
+    rel = all
+    params.each do |n, v|
+      next if v.to_s == ''
+      case n
+      when 's_event_date'
+        rel.where!(event_date: v)
+      when 's_title'
+        rel = rel.search_with_text(:title, v)
+      end
+    end
+    rel
+  }
 
   def self.all_with_place_and_criteria(place, criteria)
     holidays = self.arel_table
@@ -67,20 +81,5 @@ class BizCalendar::ExceptionHoliday < ActiveRecord::Base
 
   def set_defaults
     self.state ||= STATE_OPTIONS.first.last if self.has_attribute?(:state)
-  end
-
-  def search(params)
-    params.each do |n, v|
-      next if v.to_s == ''
-
-      case n
-      when 's_event_date'
-        self.and :event_date, v
-      when 's_title'
-        self.and_keywords v, :title
-      end
-    end if params.size != 0
-
-    return self
   end
 end

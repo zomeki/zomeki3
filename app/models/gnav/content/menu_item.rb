@@ -7,7 +7,7 @@ class Gnav::Content::MenuItem < Cms::Content
   before_create :set_default_settings
 
   def public_nodes
-    nodes.public
+    nodes.public_state
   end
 
   def public_node
@@ -21,7 +21,7 @@ class Gnav::Content::MenuItem < Cms::Content
   end
 
   def gp_category_content_category_type
-    GpCategory::Content::CategoryType.find_by_id(setting_value(:gp_category_content_category_type_id))
+    GpCategory::Content::CategoryType.find_by(id: setting_value(:gp_category_content_category_type_id))
   end
 
   def category_types

@@ -2,8 +2,7 @@ module Sys::Model::Rel::Unid
   def self.included(mod)
     mod.has_one :unid_original, :primary_key => 'unid', :foreign_key => 'id', :class_name => 'Sys::Unid',
       :dependent => :destroy
-    mod.validates_uniqueness_of :unid,
-      :if => %Q(!unid.nil?)
+    mod.validates :unid, uniqueness: true, if: %Q(!unid.nil?)
     mod.after_save :save_unid
   end
   

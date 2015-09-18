@@ -14,10 +14,10 @@ class Cms::Piece::PickupDocXml < Cms::Model::Base::PieceExtension
   attr_accessor :doc_name
   attr_accessor :sort_no
 
-  validates_presence_of :content_id, :doc_id, :sort_no
+  validates :content_id, :doc_id, :sort_no, presence: true
 
   def doc
-    GpArticle::Doc.find_by_content_id_and_name_and_state(content_id, doc_name, 'public')
+    GpArticle::Doc.find_by(content_id: content_id, name: doc_name, state: 'public')
   end
   
 end

@@ -13,7 +13,7 @@ class Gnav::MenuItem < ActiveRecord::Base
 
   # Content
   belongs_to :content, :foreign_key => :content_id, :class_name => 'Gnav::Content::MenuItem'
-  validates_presence_of :content_id
+  validates :content_id, :presence => true
 
   # Page
   belongs_to :concept, :foreign_key => :concept_id, :class_name => 'Cms::Concept'

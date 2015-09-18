@@ -44,7 +44,7 @@ $(document).ready(function () {
       $('#user_id').html('<option value=""></option>');
     } else {
       $('#user_id').html('<option value="">更新中...</option>');
-      $.get('<%= sys_group_users_path(parent: 'PARENT') %>?options=true'.replace('PARENT', group_id), function (data) {
+      $.get('<%= sys_group_users_path(parent: 'PARENT', options: 'true') %>'.replace('PARENT', group_id), function (data) {
         $('#user_id').html('<option value=""></option>' + data);
       });
     }

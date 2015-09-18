@@ -2,7 +2,7 @@
 class Cms::Admin::Site::BasicAuthUsersController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 
-  after_filter :refresh_auth, only: [:create, :update, :destroy]
+  after_action :refresh_auth, only: [:create, :update, :destroy]
 
   def pre_dispatch
     return error_auth unless Core.user.has_auth?(:manager)
@@ -26,21 +26,18 @@ class Cms::Admin::Site::BasicAuthUsersController < Cms::Controller::Admin::Base
 
   def create
     @item = @site.basic_auth_users.build(basic_auth_user_params)
-    _create(@item) do
-    end
+    _create @item
   end
 
   def update
     @item = @site.basic_auth_users.find(params[:id])
     @item.attributes = basic_auth_user_params
-    _update(@item) do
-    end
+    _update @item
   end
 
   def destroy
     @item = @site.basic_auth_users.find(params[:id])
-    _destroy(@item) do
-    end
+    _destroy @item
   end
 
   def enable_auth
@@ -75,6 +72,6 @@ class Cms::Admin::Site::BasicAuthUsersController < Cms::Controller::Admin::Base
   private
 
   def basic_auth_user_params
-    params.require(:item).permit(:in_creator, :name, :password, :state)
+    params.require(:item).permit(:name, :password, :state, :in_creator => [:group_id, :user_id])
   end
 end

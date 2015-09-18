@@ -15,18 +15,18 @@ class GpCalendar::Holiday < ActiveRecord::Base
 
   # Content
   belongs_to :content, :foreign_key => :content_id, :class_name => 'GpCalendar::Content::Event'
-  validates_presence_of :content_id
+  validates :content_id, :presence => true
 
   # Proper
-  validates_presence_of :state
+  validates :state, :presence => true
 
   after_initialize :set_defaults
 
-  validates_presence_of :title
+  validates :title, :presence => true
 
-  scope :public, -> { where(state: 'public') }
+  scope :public_state, -> { where(state: 'public') }
 
-  def self.all_with_content_and_criteria(content, criteria)
+  scope :content_and_criteria, ->(content, criteria){
     holidays = self.arel_table
 
     rel = self.where(holidays[:content_id].eq(content.id))
@@ -57,7 +57,7 @@ class GpCalendar::Holiday < ActiveRecord::Base
     end
 
     return rel
-  end
+  }
 
   belongs_to :doc, :class_name => 'GpArticle::Doc' # Not saved to database
 
@@ -77,7 +77,7 @@ class GpCalendar::Holiday < ActiveRecord::Base
 
   def holiday
     criteria = {date: started_on, kind: 'holiday'}
-    GpCalendar::Holiday.public.all_with_content_and_criteria(content, criteria).first.title rescue nil
+    GpCalendar::Holiday.public_state.content_and_criteria(content, criteria).first.title rescue nil
   end
 
   def publish!

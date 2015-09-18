@@ -8,7 +8,7 @@ class Cms::SiteBasicAuthUser < ActiveRecord::Base
 
   include StateText
 
-  validates_presence_of :site_id, :state, :name, :password
+  validates :site_id, :state, :name, :password, presence: true
 
   def states
     [['有効','enabled'],['無効','disabled']]

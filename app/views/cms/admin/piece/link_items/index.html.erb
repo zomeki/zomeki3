@@ -2,11 +2,11 @@
   
   <tr>
     <th style="width: 60px; text-align: center;">詳細</th>
-    <th style="width: ;"><%= Cms::PieceLinkItem.new.locale(:name) %></th>
-    <th style="width: 40%;"><%= Cms::PieceLinkItem.new.locale(:uri) %></th>
-    <th style="width: 80px; text-align: right;"><%= Article::Area.new.locale(:sort_no) %></th>
+    <th style="width: ;"><%= Cms::PieceLinkItem.human_attribute_name(:name) %></th>
+    <th style="width: 40%;"><%= Cms::PieceLinkItem.human_attribute_name(:uri) %></th>
+    <th style="width: 80px; text-align: right;"><%= Cms::PieceLinkItem.human_attribute_name(:sort_no) %></th>
     <th style="width: 120px; text-align: center;">更新日時</th>
-    <th style="width: 60px; text-align: center;"><%= Article::Area.new.locale(:state) %></th>
+    <th style="width: 60px; text-align: center;"><%= Cms::PieceLinkItem.human_attribute_name(:state) %></th>
   </tr>
   
   <% for item in @items %>

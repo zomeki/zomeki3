@@ -23,7 +23,7 @@ protected
   def stop_process(process_name = @process_name)
     raise "undefined process_name" if process_name.blank?
     
-    proc = Sys::Process.find_by_name(process_name)
+    proc = Sys::Process.find_by(name: process_name)
     
     if !proc
       flash[:notice] = "プロセスは実行されていません。"

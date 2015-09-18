@@ -3,11 +3,11 @@
 require 'will_paginate/array'
 
 class Map::Public::Node::MarkersController < Cms::Controller::Public::Base
-  skip_filter :render_public_layout, :only => [:file_content]
+  skip_action_callback :render_public_layout, :only => [:file_content]
 
   def pre_dispatch
     @node = Page.current_node
-    @content = Map::Content::Marker.find_by_id(@node.content.id)
+    @content = Map::Content::Marker.find_by(id: @node.content.id)
     return http_error(404) unless @content
 
     category = params[:category] ? params[:category] : params[:escaped_category].to_s.gsub('@', '/')
@@ -31,7 +31,7 @@ class Map::Public::Node::MarkersController < Cms::Controller::Public::Base
   end
 
   def file_content
-    @marker = @content.markers.find_by_name(params[:name])
+    @marker = @content.markers.find_by(name: params[:name])
     return http_error(404) if @marker.nil? || @marker.files.empty?
 
     file = @marker.files.first
@@ -80,7 +80,7 @@ class Map::Public::Node::MarkersController < Cms::Controller::Public::Base
   def find_category_by_specified_path(path)
     return nil unless path.kind_of?(String)
     category_type_name, category_path = path.split('/', 2)
-    category_type = @content.category_types.find_by_name(category_type_name)
+    category_type = @content.category_types.find_by(name: category_type_name)
     return nil unless category_type
     category_type.find_category_by_path_from_root_category(category_path)
   end

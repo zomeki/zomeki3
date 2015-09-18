@@ -3,7 +3,7 @@ class AdBanner::Admin::GroupsController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 
   def pre_dispatch
-    return error_auth unless @content = AdBanner::Content::Banner.find_by_id(params[:content])
+    return error_auth unless @content = AdBanner::Content::Banner.find_by(id: params[:content])
     return error_auth unless Core.user.has_priv?(:read, :item => @content.concept)
   end
 
@@ -40,6 +40,6 @@ class AdBanner::Admin::GroupsController < Cms::Controller::Admin::Base
   private
 
   def group_params
-    params.require(:item).permit(:in_creator, :name, :sort_no, :title)
+    params.require(:item).permit(:name, :sort_no, :title, :in_creator => [:group_id, :user_id])
   end
 end

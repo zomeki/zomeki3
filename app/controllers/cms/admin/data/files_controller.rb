@@ -6,7 +6,7 @@ class Cms::Admin::Data::FilesController < Cms::Controller::Admin::Base
     return error_auth unless Core.user.has_auth?(:designer)
 
     return redirect_to(url_for(:action => "index", :parent => '0')) if params[:reset] || (params['s_node_id'] == '' && params[:s_keyword] == '' && params[:s_target] == '')
-    
+
     if params[:parent] && params[:parent] != '0'
       @parent = Cms::DataFileNode.find(params[:parent])
     else
@@ -25,8 +25,8 @@ class Cms::Admin::Data::FilesController < Cms::Controller::Admin::Base
 
     files = Cms::DataFile.arel_table
 
-    rel = Cms::DataFile.order(params[:s_sort] == 'updated_at' ? 'updated_at DESC, id' : 'name, id')
-    rel = rel.where(files[:name].matches("%#{params[:s_keyword]}%")) if params[:s_keyword].present?
+    rel = Cms::DataFile.order(params[:s_sort] == 'updated_at' ? {updated_at: :desc, id: :asc} : {name: :asc, id: :asc})
+    rel = rel.search_with_text(:name, params[:s_keyword]) if params[:s_keyword].present?
     rel = rel.where(node_id: @parent.id) unless @parent.id.zero?
     rel = unless Core.user.has_auth?(:manager) || params[:s_target] == 'current'
             rel.readable
@@ -40,16 +40,16 @@ class Cms::Admin::Data::FilesController < Cms::Controller::Admin::Base
   end
 
   def show
-    @item = Cms::DataFile.readable.find_by(id: params[:id])
+    @item = Cms::DataFile.readable.find(params[:id])
     return error_auth unless @item.readable?
     _show @item
   end
 
   def new
-    @item = Cms::DataFile.new({
+    @item = Cms::DataFile.new(
       :concept_id => Core.concept(:id),
       :state      => 'public'
-    })
+    )
   end
 
   def create
@@ -75,10 +75,9 @@ class Cms::Admin::Data::FilesController < Cms::Controller::Admin::Base
   end
 
   def download
-    item = Cms::DataFile.new.readable
-    item.and :id, params[:id]
-    return error_auth unless @file = item.find(:first)
-    
+    @file = Cms::DataFile.readable.find(params[:id])
+    return error_auth unless @file
+
     send_file @file.upload_path, :type => @file.mime_type, :filename => @file.name, :disposition => 'inline'
   end
 

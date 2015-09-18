@@ -10,13 +10,13 @@ class Cms::DataFile < ActiveRecord::Base
 
   include StateText
 
-  scope :public, -> { where(state: 'public') }
-
   belongs_to :concept, :foreign_key => :concept_id, :class_name => 'Cms::Concept'
   belongs_to :site   , :foreign_key => :site_id   , :class_name => 'Cms::Site'
   belongs_to :node   , :foreign_key => :node_id   , :class_name => 'Cms::DataFileNode'
 
   after_destroy :remove_public_file
+
+  scope :public_state, -> { where(state: 'public') }
 
   def self.find_by_public_path(path)
     path =~ /sites\/.*\/(.*?)\/public\/_files\/.*\/(.*?)\/(.*?)$/i
@@ -80,16 +80,9 @@ class Cms::DataFile < ActiveRecord::Base
   end
 
   def duplicated?
-    file = self.class.new
-    file.and :id, "!=", id if id
-    file.and :concept_id, concept_id
-    file.and :name, name
-    if node_id
-      file.and :node_id, node_id
-    else
-      file.and :node_id, 'IS', nil
-    end
-    return file.find(:first) != nil
+    file = self.class.where(concept_id: concept_id, name: name).where(node_id: node_id ? node_id : nil)
+    file = file.where.not(id: id) if id
+    file.exists?
   end
 
   def search(params)

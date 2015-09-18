@@ -16,7 +16,7 @@ module Sys::Lib::File::Transfer
     result = {:version => _version, :sites => {} }
 
     _sites.each do |site|
-      site = Cms::Site.find_by_id(site) if site.is_a?(Integer)
+      site = Cms::Site.find_by(id: site) if site.is_a?(Integer)
       _settings = get_transfer_site_settings site
       next if _settings.size <= 0
 

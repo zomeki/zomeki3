@@ -18,7 +18,9 @@ class GpArticle::Piece::RecentTabXml < Cms::Model::Base::PieceExtension
   elem_accessor :elem_category_ids
   elem_accessor :elem_layers
 
-  validates_presence_of :name, :title, :sort_no
+  validates :name, :presence => true
+  validates :title, :presence => true
+  validates :sort_no, :presence => true
 
   def condition_name
     CONDITION_OPTIONS.detect{|o| o.last == condition }.try(:first).to_s
@@ -28,7 +30,7 @@ class GpArticle::Piece::RecentTabXml < Cms::Model::Base::PieceExtension
     categories_with_layer_array = []
 
     elem_category_ids.each_with_index do |category_id, index|
-      category = GpCategory::Category.find_by_id(category_id)
+      category = GpCategory::Category.find_by(id: category_id)
       categories_with_layer_array << {category: category, layer: elem_layers[index].sub(Regexp.new("^#{index}_"), '')} if category
     end
 

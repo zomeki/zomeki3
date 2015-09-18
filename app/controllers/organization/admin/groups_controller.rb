@@ -2,10 +2,10 @@ class Organization::Admin::GroupsController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 
   def pre_dispatch
-    return http_error(404) unless @content = Organization::Content::Group.find_by_id(params[:content])
+    return http_error(404) unless @content = Organization::Content::Group.find_by(id: params[:content])
     return error_auth unless Core.user.has_priv?(:read, :item => @content.concept)
-    @parent_sys_group = Core.site.groups.find_by_code(params[:group_id])
-    @item = @content.groups.find_by_id(params[:id])
+    @parent_sys_group = Core.site.groups.find_by(code: params[:group_id])
+    @item = @content.groups.find_by(id: params[:id])
   end
 
   def index
@@ -34,6 +34,8 @@ class Organization::Admin::GroupsController < Cms::Controller::Admin::Base
   private
 
   def group_params
-    params.require(:item).permit(:outline, :business_outline, :concept_id, :contact_information, :docs_order, :in_creator, :layout_id, :more_layout_id, :sitemap_state, :sort_no, :state)
+    params.require(:item).permit(:outline, :business_outline, :concept_id, :contact_information,
+      :docs_order, :layout_id, :more_layout_id, :sitemap_state, :sort_no, :state,
+      :in_creator => [:group_id, :user_id])
   end
 end

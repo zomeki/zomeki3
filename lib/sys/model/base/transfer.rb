@@ -1,7 +1,31 @@
 module Sys::Model::Base::Transfer
-  def self.included(base)
-    base.belongs_to :site, :class_name => 'Cms::Site'
-    base.belongs_to :user, :class_name => 'Sys::User'
+  extend ActiveSupport::Concern
+
+  included do
+    belongs_to :site, :class_name => 'Cms::Site'
+    belongs_to :user, :class_name => 'Sys::User'
+
+    scope :search_with_params, ->(params = {}) {
+      rel = all
+      params.each do |n, v|
+        next if v.to_s == ''
+        case n
+        when 's_version'
+          rel.where!(version: v)
+        when 's_operation'
+          rel.where!(operation: v)
+        when 's_file_type'
+          rel.where!(file_type: v)
+        when 's_path'
+          rel.where!(arel_table[:path].matches("%#{escape_like(v)}%"))
+        when 's_item_name'
+          rel.where!(arel_table[:item_name].matches("%#{escape_like(v)}%"))
+        when 's_operator_name'
+          rel.where!(arel_table[:operator_name].matches("%#{escape_like(v)}%"))
+        end
+      end
+      rel
+    }
   end
 
   def operations
@@ -83,29 +107,6 @@ module Sys::Model::Base::Transfer
       end
     end
     '-'
-  end
-
-  def search(params)
-    params.each do |n, v|
-      next if v.to_s == ''
-
-      case n
-      when 's_version'
-        self.and :version, v
-      when 's_operation'
-        self.and :operation, v
-      when 's_file_type'
-        self.and :file_type, v
-      when 's_path'
-        self.and 'path', 'LIKE', "%#{v.gsub(/([%_])/, '\\\\\1')}%"
-      when 's_item_name'
-        self.and 'item_name', 'LIKE', "%#{v.gsub(/([%_])/, '\\\\\1')}%"
-      when 's_operator_name'
-        self.and 'operator_name', 'LIKE', "%#{v.gsub(/([%_])/, '\\\\\1')}%"
-      end
-    end if params.size != 0
-
-    return self
   end
 
   module_function :operations

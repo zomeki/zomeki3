@@ -11,7 +11,7 @@ class GpCalendar::Content::Event < Cms::Content
   before_create :set_default_settings
 
   def public_nodes
-    nodes.public
+    nodes.public_state
   end
 
   def public_node
@@ -19,15 +19,15 @@ class GpCalendar::Content::Event < Cms::Content
   end
 
   def public_events
-    events.public
+    events.public_state
   end
 
   def public_holidays
-    holidays.public
+    holidays.public_state
   end
 
   def categories
-    setting = GpCalendar::Content::Setting.find_by_id(settings.find_by_name('gp_category_content_category_type_id').try(:id))
+    setting = GpCalendar::Content::Setting.find_by(id: settings.find_by(name: 'gp_category_content_category_type_id').try(:id))
     return GpCategory::Category.none unless setting
     setting.categories
   end
@@ -37,7 +37,7 @@ class GpCalendar::Content::Event < Cms::Content
   end
 
   def public_categories
-    categories.public
+    categories.public_state
   end
 
   def category_types

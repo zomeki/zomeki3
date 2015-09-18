@@ -2,7 +2,7 @@
 class GpCategory::Piece::CategoryType < Cms::Piece
   LAYER_OPTIONS = [['下層のカテゴリすべて', 'descendants'], ['該当カテゴリのみ', 'self']]
 
-  default_scope where(model: 'GpCategory::CategoryType')
+  default_scope { where(model: 'GpCategory::CategoryType') }
 
   def layer
     setting_value(:layer).presence || LAYER_OPTIONS.first.last
@@ -17,7 +17,7 @@ class GpCategory::Piece::CategoryType < Cms::Piece
   end
 
   def content
-    GpCategory::Content::CategoryType.find(super)
+    GpCategory::Content::CategoryType.find(super.id)
   end
 
   def category_types
@@ -25,7 +25,7 @@ class GpCategory::Piece::CategoryType < Cms::Piece
   end
 
   def public_category_types
-    category_types.public
+    category_types.public_state
   end
 
   def category_types_for_option
@@ -33,7 +33,7 @@ class GpCategory::Piece::CategoryType < Cms::Piece
   end
 
   def category_type
-    category_types.find_by_id(setting_value(:category_type_id))
+    category_types.find_by(id: setting_value(:category_type_id))
   end
 
   def categories
@@ -45,7 +45,7 @@ class GpCategory::Piece::CategoryType < Cms::Piece
 
     if (category_id = setting_value(:category_id)).present?
       if layer == 'descendants'
-        category_type.categories.find_by_id(category_id).try(:descendants) || []
+        category_type.categories.find_by(id: category_id).try(:descendants) || []
       else
         category_type.categories.where(id: category_id)
       end

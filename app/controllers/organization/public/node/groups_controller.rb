@@ -1,6 +1,6 @@
 class Organization::Public::Node::GroupsController < Cms::Controller::Public::Base
   def pre_dispatch
-    @content = Organization::Content::Group.find_by_id(Page.current_node.content.id)
+    @content = Organization::Content::Group.find_by(id: Page.current_node.content.id)
     return http_error(404) unless @content
     @more = (params[:filename_base] =~ /^more($|_)/i)
   end
@@ -9,7 +9,7 @@ class Organization::Public::Node::GroupsController < Cms::Controller::Public::Ba
     http_error(404) if params[:page]
 
     sys_group_codes = @content.root_sys_group.children.pluck(:code)
-    @groups = @content.groups.public.where(sys_group_code: sys_group_codes)
+    @groups = @content.groups.public_state.where(sys_group_code: sys_group_codes)
   end
 
   def show
@@ -44,6 +44,6 @@ class Organization::Public::Node::GroupsController < Cms::Controller::Public::Ba
   private
 
   def find_public_docs_with_group_id(group_id)
-    GpArticle::Doc.all_with_content_and_criteria(nil, group_id: group_id).mobile(::Page.mobile?).public
+    GpArticle::Doc.content_and_criteria(nil, group_id: group_id).mobile(::Page.mobile?).public_state
   end
 end

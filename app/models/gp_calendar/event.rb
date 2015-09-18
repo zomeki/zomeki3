@@ -15,31 +15,26 @@ class GpCalendar::Event < ActiveRecord::Base
 
   # Content
   belongs_to :content, :foreign_key => :content_id, :class_name => 'GpCalendar::Content::Event'
-  validates_presence_of :content_id
+  validates :content_id, :presence => true
 
   # Proper
-  validates_presence_of :state
+  validates :state, :presence => true
 
   has_and_belongs_to_many :categories, :class_name => 'GpCategory::Category', :join_table => 'gp_calendar_events_gp_category_categories'
 
   after_initialize :set_defaults
   before_save :set_name
 
-  validates_presence_of :started_on, :ended_on, :title
+  validates :started_on, :presence => true
+  validates :ended_on, :presence => true
+  validates :title, :presence => true
   validates :name, :uniqueness => true, :format => {with: /\A[\-\w]*\z/ }
 
   validate :dates_range
 
-  scope :public, -> { where(state: 'public') }
+  scope :public_state, -> { where(state: 'public') }
 
-  def self.state_options(synced: nil)
-    so = []
-    so << ['同期済', 'synced'] if synced
-    so += STATE_OPTIONS.dup
-    so
-  end
-
-  def self.all_with_content_and_criteria(content, criteria)
+  scope :content_and_criteria, ->(content, criteria){
     events = self.arel_table
 
     rel = self.where(events[:content_id].eq(content.id))
@@ -82,13 +77,21 @@ class GpCalendar::Event < ActiveRecord::Base
     rel = rel.where(events[:state].eq(criteria[:state])) if criteria[:state].present?
 
     return rel
+  }
+
+
+  def self.state_options(synced: nil)
+    so = []
+    so << ['同期済', 'synced'] if synced
+    so += STATE_OPTIONS.dup
+    so
   end
 
   attr_accessor :doc # Not saved to database
 
   def holiday
     criteria = {date: started_on, kind: 'holiday'}
-    GpCalendar::Holiday.public.all_with_content_and_criteria(content, criteria).first.title rescue nil
+    GpCalendar::Holiday.public_state.content_and_criteria(content, criteria).first.title rescue nil
   end
 
   def public_path

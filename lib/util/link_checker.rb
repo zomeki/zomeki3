@@ -80,7 +80,7 @@ class Util::LinkChecker
   end
 
   def self.check_in_progress
-    Cms::LinkCheck.find_by_in_progress(true)
+    Cms::LinkCheck.find_by(in_progress: true)
   end
 
   def self.last_check

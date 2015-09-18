@@ -22,7 +22,7 @@ module Cms::Model::Base::Node
     Cms::Lib::Modules.module_name(:cms)
   end
 
-  def model_name(option = nil)
+  def content_model_name(option = nil)
     name = Cms::Lib::Modules.model_name(:node, model).to_s
     case option
     when :short, :wo_content
@@ -54,7 +54,7 @@ module Cms::Model::Base::Node
     exists    = [self.id]
     routes    = [self]
     parent_id = route_id
-    while (current = self.class.find_by_id(parent_id))
+    while (current = self.class.find_by(id: parent_id))
       break if exists.index(current.id)
       exists << current.id
 

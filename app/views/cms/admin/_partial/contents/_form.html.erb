@@ -6,7 +6,7 @@
     <th><%= f.label :model %> <span class="note">※</span></th>
     <td>
       <%- if @item.persisted? -%>
-        <%= @item.model_name(:short) %>
+        <%= @item.module_name(:short) %>
       <%- else -%>
         <%= f.select :model, Cms::Lib::Modules.contents, :include_blank => :true %>
       <%- end -%>

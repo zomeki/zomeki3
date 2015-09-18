@@ -14,7 +14,7 @@
     <td style="text-align: center;"><%= link_to :show, item.admin_content_uri %></td>
     <td><%= link_to h(item.name), item.admin_uri %></td>
     <td><%= item.note %></td>
-    <td><%= item.model_name(:short) %></td>
+    <td><%= item.module_name(:short) %></td>
     <td><%= item.sort_no %></td>
     <td style="text-align: center;"><%= item.updated_at.strftime('%Y-%m-%d %H:%M')%></td>
   </tr>

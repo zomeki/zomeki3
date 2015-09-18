@@ -3,12 +3,12 @@ class BizCalendar::Piece::BussinessTime < Cms::Piece
   TARGET_TYPE_OPTIONS = [['全て', 'all'], ['本日', 'today']]
   PAGE_FILTER_OPTIONS = [['絞り込む', 'filter'], ['絞り込まない', 'through']]
 
-  default_scope where(model: 'BizCalendar::BussinessTime')
+  default_scope { where(model: 'BizCalendar::BussinessTime') }
 
   after_initialize :set_default_settings
 
   def content
-    BizCalendar::Content::Place.find(super)
+    BizCalendar::Content::Place.find(super.id)
   end
 
   def target_today?

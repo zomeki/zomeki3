@@ -57,12 +57,8 @@ ZomekiCMS::Application.routes.draw do
     resources :tool_convert_downloads,
       :controller  => "admin/tool/convert_downloads",
       :path        => "tool_convert_downloads"
-    match "tool_convert_files(/:site_url(/*path))" => "admin/tool/convert_files#index",
-      :format => false, :constraints => { :site_url => /[^\/]+/ },
-      via: [:get, :post]
-    resources :tool_convert_files,
-      :controller  => "admin/tool/convert_files",
-      :path        => "tool_convert_files"
+    match "tool_convert_files(/*path)" => "admin/tool/convert_files#index",
+      :format => false, :as => "tool_convert_files", via: [:get, :post]
     resources :tool_convert_settings,
       :controller  => "admin/tool/convert_settings",
       :path        => "tool_convert_settings"
@@ -93,7 +89,7 @@ ZomekiCMS::Application.routes.draw do
       end
   end
 
-  scope "#{ZomekiCMS::ADMIN_URL_PREFIX}/#{mod}", :module => mod, :as => '' do
+  scope "#{ZomekiCMS::ADMIN_URL_PREFIX}/#{mod}", :module => mod do
     post 'tool_rebuild_contents' => 'admin/tool/rebuild#rebuild_contents'
     post 'tool_rebuild_nodes' => 'admin/tool/rebuild#rebuild_nodes'
     match 'tool_rebuild' => 'admin/tool/rebuild#index', as: 'tool_rebuild', via: [:get, :post]
@@ -109,7 +105,7 @@ ZomekiCMS::Application.routes.draw do
     match 'tool_uri_check' => 'admin/tool/uri_check#index', via: [:get, :post]
   end
 
-  scope "#{ZomekiCMS::ADMIN_URL_PREFIX}/#{mod}/c:concept", :module => mod, :as => mod do
+  scope "#{ZomekiCMS::ADMIN_URL_PREFIX}/#{mod}/c(:concept)", :module => mod, :as => mod do
     match "stylesheets/(*path)" => "admin/stylesheets#index",
       :as => :stylesheets, :format => false, via: [:get, :post, :put]
     resources :contents,

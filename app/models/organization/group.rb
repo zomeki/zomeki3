@@ -14,8 +14,7 @@ class Organization::Group < ActiveRecord::Base
                         ['公開日（昇順）', 'display_published_at ASC, published_at ASC']]
 
   default_scope { order("#{self.table_name}.sort_no IS NULL, #{self.table_name}.sort_no") }
-  scope :public, -> { where(state: 'public') }
-  scope :none, -> { where("#{self.table_name}.id IS ?", nil).where("#{self.table_name}.id IS NOT ?", nil) }
+  scope :public_state, -> { where(state: 'public') }
 
   # Page
   belongs_to :concept, :class_name => 'Cms::Concept'
@@ -24,7 +23,7 @@ class Organization::Group < ActiveRecord::Base
 
   # Content
   belongs_to :content, :foreign_key => :content_id, :class_name => 'Organization::Content::Group'
-  validates_presence_of :content_id
+  validates :content_id, :presence => true
 
   belongs_to :sys_group, :foreign_key => :sys_group_code, :primary_key => :code, :class_name => 'Sys::Group'
 
@@ -75,7 +74,7 @@ class Organization::Group < ActiveRecord::Base
   end
 
   def public_children
-    children.public
+    children.public_state
   end
 
   def descendants(groups=[])

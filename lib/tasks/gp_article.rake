@@ -1,6 +1,5 @@
 # encoding: utf-8
-
-namespace :cms do
+namespace :zomeki do
   namespace :gp_article do
     task :set_user_and_group do
       Core.user       = Sys::User.first

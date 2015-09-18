@@ -1,9 +1,8 @@
 # encoding: utf-8
 module Cms::ProcessHelper
-  
+
   def script_state_view(name, options = {})
-    options[:proc] = Sys::Process.find_by_name(name) || Sys::Process.new(:name => name)
+    options[:proc] = Sys::Process.where(name: name).first_or_initialize
     render :partial => 'cms/admin/_partial/processes/view', :locals => options
   end
-  
 end

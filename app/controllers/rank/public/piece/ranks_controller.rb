@@ -3,7 +3,7 @@ class Rank::Public::Piece::RanksController < Sys::Controller::Public::Base
   include Rank::Controller::Rank
 
   def pre_dispatch
-    @piece = Rank::Piece::Rank.find_by_id(Page.current_piece.id)
+    @piece = Rank::Piece::Rank.find_by(id: Page.current_piece.id)
     render :text => '' unless @piece
   end
 

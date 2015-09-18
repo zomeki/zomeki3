@@ -7,12 +7,12 @@ class Cms::Script::TalkTasksController < Cms::Controller::Script::Publication
       return render(:text => "OK")
     end
 
-    tasks = Cms::TalkTask.find(:all, :select => :id, :order => "id")
+    tasks = Cms::TalkTask.select(:id).order(:id)
 
     Script.total tasks.size
 
     tasks.each do |v|
-      task = Cms::TalkTask.find_by_id(v[:id])
+      task = Cms::TalkTask.find_by(id: v[:id])
       next unless task
 
       begin

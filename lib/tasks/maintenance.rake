@@ -1,4 +1,4 @@
-namespace :cms do
+namespace :zomeki do
   namespace :maintenance do
     desc 'Replace @title@ to @title_link@ in settings'
     task(:replace_title_with_title_link => :environment) do

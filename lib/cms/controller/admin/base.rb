@@ -29,7 +29,7 @@ class Cms::Controller::Admin::Base < Sys::Controller::Admin::Base
 
     if Core.user
       if params[:concept]
-        concept = Cms::Concept.find_by_id(params[:concept])
+        concept = Cms::Concept.find_by(id: params[:concept])
         if concept && Core.site.id != concept.site_id
           Core.set_concept(session, 0)
         else

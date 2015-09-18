@@ -1,7 +1,7 @@
 require 'timeout'
 class Cms::Controller::Script::Publication < ApplicationController
   include Cms::Controller::Layout
-  before_filter :initialize_publication
+  before_action :initialize_publication
 
   def self.publishable?
     true
@@ -132,10 +132,10 @@ class Cms::Controller::Script::Publication < ApplicationController
     first = stopp ? stopp : (limit + 1)
     first.upto(9999) do |p|
       dep = "#{params[:dependent]}.p#{p}"
-      pub = Sys::Publisher.find(:first, :conditions => {:unid => item.unid, :dependent => dep})
+      pub = Sys::Publisher.find_by(unid: item.unid, dependent: dep)
       break unless pub
       pub.destroy
-      pub = Sys::Publisher.find(:first, :conditions => {:unid => item.unid, :dependent => "#{dep}/ruby"})
+      pub = Sys::Publisher.find_by(unid: item.unid, dependent: "#{dep}/ruby")
       pub.destroy if pub
     end
   end

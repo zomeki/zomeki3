@@ -40,7 +40,7 @@ class Cms::Admin::Content::RewriteController < Cms::Controller::Admin::Base
 
       next unless model
 
-      content = model.find_by_id(item.id)
+      content = model.find_by(id: item.id)
       next unless content
 
       conf << content.rewrite_configs unless content.rewrite_configs.empty?

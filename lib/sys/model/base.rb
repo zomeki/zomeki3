@@ -1,8 +1,10 @@
 module Sys::Model::Base
+  extend ActiveSupport::Concern
+  include Sys::Model::Scope
   include Sys::Model::ConditionBuilder
 
-  def self.included(mod)
-    mod.table_name = mod.to_s.underscore.gsub('/', '_').downcase.pluralize
+  included do
+    self.table_name = self.to_s.underscore.gsub('/', '_').downcase.pluralize
   end
 
   def locale(name)

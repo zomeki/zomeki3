@@ -11,11 +11,11 @@ class Survey::Content::Form < Cms::Content
   before_create :set_default_settings
 
   def public_forms
-    forms.public
+    forms.public_state
   end
 
   def public_nodes
-    nodes.public
+    nodes.public_state
   end
 
   def public_node
@@ -39,7 +39,7 @@ class Survey::Content::Form < Cms::Content
   end
 
   def approval_content_approval_flow
-    Approval::Content::ApprovalFlow.find_by_id(setting_extra_value(:approval_relation, :approval_content_id))
+    Approval::Content::ApprovalFlow.find_by(id: setting_extra_value(:approval_relation, :approval_content_id))
   end
 
   def approval_related?

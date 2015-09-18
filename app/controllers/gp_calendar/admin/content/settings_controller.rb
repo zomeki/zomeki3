@@ -22,7 +22,7 @@ class GpCalendar::Admin::Content::SettingsController < Cms::Controller::Admin::B
     @item = GpCalendar::Content::Setting.config(@content, params[:id])
     @item.value = params[:item][:value]
 
-    if @item.name.in?('gp_category_content_category_type_id', 'event_sync_import', 'event_sync_export')
+    if @item.name.in?(['gp_category_content_category_type_id', 'event_sync_import', 'event_sync_export'])
       extra_values = @item.extra_values
 
       case @item.name

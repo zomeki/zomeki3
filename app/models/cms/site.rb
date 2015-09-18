@@ -17,24 +17,34 @@ class Cms::Site < ActiveRecord::Base
 
   belongs_to :status, :foreign_key => :state,
     :class_name => 'Sys::Base::Status'
-  has_many :concepts, -> { order('name, id') }, :foreign_key => :site_id,
+  has_many :concepts, -> { order(:sort_no, :name, :id) }, :foreign_key => :site_id,
     :class_name => 'Cms::Concept', :dependent => :destroy
-  has_many :contents, -> { order('name, id') }, :foreign_key => :site_id,
+  has_many :contents, -> { order(:sort_no, :name, :id) }, :foreign_key => :site_id,
     :class_name => 'Cms::Content'
-  has_many :settings, -> { order('name, sort_no') }, :foreign_key => :site_id,
+  has_many :settings, -> { order(:name, :sort_no) }, :foreign_key => :site_id,
     :class_name => 'Cms::SiteSetting'
-  has_many :basic_auth_users, -> { order('name') }, :foreign_key => :site_id,
+  has_many :basic_auth_users, -> { order(:name) }, :foreign_key => :site_id,
     :class_name => 'Cms::SiteBasicAuthUser'
+  has_many :kana_dictionaries, :foreign_key => :site_id,
+    :class_name => 'Cms::KanaDictionary'
   has_many :site_belongings, :dependent => :destroy, :class_name => 'Cms::SiteBelonging'
   has_many :groups, :through => :site_belongings, :class_name => 'Sys::Group'
   has_many :nodes, :dependent => :destroy
   has_many :maintenances, class_name: 'Sys::Maintenance', dependent: :destroy
   has_many :messages, class_name: 'Sys::Message', dependent: :destroy
+  has_many :operation_logs, class_name: 'Sys::OperationLog'
+  has_many :transferred_files, class_name: 'Sys::TransferredFile'
+  has_many :transferable_files, class_name: 'Sys::TransferableFile'
+  belongs_to :root_node, foreign_key: :node_id, class_name: 'Cms::Node'
 
-  validates_presence_of :state, :name, :full_uri
-  validates_uniqueness_of :full_uri
-  validates_uniqueness_of :mobile_full_uri,
-    :if => %Q(!mobile_full_uri.blank?)
+  # conditional relations
+  has_many :root_concepts, -> { where(level_no: 1).order(:sort_no, :name, :id) }, class_name: 'Cms::Concept'
+  has_many :admin_protocol_settings, class_name: 'Cms::SiteSetting::AdminProtocol'
+  has_many :emergency_layout_settings, class_name: 'Cms::SiteSetting::EmergencyLayout'
+
+  validates :state, :name, :full_uri, presence: true
+  validates :full_uri, uniqueness: true
+  validates :mobile_full_uri, uniqueness: true, if: "mobile_full_uri.present?"
   validate :validate_attributes
 
   after_initialize :set_defaults
@@ -110,10 +120,6 @@ class Cms::Site < ActiveRecord::Base
     !mobile_full_uri.blank?
   end
 
-  def root_node
-    Cms::Node.find_by_id(node_id)
-  end
-
   def related_sites(options = {})
     sites = []
     related_site.to_s.split(/(\r\n|\n)/).each do |line|
@@ -131,7 +137,7 @@ class Cms::Site < ActiveRecord::Base
   end
 
   def self.all_with_full_uri(full_uri)
-    parsed_uri = URI.parse(full_uri)
+    parsed_uri = Addressable::URI.parse(full_uri)
     parsed_uri.path = '/'
 
     parsed_uri.scheme = 'http'
@@ -245,8 +251,16 @@ class Cms::Site < ActiveRecord::Base
     self.class.count == 1
   end
 
+  def concepts_for_option
+    root_concepts.map(&:descendants).flatten(1).map{|c| [c.tree_name, c.unid] }
+  end
+
+  def users
+    Sys::User.in_site(self)
+  end
+
   def groups_for_option
-    groups.where(level_no: 2).map{|g| g.descendants_for_option }.flatten(1)
+    Sys::Group.root.descendants_in_site(self).drop(1).map{|g| [g.tree_name(depth: -1), g.id] }
   end
 
   def og_type_text

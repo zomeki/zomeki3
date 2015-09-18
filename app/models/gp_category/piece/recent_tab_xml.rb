@@ -28,7 +28,7 @@ class GpCategory::Piece::RecentTabXml < Cms::Model::Base::PieceExtension
     categories_with_layer_array = []
 
     elem_category_ids.each_with_index do |category_id, index|
-      category = GpCategory::Category.find_by_id(category_id)
+      category = GpCategory::Category.find_by(id: category_id)
       categories_with_layer_array << {category: category, layer: elem_layers[index].sub(Regexp.new("^#{index}_"), '')} if category
     end
 

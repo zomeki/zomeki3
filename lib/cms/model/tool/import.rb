@@ -6,7 +6,7 @@ class Cms::Model::Tool::Import < ActiveRecord::Base
   attr_accessor :concept_id
   attr_accessor :target
   
-  validates_presence_of :concept_id, :file
+  validates :concept_id, :file, presence: true
   
   # empty methods
   def seve; end

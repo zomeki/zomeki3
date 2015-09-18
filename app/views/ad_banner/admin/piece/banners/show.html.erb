@@ -4,7 +4,7 @@
 <table class="show">
   <tr>
     <th><%= @item.locale :group_id %></th>
-    <td><%= @item.groups.find_by_id(@item.setting_value(:group_id)).try(:title) %></td>
+    <td><%= @item.groups.find_by(id: @item.setting_value(:group_id)).try(:title) %></td>
   </tr>
   <tr>
     <th><%= @item.locale :sort %></th>

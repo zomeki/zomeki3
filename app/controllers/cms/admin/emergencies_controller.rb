@@ -6,16 +6,16 @@ class Cms::Admin::EmergenciesController < Cms::Controller::Admin::Base
     return error_auth unless Core.user.has_auth?(:designer)
 
     @parent   = Core.site.root_node
-    @node     = @parent.children.find(:first, :conditions => {:name => 'index.html'})
-    @node   ||= @parent.children.find(:first, :conditions => {:name => 'index.htm'})
+    @node     = @parent.children.where(name: 'index.html').first
+    @node   ||= @parent.children.where(name: 'index.htm').first
   end
 
   def index
-    @items = Cms::SiteSetting::EmergencyLayout.new.current_site.where(name: 'emergency_layout').order(:sort_no)
+    @items = Core.site.emergency_layout_settings.order(:sort_no)
   end
 
   def show
-    @item = Cms::SiteSetting::EmergencyLayout.new.current_site.find(params[:id])
+    @item = Core.site.emergency_layout_settings.find(params[:id])
     @item.value = @item.value.to_i if @item.value
 
     return error_auth unless @item.readable?
@@ -24,38 +24,34 @@ class Cms::Admin::EmergenciesController < Cms::Controller::Admin::Base
   end
 
   def new
-    @item = Cms::SiteSetting::EmergencyLayout.new({
-      :site_id => Core.site.id,
-      :name    => 'emergency_layout',
+    @item = Core.site.emergency_layout_settings.build(
       :sort_no => 0
-    })
+    )
   end
 
   def create
-    @item = Cms::SiteSetting::EmergencyLayout.new(emergency_layout_params)
-    @item.site_id = Core.site.id
-    @item.name    = 'emergency_layout'
+    @item = Core.site.emergency_layout_settings.build(emergency_layout_params)
     _create @item
   end
 
   def update
-    @item = Cms::SiteSetting::EmergencyLayout.new.current_site.find(params[:id])
+    @item = Core.site.emergency_layout_settings.find(params[:id])
     @item.attributes = emergency_layout_params
     _update @item
   end
 
   def destroy
-    @item = Cms::SiteSetting::EmergencyLayout.new.current_site.find(params[:id])
+    @item = Core.site.emergency_layout_settings.find(params[:id])
     _destroy @item
   end
 
   def change
-    @item = Cms::SiteSetting::EmergencyLayout.new.current_site.find(params[:id])
+    @item = Core.site.emergency_layout_settings.find(params[:id])
 
     if @item.value.blank?
       @item.errors.add_to_base "レイアウトが登録されていません。"
     end
-    unless layout = Cms::Layout.find_by_id(@item.value)
+    unless layout = Cms::Layout.find_by(id: @item.value)
       @item.errors.add_to_base "レイアウトが見つかりません。"
     end
     unless @node
