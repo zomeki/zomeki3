@@ -212,6 +212,7 @@ class Survey::Admin::FormsController < Cms::Controller::Admin::Base
 
   def form_params
     params.require(:item).permit(:closed_at, :confirmation, :description, :index_link, :name, :opened_at,
-      :receipt, :sitemap_state, :sort_no, :summary, :title, :in_creator => [:group_id, :user_id])
+      :receipt, :sitemap_state, :sort_no, :summary, :title, :in_creator => [:group_id, :user_id],
+      :in_tasks => [:publish, :close],)
   end
 end
