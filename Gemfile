@@ -16,7 +16,7 @@ gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.1.0'
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
-# gem 'therubyracer', platforms: :ruby
+gem 'therubyracer', platforms: :ruby
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
@@ -82,6 +82,8 @@ group :development do
   gem 'bullet'
   gem 'i18n_generators'
   gem 'rails_best_practices'
+  gem 'rubocop', require: false
+  gem 'brakeman', require: false
 end
 
 group :test do
