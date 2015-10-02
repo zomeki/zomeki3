@@ -145,19 +145,14 @@ class Cms::Lib::Navi::Jtalk
     end
 
     def apply_kana_dic(text, site_id = nil)
-      ## settings
       mecab_rc = Cms::KanaDictionary.mecab_rc(site_id)
+      mc = MeCab::Tagger.new('--node-format=%c,%M,%f[8]\n --unk-format=%c,%M\n -r ' + mecab_rc)
 
       texts = []
-
-      mc = MeCab::Tagger.new('--node-format=%c,%M,%H\n -r ' + mecab_rc)
-      mc.parse(text).split(/\n/).each_with_index do |line, line_no|
-        p = line.split(/,/)
+      mc.parse(text).split("\n").each do |line|
         next if line == "EOS"
 
-        cost = p[0]
-        word = p[1]
-        kana = p[9]
+        cost, word, kana = line.split(",")
 
         if !kana || kana == "*" || cost != "100"
           texts << word # skip
