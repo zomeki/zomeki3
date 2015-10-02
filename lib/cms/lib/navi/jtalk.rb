@@ -8,6 +8,7 @@ class Cms::Lib::Navi::Jtalk
     ## settings
     sox         = Zomeki.config.application['cms.sox_bin']
     lame        = Zomeki.config.application['cms.lame_bin']
+    lame_opts   = Zomeki.config.application['cms.lame_opts']
     talk_bin    = Zomeki.config.application['cms.talk_bin']
     talk_voice  = Zomeki.config.application['cms.talk_voice']
     talk_dic    = Zomeki.config.application['cms.talk_dic']
@@ -70,7 +71,7 @@ class Cms::Lib::Navi::Jtalk
     cmd = "#{sox} #{parts.collect{|c| c.path}.join(' ')} #{wav.path}"
     system(cmd)
 
-    cmd = "#{lame} --scale 5 --silent #{wav.path} #{mp3.path}"
+    cmd = "#{lame} #{lame_opts} #{wav.path} #{mp3.path}"
     system(cmd)
 
     parts.each do |part|
