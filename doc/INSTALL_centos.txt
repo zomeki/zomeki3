@@ -74,7 +74,7 @@ Rubyをインストールします。
 
 ZOMEKIをインストールします。
 
-  # yum -y install ImageMagick-devel libxml2-devel libxslt-devel mysql-devel openldap-devel nodejs
+  # yum -y install ImageMagick-devel libxml2-devel libxslt-devel mysql-devel openldap-devel nodejs patch
 
   # git clone https://github.com/zomeki/zomeki2-development.git /var/share/zomeki
   # chown -R zomeki:zomeki /var/share/zomeki
