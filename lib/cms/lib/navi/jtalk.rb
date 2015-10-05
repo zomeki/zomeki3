@@ -1,5 +1,4 @@
 # encoding: utf-8
-require 'MeCab'
 require "cgi"
 require "kconv"
 class Cms::Lib::Navi::Jtalk
@@ -146,13 +145,12 @@ class Cms::Lib::Navi::Jtalk
     end
 
     def apply_kana_dic(text, site_id = nil)
+      require 'MeCab'
       mecab_rc = Cms::KanaDictionary.mecab_rc(site_id)
-      mc = MeCab::Tagger.new('--node-format=%c,%M,%f[8]\n --unk-format=%c,%M\n -r ' + mecab_rc)
+      mc = MeCab::Tagger.new('--node-format=%c,%M,%f[7]\n --unk-format=%c,%M\n --eos-format= -r ' + mecab_rc)
 
       texts = []
       mc.parse(text).split("\n").each do |line|
-        next if line == "EOS"
-
         cost, word, kana = line.split(",")
 
         if !kana || kana == "*" || cost != "100"

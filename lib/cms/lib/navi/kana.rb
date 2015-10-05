@@ -1,12 +1,8 @@
 # encoding: utf-8
 class Cms::Lib::Navi::Kana
 
-  def self.convert(str, site_id=nil)
+  def self.convert(str, site_id = nil)
     return nil unless Zomeki.config.application['cms.use_kana']
-
-    require 'MeCab'
-
-    mecab_rc = Cms::KanaDictionary.mecab_rc(site_id)
 
     str = str.to_utf8.gsub(/\r\n/, "\n")
 
@@ -20,17 +16,17 @@ class Cms::Lib::Navi::Kana
     texts = []
     pos   = 0
 
-    mc = MeCab::Tagger.new('--node-format=%ps,%pe,%M,%H\n -r ' + mecab_rc)
-    mc.parse(tmp).split(/\n/).each_with_index do |line, line_no|
-      p = line.split(/,/)
-      next if line == "EOS"
+    require 'MeCab'
+    mecab_rc = Cms::KanaDictionary.mecab_rc(site_id)
+    mc = MeCab::Tagger.new('--node-format=%ps,%pe,%M,%f[7]\n --unk-format= --eos-format= -r ' + mecab_rc)
+    mc.parse(tmp).split("\n").each do |line|
+      p = line.split(",")
       next if p[0] !~ /^[0-9]+$/
       next if p[2] =~ /^[\*\.]+$/
-      next if p[10].blank?
-      next if p[10] == "*"
-      next if p[2] == p[10]
+      next if p[3].blank?
+      next if p[2] == p[3]
       next if p[2] !~ /[一-龠]/
-      kana = p[10].to_s.tr('ァ-ン', 'ぁ-ん')
+      kana = p[3].to_s.tr('ァ-ン', 'ぁ-ん')
       next if p[2] == kana
 
       s = p[0].to_i
