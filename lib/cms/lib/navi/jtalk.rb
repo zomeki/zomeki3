@@ -103,10 +103,8 @@ class Cms::Lib::Navi::Jtalk
       return '' unless content
 
       content.xpath('.//comment()[.=" skip reading "]').each do |comment1|
-        if comment2 = comment1.xpath('following-sibling::comment()[.=" /skip reading "]').first
-          nodes = nodes_between(comment1, comment2)
-          nodes.each(&:remove) if nodes.last == comment2
-        end
+        comment2 = comment1.xpath('following-sibling::comment()[.=" /skip reading "]').first
+        nodes_between(comment1.parent, comment1, comment2).each(&:remove) if comment2 && comment1.parent
       end
 
       ## replace img tag
@@ -140,8 +138,10 @@ class Cms::Lib::Navi::Jtalk
       html
     end
 
-    def nodes_between(first, last)
-      !first ? [] : first == last ? [last] : [first, *nodes_between(first.next, last)]
+    def nodes_between(parent, first, last)
+      p1 = parent.children.index(first)
+      p2 = parent.children.index(last)
+      p1 && p2 ? parent.children[p1..p2] : []
     end
 
     def apply_kana_dic(text, site_id = nil)
