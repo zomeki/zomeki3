@@ -13,6 +13,7 @@ class Cms::Lib::Navi::Jtalk
     talk_dic    = Zomeki.config.application['cms.talk_dic']
     talk_opts   = Zomeki.config.application['cms.talk_opts']
     talk_strlen = Zomeki.config.application['cms.talk_strlen'].to_i
+    talk_thread_num = Zomeki.config.application['cms.talk_thread_num'].to_i
 
     text    = nil
     options = {}
@@ -32,23 +33,23 @@ class Cms::Lib::Navi::Jtalk
     return false unless text
 
     texts = []
-    parts = []
     buf   = ""
 
     site_id = options[:site_id] rescue nil
 
     self.class.make_text(text, site_id).split(/[ 。]/).each do |str|
-      buf << " " if !buf.blank?
+      buf << " " if buf.present?
       buf << str
       if buf.size >= talk_strlen
         texts << buf
         buf = ""
       end
     end
-    texts << buf
+    texts << buf if buf.present?
 
     ## split
-    texts.each do |text|
+    parts = []
+    Parallel.each_with_index(texts, in_threads: talk_thread_num) do |text, i|
       cnf = Tempfile::new(["talk", ".cnf"], '/tmp')
       wav = Tempfile::new(["talk", ".wav"], '/tmp')
 
@@ -59,7 +60,7 @@ class Cms::Lib::Navi::Jtalk
       system("#{cmd} -ow #{wav.path} #{cnf.path}")
 
       if FileTest.exists?(wav.path)
-        parts << wav
+        parts[i] = wav
       end
       FileUtils.rm(cnf.path) if FileTest.exists?(cnf.path)
     end
@@ -67,7 +68,7 @@ class Cms::Lib::Navi::Jtalk
     wav = Tempfile::new(["talk", ".wav"], '/tmp')
     mp3 = Tempfile::new(["talk", "mp3"], '/tmp')
 
-    cmd = "#{sox} #{parts.collect{|c| c.path}.join(' ')} #{wav.path}"
+    cmd = "#{sox} #{parts.compact.map(&:path).join(' ')} #{wav.path}"
     system(cmd)
 
     cmd = "#{lame} #{lame_opts} #{wav.path} #{mp3.path}"
