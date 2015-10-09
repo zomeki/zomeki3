@@ -21,7 +21,7 @@ class Cms::Admin::Tool::ConvertImportsController < Cms::Controller::Admin::Base
 
     _params = import_params
 
-    if Array === _params[:site_filename]
+    if _params[:site_filename].is_a?(Array)
       site_filenames = _params[:site_filename]
     else
       site_filenames = ['']
