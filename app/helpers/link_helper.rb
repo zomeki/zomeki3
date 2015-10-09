@@ -47,8 +47,7 @@ module LinkHelper
       :enabale   => '有効化',
       :disable   => '無効化',
       :recognize => '承認',
-      :publish   => '公開',
-      :close     => '非公開'
+      :publish   => '公開'
     }
     args[0] = labels[args[0]] if labels.key?(args[0])
 
