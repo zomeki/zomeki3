@@ -8,8 +8,8 @@
 OS         : CentOS 6.6
 Webサーバ  : Apache 2.2
 DBシステム : MySQL 5.1
-Ruby       : 2.1
-Rails      : 4.0
+Ruby       : 2.2
+Rails      : 4.2
 
 [設定]
 ドメイン   : zomeki.example.com
@@ -59,8 +59,8 @@ Rubyをインストールします。
   # yum -y install gcc-c++ libffi-devel libyaml-devel make openssl-devel readline-devel zlib-devel
 
   # cd /usr/local/src
-  # curl -fsSLO http://cache.ruby-lang.org/pub/ruby/2.1/ruby-2.1.6.tar.bz2
-  # tar jxf ruby-2.1.6.tar.bz2 && cd ruby-2.1.6 && ./configure && make && make install
+  # curl -fsSLO http://cache.ruby-lang.org/pub/ruby/2.2/ruby-2.2.3.tar.bz2
+  # tar jxf ruby-2.2.3.tar.bz2 && cd ruby-2.2.3 && ./configure && make && make install
 
   # gem install bundler
 
