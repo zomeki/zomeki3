@@ -52,8 +52,8 @@ class Tool::Convert
     end
 
     options[:ignore_dirnames] ||= []
-    options[:include_child_dir] ||= true
     options[:only_filenames] ||= []
+    options[:include_child_dir] = true if options[:include_child_dir].nil?
     Dir.chdir(root_dir) {
       _htmlfiles(".", site_url, 0, options, &block)
     }
