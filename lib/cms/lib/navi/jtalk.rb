@@ -37,7 +37,10 @@ class Cms::Lib::Navi::Jtalk
 
     site_id = options[:site_id] rescue nil
 
-    self.class.make_text(text, site_id).split(/[ 。]/).each do |str|
+    text = self.class.make_text(text, site_id)
+    return false if text.blank?
+
+    text.split(/[ 。]/).each do |str|
       buf << " " if buf.present?
       buf << str
       if buf.size >= talk_strlen

@@ -8,7 +8,7 @@ class Tool::ConvertDoc < ActiveRecord::Base
 
   scope :search_with_criteria, ->(criteria = {}) {
     rel = all
-    if criteria[:keyword].present?
+    if criteria && criteria[:keyword].present?
       rel = rel.search_with_text(:title, :uri_path, :doc_name, :doc_public_uri, :body, criteria[:keyword])
     end
     rel
