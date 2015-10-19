@@ -106,7 +106,7 @@ class Cms::Node < ActiveRecord::Base
   def public_uri
     return @public_uri if @public_uri
     uri = site.uri
-    parents_tree.each{|n| uri += "#{n.name}/" if n.name != '/' }
+    ancestors.each{|n| uri += "#{n.name}/" if n.name != '/' }
     uri = uri.gsub(/\/$/, '') if directory == 0
     @public_uri = uri
   end
@@ -114,7 +114,7 @@ class Cms::Node < ActiveRecord::Base
   def public_full_uri
     return @public_full_uri if @public_full_uri
     uri = site.full_uri
-    parents_tree.each{|n| uri += "#{n.name}/" if n.name != '/' }
+    ancestors.each{|n| uri += "#{n.name}/" if n.name != '/' }
     uri = uri.gsub(/\/$/, '') if directory == 0
     @public_full_uri = uri
   end
@@ -122,7 +122,7 @@ class Cms::Node < ActiveRecord::Base
   def inherited_concept(key = nil)
     if !@_inherited_concept
       concept_id = self.concept_id
-      parents_tree.each do |r|
+      ancestors.each do |r|
         concept_id = r.concept_id if r.concept_id
       end unless concept_id
       return nil unless concept_id
@@ -133,7 +133,7 @@ class Cms::Node < ActiveRecord::Base
   
   def inherited_layout
     layout_id = layout_id
-    parents_tree.each do |r|
+    ancestors.each do |r|
       layout_id = r.layout_id if r.layout_id
     end unless layout_id
     Cms::Layout.where(id: layout_id).first

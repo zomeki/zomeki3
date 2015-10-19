@@ -90,11 +90,13 @@ class Cms::Piece < ActiveRecord::Base
   end
 
   def setting_value(name)
-    settings.find_by(name: name).try(:value)
+    st = settings.detect{|st| st.name == name.to_s}
+    st ? st.value : nil
   end
 
   def setting_extra_values(name)
-    settings.find_by(name: name).try(:extra_values) || {}.with_indifferent_access
+    st = settings.detect{|st| st.name == name.to_s}
+    st ? st.extra_values : {}.with_indifferent_access
   end
 
   def setting_extra_value(name, extra_name)

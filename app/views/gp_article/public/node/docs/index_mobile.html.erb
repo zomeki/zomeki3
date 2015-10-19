@@ -4,7 +4,7 @@
     <%- if item[:date] -%>
     <div class="h2 date"><%= item[:date] %></div>
     <%- end -%>
-    <div class="doc">・<%= render 'gp_article/public/shared/doc', doc: item[:doc], list_style: @content.list_style, date_style: @content.date_style %></div>
+    <div class="doc">・<%= doc_replace(item[:doc], @content.list_style, @content.date_style) %></div>
     <%- end -%>
   </div>
   <%= paginate @docs %>
