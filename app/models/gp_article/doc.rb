@@ -108,6 +108,13 @@ class GpArticle::Doc < ActiveRecord::Base
 
   attr_accessor :ignore_accessibility_check
 
+  scope :preload_creator, -> {
+    preload(creator: {group: nil, user: nil})
+  }
+  scope :preload_public_node_ancestors, -> {
+    preload(content: {public_node: {site: nil, parent: {parent: {parent: nil}}}})
+  }
+
   scope :content_and_criteria, ->(content, criteria){
     docs = self.arel_table
 
@@ -795,18 +802,24 @@ class GpArticle::Doc < ActiveRecord::Base
     self.terminal_mobile            = true if self.has_attribute?(:terminal_mobile) && self.terminal_mobile.nil?
     self.share_to_sns_with ||= SHARE_TO_SNS_WITH_OPTIONS.first.last if self.has_attribute?(:share_to_sns_with)
     self.body_more_link_text ||= '続きを読む' if self.has_attribute?(:body_more_link_text)
-    self.feature_1 = content.feature_settings[:feature_1] if self.has_attribute?(:feature_1) && self.feature_1.nil? && content
-    self.feature_2 = content.feature_settings[:feature_2] if self.has_attribute?(:feature_2) && self.feature_2.nil? && content
-    self.filename_base = 'index' if self.has_attribute?(:filename_base) && self.filename_base.nil?
-    self.qrcode_state = content.qrcode_default_state if self.has_attribute?(:qrcode_state) && self.qrcode_state.nil? && content
-    self.event_will_sync ||= content.event_sync_default_will_sync if self.has_attribute?(:event_will_sync) && content
-    if content
-      if (node = content.public_node)
-        self.layout_id ||= node.layout_id
-        self.concept_id ||= node.concept_id
-      else
-        self.concept_id ||= content.concept_id
-      end
+    self.filename_base ||= 'index' if self.has_attribute?(:filename_base)
+
+    set_defaults_from_content if new_record?
+  end
+
+  def set_defaults_from_content
+    return unless content
+
+    self.qrcode_state = content.qrcode_default_state if self.has_attribute?(:qrcode_state) && self.qrcode_state.nil?
+    self.event_will_sync ||= content.event_sync_default_will_sync if self.has_attribute?(:event_will_sync)
+    self.feature_1 = content.feature_settings[:feature_1] if self.has_attribute?(:feature_1) && self.feature_1.nil?
+    self.feature_2 = content.feature_settings[:feature_2] if self.has_attribute?(:feature_2) && self.feature_2.nil?
+
+    if (node = content.public_node)
+      self.layout_id ||= node.layout_id
+      self.concept_id ||= node.concept_id
+    else
+      self.concept_id ||= content.concept_id
     end
   end
 

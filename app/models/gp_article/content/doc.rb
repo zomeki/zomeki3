@@ -22,6 +22,11 @@ class GpArticle::Content::Doc < Cms::Content
 
   has_many :docs, :foreign_key => :content_id, :class_name => 'GpArticle::Doc', :dependent => :destroy
 
+  has_one :public_node, -> { where(state: 'public', model: 'GpArticle::Doc').order(:id) },
+    :foreign_key => :content_id, :class_name => 'Cms::Node'
+  has_one :public_archives_node, -> { where(state: 'public', model: 'GpArticle::Archive').order(:id) },
+    :foreign_key => :content_id, :class_name => 'Cms::Node'
+
   before_create :set_default_settings
 
   # draft, approvable, approved, public, closed, archived
@@ -38,14 +43,6 @@ class GpArticle::Content::Doc < Cms::Content
   # public
   def public_docs
     docs.mobile(::Page.mobile?).public_state
-  end
-
-  def public_node
-    Cms::Node.where(state: 'public', content_id: id, model: 'GpArticle::Doc').order(:id).first
-  end
-
-  def public_archives_node
-    Cms::Node.where(state: 'public', content_id: id, model: 'GpArticle::Archive').order(:id).first
   end
 
   def public_nodes
@@ -246,7 +243,8 @@ class GpArticle::Content::Doc < Cms::Content
   end
 
   def organization_content_group
-    Organization::Content::Group.find_by(id: setting_value(:organization_content_group_id))
+    return @organization_content_group if defined? @organization_content_group
+    @organization_content_group = Organization::Content::Group.find_by(id: setting_value(:organization_content_group_id))
   end
 
   def notify_broken_link?
