@@ -21,6 +21,7 @@ class GpArticle::Doc < ActiveRecord::Base
   include GpTemplate::Model::Rel::Template
 
   include StateText
+  include Concerns::GpArticle::Doc::Preload
 
   STATE_OPTIONS = [['下書き保存', 'draft'], ['承認依頼', 'approvable'], ['即時公開', 'public']]
   TARGET_OPTIONS = [['無効', ''], ['同一ウィンドウ', '_self'], ['別ウィンドウ', '_blank'], ['添付ファイル', 'attached_file']]
@@ -108,20 +109,13 @@ class GpArticle::Doc < ActiveRecord::Base
 
   attr_accessor :ignore_accessibility_check
 
-  scope :preload_creator, -> {
-    preload(creator: {group: nil, user: nil})
-  }
-  scope :preload_public_node_ancestors, -> {
-    preload(content: {public_node: {site: nil, parent: {parent: {parent: nil}}}})
-  }
-
   scope :content_and_criteria, ->(content, criteria){
     docs = self.arel_table
 
     creators = Sys::Creator.arel_table
 
     rel = if criteria[:group].blank? && criteria[:group_id].blank? && criteria[:user].blank?
-            self.joins(:creator)
+            all
           else
             inners = []
 

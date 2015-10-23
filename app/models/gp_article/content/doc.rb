@@ -22,9 +22,9 @@ class GpArticle::Content::Doc < Cms::Content
 
   has_many :docs, :foreign_key => :content_id, :class_name => 'GpArticle::Doc', :dependent => :destroy
 
-  has_one :public_node, -> { where(state: 'public', model: 'GpArticle::Doc').order(:id) },
+  has_one :public_node, -> { public_state.where(model: 'GpArticle::Doc').order(:id) },
     :foreign_key => :content_id, :class_name => 'Cms::Node'
-  has_one :public_archives_node, -> { where(state: 'public', model: 'GpArticle::Archive').order(:id) },
+  has_one :public_archives_node, -> { public_state.where(model: 'GpArticle::Archive').order(:id) },
     :foreign_key => :content_id, :class_name => 'Cms::Node'
 
   before_create :set_default_settings

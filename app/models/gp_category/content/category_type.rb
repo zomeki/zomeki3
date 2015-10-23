@@ -12,14 +12,13 @@ class GpCategory::Content::CategoryType < Cms::Content
   has_many :templates, :foreign_key => :content_id, :class_name => 'GpCategory::Template', :dependent => :destroy
   has_many :template_modules, :foreign_key => :content_id, :class_name => 'GpCategory::TemplateModule', :dependent => :destroy
 
+  has_one :public_node, -> { public_state.order(:id) },
+    :foreign_key => :content_id, :class_name => 'Cms::Node'
+
   before_create :set_default_settings
 
   def public_nodes
     nodes.public_state
-  end
-
-  def public_node
-    public_nodes.order(:id).first
   end
 
 #TODO: DEPRECATED

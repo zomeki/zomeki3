@@ -10,12 +10,13 @@ class GpCategory::Category < ActiveRecord::Base
   include Cms::Model::Base::Page::TalkTask
 
   include StateText
+  include Concerns::GpCategory::Category::Preload
 
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
   SITEMAP_STATE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
   DOCS_ORDER_OPTIONS = [['公開日（降順）', 'display_published_at DESC, published_at DESC'], ['公開日（昇順）', 'display_published_at ASC, published_at ASC']]
 
-  default_scope { order("#{self.table_name}.category_type_id, #{self.table_name}.parent_id, #{self.table_name}.level_no, #{self.table_name}.sort_no, #{self.table_name}.name") }
+  default_scope { order(category_type_id: :asc, parent_id: :asc, level_no: :asc, sort_no: :asc, name: :asc) }
 
   # Page
   belongs_to :concept, :foreign_key => :concept_id, :class_name => 'Cms::Concept'
@@ -43,10 +44,15 @@ class GpCategory::Category < ActiveRecord::Base
 
   belongs_to :group, :foreign_key => :group_code, :class_name => 'Sys::Group'
 
+  # conditional associations
+  has_many :public_children, -> { public_state },
+    :foreign_key => :parent_id, :class_name => self.name
+
   after_initialize :set_defaults
 
   before_validation :set_attributes_from_parent
 
+  scope :with_root, -> { where(parent_id: nil) }
   scope :public_state, -> { where(state: 'public') }
 
   after_save :publish_ancestor_pages
@@ -61,14 +67,14 @@ class GpCategory::Category < ActiveRecord::Base
 
   def descendants(categories=[])
     categories << self
-    children.includes(:children).each {|c| c.descendants(categories) } unless children.empty?
+    children.each {|c| c.descendants(categories) }
     return categories
   end
 
   def public_descendants(categories=[])
     return categories unless self.public?
     categories << self
-    children.includes(:children).each {|c| c.public_descendants(categories) } unless children.empty?
+    public_children.each {|c| c.public_descendants(categories) }
     return categories
   end
 
@@ -127,10 +133,6 @@ class GpCategory::Category < ActiveRecord::Base
       end
       child.copy_from_group(child_group) unless child_group.children.empty?
     end
-  end
-
-  def public_children
-    children.public_state
   end
 
   def sitemap_visible?
