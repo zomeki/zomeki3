@@ -66,9 +66,6 @@
 <%- end -%>
 
 <%- if @item.links_in_string(body, false).any?{|l| l[:url] =~ /\.pdf$/i } -%>
-<div class="adobeReader">
-  <p>PDFの閲覧にはAdobe System社の無償のソフトウェア「Adobe Reader」が必要です。下記のAdobe Readerダウンロードページから入手してください。</p>
-  <a href="http://get.adobe.com/jp/reader/" target="_blank" title="Adobe Readerダウンロード">Adobe Readerダウンロード</a>
-</div>
+<%= render 'cms/public/_partial/adobe_reader' %>
 <%- end -%>
 <!-- end .contentGpArticleDoc --></article>
