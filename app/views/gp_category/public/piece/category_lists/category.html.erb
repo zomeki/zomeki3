@@ -6,7 +6,9 @@
     <h3><%= link_to child.title, child.public_uri %></h3>
 
     <%- if child.public_children.present? && @piece.layer == 'descendants' -%>
-    <%= render 'categories', category: child %>
+    <ul class="level<%= child.level_no + 1 -%>">
+    <%= render 'categories', categories: child.public_children %>
+    </ul>
     <%- end -%>
   </section>
   <%- end -%>

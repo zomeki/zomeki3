@@ -5,9 +5,7 @@
     <h2><%= link_to category.title, category.public_uri %></h2>
     <%- unless category.public_children.empty? -%>
     <ul class="children">
-      <%- category.public_children.each do |child| -%>
-      <%= render 'all_categories_category', category: child %>
-      <%- end -%>
+      <%= render 'all_categories_categories', categories: category.public_children %>
     </ul>
     <%- end -%>
   </section>
