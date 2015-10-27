@@ -17,5 +17,5 @@
     <%- end -%>
   <%- end -%>
 <%- else -%>
-  <%= @item.contact_information.html_safe %>
+  <%=raw @item.contact_information %>
 <%- end -%>

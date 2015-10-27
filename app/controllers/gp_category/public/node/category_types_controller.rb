@@ -47,6 +47,7 @@ class GpCategory::Public::Node::CategoryTypesController < GpCategory::Public::No
       render text: vc.content_tag(:div, rendered.html_safe, class: 'contentGpCategory contentGpCategoryCategoryTypes')
     else
       @category_types = @content.public_category_types.paginate(page: params[:page], per_page: 20)
+        .preload_public_node_ancestors
       return http_error(404) if @category_types.current_page > @category_types.total_pages
 
       render :index_mobile if Page.mobile?
@@ -202,7 +203,8 @@ class GpCategory::Public::Node::CategoryTypesController < GpCategory::Public::No
       when 'all_docs'
         category_ids = @category_type.public_categories.pluck(:id)
         @docs = find_public_docs_with_category_id(category_ids).order(display_published_at: :desc, published_at: :desc)
-        @docs = @docs.paginate(page: params[:page], per_page: @content.category_type_docs_number)
+          .paginate(page: params[:page], per_page: @content.category_type_docs_number)
+          .preload_public_node_ancestors_and_main_associations.to_a
         return http_error(404) if @docs.current_page > @docs.total_pages
       else
         return http_error(404) if params[:page].to_i > 1

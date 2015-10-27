@@ -8,12 +8,13 @@ class GpCategory::CategoryType < ActiveRecord::Base
   include Cms::Model::Base::Page::TalkTask
 
   include StateText
+  include Concerns::GpCategory::CategoryType::Preload
 
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
   SITEMAP_STATE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
   DOCS_ORDER_OPTIONS = [['公開日（降順）', 'display_published_at DESC, published_at DESC'], ['公開日（昇順）', 'display_published_at ASC, published_at ASC']]
 
-  default_scope { joins(:content).includes(:content).order("#{self.table_name}.sort_no, #{self.table_name}.name") }
+  default_scope { order(sort_no: :asc, name: :asc) }
 
   # Content
   belongs_to :content, :foreign_key => :content_id, :class_name => 'GpCategory::Content::CategoryType'
@@ -27,6 +28,14 @@ class GpCategory::CategoryType < ActiveRecord::Base
 
   has_many :categories, :foreign_key => :category_type_id, :class_name => 'GpCategory::Category', :dependent => :destroy
 
+  # conditional associations
+  has_many :root_categories, -> { with_root },
+    :foreign_key => :category_type_id, :class_name => 'GpCategory::Category'
+  has_many :public_categories, -> { public_state },
+    :foreign_key => :category_type_id, :class_name => 'GpCategory::Category'
+  has_many :public_root_categories, -> { public_state.with_root },
+    :foreign_key => :category_type_id, :class_name => 'GpCategory::Category'
+
   validates :name, :presence => true, :uniqueness => {:scope => :content_id}
   validates :title, :presence => true
   validates :state, :presence => true
@@ -38,20 +47,8 @@ class GpCategory::CategoryType < ActiveRecord::Base
   after_save :clean_published_files
   after_destroy :clean_published_files
 
-  def public_categories
-    categories.public_state
-  end
-
-  def root_categories
-    categories.where(parent_id: nil)
-  end
-
   def root_categories_for_option
     root_categories.map {|c| [c.title, c.id] }
-  end
-
-  def public_root_categories
-    root_categories.public_state
   end
 
   def categories_for_option
