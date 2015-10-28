@@ -25,9 +25,9 @@ module Cms::Lib::Layout
 
   def self.find_design_pieces(html, concepts)
     names = html.scan(/\[\[piece\/([^\]]+)\]\]/).map{|n| n[0] }.uniq
+    return {} if names.blank?
 
-    items = {}
-    names.each do |name|
+    relations = names.map do |name|
       rel = Cms::Piece.where(state: 'public')
       name_array = name.split('#')
       rel = if name_array.size > 1 # [[piece/name#id]]
@@ -38,45 +38,45 @@ module Cms::Lib::Layout
               rel.where(name: name_array[0])
                  .where(concept_id: concept_ids)
             end
-      if item = rel.order(concepts_order(concepts)).first
-        items[name] = item
-      end
+      rel.select("*, #{Cms::DataFile.connection.quote(name)} as name_with_option")
+        .order(concepts_order(concepts)).limit(1)
     end
-    return items
+
+    Cms::Piece.union(relations).index_by(&:name_with_option)
   end
-  
+
   def self.find_data_texts(html, concepts)
-    names = html.scan(/\[\[text\/([0-9a-zA-Z\._-]+)\]\]/).flatten
-    
-    items = {}
-    names.uniq.each do |name|
-      item = Cms::DataText.public_state.where(name: name, concept_id: [nil] + concepts.to_a)
-        .order(concepts_order(concepts)).first
-      items[name] = item if item
+    names = html.scan(/\[\[text\/([0-9a-zA-Z\._-]+)\]\]/).flatten.uniq
+    return {} if names.blank?
+
+    relations = names.map do |name|
+      Cms::DataText.public_state.where(name: name, concept_id: [nil] + concepts.to_a)
+        .order(concepts_order(concepts)).limit(1)
     end
-    return items
+
+    Cms::DataText.union(relations).index_by(&:name)
   end
-  
+
   def self.find_data_files(html, concepts)
-    names = html.scan(/\[\[file\/([^\]]+)\]\]/).flatten
-    
-    items = {}
-    names.uniq.each do |name|
+    names = html.scan(/\[\[file\/([^\]]+)\]\]/).flatten.uniq
+    return {} if names.blank?
+
+    relations = names.map do |name|
       dirname  = ::File.dirname(name)
       basename = dirname == '.' ? name : ::File.basename(name)
-      
-      item = Cms::DataFile.public_state.where(name: basename, concept_id: [nil] + concepts.to_a)
+
+      item = Cms::DataFile.select(Cms::DataFile.arel_table[Arel.star])
+        .select("#{Cms::DataFile.connection.quote(name)} as name_with_option")
+        .public_state.where(name: basename, concept_id: [nil] + concepts.to_a)
 
       if dirname == '.'
         item = item.where(node_id: nil)
       else
-        nodes = Cms::DataFileNode.arel_table
-        item = item.joins(:node).where(nodes[:name].eq(dirname))
+        item = item.joins(:node).where(Cms::DataFileNode.arel_table[:name].eq(dirname))
       end
-      item = item.order(concepts_order(concepts, :table_name => Cms::DataFile.table_name)).first
-
-      items[name] = item if item
+      item.order(concepts_order(concepts, :table_name => Cms::DataFile.table_name)).limit(1)
     end
-    return items
+
+    Cms::DataFile.union(relations).index_by(&:name_with_option)
   end
 end
