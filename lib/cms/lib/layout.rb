@@ -71,7 +71,7 @@ module Cms::Lib::Layout
         item = item.where(node_id: nil)
       else
         nodes = Cms::DataFileNode.arel_table
-        item = item.eager_load(:node).where(nodes[:name].eq(dirname))
+        item = item.joins(:node).where(nodes[:name].eq(dirname))
       end
       item = item.order(concepts_order(concepts, :table_name => Cms::DataFile.table_name)).first
 
