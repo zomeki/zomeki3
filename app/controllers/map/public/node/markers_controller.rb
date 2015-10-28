@@ -18,7 +18,7 @@ class Map::Public::Node::MarkersController < Cms::Controller::Public::Base
     markers = if @specified_category
                 categorizations = GpCategory::Categorization.arel_table
                 @content.public_markers.joins(:categorizations)
-                                       .where(categorizations[:category_id].in(@specified_category.public_descendant_ids))
+                                       .where(categorizations[:category_id].in(@specified_category.public_descendants_ids))
               else
                 @content.public_markers
               end
