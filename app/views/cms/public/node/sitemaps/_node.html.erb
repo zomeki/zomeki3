@@ -7,9 +7,14 @@
 
   <%- case node.model -%>
   <%- when 'GpCategory::CategoryType' -%>
-    <%- unless node.content.public_category_types.empty? -%>
+    <%-
+      category_types = node.content.public_category_types
+        .preload_public_node_ancestors
+        .preload_public_root_categories_and_public_descendants_and_public_node_ancestors
+    -%>
+    <%- unless category_types.empty? -%>
     <ul class="level<%= level + 1 %> <%= css_class %>">
-      <%= render partial: 'category_type', collection: node.content.public_category_types, locals: {level: level + 1, css_class: css_class} %>
+      <%= render partial: 'category_type', collection: category_types, locals: {level: level + 1, css_class: css_class} %>
     </ul>
     <%- end -%>
 
@@ -21,9 +26,10 @@
     <%- end -%>
 
   <%- when 'Gnav::MenuItem' -%>
-    <%- unless node.content.menu_items.empty? -%>
+    <%- menu_items = node.content.menu_items.preload_public_node_ancestors -%>
+    <%- unless menu_items.empty? -%>
     <ul class="level<%= level + 1 %> <%= css_class %>">
-      <%= render partial: 'gnav_menu_item', collection: node.content.menu_items, locals: {level: level + 1, css_class: css_class} %>
+      <%= render partial: 'gnav_menu_item', collection: menu_items, locals: {level: level + 1, css_class: css_class} %>
     </ul>
     <%- end -%>
 

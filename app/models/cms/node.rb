@@ -15,16 +15,23 @@ class Cms::Node < ActiveRecord::Base
   include Cms::Model::Auth::Concept
 
   include StateText
-  
+  include Concerns::Cms::Node::Preload
+
   SITEMAP_STATE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
 
   belongs_to :parent, :foreign_key => :parent_id, :class_name => 'Cms::Node'
   belongs_to :layout, :foreign_key => :layout_id, :class_name => 'Cms::Layout'
 
-  has_many :children, -> { order('sitemap_sort_no IS NULL, sitemap_sort_no, name') },
+  has_many :children, -> { sitemap_order },
     :foreign_key => :parent_id, :class_name => 'Cms::Node', :dependent => :destroy
-  has_many :children_in_route, -> { order('sitemap_sort_no IS NULL, sitemap_sort_no, name') },
+  has_many :children_in_route, -> { sitemap_order },
     :foreign_key => :route_id,  :class_name => 'Cms::Node', :dependent => :destroy
+
+  # conditional associations
+  has_many :public_children, -> { public_state.sitemap_order },
+    :foreign_key => :parent_id, :class_name => 'Cms::Node'
+  has_many :public_children_in_route, -> { public_state.sitemap_order },
+    :foreign_key => :route_id, :class_name => 'Cms::Node'
 
   validates :parent_id, :state, :model, :title, presence: true
   validates :name, presence: true, uniqueness: {scope: [:site_id, :parent_id], if: %Q(!replace_page?) },
@@ -39,6 +46,7 @@ class Cms::Node < ActiveRecord::Base
   after_destroy :remove_file
 
   scope :public_state, -> { where(state: 'public') }
+  scope :sitemap_order, -> { order('sitemap_sort_no IS NULL, sitemap_sort_no, name') }
 
   scope :search_with_params, ->(params) {
     rel = all
@@ -218,14 +226,6 @@ class Cms::Node < ActiveRecord::Base
     self.sitemap_state == 'visible'
   end
 
-  def public_children
-    children.public_state
-  end
-
-  def public_children_in_route
-    children_in_route.public_state
-  end
-  
   def set_inquiry_group
     inquiries.each_with_index do |inquiry, i|
       next if i != 0
