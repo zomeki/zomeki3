@@ -49,16 +49,16 @@ module Concerns::GpCategory::Category::Preload
     end
 
     def descendants_assocs
-      { parent: nil, children: {
-          parent: nil, children: {
-            parent: nil, children: nil
+      { category_type: nil, parent: nil, children: {
+          category_type: nil, parent: nil, children: {
+            category_type: nil, parent: nil, children: nil
           }}}
     end
 
     def public_descendants_assocs
-      { parent: nil, public_children: {
-          parent: nil, public_children: {
-            parent: nil, public_children: nil
+      { category_type: nil, parent: nil, public_children: {
+          category_type: nil, parent: nil, public_children: {
+            category_type: nil, parent: nil, public_children: nil
           }}}
     end
 
