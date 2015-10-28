@@ -109,6 +109,10 @@ class GpArticle::Doc < ActiveRecord::Base
 
   attr_accessor :ignore_accessibility_check
 
+  scope :event_scheduled_between, ->(start_date, end_date) {
+    where(arel_table[:event_ended_on].gteq(start_date)).where(arel_table[:event_started_on].lt(end_date + 1))
+  }
+
   scope :content_and_criteria, ->(content, criteria){
     docs = self.arel_table
 
