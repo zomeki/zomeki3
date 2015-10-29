@@ -18,6 +18,11 @@ module Concerns::GpCategory::CategoryType::Preload
     ActiveRecord::Associations::Preloader.new.preload(self, assocs)
   end
 
+  def preload_public_root_categories_and_public_descendants
+    assocs = self.class.public_root_categories_and_public_descendants_assocs
+    ActiveRecord::Associations::Preloader.new.preload(self, assocs)
+  end
+
   def preload_public_root_categories_and_public_descendants_and_public_node_ancestors
     assocs = self.class.public_root_categories_and_public_descendants_and_public_node_ancestors_assocs
     ActiveRecord::Associations::Preloader.new.preload(self, assocs)
@@ -33,6 +38,14 @@ module Concerns::GpCategory::CategoryType::Preload
         parent: nil, children: {
           parent: nil, children: {
             parent: nil, children: nil 
+          }}}}
+    end
+
+    def public_root_categories_and_public_descendants_assocs
+      {public_root_categories: {
+        category_type: nil, parent: nil, public_children: {
+          category_type: nil, parent: nil, public_children: {
+            category_type: nil, parent: nil, public_children: nil 
           }}}}
     end
 

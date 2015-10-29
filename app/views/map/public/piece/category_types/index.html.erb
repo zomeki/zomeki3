@@ -1,7 +1,5 @@
 <%- unless @top_categories.empty? -%>
 <ul class="categories level<%= @top_categories.first.level_no %>">
-  <%- @top_categories.each do |category| -%>
-  <%= render 'category', category: category %>
-  <%- end -%>
+  <%= render 'categories', categories: @top_categories %>
 </ul>
 <%- end -%>

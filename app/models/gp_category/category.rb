@@ -71,11 +71,31 @@ class GpCategory::Category < ActiveRecord::Base
     return categories
   end
 
+  def descendants_ids
+    preload_descendants
+    descendants.map {|c| c.id }
+  end
+
+  def descendants_with_preload
+    preload_descendants
+    descendants
+  end
+
   def public_descendants(categories=[])
     return categories unless self.public?
     categories << self
     public_children.each {|c| c.public_descendants(categories) }
     return categories
+  end
+
+  def public_descendants_ids
+    preload_public_descendants
+    public_descendants.map {|c| c.id }
+  end
+
+  def public_descendants_with_preload
+    preload_public_descendants
+    public_descendants
   end
 
   def descendants_for_option(categories=[])

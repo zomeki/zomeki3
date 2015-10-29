@@ -2,9 +2,7 @@
 class Map::Piece::CategoryType < Cms::Piece
   default_scope { where(model: 'Map::CategoryType') }
 
-  def content
-    Map::Content::Marker.find(super)
-  end
+  belongs_to :content, :foreign_key => :content_id, :class_name => 'Map::Content::Marker'
 
   def category_types
     content.category_types
@@ -25,6 +23,7 @@ class Map::Piece::CategoryType < Cms::Piece
   end
 
   def target_node
-    content.public_nodes.find_by(id: setting_value(:target_node_id))
+    return @target_node if defined? @target_node
+    @target_node = content.public_nodes.find_by(id: setting_value(:target_node_id))
   end
 end

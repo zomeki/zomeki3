@@ -36,11 +36,6 @@ module Concerns::GpCategory::Category::Preload
     ActiveRecord::Associations::Preloader.new.preload(self, assocs)
   end
 
-  def descendants_with_preload
-    preload_descendants
-    descendants
-  end
-
   module ClassMethods
     def public_children_and_public_node_ancestors_assocs
       { category_type: category_type_assocs, parent: nil, public_children: {
@@ -49,16 +44,16 @@ module Concerns::GpCategory::Category::Preload
     end
 
     def descendants_assocs
-      { parent: nil, children: {
-          parent: nil, children: {
-            parent: nil, children: nil
+      { category_type: nil, parent: nil, children: {
+          category_type: nil, parent: nil, children: {
+            category_type: nil, parent: nil, children: nil
           }}}
     end
 
     def public_descendants_assocs
-      { parent: nil, public_children: {
-          parent: nil, public_children: {
-            parent: nil, public_children: nil
+      { category_type: nil, parent: nil, public_children: {
+          category_type: nil, parent: nil, public_children: {
+            category_type: nil, parent: nil, public_children: nil
           }}}
     end
 

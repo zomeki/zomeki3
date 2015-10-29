@@ -8,9 +8,8 @@ class GpCalendar::Public::Node::EventsController < GpCalendar::Public::Node::Bas
     year_month = @year_only ? @date.strftime('%Y') : @date.strftime('%Y%m')
 
     criteria = {year_month: year_month}
-    events_table = GpCalendar::Event.arel_table
     @events = GpCalendar::Event.public_state.content_and_criteria(@content, criteria).order(:started_on)
-                               .where(events_table[:started_on].lteq(@max_date).and(events_table[:ended_on].gteq(@min_date))).to_a
+      .preload(:categories).to_a
 
     start_date, end_date = if @year_only
                              boy = @date.beginning_of_year

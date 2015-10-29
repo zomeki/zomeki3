@@ -9,5 +9,6 @@ class Map::Public::Piece::CategoryTypesController < Sys::Controller::Public::Bas
 
   def index
     @top_categories = @piece.content.public_categories.where(category_type_id: @piece.visible_category_type_ids)
+      .preload_public_descendants
   end
 end

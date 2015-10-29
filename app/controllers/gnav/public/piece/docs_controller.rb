@@ -12,19 +12,19 @@ class Gnav::Public::Piece::DocsController < Sys::Controller::Public::Base
 
     piece_doc_ids = find_public_docs_by_category_ids(piece_category_ids).map(&:id)
 
-    case @item
-    when Gnav::MenuItem
-      page_category_ids = @item.categories.map(&:id)
-    end
+    doc_ids = 
+      case @item
+      when Gnav::MenuItem
+        page_category_ids = @item.categories.map(&:id)
+        page_doc_ids = find_public_docs_by_category_ids(page_category_ids).map(&:id)
+        piece_doc_ids & page_doc_ids
+      else
+        piece_doc_ids
+      end
 
-    if page_category_ids
-      page_doc_ids = find_public_docs_by_category_ids(page_category_ids).map(&:id)
-      doc_ids = piece_doc_ids & page_doc_ids
-    else
-      doc_ids = piece_doc_ids
-    end
-
-    @docs = GpArticle::Doc.where(id: doc_ids).order('display_published_at DESC, published_at DESC').limit(@piece.list_count)
+    @docs = GpArticle::Doc.where(id: doc_ids).order(display_published_at: :desc, published_at: :desc)
+      .limit(@piece.list_count)
+      .preload_public_node_ancestors_and_main_associations
   end
 
   private
