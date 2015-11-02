@@ -813,7 +813,10 @@ class GpArticle::Doc < ActiveRecord::Base
     self.feature_1 = content.feature_settings[:feature_1] if self.has_attribute?(:feature_1) && self.feature_1.nil?
     self.feature_2 = content.feature_settings[:feature_2] if self.has_attribute?(:feature_2) && self.feature_2.nil?
 
-    if (node = content.public_node)
+    if !content.setting_value(:basic_setting).blank?
+      self.layout_id ||= content.setting_extra_value(:basic_setting, :default_layout_id).to_i
+      self.concept_id ||= content.setting_value(:basic_setting).to_i
+    elsif (node = content.public_node)
       self.layout_id ||= node.layout_id
       self.concept_id ||= node.concept_id
     else
