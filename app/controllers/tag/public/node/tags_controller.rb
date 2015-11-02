@@ -25,6 +25,6 @@ class Tag::Public::Node::TagsController < Cms::Controller::Public::Base
     Page.current_item = @item
     Page.title = @node.title
 
-    @docs = @item.public_docs
+    @docs = @item.public_docs.preload_public_node_ancestors_and_main_associations
   end
 end

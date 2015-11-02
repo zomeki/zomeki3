@@ -4,12 +4,10 @@ class Gnav::Piece::CategoryType < Cms::Piece
 
   default_scope { where(model: 'Gnav::CategoryType') }
 
+  belongs_to :content, :foreign_key => :content_id, :class_name => 'Gnav::Content::MenuItem'
+
   def layer
     setting_value(:layer).presence || LAYER_OPTIONS.first.last
-  end
-
-  def content
-    Gnav::Content::MenuItem.find(super)
   end
 
   def category_types
@@ -21,14 +19,16 @@ class Gnav::Piece::CategoryType < Cms::Piece
   end
 
   def category_type
-    category_types.find_by(id: setting_value(:category_type_id)) rescue nil
+    return @category_type if defined? @category_type
+    @category_type = category_types.find_by(id: setting_value(:category_type_id))
   end
 
   def categories
     unless category_type
       return category_types.inject([]) {|result, ct|
-                 result | ct.root_categories.inject([]) {|r, c| r | c.descendants }
-               }
+        ct.preload_root_categories_and_descendants
+        result | ct.root_categories.inject([]) {|r, c| r | c.descendants }
+      }
     end
 
     if (category_id = setting_value(:category_id)).present?
@@ -38,6 +38,7 @@ class Gnav::Piece::CategoryType < Cms::Piece
         category_type.categories.where(id: category_id)
       end
     else
+      category_type.preload_root_categories_and_descendants
       category_type.root_categories.inject([]) {|r, c| r | c.descendants }
     end
   end
@@ -45,8 +46,9 @@ class Gnav::Piece::CategoryType < Cms::Piece
   def public_categories
     unless category_type
       return category_types.inject([]) {|result, ct|
-                 result | ct.public_root_categories.inject([]) {|r, c| r | c.public_descendants }
-               }
+        ct.preload_public_root_categories_and_public_descendants
+        result | ct.public_root_categories.inject([]) {|r, c| r | c.public_descendants }
+      }
     end
 
     if (category_id = setting_value(:category_id)).present?
@@ -56,6 +58,7 @@ class Gnav::Piece::CategoryType < Cms::Piece
         category_type.public_categories.where(id: category_id)
       end
     else
+      category_type.preload_public_root_categories_and_public_descendants
       category_type.public_root_categories.inject([]) {|r, c| r | c.public_descendants }
     end
   end

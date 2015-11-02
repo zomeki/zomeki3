@@ -141,7 +141,9 @@ class GpCategory::Public::Node::CategoriesController < GpCategory::Public::Node:
         render text: vc.content_tag(:div, rendered.html_safe, class: 'contentGpCategory contentGpCategoryCategory')
       end
     else
-      @docs = @category.public_docs.order(display_published_at: :desc, published_at: :desc).paginate(page: params[:page], per_page: per_page)
+      @docs = @category.public_docs.order(display_published_at: :desc, published_at: :desc)
+        .paginate(page: params[:page], per_page: per_page)
+        .preload_public_node_ancestors_and_main_associations
       return http_error(404) if @docs.current_page > @docs.total_pages
 
       if Page.mobile?

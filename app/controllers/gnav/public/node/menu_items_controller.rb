@@ -6,6 +6,7 @@ class Gnav::Public::Node::MenuItemsController < Cms::Controller::Public::Base
 
   def index
     @menu_items = @content.menu_items.paginate(page: params[:page], per_page: 20)
+      .preload_public_node_ancestors
     return http_error(404) if @menu_items.current_page > @menu_items.total_pages
 
     render :index_mobile if Page.mobile?

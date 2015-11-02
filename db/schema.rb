@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150623032020) do
+ActiveRecord::Schema.define(version: 20151028091100) do
 
   create_table "ad_banner_banners", force: :cascade do |t|
     t.string   "name",               limit: 255
@@ -860,6 +860,10 @@ ActiveRecord::Schema.define(version: 20150623032020) do
 
   add_index "gp_article_docs", ["concept_id"], name: "index_gp_article_docs_on_concept_id", using: :btree
   add_index "gp_article_docs", ["content_id"], name: "index_gp_article_docs_on_content_id", using: :btree
+  add_index "gp_article_docs", ["event_started_on", "event_ended_on"], name: "index_gp_article_docs_on_event_started_on_and_event_ended_on", using: :btree
+  add_index "gp_article_docs", ["event_state"], name: "index_gp_article_docs_on_event_state", using: :btree
+  add_index "gp_article_docs", ["state"], name: "index_gp_article_docs_on_state", using: :btree
+  add_index "gp_article_docs", ["terminal_pc_or_smart_phone"], name: "index_gp_article_docs_on_terminal_pc_or_smart_phone", using: :btree
 
   create_table "gp_article_docs_tag_tags", id: false, force: :cascade do |t|
     t.integer "doc_id", limit: 4
@@ -901,6 +905,10 @@ ActiveRecord::Schema.define(version: 20150623032020) do
     t.string   "sync_source_source_class", limit: 255
     t.string   "will_sync",                limit: 255
   end
+
+  add_index "gp_calendar_events", ["content_id"], name: "index_gp_calendar_events_on_content_id", using: :btree
+  add_index "gp_calendar_events", ["started_on", "ended_on"], name: "index_gp_calendar_events_on_started_on_and_ended_on", using: :btree
+  add_index "gp_calendar_events", ["state"], name: "index_gp_calendar_events_on_state", using: :btree
 
   create_table "gp_calendar_events_gp_category_categories", id: false, force: :cascade do |t|
     t.integer "event_id",    limit: 4
@@ -958,6 +966,10 @@ ActiveRecord::Schema.define(version: 20150623032020) do
     t.integer  "sort_no",            limit: 4
     t.string   "categorized_as",     limit: 255
   end
+
+  add_index "gp_category_categorizations", ["categorizable_id", "categorizable_type"], name: "index_gp_category_categorizations_on_categorizable_id_and_type", using: :btree
+  add_index "gp_category_categorizations", ["categorized_as"], name: "index_gp_category_categorizations_on_categorized_as", using: :btree
+  add_index "gp_category_categorizations", ["category_id"], name: "index_gp_category_categorizations_on_category_id", using: :btree
 
   create_table "gp_category_category_types", force: :cascade do |t|
     t.integer  "unid",                      limit: 4

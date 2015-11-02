@@ -65,13 +65,14 @@ class Cms::Content < ActiveRecord::Base
   end
 
   def setting_value(name, default_value = nil)
-    st = settings.where(name: name).first
+    st = settings.detect{|s| s.name == name.to_s}
     return default_value unless st
     return st.value.blank? ? default_value : st.value
   end
 
   def setting_extra_values(name)
-    settings.find_by(name: name).try(:extra_values) || {}.with_indifferent_access
+    st = settings.detect{|s| s.name == name.to_s}
+    st ? st.extra_values : {}.with_indifferent_access
   end
 
   def setting_extra_value(name, extra_name)

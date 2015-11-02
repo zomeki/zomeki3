@@ -2,7 +2,7 @@ require 'will_paginate/array'
 
 class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
   include GpArticle::Controller::Feed
-  skip_action_callback :render_public_layout, :only => [:file_content]
+  skip_action_callback :render_public_layout, :only => [:file_content, :qrcode]
 
   def pre_dispatch
     if (organization_content = Page.current_node.content).kind_of?(Organization::Content::Group)
@@ -31,6 +31,7 @@ class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
       @docs = @docs.paginate(page: params[:page], per_page: @content.feed_docs_number)
       return render_feed(@docs)
     end
+    @docs = @docs.preload_public_node_ancestors_and_main_associations
     @docs = @docs.includes(:next_edition).reject{|d| d.will_be_replaced? } unless Core.publish
     @docs = @docs.paginate(page: params[:page], per_page: 20)
     return http_error(404) if @docs.current_page > @docs.total_pages

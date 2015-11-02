@@ -6,6 +6,8 @@ class Gnav::Piece::Doc < Cms::Piece
 
   validate :validate_settings
 
+  belongs_to :content, :foreign_key => :content_id, :class_name => 'Gnav::Content::MenuItem'
+
   def validate_settings
     if (lc = in_settings['list_count']).present?
       errors.add(:base, "#{self.class.human_attribute_name :list_count} #{errors.generate_message(:base, :not_a_number)}") unless lc =~ /^[0-9]+$/
@@ -24,10 +26,6 @@ class Gnav::Piece::Doc < Cms::Piece
     setting_value(:date_style).to_s
   end
 
-  def content
-    Gnav::Content::MenuItem.find(super)
-  end
-
   def category_types
     content.category_types
   end
@@ -37,19 +35,22 @@ class Gnav::Piece::Doc < Cms::Piece
   end
 
   def category_type
-    category_types.find_by(id: setting_value(:category_type_id)) rescue nil
+    return @category_type if defined? @category_type
+    @category_type = category_types.find_by(id: setting_value(:category_type_id))
   end
 
   def categories
     unless category_type
       return category_types.inject([]) {|result, ct|
-                 result | ct.root_categories.inject([]) {|r, c| r | c.descendants }
-               }
+        ct.preload_root_categories_and_descendants
+        result | ct.root_categories.inject([]) {|r, c| r | c.descendants }
+      }
     end
 
     if (category_id = setting_value(:category_id)).present?
       category_type.categories.where(id: category_id)
     else
+      category_type.preload_root_categories_and_descendants
       category_type.root_categories.inject([]) {|r, c| r | c.descendants }
     end
   end

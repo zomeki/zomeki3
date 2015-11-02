@@ -46,8 +46,8 @@ module RenderComponent
       request_env["action_dispatch.request.parameters"] = request_params.with_indifferent_access
       request_env["action_dispatch.request.path_parameters"] = request_params.slice(:controller, :action)
       if jpmobile_params
-        component_request.env['HTTP_USER_AGENT'] = jpmobile_params['HTTP_USER_AGENT']
-        component_request.env['rack.jpmobile'] = jpmobile_params['rack.jpmobile']
+        request_env['HTTP_USER_AGENT'] = jpmobile_params['HTTP_USER_AGENT']
+        request_env['rack.jpmobile'] = jpmobile_params['rack.jpmobile']
       end
       ActionDispatch::Request.new(request_env)
     end

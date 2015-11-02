@@ -48,8 +48,9 @@ class GpCalendar::Public::Node::BaseController < Cms::Controller::Public::Base
       case dc.model
       when 'GpArticle::Doc'
         dc = GpArticle::Content::Doc.find(dc.id)
-        docs = dc.public_docs.table
-        dc.public_docs.where(event_state: 'visible').where(docs[:event_ended_on].gteq(start_date).and(docs[:event_started_on].lteq(end_date)))
+        dc.public_docs.where(event_state: 'visible').event_scheduled_between(start_date, end_date)
+          .preload_public_node_ancestors
+          .preload(:event_categories, :files)
       else
         []
       end
@@ -69,12 +70,13 @@ class GpCalendar::Public::Node::BaseController < Cms::Controller::Public::Base
                   end
                 end
 
-      event = GpCalendar::Event.new(title: doc.title, href: doc_uri, target: '_self',
-                                    started_on: doc.event_started_on, ended_on: doc.event_ended_on,
-                                    description: doc.summary, content_id: @content.id)
+      event = GpCalendar::Event.new(
+        title: doc.title, href: doc_uri, target: '_self',
+        started_on: doc.event_started_on, ended_on: doc.event_ended_on,
+        description: doc.summary, content: @content, will_sync: 'disabled'
+      )
       event.categories = doc.event_categories
       event.files = doc.files
-
       event.doc = doc
 
       events << event

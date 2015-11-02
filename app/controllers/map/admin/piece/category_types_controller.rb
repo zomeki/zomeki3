@@ -14,7 +14,7 @@ class Map::Admin::Piece::CategoryTypesController < Cms::Admin::Piece::BaseContro
 
   private
 
-  def find_piece
-    model.new.readable.find(params[:id])
+  def base_params_item_in_settings
+    [:category_type_ids, :target_node_id]
   end
 end

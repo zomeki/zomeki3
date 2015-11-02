@@ -15,16 +15,23 @@ class Cms::Node < ActiveRecord::Base
   include Cms::Model::Auth::Concept
 
   include StateText
-  
+  include Concerns::Cms::Node::Preload
+
   SITEMAP_STATE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
 
   belongs_to :parent, :foreign_key => :parent_id, :class_name => 'Cms::Node'
   belongs_to :layout, :foreign_key => :layout_id, :class_name => 'Cms::Layout'
 
-  has_many :children, -> { order('sitemap_sort_no IS NULL, sitemap_sort_no, name') },
+  has_many :children, -> { sitemap_order },
     :foreign_key => :parent_id, :class_name => 'Cms::Node', :dependent => :destroy
-  has_many :children_in_route, -> { order('sitemap_sort_no IS NULL, sitemap_sort_no, name') },
+  has_many :children_in_route, -> { sitemap_order },
     :foreign_key => :route_id,  :class_name => 'Cms::Node', :dependent => :destroy
+
+  # conditional associations
+  has_many :public_children, -> { public_state.sitemap_order },
+    :foreign_key => :parent_id, :class_name => 'Cms::Node'
+  has_many :public_children_in_route, -> { public_state.sitemap_order },
+    :foreign_key => :route_id, :class_name => 'Cms::Node'
 
   validates :parent_id, :state, :model, :title, presence: true
   validates :name, presence: true, uniqueness: {scope: [:site_id, :parent_id], if: %Q(!replace_page?) },
@@ -39,6 +46,7 @@ class Cms::Node < ActiveRecord::Base
   after_destroy :remove_file
 
   scope :public_state, -> { where(state: 'public') }
+  scope :sitemap_order, -> { order('sitemap_sort_no IS NULL, sitemap_sort_no, name') }
 
   scope :search_with_params, ->(params) {
     rel = all
@@ -106,7 +114,7 @@ class Cms::Node < ActiveRecord::Base
   def public_uri
     return @public_uri if @public_uri
     uri = site.uri
-    parents_tree.each{|n| uri += "#{n.name}/" if n.name != '/' }
+    ancestors.each{|n| uri += "#{n.name}/" if n.name != '/' }
     uri = uri.gsub(/\/$/, '') if directory == 0
     @public_uri = uri
   end
@@ -114,7 +122,7 @@ class Cms::Node < ActiveRecord::Base
   def public_full_uri
     return @public_full_uri if @public_full_uri
     uri = site.full_uri
-    parents_tree.each{|n| uri += "#{n.name}/" if n.name != '/' }
+    ancestors.each{|n| uri += "#{n.name}/" if n.name != '/' }
     uri = uri.gsub(/\/$/, '') if directory == 0
     @public_full_uri = uri
   end
@@ -122,7 +130,7 @@ class Cms::Node < ActiveRecord::Base
   def inherited_concept(key = nil)
     if !@_inherited_concept
       concept_id = self.concept_id
-      parents_tree.each do |r|
+      ancestors.each do |r|
         concept_id = r.concept_id if r.concept_id
       end unless concept_id
       return nil unless concept_id
@@ -133,7 +141,7 @@ class Cms::Node < ActiveRecord::Base
   
   def inherited_layout
     layout_id = layout_id
-    parents_tree.each do |r|
+    ancestors.each do |r|
       layout_id = r.layout_id if r.layout_id
     end unless layout_id
     Cms::Layout.where(id: layout_id).first
@@ -218,14 +226,6 @@ class Cms::Node < ActiveRecord::Base
     self.sitemap_state == 'visible'
   end
 
-  def public_children
-    children.public_state
-  end
-
-  def public_children_in_route
-    children_in_route.public_state
-  end
-  
   def set_inquiry_group
     inquiries.each_with_index do |inquiry, i|
       next if i != 0

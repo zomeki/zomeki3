@@ -112,6 +112,21 @@ class GpArticle::Content::Setting < Cms::ContentSetting
     }
   end
 
+  def default_layout_id
+    extra_values[:default_layout_id] || 0
+  end
+
+  def config_options
+    case name
+    when 'basic_setting'
+      return {
+        :root => Cms::Concept.where(site_id: Core.site.id, parent_id: 0, level_no: 1, state: 'public'),
+        :configs => {:conditions => {:state => 'public'}, :include_blank => true}
+      }
+    end
+    super
+  end
+
   private
 
   def set_defaults

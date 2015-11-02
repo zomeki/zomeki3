@@ -4,7 +4,8 @@ class GpCalendar::Public::Node::CalendarStyledEventsController < GpCalendar::Pub
     http_error(404) if params[:page]
 
     criteria = {year_month: @date.strftime('%Y%m')}
-    @events = GpCalendar::Event.public_state.content_and_criteria(@content, criteria).order(:started_on).to_a
+    @events = GpCalendar::Event.public_state.content_and_criteria(@content, criteria).order(:started_on)
+      .preload(:categories).to_a
 
     start_date = @date.beginning_of_month.beginning_of_week(:sunday)
     end_date = @date.end_of_month.end_of_week(:sunday)

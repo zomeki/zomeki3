@@ -1,10 +1,10 @@
-<ul class="level<%= category.level_no + 1 -%>">
-  <%- category.public_children.each do |child| -%>
-  <li class="<%= child.name -%>">
-    <%= link_to child.title, child.public_uri %>
-    <%- if child.public_children.present? -%>
-    <%= render 'categories', category: child %>
-    <%- end -%>
-  </li>
+<%- categories.each do |category| -%>
+<li class="<%= category.name -%>">
+  <%= link_to category.title, category.public_uri %>
+  <%- if category.public_children.present? -%>
+  <ul class="level<%= category.level_no + 1 -%>">
+    <%= render 'categories', categories: category.public_children %>
+  </ul>
   <%- end -%>
-</ul>
+</li>
+<%- end -%>

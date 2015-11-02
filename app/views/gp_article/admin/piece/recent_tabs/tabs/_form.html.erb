@@ -1,14 +1,14 @@
 <table class="show">
   <tr>
-    <th><%= f.label :name %> <span class="note">※</span></th>
+    <th><%= GpArticle::Piece::RecentTabXml.human_attribute_name(:name) %> <span class="note">※</span></th>
     <td><%= f.text_field :name, :class => 'id' %></td>
   </tr>
   <tr>
-    <th><%= f.label :title %> <span class="note">※</span></th>
+    <th><%= GpArticle::Piece::RecentTabXml.human_attribute_name(:title) %> <span class="note">※</span></th>
     <td><%= f.text_field :title %></td>
   </tr>
   <tr>
-    <th><%= f.label :more %></th>
+    <th><%= GpArticle::Piece::RecentTabXml.human_attribute_name(:more) %></th>
     <td><%= f.text_field :more %></td>
   </tr>
   <tr>
@@ -16,7 +16,7 @@
     <td>
       <table class="noDesign">
         <tr>
-          <td><%= f.label :condition %></td>
+          <td><%= GpArticle::Piece::RecentTabXml.human_attribute_name(:condition) %></td>
           <td><%= f.radio_buttons :condition, @item.class::CONDITION_OPTIONS %></td>
         </tr>
         <tr>
@@ -42,7 +42,7 @@
     </td>
   </tr>
   <tr>
-    <th><%= f.label :sort_no %> <span class="note">※</span></th>
+    <th><%= GpArticle::Piece::RecentTabXml.human_attribute_name(:sort_no) %> <span class="note">※</span></th>
     <td><%= f.text_field :sort_no, :class => 'number' %></td>
   </tr>
 </table>

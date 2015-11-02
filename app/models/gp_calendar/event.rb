@@ -33,6 +33,9 @@ class GpCalendar::Event < ActiveRecord::Base
   validate :dates_range
 
   scope :public_state, -> { where(state: 'public') }
+  scope :scheduled_between, ->(start_date, end_date) {
+    where(arel_table[:ended_on].gteq(start_date)).where(arel_table[:started_on].lt(end_date + 1))
+  }
 
   scope :content_and_criteria, ->(content, criteria){
     events = self.arel_table
@@ -87,11 +90,15 @@ class GpCalendar::Event < ActiveRecord::Base
     so
   end
 
+  def kind
+    'event'
+  end
+
   attr_accessor :doc # Not saved to database
 
   def holiday
     criteria = {date: started_on, kind: 'holiday'}
-    GpCalendar::Holiday.public_state.content_and_criteria(content, criteria).first.title rescue nil
+    GpCalendar::Holiday.public_state.content_and_criteria(content, criteria).first.try(:title)
   end
 
   def public_path
@@ -129,6 +136,12 @@ class GpCalendar::Event < ActiveRecord::Base
   def set_defaults
     self.state ||= STATE_OPTIONS.first.last if self.has_attribute?(:state)
     self.target ||= TARGET_OPTIONS.first.last if self.has_attribute?(:target)
+
+    set_defaults_from_content if new_record?
+  end
+
+  def set_defaults_from_content
+    return unless content
     self.will_sync ||= content.event_sync_default_will_sync if self.has_attribute?(:will_sync)
   end
 

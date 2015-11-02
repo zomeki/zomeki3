@@ -22,7 +22,7 @@ class Script
     end
 
     ## run
-    ruby   = "#{Config::CONFIG["bindir"]}/ruby"
+    ruby   = "#{RbConfig::CONFIG["bindir"]}/ruby"
     runner = "#{Rails.root}/bin/rails runner"
     opts   = options.inspect
     cmd    = "#{ruby} #{runner} -e #{Rails.env} \"Script.run('#{path}', #{opts})\""

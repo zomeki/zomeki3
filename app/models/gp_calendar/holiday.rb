@@ -77,7 +77,7 @@ class GpCalendar::Holiday < ActiveRecord::Base
 
   def holiday
     criteria = {date: started_on, kind: 'holiday'}
-    GpCalendar::Holiday.public_state.content_and_criteria(content, criteria).first.title rescue nil
+    GpCalendar::Holiday.public_state.content_and_criteria(content, criteria).first.try(:title)
   end
 
   def publish!

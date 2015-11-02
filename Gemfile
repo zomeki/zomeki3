@@ -16,7 +16,7 @@ gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.1.0'
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
-# gem 'therubyracer', platforms: :ruby
+gem 'therubyracer', platforms: :ruby
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
@@ -55,6 +55,7 @@ gem 'moji', '~> 1.6'
 gem 'nokogiri', '~> 1.6.6.2'
 gem 'omniauth-facebook', '~> 2.0.0'
 gem 'omniauth-twitter', '~> 1.1.0'
+gem 'parallel', '~> 1.6.1'
 gem 'rails_autolink', '~> 1.1.6'
 gem 'rest-more', '~> 3.3.1'
 gem 'rmagick', '~> 2.13.4'
@@ -82,6 +83,8 @@ group :development do
   gem 'bullet'
   gem 'i18n_generators'
   gem 'rails_best_practices'
+  gem 'rubocop', require: false
+  gem 'brakeman', require: false
 end
 
 group :test do

@@ -6,6 +6,7 @@ class Gnav::MenuItem < ActiveRecord::Base
   include Cms::Model::Base::Page
 
   include StateText
+  include Concerns::Gnav::MenuItem::Preload
 
   SITEMAP_STATE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
 
@@ -49,7 +50,7 @@ class Gnav::MenuItem < ActiveRecord::Base
   def categories
     category_sets.inject([]) {|result, category_set|
       if category_set.layer == 'descendants'
-        result | category_set.category.descendants
+        result | category_set.category.descendants_with_preload
       else
         result | [category_set.category]
       end
@@ -60,7 +61,7 @@ class Gnav::MenuItem < ActiveRecord::Base
     category_sets.inject([]) {|result, category_set|
       next result unless category_set.category.public?
       if category_set.layer == 'descendants'
-        result | category_set.category.public_descendants
+        result | category_set.category.public_descendants_with_preload
       else
         result | [category_set.category]
       end

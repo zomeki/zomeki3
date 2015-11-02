@@ -2,7 +2,5 @@
 class GpCalendar::Piece::NearFutureEvent < Cms::Piece
   default_scope { where(model: 'GpCalendar::NearFutureEvent') }
 
-  def content
-    GpCalendar::Content::Event.find(super)
-  end
+  belongs_to :content, :foreign_key => :content_id, :class_name => 'GpCalendar::Content::Event'
 end
