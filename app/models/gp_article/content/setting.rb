@@ -66,6 +66,8 @@ class GpArticle::Content::Setting < Cms::ContentSetting
 
   after_initialize :set_defaults
 
+  belongs_to :organization_content_group, :primary_key => :id, :foreign_key => :value, :class_name => 'Organization::Content::Group'
+
   def content
     GpArticle::Content::Doc.find(content_id)
   end

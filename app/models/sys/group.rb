@@ -22,6 +22,9 @@ class Sys::Group < ActiveRecord::Base
   has_many :site_belongings, :dependent => :destroy, :class_name => 'Cms::SiteBelonging'
   has_many :sites, :through => :site_belongings, :class_name => 'Cms::Site'
 
+  has_one :organization_group, :primary_key => :code, :foreign_key => :sys_group_code, 
+    :class_name => 'Organization::Group'
+
   validates :state, :level_no, :name, :ldap, presence: true
   validates :code, presence: true, uniqueness: true
   validates :name_en, presence: true, uniqueness: { scope: :parent_id }, format: { with: /\A[0-9A-Za-z\._-]*\z/i }
