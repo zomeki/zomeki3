@@ -42,7 +42,7 @@ class Gnav::Piece::Doc < Cms::Piece
   def categories
     unless category_type
       return category_types.inject([]) {|result, ct|
-        ct.preload_root_categories_and_descendants
+        ct.preload_assocs(:root_categories_and_descendants_assocs)
         result | ct.root_categories.inject([]) {|r, c| r | c.descendants }
       }
     end
@@ -50,7 +50,7 @@ class Gnav::Piece::Doc < Cms::Piece
     if (category_id = setting_value(:category_id)).present?
       category_type.categories.where(id: category_id)
     else
-      category_type.preload_root_categories_and_descendants
+      category_type.preload_assocs(:root_categories_and_descendants_assocs)
       category_type.root_categories.inject([]) {|r, c| r | c.descendants }
     end
   end

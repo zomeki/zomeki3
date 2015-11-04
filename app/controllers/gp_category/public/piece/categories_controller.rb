@@ -8,7 +8,7 @@ class GpCategory::Public::Piece::CategoriesController < Sys::Controller::Public:
     return render(text: '') unless @piece.category_type
 
     @root_categories = @piece.category_type.public_root_categories
-      .preload_public_descendants_and_public_node_ancestors
+      .preload_assocs(:public_descendants_and_public_node_ancestors_assocs)
     return render(text: '') if @root_categories.empty?
   end
 end
