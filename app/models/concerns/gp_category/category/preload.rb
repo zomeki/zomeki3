@@ -8,35 +8,31 @@ module Concerns::GpCategory::Category::Preload
         }}
     end
 
-    def descendants_assocs
-      { category_type: nil, parent: nil, children: {
-          category_type: nil, parent: nil, children: {
-            category_type: nil, parent: nil, children: nil
-          }}}
+    def descendants_assocs(depth = 3)
+      return nil if depth < 0
+      { category_type: nil, parent: nil, children: descendants_assocs(depth - 1) }
     end
 
-    def public_descendants_assocs
-      { category_type: nil, parent: nil, public_children: {
-          category_type: nil, parent: nil, public_children: {
-            category_type: nil, parent: nil, public_children: nil
-          }}}
+    def public_descendants_assocs(depth = 3)
+      return nil if depth < 0
+      { category_type: nil, parent: nil, public_children: public_descendants_assocs(depth - 1) }
     end
 
-    def public_descendants_and_public_node_ancestors_assocs
-      { category_type: category_type_assocs, parent: nil, public_children: {
-          category_type: category_type_assocs, parent: nil, public_children: {
-            category_type: category_type_assocs, parent: nil, public_children: nil
-          }}}
+    def public_descendants_and_public_node_ancestors_assocs(depth = 3)
+      return nil if depth < 0
+      { category_type: category_type_assocs, parent: nil,
+        public_children: public_descendants_and_public_node_ancestors_assocs(depth - 1) }
     end
 
     private
 
-    def public_node_assocs
-      {site: nil, parent: {parent: {parent: nil}}}
+    def parent_assocs(depth = 3)
+      return nil if depth < 0
+      { site: nil, parent: parent_assocs(depth - 1) }
     end
 
     def category_type_assocs
-      {content: {public_node: public_node_assocs}}
+      { content: { public_node: { site: nil, parent: parent_assocs } } }
     end
   end
 end
