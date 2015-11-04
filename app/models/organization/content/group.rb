@@ -5,14 +5,13 @@ class Organization::Content::Group < Cms::Content
 
   has_many :groups, :foreign_key => :content_id, :class_name => 'Organization::Group', :dependent => :destroy
 
+  has_one :public_node, -> { public_state.order(:id) },
+    :foreign_key => :content_id, :class_name => 'Cms::Node'
+
   before_create :set_default_settings
 
   def public_nodes
     nodes.public_state
-  end
-
-  def public_node
-    public_nodes.order(:id).first
   end
 
   def refresh_groups
@@ -56,6 +55,10 @@ class Organization::Content::Group < Cms::Content
 
   def article_related?
     setting_value(:article_relation) == 'enabled'
+  end
+
+  def related_article_content_id
+    setting_extra_value(:article_relation, :gp_article_content_doc_id)
   end
 
   def related_article_content
