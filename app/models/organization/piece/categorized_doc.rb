@@ -1,6 +1,8 @@
 class Organization::Piece::CategorizedDoc < Cms::Piece
   default_scope { where(model: 'Organization::CategorizedDoc') }
 
+  belongs_to :content, :foreign_key => :content_id, :class_name => 'Organization::Content::Group'
+
   after_initialize :set_default_settings
 
   store :etcetera, accessors: [:category_ids]

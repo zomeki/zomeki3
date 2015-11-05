@@ -237,29 +237,42 @@ class GpArticle::Doc < ActiveRecord::Base
     "#{content.public_path}/_smartphone#{public_uri}#{filename_base}.html"
   end
 
-  def public_uri(without_filename: false)
-    return '' unless node = content.public_node
-    uri = if (organization_content = content.organization_content_group) &&
-              organization_content.article_related? &&
-              organization_content.related_article_content == content
+  def organization_content_related?
+    organization_content = content.organization_content_group
+    return organization_content &&
+      organization_content.article_related? &&
+      organization_content.related_article_content_id == content.id
+  end
 
-            group = organization_content.groups.where(sys_group_code: creator.group.code).first
-            "#{group.public_uri}docs/#{name}/" if group
-          end
-    uri ||= "#{node.public_uri}#{name}/"
+  def organization_group
+    return @organization_group if defined? @organization_group
+    @organization_group =
+      if content.organization_content_group && creator.group
+        content.organization_content_group.groups.detect{|og| og.sys_group_code == creator.group.code}
+      else
+        nil
+      end
+  end
+
+  def public_uri(without_filename: false)
+    uri = 
+      if organization_content_related? && organization_group
+        "#{organization_group.public_uri}docs/#{name}/"
+      elsif content.public_node
+        "#{content.public_node.public_uri}#{name}/"
+      end
+    return '' unless uri
     without_filename || filename_base == 'index' ? uri : "#{uri}#{filename_base}.html"
   end
 
   def public_full_uri(without_filename: false)
-    return '' unless node = content.public_node
-    uri = if (organization_content = content.organization_content_group) &&
-            organization_content.article_related? &&
-            organization_content.related_article_content == content
-
-            group = organization_content.groups.where(sys_group_code: creator.group.code).first
-            "#{group.public_full_uri}docs/#{name}/" if group
-          end
-    uri ||= "#{node.public_full_uri}#{name}/"
+    uri = 
+      if organization_content_related? && organization_group
+        "#{organization_group.public_full_uri}docs/#{name}/"
+      elsif content.public_node
+        "#{content.public_node.public_full_uri}#{name}/"
+      end
+    return '' unless uri
     without_filename || filename_base == 'index' ? uri : "#{uri}#{filename_base}.html"
   end
 

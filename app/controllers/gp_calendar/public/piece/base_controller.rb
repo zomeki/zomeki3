@@ -13,8 +13,7 @@ class GpCalendar::Public::Piece::BaseController < Sys::Controller::Public::Base
       when 'GpArticle::Doc'
         dc = GpArticle::Content::Doc.find(dc.id)
         dc.public_docs.where(event_state: 'visible').event_scheduled_between(start_date, end_date)
-          .preload_public_node_ancestors
-          .preload(:event_categories)
+          .preload_assocs(:public_node_ancestors_assocs, :event_categories)
       else
         []
       end

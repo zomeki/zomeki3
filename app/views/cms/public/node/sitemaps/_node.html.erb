@@ -9,8 +9,9 @@
   <%- when 'GpCategory::CategoryType' -%>
     <%-
       category_types = node.content.public_category_types
-        .preload_public_node_ancestors
-        .preload_public_root_categories_and_public_descendants_and_public_node_ancestors
+        .preload_assocs(
+          :public_node_ancestors_assocs, 
+          :public_root_categories_and_public_descendants_and_public_node_ancestors_assocs)
     -%>
     <%- unless category_types.empty? -%>
     <ul class="level<%= level + 1 %> <%= css_class %>">
@@ -26,7 +27,7 @@
     <%- end -%>
 
   <%- when 'Gnav::MenuItem' -%>
-    <%- menu_items = node.content.menu_items.preload_public_node_ancestors -%>
+    <%- menu_items = node.content.menu_items.preload_assocs(:public_node_ancestors_assocs) -%>
     <%- unless menu_items.empty? -%>
     <ul class="level<%= level + 1 %> <%= css_class %>">
       <%= render partial: 'gnav_menu_item', collection: menu_items, locals: {level: level + 1, css_class: css_class} %>

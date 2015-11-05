@@ -24,7 +24,7 @@ class Gnav::Public::Piece::DocsController < Sys::Controller::Public::Base
 
     @docs = GpArticle::Doc.where(id: doc_ids).order(display_published_at: :desc, published_at: :desc)
       .limit(@piece.list_count)
-      .preload_public_node_ancestors_and_main_associations
+      .preload_assocs(:public_node_ancestors_assocs, :public_index_assocs)
   end
 
   private

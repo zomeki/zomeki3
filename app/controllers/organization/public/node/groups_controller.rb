@@ -10,6 +10,7 @@ class Organization::Public::Node::GroupsController < Cms::Controller::Public::Ba
 
     sys_group_codes = @content.root_sys_group.children.pluck(:code)
     @groups = @content.groups.public_state.where(sys_group_code: sys_group_codes)
+      .preload_assocs(:public_descendants_and_public_node_ancestors_assocs)
   end
 
   def show
@@ -31,11 +32,12 @@ class Organization::Public::Node::GroupsController < Cms::Controller::Public::Ba
     @docs = if article_contents.empty?
               GpArticle::Doc.none
             else
-              sys_group_ids = @group.public_descendants.map{|g| g.sys_group.id }
+              sys_group_ids = @group.public_descendants_with_preload.map{|g| g.sys_group.id }
               find_public_docs_with_group_id(sys_group_ids)
                 .where(content_id: article_contents.pluck(:id))
                 .order(@group.docs_order)
                 .paginate(page: params[:page], per_page: per_page)
+                .preload_assocs(:organization_groups_and_public_node_ancestors_assocs, :public_index_assocs)
             end
 
     render 'more' if @more

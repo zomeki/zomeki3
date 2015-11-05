@@ -7,6 +7,7 @@ class Organization::Group < ActiveRecord::Base
   include Cms::Model::Auth::Content
 
   include StateText
+  include Concerns::Organization::Group::Preload
 
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
   SITEMAP_STATE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
@@ -26,6 +27,15 @@ class Organization::Group < ActiveRecord::Base
   validates :content_id, :presence => true
 
   belongs_to :sys_group, :foreign_key => :sys_group_code, :primary_key => :code, :class_name => 'Sys::Group'
+
+  has_many :sys_group_children, :through => :sys_group, :source => :children
+  has_one :sys_group_parent, :through => :sys_group, :source => :parent
+
+  has_many :children, :through => :sys_group_children, :source => :organization_group
+  has_one :parent, :through => :sys_group_parent, :source => :organization_group
+
+  # conditional associations
+  has_many :public_children, -> { public_state }, :through => :sys_group_children, :source => :organization_group
 
   after_initialize :set_defaults
 
@@ -55,10 +65,6 @@ class Organization::Group < ActiveRecord::Base
     "#{content.public_node.public_full_uri}#{path_from_root}/"
   end
 
-  def parent
-    content.groups.where(sys_group_code: sys_group.parent.code).first
-  end
-
   def ancestors(groups=[])
     parent.ancestors(groups) if parent
     groups << self
@@ -68,26 +74,22 @@ class Organization::Group < ActiveRecord::Base
     ancestors.map(&:name).join('/')
   end
 
-  def children
-    sys_group_codes = sys_group.children.pluck(:code)
-    content.groups.where(sys_group_code: sys_group_codes)
-  end
-
-  def public_children
-    children.public_state
-  end
-
   def descendants(groups=[])
     groups << self
-    children.each{|c| c.descendants(groups) } unless children.empty?
+    children.each{|c| c.descendants(groups) }
     return groups
   end
 
   def public_descendants(groups=[])
     return groups unless self.public?
     groups << self
-    children.each{|c| c.public_descendants(groups) } unless children.empty?
+    public_children.each{|c| c.public_descendants(groups) }
     return groups
+  end
+
+  def public_descendants_with_preload
+    preload_assocs(:public_descendants_assocs)
+    public_descendants
   end
 
   def bread_crumbs(public_node)
@@ -132,6 +134,6 @@ class Organization::Group < ActiveRecord::Base
 
   def name_uniqueness_in_siblings
     siblings = parent ? parent.children : content.root_groups
-    errors.add(:name, :taken) unless siblings.where(name: name).where('id != ?', id).empty?
+    errors.add(:name, :taken) unless siblings.where(name: name).where.not(id: id).empty?
   end
 end

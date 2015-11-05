@@ -4,7 +4,7 @@
     <h2><%= link_to category.title, category.public_uri %></h2>
     <%-
       public_docs = category.public_docs.limit(@content.category_type_docs_number)
-        .preload_public_node_ancestors_and_main_associations.to_a
+        .preload_assocs(:public_node_ancestors_assocs, :public_index_assocs).to_a
     -%>
     <%- if public_docs.present? -%>
     <div class="docs">

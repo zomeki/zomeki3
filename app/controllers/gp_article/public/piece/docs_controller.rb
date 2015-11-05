@@ -19,7 +19,7 @@ class GpArticle::Public::Piece::DocsController < Sys::Controller::Public::Base
             else
               @docs
             end
-    @docs = @docs.preload_public_node_ancestors_and_main_associations
+    @docs = @docs.preload_assocs(:public_node_ancestors_assocs, :public_index_assocs)
 
     render :index_mobile if Page.mobile?
   end

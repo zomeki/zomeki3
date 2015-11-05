@@ -27,6 +27,10 @@ class GpArticle::Content::Doc < Cms::Content
   has_one :public_archives_node, -> { public_state.where(model: 'GpArticle::Archive').order(:id) },
     :foreign_key => :content_id, :class_name => 'Cms::Node'
 
+  has_one :organization_content_group_setting, -> { where(name: 'organization_content_group_id') },
+    :foreign_key => :content_id, :class_name => 'GpArticle::Content::Setting'
+  has_one :organization_content_group, :through => :organization_content_group_setting, :source => :organization_content_group
+
   before_create :set_default_settings
 
   # draft, approvable, approved, public, closed, archived
@@ -240,11 +244,6 @@ class GpArticle::Content::Doc < Cms::Content
   def public_comments
     docs = GpArticle::Doc.arel_table
     comments.where(docs[:state].eq('public')).public_state
-  end
-
-  def organization_content_group
-    return @organization_content_group if defined? @organization_content_group
-    @organization_content_group = Organization::Content::Group.find_by(id: setting_value(:organization_content_group_id))
   end
 
   def notify_broken_link?

@@ -1,4 +1,4 @@
-<%- @category.preload_public_descendants_and_public_node_ancestors -%>
+<%- @category.preload_assocs(:public_descendants_and_public_node_ancestors_assocs) -%>
 <%- if @category.public_children.present? -%>
 <div class="level<%= @category.level_no + 1 -%>">
   <%- @category.public_children.each do |child| -%>

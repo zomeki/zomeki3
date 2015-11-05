@@ -143,7 +143,7 @@ class GpCategory::Public::Node::CategoriesController < GpCategory::Public::Node:
     else
       @docs = @category.public_docs.order(display_published_at: :desc, published_at: :desc)
         .paginate(page: params[:page], per_page: per_page)
-        .preload_public_node_ancestors_and_main_associations
+        .preload_assocs(:public_node_ancestors_assocs, :public_index_assocs)
       return http_error(404) if @docs.current_page > @docs.total_pages
 
       if Page.mobile?

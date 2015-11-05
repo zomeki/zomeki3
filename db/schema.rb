@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151028091100) do
+ActiveRecord::Schema.define(version: 20151030094509) do
 
   create_table "ad_banner_banners", force: :cascade do |t|
     t.string   "name",               limit: 255
@@ -566,7 +566,14 @@ ActiveRecord::Schema.define(version: 20151028091100) do
     t.integer  "sitemap_sort_no", limit: 4
   end
 
+  add_index "cms_nodes", ["concept_id"], name: "index_cms_nodes_on_concept_id", using: :btree
+  add_index "cms_nodes", ["content_id"], name: "index_cms_nodes_on_content_id", using: :btree
+  add_index "cms_nodes", ["layout_id"], name: "index_cms_nodes_on_layout_id", using: :btree
   add_index "cms_nodes", ["parent_id", "name"], name: "parent_id", using: :btree
+  add_index "cms_nodes", ["parent_id"], name: "index_cms_nodes_on_parent_id", using: :btree
+  add_index "cms_nodes", ["route_id"], name: "index_cms_nodes_on_route_id", using: :btree
+  add_index "cms_nodes", ["site_id"], name: "index_cms_nodes_on_site_id", using: :btree
+  add_index "cms_nodes", ["state"], name: "index_cms_nodes_on_state", using: :btree
 
   create_table "cms_o_auth_users", force: :cascade do |t|
     t.string   "provider",   limit: 255
@@ -956,6 +963,7 @@ ActiveRecord::Schema.define(version: 20151028091100) do
   add_index "gp_category_categories", ["concept_id"], name: "index_gp_category_categories_on_concept_id", using: :btree
   add_index "gp_category_categories", ["layout_id"], name: "index_gp_category_categories_on_layout_id", using: :btree
   add_index "gp_category_categories", ["parent_id"], name: "index_gp_category_categories_on_parent_id", using: :btree
+  add_index "gp_category_categories", ["state"], name: "index_gp_category_categories_on_state", using: :btree
 
   create_table "gp_category_categorizations", force: :cascade do |t|
     t.integer  "categorizable_id",   limit: 4
@@ -1632,6 +1640,10 @@ ActiveRecord::Schema.define(version: 20151028091100) do
     t.string   "note",         limit: 255
     t.string   "tel_attend",   limit: 255
   end
+
+  add_index "sys_groups", ["code"], name: "index_sys_groups_on_code", using: :btree
+  add_index "sys_groups", ["parent_id"], name: "index_sys_groups_on_parent_id", using: :btree
+  add_index "sys_groups", ["state"], name: "index_sys_groups_on_state", using: :btree
 
   create_table "sys_languages", force: :cascade do |t|
     t.string   "state",      limit: 15
