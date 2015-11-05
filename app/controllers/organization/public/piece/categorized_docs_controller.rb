@@ -19,8 +19,7 @@ class Organization::Public::Piece::CategorizedDocsController < Sys::Controller::
       @docs = if article_contents.empty?
                 GpArticle::Doc.none
               else
-                @item.preload_public_descendants
-                sys_group_ids = @item.public_descendants.map{|g| g.sys_group.id }
+                sys_group_ids = @item.public_descendants_with_preload.map{|g| g.sys_group.id }
                 find_public_docs_with_group_id(sys_group_ids)
                   .where(content_id: article_contents.pluck(:id))
                   .order(@item.docs_order)
@@ -29,7 +28,7 @@ class Organization::Public::Piece::CategorizedDocsController < Sys::Controller::
       categorizations = GpCategory::Categorization.arel_table
       @docs = @docs.joins(:categorizations).where(categorizations[:categorized_as].eq('GpArticle::Doc')
                                                   .and(categorizations[:category_id].in(@piece.category_ids)))
-      @docs = @docs.preload_organization_content_groups_and_public_node_ancestors.preload_creator
+      @docs = @docs.preload_assocs(:organization_groups_and_public_node_ancestors_assocs, :public_index_assocs)
     else
       render :text => ''
     end

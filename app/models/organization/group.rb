@@ -87,6 +87,11 @@ class Organization::Group < ActiveRecord::Base
     return groups
   end
 
+  def public_descendants_with_preload
+    preload_assocs(:public_descendants_assocs)
+    public_descendants
+  end
+
   def bread_crumbs(public_node)
     crumbs = []
 

@@ -1,4 +1,4 @@
-<%- categorize_docs = @piece.categorize_docs(@category.public_docs.preload_public_node_ancestors_and_main_associations) -%>
+<%- categorize_docs = @piece.categorize_docs(@category.public_docs.preload_assocs(:public_node_ancestors_assocs, :public_index_assocs)) -%>
 <%- if categorize_docs.present? -%>
 <div class="docs">
   <section class="category <%= @category.name -%>">
@@ -13,12 +13,12 @@
 
 <%- unless @category.public_children.empty? -%>
 <div class="level<%= @category.level_no + 1 -%>">
-  <%- @category.preload_public_children_and_public_node_ancestors -%>
+  <%- @category.preload_assocs(:public_children_and_public_node_ancestors_assocs) -%>
   <%- @category.public_children.each do |child| -%>
   <section class="category <%= child.name -%><%= cycle '', ' cycle' %>">
     <h3><%= link_to child.title, child.public_uri %></h3>
 
-    <%- categorize_docs = @piece.categorize_docs(child.public_docs.preload_public_node_ancestors_and_main_associations) -%>
+    <%- categorize_docs = @piece.categorize_docs(child.public_docs.preload_assocs(:public_node_ancestors_assocs, :public_index_assocs)) -%>
     <%- if categorize_docs.present? -%>
     <ul class="docs">
       <%- categorize_docs.each do |doc| -%>

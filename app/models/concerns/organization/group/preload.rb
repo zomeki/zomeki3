@@ -1,36 +1,23 @@
 module Concerns::Organization::Group::Preload
   extend ActiveSupport::Concern
 
-  included do
-    scope :preload_public_descendants_and_public_node_ancestors, -> {
-      preload(public_descendants_and_public_node_ancestors_assocs)
-    }
-  end
-
-  def preload_public_descendants
-    assocs = self.class.public_descendants_assocs
-    ActiveRecord::Associations::Preloader.new.preload(self, assocs)
-  end
-
   module ClassMethods
-    def public_descendants_assocs
-      { parent: nil, public_children: {
-          parent: nil, public_children: {
-            parent: nil, public_children: nil
-          }}}
+    def public_descendants_assocs(depth = 3)
+      return nil if depth < 0
+      { parent: nil, public_children: public_descendants_assocs(depth - 1) }
     end
 
-    def public_descendants_and_public_node_ancestors_assocs
-      { content: {public_node: public_node_assocs}, parent: nil, public_children: {
-          content: {public_node: public_node_assocs}, parent: nil, public_children: {
-            content: {public_node: public_node_assocs}, parent: nil, public_children: nil
-          }}}
+    def public_descendants_and_public_node_ancestors_assocs(depth = 3)
+      return nil if depth < 0
+      { content: { public_node: { site: nil, parent: parent_assocs } },
+        parent: nil, public_children: public_descendants_and_public_node_ancestors_assocs(depth - 1) }
     end
 
     private
 
-    def public_node_assocs
-      {site: nil, parent: {parent: {parent: nil}}}
+    def parent_assocs(depth = 3)
+      return nil if depth < 0
+      { parent: parent_assocs(depth - 1) }
     end
   end
 end

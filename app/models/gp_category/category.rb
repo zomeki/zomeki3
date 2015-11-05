@@ -72,12 +72,12 @@ class GpCategory::Category < ActiveRecord::Base
   end
 
   def descendants_ids
-    preload_descendants
+    preload_assocs(:descendants_assocs)
     descendants.map {|c| c.id }
   end
 
   def descendants_with_preload
-    preload_descendants
+    preload_assocs(:descendants_assocs)
     descendants
   end
 
@@ -89,12 +89,12 @@ class GpCategory::Category < ActiveRecord::Base
   end
 
   def public_descendants_ids
-    preload_public_descendants
+    preload_assocs(:public_descendants_assocs)
     public_descendants.map {|c| c.id }
   end
 
   def public_descendants_with_preload
-    preload_public_descendants
+    preload_assocs(:public_descendants_assocs)
     public_descendants
   end
 

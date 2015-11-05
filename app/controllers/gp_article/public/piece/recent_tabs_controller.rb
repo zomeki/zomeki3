@@ -39,7 +39,7 @@ class GpArticle::Public::Piece::RecentTabsController < Sys::Controller::Public::
       else
         docs = @piece.content.public_docs.order('display_published_at DESC, published_at DESC').limit(@piece.list_count)
       end
-      docs = docs.preload_public_node_ancestors_and_main_associations
+      docs = docs.preload_assocs(:public_node_ancestors_assocs, :public_index_assocs)
 
       @tabs.push(name: tab.name,
                  title: tab.title,

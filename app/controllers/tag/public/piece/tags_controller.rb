@@ -6,7 +6,7 @@ class Tag::Public::Piece::TagsController < Sys::Controller::Public::Base
   end
 
   def index
-    @tags = @piece.content.tags.preload_public_node_ancestors
+    @tags = @piece.content.tags.preload_assocs(:public_node_ancestors_assocs)
     render :text => '' if @tags.empty?
   end
 end

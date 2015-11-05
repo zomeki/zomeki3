@@ -1,6 +1,7 @@
 module Sys::Model::Base
   extend ActiveSupport::Concern
   include Sys::Model::Scope
+  include Sys::Model::Preload
   include Sys::Model::ConditionBuilder
 
   included do
