@@ -11,9 +11,11 @@ class Cms::Public::TalkController < ApplicationController
 
     uri = Core.request_uri.gsub(/\.mp3$/, '').gsub(/\.r$/, '')
     return http_error(404) if ::File.extname(uri) != '.html'
-    
+
     uri = "#{request.env['SCRIPT_URI'].gsub(/^(.*?\/\/.*?)\/.*/, '\1')}#{uri}"
     options = uri =~ /^https:/ ? {:ssl_verify_mode => OpenSSL::SSL::VERIFY_NONE} : {}
+    session_key = Rails.application.config.session_options[:key]
+    options.merge!("Cookie" => "#{session_key}=#{CGI.escape(cookies[session_key])}")
     res = Util::Http::Request.send(uri, options)
 
     return http_error(404) if res.status != 200

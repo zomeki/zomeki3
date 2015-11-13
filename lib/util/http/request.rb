@@ -4,12 +4,11 @@ class Util::Http::Request
   require 'timeout'
 
   def self.send(uri, options = {})
-    limit    = options[:timeout] || 30
+    limit    = options.delete(:timeout) || 30
     status   = nil
     body     = ''
 
-    settings = { :proxy => Core.proxy }
-    settings[:ssl_verify_mode] = options[:ssl_verify_mode] if options.include?(:ssl_verify_mode)
+    settings = { :proxy => Core.proxy }.merge(options)
 
     begin
       timeout(limit) do
