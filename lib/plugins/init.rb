@@ -1,5 +1,4 @@
 require 'plugins/condition_builder/lib/condition_builder'
-require 'plugins/zomeki_plugin/lib/extend_rack'
 require 'plugins/zomeki_plugin/lib/extend_mysql2'
 require 'plugins/zomeki_plugin/lib/extend_activemodel'
 require 'plugins/zomeki_plugin/lib/extend_form_builder'

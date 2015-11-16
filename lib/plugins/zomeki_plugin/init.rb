@@ -1,4 +1,3 @@
-require 'extend_rack'
 require 'extend_mysql2'
 require 'extend_activemodel'
 #require 'extend_jpmobile'
