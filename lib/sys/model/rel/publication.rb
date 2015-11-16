@@ -107,7 +107,7 @@ module Sys::Model::Rel::Publication
 
   def rebuild(content, options = {})
     unless public?
-      errors.add_to_base "公開されていません。"
+      errors.add :base, "公開されていません。"
       return false
     end
     

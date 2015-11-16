@@ -133,11 +133,11 @@ class Cms::Stylesheet < Sys::Model::ValidationModel::Base
   def valid_exist?(path, type = nil)
     return true unless ::File.exist?(path)
     if type == nil
-      errors.add_to_base "ファイルが既に存在します。"
+      errors.add :base, "ファイルが既に存在します。"
     elsif type == :file
-      errors.add_to_base "ファイルが既に存在します。" if ::File.file?(path)
+      errors.add :base, "ファイルが既に存在します。" if ::File.file?(path)
     elsif type == :directory
-      errors.add_to_base "ディレクトリが既に存在します。" if ::File.file?(path)
+      errors.add :base, "ディレクトリが既に存在します。" if ::File.file?(path)
     end
     return errors.size == 0
   end
@@ -148,7 +148,7 @@ class Cms::Stylesheet < Sys::Model::ValidationModel::Base
     File.open(@full_path,'w') {|f| f.write(self.body) }
     return true
   rescue => e
-    errors.add_to_base(e.to_s)
+    errors.add(:base, e.to_s)
     return false
   end
   
@@ -161,7 +161,7 @@ class Cms::Stylesheet < Sys::Model::ValidationModel::Base
     
     FileUtils.mkdir(src)
   rescue => e
-    errors.add_to_base(e.to_s)
+    errors.add(:base, e.to_s)
     return false
   end
   
@@ -174,7 +174,7 @@ class Cms::Stylesheet < Sys::Model::ValidationModel::Base
     
     FileUtils.touch(src)
   rescue => e
-    errors.add_to_base(e.to_s)
+    errors.add(:base, e.to_s)
     return false
   end
   
@@ -186,14 +186,14 @@ class Cms::Stylesheet < Sys::Model::ValidationModel::Base
     
     src = ::File::join(@full_path, file.original_filename)
     if ::File.exist?(src) && FileTest.directory?(src)
-      errors.add_to_base "同名のディレクトリが既に存在します。"
+      errors.add :base, "同名のディレクトリが既に存在します。"
       return false
     end
     
     File.open(src,'w') {|f| f.write(file.read.force_encoding('utf-8')) }
     return true
   rescue => e
-    errors.add_to_base(e.to_s)
+    errors.add(:base, e.to_s)
     return false
   end
   
@@ -208,7 +208,7 @@ class Cms::Stylesheet < Sys::Model::ValidationModel::Base
     FileUtils.mv(src, dst)
     return true
   rescue => e
-    errors.add_to_base(e.to_s)
+    errors.add(:base, e.to_s)
     return false
   end
   
@@ -223,10 +223,10 @@ class Cms::Stylesheet < Sys::Model::ValidationModel::Base
     
     if !::File.exist?(::File.dirname(dst))
       dir = ::File.dirname(dst.gsub(@base_uri[0], @base_uri[1]))
-      errors.add_to_base "ディレクトリが見つかりません。（ #{dir} ）"
+      errors.add :base, "ディレクトリが見つかりません。（ #{dir} ）"
     elsif file? && !::File.exist?(::File.dirname(dst))
       dir = ::File.dirname(dst.gsub(@base_uri[0], @base_uri[1]))
-      errors.add_to_base "ディレクトリが見つかりません。（ #{dir} ）"
+      errors.add :base, "ディレクトリが見つかりません。（ #{dir} ）"
     end
     return false if errors.size != 0
     return false unless valid_exist?(dst, :file)
@@ -237,9 +237,9 @@ class Cms::Stylesheet < Sys::Model::ValidationModel::Base
     if e.to_s =~ /^same file/i
       return true
     elsif e.to_s =~ /^Not a directory/i
-      errors.add_to_base "ディレクトリが見つかりません。（ #{dst} ）"
+      errors.add :base, "ディレクトリが見つかりません。（ #{dst} ）"
     else
-      errors.add_to_base(e.to_s)
+      errors.add(:base, e.to_s)
     end
     return false
   end
@@ -249,7 +249,7 @@ class Cms::Stylesheet < Sys::Model::ValidationModel::Base
     FileUtils.rm_rf(src)
     return true
   rescue => e
-    errors.add_to_base(e.to_s)
+    errors.add(:base, e.to_s)
     return false
   end
 end

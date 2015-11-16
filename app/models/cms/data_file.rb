@@ -62,7 +62,7 @@ class Cms::DataFile < ActiveRecord::Base
 
   def publish(options = {})
     unless FileTest.exist?(upload_path)
-      errors.add_to_base 'ファイルデータが見つかりません。'
+      errors.add :base, 'ファイルデータが見つかりません。'
       return false
     end
     self.state        = 'public'

@@ -49,13 +49,13 @@ class Cms::Admin::EmergenciesController < Cms::Controller::Admin::Base
     @item = Core.site.emergency_layout_settings.find(params[:id])
 
     if @item.value.blank?
-      @item.errors.add_to_base "レイアウトが登録されていません。"
+      @item.errors.add :base, "レイアウトが登録されていません。"
     end
     unless layout = Cms::Layout.find_by(id: @item.value)
-      @item.errors.add_to_base "レイアウトが見つかりません。"
+      @item.errors.add :base, "レイアウトが見つかりません。"
     end
     unless @node
-      @item.errors.add_to_base "トップページが見つかりません。"
+      @item.errors.add :base, "トップページが見つかりません。"
     end
 
     if @item.errors.size == 0
