@@ -1,5 +1,2 @@
 require 'plugins/condition_builder/lib/condition_builder'
-require 'plugins/zomeki_plugin/lib/extend_form_builder'
-require 'plugins/zomeki_plugin/lib/extend_rsync'
-require 'plugins/zomeki_plugin/lib/render_component_vho.rb'
-require 'plugins/zomeki_plugin/lib/shortcut_methods.rb'
+require 'plugins/zomeki_plugin/init'
