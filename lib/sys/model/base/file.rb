@@ -53,7 +53,7 @@ module Sys::Model::Base::File
     if name.present?
       ext = ::File.extname(name.to_s).downcase
       if types[ext] != true
-        errors.add_to_base "許可されていないファイルです。（#{allowed_type}）"
+        errors.add :base, "許可されていないファイルです。（#{allowed_type}）"
         return
       end
     end
@@ -61,7 +61,7 @@ module Sys::Model::Base::File
     if file.present? && file.original_filename.present?
       ext = ::File.extname(file.original_filename.to_s).downcase
       unless types[ext]
-        errors.add_to_base "許可されていないファイルです。（#{allowed_type}）"
+        errors.add :base, "許可されていないファイルです。（#{allowed_type}）"
         return
       end
     end

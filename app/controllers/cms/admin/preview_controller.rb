@@ -58,9 +58,7 @@ protected
     end
 
     ## preview mark
-    html = <<-EOT
-<div id="cmsPreviewMark" style="margin: 1px; padding: 5px 10px; border-bottom: 1px solid #fff; background-color: #000; color: #fff; line-height: 1.5; font-family: sans-serif; cursor: pointer; " onclick="document.getElementById('cmsPreviewMark').style.display='none';">プレビュー：&nbsp;終了する場合は、ブラウザのタブの×で閉じてください。</div>
-    EOT
+    html = render_to_string(partial: 'cms/admin/preview/preview_mark')
     self.response_body = response.body.gsub(/(<body[^>]*?>)/i, '\\1' + html)
 
     ## host

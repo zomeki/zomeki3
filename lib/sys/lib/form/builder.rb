@@ -63,7 +63,7 @@ class Sys::Lib::Form::Builder
   def valid?
     elements.each do |e|
       if e.required == true && e.blank_value?
-        errors.add_to_base "#{e.label} を入力してください。"
+        errors.add :base, "#{e.label} を入力してください。"
       end
     end
     return errors.size == 0

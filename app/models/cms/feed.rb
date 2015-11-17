@@ -32,7 +32,7 @@ class Cms::Feed < ActiveRecord::Base
   def request_feed
      res = Util::Http::Request.send(uri)
     if res.status != 200
-      errors.add_to_base "RequestError: #{uri}"
+      errors.add :base, "RequestError: #{uri}"
       return nil
     end
     return res.body
@@ -41,7 +41,7 @@ class Cms::Feed < ActiveRecord::Base
 
   def update_feed
     unless xml = request_feed
-      errors.add_to_base "FeedRequestError: #{uri}"
+      errors.add :base, "FeedRequestError: #{uri}"
       return false
     end
 
@@ -133,7 +133,7 @@ class Cms::Feed < ActiveRecord::Base
         end
       end
     rescue Exception => e
-      errors.add_to_base "FeedEntryError: #{e}"
+      errors.add :base, "FeedEntryError: #{e}"
     end
 
     if latest.size > 0
@@ -142,7 +142,7 @@ class Cms::Feed < ActiveRecord::Base
     return errors.size == 0
 
   rescue => e
-    errors.add_to_base "Error: #{e.class}"
+    errors.add :base, "Error: #{e.class}"
     return false
   end
 end
