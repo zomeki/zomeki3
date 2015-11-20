@@ -1,5 +1,4 @@
 require 'csv'
-
 class GpArticle::Admin::Docs::FilesController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 
@@ -69,7 +68,7 @@ class GpArticle::Admin::Docs::FilesController < Cms::Controller::Admin::Base
 
   def update
     @item = Sys::File.find(params[:id])
-    @item.attributes = params[:item]
+    @item.attributes = file_params
     @item.allowed_type = @content.setting_value(:allowed_attachment_type)
     @item.image_resize = params[:image_resize]
     @item.skip_upload
@@ -136,5 +135,11 @@ class GpArticle::Admin::Docs::FilesController < Cms::Controller::Admin::Base
     end
 
     redirect_to url_for(action: :index)
+  end
+
+  private
+
+  def file_params
+    params.require(:item).permit(:name, :title)
   end
 end
