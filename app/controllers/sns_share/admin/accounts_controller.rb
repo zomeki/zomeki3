@@ -19,7 +19,7 @@ class SnsShare::Admin::AccountsController < Cms::Controller::Admin::Base
   end
 
   def update
-    @item.attributes = params[:item]
+    @item.attributes = account_params
     _update @item
   end
 
@@ -35,5 +35,15 @@ class SnsShare::Admin::AccountsController < Cms::Controller::Admin::Base
                             facebook_page_options: nil,
                             facebook_page: nil)
     redirect_to sns_share_accounts_path(@content), notice: 'ログアウトしました。'
+  end
+
+  private
+
+  def account_params
+    if params[:item]
+      params[:item].permit(:facebook_token, :facebook_page)
+    else
+      {}
+    end
   end
 end
