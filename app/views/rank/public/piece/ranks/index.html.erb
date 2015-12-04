@@ -18,7 +18,13 @@ $(document).ready(function () {
           if (i <= 10) l.attr('class', 'ranking'+i);
           l.append($('<span>', {'class': 'rank', 'text': i}));
           l.append($('<a>', {'href': item['url'], 'target': '_blank', 'text': item['title']}));
-          if (item['count'] !== null) l.append($('<span>', {'class': 'count', 'text': '('+item['count']+')'}));
+          if (item['count'] !== null) {
+            c = $('<span>', {'class': 'count'});
+            c.append($('<span>', {'class': 'parenthesis', 'text': '('}));
+            c.append(item['count']);
+            c.append($('<span>', {'class': 'parenthesis', 'text': ')'}));
+            l.append(c);
+          }
           u.append(l);
         });
         wrapper.append(u);
