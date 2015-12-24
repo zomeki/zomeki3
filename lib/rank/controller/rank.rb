@@ -29,6 +29,7 @@ module Rank::Controller::Rank
       first_date = Date.today.strftime("%Y%m%d")
       ActiveRecord::Base.transaction do
         results.each_with_index do |result,i|
+          next if result.page_path.length > 250
           rank = Rank::Rank.where(content_id: content.id)
                            .where(page_title: result.page_title)
                            .where(hostname:   result.hostname)
@@ -181,9 +182,10 @@ module Rank::Controller::Rank
     category_ids = category_ids.flatten.uniq
 
     if category_ids.size > 0
-      ranks = ranks.where(Rank::Category.select(:id)
-                                        .where(content_id:  content.id)
-                                        .where(page_path:   rank_table[:page_path])
+      rank_cate_table = Rank::Category.arel_table
+      ranks = ranks.where(Rank::Category.select(:page_path)
+                                        .where(rank_cate_table[:content_id].eq(content.id)  )
+                                        .where(rank_cate_table[:page_path].eq(rank_table[:page_path]))
                                         .where(category_id: category_ids).exists)
     end
 
