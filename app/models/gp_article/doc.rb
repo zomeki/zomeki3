@@ -119,7 +119,7 @@ class GpArticle::Doc < ActiveRecord::Base
     creators = Sys::Creator.arel_table
 
     rel = if criteria[:group].blank? && criteria[:group_id].blank? && criteria[:user].blank?
-            all
+            joins(:creator)
           else
             inners = []
 
