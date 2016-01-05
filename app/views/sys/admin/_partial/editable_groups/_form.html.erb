@@ -1,5 +1,5 @@
 <%
-groups = Core.site.groups.find(:all, :conditions => {:level_no => 2}, :order => :sort_no)
+groups = Core.site.groups.where(level_no: 2).order(sort_no: :asc)
 %>
 
 <p class="form">編集権限</p>

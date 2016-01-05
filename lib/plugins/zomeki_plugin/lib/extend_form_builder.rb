@@ -74,7 +74,7 @@ class ActionView::Helpers::FormBuilder
       indstr  = '　　'
       down = lambda do |_parent, _indent|
         choices << [(indstr * _indent) + _parent.send(label), _parent.send(value).to_s]
-        iclass.find(:all, :conditions => cond.merge({:parent_id => _parent.id}), :order => order).each do |_child|
+        iclass.where(cond.merge({:parent_id => _parent.id})).order(order).each do |_child|
           next unless _child.sites.include?(Core.site)
           down.call(_child, _indent + 1)
         end
