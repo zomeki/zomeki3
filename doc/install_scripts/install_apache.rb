@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 DONE_FLAG = "/tmp/#{$0}_done"
 
-PASSENGER_VERSION = '4.0.59'
+PASSENGER_VERSION = '5.0.23'
 
 puts '#### Install Apache ####'
 exit if File.exist?(DONE_FLAG)
@@ -43,7 +43,7 @@ def centos
   unless File.exist?(passenger_conf)
     system 'yum -y install curl-devel'
     system "gem install passenger -v #{PASSENGER_VERSION}"
-    system 'passenger-install-apache2-module'
+    system 'passenger-install-apache2-module -a'
 
     File.open(passenger_conf, File::RDWR|File::CREAT, 0644) do |f|
       f.flock(File::LOCK_EX)
