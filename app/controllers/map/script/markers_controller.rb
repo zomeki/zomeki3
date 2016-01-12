@@ -22,7 +22,9 @@ class Map::Script::MarkersController < Cms::Controller::Script::Publication
       next unless file && ::File.exist?(file.upload_path)
 
       Util::File.put marker.public_file_path, src: file.upload_path, mkdir: true
-      Util::File.put marker.public_smart_phone_file_path, src: file.upload_path, mkdir: true
+      if @node.content.site.publish_for_smart_phone?
+        Util::File.put marker.public_smart_phone_file_path, src: file.upload_path, mkdir: true
+      end
     end
 
     render text: 'OK'
