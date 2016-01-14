@@ -59,7 +59,7 @@ class Cms::Admin::NodesController < Cms::Controller::Admin::Base
     @item.state        = 'closed'
     @item.published_at = Core.now
     @item.name         = "tmp" # for validation
-    @item.title        = @item.model_name.to_s.gsub(/.*\//, '')
+    @item.title        = @item.content_model_name.to_s.gsub(/.*\//, '')
 
     @contents = content_options(false)
     @models   = model_options(false)
