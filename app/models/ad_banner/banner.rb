@@ -76,6 +76,7 @@ class AdBanner::Banner < ActiveRecord::Base
   def publish_or_close_image
     if published?
       [image_path, image_mobile_path, image_smart_phone_path].each do |path|
+        next if path == image_smart_phone_path && !self.content.site.publish_for_smart_phone?
         FileUtils.mkdir_p ::File.dirname(path)
         FileUtils.cp upload_path, path
       end

@@ -6,17 +6,16 @@ See COPYING
 
 == 想定環境
 
-OS:: CentOS 6.6 / Ubuntu 12.04
+OS:: CentOS 6.6
 Webサーバ:: Apache 2.2
 DBシステム:: MySQL 5.1
-Ruby:: 2.2
+Ruby:: 2.3
 Rails:: 4.2
 
 == 自動スクリプト
 
-  # export LANG=ja_JP.UTF-8; curl -fsSL https://raw.githubusercontent.com/zomeki/zomeki2-development/master/doc/install_scripts/prepare.sh | bash
+  # export LANG=ja_JP.UTF-8; curl -fsSL https://raw.githubusercontent.com/zomeki/zomeki2/master/doc/install_scripts/prepare.sh | bash
 
 == 手動マニュアル
 
 - doc/INSTALL_centos.txt
-- doc/INSTALL_ubuntu.txt
