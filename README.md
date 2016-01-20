@@ -1,13 +1,13 @@
 ZOMEKI
 ==========
 
-# Copyright
+## Copyright
 
 See COPYING
 
-# インストール
+## インストール
 
-## 想定環境
+### 想定環境
 
 | Software | Version    |
 |:---------|:-----------|
@@ -18,8 +18,8 @@ See COPYING
 | Rails    | 4.2        |
 
 
-## 自動スクリプト
+### 自動スクリプト
         export LANG=ja_JP.UTF-8; curl -fsSL https://raw.githubusercontent.com/zomeki/zomeki2/master/doc/install_scripts/prepare.sh | bash
 
-## 手動マニュアル
+### 手動マニュアル
   - [doc/INSTALL.txt](doc/INSTALL.txt)
