@@ -81,9 +81,8 @@ class GpCategory::Public::Node::CategoriesController < GpCategory::Public::Node:
               if vc.respond_to?(tm.module_type)
                 @category.public_children.inject(''){|tags, child|
                   tags << vc.content_tag(:section, class: child.name) do
-                      category_html = vc.link_to(child.title, child.public_uri)
-                      category_html << vc.content_tag(:span, child.description, class: 'category_summary') if child.description.present?
-                      html = vc.content_tag(:h2, category_html)
+                      html = vc.content_tag(:h2, vc.link_to(child.title, child.public_uri))
+                      html << vc.content_tag(:span, child.description, class: 'category_summary') if child.description.present?
                       html << vc.send(tm.module_type, template_module: tm,
                                       categories: child.public_children)
                     end

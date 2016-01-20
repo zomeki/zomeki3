@@ -59,6 +59,8 @@ ZomekiCMS::Application.routes.draw do
     end
     resources :piece_feeds,
       :controller => 'admin/piece/feeds'
+    resources :piece_category_summaries,
+      :controller => 'admin/piece/category_summaries'
   end
 
   ## public

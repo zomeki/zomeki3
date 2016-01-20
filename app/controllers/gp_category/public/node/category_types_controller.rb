@@ -27,9 +27,9 @@ class GpCategory::Public::Node::CategoryTypesController < GpCategory::Public::No
               if vc.respond_to?(tm.module_type)
               @content.public_category_types.inject(''){|tags, category_type|
                 tags << vc.content_tag(:section, class: category_type.name) do
-                    category_html = vc.link_to(category_type.title, category_type.public_uri)
-                    category_html << vc.content_tag(:span, category_type.description, class: 'category_summary') if category_type.description.present?
-                    html = vc.content_tag(:h2, category_html)
+                    category_html =
+                    html = vc.link_to(category_type.title, category_type.public_uri)
+                    html << vc.content_tag(:span, category_type.description, class: 'category_summary') if category_type.description.present?
                     html << vc.send(tm.module_type, template_module: tm,
                                     categories: category_type.public_root_categories)
                   end
@@ -160,9 +160,8 @@ class GpCategory::Public::Node::CategoryTypesController < GpCategory::Public::No
               if vc.respond_to?(tm.module_type)
                 @category_type.public_root_categories.inject(''){|tags, category|
                   tags << vc.content_tag(:section, class: category.name) do
-                      category_html = vc.link_to(category.title, category.public_uri)
-                      category_html << vc.content_tag(:span, category.description, class: 'category_summary') if category.description.present?
-                      html = vc.content_tag(:h2, category_html)
+                      html = vc.content_tag(:h2, vc.link_to(category.title, category.public_uri))
+                      html << vc.content_tag(:span, category.description, class: 'category_summary') if category.description.present?
                       html << vc.send(tm.module_type, template_module: tm,
                                       categories: category.public_children)
                     end
