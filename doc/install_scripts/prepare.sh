@@ -1,6 +1,7 @@
 #!/bin/bash
 
 EPEL_RPM_URL="http://dl.fedoraproject.org/pub/epel/6/`uname -i`/epel-release-6-8.noarch.rpm"
+MYSQL_REPO_URL="http://dev.mysql.com/get/mysql-community-release-el6-5.noarch.rpm"
 INSTALL_SCRIPTS_URL='https://raw.githubusercontent.com/zomeki/zomeki2/master/doc/install_scripts'
 
 echo '#### Prepare to install ####'
@@ -13,6 +14,7 @@ centos() {
   echo "It's CentOS!"
 
   rpm -ivh $EPEL_RPM_URL
+  yum -y install $MYSQL_REPO_URL
   yum -y install git
 
   cd /usr/local/src

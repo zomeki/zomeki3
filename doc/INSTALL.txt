@@ -7,7 +7,7 @@
 [システム]
 OS         : CentOS 6.6
 Webサーバ  : Apache 2.2
-DBシステム : MySQL 5.1
+DBシステム : MySQL 5.6
 Ruby       : 2.3
 Rails      : 4.2
 
@@ -46,6 +46,10 @@ yumリポジトリにEPELを追加します。
 
   # rpm -ivh http://dl.fedoraproject.org/pub/epel/6/`uname -i`/epel-release-6-8.noarch.rpm
 
+yumリポジトリにmysqlを追加します。
+
+  # yum -y install http://dev.mysql.com/get/mysql-community-release-el6-5.noarch.rpm
+
 必要なパッケージをインストールします。
 
   # yum -y install git
@@ -74,7 +78,7 @@ Rubyをインストールします。
 
 ZOMEKIをインストールします。
 
-  # yum -y install ImageMagick-devel libxml2-devel libxslt-devel mysql-devel openldap-devel nodejs patch
+  # yum -y install ImageMagick-devel libxml2-devel libxslt-devel mysql-community-devel openldap-devel nodejs patch
 
   # git clone https://github.com/zomeki/zomeki2.git /var/share/zomeki
   # chown -R zomeki:zomeki /var/share/zomeki
@@ -122,7 +126,7 @@ Phusion Passengerをインストールします。
 
 MySQLをインストールします
 
-  # yum -y install mysql-server
+  # yum -y install mysql-community-server
 
 設定ファイルを変更します。
 
