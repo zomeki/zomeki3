@@ -63,6 +63,9 @@ class GpArticle::Content::Setting < Cms::ContentSetting
   set_config :qrcode_settings, name: 'QRコード',
     options: GpArticle::Content::Doc::QRCODE_SETTINGS_OPTIONS,
     form_type: :radio_buttons
+  set_config :serial_no_settings, name: '記事番号表示',
+    options: GpArticle::Content::Doc::SERIALNO_SETTINGS_OPTIONS,
+    form_type: :radio_buttons
 
   after_initialize :set_defaults
 
@@ -144,6 +147,9 @@ class GpArticle::Content::Setting < Cms::ContentSetting
       ev[:footer_style] = '投稿者：@user@ @publish_time@ コメント(@comment_count@) カテゴリ：@category_link@' if ev[:footer_style].nil?
       self.extra_values = ev
     when 'qrcode_settings'
+      self.value = 'disabled' if value.blank?
+      self.extra_values = { state: 'hidden' } if extra_values.blank?
+    when 'serial_no_settings'
       self.value = 'disabled' if value.blank?
       self.extra_values = { state: 'hidden' } if extra_values.blank?
     end

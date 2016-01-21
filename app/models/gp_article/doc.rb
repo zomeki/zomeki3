@@ -85,6 +85,7 @@ class GpArticle::Doc < ActiveRecord::Base
   before_save :set_name
   before_save :set_published_at
   before_save :replace_public
+  before_save :set_serial_no
   before_destroy :keep_edition_relation
   after_destroy :close_page
 
@@ -255,7 +256,7 @@ class GpArticle::Doc < ActiveRecord::Base
   end
 
   def public_uri(without_filename: false)
-    uri = 
+    uri =
       if organization_content_related? && organization_group
         "#{organization_group.public_uri}docs/#{name}/"
       elsif content.public_node
@@ -266,7 +267,7 @@ class GpArticle::Doc < ActiveRecord::Base
   end
 
   def public_full_uri(without_filename: false)
-    uri = 
+    uri =
       if organization_content_related? && organization_group
         "#{organization_group.public_full_uri}docs/#{name}/"
       elsif content.public_node
@@ -840,6 +841,16 @@ class GpArticle::Doc < ActiveRecord::Base
   def set_display_attributes
     self.update_column(:display_published_at, self.published_at) unless self.display_published_at
     self.update_column(:display_updated_at, self.updated_at) if self.display_updated_at.blank? || !self.keep_display_updated_at
+  end
+
+  def set_serial_no
+    return if self.serial_no.present?
+    if prev_edition && prev_edition.serial_no
+      self.serial_no = prev_edition.serial_no
+    else
+      seq = Util::Sequencer.next_id('gp_article_doc_serial_no', :version => self.content_id)
+      self.serial_no = seq
+    end
   end
 
   def node_existence

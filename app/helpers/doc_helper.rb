@@ -21,7 +21,8 @@ module DocHelper
       body_beginning: -> { doc_replace_body_beginning(doc) },
       body: -> { doc_replace_body(doc) },
       user: -> { doc_replace_user(doc) },
-      comment_count: -> { doc_replace_comment_count(doc) }
+      comment_count: -> { doc_replace_comment_count(doc) },
+      doc_no: -> {doc_replace_doc_no(doc)}
     }
 
     if Page.mobile?
@@ -64,7 +65,7 @@ private
       ''
     end
   end
-  
+
   def doc_replace_title(doc)
     if doc.title.present?
       content_tag(:span, doc.title, class: 'title')
@@ -144,7 +145,7 @@ private
 
   def doc_replace_category(doc)
     if doc.categories.present?
-      category_text = doc.categories.map {|c| 
+      category_text = doc.categories.map {|c|
         content_tag(:span, c.title, class: "#{c.category_type.name}-#{c.ancestors.map(&:name).join('-')}")
       }.join.html_safe
       content_tag(:span, category_text, class: 'category')
@@ -204,4 +205,13 @@ private
   def doc_replace_comment_count(doc)
     content_tag(:span, link_to(doc.comments.count, "#{doc.public_uri}#comments"), class: 'comment_count')
   end
+
+  def doc_replace_doc_no(doc)
+    if doc.serial_no
+      content_tag(:span, doc.serial_no, class: 'docNo')
+    else
+      ''
+    end
+  end
+
 end

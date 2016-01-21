@@ -17,6 +17,7 @@ class GpArticle::Content::Doc < Cms::Content
   QRCODE_STATE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
   EVENT_SYNC_SETTINGS_OPTIONS = [['使用する', 'enabled'], ['使用しない', 'disabled']]
   EVENT_SYNC_DEFAULT_WILL_SYNC_OPTIONS = [['同期する', 'enabled'], ['同期しない', 'disabled']]
+  SERIALNO_SETTINGS_OPTIONS = [['使用する', 'enabled'], ['使用しない', 'disabled']]
 
   default_scope { where(model: 'GpArticle::Doc') }
 
@@ -297,6 +298,14 @@ class GpArticle::Content::Doc < Cms::Content
 
   def event_sync_default_will_sync
     setting_extra_value(:calendar_relation, :event_sync_default_will_sync).to_s
+  end
+
+  def serial_no_enabled?
+    setting_value(:serial_no_settings) == 'enabled'
+  end
+
+  def serial_no_title
+    setting_extra_value(:serial_no_settings, :title)
   end
 
   private
