@@ -1,7 +1,7 @@
 <article class="contentGpArticleDoc">
-<%if @content.serial_no_enabled?%>
-<div class="docNo"><p><%=@content.serial_no_title%> <%= @item.serial_no%></p></div>
-<%end%>
+<%- if @content.serial_no_enabled? -%>
+<div class="docNo"><p><%= @content.serial_no_title %>&nbsp;<%= @item.serial_no %></p></div>
+<%- end -%>
 <%- if @content.display_dates(:published_at) || @content.display_dates(:updated_at) -%>
 <div class="date">
   <%- if @content.display_dates(:published_at) -%>

@@ -422,6 +422,7 @@ class GpArticle::Doc < ActiveRecord::Base
       new_doc.published_at = nil
       new_doc.display_published_at = nil
       new_doc.in_tasks = nil
+      new_doc.serial_no = nil
     end
 
     new_doc.in_editable_groups = editable_group.group_ids.split if editable_group
@@ -845,12 +846,8 @@ class GpArticle::Doc < ActiveRecord::Base
 
   def set_serial_no
     return if self.serial_no.present?
-    if prev_edition && prev_edition.serial_no
-      self.serial_no = prev_edition.serial_no
-    else
-      seq = Util::Sequencer.next_id('gp_article_doc_serial_no', :version => self.content_id)
-      self.serial_no = seq
-    end
+    seq = Util::Sequencer.next_id('gp_article_doc_serial_no', :version => self.content_id)
+    self.serial_no = seq
   end
 
   def node_existence
