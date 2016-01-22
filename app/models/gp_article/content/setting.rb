@@ -151,7 +151,6 @@ class GpArticle::Content::Setting < Cms::ContentSetting
       self.extra_values = { state: 'hidden' } if extra_values.blank?
     when 'serial_no_settings'
       self.value = 'disabled' if value.blank?
-      self.extra_values = { state: 'hidden' } if extra_values.blank?
     end
   end
 end
