@@ -4,18 +4,18 @@ module ApplicationHelper
   def query(params = nil)
     Util::Http::QueryString.get_query(params)
   end
-  
+
   ## nl2br
   def br(str)
     str.gsub(/\r\n|\r|\n/, '<br />')
   end
-  
+
   ## nl2br and escape
   def hbr(str)
     str = html_escape(str)
     str.gsub(/\r\n|\r|\n/, '<br />').html_safe
   end
-  
+
   ## safe calling
   def safe(alt = nil, &block)
     begin
@@ -31,7 +31,7 @@ module ApplicationHelper
       #end
     end
   end
-  
+
   ## paginates
   def paginate(items, options = {})
     return '' unless items
@@ -39,7 +39,7 @@ module ApplicationHelper
       :params         => {jpmobile: nil},
       :previous_label => '前のページ',
       :next_label     => '次のページ',
-      :separator      => '<span class="separator"> | </span' + "\n" + '>'
+      :link_separator => '<span class="separator"> | </span' + "\n" + '>'
     }
     if request.mobile?
       defaults[:page_links]     = false
@@ -68,7 +68,7 @@ module ApplicationHelper
     end
     links.html_safe
   end
-  
+
   ## number format
   def number_format(num)
     number_to_currency(num, :unit => '', :precision => 0)
@@ -79,7 +79,7 @@ module ApplicationHelper
     require 'jpmobile'
     return Cms::Lib::Mobile::Emoji.convert(name, request.mobile)
   end
-  
+
   ## furigana
   def ruby(str, ruby = nil)
     ruby = Page.ruby unless ruby
