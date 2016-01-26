@@ -2,11 +2,15 @@
 $(function() {
     $('#item_file').change(function(e){
         var name = $(this).val().replace(/\\/g, '/').replace(/.*\//, '');
-        $('#item_name').val(name.replace(/[^0-9a-z\.\-_\\+@#]/ig, ''));
+        <%- if Zomeki.config.application['upload.allow_japanese_filename'] -%>
+          $('#item_name').val(name);
+        <%- else -%>
+          $('#item_name').val(name.replace(/[^0-9a-z\.\-_\\+@#]/ig, ''));
+        <%- end -%>
         $('#item_title').val(name.replace(/(.*)\.[a-z]+$/i, '$1'));
     });
 });
-<% end %> 
+<% end %>
 
 <%#= f.hidden_field :concept_id  %>
 
@@ -17,7 +21,7 @@ $(function() {
     <td><%= f.select(:node_id, Cms::DataFileNode.where(concept_id: Core.concept(:id)).order(:name).all.collect{|i| [i.label, i.id]},
         :include_blank => '　') %></td>
   </tr>
-  
+
   <% if @item.id %>
   <tr>
     <th style=""><%=@item.locale(:name) %></th>
@@ -32,10 +36,10 @@ $(function() {
     <td><%= f.text_field :name, :class => 'nameEn' %></td>
   </tr>
   <% end %>
-  
+
   <tr>
     <th style=""><%=@item.locale(:title) %><div class="note">※日本語でわかりやすく</div></th>
     <td><%= f.text_field :title, :class => 'name' %></td>
   </tr>
-  
+
 </table>
