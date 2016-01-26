@@ -1,7 +1,11 @@
 # encoding: utf-8
 class Cms::Public::Piece::BreadCrumbsController < Sys::Controller::Public::Base
   def index
+    @piece = Page.current_piece
     @item = Page.current_item
+
+    @top_label = @piece.setting_value(:top_label)
+
     if @item.respond_to?(:bread_crumbs)
       @bread_crumbs = @item.bread_crumbs(Page.current_node)
     else
