@@ -37,8 +37,9 @@ module GpCategory::GpCategoryHelper
 
   def category_summary_li(category, depth_limit: 1000, depth: 1)
     content_tag(:li) do
-      result = link_to(category.title, category.public_uri)
-      result << content_tag(:span, category.description, class: 'category_summary') if category.description.present?
+      title_tag = content_tag(:span, category.title)
+      title_tag << content_tag(:span, category.description, class: 'category_summary') if category.description.present?
+      result = link_to(title_tag, category.public_uri)
       if category.public_children.empty? || depth >= depth_limit
         result
       else
