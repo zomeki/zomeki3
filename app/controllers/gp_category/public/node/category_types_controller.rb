@@ -27,22 +27,13 @@ class GpCategory::Public::Node::CategoryTypesController < GpCategory::Public::No
               if vc.respond_to?(tm.module_type)
               @content.public_category_types.inject(''){|tags, category_type|
                 tags << vc.content_tag(:section, class: category_type.name) do
-                    category_html =
-                    html = vc.link_to(category_type.title, category_type.public_uri)
-                    html << vc.content_tag(:span, category_type.description, class: 'category_summary') if category_type.description.present?
+                    title_tag = vc.content_tag(:h2, category_type.title)
+                    title_tag << vc.content_tag(:span, category_type.description, class: 'category_summary') if category_type.description.present?
+                    html = vc.link_to(title_tag.html_safe, category_type.public_uri)
                     html << vc.send(tm.module_type, template_module: tm,
                                     categories: category_type.public_root_categories)
                   end
               }
-                @category.public_children.inject(''){|tags, child|
-                  tags << vc.content_tag(:section, class: child.name) do
-                      category_html = vc.link_to(child.title, child.public_uri)
-                      category_html = vc.content_tag(:span, child.description, class: 'category_summary')
-                      html = vc.content_tag(:h2, category_html )
-                      html << vc.send(tm.module_type, template_module: tm,
-                                      categories: child.public_children)
-                    end
-                }
               end
           when 'docs_1'
             if vc.respond_to?(tm.module_type)
@@ -160,8 +151,9 @@ class GpCategory::Public::Node::CategoryTypesController < GpCategory::Public::No
               if vc.respond_to?(tm.module_type)
                 @category_type.public_root_categories.inject(''){|tags, category|
                   tags << vc.content_tag(:section, class: category.name) do
-                      html = vc.content_tag(:h2, vc.link_to(category.title, category.public_uri))
-                      html << vc.content_tag(:span, category.description, class: 'category_summary') if category.description.present?
+                      title_tag = vc.content_tag(:h2, category.title)
+                      title_tag << vc.content_tag(:span, category.description, class: 'category_summary') if category.description.present?
+                      html = vc.link_to(title_tag.html_safe, category.public_uri)
                       html << vc.send(tm.module_type, template_module: tm,
                                       categories: category.public_children)
                     end
