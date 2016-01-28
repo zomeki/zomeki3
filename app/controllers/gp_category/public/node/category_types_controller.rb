@@ -29,7 +29,7 @@ class GpCategory::Public::Node::CategoryTypesController < GpCategory::Public::No
                 tags << vc.content_tag(:section, class: category_type.name) do
                     title_tag = vc.content_tag(:h2, category_type.title)
                     title_tag << vc.content_tag(:span, category_type.description, class: 'category_summary') if category_type.description.present?
-                    html = vc.link_to(title_tag.html_safe, category_type.public_uri)
+                    html = vc.link_to(title_tag, category_type.public_uri)
                     html << vc.send(tm.module_type, template_module: tm,
                                     categories: category_type.public_root_categories)
                   end
@@ -153,7 +153,7 @@ class GpCategory::Public::Node::CategoryTypesController < GpCategory::Public::No
                   tags << vc.content_tag(:section, class: category.name) do
                       title_tag = vc.content_tag(:h2, category.title)
                       title_tag << vc.content_tag(:span, category.description, class: 'category_summary') if category.description.present?
-                      html = vc.link_to(title_tag.html_safe, category.public_uri)
+                      html = vc.link_to(title_tag, category.public_uri)
                       html << vc.send(tm.module_type, template_module: tm,
                                       categories: category.public_children)
                     end

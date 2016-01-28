@@ -83,7 +83,7 @@ class GpCategory::Public::Node::CategoriesController < GpCategory::Public::Node:
                   tags << vc.content_tag(:section, class: child.name) do
                       title_tag = vc.content_tag(:h2, child.title)
                       title_tag << vc.content_tag(:span, child.description, class: 'category_summary') if child.description.present?
-                      html = vc.link_to(title_tag.html_safe, child.public_uri)
+                      html = vc.link_to(title_tag, child.public_uri)
                       html << vc.send(tm.module_type, template_module: tm,
                                       categories: child.public_children)
                     end
