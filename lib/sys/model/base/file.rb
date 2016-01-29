@@ -1,7 +1,7 @@
 require 'RMagick'
 
 module Sys::Model::Base::File
-  IMAGE_RESIZE_OPTIONS = [['120px', '120'], ['160px', '160'], ['240px', '240'], ['320px', '320'], 
+  IMAGE_RESIZE_OPTIONS = [['120px', '120'], ['160px', '160'], ['240px', '240'], ['320px', '320'],
                           ['480px', '480'],['640px', '640'], ['800px', '800'], ['1280px', '1280'],
                           ['1600px', '1600'], ['1920px', '1920']]
 
@@ -31,7 +31,7 @@ module Sys::Model::Base::File
     return true if name.blank?
 
     if self.name !~ /^[0-9a-zA-Z\-\_\.]+$/
-      errors.add :name, 'は半角英数字を入力してください。'
+      errors.add :name, 'は半角英数字を入力してください。' unless Zomeki.config.application['upload.allow_japanese_filename']
     elsif self.name !~ /^[^\.]+?\.[^\.]+$/
       errors.add(:name, 'を正しく入力してください。＜ファイル名.拡張子＞')
     elsif duplicated?
@@ -192,7 +192,7 @@ module Sys::Model::Base::File
     return '' unless image_file?
     "( #{image_width}x#{image_height} )"
   end
-  
+
   def duplicated?
     nil
   end
@@ -213,7 +213,7 @@ module Sys::Model::Base::File
   def eng_unit
     _size = size
     return _size if _size.to_s !~ /^[0-9]+$/
-    
+
     if _size >= 1024**3
       bs = (_size.to_f / (1024**3)).round#.to_s + '000'
       return "#{bs}GB"
