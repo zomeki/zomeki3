@@ -15,7 +15,7 @@ class Feed::Admin::EntriesController < Cms::Controller::Admin::Base
     item = Feed::FeedEntry.new
     item.and :feed_id, @feed.id
     item.page  params[:page], params[:limit]
-    item.order params[:sort], 'entry_updated DESC, id DESC'
+    item.order params[:sort],  entry_updated: :desc, id: :desc
     @items = item.find(:all)
     _index @items
   end

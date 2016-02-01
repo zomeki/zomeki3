@@ -13,7 +13,7 @@ class Feed::Content::Feed < Cms::Content
   end
   
   def public_entries
-    entries.where(state: 'public').reorder('entry_updated desc, id desc')
+    entries.where(state: 'public').reorder(entry_updated: :desc, id: :desc)
   end
 
   def list_style
