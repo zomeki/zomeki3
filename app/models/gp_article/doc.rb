@@ -425,7 +425,11 @@ class GpArticle::Doc < ActiveRecord::Base
       new_doc.serial_no = nil
     end
 
-    new_doc.in_editable_groups = editable_group.group_ids.split if editable_group
+    if editable_group
+      gids = editable_group.group_ids.split
+      gids << 'ALL' if editable_group.all
+      new_doc.in_editable_groups = gids
+    end
 
     inquiries.each_with_index do |inquiry, i|
       attrs = inquiry.attributes
