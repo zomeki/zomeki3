@@ -59,3 +59,8 @@ end
 every :day, at: '0:30 am' do
   rake 'zomeki:gp_calendar:publish_todays_events'
 end
+
+# Feedコンテンツで設定したRSS・Atomフィードを取り込みます。
+every :hour do
+  rake 'zomeki:feed:feeds:read'
+end

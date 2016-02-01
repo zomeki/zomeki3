@@ -1,0 +1,35 @@
+ja:
+  activerecord:
+    models:
+      feed/feed: Feed
+      feed/feed_entry: エントリ
+    attributes:
+      feed/feed:
+        state: "状態"
+        name: "フィードID"
+        title: "フィード名"
+        uri: "フィードURL"
+        feed_type: "フィード文書種別"
+        feed_id: "フィード文書ID"
+        feed_title: "フィード文書名"
+        link_alternate: "代替URL"
+        entry_count: "記事取込数"
+        fixed_categories_xml: "カテゴリXML（固定）"
+      feed/feed_entry:
+        id: "記事ID"
+        state: "状態"
+        entry_updated: "更新日時"
+        title: "タイトル"
+        summary: "概要"
+        link_alternate: "記事URL"
+        link_enclosure: "コンテンツURL"
+        categories: "分類"
+        image_uri: "画像URL"
+        image_type: "画像種別"
+        image_length: "画像サイズ"
+        author_name: "作成者名"
+        author_email: "作成者メールアドレス"
+        author_uri: "作成者URI"
+      feed/piece/feed_entry:
+        doc_style: 記事表示形式
+        date_style: 日付形式
