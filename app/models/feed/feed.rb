@@ -70,7 +70,6 @@ class Feed::Feed < ActiveRecord::Base
   end
   
   def update_feed_rss(root)
-    require 'date/format'
     latest = []
     
     channel = root.elements['channel']
@@ -148,7 +147,6 @@ class Feed::Feed < ActiveRecord::Base
   end
   
   def update_feed_atom(root)
-    require 'date/format'
     latest = []
     
     ## feed
