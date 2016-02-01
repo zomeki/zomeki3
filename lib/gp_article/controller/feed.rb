@@ -56,8 +56,10 @@ module GpArticle::Controller::Feed
               unless (img_tags = Nokogiri::HTML.parse(doc.body).css('img[src^="file_contents/"]')).empty?
                 filename = File.basename(img_tags.first.attributes['src'].value)
                 image_file = doc.image_files.detect{|f| f.name == filename }
-                image_uri = "#{doc.public_full_uri(without_filename: true)}file_contents/#{image_file.name}"
-                xml.enclosure :url => image_uri, :type => image_file.mime_type, :length => image_file.size
+                if image_file
+                  image_uri = "#{doc.public_full_uri(without_filename: true)}file_contents/#{image_file.name}"
+                  xml.enclosure :url => image_uri, :type => image_file.mime_type, :length => image_file.size
+                end
               end
             end
                   
@@ -139,8 +141,10 @@ module GpArticle::Controller::Feed
             unless (img_tags = Nokogiri::HTML.parse(doc.body).css('img[src^="file_contents/"]')).empty?
               filename = File.basename(img_tags.first.attributes['src'].value)
               image_file = doc.image_files.detect{|f| f.name == filename }
-              image_uri = "#{doc.public_full_uri(without_filename: true)}file_contents/#{image_file.name}"
-              xml.link :rel => 'enclosure', :href => image_uri, :type => image_file.mime_type, :length => image_file.size
+              if image_file
+                image_uri = "#{doc.public_full_uri(without_filename: true)}file_contents/#{image_file.name}"
+                xml.link :rel => 'enclosure', :href => image_uri, :type => image_file.mime_type, :length => image_file.size
+              end
             end
           end
 
