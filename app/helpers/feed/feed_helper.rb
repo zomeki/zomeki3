@@ -98,7 +98,7 @@ private
     if image_link.present?
       content_tag(:span, image_link, class: 'image')
     else
-      content_tag(:span, '', class: 'image')
+      ''
     end
   end
 
@@ -107,7 +107,7 @@ private
     if image_tag.present?
       content_tag(:span, image_tag, class: 'image')
     else
-      content_tag(:span, '', class: 'image')
+      ''
     end
   end
   
