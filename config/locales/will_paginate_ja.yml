@@ -1,0 +1,16 @@
+ja:
+  will_paginate:
+    page_gap: " || "
+    previous_label: 前へ
+    next_label: 次へ
+    page_entries_info:
+      single_page:
+        zero:  "0件"
+        one:   "1件"
+        other: "%{count}件"
+      single_page_html:
+        zero:  '<span class="count">0</span>件'
+        one:   '<span class="count">1</span>件表示'
+        other: '<span class="count">%{count}</span>件表示'
+      multi_page: "全%{count}件中、%{from}～%{to}件を表示"
+      multi_page_html: '<div class="pageEntryInfo">全<span class="count">%{count}</span>件中、<span class="from">%{from}</span>～<span class="to">%{to}</span>件を表示</div>'

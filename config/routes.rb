@@ -73,9 +73,6 @@ ZomekiCMS::Application.routes.draw do
   get "*path.html.r.mp3"       => "cms/public/talk#down_mp3"
   get "*path.html.r.m3u"       => "cms/public/talk#down_m3u"
 
-  # Api
-  match '_api/*api_path' => 'cms/public/api#receive', as: :api_receive, via: [:get, :post]
-
   # Admin
   get "#{ZomekiCMS::ADMIN_URL_PREFIX}"         => 'sys/admin/front#index'
   match "#{ZomekiCMS::ADMIN_URL_PREFIX}/login" => 'sys/admin/account#login',  :as => :admin_login, via: [:get, :post]
@@ -93,6 +90,9 @@ ZomekiCMS::Application.routes.draw do
     file = "#{Rails.root}/config/modules/#{mod}/routes.rb"
     load(file) if FileTest.exist?(file)
   end
+
+  # Api
+  match '_api/*api_path' => 'cms/public/api#receive', as: :api_receive, via: [:get, :post]
 
   # Exception
   get "404.:format" => "exception#index"
