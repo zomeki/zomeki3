@@ -33,7 +33,7 @@ class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
     end
     @docs = @docs.preload_assocs(:public_node_ancestors_assocs, :public_index_assocs)
     @docs = @docs.includes(:next_edition).reject{|d| d.will_be_replaced? } unless Core.publish
-    @docs = @docs.paginate(page: params[:page], per_page: 20)
+    @docs = @docs.paginate(page: params[:page], per_page: 30)
     return http_error(404) if @docs.current_page > @docs.total_pages
 
     @items = @docs.inject([]) do |result, doc|
