@@ -29,12 +29,12 @@ class Sys::Lib::Form::Checker
     }
 
     begin
-      timeout(2) do
+      Timeout.timeout(2) do
         open(uri, options) do |f|
           return true if f.status[0].to_i == 200
         end
       end
-    rescue TimeoutError
+    rescue Timeout::Error
     rescue => e
       return true if e.to_s == ok_code
     end

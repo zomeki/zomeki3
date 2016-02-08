@@ -85,7 +85,7 @@ class Cms::Controller::Script::Publication < ApplicationController
 
     if ruby
       begin
-        timeout(600) do
+        Timeout.timeout(600) do
           rendered = render_public_as_string(uri, site: site, jpmobile: (params[:smart_phone] ? envs_to_request_as_smart_phone : nil))
           item.publish_page(rendered, :path => path, :dependent => dep)
           if smart_phone_path
@@ -93,7 +93,7 @@ class Cms::Controller::Script::Publication < ApplicationController
             item.publish_page(rendered, path: smart_phone_path, dependent: "#{dep}_smart_phone")
           end
         end
-      rescue TimeoutError => e
+      rescue Timeout::Error => e
         ::Script.error "#{uri} Timeout"
       rescue => e
         ::Script.error "#{uri}\n#{e.message}"
