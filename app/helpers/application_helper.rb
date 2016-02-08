@@ -36,7 +36,7 @@ module ApplicationHelper
   def paginate(items, options = {})
     return '' unless items
     defaults = {
-      :params         => {jpmobile: nil},
+      :params         => params.merge(jpmobile: nil),
       :previous_label => '前のページ',
       :next_label     => '次のページ',
       :link_separator => '<span class="separator"> | </span' + "\n" + '>'
