@@ -5,7 +5,10 @@ class GpCategory::TemplateModule < ActiveRecord::Base
   WRAPPER_TAG_OPTIONS = [['li', 'li'], ['article', 'article'], ['section', 'section']]
   MODULE_TYPE_OPTIONS = {'カテゴリ一覧' => [['自カテゴリ以下全て', 'categories_1'],
                                             ['自カテゴリの1階層',  'categories_2'],
-                                            ['自カテゴリの2階層',  'categories_3']],
+                                            ['自カテゴリの2階層',  'categories_3'],
+                                            ['自カテゴリ以下全て＋説明', 'categories_summary_1'],
+                                            ['自カテゴリの1階層＋説明',  'categories_summary_2'],
+                                            ['自カテゴリの2階層＋説明',  'categories_summary_3']],
                          '記事一覧' => [['自カテゴリ以下全て',                                             'docs_1'],
                                         ['自カテゴリのみ ',                                                'docs_2'],
                                         ['自カテゴリ以下全て+ネスト（汎用カテゴリタイプの1階層目で分類）', 'docs_3'],

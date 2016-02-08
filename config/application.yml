@@ -54,3 +54,7 @@ cms:
 gp_article:
   #携帯用内容制限[Bytes]
   body_limit_for_mobile: 81920
+
+upload:
+  #アップロード時に日本語ファイル名を許可
+  allow_japanese_filename: false

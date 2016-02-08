@@ -118,6 +118,9 @@ ja:
         doc_name: 記事
         sort_no: 並び順
 
+      cms/piece/bread_crumb:
+        top_label: TOPリンク文字
+
       cms/node:
         parent_id: "親ディレクトリ"
         concept_id: "コンセプト"

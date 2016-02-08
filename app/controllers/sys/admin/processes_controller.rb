@@ -18,6 +18,7 @@ class Sys::Admin::ProcessesController < Cms::Controller::Admin::Base
       ["ページ書き出し"    , "cms/script/nodes/publish"],
       ["音声書き出し"      , "cms/script/talk_tasks/exec"],
       ["アクセスランキング取り込み" , "rank/script/ranks/exec"],
+      ["Feed取り込み" , "feed/script/feeds/read"],
     ]
   end
 

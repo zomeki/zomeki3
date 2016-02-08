@@ -31,15 +31,6 @@ ja:
         onebyte_characters: "は半角で入力してください。"
         platform_dependent_characters: "に機種依存文字が含まれています。（%{chars}）"
 
-  will_paginate:
-    page_gap: " || "
-
-  simple_captcha:
-    placeholder: ""
-    label: "画像の文字を入力してください"
-    message:
-      default: "の画像と文字が一致しません。"
-
   comments:
     list_style: <strong>公開日時：</strong>@publish_date@ <strong>タイトル：</strong>@title@ <strong>組織：</strong>@group@ <strong>カテゴリ：</strong>@category@
     date_style: <strong>年：</strong>%Y <strong>月：</strong>%m <strong>日：</strong>%d <strong>曜日：</strong>%A <strong>曜日（省略）：</strong>%a

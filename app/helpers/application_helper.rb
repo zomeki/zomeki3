@@ -4,18 +4,18 @@ module ApplicationHelper
   def query(params = nil)
     Util::Http::QueryString.get_query(params)
   end
-  
+
   ## nl2br
   def br(str)
     str.gsub(/\r\n|\r|\n/, '<br />')
   end
-  
+
   ## nl2br and escape
   def hbr(str)
     str = html_escape(str)
     str.gsub(/\r\n|\r|\n/, '<br />').html_safe
   end
-  
+
   ## safe calling
   def safe(alt = nil, &block)
     begin
@@ -31,15 +31,15 @@ module ApplicationHelper
       #end
     end
   end
-  
+
   ## paginates
   def paginate(items, options = {})
     return '' unless items
     defaults = {
-      :params         => {jpmobile: nil},
+      :params         => params.merge(jpmobile: nil),
       :previous_label => '前のページ',
       :next_label     => '次のページ',
-      :separator      => '<span class="separator"> | </span' + "\n" + '>'
+      :link_separator => '<span class="separator"> | </span' + "\n" + '>'
     }
     if request.mobile?
       defaults[:page_links]     = false
@@ -52,7 +52,7 @@ module ApplicationHelper
     if Core.request_uri != Core.internal_uri
       links.gsub!(/href="(#{URI.encode Core.internal_uri}[^"]+|#{URI.encode File.dirname(Core.internal_uri)}[^"]+)/m) do |m|
         page = m =~ /(\?|\&amp;)page=([0-9]+)/ ? m.gsub(/.*(\?|\&amp;)page=([0-9]+).*/, '\\2') : 1
-        uri  = m.gsub(/^href="(#{URI.encode Core.internal_uri}|#{URI.encode File.dirname(Core.internal_uri)})/, URI.encode(Page.uri))
+        uri  = m.gsub(/^href="(#{URI.encode Core.internal_uri}|#{URI.encode Core.internal_uri.gsub(/\.html/,'')}|#{URI.encode File.dirname(Core.internal_uri)})/, URI.encode(Page.uri))
         uri.gsub!(/\/(\?|$)/, "/index.html\\1")
         uri.gsub!(/\.p[0-9]+\.html/, ".html")
         uri.gsub!(/\.html/, ".p#{page}.html") if page.to_i > 1
@@ -68,7 +68,7 @@ module ApplicationHelper
     end
     links.html_safe
   end
-  
+
   ## number format
   def number_format(num)
     number_to_currency(num, :unit => '', :precision => 0)
@@ -79,7 +79,7 @@ module ApplicationHelper
     require 'jpmobile'
     return Cms::Lib::Mobile::Emoji.convert(name, request.mobile)
   end
-  
+
   ## furigana
   def ruby(str, ruby = nil)
     ruby = Page.ruby unless ruby

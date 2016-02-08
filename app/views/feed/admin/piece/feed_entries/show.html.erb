@@ -1,0 +1,14 @@
+<%= render(layout: 'feed/admin/piece/shared/show') do -%>
+<p class="form">詳細設定</p>
+
+<table class="show">
+  <tr>
+    <th><%= @item.locale :doc_style %></th>
+    <td><%=simple_format @item.setting_value(:doc_style) %></td>
+  </tr>
+  <tr>
+    <th><%= @item.locale :date_style %></th>
+    <td><%= @item.setting_value(:date_style) %></td>
+  </tr>
+</table>
+<%- end -%>

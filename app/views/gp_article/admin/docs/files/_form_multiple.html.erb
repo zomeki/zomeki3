@@ -42,7 +42,11 @@ $(document).ready(function () {
     $('#fileAttrs tr[id!="fileAttrHeader"]').remove();
     for (var i=0; i<filenames.length; i++) {
       var filename = filenames[i].replace(/\\/g, '/').replace(/.*\//, '');
-      var name = filename.replace(/[^0-9a-z\.\-_\\+@#]/ig, '');
+      <%- if Zomeki.config.application['upload.allow_japanese_filename'] -%>
+        var name = filename;
+      <%- else -%>
+        var name = filename.replace(/[^0-9a-z\.\-_\\+@#]/ig, '');
+      <%- end -%>
       var title = filename.replace(/(.*)\.[a-z]+$/i, '$1');
       var html = row.replace(/_NO_/, i+1).replace(/_NAME_/, name).replace(/_TITLE_/, title);
       $('#fileAttrs').append(html);

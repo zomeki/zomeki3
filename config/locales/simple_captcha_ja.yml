@@ -1,0 +1,6 @@
+ja:
+  simple_captcha:
+    placeholder: ""
+    label: "画像の文字を入力してください"
+    message:
+      default: "の画像と文字が一致しません。"

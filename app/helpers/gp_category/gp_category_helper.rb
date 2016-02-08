@@ -35,6 +35,23 @@ module GpCategory::GpCategoryHelper
     end
   end
 
+  def category_summary_li(category, depth_limit: 1000, depth: 1)
+    content_tag(:li) do
+      title_tag = content_tag(:span, category.title)
+      title_tag << content_tag(:span, category.description, class: 'category_summary') if category.description.present?
+      result = link_to(title_tag, category.public_uri)
+      if category.public_children.empty? || depth >= depth_limit
+        result
+      else
+        result << content_tag(:ul) do
+            category.public_children.inject(''){|lis, child|
+              lis << category_summary_li(child, depth_limit: depth_limit, depth: depth + 1)
+            }.html_safe
+          end
+      end
+    end
+  end
+
   def categories_1(template_module: nil, categories: nil)
     return if categories.empty?
 
@@ -54,6 +71,28 @@ module GpCategory::GpCategoryHelper
     content_tag(:ul) do
       categories.inject(''){|lis, child|
         lis << category_li(child, depth_limit: 1)
+      }.html_safe
+    end
+  end
+  def categories_summary_1(template_module: nil, categories: nil)
+    return if categories.empty?
+
+    content_tag(:ul) do
+      categories.inject(''){|lis, child|
+        lis << category_summary_li(child)
+      }.html_safe
+    end
+  end
+
+  def categories_summary_2(template_module: nil, categories: nil)
+  end
+
+  def categories_summary_3(template_module: nil, categories: nil)
+    return if categories.empty?
+
+    content_tag(:ul) do
+      categories.inject(''){|lis, child|
+        lis << category_summary_li(child, depth_limit: 1)
       }.html_safe
     end
   end

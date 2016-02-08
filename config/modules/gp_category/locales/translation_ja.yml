@@ -16,6 +16,7 @@ ja:
         docs_order: 記事表示順
         template_id: テンプレート
         internal_category_type_id: ネストカテゴリタイプ
+        description: 説明
       gp_category/category:
         name: カテゴリID
         title: カテゴリ名

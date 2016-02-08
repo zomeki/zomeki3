@@ -14,4 +14,5 @@ Cms::Lib::Modules::ModuleSet.draw :gp_category, 'カテゴリ' do |mod|
   mod.piece :docs, '記事一覧'
   mod.piece :recent_tabs, '新着タブ'
   mod.piece :feeds, 'フィード'
+  mod.piece :category_summaries, 'カテゴリ説明'
 end
