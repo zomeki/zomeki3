@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151118044706) do
+ActiveRecord::Schema.define(version: 20160208080437) do
 
   create_table "ad_banner_banners", force: :cascade do |t|
     t.string   "name",               limit: 255
@@ -578,7 +578,7 @@ ActiveRecord::Schema.define(version: 20151118044706) do
 
   create_table "cms_talk_tasks", force: :cascade do |t|
     t.integer  "unid",         limit: 4
-    t.string   "dependent",    limit: 64
+    t.string   "dependent",    limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "path",         limit: 65535
@@ -602,6 +602,47 @@ ActiveRecord::Schema.define(version: 20151118044706) do
   end
 
   add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
+
+  create_table "feed_feed_entries", force: :cascade do |t|
+    t.integer  "feed_id",        limit: 4
+    t.integer  "content_id",     limit: 4
+    t.text     "state",          limit: 65535
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "entry_id",       limit: 255
+    t.datetime "entry_updated"
+    t.date     "event_date"
+    t.text     "title",          limit: 65535
+    t.text     "summary",        limit: 4294967295
+    t.text     "link_alternate", limit: 65535
+    t.text     "link_enclosure", limit: 65535
+    t.text     "categories",     limit: 65535
+    t.text     "categories_xml", limit: 65535
+    t.text     "image_uri",      limit: 65535
+    t.integer  "image_length",   limit: 4
+    t.text     "image_type",     limit: 65535
+    t.text     "author_name",    limit: 65535
+    t.string   "author_email",   limit: 255
+    t.text     "author_uri",     limit: 65535
+  end
+
+  create_table "feed_feeds", force: :cascade do |t|
+    t.integer  "unid",                 limit: 4
+    t.integer  "content_id",           limit: 4
+    t.text     "state",                limit: 65535
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "name",                 limit: 255,   null: false
+    t.text     "uri",                  limit: 65535
+    t.text     "title",                limit: 65535
+    t.string   "feed_id",              limit: 255
+    t.string   "feed_type",            limit: 255
+    t.datetime "feed_updated"
+    t.text     "feed_title",           limit: 65535
+    t.text     "link_alternate",       limit: 65535
+    t.integer  "entry_count",          limit: 4
+    t.text     "fixed_categories_xml", limit: 65535
+  end
 
   create_table "gnav_category_sets", force: :cascade do |t|
     t.integer "menu_item_id", limit: 4
@@ -695,6 +736,7 @@ ActiveRecord::Schema.define(version: 20151118044706) do
     t.integer  "layout_id",                  limit: 4
     t.text     "qrcode_state",               limit: 65535
     t.string   "event_will_sync",            limit: 255
+    t.integer  "serial_no",                  limit: 4
   end
 
   add_index "gp_article_docs", ["concept_id"], name: "index_gp_article_docs_on_concept_id", using: :btree
@@ -826,6 +868,7 @@ ActiveRecord::Schema.define(version: 20151118044706) do
     t.string   "docs_order",                limit: 255
     t.integer  "template_id",               limit: 4
     t.integer  "internal_category_type_id", limit: 4
+    t.string   "description",               limit: 255
   end
 
   add_index "gp_category_category_types", ["concept_id"], name: "index_gp_category_category_types_on_concept_id", using: :btree
@@ -1247,7 +1290,7 @@ ActiveRecord::Schema.define(version: 20151118044706) do
 
   create_table "sys_publishers", force: :cascade do |t|
     t.integer  "unid",         limit: 4
-    t.string   "dependent",    limit: 64
+    t.string   "dependent",    limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "path",         limit: 255
