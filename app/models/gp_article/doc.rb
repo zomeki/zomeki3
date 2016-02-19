@@ -230,12 +230,12 @@ class GpArticle::Doc < ActiveRecord::Base
 
   def public_path
     return '' if public_uri.blank?
-    "#{content.public_path}#{public_uri}#{filename_base}.html"
+    "#{content.public_path}#{public_uri(without_filename: true)}#{filename_base}.html"
   end
 
   def public_smart_phone_path
     return '' if public_uri.blank?
-    "#{content.public_path}/_smartphone#{public_uri}#{filename_base}.html"
+    "#{content.public_path}/_smartphone#{public_uri(without_filename: true)}#{filename_base}.html"
   end
 
   def organization_content_related?
