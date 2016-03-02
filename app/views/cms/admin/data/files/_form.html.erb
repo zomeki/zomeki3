@@ -31,7 +31,12 @@ $(function() {
   <tr>
     <th><%= @item.locale(:file) %></th>
     <td><%= f.file_field :file, :size => 64, :style => 'width: 450px;' %></td>
-  </tr><tr>
+  </tr>
+  <tr>
+    <th>画像リサイズ <span class="note">※長辺の長さ</span></th>
+    <td><%= select_tag :image_resize, options_for_select(Sys::Model::Base::File::IMAGE_RESIZE_OPTIONS), include_blank: true %></td>
+  </tr>
+  <tr>
     <th style=""><%=@item.locale(:name) %><div class="note">※半角英数字のみ</div></th>
     <td><%= f.text_field :name, :class => 'nameEn' %></td>
   </tr>
