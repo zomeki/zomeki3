@@ -56,6 +56,7 @@ class Cms::Admin::Data::FilesController < Cms::Controller::Admin::Base
     @item = Cms::DataFile.new(data_file_params)
     @item.site_id = Core.site.id
     @item.state   = 'public'
+    @item.image_resize = params[:image_resize]
     _create @item do
       @item.publish if @item.state == 'public'
     end
