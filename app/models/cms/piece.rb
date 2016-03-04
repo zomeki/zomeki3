@@ -104,13 +104,16 @@ class Cms::Piece < ActiveRecord::Base
   end
 
   def duplicate(rel_type = nil)
-    item = self.class.new(self.attributes)
-    item.id            = nil
-    item.unid          = nil
-    item.created_at    = nil
-    item.updated_at    = nil
-    item.recognized_at = nil
-    item.published_at  = nil
+
+    new_attributes = self.attributes
+    new_attributes[:id] = nil
+    new_attributes[:unid] = nil
+    new_attributes[:created_at] = nil
+    new_attributes[:updated_at] = nil
+    new_attributes[:recognized_at] = nil
+    new_attributes[:published_at] = nil
+    
+    item = self.class.new(new_attributes)
 
     if rel_type == nil
       item.name  = nil
@@ -124,11 +127,12 @@ class Cms::Piece < ActiveRecord::Base
 
     # piece_settings
     settings.each do |setting|
-      dupe_setting = Cms::PieceSetting.new(setting.attributes)
-      dupe_setting.id         = nil
-      dupe_setting.piece_id   = item.id
-      dupe_setting.created_at = nil
-      dupe_setting.updated_at = nil
+      setting_attributes = setting.attributes
+      setting_attributes[:id] = nil
+      setting_attributes[:piece_id] = item.id
+      setting_attributes[:created_at] = nil
+      setting_attributes[:updated_at] = nil
+      dupe_setting = Cms::PieceSetting.new(setting_attributes)
       dupe_setting.save(:validate => false)
     end
 
