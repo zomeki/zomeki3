@@ -9,7 +9,6 @@ class Feed::Public::Piece::FeedEntriesController < Sys::Controller::Public::Base
   end
 
   def index
-    limit = 10
     @content = Feed::Content::Feed.find(Page.current_piece.content_id)
 
     item = @content.public_entries
@@ -21,7 +20,7 @@ class Feed::Public::Piece::FeedEntriesController < Sys::Controller::Public::Base
     @node = @content.public_node
     @node_uri = @node.public_uri if @node
 
-    @entries = item.limit(limit)
+    @entries = item.limit(@piece.docs_number)
 
     prev   = nil
     @items = []

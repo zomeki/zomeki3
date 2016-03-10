@@ -97,6 +97,12 @@ class Cms::DataFile < ActiveRecord::Base
 
     return self
   end
+  
+  def remove_old_name_public_file(old_name)
+    public_dir = ::File.dirname(public_path)
+    old_path = "#{public_dir}/#{old_name}"
+    ::Storage.rm_rf(old_path) if ::Storage.exists?(old_path)
+  end
 
   def remove_public_file
     return true unless FileTest.exist?(public_path)

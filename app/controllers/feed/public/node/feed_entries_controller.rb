@@ -19,7 +19,6 @@ class Feed::Public::Node::FeedEntriesController < Cms::Controller::Public::Base
     @items = []
     @entries.each do |entry|
       next unless entry.entry_updated
-      dump entry.entry_updated.strftime('%y%m%d')
       date = entry.entry_updated.strftime('%y%m%d')
       @items << {
         :date => (date != prev ? entry.entry_updated.strftime('%Y年%-m月%-d日') : nil),

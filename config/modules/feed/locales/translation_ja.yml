@@ -31,5 +31,6 @@ ja:
         author_email: "作成者メールアドレス"
         author_uri: "作成者URI"
       feed/piece/feed_entry:
+        docs_number: 表示件数
         doc_style: 記事表示形式
         date_style: 日付形式
