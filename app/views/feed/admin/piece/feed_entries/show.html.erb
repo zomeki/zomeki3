@@ -3,6 +3,10 @@
 
 <table class="show">
   <tr>
+    <th><%= @item.locale :docs_number %></th>
+    <td><%= @item.setting_value(:docs_number) %></td>
+  </tr>
+  <tr>
     <th><%= @item.locale :doc_style %></th>
     <td><%=simple_format @item.setting_value(:doc_style) %></td>
   </tr>

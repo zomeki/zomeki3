@@ -3,6 +3,10 @@
 
 <table class="show">
   <tr>
+    <th><%= @item.locale :docs_number %></th>
+    <td><%= f.array_text_field 'in_settings[docs_number]', class: 'number' %></td>
+  </tr>
+  <tr>
     <th><%= @item.locale :doc_style %></th>
     <td>
       <%= link_to '置き換えテキストを確認する', '#', id: 'show_dialog' %><br />
