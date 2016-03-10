@@ -21,13 +21,6 @@ $(function() {
     <td><%= f.select(:node_id, Cms::DataFileNode.where(concept_id: Core.concept(:id)).order(:name).all.collect{|i| [i.label, i.id]},
         :include_blank => '　') %></td>
   </tr>
-
-  <% if @item.id %>
-  <tr>
-    <th style=""><%=@item.locale(:name) %></th>
-    <td><%= @item.name %></td>
-  </tr>
-  <% else %>
   <tr>
     <th><%= @item.locale(:file) %></th>
     <td><%= f.file_field :file, :size => 64, :style => 'width: 450px;' %></td>
@@ -40,8 +33,6 @@ $(function() {
     <th style=""><%=@item.locale(:name) %><div class="note">※半角英数字のみ</div></th>
     <td><%= f.text_field :name, :class => 'nameEn' %></td>
   </tr>
-  <% end %>
-
   <tr>
     <th style=""><%=@item.locale(:title) %><div class="note">※日本語でわかりやすく</div></th>
     <td><%= f.text_field :title, :class => 'name' %></td>
