@@ -66,8 +66,14 @@ class Cms::Admin::Data::FilesController < Cms::Controller::Admin::Base
     @item = Cms::DataFile.find(params[:id])
     @item.attributes = data_file_params
     @item.node_id    = nil if @item.concept_id_changed?
-    @item.skip_upload
-    _update @item
+    @item.image_resize = params[:image_resize]
+    old_name = @item.name_changed? ? Cms::DataFile.find(params[:id]).try(:escaped_name) : nil
+    
+    @item.skip_upload if @item.file.blank?
+    _update @item do
+      @item.remove_old_name_public_file(old_name) unless old_name.blank?
+      @item.publish if @item.state == 'public'
+    end
   end
 
   def destroy
