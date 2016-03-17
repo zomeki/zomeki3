@@ -23,7 +23,7 @@ class Cms::Lib::Navi::Kana
         s = s.to_i
         e = e.to_i
         kana = kana.to_s.tr('ァ-ン', 'ぁ-ん')
- 
+
         texts << html.byteslice(pos..s-1) if pos < s
         texts << "<ruby><rb>#{word}</rb><rp>(</rp><rt>#{kana}</rt><rp>)</rp></ruby>"
 
@@ -43,7 +43,7 @@ class Cms::Lib::Navi::Kana
       ["head", "style", "script", "ruby"].each do |name|
         tmp.gsub!(/<#{name}[^>]*>.*?<\/#{name}>/im, &mask)
       end
-      tmp.gsub!(/<[^>]+>/, &mask)
+      tmp.gsub!(/<[^>]+>/, &mask) || tmp
     end
   end
 end
