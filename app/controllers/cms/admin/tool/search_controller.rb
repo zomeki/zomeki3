@@ -21,7 +21,7 @@ class Cms::Admin::Tool::SearchController < Cms::Controller::Admin::Base
     Cms::Node.where(site_id: Core.site.id, model: "Cms::Page")
       .search_with_text(:title, :body, :mobile_title, :mobile_body, @item.keyword)
       .order(:id)
-      .each {|c| group[1] << [c.id, c.title, c.public_uri] }
+      .each {|c| group[1] << [c.id, c.title, c.admin_uri] }
     @items << group
 
     Cms::Content.where(site_id: Core.site.id, model: "GpArticle::Doc").order(:id).each do |content|
