@@ -77,5 +77,8 @@ protected
 
     ## themes
     self.response_body = response.body.gsub(%r! (href|src)="/_themes/!, %Q! \\1="#{public_uri}_themes/!)
+
+    ## files
+    self.response_body = response.body.gsub(%r! (href|src)="/_files/!, %Q! \\1="#{public_uri}_files/!)
   end
 end
