@@ -14,14 +14,14 @@
   
   <% for item in @items %>
   <tr class="<%= cycle '', 'cycle' %>">
-    <td style="text-align: center;"><%= link_to :show, url_for(:action => :show, :id => item) %></td>
+    <td style="text-align: center;"><%= link_to :show, url_for(:action => :show, :concept => item.concept_id, :id => item) %></td>
     <td style="text-align: center;">
       <% if item.image_file? %>
-        <a href="<%= url_for(:id => item, :action => :download) %>" target="_blank">
-        <img src="<%= url_for(:id => item, :action => :download) %>" 
+        <a href="<%= url_for(:id => item, :concept => item.concept_id, :action => :download) %>" target="_blank">
+        <img src="<%= url_for(:id => item, :concept => item.concept_id, :action => :download) %>" 
         style="<%= item.reduced_size(:width => 80, :height => 40, :css => true) %>" /></a>
       <% else %>
-        <a href="<%= url_for(:id => item, :action => :download) %>" class="<%= item.css_class %>" target="_blank">File</a>
+        <a href="<%= url_for(:id => item, :concept => item.concept_id, :action => :download) %>" class="<%= item.css_class %>" target="_blank">File</a>
       <% end %>
     </td>
     <td><%= safe{item.node.name} %><br /><%= "（#{item.node.title}）" if safe{item.node.title}.to_s != '' %></td>
