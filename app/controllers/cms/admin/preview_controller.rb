@@ -56,6 +56,14 @@ protected
         m.gsub(/^(<a[^>]+?href=")(\/[^"]*?)("[^>]*?>)/i, '\\1' + base_uri + '\\2\\3')
       end
     end
+    
+    self.response_body = response.body.gsub(/<img[^>]+?src="\/[^"]*?"[^>]*?>/i) do |m|
+      if m =~ /src="\/_(files|layouts|themes)\//
+        m
+      else
+        m.gsub(/^(<img[^>]+?src=")(\/[^"]*?)("[^>]*?>)/i, '\\1' + base_uri + '\\2\\3')
+      end
+    end
 
     ## preview mark
     html = render_to_string(partial: 'cms/admin/preview/preview_mark')
