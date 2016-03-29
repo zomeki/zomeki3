@@ -16,12 +16,36 @@ class Cms::Admin::PreviewController < Cms::Controller::Admin::Base
     Page.site   = options[:site] || Core.site
     Page.uri    = path
     Page.mobile = options[:mobile]
+    
+    if path =~ /^\/_files\//
+      ## _files
+      file_path = path.gsub(/^\/_files\//, '')
+      format    = ::File.extname(file_path)
+      
+      opt  = {
+        :path   => file_path.gsub(format, ''),
+        :format => format.gsub(/^\./, '')
+      }
+      ctl  = "cms/public/files"
+      act  = "down"
+      
+    elsif path =~ /^\/_themes\//
+      ## _themes
+      root      = "#{Core.site.public_path}/_themes"
+      full_path = "#{root}/#{path.gsub(/^\/_themes\//, '')}"
+      base_uri  = ["#{Core.site.public_path}/", "/"]
+      
+      stylesheet = Cms::Stylesheet.find(full_path, :root => root, :base_uri => base_uri)
+      return http_error(404) unless ::File.exist?(full_path)
+      return send_file(full_path, :type => stylesheet.mime_type, :filename => stylesheet.name, :disposition => 'inline')
 
-    node = Core.search_node(path)
-    env  = {}
-    opt  = _routes.recognize_path(node, env)
-    ctl  = opt[:controller]
-    act  = opt[:action]
+    else
+      node = Core.search_node(path)
+      env  = {}
+      opt  = _routes.recognize_path(node, env)
+      ctl  = opt[:controller]
+      act  = opt[:action]
+    end
 
     opt.each {|k,v| params[k] = v }
     #opt[:layout_id] = params[:layout_id] if params[:layout_id]
@@ -50,19 +74,11 @@ protected
     base_uri = "#{admin_uri}_preview/#{format('%08d', Page.site.id)}#{mobile}"
 
     self.response_body = response.body.gsub(/<a[^>]+?href="\/[^"]*?"[^>]*?>/i) do |m|
-      if m =~ /href="\/_(files|layouts)\//
-        m
-      else
-        m.gsub(/^(<a[^>]+?href=")(\/[^"]*?)("[^>]*?>)/i, '\\1' + base_uri + '\\2\\3')
-      end
+      m.gsub(/^(<a[^>]+?href=")(\/[^"]*?)("[^>]*?>)/i, '\\1' + base_uri + '\\2\\3')
     end
     
     self.response_body = response.body.gsub(/<img[^>]+?src="\/[^"]*?"[^>]*?>/i) do |m|
-      if m =~ /src="\/_(files|layouts|themes)\//
-        m
-      else
-        m.gsub(/^(<img[^>]+?src=")(\/[^"]*?)("[^>]*?>)/i, '\\1' + base_uri + '\\2\\3')
-      end
+      m.gsub(/^(<img[^>]+?src=")(\/[^"]*?)("[^>]*?>)/i, '\\1' + base_uri + '\\2\\3')
     end
 
     ## preview mark
@@ -83,10 +99,5 @@ protected
     end
     self.response_body = doc.to_s
 
-    ## themes
-    self.response_body = response.body.gsub(%r! (href|src)="/_themes/!, %Q! \\1="#{public_uri}_themes/!)
-
-    ## files
-    self.response_body = response.body.gsub(%r! (href|src)="/_files/!, %Q! \\1="#{public_uri}_files/!)
   end
 end
