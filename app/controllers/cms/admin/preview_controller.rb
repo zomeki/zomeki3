@@ -73,12 +73,12 @@ protected
     mobile   = Page.mobile? ? 'm' : ''
     base_uri = "#{admin_uri}_preview/#{format('%08d', Page.site.id)}#{mobile}"
 
-    self.response_body = response.body.gsub(/<a[^>]+?href="\/[^"]*?"[^>]*?>/i) do |m|
-      m.gsub(/^(<a[^>]+?href=")(\/[^"]*?)("[^>]*?>)/i, '\\1' + base_uri + '\\2\\3')
-    end
-    
-    self.response_body = response.body.gsub(/<img[^>]+?src="\/[^"]*?"[^>]*?>/i) do |m|
-      m.gsub(/^(<img[^>]+?src=")(\/[^"]*?)("[^>]*?>)/i, '\\1' + base_uri + '\\2\\3')
+    self.response_body = response.body.gsub(/ (href|src)="\/[^"]*?"[^>]*?>/i) do |m|
+      if m =~ /(href|src)="(\/_common\/|\/\/)/
+        m
+      else
+        m.gsub(/^( href="| src=")(\/[^"]*?)("[^>]*?>)/i, '\\1' + base_uri + '\\2\\3')
+      end
     end
 
     ## preview mark
