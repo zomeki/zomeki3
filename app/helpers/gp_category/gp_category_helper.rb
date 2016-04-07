@@ -130,8 +130,21 @@ module GpCategory::GpCategoryHelper
             cats = categorizations.where(category_id: category.public_descendants.map(&:id))
             next if cats.empty?
 
+            docs_order = case @content.docs_order
+              when 'published_at_desc'
+                'display_published_at DESC, published_at DESC'
+              when 'published_at_asc'
+                'display_published_at ASC, published_at ASC'
+              when 'updated_at_desc'
+                'display_updated_at DESC, updated_at DESC'
+              when 'updated_at_asc'
+                'display_updated_at ASC, updated_at ASC'
+              else
+                'display_published_at DESC, published_at DESC'
+              end
+
             docs = cats.first.categorizable_type.constantize.where(id: cats.pluck(:categorizable_id))
-                                                            .limit(template_module.num_docs).order(display_published_at: :desc, published_at: :desc)
+                                                            .limit(template_module.num_docs).order(docs_order)
             html = content_tag(:h2, category.title)
             doc_tags = docs.inject(''){|t, d|
                          t << content_tag(template_module.wrapper_tag,
@@ -161,10 +174,23 @@ module GpCategory::GpCategoryHelper
   def docs_5(template_module: nil, ct_or_c: nil, groups: nil, docs: nil)
     return '' if docs.empty?
 
+    docs_order = case @content.docs_order
+      when 'published_at_desc'
+        'display_published_at DESC, published_at DESC'
+      when 'published_at_asc'
+        'display_published_at ASC, published_at ASC'
+      when 'updated_at_desc'
+        'display_updated_at DESC, updated_at DESC'
+      when 'updated_at_asc'
+        'display_updated_at ASC, updated_at ASC'
+      else
+        'display_published_at DESC, published_at DESC'
+      end
+
     content = groups.inject(''){|tags, group|
         tags << content_tag(:section, class: group.code) do
             docs = docs.where(Sys::Group.arel_table[:id].eq(group.id))
-                       .limit(template_module.num_docs).order(display_published_at: :desc, published_at: :desc)
+                       .limit(template_module.num_docs).order(docs_order)
 
             html = content_tag(:h2, group.name)
             doc_tags = docs.inject(''){|t, d|
@@ -189,8 +215,21 @@ module GpCategory::GpCategoryHelper
   def docs_7(template_module: nil, categories: nil, categorizations: nil)
     return '' if categorizations.empty?
 
+    docs_order = case @content.docs_order
+      when 'published_at_desc'
+        'display_published_at DESC, published_at DESC'
+      when 'published_at_asc'
+        'display_published_at ASC, published_at ASC'
+      when 'updated_at_desc'
+        'display_updated_at DESC, updated_at DESC'
+      when 'updated_at_asc'
+        'display_updated_at ASC, updated_at ASC'
+      else
+        'display_published_at DESC, published_at DESC'
+      end
+
     content = categories.inject(''){|tags, category|
-        tags << category_section(category, template_module: template_module, categorizations: categorizations, with_child_categories: false)
+        tags << category_section(category, template_module: template_module, categorizations: categorizations, with_child_categories: false, docs_order: docs_order)
       }
     return '' if content.blank?
 
@@ -200,21 +239,34 @@ module GpCategory::GpCategoryHelper
   def docs_8(template_module: nil, categories: nil, categorizations: nil)
     return '' if categorizations.empty?
 
+    docs_order = case @content.docs_order
+      when 'published_at_desc'
+        'display_published_at DESC, published_at DESC'
+      when 'published_at_asc'
+        'display_published_at ASC, published_at ASC'
+      when 'updated_at_desc'
+        'display_updated_at DESC, updated_at DESC'
+      when 'updated_at_asc'
+        'display_updated_at ASC, updated_at ASC'
+      else
+        'display_published_at DESC, published_at DESC'
+      end
+
     content = categories.inject(''){|tags, category|
-        tags << category_section(category, template_module: template_module, categorizations: categorizations, with_child_categories: true)
+        tags << category_section(category, template_module: template_module, categorizations: categorizations, with_child_categories: true, docs_order: docs_order)
       }
     return '' if content.blank?
 
     content_tag(:section, "#{template_module.upper_text}#{content}#{template_module.lower_text}".html_safe, class: template_module.name)
   end
 
-  def category_section(category, template_module: nil, categorizations: nil, with_child_categories: nil)
+  def category_section(category, template_module: nil, categorizations: nil, with_child_categories: nil, docs_order: nil)
     content = lambda{
         cats = categorizations.where(category_id: category.public_descendants.map(&:id))
         next if cats.empty?
 
         all_docs = cats.first.categorizable_type.constantize.where(id: cats.pluck(:categorizable_id))
-                                                            .order(display_published_at: :desc, published_at: :desc)
+                                                            .order(docs_order)
         docs = all_docs.limit(template_module.num_docs)
 
         html = content_tag(:h2, category.title)
