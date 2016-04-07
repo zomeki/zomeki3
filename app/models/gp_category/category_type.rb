@@ -12,7 +12,8 @@ class GpCategory::CategoryType < ActiveRecord::Base
 
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
   SITEMAP_STATE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
-  DOCS_ORDER_OPTIONS = [['公開日（降順）', 'display_published_at DESC, published_at DESC'], ['公開日（昇順）', 'display_published_at ASC, published_at ASC']]
+  DOCS_ORDER_OPTIONS = [['公開日（降順）', 'display_published_at DESC, published_at DESC'], ['公開日（昇順）', 'display_published_at ASC, published_at ASC'],
+                        ['更新日（降順）', 'display_updated_at DESC, updated_at DESC'], ['更新日（昇順）', 'display_updated_at ASC, updated_at ASC']]
 
   default_scope { order(sort_no: :asc, name: :asc) }
 

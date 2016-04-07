@@ -56,7 +56,20 @@ class GpCategory::Public::Node::CategoriesController < GpCategory::Public::Node:
           end
         end
 
-        @docs = @docs.order(display_published_at: :desc, published_at: :desc).paginate(page: params[:page], per_page: per_page)
+        @docs = case @content.docs_order
+          when 'published_at_desc'
+            @docs.order('display_published_at DESC, published_at DESC')
+          when 'published_at_asc'
+            @docs.order('display_published_at ASC, published_at ASC')
+          when 'updated_at_desc'
+            @docs.order('display_updated_at DESC, updated_at DESC')
+          when 'updated_at_asc'
+            @docs.order('display_updated_at ASC, updated_at ASC')
+          else
+            @docs.order('display_published_at DESC, published_at DESC')
+          end
+
+        @docs = @docs.paginate(page: params[:page], per_page: per_page)
         return http_error(404) if @docs.current_page > @docs.total_pages
         render :more
       else
@@ -99,7 +112,19 @@ class GpCategory::Public::Node::CategoriesController < GpCategory::Public::Node:
                        end
                 docs = docs.where(tm.module_type_feature, true) if docs.columns.any?{|c| c.name == tm.module_type_feature }
 
-                all_docs = docs.order(display_published_at: :desc, published_at: :desc)
+                all_docs = case @content.docs_order
+                  when 'published_at_desc'
+                    docs.order('display_published_at DESC, published_at DESC')
+                  when 'published_at_asc'
+                    docs.order('display_published_at ASC, published_at ASC')
+                  when 'updated_at_desc'
+                    docs.order('display_updated_at DESC, updated_at DESC')
+                  when 'updated_at_asc'
+                    docs.order('display_updated_at ASC, updated_at ASC')
+                  else
+                    docs.order('display_published_at DESC, published_at DESC')
+                  end
+
                 docs = all_docs.limit(tm.num_docs)
                 vc.send(tm.module_type, template_module: tm,
                         ct_or_c: @category, docs: docs, all_docs: all_docs)
