@@ -64,3 +64,8 @@ end
 every :hour do
   rake 'zomeki:feed:feeds:read'
 end
+
+# サイトのVirtualHost設定を定期的に更新します。
+every '25,55 * * * *' do
+  rake 'zomeki:cms:sites:update_virtual_hosts'
+end
