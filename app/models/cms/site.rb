@@ -136,8 +136,8 @@ class Cms::Site < ActiveRecord::Base
     !mobile_full_uri.blank?
   end
 
-  def admin_uri?(script_uri)
-    return false if admin_full_uri.blank?
+  def site_domain?(script_uri)
+    return false if Cms::SiteSetting::AdminProtocol.core_domain?
     parsed_uri = Addressable::URI.parse(script_uri)
     parsed_uri.path = '/'
 
@@ -145,8 +145,16 @@ class Cms::Site < ActiveRecord::Base
     http_base = parsed_uri.to_s
     parsed_uri.scheme = 'https'
     https_base = parsed_uri.to_s
-    return true if admin_full_uri == http_base || admin_full_uri == https_base
+    return true if site_domains.index(http_base).present? || site_domains.index(https_base).present?
     return false
+  end
+
+  def site_domains
+    domains = []
+    domains << "#{full_uri}" if !full_uri.blank?
+    domains << "#{mobile_full_uri}" if !mobile_full_uri.blank?
+    domains << "#{admin_full_uri}" if !admin_full_uri.blank?
+    domains
   end
 
   def related_sites(options = {})
@@ -175,33 +183,22 @@ class Cms::Site < ActiveRecord::Base
     http_base = parsed_uri.to_s
     parsed_uri.scheme = 'https'
     https_base = parsed_uri.to_s
-
     sites = self.arel_table
-    self.where(sites[:full_uri].matches("#{http_base}%")
-               .or(sites[:full_uri].matches("#{https_base}%"))
-               .or(sites[:mobile_full_uri].matches("#{http_base}%"))
-               .or(sites[:mobile_full_uri].matches("#{https_base}%")))
-        .order(:id)
-  end
-
-
-  def self.all_with_admin_full_uri(full_uri)
-    parsed_uri = Addressable::URI.parse(full_uri)
-    parsed_uri.path = '/'
-
-    parsed_uri.scheme = 'http'
-    http_base = parsed_uri.to_s
-    parsed_uri.scheme = 'https'
-    https_base = parsed_uri.to_s
-
-    sites = self.arel_table
-    self.where(sites[:full_uri].matches("#{http_base}%")
-               .or(sites[:full_uri].matches("#{https_base}%"))
-               .or(sites[:mobile_full_uri].matches("#{http_base}%"))
-               .or(sites[:mobile_full_uri].matches("#{https_base}%"))
-               .or(sites[:admin_full_uri].matches("#{http_base}%"))
-               .or(sites[:admin_full_uri].matches("#{https_base}%")))
-        .order(:id)
+    if Cms::SiteSetting::AdminProtocol.core_domain?
+      self.where(sites[:full_uri].matches("#{http_base}%")
+                     .or(sites[:full_uri].matches("#{https_base}%"))
+                     .or(sites[:mobile_full_uri].matches("#{http_base}%"))
+                     .or(sites[:mobile_full_uri].matches("#{https_base}%")))
+          .order(:id)
+    else
+      self.where(sites[:full_uri].matches("#{http_base}%")
+                     .or(sites[:full_uri].matches("#{https_base}%"))
+                     .or(sites[:mobile_full_uri].matches("#{http_base}%"))
+                     .or(sites[:mobile_full_uri].matches("#{https_base}%"))
+                     .or(sites[:admin_full_uri].matches("#{http_base}%"))
+                     .or(sites[:admin_full_uri].matches("#{https_base}%")))
+          .order(:id)
+    end
   end
 
   def self.find_by_script_uri(script_uri)
