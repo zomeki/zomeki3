@@ -12,7 +12,7 @@ class Cms::SiteSetting::AdminProtocol < Cms::SiteSetting
   end
 
   def self.core_domain(site, options={})
-    default_uri = site.admin_full_uri || full_uri
+    default_uri = site.admin_full_uri || site.full_uri
     d = core_domain? ? Core.full_uri : default_uri;
     return d if options[:freeze_protocol] && options[:freeze_protocol] == true
 
