@@ -48,6 +48,7 @@ class Cms::Admin::SitesController < Cms::Controller::Admin::Base
     @item.state = 'public'
     @item.portal_group_state = 'visible'
     _create(@item, notice: "登録処理が完了しました。 （反映にはWebサーバの再起動が必要です。）") do
+
       @item.users << Core.user unless Core.user.root?
       update_configs
       save_sns_apps
@@ -72,10 +73,11 @@ class Cms::Admin::SitesController < Cms::Controller::Admin::Base
     _destroy(@item) do
       cookies.delete(:cms_site)
       update_configs
+
     end
   end
 
-  protected
+
 
   def update_configs
     Cms::Site.generate_apache_configs
@@ -155,8 +157,6 @@ class Cms::Admin::SitesController < Cms::Controller::Admin::Base
   def site_params
     params.require(:item).permit(:body, :full_uri, :in_setting_site_admin_protocol, :in_setting_transfer_dest_dir,
       :in_setting_transfer_dest_domain, :in_setting_transfer_dest_host, :in_setting_transfer_dest_user,
-      :mobile_full_uri, :name, :og_description, :og_image, :og_title, :og_type, :related_site,
-      :smart_phone_publication, :spp_target, :site_image, :del_site_image, :google_map_api_key,
-      :in_creator => [:group_id, :user_id])
+      :mobile_full_uri, :admin_full_uri, :name, :og_description, :og_image, :og_title, :og_type, :related_site,
   end
 end

@@ -185,6 +185,7 @@ class GpArticle::Doc < ActiveRecord::Base
       assignments = Approval::Assignment.arel_table
       rel = rel.joins(:approval_requests => [:approval_flow => [:approvals => :assignments]])
                .where(approval_requests[:user_id].eq(Core.user.id)
+
                       .or(assignments[:user_id].eq(Core.user.id))).distinct
     end
 
@@ -286,7 +287,6 @@ class GpArticle::Doc < ActiveRecord::Base
     filename = without_filename || filename_base == 'index' ? '' : "#{filename_base}.html"
 
     path = "_preview/#{format('%04d', site.id)}#{mobile ? 'm' : ''}#{public_uri(without_filename: true)}preview/#{id}/#{filename}#{params.present? ? "?#{params}" : ''}"
-    d = Cms::SiteSetting::AdminProtocol.core_domain site, site.full_uri, :freeze_protocol => true
     "#{d}#{path}"
   end
 
@@ -620,6 +620,7 @@ class GpArticle::Doc < ActiveRecord::Base
     "#{::File.dirname(public_path)}/file_contents"
   end
 
+
   def qrcode_path
     return @public_qrcode_path if @public_qrcode_path
     "#{::File.dirname(public_path)}/qrcode.png"
@@ -639,10 +640,6 @@ class GpArticle::Doc < ActiveRecord::Base
 
   def event_will_sync_text
     EVENT_WILL_SYNC_OPTIONS.detect{|o| o.last == event_will_sync }.try(:first).to_s
-  end
-
-  def event_state_visible?
-    event_state == 'visible'
   end
 
   private

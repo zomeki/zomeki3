@@ -182,7 +182,7 @@ private
   def self.recognize_site
     case @@mode
     when ZomekiCMS::ADMIN_URL_PREFIX.sub(/\A_/, '')
-      @@site          = self.get_site_by_cookie || find_site_by_script_uri(@@script_uri) || Cms::Site.order(:id).first
+      @@site          = self.get_site_by_cookie || find_site_by_admin_uri(@@script_uri) || Cms::Site.order(:id).first
       Page.site       = @@site
       @@internal_uri  = @@request_uri
     when 'preview'
@@ -242,5 +242,9 @@ private
 
   def self.find_site_by_script_uri(uri)
     Cms::Site.all_with_full_uri(uri).first
+  end
+
+  def self.find_site_by_admin_uri(uri)
+    Cms::Site.all_with_admin_full_uri(uri).first
   end
 end

@@ -28,7 +28,7 @@ module Cms::Model::Base::Page::Publisher
 
     path = "_preview/#{format('%04d', site.id)}#{mobile}#{public_uri}#{params}"
 
-    _core_uri = Cms::SiteSetting::AdminProtocol.core_domain site, site.full_uri, :freeze_protocol => true
+    _core_uri = Cms::SiteSetting::AdminProtocol.core_domain site, :freeze_protocol => true
     "#{_core_uri}#{path}"
   end
 
