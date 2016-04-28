@@ -231,6 +231,7 @@ protected
     params.require(:item).permit(:body, :full_uri, :in_setting_site_admin_protocol, :in_setting_transfer_dest_dir,
       :in_setting_transfer_dest_domain, :in_setting_transfer_dest_host, :in_setting_transfer_dest_user,
       :mobile_full_uri, :name, :og_description, :og_image, :og_title, :og_type, :related_site,
-      :smart_phone_publication, :spp_target, :site_image, :del_site_image, :in_creator => [:group_id, :user_id])
+      :smart_phone_publication, :spp_target, :site_image, :del_site_image, :google_map_api_key,
+      :in_creator => [:group_id, :user_id])
   end
 end

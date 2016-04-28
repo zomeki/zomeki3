@@ -49,5 +49,17 @@ namespace :zomeki do
         Cms::TalkTask.find_each{|t| t.destroy if ids.include?(t.site_id) }
       end
     end
+
+    namespace :sites do
+      desc 'Update virtual-hosts'
+      task(:update_virtual_hosts => :environment) do
+        path = Cms::Site.virtual_hosts_config_path
+        conf = Cms::Site.make_virtual_hosts_config
+        if File.read(path) != conf
+          Util::File.put path, data: conf
+          FileUtils.touch Cms::Site.reload_virtual_hosts_text_path
+        end
+      end
+    end
   end
 end

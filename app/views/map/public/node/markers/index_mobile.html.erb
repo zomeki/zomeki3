@@ -1,0 +1,17 @@
+<div class="contentMapMarkers">
+  <%- unless @markers.empty? -%>
+  <div class="markers">
+  <%- @markers.each do |marker| -%>
+    <div class="marker">
+      <%- unless marker.categories.empty? -%><span class="category">
+        <%- marker.categories.each do |category| -%>
+        <span class="<%= category.name -%>"><%= category.title %></span>
+        <%- end -%>
+      </span><%- end -%>
+      <%= marker.doc ? title_replace(marker.doc, @content.title_style) : marker.title %>
+    </div>
+  <%- end -%>
+  </div>
+  <%- end -%>
+  <%= paginate @markers %>
+</div>
