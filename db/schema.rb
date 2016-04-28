@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160208080437) do
+ActiveRecord::Schema.define(version: 20160427125546) do
 
   create_table "ad_banner_banners", force: :cascade do |t|
     t.string   "name",               limit: 255
@@ -574,6 +574,7 @@ ActiveRecord::Schema.define(version: 20160208080437) do
     t.string   "og_image",                limit: 255
     t.string   "smart_phone_publication", limit: 255
     t.string   "spp_target",              limit: 255
+    t.string   "google_map_api_key",      limit: 255
   end
 
   create_table "cms_talk_tasks", force: :cascade do |t|
