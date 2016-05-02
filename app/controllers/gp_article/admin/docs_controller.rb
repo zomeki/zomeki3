@@ -167,7 +167,11 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   end
 
   def edit
-    return redirect_to(edit_gp_article_doc_url(@content, @item.duplicate(:replace))) if @item.state_public?
+    if @item.will_be_replaced?
+      return redirect_to(edit_gp_article_doc_url(@content, @item.next_edition))
+    elsif @item.state_public?
+      return redirect_to(edit_gp_article_doc_url(@content, @item.duplicate(:replace)))
+    end
     render 'edit_smart_phone', layout: 'admin/gp_article_smart_phone' if Page.smart_phone?
   end
 
