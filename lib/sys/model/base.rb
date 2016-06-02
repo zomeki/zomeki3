@@ -19,12 +19,15 @@ module Sys::Model::Base
   end
   
   def save_with_direct_sql #TODO
+    ActiveSupport::Deprecation.warn("save_with_direct_sql (\n#{caller[0..4].join("\n")}\n)")
+
     quote = Proc.new{|v| self.class.connection.quote(v)}
     
     table = self.class.table_name
-    sql = "INSERT INTO #{table} (`"
-    sql += self.class.column_names.sort.join('`,`')
-    sql += "`) VALUES ("
+    q = self.class.connection.adapter_name == 'Mysql2' ? '`' : '"'
+    sql = "INSERT INTO #{table} (#{q}"
+    sql += self.class.column_names.sort.join("#{q},#{q}")
+    sql += "#{q}) VALUES ("
     
     self.class.column_names.sort.each_with_index do |name, i|
       sql += ',' if i != 0
@@ -41,8 +44,14 @@ module Sys::Model::Base
     sql += ")"
     
     self.class.connection.execute(sql)
-    rs = self.class.connection.execute("SELECT LAST_INSERT_ID() AS id FROM #{table}")
-    return rs.first[0] if rs.class.to_s =~ /^Mysql2/
-    return rs.fetch_row[0]
+
+    case self.class.connection.adapter_name
+    when 'Mysql2'
+      rs = self.class.connection.execute("SELECT LAST_INSERT_ID() AS id FROM #{table}")
+      rs.first[0]
+    when 'PostgreSQL'
+      rs = self.class.connection.execute("SELECT LASTVAL() AS id FROM #{table}")
+      rs[0].try!(:fetch, 'id')
+    end
   end
 end
