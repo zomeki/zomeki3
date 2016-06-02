@@ -56,6 +56,7 @@ group :development do
   gem 'rails_best_practices'
   gem 'rubocop', require: false
   gem 'brakeman', require: false
+  gem 'pry-byebug'
 end
 
 gem 'hpricot', '0.8.6'
