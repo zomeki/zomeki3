@@ -1152,7 +1152,10 @@ ActiveRecord::Schema.define(version: 20160427125546) do
     t.datetime "updated_at"
     t.integer  "user_id",     limit: 4
     t.integer  "group_id",    limit: 4
+    t.integer  "last_is",     limit: 4
   end
+
+  add_index "sys_editors", ["parent_unid", "last_is"], name: "index_sys_editors_on_last_is", using: :btree
 
   create_table "sys_files", force: :cascade do |t|
     t.integer  "unid",         limit: 4
