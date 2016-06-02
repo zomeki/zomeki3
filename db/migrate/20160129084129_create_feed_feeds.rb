@@ -27,7 +27,7 @@ class CreateFeedFeeds < ActiveRecord::Migration
       t.datetime :entry_updated
       t.date     :event_date
       t.text     :title
-      t.text     :summary,        :limit => 2147483647
+      t.text     :summary
       t.text     :link_alternate
       t.text     :link_enclosure
       t.text     :categories

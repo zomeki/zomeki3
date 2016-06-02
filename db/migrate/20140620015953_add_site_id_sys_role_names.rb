@@ -2,7 +2,7 @@ class AddSiteIdSysRoleNames < ActiveRecord::Migration
   def change
     add_column :sys_role_names, :site_id, :integer, :after => :id
 
-    site = Cms::Site.where(state: 'public').find(:first, :order => :id)
+    site = Cms::Site.where(state: 'public').order(:id).first
     Sys::RoleName.all.each do |role|
       item = Sys::ObjectPrivilege.new
       item.and :role_id, role.id

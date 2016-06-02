@@ -5,7 +5,7 @@ class Existing20120215 < ActiveRecord::Migration
       t.integer  "parent_id",                :null => false
       t.integer  "concept_id"
       t.integer  "content_id"
-      t.string   "state",      :limit => 15
+      t.string   "state"
       t.datetime "created_at"
       t.datetime "updated_at"
       t.integer  "level_no",                 :null => false
@@ -23,7 +23,7 @@ class Existing20120215 < ActiveRecord::Migration
       t.integer  "unid"
       t.integer  "concept_id"
       t.integer  "content_id"
-      t.string   "state",      :limit => 15
+      t.string   "state"
       t.datetime "created_at"
       t.datetime "updated_at"
       t.integer  "sort_no"
@@ -37,7 +37,7 @@ class Existing20120215 < ActiveRecord::Migration
       t.integer  "parent_id",                :null => false
       t.integer  "concept_id"
       t.integer  "content_id"
-      t.string   "state",      :limit => 15
+      t.string   "state"
       t.datetime "created_at"
       t.datetime "updated_at"
       t.integer  "level_no",                 :null => false
@@ -50,8 +50,8 @@ class Existing20120215 < ActiveRecord::Migration
     create_table "article_docs", :force => true do |t|
       t.integer  "unid"
       t.integer  "content_id"
-      t.string   "state",         :limit => 15
-      t.string   "agent_state",   :limit => 15
+      t.string   "state"
+      t.string   "agent_state"
       t.datetime "created_at"
       t.datetime "updated_at"
       t.datetime "recognized_at"
@@ -68,13 +68,13 @@ class Existing20120215 < ActiveRecord::Migration
       t.date     "event_date"
       t.string   "name"
       t.text     "title"
-      t.text     "head",          :limit => 2147483647
-      t.text     "body",          :limit => 2147483647
+      t.text     "head"
+      t.text     "body"
       t.text     "mobile_title"
-      t.text     "mobile_body",   :limit => 2147483647
+      t.text     "mobile_body"
     end
 
-    add_index "article_docs", ["content_id", "published_at", "event_date"], :name => "content_id"
+    add_index "article_docs", ["content_id", "published_at", "event_date"], name: 'idx_article_docs_on_c_id_and_p_at_and_e_date'
 
     create_table "article_tags", :force => true do |t|
       t.integer  "unid"
@@ -88,15 +88,15 @@ class Existing20120215 < ActiveRecord::Migration
       t.integer  "parent_id"
       t.integer  "thread_id"
       t.integer  "content_id"
-      t.string   "state",      :limit => 15
+      t.string   "state"
       t.datetime "created_at"
       t.datetime "updated_at"
       t.string   "name"
       t.string   "email"
       t.string   "uri"
       t.text     "title"
-      t.text     "body",       :limit => 2147483647
-      t.string   "password",   :limit => 15
+      t.text     "body"
+      t.string   "password"
       t.string   "ipaddr"
       t.string   "user_agent"
     end
@@ -104,23 +104,23 @@ class Existing20120215 < ActiveRecord::Migration
     create_table "calendar_events", :force => true do |t|
       t.integer  "unid"
       t.integer  "content_id"
-      t.string   "state",        :limit => 15
+      t.string   "state"
       t.datetime "created_at"
       t.datetime "updated_at"
       t.datetime "published_at"
       t.date     "event_date"
       t.string   "event_uri"
       t.text     "title"
-      t.text     "body",         :limit => 2147483647
+      t.text     "body"
     end
 
-    add_index "calendar_events", ["content_id", "published_at", "event_date"], :name => "content_id"
+    add_index "calendar_events", ["content_id", "published_at", "event_date"], name: 'idx_calendar_events_on_c_id_and_p_at_and_e_date'
 
     create_table "cms_concepts", :force => true do |t|
       t.integer  "unid"
       t.integer  "parent_id"
       t.integer  "site_id"
-      t.string   "state",      :limit => 15
+      t.string   "state"
       t.datetime "created_at"
       t.datetime "updated_at"
       t.integer  "level_no",                 :null => false
@@ -128,7 +128,7 @@ class Existing20120215 < ActiveRecord::Migration
       t.string   "name"
     end
 
-    add_index "cms_concepts", ["parent_id", "state", "sort_no"], :name => "parent_id"
+    add_index "cms_concepts", ["parent_id", "state", "sort_no"]
 
     create_table "cms_content_settings", :force => true do |t|
       t.integer  "content_id", :null => false
@@ -139,18 +139,18 @@ class Existing20120215 < ActiveRecord::Migration
       t.integer  "sort_no"
     end
 
-    add_index "cms_content_settings", ["content_id"], :name => "content_id"
+    add_index "cms_content_settings", ["content_id"]
 
     create_table "cms_contents", :force => true do |t|
       t.integer  "unid"
       t.integer  "site_id",                              :null => false
       t.integer  "concept_id"
-      t.string   "state",          :limit => 15
+      t.string   "state"
       t.datetime "created_at"
       t.datetime "updated_at"
       t.string   "model"
       t.string   "name"
-      t.text     "xml_properties", :limit => 2147483647
+      t.text     "xml_properties"
     end
 
     create_table "cms_data_file_nodes", :force => true do |t|
@@ -163,14 +163,14 @@ class Existing20120215 < ActiveRecord::Migration
       t.text     "title"
     end
 
-    add_index "cms_data_file_nodes", ["concept_id", "name"], :name => "concept_id"
+    add_index "cms_data_file_nodes", ["concept_id", "name"]
 
     create_table "cms_data_files", :force => true do |t|
       t.integer  "unid"
       t.integer  "site_id"
       t.integer  "concept_id"
       t.integer  "node_id"
-      t.string   "state",        :limit => 15
+      t.string   "state"
       t.datetime "created_at"
       t.datetime "updated_at"
       t.datetime "published_at"
@@ -183,19 +183,19 @@ class Existing20120215 < ActiveRecord::Migration
       t.integer  "image_height"
     end
 
-    add_index "cms_data_files", ["concept_id", "node_id", "name"], :name => "concept_id"
+    add_index "cms_data_files", ["concept_id", "node_id", "name"]
 
     create_table "cms_data_texts", :force => true do |t|
       t.integer  "unid"
       t.integer  "site_id"
       t.integer  "concept_id"
-      t.string   "state",        :limit => 15
+      t.string   "state"
       t.datetime "created_at"
       t.datetime "updated_at"
       t.datetime "published_at"
       t.string   "name"
       t.text     "title"
-      t.text     "body",         :limit => 2147483647
+      t.text     "body"
     end
 
     create_table "cms_feed_entries", :force => true do |t|
@@ -208,7 +208,7 @@ class Existing20120215 < ActiveRecord::Migration
       t.datetime "entry_updated"
       t.date     "event_date"
       t.text     "title"
-      t.text     "summary",        :limit => 2147483647
+      t.text     "summary"
       t.text     "link_alternate"
       t.text     "link_enclosure"
       t.text     "categories"
@@ -217,7 +217,7 @@ class Existing20120215 < ActiveRecord::Migration
       t.text     "author_uri"
     end
 
-    add_index "cms_feed_entries", ["feed_id", "content_id", "entry_updated"], :name => "feed_id"
+    add_index "cms_feed_entries", ["feed_id", "content_id", "entry_updated"], name: 'idx_cms_feed_entries_on_f_id_and_c_id_and_e_updated'
 
     create_table "cms_feeds", :force => true do |t|
       t.integer  "unid"
@@ -237,7 +237,7 @@ class Existing20120215 < ActiveRecord::Migration
     end
 
     create_table "cms_inquiries", :force => true do |t|
-      t.string   "state",      :limit => 15
+      t.string   "state"
       t.datetime "created_at"
       t.datetime "updated_at"
       t.integer  "user_id"
@@ -253,9 +253,9 @@ class Existing20120215 < ActiveRecord::Migration
       t.datetime "created_at"
       t.datetime "updated_at"
       t.string   "name"
-      t.text     "body",        :limit => 2147483647
-      t.text     "ipadic_body", :limit => 2147483647
-      t.text     "unidic_body", :limit => 2147483647
+      t.text     "body"
+      t.text     "ipadic_body"
+      t.text     "unidic_body"
     end
 
     create_table "cms_layouts", :force => true do |t|
@@ -263,22 +263,22 @@ class Existing20120215 < ActiveRecord::Migration
       t.integer  "concept_id"
       t.integer  "template_id"
       t.integer  "site_id",                                      :null => false
-      t.string   "state",                  :limit => 15
+      t.string   "state"
       t.datetime "created_at"
       t.datetime "updated_at"
       t.datetime "recognized_at"
       t.datetime "published_at"
       t.string   "name"
       t.text     "title"
-      t.text     "head",                   :limit => 2147483647
-      t.text     "body",                   :limit => 2147483647
-      t.text     "stylesheet",             :limit => 2147483647
+      t.text     "head"
+      t.text     "body"
+      t.text     "stylesheet"
       t.text     "mobile_head"
-      t.text     "mobile_body",            :limit => 2147483647
-      t.text     "mobile_stylesheet",      :limit => 2147483647
+      t.text     "mobile_body"
+      t.text     "mobile_stylesheet"
       t.text     "smart_phone_head"
-      t.text     "smart_phone_body",       :limit => 2147483647
-      t.text     "smart_phone_stylesheet", :limit => 2147483647
+      t.text     "smart_phone_body"
+      t.text     "smart_phone_stylesheet"
     end
 
     create_table "cms_map_markers", :force => true do |t|
@@ -291,7 +291,7 @@ class Existing20120215 < ActiveRecord::Migration
       t.string   "lng"
     end
 
-    add_index "cms_map_markers", ["map_id"], :name => "map_id"
+    add_index "cms_map_markers", ["map_id"]
 
     create_table "cms_maps", :force => true do |t|
       t.integer  "unid"
@@ -323,7 +323,7 @@ class Existing20120215 < ActiveRecord::Migration
       t.integer  "unid"
       t.integer  "concept_id"
       t.integer  "site_id"
-      t.string   "state",         :limit => 15
+      t.string   "state"
       t.datetime "created_at"
       t.datetime "updated_at"
       t.datetime "recognized_at"
@@ -336,16 +336,16 @@ class Existing20120215 < ActiveRecord::Migration
       t.integer  "layout_id"
       t.string   "name"
       t.text     "title"
-      t.text     "body",          :limit => 2147483647
+      t.text     "body"
       t.text     "mobile_title"
-      t.text     "mobile_body",   :limit => 2147483647
+      t.text     "mobile_body"
     end
 
-    add_index "cms_nodes", ["parent_id", "name"], :name => "parent_id"
+    add_index "cms_nodes", ["parent_id", "name"]
 
     create_table "cms_piece_link_items", :force => true do |t|
       t.integer  "piece_id",                 :null => false
-      t.string   "state",      :limit => 15
+      t.string   "state"
       t.datetime "created_at"
       t.datetime "updated_at"
       t.string   "name"
@@ -355,7 +355,7 @@ class Existing20120215 < ActiveRecord::Migration
       t.string   "target"
     end
 
-    add_index "cms_piece_link_items", ["piece_id"], :name => "piece_id"
+    add_index "cms_piece_link_items", ["piece_id"]
 
     create_table "cms_piece_settings", :force => true do |t|
       t.integer  "piece_id",   :null => false
@@ -366,13 +366,13 @@ class Existing20120215 < ActiveRecord::Migration
       t.integer  "sort_no"
     end
 
-    add_index "cms_piece_settings", ["piece_id"], :name => "piece_id"
+    add_index "cms_piece_settings", ["piece_id"]
 
     create_table "cms_pieces", :force => true do |t|
       t.integer  "unid"
       t.integer  "concept_id"
       t.integer  "site_id",                              :null => false
-      t.string   "state",          :limit => 15
+      t.string   "state"
       t.datetime "created_at"
       t.datetime "updated_at"
       t.datetime "recognized_at"
@@ -382,27 +382,27 @@ class Existing20120215 < ActiveRecord::Migration
       t.string   "name"
       t.text     "title"
       t.string   "view_title"
-      t.text     "head",           :limit => 2147483647
-      t.text     "body",           :limit => 2147483647
-      t.text     "xml_properties", :limit => 2147483647
+      t.text     "head"
+      t.text     "body"
+      t.text     "xml_properties"
     end
 
-    add_index "cms_pieces", ["concept_id", "name", "state"], :name => "concept_id"
+    add_index "cms_pieces", ["concept_id", "name", "state"]
 
     create_table "cms_site_settings", :force => true do |t|
       t.integer  "site_id"
       t.datetime "created_at"
       t.datetime "updated_at"
-      t.string   "name",       :limit => 32
+      t.string   "name"
       t.text     "value"
       t.integer  "sort_no"
     end
 
-    add_index "cms_site_settings", ["site_id", "name"], :name => "concept_id"
+    add_index "cms_site_settings", ["site_id", "name"]
 
     create_table "cms_sites", :force => true do |t|
       t.integer  "unid"
-      t.string   "state",                :limit => 15
+      t.string   "state"
       t.datetime "created_at"
       t.datetime "updated_at"
       t.string   "name"
@@ -411,6 +411,7 @@ class Existing20120215 < ActiveRecord::Migration
       t.integer  "node_id"
       t.text     "related_site"
       t.string   "map_key"
+      t.string   "portal_group_state"
       t.integer  "portal_group_id"
       t.integer  "portal_category_ids"
       t.integer  "portal_business_ids"
@@ -420,39 +421,39 @@ class Existing20120215 < ActiveRecord::Migration
 
     create_table "cms_talk_tasks", :force => true do |t|
       t.integer  "unid"
-      t.string   "dependent",    :limit => 64
+      t.string   "dependent"
       t.datetime "created_at"
       t.datetime "updated_at"
       t.text     "path"
       t.string   "content_hash"
     end
 
-    add_index "cms_talk_tasks", ["unid", "dependent"], :name => "unid"
+    add_index "cms_talk_tasks", ["unid", "dependent"]
 
     create_table "enquete_answer_columns", :force => true do |t|
       t.integer "answer_id"
       t.integer "form_id"
       t.integer "column_id"
-      t.text    "value",     :limit => 2147483647
+      t.text    "value"
     end
 
-    add_index "enquete_answer_columns", ["answer_id", "form_id", "column_id"], :name => "answer_id"
+    add_index "enquete_answer_columns", ["answer_id", "form_id", "column_id"], name: 'idx_enquete_answer_columns_on_a_id_and_f_id_and_c_id'
 
     create_table "enquete_answers", :force => true do |t|
       t.integer  "content_id"
       t.integer  "form_id"
-      t.string   "state",      :limit => 15
+      t.string   "state"
       t.datetime "created_at"
       t.string   "ipaddr"
       t.text     "user_agent"
     end
 
-    add_index "enquete_answers", ["content_id", "form_id"], :name => "content_id"
+    add_index "enquete_answers", ["content_id", "form_id"]
 
     create_table "enquete_form_columns", :force => true do |t|
       t.integer  "unid"
       t.integer  "form_id"
-      t.string   "state",        :limit => 15
+      t.string   "state"
       t.datetime "created_at"
       t.datetime "updated_at"
       t.integer  "sort_no"
@@ -461,108 +462,108 @@ class Existing20120215 < ActiveRecord::Migration
       t.string   "column_type"
       t.string   "column_style"
       t.integer  "required"
-      t.text     "options",      :limit => 2147483647
+      t.text     "options"
     end
 
-    add_index "enquete_form_columns", ["form_id", "sort_no"], :name => "form_id"
+    add_index "enquete_form_columns", ["form_id", "sort_no"]
 
     create_table "enquete_forms", :force => true do |t|
       t.integer  "unid"
       t.integer  "content_id"
-      t.string   "state",      :limit => 15
+      t.string   "state"
       t.datetime "created_at"
       t.datetime "updated_at"
       t.integer  "sort_no"
       t.text     "name"
-      t.text     "body",       :limit => 2147483647
+      t.text     "body"
       t.text     "summary"
-      t.text     "sent_body",  :limit => 2147483647
+      t.text     "sent_body"
     end
 
-    add_index "enquete_forms", ["content_id", "sort_no"], :name => "content_id"
+    add_index "enquete_forms", ["content_id", "sort_no"]
 
     create_table "laby_docs", :force => true do |t|
       t.integer  "unid"
       t.integer  "content_id"
-      t.string   "state",        :limit => 15
+      t.string   "state"
       t.datetime "created_at"
       t.datetime "updated_at"
       t.datetime "published_at"
       t.string   "name"
       t.text     "title"
-      t.text     "head",         :limit => 2147483647
-      t.text     "body",         :limit => 2147483647
+      t.text     "head"
+      t.text     "body"
     end
 
     create_table "newsletter_delivery_logs", :force => true do |t|
       t.integer  "unid"
       t.integer  "content_id"
-      t.string   "state",             :limit => 15
+      t.string   "state"
       t.datetime "created_at"
       t.datetime "updated_at"
       t.integer  "doc_id"
-      t.string   "letter_type",       :limit => 15
+      t.string   "letter_type"
       t.text     "title"
-      t.text     "body",              :limit => 2147483647
-      t.string   "delivery_state",    :limit => 15
+      t.text     "body"
+      t.string   "delivery_state"
       t.integer  "delivered_count"
       t.integer  "deliverable_count"
       t.integer  "last_member_id"
     end
 
-    add_index "newsletter_delivery_logs", ["content_id", "doc_id", "letter_type"], :name => "content_id"
+    add_index "newsletter_delivery_logs", ["content_id", "doc_id", "letter_type"], name: 'idx_newsletter_delivery_logs_on_c_id_and_d_id_and_l_type'
 
     create_table "newsletter_docs", :force => true do |t|
       t.integer  "unid"
       t.integer  "content_id"
-      t.string   "state",          :limit => 15
+      t.string   "state"
       t.datetime "created_at"
       t.datetime "updated_at"
-      t.string   "delivery_state", :limit => 15
+      t.string   "delivery_state"
       t.datetime "delivered_at"
       t.string   "name"
       t.text     "title"
-      t.text     "body",           :limit => 2147483647
+      t.text     "body"
       t.text     "mobile_title"
-      t.text     "mobile_body",    :limit => 2147483647
+      t.text     "mobile_body"
     end
 
-    add_index "newsletter_docs", ["content_id", "updated_at"], :name => "content_id"
+    add_index "newsletter_docs", ["content_id", "updated_at"]
 
     create_table "newsletter_members", :force => true do |t|
       t.integer  "unid"
       t.integer  "content_id"
-      t.string   "state",            :limit => 15
+      t.string   "state"
       t.datetime "created_at"
       t.datetime "updated_at"
-      t.string   "letter_type",      :limit => 15
+      t.string   "letter_type"
       t.text     "email"
       t.integer  "delivered_doc_id"
       t.datetime "delivered_at"
     end
 
-    add_index "newsletter_members", ["content_id", "letter_type", "created_at"], :name => "content_id"
+    add_index "newsletter_members", ["content_id", "letter_type", "created_at"], name: 'idx_newsletter_members_on_c_id_and_l_type_and_c_at'
 
     create_table "newsletter_requests", :force => true do |t|
       t.integer  "content_id"
-      t.string   "state",             :limit => 15
+      t.string   "state"
       t.datetime "created_at"
       t.datetime "updated_at"
-      t.string   "request_state",     :limit => 15
-      t.string   "request_type",      :limit => 15
-      t.string   "letter_type",       :limit => 15
+      t.string   "request_state"
+      t.string   "request_type"
+      t.string   "letter_type"
       t.text     "subscribe_email"
       t.text     "unsubscribe_email"
       t.text     "token"
     end
 
-    add_index "newsletter_requests", ["content_id", "request_state", "request_type"], :name => "content_id"
+    add_index "newsletter_requests", ["content_id", "request_state", "request_type"], name: 'idx_newsletter_requests_on_c_id_and_r_state_and_r_type'
 
     create_table "newsletter_tests", :force => true do |t|
       t.integer  "unid"
       t.integer  "content_id"
-      t.string   "state",       :limit => 15
-      t.string   "agent_state", :limit => 15
+      t.string   "state"
+      t.string   "agent_state"
       t.datetime "created_at"
       t.datetime "updated_at"
       t.text     "name"
@@ -574,7 +575,7 @@ class Existing20120215 < ActiveRecord::Migration
       t.integer  "parent_id",                :null => false
       t.integer  "concept_id"
       t.integer  "content_id"
-      t.string   "state",      :limit => 15
+      t.string   "state"
       t.datetime "created_at"
       t.datetime "updated_at"
       t.integer  "level_no",                 :null => false
@@ -587,8 +588,8 @@ class Existing20120215 < ActiveRecord::Migration
     create_table "portal_article_docs", :force => true do |t|
       t.integer  "unid"
       t.integer  "content_id"
-      t.string   "state",                :limit => 15
-      t.string   "agent_state",          :limit => 15
+      t.string   "state"
+      t.string   "agent_state"
       t.datetime "created_at"
       t.datetime "updated_at"
       t.datetime "recognized_at"
@@ -604,10 +605,10 @@ class Existing20120215 < ActiveRecord::Migration
       t.text     "notice_state"
       t.string   "name"
       t.text     "title"
-      t.text     "head",                 :limit => 2147483647
-      t.text     "body",                 :limit => 2147483647
+      t.text     "head"
+      t.text     "body"
       t.text     "mobile_title"
-      t.text     "mobile_body",          :limit => 2147483647
+      t.text     "mobile_body"
     end
 
     create_table "portal_article_tags", :force => true do |t|
@@ -622,7 +623,7 @@ class Existing20120215 < ActiveRecord::Migration
       t.integer  "unid"
       t.integer  "parent_id",                              :null => false
       t.integer  "content_id"
-      t.string   "state",            :limit => 15
+      t.string   "state"
       t.datetime "created_at"
       t.datetime "updated_at"
       t.integer  "level_no",                               :null => false
@@ -630,10 +631,10 @@ class Existing20120215 < ActiveRecord::Migration
       t.integer  "layout_id"
       t.string   "name"
       t.text     "title"
-      t.text     "entry_categories", :limit => 2147483647
+      t.text     "entry_categories"
     end
 
-    add_index "portal_categories", ["parent_id", "content_id", "state"], :name => "parent_id"
+    add_index "portal_categories", ["parent_id", "content_id", "state"]
 
     create_table "portal_group_areas", :force => true do |t|
       t.integer  "unid"
@@ -641,7 +642,7 @@ class Existing20120215 < ActiveRecord::Migration
       t.integer  "content_id"
       t.integer  "concept_id"
       t.integer  "site_id"
-      t.string   "state",      :limit => 15
+      t.string   "state"
       t.datetime "created_at"
       t.datetime "updated_at"
       t.integer  "level_no",                 :null => false
@@ -660,7 +661,7 @@ class Existing20120215 < ActiveRecord::Migration
       t.integer  "content_id"
       t.integer  "concept_id"
       t.integer  "site_id"
-      t.string   "state",      :limit => 15
+      t.string   "state"
       t.datetime "created_at"
       t.datetime "updated_at"
       t.integer  "sort_no"
@@ -675,7 +676,7 @@ class Existing20120215 < ActiveRecord::Migration
       t.integer  "content_id"
       t.integer  "concept_id"
       t.integer  "site_id"
-      t.string   "state",      :limit => 15
+      t.string   "state"
       t.datetime "created_at"
       t.datetime "updated_at"
       t.integer  "level_no",                 :null => false
@@ -691,7 +692,7 @@ class Existing20120215 < ActiveRecord::Migration
       t.integer  "content_id"
       t.integer  "concept_id"
       t.integer  "site_id"
-      t.string   "state",      :limit => 15
+      t.string   "state"
       t.datetime "created_at"
       t.datetime "updated_at"
       t.integer  "level_no",                 :null => false
@@ -729,12 +730,12 @@ class Existing20120215 < ActiveRecord::Migration
       t.integer  "image_height"
     end
 
-    add_index "sys_files", ["parent_unid", "name"], :name => "parent_unid"
+    add_index "sys_files", ["parent_unid", "name"]
 
     create_table "sys_groups", :force => true do |t|
       t.integer  "unid"
-      t.string   "state",        :limit => 15
-      t.string   "web_state",    :limit => 15
+      t.string   "state"
+      t.string   "web_state"
       t.datetime "created_at"
       t.datetime "updated_at"
       t.integer  "parent_id",                  :null => false
@@ -752,7 +753,7 @@ class Existing20120215 < ActiveRecord::Migration
     end
 
     create_table "sys_languages", :force => true do |t|
-      t.string   "state",      :limit => 15
+      t.string   "state"
       t.datetime "created_at"
       t.datetime "updated_at"
       t.integer  "sort_no"
@@ -764,8 +765,8 @@ class Existing20120215 < ActiveRecord::Migration
       t.integer  "parent_id"
       t.datetime "created_at"
       t.datetime "updated_at"
-      t.string   "version",    :limit => 10
-      t.string   "entry_type", :limit => 15
+      t.string   "version"
+      t.string   "entry_type"
       t.string   "code"
       t.integer  "sort_no"
       t.string   "name"
@@ -773,11 +774,11 @@ class Existing20120215 < ActiveRecord::Migration
       t.string   "email"
     end
 
-    add_index "sys_ldap_synchros", ["version", "parent_id", "entry_type"], :name => "version"
+    add_index "sys_ldap_synchros", ["version", "parent_id", "entry_type"]
 
     create_table "sys_maintenances", :force => true do |t|
       t.integer  "unid"
-      t.string   "state",        :limit => 15
+      t.string   "state"
       t.datetime "created_at"
       t.datetime "updated_at"
       t.datetime "published_at"
@@ -787,7 +788,7 @@ class Existing20120215 < ActiveRecord::Migration
 
     create_table "sys_messages", :force => true do |t|
       t.integer  "unid"
-      t.string   "state",        :limit => 15
+      t.string   "state"
       t.datetime "created_at"
       t.datetime "updated_at"
       t.datetime "published_at"
@@ -800,21 +801,21 @@ class Existing20120215 < ActiveRecord::Migration
       t.datetime "created_at"
       t.datetime "updated_at"
       t.integer  "item_unid"
-      t.string   "action",     :limit => 15
+      t.string   "action"
     end
 
-    add_index "sys_object_privileges", ["item_unid", "action"], :name => "item_unid"
+    add_index "sys_object_privileges", ["item_unid", "action"]
 
     create_table "sys_publishers", :force => true do |t|
       t.integer  "unid"
-      t.string   "dependent",    :limit => 64
+      t.string   "dependent"
       t.datetime "created_at"
       t.datetime "updated_at"
       t.string   "path"
       t.string   "content_hash"
     end
 
-    add_index "sys_publishers", ["unid", "dependent"], :name => "unid"
+    add_index "sys_publishers", ["unid", "dependent"]
 
     create_table "sys_recognitions", :force => true do |t|
       t.datetime "created_at"
@@ -824,7 +825,7 @@ class Existing20120215 < ActiveRecord::Migration
       t.text     "info_xml"
     end
 
-    add_index "sys_recognitions", ["user_id"], :name => "user_id"
+    add_index "sys_recognitions", ["user_id"]
 
     create_table "sys_role_names", :force => true do |t|
       t.datetime "created_at"
@@ -841,7 +842,7 @@ class Existing20120215 < ActiveRecord::Migration
       t.integer  "value"
     end
 
-    add_index "sys_sequences", ["name", "version"], :name => "name"
+    add_index "sys_sequences", ["name", "version"]
 
     create_table "sys_tasks", :force => true do |t|
       t.integer  "unid"
@@ -857,8 +858,8 @@ class Existing20120215 < ActiveRecord::Migration
       t.string  "rel_type", :null => false
     end
 
-    add_index "sys_unid_relations", ["rel_unid"], :name => "rel_unid"
-    add_index "sys_unid_relations", ["unid"], :name => "unid"
+    add_index "sys_unid_relations", ["rel_unid"]
+    add_index "sys_unid_relations", ["unid"]
 
     create_table "sys_unids", :force => true do |t|
       t.datetime "created_at"
@@ -868,7 +869,7 @@ class Existing20120215 < ActiveRecord::Migration
     end
 
     create_table "sys_users", :force => true do |t|
-      t.string   "state",                     :limit => 15
+      t.string   "state"
       t.datetime "created_at"
       t.datetime "updated_at"
       t.integer  "ldap",                                    :null => false
@@ -890,18 +891,18 @@ class Existing20120215 < ActiveRecord::Migration
       t.integer  "group_id"
     end
 
-    add_index "sys_users_groups", ["user_id", "group_id"], :name => "user_id"
+    add_index "sys_users_groups", ["user_id", "group_id"]
 
     create_table "sys_users_roles", :force => true do |t|
       t.integer "user_id"
       t.integer "role_id"
     end
 
-    add_index "sys_users_roles", ["user_id", "role_id"], :name => "user_id"
+    add_index "sys_users_roles", ["user_id", "role_id"]
 
     create_table "tool_simple_captcha_data", :force => true do |t|
-      t.string   "key",        :limit => 40
-      t.string   "value",      :limit => 6
+      t.string   "key"
+      t.string   "value"
       t.datetime "created_at"
       t.datetime "updated_at"
     end

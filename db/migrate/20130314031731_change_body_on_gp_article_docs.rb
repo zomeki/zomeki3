@@ -1,6 +1,6 @@
 class ChangeBodyOnGpArticleDocs < ActiveRecord::Migration
   def up
-    change_column :gp_article_docs, :body, :text, :limit => 16777215
+    change_column :gp_article_docs, :body, :text
   end
 
   def down

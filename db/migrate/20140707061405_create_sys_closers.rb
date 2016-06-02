@@ -2,7 +2,7 @@ class CreateSysClosers < ActiveRecord::Migration
   def up
     create_table :sys_closers do |t|
       t.integer  :unid
-      t.string   :dependent, :limit => 64
+      t.string   :dependent
       t.string   :path
       t.string   :content_hash
       t.datetime :published_at

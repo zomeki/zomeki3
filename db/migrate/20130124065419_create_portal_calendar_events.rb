@@ -3,12 +3,12 @@ class CreatePortalCalendarEvents < ActiveRecord::Migration
 		create_table :portal_calendar_events do |t|
       t.integer  :unid
       t.integer  :content_id
-      t.string   :state,        :limit => 15
+      t.string   :state
       t.date     :event_start_date
       t.date     :event_end_date
       t.string   :event_uri, :default => ''
       t.string   :title
-      t.text     :body,         :limit => 2147483647
+      t.text     :body
 			t.integer  :event_genre_id,     :default => 0
 			t.integer  :event_status_id,    :default => 0
 			

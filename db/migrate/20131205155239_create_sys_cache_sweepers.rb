@@ -1,7 +1,7 @@
 class CreateSysCacheSweepers < ActiveRecord::Migration
   def change
     create_table "sys_cache_sweepers", :force => true do |t|
-      t.string   "state",      :limit => 15
+      t.string   "state"
       t.datetime "created_at"
       t.datetime "updated_at"
       t.string   "model"
