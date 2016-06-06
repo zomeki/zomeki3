@@ -163,6 +163,7 @@ GEM
     pry-byebug (3.4.0)
       byebug (~> 9.0)
       pry (~> 0.10)
+    puma (3.4.0)
     rack (1.6.4)
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -319,6 +320,7 @@ DEPENDENCIES
   parallel (~> 1.6.1)
   pg (~> 0.15)
   pry-byebug
+  puma
   rails (= 4.2.6)
   rails_autolink (~> 1.1.6)
   rails_best_practices
