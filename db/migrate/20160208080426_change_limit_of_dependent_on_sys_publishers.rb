@@ -1,8 +1,8 @@
 class ChangeLimitOfDependentOnSysPublishers < ActiveRecord::Migration
   def up
-    change_column :sys_publishers, :dependent, :string, limit: 255
+    change_column :sys_publishers, :dependent, :string
   end
   def down
-    change_column :sys_publishers, :dependent, :string, limit: 64
+    change_column :sys_publishers, :dependent, :string
   end
 end

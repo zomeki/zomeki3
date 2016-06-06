@@ -4,8 +4,8 @@ class CreateToolConvertLinks < ActiveRecord::Migration
       t.belongs_to :concept
       t.belongs_to :linkable, polymorphic: true
       t.text       :urls
-      t.text       :before_body, limit: 2147483647
-      t.text       :after_body, limit: 2147483647
+      t.text       :before_body
+      t.text       :after_body
       t.timestamps
     end
   end

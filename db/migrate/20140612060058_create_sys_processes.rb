@@ -13,7 +13,7 @@ class CreateSysProcesses < ActiveRecord::Migration
       t.integer  "current"
       t.integer  "success"
       t.integer  "error"
-      t.text     "message",    :limit => 2147483647
+      t.text     "message"
     end
   end
 end

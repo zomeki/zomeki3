@@ -8,7 +8,7 @@ class CreateToolConvertDocs < ActiveRecord::Migration
      t.string :host 
      t.text :title 
      t.datetime :published_at 
-     t.text :body, :limit => 4294967295
+     t.text :body
      t.timestamps
    end
   end 
