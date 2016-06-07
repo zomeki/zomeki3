@@ -30,7 +30,7 @@ class GpArticle::Content::Doc < Cms::Content
 
   has_one :organization_content_group_setting, -> { where(name: 'organization_content_group_id') },
     :foreign_key => :content_id, :class_name => 'GpArticle::Content::Setting'
-  has_one :organization_content_group, :through => :organization_content_group_setting, :source => :organization_content_group
+  delegate :organization_content_group, to: :organization_content_group_setting
 
   before_create :set_default_settings
 
