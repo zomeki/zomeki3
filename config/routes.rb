@@ -54,6 +54,12 @@ Rails.application.routes.draw do
   #     resources :products
   #   end
 
+  # Common directory
+  match '/_common(/*path)' => 'exception#index', via: :all
+
+  # Themes directory
+  match '/_themes(/*path)' => 'exception#index', via: :all
+
   # OmniAuth
   get "/_auth/facebook"           => "cms/public/o_auth#dummy",   :as => :o_auth_facebook
   get "/_auth/twitter"            => "cms/public/o_auth#dummy",   :as => :o_auth_twitter
