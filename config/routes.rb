@@ -71,6 +71,9 @@ Rails.application.routes.draw do
   get "#{admin_prefix}/password/edit" => 'sys/admin/account#edit_password', as: :edit_admin_password
   put "#{admin_prefix}/password" => 'sys/admin/account#update_password', as: :admin_password
 
+  # Api
+  match '_api/*api_path' => 'cms/public/api#receive', as: :api_receive, via: [:get, :post]
+
   # OmniAuth
   get "/_auth/facebook"           => "cms/public/o_auth#dummy",   :as => :o_auth_facebook
   get "/_auth/twitter"            => "cms/public/o_auth#dummy",   :as => :o_auth_twitter
@@ -89,9 +92,6 @@ Rails.application.routes.draw do
   get "*path.html.m3u"         => "cms/public/talk#down_m3u"
   get "*path.html.r.mp3"       => "cms/public/talk#down_mp3"
   get "*path.html.r.m3u"       => "cms/public/talk#down_m3u"
-
-  # Api
-  match '_api/*api_path' => 'cms/public/api#receive', as: :api_receive, via: [:get, :post]
 
   # Modules
   Dir::entries("#{Rails.root}/config/modules").each do |mod|
