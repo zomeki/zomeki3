@@ -60,6 +60,17 @@ Rails.application.routes.draw do
   # Themes directory
   match '/_themes(/*path)' => 'exception#index', via: :all
 
+  # Admin
+  admin_prefix = ZomekiCMS::ADMIN_URL_PREFIX
+  get admin_prefix => 'sys/admin/front#index'
+  match "#{admin_prefix}/login" => 'sys/admin/account#login', as: :admin_login, via: [:get, :post]
+  get "#{admin_prefix}/logout" => 'sys/admin/account#logout', as: :admin_logout
+  get "#{admin_prefix}/account" => 'sys/admin/account#info', as: :admin_account
+  get "#{admin_prefix}/password_reminders/new" => 'sys/admin/account#new_password_reminder', as: :new_admin_password_reminder
+  post "#{admin_prefix}/password_reminders" => 'sys/admin/account#create_password_reminder', as: :admin_password_reminders
+  get "#{admin_prefix}/password/edit" => 'sys/admin/account#edit_password', as: :edit_admin_password
+  put "#{admin_prefix}/password" => 'sys/admin/account#update_password', as: :admin_password
+
   # OmniAuth
   get "/_auth/facebook"           => "cms/public/o_auth#dummy",   :as => :o_auth_facebook
   get "/_auth/twitter"            => "cms/public/o_auth#dummy",   :as => :o_auth_twitter
@@ -79,16 +90,8 @@ Rails.application.routes.draw do
   get "*path.html.r.mp3"       => "cms/public/talk#down_mp3"
   get "*path.html.r.m3u"       => "cms/public/talk#down_m3u"
 
-  # Admin
-  get "#{ZomekiCMS::ADMIN_URL_PREFIX}"         => 'sys/admin/front#index'
-  match "#{ZomekiCMS::ADMIN_URL_PREFIX}/login" => 'sys/admin/account#login',  :as => :admin_login, via: [:get, :post]
-  get "#{ZomekiCMS::ADMIN_URL_PREFIX}/logout"  => 'sys/admin/account#logout', :as => :admin_logout
-  get "#{ZomekiCMS::ADMIN_URL_PREFIX}/account" => 'sys/admin/account#info',   :as => :admin_account
-
-  get  "#{ZomekiCMS::ADMIN_URL_PREFIX}/password_reminders/new" => 'sys/admin/account#new_password_reminder',    :as => :new_admin_password_reminder
-  post "#{ZomekiCMS::ADMIN_URL_PREFIX}/password_reminders"     => 'sys/admin/account#create_password_reminder', :as => :admin_password_reminders
-  get  "#{ZomekiCMS::ADMIN_URL_PREFIX}/password/edit"          => 'sys/admin/account#edit_password',            :as => :edit_admin_password
-  put  "#{ZomekiCMS::ADMIN_URL_PREFIX}/password"               => 'sys/admin/account#update_password',          :as => :admin_password
+  # Api
+  match '_api/*api_path' => 'cms/public/api#receive', as: :api_receive, via: [:get, :post]
 
   # Modules
   Dir::entries("#{Rails.root}/config/modules").each do |mod|
@@ -96,9 +99,6 @@ Rails.application.routes.draw do
     file = "#{Rails.root}/config/modules/#{mod}/routes.rb"
     load(file) if FileTest.exist?(file)
   end
-
-  # Api
-  match '_api/*api_path' => 'cms/public/api#receive', as: :api_receive, via: [:get, :post]
 
   # Exception
   get "404.:format" => "exception#index"
