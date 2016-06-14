@@ -5,6 +5,7 @@
 # The default is the current directory.
 #
 # directory '/u/apps/lolcat'
+directory '/var/www/zomeki'
 
 # Use an object or block as the rack application. This allows the
 # config file to be the application itself.
@@ -22,12 +23,14 @@
 # The default is "config.ru".
 #
 # rackup '/u/apps/lolcat/config.ru'
+rackup '/var/www/zomeki/config.ru'
 
 # Set the environment in which the rack's app will run. The value must be a string.
 #
 # The default is "development".
 #
 # environment 'production'
+environment 'development'
 
 # Daemonize the server into the background. Highly suggest that
 # this be combined with "pidfile" and "stdout_redirect".
@@ -36,15 +39,18 @@
 #
 # daemonize
 # daemonize false
+daemonize true
 
 # Store the pid of the server in the file at "path".
 #
 # pidfile '/u/apps/lolcat/tmp/pids/puma.pid'
+pidfile '/var/www/zomeki/tmp/pids/puma.pid'
 
 # Use "path" as the file to store the server info state. This is
 # used by "pumactl" to query and control the server.
 #
 # state_path '/u/apps/lolcat/tmp/pids/puma.state'
+state_path '/var/www/zomeki/tmp/pids/puma.state'
 
 # Redirect STDOUT and STDERR to files specified. The 3rd parameter
 # ("append") specifies whether the output is appended, the default is
@@ -52,6 +58,7 @@
 #
 # stdout_redirect '/u/apps/lolcat/log/stdout', '/u/apps/lolcat/log/stderr'
 # stdout_redirect '/u/apps/lolcat/log/stdout', '/u/apps/lolcat/log/stderr', true
+stdout_redirect '/var/www/zomeki/log/puma_access.log', '/var/www/zomeki/log/puma_error.log', true
 
 # Disable request logging.
 #
@@ -65,6 +72,7 @@
 # The default is "0, 16".
 #
 # threads 0, 16
+threads 0, 16
 
 # Bind the server to "url". "tcp://", "unix://" and "ssl://" are the only
 # accepted protocols.
@@ -75,6 +83,7 @@
 # bind 'unix:///var/run/puma.sock'
 # bind 'unix:///var/run/puma.sock?umask=0111'
 # bind 'ssl://127.0.0.1:9292?key=path_to_key&cert=path_to_cert'
+bind 'unix:///var/www/zomeki/tmp/sockets/puma.sock'
 
 # Instead of "bind 'ssl://127.0.0.1:9292?key=path_to_key&cert=path_to_cert'" you
 # can also use the "ssl_bind" option.
@@ -109,6 +118,7 @@
 # The default is "0".
 #
 # workers 2
+workers 0
 
 # Code to run immediately before the master starts workers.
 #
@@ -156,6 +166,7 @@
 # (off by default)
 
 # prune_bundler
+prune_bundler
 
 # Preload the application before starting the workers; this conflicts with
 # phased restart feature. (off by default)
