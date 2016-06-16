@@ -1,6 +1,6 @@
 #!/usr/bin/env puma
 
-zomeki_root = Rails.root
+zomeki_root = File.expand_path('../../../', __FILE__)
 
 # The directory to operate out of.
 #
@@ -41,7 +41,6 @@ environment 'development'
 #
 # daemonize
 # daemonize false
-daemonize true
 
 # Store the pid of the server in the file at "path".
 #
