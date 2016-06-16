@@ -1,3 +1,4 @@
+<% zomeki_root = Rails.root -%>
 listen 80;
 
 location / {
@@ -8,5 +9,5 @@ location / {
 }
 
 location /_common/ {
-  root $zomeki_root/public;
+  root <%= zomeki_root %>/public;
 }
