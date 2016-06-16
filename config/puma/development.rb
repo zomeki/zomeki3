@@ -1,6 +1,6 @@
 #!/usr/bin/env puma
 
-zomeki_root = '/var/www/zomeki'
+zomeki_root = Rails.root
 
 # The directory to operate out of.
 #
