@@ -1,6 +1,8 @@
 <% zomeki_root = Rails.root -%>
 listen 80;
 
+proxy_set_header X-Forwarded-Host $host;
+
 location / {
   if (!-f $request_filename) {
     proxy_pass http://zomeki_puma;
