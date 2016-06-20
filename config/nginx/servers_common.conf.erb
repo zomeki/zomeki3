@@ -1,10 +1,14 @@
 <% zomeki_root = Rails.root -%>
-location / {
-  try_files $uri $uri.html $uri/index.html @puma;
-}
-
 location /_common/ {
   root <%= zomeki_root %>/public;
+}
+
+location /_themes/ {
+  root <%= zomeki_root %>/public;
+}
+
+location / {
+  try_files $uri $uri.html $uri/index.html @puma;
 }
 
 location @puma {
