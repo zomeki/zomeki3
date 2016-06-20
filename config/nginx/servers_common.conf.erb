@@ -1,15 +1,13 @@
 <% zomeki_root = Rails.root -%>
-listen 80;
-
-proxy_set_header X-Forwarded-Host $host;
-
 location / {
-  if (!-f $request_filename) {
-    proxy_pass http://zomeki_puma;
-    break;
-  }
+  try_files $uri $uri.html $uri/index.html @puma;
 }
 
 location /_common/ {
   root <%= zomeki_root %>/public;
+}
+
+location @puma {
+  proxy_set_header X-Forwarded-Host $host;
+  proxy_pass http://zomeki_puma;
 }
