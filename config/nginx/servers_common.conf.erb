@@ -1,14 +1,19 @@
 <% zomeki_root = Rails.root -%>
-location /_common/ {
+location ~* /_(common|themes)/ {
   root <%= zomeki_root %>/public;
 }
 
-location /_themes/ {
-  root <%= zomeki_root %>/public;
+location /<%= ZomekiCMS::ADMIN_URL_PREFIX %>/ {
+  error_page 418 = @puma; return 418;
 }
 
 location / {
-  try_files $uri $uri.html $uri/index.html @puma;
+  try_files $uri $uri/ @puma;
+
+  if ($cookie_navigation_ruby = 'on') {
+    rewrite ^(.*)/$ $1/index.html;
+    rewrite ^(.+)\.html$ $1.html.r break;
+  }
 }
 
 location @puma {
