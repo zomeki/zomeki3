@@ -53,7 +53,6 @@ class Cms::Admin::SitesController < Cms::Controller::Admin::Base
       end
       make_concept(@item)
       make_node(@item)
-      make_files(@item)
       update_config
       save_sns_apps
     end
@@ -67,7 +66,6 @@ class Cms::Admin::SitesController < Cms::Controller::Admin::Base
 
     _update @item do
       make_node(@item)
-      make_files(@item)
       update_config
       save_sns_apps
       FileUtils.rm_rf Pathname.new(@item.public_smart_phone_path).children if ::File.exist?(@item.public_smart_phone_path) && !@item.publish_for_smart_phone?
@@ -79,7 +77,6 @@ class Cms::Admin::SitesController < Cms::Controller::Admin::Base
     _destroy(@item) do
       cookies.delete(:cms_site)
       update_config
-      clean_files(@item)
     end
   end
 
@@ -133,24 +130,6 @@ protected
 
     item.node_id = node.id
     item.save
-  end
-
-  def make_files(item)
-    dir = item.public_path
-    FileUtils.mkdir_p(dir) unless ::File.exist?(dir)
-
-    dir = "#{item.public_path}/_dynamic"
-    FileUtils.mkdir_p(dir) unless ::File.exist?(dir)
-
-    dir = item.config_path
-    FileUtils.mkdir_p(dir) unless ::File.exist?(dir)
-
-    file = "#{item.config_path}/rewrite.conf"
-    FileUtils.touch(file) unless ::File.exist?(file)
-  end
-
-  def clean_files(item)
-    FileUtils.rm_rf item.root_path
   end
 
   def update_config

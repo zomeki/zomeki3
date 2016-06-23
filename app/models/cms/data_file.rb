@@ -19,16 +19,14 @@ class Cms::DataFile < ActiveRecord::Base
   scope :public_state, -> { where(state: 'public') }
 
   def self.find_by_public_path(path)
-    path =~ /sites\/.*\/(.*?)\/public\/_files\/.*\/(.*?)\/(.*?)$/i
-    _site_id = $1.to_i rescue 0;
-    _id      = $2[0 .. -2].to_i rescue 0;
-    _name    = $3
-    Cms::DataFile.where(:id => _id, :name => _name, :site_id => _site_id).first
+    site_id, id, name = path.match(%r!/sites[/\d]*/(\d+)/public/_files/(\d+)/(.+)\z!i).captures
+    return nil unless site_id && id && name
+    Cms::DataFile.find_by(id: id[0..-2], name: name, site_id: site_id)
   end
 
   def public_path
     return nil unless site
-    dir = Util::String::CheckDigit.check(format('%07d', id)).gsub(/(.*)(..)(..)(..)$/, '\1/\2/\3/\4/\1\2\3\4')
+    dir = Util::String::CheckDigit.check(format('%07d', id))
     "#{site.public_path}/_files/#{dir}/#{escaped_name}"
   end
 

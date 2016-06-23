@@ -9,11 +9,12 @@ class Cms::Public::TalkController < ApplicationController
   def down_mp3
     return render :text => '1' if params[:file_check] == '1'
 
-    uri = Core.request_uri.gsub(/\.mp3$/, '').gsub(/\.r$/, '')
+    uri = Core.request_uri.gsub(/\.mp3\z/, '').gsub(/\.r\z/, '')
     return http_error(404) if ::File.extname(uri) != '.html'
 
-    uri = "#{request.env['SCRIPT_URI'].gsub(/^(.*?\/\/.*?)\/.*/, '\1')}#{uri}"
-    options = uri =~ /^https:/ ? {:ssl_verify_mode => OpenSSL::SSL::VERIFY_NONE} : {}
+    return http_error(404) if (script_uri = request.env['SCRIPT_URI'].to_s).blank?
+    uri = "#{script_uri.gsub(/\A(.*?\/\/.*?)\/.*/, '\1')}#{uri}"
+    options = uri =~ /\Ahttps:/ ? {:ssl_verify_mode => OpenSSL::SSL::VERIFY_NONE} : {}
     session_key = Rails.application.config.session_options[:key]
     options.merge!("Cookie" => "#{session_key}=#{CGI.escape(cookies[session_key])}")
     res = Util::Http::Request.send(uri, options)
@@ -38,11 +39,11 @@ class Cms::Public::TalkController < ApplicationController
 
   def sound_uri
     uri = Core.request_uri
-    if uri =~ /\.m3u$/
-      uri = uri.gsub(/.m3u$/, '.mp3')
+    if uri =~ /\.m3u\z/
+      uri = uri.gsub(/.m3u\z/, '.mp3')
     end
-    if uri =~ /\.html\.r\.mp3$/
-      uri = uri.gsub(/\.r\.mp3$/, '.mp3')
+    if uri =~ /\.html\.r\.mp3\z/
+      uri = uri.gsub(/\.r\.mp3\z/, '.mp3')
     end
     Page.site.full_uri + uri.slice(1, uri.size)
   end

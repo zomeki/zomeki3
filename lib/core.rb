@@ -28,7 +28,7 @@ class Core
     @@params       = parse_query_string(env)
     @@mode         = nil
     @@site         = nil
-    @@script_uri   = env['SCRIPT_URI'] || "http://#{env['HTTP_HOST']}#{env['PATH_INFO']}"
+    @@script_uri   = "#{env['rack.url_scheme']}://#{env['HTTP_X_FORWARDED_HOST'].presence || env['HTTP_HOST']}#{env['REQUEST_URI'].presence || env['PATH_INFO']}"
     @@request_uri  = nil
     @@internal_uri = nil
     @@ldap         = nil

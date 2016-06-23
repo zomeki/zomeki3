@@ -1,0 +1,10 @@
+<% zomeki_root = Rails.root -%>
+server {
+  listen 80;
+  server_name <%= domain %>;
+  root <%= public_path %>;
+  access_log <%= zomeki_root %>/log/access_site_<%= '%08d' % id %>.log main;
+  error_log <%= zomeki_root %>/log/error_site_<%= '%08d' % id %>.log warn;
+
+  include <%= zomeki_root %>/config/nginx/servers_common.conf;
+}
