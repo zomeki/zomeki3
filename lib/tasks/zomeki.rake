@@ -6,10 +6,11 @@ namespace :zomeki do
 
   namespace :configure do
     task :nginx do
-      Pathname.glob(Rails.root.join('config/nginx/**/*.erb')).each do |erb|
+      Pathname.glob(Rails.root.join('config/nginx/*.erb')).each do |erb|
         next unless erb.file?
         erb.sub_ext('').write(ERB.new(erb.read, nil, '-').result(binding))
       end
+      Cms::Site.update_nginx_configs
     end
   end
 end

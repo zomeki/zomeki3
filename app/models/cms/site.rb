@@ -63,8 +63,10 @@ class Cms::Site < ActiveRecord::Base
   before_validation :fix_full_uri
   before_destroy :block_last_deletion
 
-  after_save :make_files
-  after_destroy :clean_files
+  after_save :generate_files
+  after_destroy :destroy_files
+  after_save :generate_nginx_configs
+  after_destroy :destroy_nginx_configs
 
   def states
     [['公開','public']]
@@ -215,6 +217,26 @@ class Cms::Site < ActiveRecord::Base
     Rails.root.join('tmp/reload_virtual_hosts.txt')
   end
 
+  def self.generate_nginx_configs
+    all.each(&:generate_nginx_configs)
+  end
+
+  def generate_nginx_configs
+    servers = Rails.root.join('config/nginx/servers')
+    unless (template = servers.join('template.conf.erb')).file?
+      logger.warn 'Server template not found.'
+      return false
+    end
+    erb = ERB.new(template.read, nil, '-').result(binding)
+    servers.join("site_#{'%08d' % id}.conf").write erb
+  end
+
+  def destroy_nginx_configs
+    conf = Rails.root.join("config/nginx/servers/site_#{'%08d' % id}.conf")
+    return false unless conf.exist?
+    conf.delete
+  end
+
   def basic_auth_enabled?
     pw_file = "#{::File.dirname(public_path)}/.htpasswd"
     return ::File.exists?(pw_file)
@@ -327,14 +349,14 @@ protected
     self.spp_target ||= SPP_TARGET_OPTIONS.first.last if self.has_attribute?(:spp_target)
   end
 
-  def make_files
+  def generate_files
     FileUtils.mkdir_p public_path
     FileUtils.mkdir_p "#{item.public_path}/_dynamic"
     FileUtils.mkdir_p config_path
     FileUtils.touch "#{item.config_path}/rewrite.conf"
   end
 
-  def clean_files
+  def destroy_files
     FileUtils.rm_rf root_path
   end
 end
