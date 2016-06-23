@@ -351,9 +351,9 @@ protected
 
   def generate_files
     FileUtils.mkdir_p public_path
-    FileUtils.mkdir_p "#{item.public_path}/_dynamic"
+    FileUtils.mkdir_p "#{public_path}/_dynamic"
     FileUtils.mkdir_p config_path
-    FileUtils.touch "#{item.config_path}/rewrite.conf"
+    FileUtils.touch "#{config_path}/rewrite.conf"
   end
 
   def destroy_files

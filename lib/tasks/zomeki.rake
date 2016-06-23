@@ -10,7 +10,7 @@ namespace :zomeki do
         next unless erb.file?
         erb.sub_ext('').write(ERB.new(erb.read, nil, '-').result(binding))
       end
-      Cms::Site.update_nginx_configs
+      Cms::Site.generate_nginx_configs
     end
   end
 end
