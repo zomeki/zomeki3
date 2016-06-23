@@ -63,6 +63,9 @@ class Cms::Site < ActiveRecord::Base
   before_validation :fix_full_uri
   before_destroy :block_last_deletion
 
+  after_save :make_files
+  after_destroy :clean_files
+
   def states
     [['公開','public']]
   end
@@ -322,5 +325,16 @@ protected
   def set_defaults
     self.smart_phone_publication ||= SMART_PHONE_PUBLICATION_OPTIONS.first.last if self.has_attribute?(:smart_phone_publication)
     self.spp_target ||= SPP_TARGET_OPTIONS.first.last if self.has_attribute?(:spp_target)
+  end
+
+  def make_files
+    FileUtils.mkdir_p public_path
+    FileUtils.mkdir_p "#{item.public_path}/_dynamic"
+    FileUtils.mkdir_p config_path
+    FileUtils.touch "#{item.config_path}/rewrite.conf"
+  end
+
+  def clean_files
+    FileUtils.rm_rf root_path
   end
 end
