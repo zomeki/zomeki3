@@ -42,6 +42,9 @@ environment 'development'
 # daemonize
 # daemonize false
 
+# TODO: uncomment on development server
+#daemonize true
+
 # Store the pid of the server in the file at "path".
 #
 # pidfile '/u/apps/lolcat/tmp/pids/puma.pid'
@@ -59,7 +62,9 @@ state_path "#{zomeki_root}/tmp/pids/puma.state"
 #
 # stdout_redirect '/u/apps/lolcat/log/stdout', '/u/apps/lolcat/log/stderr'
 # stdout_redirect '/u/apps/lolcat/log/stdout', '/u/apps/lolcat/log/stderr', true
-stdout_redirect "#{zomeki_root}/log/puma_access.log", "#{zomeki_root}/log/puma_error.log", true
+
+# TODO: uncomment on development server
+#stdout_redirect "#{zomeki_root}/log/puma_access.log", "#{zomeki_root}/log/puma_error.log", true
 
 # Disable request logging.
 #

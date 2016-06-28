@@ -7,6 +7,9 @@ class Sys::Creator < ActiveRecord::Base
   before_save :set_user
   before_save :set_group
 
+  validates :user_id, presence: true
+  validates :group_id, presence: true
+
   def set_user
     #self.user_id = Core.user.id unless user_id
     unless user_id
