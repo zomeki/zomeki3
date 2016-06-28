@@ -7,7 +7,7 @@ module Sys::Model::Rel::Creator
     name = mod.table_name
     if (refs = Sys::Creator.has_many name.to_sym, class_name: mod.name).kind_of?(Hash)
       ref = refs.with_indifferent_access[name]
-      fail %!Table "#{name}" must have column named "#{ref.foreign_key}".! unless ref.foreign_key.in?(mod.column_names)
+      Rails.logger.warn %!RELATION WARNING: Table "#{name}" must have column named "#{ref.foreign_key}".! unless ref.foreign_key.in?(mod.column_names)
     end
 
     mod.before_save :save_creator
