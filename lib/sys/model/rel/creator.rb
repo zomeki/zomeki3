@@ -1,61 +1,44 @@
 module Sys::Model::Rel::Creator
+  ATTRIBUTE_NAMES = [:group_id, :user_id]
+
   def self.included(mod)
-    mod.belongs_to :creator, :foreign_key => 'unid', :class_name => 'Sys::Creator',
-      :dependent => :destroy
+    mod.belongs_to :creator, class_name: 'Sys::Creator', dependent: :destroy
 
-    mod.after_save :save_creator
-  end
-
-  def in_creator
-    unless val = @in_creator
-      val = {}
-      creator.attributes.each do |k,v|
-        val[k.to_s] = v
-      end if creator
-      @in_creator = val
+    name = mod.table_name
+    if (refs = Sys::Creator.has_many name.to_sym, class_name: mod.name).kind_of?(Hash)
+      ref = refs.with_indifferent_access[name]
+      fail %!Table "#{name}" must have column named "#{ref.foreign_key}".! unless ref.foreign_key.in?(mod.column_names)
     end
-    @in_creator
+
+    mod.before_save :save_creator
   end
 
   def in_creator=(values)
-    @creator_ids = values.with_indifferent_access
-    @creator_ids.each {|k,v| @creator_ids[k] = nil if v.blank? }
-    @in_creator = @creator_ids
+    @creator_attributes ||= {}.with_indifferent_access
+    return @creator_attributes unless values.kind_of?(Hash)
+
+    values = values.with_indifferent_access
+    ATTRIBUTE_NAMES.each {|n| @creator_attributes[n] = values[n].presence }
+  end
+
+  def in_creator
+    @creator_attributes ||= {}.with_indifferent_access
   end
 
   def join_creator
+    ActiveSupport::Deprecation.warn("Replace condition_builder with arel (#{caller[0..4].join("\n")})")
     return true if @joined_creator
     @joined_creator = true
     join :creator
   end
 
+  private
+
   def save_creator
-    return false unless unid
+    return true if creator
 
-    unless @creator_ids
-      if creator && !creator.user_id.blank?
-        return true
-      end
-    end
-
-    @creator_ids ||= {}
-    group_id = @creator_ids['group_id'] || Core.user_group.id
-    user_id  = @creator_ids['user_id']  || Core.user.id
-
-    if creator
-      creator.group_id = group_id
-      creator.user_id  = user_id
-      return creator.save
-    end
-
-    _creator = Sys::Creator.new
-    _creator.id         = unid
-    _creator.created_at = Core.now
-    _creator.updated_at = Core.now
-    _creator.group_id   = group_id
-    _creator.user_id    = user_id
-    return false unless _creator.save_with_direct_sql
-    creator(true)
-    return true
+    @creator_attributes ||= {}.with_indifferent_access
+    create_creator!(group_id: @creator_attributes[:group_id].presence || Core.user_group.id,
+                    user_id: @creator_attributes[:user_id].presence || Core.user.id)
   end
 end

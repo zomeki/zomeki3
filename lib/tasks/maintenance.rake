@@ -31,5 +31,15 @@ namespace :zomeki do
       end
       puts count > 0 ? "#{count} invalid links removed." : 'No invalid links.'
     end
+
+    namespace :postgresql do
+      desc 'Set valid value to sequences for id'
+      task reset_id_sequences: :environment do
+        [Sys::Creator].each do |klass|
+          sql = "SELECT setval('#{klass.table_name}_id_seq', coalesce((SELECT max(id) + 1 FROM #{klass.table_name}), 1), FALSE)"
+          klass.connection.execute sql
+        end
+      end
+    end
   end
 end
