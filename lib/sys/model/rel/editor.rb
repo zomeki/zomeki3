@@ -11,7 +11,7 @@ module Sys::Model::Rel::Editor
   end
 
   def save_editor
-    return false if Core.user_group.blank? || Core.user.blank?
-    !!editors.create(group_id: Core.user_group.id, user_id: Core.user.id)
+    e = editors.build(group_id: Core.user_group.try!(:id), user_id: Core.user.try!(:id))
+    e.save
   end
 end
