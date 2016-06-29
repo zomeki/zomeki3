@@ -1,23 +1,21 @@
 class Sys::Editor < ActiveRecord::Base
   include Sys::Model::Base
-  
-  belongs_to :user,  :foreign_key => :user_id,  :class_name => 'Sys::User'
-  belongs_to :group, :foreign_key => :group_id, :class_name => 'Sys::Group'
-  
+
+  belongs_to :editable, polymorphic: true, required: true
+
+  belongs_to :user, class_name: 'Sys::User', required: true
+  belongs_to :group, class_name: 'Sys::Group', required: true
+
   before_save :set_user
   before_save :set_group
 
+  private
+
   def set_user
-    #self.user_id = Core.user.id unless user_id
-    unless user_id
-      self.user_id = Core.user ? Core.user.id : 0
-    end
+    self.user_id ||= Core.user.try!(:id)
   end
-  
+
   def set_group
-    #self.group_id = Core.user_group.id unless group_id
-    unless group_id
-      self.group_id = Core.user_group ? Core.user_group.id : 0
-    end
+    self.group_id ||= Core.user_group.try!(:id)
   end
 end
