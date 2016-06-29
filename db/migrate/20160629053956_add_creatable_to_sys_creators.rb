@@ -1,4 +1,4 @@
-class AddCreatorIdsForCreatorRelation < ActiveRecord::Migration
+class AddCreatableToSysCreators < ActiveRecord::Migration
   KLASSES = [
     AdBanner::Banner,
     AdBanner::Group,
@@ -21,6 +21,7 @@ class AddCreatorIdsForCreatorRelation < ActiveRecord::Migration
     Cms::SiteBasicAuthUser,
     Feed::Feed,
     Gnav::MenuItem,
+    GpArticle::Doc,
     GpCalendar::Event,
     GpCalendar::Holiday,
     GpCategory::Category,
@@ -34,15 +35,13 @@ class AddCreatorIdsForCreatorRelation < ActiveRecord::Migration
   ]
 
   def up
+    add_reference :sys_creators, :creatable, index: true, polymorphic: true
     KLASSES.each do |klass|
-      add_column klass.table_name, :creator_id, :integer, index: true
-      klass.find_each {|c| c.update_column(:creator_id, c.unid) }
+      klass.find_each {|o| o.creator ||= Sys::Creator.find_by(id: o.unid) }
     end
   end
 
   def down
-    KLASSES.reverse.each do |klass|
-      remove_column klass.table_name, :creator_id
-    end
+    remove_reference :sys_creators, :creatable, index: true, polymorphic: true
   end
 end

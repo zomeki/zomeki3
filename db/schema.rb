@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160629044421) do
+ActiveRecord::Schema.define(version: 20160629053956) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -40,7 +40,6 @@ ActiveRecord::Schema.define(version: 20160629044421) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "target"
-    t.integer  "creator_id"
   end
 
   add_index "ad_banner_banners", ["token"], name: "index_ad_banner_banners_on_token", unique: true, using: :btree
@@ -62,7 +61,6 @@ ActiveRecord::Schema.define(version: 20160629044421) do
     t.integer  "sort_no"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "creator_id"
   end
 
   create_table "approval_approval_flows", force: :cascade do |t|
@@ -136,7 +134,6 @@ ActiveRecord::Schema.define(version: 20160629044421) do
     t.integer  "repeat_interval"
     t.text     "repeat_week"
     t.text     "repeat_criterion"
-    t.integer  "creator_id"
   end
 
   create_table "biz_calendar_bussiness_hours", force: :cascade do |t|
@@ -157,7 +154,6 @@ ActiveRecord::Schema.define(version: 20160629044421) do
     t.integer  "repeat_interval"
     t.text     "repeat_week"
     t.text     "repeat_criterion"
-    t.integer  "creator_id"
   end
 
   create_table "biz_calendar_exception_holidays", force: :cascade do |t|
@@ -168,7 +164,6 @@ ActiveRecord::Schema.define(version: 20160629044421) do
     t.date     "end_date"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "creator_id"
   end
 
   create_table "biz_calendar_holiday_types", force: :cascade do |t|
@@ -179,7 +174,6 @@ ActiveRecord::Schema.define(version: 20160629044421) do
     t.string   "title"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "creator_id"
   end
 
   add_index "biz_calendar_holiday_types", ["content_id"], name: "index_biz_calendar_holiday_types_on_content_id", using: :btree
@@ -199,7 +193,6 @@ ActiveRecord::Schema.define(version: 20160629044421) do
     t.integer  "sort_no"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "creator_id"
   end
 
   add_index "biz_calendar_places", ["content_id"], name: "index_biz_calendar_places_on_content_id", using: :btree
@@ -214,7 +207,6 @@ ActiveRecord::Schema.define(version: 20160629044421) do
     t.integer  "level_no",   null: false
     t.integer  "sort_no"
     t.string   "name"
-    t.integer  "creator_id"
   end
 
   add_index "cms_concepts", ["parent_id", "state", "sort_no"], name: "index_cms_concepts_on_parent_id_and_state_and_sort_no", using: :btree
@@ -244,7 +236,6 @@ ActiveRecord::Schema.define(version: 20160629044421) do
     t.string   "note"
     t.string   "code"
     t.integer  "sort_no"
-    t.integer  "creator_id"
   end
 
   create_table "cms_data_file_nodes", force: :cascade do |t|
@@ -255,7 +246,6 @@ ActiveRecord::Schema.define(version: 20160629044421) do
     t.datetime "updated_at"
     t.string   "name"
     t.text     "title"
-    t.integer  "creator_id"
   end
 
   add_index "cms_data_file_nodes", ["concept_id", "name"], name: "index_cms_data_file_nodes_on_concept_id_and_name", using: :btree
@@ -276,7 +266,6 @@ ActiveRecord::Schema.define(version: 20160629044421) do
     t.integer  "image_is"
     t.integer  "image_width"
     t.integer  "image_height"
-    t.integer  "creator_id"
   end
 
   add_index "cms_data_files", ["concept_id", "node_id", "name"], name: "index_cms_data_files_on_concept_id_and_node_id_and_name", using: :btree
@@ -292,7 +281,6 @@ ActiveRecord::Schema.define(version: 20160629044421) do
     t.string   "name"
     t.text     "title"
     t.text     "body"
-    t.integer  "creator_id"
   end
 
   create_table "cms_feed_entries", force: :cascade do |t|
@@ -331,7 +319,6 @@ ActiveRecord::Schema.define(version: 20160629044421) do
     t.text     "feed_title"
     t.text     "link_alternate"
     t.integer  "entry_count"
-    t.integer  "creator_id"
   end
 
   create_table "cms_inquiries", force: :cascade do |t|
@@ -357,7 +344,6 @@ ActiveRecord::Schema.define(version: 20160629044421) do
     t.text     "body"
     t.text     "mecab_csv"
     t.integer  "site_id"
-    t.integer  "creator_id"
   end
 
   create_table "cms_layouts", force: :cascade do |t|
@@ -381,7 +367,6 @@ ActiveRecord::Schema.define(version: 20160629044421) do
     t.text     "smart_phone_head"
     t.text     "smart_phone_body"
     t.text     "smart_phone_stylesheet"
-    t.integer  "creator_id"
   end
 
   create_table "cms_link_check_logs", force: :cascade do |t|
@@ -466,7 +451,6 @@ ActiveRecord::Schema.define(version: 20160629044421) do
     t.text     "mobile_body"
     t.string   "sitemap_state"
     t.integer  "sitemap_sort_no"
-    t.integer  "creator_id"
   end
 
   add_index "cms_nodes", ["concept_id"], name: "index_cms_nodes_on_concept_id", using: :btree
@@ -533,7 +517,6 @@ ActiveRecord::Schema.define(version: 20160629044421) do
     t.text     "body"
     t.text     "xml_properties"
     t.text     "etcetera"
-    t.integer  "creator_id"
   end
 
   add_index "cms_pieces", ["concept_id", "name", "state"], name: "index_cms_pieces_on_concept_id_and_name_and_state", using: :btree
@@ -546,7 +529,6 @@ ActiveRecord::Schema.define(version: 20160629044421) do
     t.string   "password"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "creator_id"
   end
 
   create_table "cms_site_belongings", force: :cascade do |t|
@@ -596,7 +578,6 @@ ActiveRecord::Schema.define(version: 20160629044421) do
     t.string   "smart_phone_publication"
     t.string   "spp_target"
     t.string   "google_map_api_key"
-    t.integer  "creator_id"
   end
 
   create_table "cms_talk_tasks", force: :cascade do |t|
@@ -665,7 +646,6 @@ ActiveRecord::Schema.define(version: 20160629044421) do
     t.text     "link_alternate"
     t.integer  "entry_count"
     t.text     "fixed_categories_xml"
-    t.integer  "creator_id"
   end
 
   create_table "gnav_category_sets", force: :cascade do |t|
@@ -689,7 +669,6 @@ ActiveRecord::Schema.define(version: 20160629044421) do
     t.datetime "updated_at"
     t.integer  "layout_id"
     t.string   "sitemap_state"
-    t.integer  "creator_id"
   end
 
   add_index "gnav_menu_items", ["concept_id"], name: "index_gnav_menu_items_on_concept_id", using: :btree
@@ -762,7 +741,6 @@ ActiveRecord::Schema.define(version: 20160629044421) do
     t.text     "qrcode_state"
     t.string   "event_will_sync"
     t.integer  "serial_no"
-    t.integer  "creator_id"
   end
 
   add_index "gp_article_docs", ["concept_id"], name: "index_gp_article_docs_on_concept_id", using: :btree
@@ -811,7 +789,6 @@ ActiveRecord::Schema.define(version: 20160629044421) do
     t.string   "sync_source_id"
     t.string   "sync_source_source_class"
     t.string   "will_sync"
-    t.integer  "creator_id"
   end
 
   add_index "gp_calendar_events", ["content_id"], name: "index_gp_calendar_events_on_content_id", using: :btree
@@ -837,7 +814,6 @@ ActiveRecord::Schema.define(version: 20160629044421) do
     t.string   "sync_source_host"
     t.integer  "sync_source_content_id"
     t.integer  "sync_source_id"
-    t.integer  "creator_id"
   end
 
   create_table "gp_category_categories", force: :cascade do |t|
@@ -859,7 +835,6 @@ ActiveRecord::Schema.define(version: 20160629044421) do
     t.string   "docs_order"
     t.integer  "template_id"
     t.integer  "children_count",   default: 0, null: false
-    t.integer  "creator_id"
   end
 
   add_index "gp_category_categories", ["category_type_id"], name: "index_gp_category_categories_on_category_type_id", using: :btree
@@ -898,7 +873,6 @@ ActiveRecord::Schema.define(version: 20160629044421) do
     t.integer  "template_id"
     t.integer  "internal_category_type_id"
     t.string   "description"
-    t.integer  "creator_id"
   end
 
   add_index "gp_category_category_types", ["concept_id"], name: "index_gp_category_category_types_on_concept_id", using: :btree
@@ -965,7 +939,6 @@ ActiveRecord::Schema.define(version: 20160629044421) do
     t.integer  "sort_no"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "creator_id"
   end
 
   add_index "gp_template_templates", ["content_id"], name: "index_gp_template_templates_on_content_id", using: :btree
@@ -1001,7 +974,6 @@ ActiveRecord::Schema.define(version: 20160629044421) do
     t.datetime "updated_at"
     t.integer  "more_layout_id"
     t.text     "outline"
-    t.integer  "creator_id"
   end
 
   add_index "organization_groups", ["sys_group_code"], name: "index_organization_groups_on_sys_group_code", using: :btree
@@ -1118,7 +1090,6 @@ ActiveRecord::Schema.define(version: 20160629044421) do
     t.boolean  "confirmation"
     t.string   "sitemap_state"
     t.string   "index_link"
-    t.integer  "creator_id"
   end
 
   add_index "survey_forms", ["content_id"], name: "index_survey_forms_on_content_id", using: :btree
@@ -1169,7 +1140,11 @@ ActiveRecord::Schema.define(version: 20160629044421) do
     t.datetime "updated_at"
     t.integer  "user_id"
     t.integer  "group_id"
+    t.integer  "creatable_id"
+    t.string   "creatable_type"
   end
+
+  add_index "sys_creators", ["creatable_type", "creatable_id"], name: "index_sys_creators_on_creatable_type_and_creatable_id", using: :btree
 
   create_table "sys_editable_groups", force: :cascade do |t|
     t.datetime "created_at"
@@ -1203,7 +1178,6 @@ ActiveRecord::Schema.define(version: 20160629044421) do
     t.integer  "image_is"
     t.integer  "image_width"
     t.integer  "image_height"
-    t.integer  "creator_id"
   end
 
   add_index "sys_files", ["parent_unid", "name"], name: "index_sys_files_on_parent_unid_and_name", using: :btree
@@ -1269,7 +1243,6 @@ ActiveRecord::Schema.define(version: 20160629044421) do
     t.text     "title"
     t.text     "body"
     t.integer  "site_id"
-    t.integer  "creator_id"
   end
 
   create_table "sys_messages", force: :cascade do |t|
@@ -1281,7 +1254,6 @@ ActiveRecord::Schema.define(version: 20160629044421) do
     t.text     "title"
     t.text     "body"
     t.integer  "site_id"
-    t.integer  "creator_id"
   end
 
   create_table "sys_object_privileges", force: :cascade do |t|
