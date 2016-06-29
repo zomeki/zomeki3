@@ -3,7 +3,7 @@ module Sys::Model::Rel::Creator
 
   def self.included(mod)
     mod.has_one :creator, class_name: 'Sys::Creator', dependent: :destroy, as: :creatable
-    mod.before_save :save_creator
+    mod.after_save :save_creator
   end
 
   # setter always returns supplied argument
