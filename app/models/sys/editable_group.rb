@@ -1,8 +1,9 @@
 class Sys::EditableGroup < ActiveRecord::Base
   include Sys::Model::Base
-  
+
+  belongs_to :editable, polymorphic: true, required: true
+
   def groups
-    ids = group_ids.to_s.split(' ').uniq
-    ids.blank? ? [] : Sys::Group.where(id: ids).to_a
+    Sys::Group.where(id: group_ids.to_s.split)
   end
 end
