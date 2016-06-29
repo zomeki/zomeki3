@@ -1,56 +1,45 @@
-# encoding: utf-8
 module Sys::Model::Rel::EditableGroup
   def self.included(mod)
-    mod.belongs_to :editable_group, :foreign_key => 'unid', :class_name => 'Sys::EditableGroup',
-      :dependent => :destroy
-    
+    mod.has_one :editable_group, class_name: 'Sys::EditableGroup', dependent: :destroy, as: :editable
     mod.after_save :save_editable_groups
   end
-  
-  def in_editable_groups
-    unless val = @in_editable_groups
-      val = []
-      val = editable_group.group_ids.to_s.split(' ').uniq if editable_group
-      @in_editable_groups = val
-    end
-    @in_editable_groups
-  end
-  
+
+  # setter always returns supplied argument
   def in_editable_groups=(ids)
-    _ids = []
-    if ids.is_a?(Array)
-      _ids = ids
-    elsif ids.is_a?(Hash)
-      ids.each {|key, val| _ids << val unless val.blank? }
-    else
-      _ids = ids.to_s.split(' ').uniq
-    end
-    @editable_group_ids = _ids
+    @editable_group_ids = (case ids
+                           when Array
+                             ids
+                           when Hash
+                             ids.values
+                           else
+                             ids.to_s.split
+                           end).uniq
   end
-  
+
+  def in_editable_groups
+    @editable_group_ids ||= if (eg = editable_group)
+                              eg.group_ids.to_s.split.uniq
+                            else
+                              []
+                            end
+  end
+
+  private
+
   def save_editable_groups
-    return false unless unid
-    return true unless @editable_group_ids
+    return true unless @editable_group_ids.kind_of?(Array)
 
-    all_group = @editable_group_ids.delete('ALL')
-
-    value = @editable_group_ids.join(' ').strip
+    all = !!@editable_group_ids.delete('ALL')
+    group_ids = @editable_group_ids.join(' ').strip
     @editable_group_ids = nil
-    
+
     if editable_group
-      editable_group.group_ids = value
-      editable_group.all = !!all_group
+      editable_group.group_ids = group_ids
+      editable_group.all = all
       editable_group.save
     else
-      group = Sys::EditableGroup.new
-      group.id         = unid
-      group.created_at = Core.now
-      group.updated_at = Core.now
-      group.group_ids  = value
-      group.all = !!all_group
-      return false unless group.save_with_direct_sql
-      editable_group(true)
+      eg = build_editable_group(group_ids: group_ids, all: all)
+      eg.save
     end
-    return true
   end
 end
