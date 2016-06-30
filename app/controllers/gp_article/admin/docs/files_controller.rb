@@ -7,8 +7,8 @@ class GpArticle::Admin::Docs::FilesController < Cms::Controller::Admin::Base
   def pre_dispatch
     return http_error(404) unless @content = GpArticle::Content::Doc.find_by(id: params[:content])
 
-    if (@doc_id = params[:doc_id]) =~ /^[0-9a-z]{32}$/
-      @tmp_unid = @doc_id
+    if (@doc_id = params[:doc_id]) =~ /\A[0-9a-z]{32}\z/
+      @tmp_id = @doc_id
     else
       @doc = @content.all_docs.find(@doc_id)
     end
@@ -16,7 +16,8 @@ class GpArticle::Admin::Docs::FilesController < Cms::Controller::Admin::Base
 
   def index
     @item = Sys::File.new
-    @items = Sys::File.where(tmp_id: @tmp_unid, parent_unid: @doc.try(:unid)).paginate(page: params[:page], per_page: 20).order(:name)
+    @items = Sys::File.where(tmp_id: @tmp_id).paginate(page: params[:page], per_page: 20).order(:name)
+    @items = @items.where(file_attachable_id: @doc.id, file_attachable_type: @doc.class.name) if @doc
     if Page.smart_phone?
       render 'index_smart_phone', layout: 'admin/gp_article_files_smart_phone'
     else
@@ -39,10 +40,10 @@ class GpArticle::Admin::Docs::FilesController < Cms::Controller::Admin::Base
     success = failure = 0
 
     files.each_with_index do |file, i|
-      attrs = { file: files[i], name: names[i], title: titles[i] }
+      attrs = {file: files[i], name: names[i], title: titles[i]}
       item = Sys::File.new(attrs)
-      item.tmp_id = @tmp_unid
-      item.parent_unid = @doc.try(:unid)
+      item.tmp_id = @tmp_id
+      item.file_attachable = @doc if @doc
 
       if (duplicated = item.duplicated)
         item = duplicated
@@ -55,14 +56,16 @@ class GpArticle::Admin::Docs::FilesController < Cms::Controller::Admin::Base
         success += 1
       else
         failure += 1
-        item.errors.to_a.each { |msg| @item.errors.add(:base, "#{attrs[:name]}: #{msg}") }
+        item.errors.to_a.each {|msg| @item.errors.add(:base, "#{attrs[:name]}: #{msg}") }
       end
     end
 
-    flash[:notice] = "#{success}件の登録処理が完了しました。（#{I18n.l Time.now}）" if success != 0
-    flash[:alert]  = "#{failure}件の登録処理に失敗しました。" if failure != 0
+    flash[:notice] = "#{success}件の登録処理が完了しました。（#{I18n.l Time.now}）" if success > 0
+    flash[:alert]  = "#{failure}件の登録処理に失敗しました。" if failure > 0
 
-    @items = Sys::File.where(tmp_id: @tmp_unid, parent_unid: @doc.try(:unid)).paginate(page: params[:page], per_page: 20).order(:name)
+    @items = Sys::File.where(tmp_id: @tmp_id).paginate(page: params[:page], per_page: 20).order(:name)
+    @items = @items.where(file_attachable_id: @doc.id, file_attachable_type: @doc.class.name) if @doc
+
     render action: :index
   end
 
@@ -81,7 +84,9 @@ class GpArticle::Admin::Docs::FilesController < Cms::Controller::Admin::Base
   end
 
   def content
-    if (file = Sys::File.where(tmp_id: @tmp_unid, parent_unid: @doc.try(:unid), name: "#{params[:basename]}.#{params[:extname]}").first)
+    files = Sys::File.where(tmp_id: @tmp_id, name: "#{params[:basename]}.#{params[:extname]}")
+    files = files.where(file_attachable_id: @doc.id, file_attachable_type: @doc.class.name) if @doc
+    if (file = files.first)
       mt = Rack::Mime.mime_type(".#{params[:extname]}")
       if mt == 'text/csv' && params[:convert] == 'csv:table'
         begin

@@ -1,16 +1,13 @@
-# encoding: utf-8
 module Sys::Model::Rel::File
   def self.included(mod)
-    mod.has_many :files, :foreign_key => 'parent_unid', :class_name => 'Sys::File',
-      :primary_key => 'unid', :dependent => :destroy
-
+    mod.has_many :files, class_name: 'Sys::File', dependent: :destroy, as: :file_attachable
     mod.before_save :publish_files
     mod.before_save :close_files
   end
 
   ## Remove the temporary flag.
   def fix_tmp_files(tmp_id)
-    Sys::File.fix_tmp_files(tmp_id, unid)
+    Sys::File.fix_tmp_files(tmp_id, self)
     return true
   end
 
@@ -20,21 +17,19 @@ module Sys::Model::Rel::File
 
   def publish_files
     return true unless @save_mode == :publish
-    return true if files.size == 0
+    return true if files.empty?
 
     dir = public_files_path
     FileUtils.mkdir_p(dir) unless FileTest.exist?(dir)
 
     files.each do |file|
       next unless FileTest.exist?(file.upload_path)
-      new_file = dir + '/' + file.name
-      if FileTest.exist?(new_file)
-        if File::stat(new_file).mtime >= File::stat(file.upload_path).mtime
-          next
-        end
+      if FileTest.exist?(new_file = "#{dir}/#{file.name}")
+        next if File::stat(new_file).mtime >= File::stat(file.upload_path).mtime
       end
-      FileUtils.cp(file.upload_path, dir + '/' + file.name) if FileTest.exist?(file.upload_path)
+      FileUtils.cp(file.upload_path, new_file) if FileTest.exist?(file.upload_path)
     end
+
     return true
   end
 
