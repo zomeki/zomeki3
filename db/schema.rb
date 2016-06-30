@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160629214849) do
+ActiveRecord::Schema.define(version: 20160630054010) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1361,7 +1361,11 @@ ActiveRecord::Schema.define(version: 20160629214849) do
     t.datetime "updated_at"
     t.datetime "process_at"
     t.string   "name"
+    t.integer  "processable_id"
+    t.string   "processable_type"
   end
+
+  add_index "sys_tasks", ["processable_type", "processable_id"], name: "index_sys_tasks_on_processable_type_and_processable_id", using: :btree
 
   create_table "sys_temp_texts", force: :cascade do |t|
     t.text     "content"
