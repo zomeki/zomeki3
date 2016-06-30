@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160629113937) do
+ActiveRecord::Schema.define(version: 20160629214849) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1182,8 +1182,11 @@ ActiveRecord::Schema.define(version: 20160629113937) do
     t.integer  "image_is"
     t.integer  "image_width"
     t.integer  "image_height"
+    t.integer  "file_attachable_id"
+    t.string   "file_attachable_type"
   end
 
+  add_index "sys_files", ["file_attachable_type", "file_attachable_id"], name: "index_sys_files_on_file_attachable_type_and_file_attachable_id", using: :btree
   add_index "sys_files", ["parent_unid", "name"], name: "index_sys_files_on_parent_unid_and_name", using: :btree
 
   create_table "sys_groups", force: :cascade do |t|

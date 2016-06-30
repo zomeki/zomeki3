@@ -4,6 +4,8 @@ class Sys::File < ActiveRecord::Base
   include Sys::Model::Rel::Unid
   include Sys::Model::Rel::Creator
 
+  belongs_to :file_attachable, polymorphic: true
+
   ## garbage collect
   def self.garbage_collect
     self.where.not(tmp_id: nil).where(parent_unid: nil)

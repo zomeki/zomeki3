@@ -1,9 +1,6 @@
-# encoding: utf-8
 module Sys::Model::Rel::File
   def self.included(mod)
-    mod.has_many :files, :foreign_key => 'parent_unid', :class_name => 'Sys::File',
-      :primary_key => 'unid', :dependent => :destroy
-
+    mod.has_many :files, class_name: 'Sys::File', dependent: :destroy, as: :file_attachable
     mod.before_save :publish_files
     mod.before_save :close_files
   end
