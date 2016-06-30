@@ -1,35 +1,34 @@
 class Sys::Script::TasksController < ApplicationController
   def exec
     tasks = Sys::Task.where(Sys::Task.arel_table[:process_at].lteq(3.minutes.since))
-                     .order(:process_at)
-                     .includes(:unid_data)
+                     .order(:process_at).includes(:processable)
 
     Script.total tasks.size
 
-    return render(:text => 'No Tasks') if tasks.empty?
+    return render(text: 'No Tasks') if tasks.empty?
 
     tasks.each do |task|
       begin
-        unless unid = task.unid_data
+        unless task.processable
           task.destroy
-          raise 'Unid Not Found'
+          raise 'Processable Not Found'
         end
-        
-        model = unid.model.underscore.pluralize
-        item  = eval(unid.model).find_by(unid: unid.id)
-        
-        model = "cms/nodes" if model == "cms/model/node/pages" # for v1.1.7
-        ctl   = model.gsub(/^(.*?)\//, '\1/script/')
-        act   = "#{task.name}_by_task"
-        
-        params.merge!({:unid => unid, :task => task, :item => item})
-        render_component_into_view :controller => ctl, :action => act, :params => params
+
+        item = task.processable
+        model = item.class.name.underscore.pluralize
+        model = 'cms/nodes' if model == 'cms/model/node/pages' # for v1.1.7
+
+        ctl = model.gsub(/\A(.*?)\//, '\1/script/')
+        act = "#{task.name}_by_task"
+        prms = params.merge(task: task, item: item)
+
+        render_component_into_view controller: ctl, action: act, params: prms
       rescue => e
         Script.error e
         puts "Error: #{e}"
       end
     end
-    
-    render(:text => "OK")
+
+    render(text: 'OK')
   end
 end
