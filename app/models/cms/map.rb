@@ -1,6 +1,8 @@
 class Cms::Map < ActiveRecord::Base
   include Sys::Model::Base
-  
+
+  belongs_to :map_attachable, polymorphic: true
+
   has_many :markers_tmp, :foreign_key => 'map_id', :class_name => 'Cms::MapMarker',
     :dependent => :destroy
 

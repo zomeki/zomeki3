@@ -1,11 +1,9 @@
 module Cms::Model::Rel::Map
   def self.included(mod)
-    mod.has_many :maps, :primary_key => 'unid', :foreign_key => 'unid', :class_name => 'Cms::Map',
-      :dependent => :destroy
-      
+    mod.has_many :maps, class_name: 'Cms::Map', dependent: :destroy, as: :map_attachable
     mod.after_save :save_maps
   end
-  
+
   def in_maps
     unless val = @in_maps
       val = []
