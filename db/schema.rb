@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160630054010) do
+ActiveRecord::Schema.define(version: 20160704062912) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -427,7 +427,11 @@ ActiveRecord::Schema.define(version: 20160630054010) do
     t.text     "point5_name"
     t.text     "point5_lat"
     t.text     "point5_lng"
+    t.integer  "map_attachable_id"
+    t.string   "map_attachable_type"
   end
+
+  add_index "cms_maps", ["map_attachable_type", "map_attachable_id"], name: "index_cms_maps_on_map_attachable_type_and_map_attachable_id", using: :btree
 
   create_table "cms_nodes", force: :cascade do |t|
     t.integer  "unid"
