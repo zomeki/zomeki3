@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160707142739) do
+ActiveRecord::Schema.define(version: 20160707142943) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -863,7 +863,6 @@ ActiveRecord::Schema.define(version: 20160707142739) do
   add_index "gp_category_categorizations", ["category_id"], name: "index_gp_category_categorizations_on_category_id", using: :btree
 
   create_table "gp_category_category_types", force: :cascade do |t|
-    t.integer  "unid"
     t.integer  "content_id"
     t.integer  "concept_id"
     t.integer  "layout_id"
