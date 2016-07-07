@@ -2,7 +2,6 @@
 class GpArticle::Doc < ActiveRecord::Base
   include Sys::Model::Base
   include Sys::Model::Base::OperationLog
-  include Sys::Model::Rel::Unid
   include Sys::Model::Rel::Creator
   include Sys::Model::Rel::Editor
   include Sys::Model::Rel::EditableGroup
@@ -403,7 +402,6 @@ class GpArticle::Doc < ActiveRecord::Base
 
     new_attributes[:state] = 'draft'
     new_attributes[:id] = nil
-    new_attributes[:unid] = nil
     new_attributes[:created_at] = nil
     new_attributes[:prev_edition_id] = nil
 

@@ -11,7 +11,7 @@ else
   users = Sys::User.where(state: 'enabled').order(:id)
 end
 
-if !item.unid && !params[f.object_name]
+unless params[f.object_name]
   item.in_creator = {
     'group_id' => Core.user_group.id,
     'user_id'  => Core.user.id
