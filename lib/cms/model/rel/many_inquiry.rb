@@ -1,9 +1,7 @@
 # encoding: utf-8
 module Cms::Model::Rel::ManyInquiry
-
   def self.included(mod)
-    mod.has_many :inquiries, :foreign_key => 'parent_unid', :primary_key => 'unid', :class_name => 'Cms::Inquiry',
-      :dependent => :destroy
+    mod.has_many :inquiries, class_name: 'Cms::Inquiry', dependent: :destroy, as: :inquirable
     mod.accepts_nested_attributes_for :inquiries, :allow_destroy => true
 
     mod.after_save :save_inquiry_parent_unid
