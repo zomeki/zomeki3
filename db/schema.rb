@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160707022625) do
+ActiveRecord::Schema.define(version: 20160707135704) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -699,7 +699,6 @@ ActiveRecord::Schema.define(version: 20160707022625) do
   add_index "gp_article_comments", ["doc_id"], name: "index_gp_article_comments_on_doc_id", using: :btree
 
   create_table "gp_article_docs", force: :cascade do |t|
-    t.integer  "unid"
     t.integer  "concept_id"
     t.integer  "content_id"
     t.string   "title"
