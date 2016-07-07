@@ -26,7 +26,11 @@ module Sys::Model::Rel::Creator
   private
 
   def creator_attributes
-    @creator_attributes ||= {}.with_indifferent_access
+    return @creator_attributes if @creator_attributes
+    @creator_attributes = {}.with_indifferent_access.tap do |attrs|
+      next unless creator
+      ATTRIBUTE_NAMES.each {|n| attrs[n] = creator[n].presence }
+    end
   end
 
   def save_creator
