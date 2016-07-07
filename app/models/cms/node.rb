@@ -226,13 +226,6 @@ class Cms::Node < ActiveRecord::Base
     self.sitemap_state == 'visible'
   end
 
-  def set_inquiry_group
-    inquiries.each_with_index do |inquiry, i|
-      next if i != 0
-      inquiry.group_id = in_creator["group_id"]
-    end
-  end
-
   def pdf_in_body?(html)
     extract_links(html, false).any?{|l| l[:url] =~ /\.pdf$/i }
   end

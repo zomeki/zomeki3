@@ -2,9 +2,7 @@
 module Cms::Model::Rel::ManyInquiry
   def self.included(mod)
     mod.has_many :inquiries, class_name: 'Cms::Inquiry', dependent: :destroy, as: :inquirable
-    mod.accepts_nested_attributes_for :inquiries, :allow_destroy => true
-
-    mod.after_save :save_inquiry_parent_unid
+    mod.accepts_nested_attributes_for :inquiries, allow_destroy: true, reject_if: :reject_inquiry
   end
 
   def inquiry_states
@@ -39,13 +37,6 @@ module Cms::Model::Rel::ManyInquiry
     end
   end
 
-  def save_inquiry_parent_unid
-    inquiries.each do |inquiry|
-      inquiry.update_attribute(:parent_unid, unid) if inquiry.parent_unid.blank?
-      inquiry.destroy if inquiry.group_id.blank?
-    end
-  end
-
   def default_inquiry_state
     if content && content.inquiry_extra_values
       content.inquiry_extra_values[:state]
@@ -64,5 +55,20 @@ module Cms::Model::Rel::ManyInquiry
 
   def inquiry_display_field?(name)
     inquiry_display_fields.include?(name.to_s)
+  end
+
+  def set_inquiry_group
+    return if (group_id = in_creator[:group_id]).blank?
+    return if group_id.to_i.in?(inquiries.map(&:group_id))
+    inquiries.build(group_id: group_id)
+  end
+
+  private
+
+  def reject_inquiry(attributes)
+    exists = attributes[:id].present?
+    invalid = attributes[:group_id].blank?
+    attributes.merge!(_destroy: 1) if exists && invalid
+    !exists && invalid
   end
 end

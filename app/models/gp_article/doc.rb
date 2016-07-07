@@ -750,13 +750,6 @@ class GpArticle::Doc < ActiveRecord::Base
     "#{::File.dirname(public_path)}/file_contents"
   end
 
-  def set_inquiry_group
-    inquiries.each_with_index do |inquiry, i|
-      next if i != 0
-      inquiry.group_id = in_creator["group_id"]
-    end
-  end
-
   def qrcode_path
     return @public_qrcode_path if @public_qrcode_path
     "#{::File.dirname(public_path)}/qrcode.png"
