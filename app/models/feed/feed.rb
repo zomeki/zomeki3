@@ -1,7 +1,6 @@
 # encoding: utf-8
 class Feed::Feed < ActiveRecord::Base
   include Sys::Model::Base
-  include Sys::Model::Rel::Unid
   include Sys::Model::Rel::Creator
   include Cms::Model::Auth::Content
 
