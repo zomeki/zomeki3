@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160711033007) do
+ActiveRecord::Schema.define(version: 20160711033848) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -768,7 +768,6 @@ ActiveRecord::Schema.define(version: 20160711033007) do
   end
 
   create_table "gp_calendar_events", force: :cascade do |t|
-    t.integer  "unid"
     t.integer  "content_id"
     t.string   "state"
     t.date     "started_on"
@@ -797,7 +796,6 @@ ActiveRecord::Schema.define(version: 20160711033007) do
   end
 
   create_table "gp_calendar_holidays", force: :cascade do |t|
-    t.integer  "unid"
     t.integer  "content_id"
     t.string   "state"
     t.string   "title"
