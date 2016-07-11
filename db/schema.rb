@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160711033848) do
+ActiveRecord::Schema.define(version: 20160711062403) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -923,7 +923,6 @@ ActiveRecord::Schema.define(version: 20160711033848) do
   add_index "gp_template_items", ["template_id"], name: "index_gp_template_items_on_template_id", using: :btree
 
   create_table "gp_template_templates", force: :cascade do |t|
-    t.integer  "unid"
     t.integer  "content_id"
     t.string   "state"
     t.string   "title"

@@ -1,7 +1,6 @@
 # encoding: utf-8
 class GpTemplate::Template < ActiveRecord::Base
   include Sys::Model::Base
-  include Sys::Model::Rel::Unid
   include Sys::Model::Rel::Creator
   include Cms::Model::Auth::Content
 
@@ -35,7 +34,6 @@ class GpTemplate::Template < ActiveRecord::Base
   def duplicate
     item = self.class.new(self.attributes)
     item.id            = nil
-    item.unid          = nil
     item.created_at    = nil
     item.updated_at    = nil
 
