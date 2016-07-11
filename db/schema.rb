@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160711004031) do
+ActiveRecord::Schema.define(version: 20160711014004) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -62,7 +62,6 @@ ActiveRecord::Schema.define(version: 20160711004031) do
   end
 
   create_table "approval_approval_flows", force: :cascade do |t|
-    t.integer  "unid"
     t.integer  "content_id"
     t.string   "title"
     t.integer  "group_id"
