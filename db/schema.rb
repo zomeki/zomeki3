@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160711023125) do
+ActiveRecord::Schema.define(version: 20160711033007) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -656,7 +656,6 @@ ActiveRecord::Schema.define(version: 20160711023125) do
   add_index "gnav_category_sets", ["menu_item_id"], name: "index_gnav_category_sets_on_menu_item_id", using: :btree
 
   create_table "gnav_menu_items", force: :cascade do |t|
-    t.integer  "unid"
     t.integer  "content_id"
     t.integer  "concept_id"
     t.string   "state"

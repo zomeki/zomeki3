@@ -1,6 +1,5 @@
 class Gnav::MenuItem < ActiveRecord::Base
   include Sys::Model::Base
-  include Sys::Model::Rel::Unid
   include Sys::Model::Rel::Creator
   include Cms::Model::Auth::Content
   include Cms::Model::Base::Page

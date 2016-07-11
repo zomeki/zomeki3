@@ -10,7 +10,7 @@ class Gnav::Admin::MenuItemsController < Cms::Controller::Admin::Base
       @category_types = gccct.category_types
       @category_types_for_option = gccct.category_types_for_option
     else
-      redirect_to gnav_content_settings_path, :alert => '汎用カテゴリタイプを設定してください。'
+      redirect_to gnav_content_settings_path, :alert => 'カテゴリタイプを設定してください。'
     end
   end
 
