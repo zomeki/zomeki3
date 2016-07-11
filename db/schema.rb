@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160711014004) do
+ActiveRecord::Schema.define(version: 20160711020951) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -115,7 +115,6 @@ ActiveRecord::Schema.define(version: 20160711014004) do
   add_index "approval_assignments", ["user_id"], name: "index_approval_assignments_on_user_id", using: :btree
 
   create_table "biz_calendar_bussiness_holidays", force: :cascade do |t|
-    t.integer  "unid"
     t.integer  "place_id"
     t.string   "state"
     t.integer  "type_id"
@@ -134,7 +133,6 @@ ActiveRecord::Schema.define(version: 20160711014004) do
   end
 
   create_table "biz_calendar_bussiness_hours", force: :cascade do |t|
-    t.integer  "unid"
     t.integer  "place_id"
     t.string   "state"
     t.date     "fixed_start_date"
@@ -154,7 +152,6 @@ ActiveRecord::Schema.define(version: 20160711014004) do
   end
 
   create_table "biz_calendar_exception_holidays", force: :cascade do |t|
-    t.integer  "unid"
     t.integer  "place_id"
     t.string   "state"
     t.date     "start_date"
@@ -164,7 +161,6 @@ ActiveRecord::Schema.define(version: 20160711014004) do
   end
 
   create_table "biz_calendar_holiday_types", force: :cascade do |t|
-    t.integer  "unid"
     t.integer  "content_id"
     t.string   "state"
     t.string   "name"
@@ -176,7 +172,6 @@ ActiveRecord::Schema.define(version: 20160711014004) do
   add_index "biz_calendar_holiday_types", ["content_id"], name: "index_biz_calendar_holiday_types_on_content_id", using: :btree
 
   create_table "biz_calendar_places", force: :cascade do |t|
-    t.integer  "unid"
     t.integer  "content_id"
     t.string   "state"
     t.string   "url"
