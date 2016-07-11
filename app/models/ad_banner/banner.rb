@@ -2,7 +2,6 @@
 class AdBanner::Banner < ActiveRecord::Base
   include Sys::Model::Base
   include Sys::Model::Base::File
-  include Sys::Model::Rel::Unid
   include Sys::Model::Rel::Creator
   include Cms::Model::Auth::Content
 

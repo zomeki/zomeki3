@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160707142943) do
+ActiveRecord::Schema.define(version: 20160711004031) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,7 +24,6 @@ ActiveRecord::Schema.define(version: 20160707142943) do
     t.integer  "image_is"
     t.integer  "image_width"
     t.integer  "image_height"
-    t.integer  "unid"
     t.integer  "content_id"
     t.integer  "group_id"
     t.string   "state"
@@ -54,7 +53,6 @@ ActiveRecord::Schema.define(version: 20160707142943) do
   end
 
   create_table "ad_banner_groups", force: :cascade do |t|
-    t.integer  "unid"
     t.integer  "content_id"
     t.string   "name"
     t.string   "title"
