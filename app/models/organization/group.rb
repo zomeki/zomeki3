@@ -1,6 +1,5 @@
 class Organization::Group < ActiveRecord::Base
   include Sys::Model::Base
-  include Sys::Model::Rel::Unid
   include Sys::Model::Rel::Creator
   include Cms::Model::Base::Page::Publisher
 
