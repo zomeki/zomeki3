@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160712070754) do
+ActiveRecord::Schema.define(version: 20160712074857) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1063,7 +1063,6 @@ ActiveRecord::Schema.define(version: 20160712070754) do
   add_index "survey_form_answers", ["form_id"], name: "index_survey_form_answers_on_form_id", using: :btree
 
   create_table "survey_forms", force: :cascade do |t|
-    t.integer  "unid"
     t.integer  "content_id"
     t.string   "state"
     t.string   "name"
