@@ -1,7 +1,6 @@
 class Survey::Form < ActiveRecord::Base
   include Sys::Model::Base
   include Sys::Model::Base::OperationLog
-  include Sys::Model::Rel::Unid
   include Sys::Model::Rel::Creator
   include Sys::Model::Rel::EditableGroup
   include Sys::Model::Rel::Task
@@ -194,7 +193,6 @@ class Survey::Form < ActiveRecord::Base
   def duplicate
     item = self.class.new(self.attributes)
     item.id            = nil
-    item.unid          = nil
     item.created_at    = nil
     item.updated_at    = nil
     item.in_tasks      = nil
