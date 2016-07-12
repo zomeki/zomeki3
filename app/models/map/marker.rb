@@ -1,7 +1,6 @@
 # encoding: utf-8
 class Map::Marker < ActiveRecord::Base
   include Sys::Model::Base
-  include Sys::Model::Rel::Unid
   include Sys::Model::Rel::File
   include Cms::Model::Auth::Content
 
