@@ -9,10 +9,8 @@ class Sys::Admin::ObjectPrivilegesController < Cms::Controller::Admin::Base
   end
   
   def index
-    @items = Sys::ObjectPrivilege.joins(:concept).where(role_id: @parent.id)
-      .group(:item_unid).order('cms_concepts.name')
+    @items = Sys::ObjectPrivilege.joins(:concept).where(role_id: @parent.id).order('cms_concepts.name')
       .paginate(page: params[:page], per_page: params[:limit])
-
     _index @items
   end
   
@@ -27,21 +25,23 @@ class Sys::Admin::ObjectPrivilegesController < Cms::Controller::Admin::Base
       :role_id => @parent.id
     )
   end
-  
+
   def create
     @item = Sys::ObjectPrivilege.new(privilege_params)
-    @item.role_id    = @parent.id
-    @item.in_actions = {} unless params[:item][:in_actions]
+    @item.role_id = @parent.id
+    @item.privilegable ||= @item.concept
+    @item.in_actions = {} unless privilege_params[:in_actions]
     _create @item
   end
-  
+
   def update
     @item = Sys::ObjectPrivilege.find(params[:id])
     @item.attributes = privilege_params
-    @item.in_actions = {} unless params[:item][:in_actions]
+    @item.privilegable ||= @item.concept
+    @item.in_actions = {} unless privilege_params[:in_actions]
     _update @item
   end
-  
+
   def destroy
     @item = Sys::ObjectPrivilege.find(params[:id])
     _destroy @item do
@@ -50,6 +50,6 @@ class Sys::Admin::ObjectPrivilegesController < Cms::Controller::Admin::Base
   end
 
   def privilege_params
-    params.require(:item).permit(:item_unid, in_actions: [:read, :create, :update, :delete])
+    params.require(:item).permit(:concept_id, in_actions: [:read, :create, :update, :delete])
   end
 end
