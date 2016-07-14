@@ -3,12 +3,11 @@ class Cms::Piece < ActiveRecord::Base
   include Sys::Model::Base
   include Cms::Model::Base::Piece
   include Cms::Model::Base::Page::Publisher
-  include Sys::Model::Rel::Unid
-  include Sys::Model::Rel::UnidRelation
   include Sys::Model::Rel::Creator
   include Cms::Model::Rel::Site
   include Cms::Model::Rel::Concept
   include Cms::Model::Rel::Content
+  include Sys::Model::Rel::ObjectRelation
   include Cms::Model::Auth::Concept
 
   include StateText
@@ -107,7 +106,6 @@ class Cms::Piece < ActiveRecord::Base
 
     new_attributes = self.attributes
     new_attributes[:id] = nil
-    new_attributes[:unid] = nil
     new_attributes[:created_at] = nil
     new_attributes[:updated_at] = nil
     new_attributes[:recognized_at] = nil
@@ -136,13 +134,7 @@ class Cms::Piece < ActiveRecord::Base
       dupe_setting.save(:validate => false)
     end
 
-    if rel_type == :replace
-      rel = Sys::UnidRelation.new
-      rel.unid     = item.unid
-      rel.rel_unid = self.unid
-      rel.rel_type = 'replace'
-      rel.save
-    end
+    Sys::ObjectRelation.create(source: item, related: self, relation_type: 'replace') if rel_type == :replace
 
     return item
   end
