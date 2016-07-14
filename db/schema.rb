@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160714030742) do
+ActiveRecord::Schema.define(version: 20160714031024) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1127,7 +1127,6 @@ ActiveRecord::Schema.define(version: 20160714030742) do
   add_index "sys_editable_groups", ["editable_type", "editable_id"], name: "index_sys_editable_groups_on_editable_type_and_editable_id", using: :btree
 
   create_table "sys_editors", force: :cascade do |t|
-    t.integer  "parent_unid"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
