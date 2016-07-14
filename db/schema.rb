@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160714150502) do
+ActiveRecord::Schema.define(version: 20160714150614) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -487,7 +487,6 @@ ActiveRecord::Schema.define(version: 20160714150502) do
   add_index "cms_piece_settings", ["piece_id"], name: "index_cms_piece_settings_on_piece_id", using: :btree
 
   create_table "cms_pieces", force: :cascade do |t|
-    t.integer  "unid"
     t.integer  "concept_id"
     t.integer  "site_id",        null: false
     t.string   "state"
