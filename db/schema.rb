@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160714043758) do
+ActiveRecord::Schema.define(version: 20160714044412) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1159,7 +1159,6 @@ ActiveRecord::Schema.define(version: 20160714043758) do
   add_index "sys_files", ["file_attachable_type", "file_attachable_id"], name: "index_sys_files_on_file_attachable_type_and_file_attachable_id", using: :btree
 
   create_table "sys_groups", force: :cascade do |t|
-    t.integer  "unid"
     t.string   "state"
     t.string   "web_state"
     t.datetime "created_at"

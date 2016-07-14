@@ -5,7 +5,6 @@ class Sys::Group < ActiveRecord::Base
   include Sys::Model::Base::Config
   include Cms::Model::Base::Page::Publisher
   include Cms::Model::Base::Page::TalkTask
-  include Sys::Model::Rel::Unid
   include Sys::Model::Tree
   include Sys::Model::Auth::Manager
 
