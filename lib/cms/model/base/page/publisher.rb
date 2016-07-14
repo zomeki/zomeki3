@@ -2,8 +2,7 @@
 require 'digest/md5'
 module Cms::Model::Base::Page::Publisher
   def self.included(mod)
-    mod.has_many :publishers, :foreign_key => 'unid', :primary_key => 'unid', :class_name => 'Sys::Publisher',
-      :dependent => :destroy
+    mod.has_many :publishers, class_name: 'Sys::Publisher', dependent: :destroy, as: :publishable
     mod.after_save :close_page
   end
 
@@ -86,8 +85,7 @@ module Cms::Model::Base::Page::Publisher
   def publish_page(content, options = {})
     @published = false
     return false if content.nil?
-    save(:validate => false) if unid.nil? # path for Article::Unit
-    return false if unid.nil?
+    save(validate: false)
 
     content = content.gsub(%r!zdel_.+?/!i, '')
 
@@ -119,7 +117,6 @@ else
 end
 
     pub ||= Sys::Publisher.new
-    pub.unid         = unid
     pub.dependent    = options[:dependent] ? options[:dependent].to_s : nil
     pub.path         = path
     pub.content_hash = hash

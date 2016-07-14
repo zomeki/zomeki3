@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160714032259) do
+ActiveRecord::Schema.define(version: 20160714043758) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1288,8 +1288,11 @@ ActiveRecord::Schema.define(version: 20160714032259) do
     t.datetime "updated_at"
     t.string   "path"
     t.string   "content_hash"
+    t.integer  "publishable_id"
+    t.string   "publishable_type"
   end
 
+  add_index "sys_publishers", ["publishable_type", "publishable_id"], name: "index_sys_publishers_on_publishable_type_and_publishable_id", using: :btree
   add_index "sys_publishers", ["unid", "dependent"], name: "index_sys_publishers_on_unid_and_dependent", using: :btree
 
   create_table "sys_recognitions", force: :cascade do |t|
