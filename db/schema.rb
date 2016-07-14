@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160714024709) do
+ActiveRecord::Schema.define(version: 20160714030228) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -510,7 +510,6 @@ ActiveRecord::Schema.define(version: 20160714024709) do
   add_index "cms_pieces", ["concept_id", "name", "state"], name: "index_cms_pieces_on_concept_id_and_name_and_state", using: :btree
 
   create_table "cms_site_basic_auth_users", force: :cascade do |t|
-    t.integer  "unid"
     t.string   "state"
     t.integer  "site_id"
     t.string   "name"
