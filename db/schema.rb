@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160714015734) do
+ActiveRecord::Schema.define(version: 20160714015914) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -292,7 +292,6 @@ ActiveRecord::Schema.define(version: 20160714015734) do
   add_index "cms_feed_entries", ["feed_id", "content_id", "entry_updated"], name: "idx_cms_feed_entries_on_f_id_and_c_id_and_e_updated", using: :btree
 
   create_table "cms_feeds", force: :cascade do |t|
-    t.integer  "unid"
     t.integer  "content_id"
     t.text     "state"
     t.datetime "created_at"

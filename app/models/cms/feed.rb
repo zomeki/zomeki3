@@ -2,7 +2,6 @@
 class Cms::Feed < ActiveRecord::Base
   include Sys::Model::Base
   include Cms::Model::Base::Page
-  include Sys::Model::Rel::Unid
   include Sys::Model::Rel::Creator
   include Cms::Model::Rel::Content
   include Cms::Model::Rel::Concept
