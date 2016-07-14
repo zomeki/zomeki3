@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160714015100) do
+ActiveRecord::Schema.define(version: 20160714015341) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -229,7 +229,6 @@ ActiveRecord::Schema.define(version: 20160714015100) do
   end
 
   create_table "cms_data_file_nodes", force: :cascade do |t|
-    t.integer  "unid"
     t.integer  "site_id"
     t.integer  "concept_id"
     t.datetime "created_at"
