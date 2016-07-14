@@ -6,12 +6,11 @@ class Cms::Node < ActiveRecord::Base
   include Cms::Model::Base::Page::TalkTask
   include Cms::Model::Base::Node
   include Sys::Model::Tree
-  include Sys::Model::Rel::Unid
-  include Sys::Model::Rel::UnidRelation
   include Sys::Model::Rel::Creator
   include Cms::Model::Rel::Site
   include Cms::Model::Rel::Concept
   include Cms::Model::Rel::Content
+  include Sys::Model::Rel::ObjectRelation
   include Cms::Model::Auth::Concept
 
   include StateText
@@ -259,10 +258,6 @@ protected
     validate :validate_recognizers,
       :if => %Q(state == "recognize")
     
-    def unid_model_name
-      'Cms::Node'
-    end
-    
     def states
       s = [['下書き保存','draft'],['承認待ち','recognize']]
       s << ['公開保存','public'] if Core.user.has_auth?(:manager)
@@ -313,7 +308,6 @@ protected
     def duplicate(rel_type = nil)
       item = self.class.new(self.attributes)
       item.id            = nil
-      item.unid          = nil
       item.created_at    = nil
       item.updated_at    = nil
       item.recognized_at = nil
@@ -342,13 +336,7 @@ protected
 
       return false unless item.save(:validate => false)
       
-      if rel_type == :replace
-        rel = Sys::UnidRelation.new
-        rel.unid     = item.unid
-        rel.rel_unid = self.unid
-        rel.rel_type = 'replace'
-        rel.save
-      end
+      Sys::ObjectRelation.create(source: item, related: self, relation_type: 'replace') if rel_type == :replace
       
       return item
     end
