@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160714045115) do
+ActiveRecord::Schema.define(version: 20160714045427) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1233,7 +1233,6 @@ ActiveRecord::Schema.define(version: 20160714045115) do
     t.integer  "role_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "item_unid"
     t.string   "action"
     t.integer  "privilegable_id"
     t.string   "privilegable_type"
@@ -1241,7 +1240,6 @@ ActiveRecord::Schema.define(version: 20160714045115) do
   end
 
   add_index "sys_object_privileges", ["concept_id"], name: "index_sys_object_privileges_on_concept_id", using: :btree
-  add_index "sys_object_privileges", ["item_unid", "action"], name: "index_sys_object_privileges_on_item_unid_and_action", using: :btree
   add_index "sys_object_privileges", ["privilegable_type", "privilegable_id"], name: "index_sys_object_privileges_on_privilegable", using: :btree
 
   create_table "sys_operation_logs", force: :cascade do |t|
