@@ -2,7 +2,6 @@
 class Cms::Site < ActiveRecord::Base
   include Sys::Model::Base
   include Sys::Model::Base::Page
-  include Sys::Model::Rel::Unid
   include Sys::Model::Rel::Creator
   include Sys::Model::Auth::Manager
   include Cms::Model::Rel::DataFile
