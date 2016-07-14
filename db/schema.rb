@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160712074857) do
+ActiveRecord::Schema.define(version: 20160714150614) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -190,7 +190,6 @@ ActiveRecord::Schema.define(version: 20160712074857) do
   add_index "biz_calendar_places", ["content_id"], name: "index_biz_calendar_places_on_content_id", using: :btree
 
   create_table "cms_concepts", force: :cascade do |t|
-    t.integer  "unid"
     t.integer  "parent_id"
     t.integer  "site_id"
     t.string   "state"
@@ -216,7 +215,6 @@ ActiveRecord::Schema.define(version: 20160712074857) do
   add_index "cms_content_settings", ["content_id"], name: "index_cms_content_settings_on_content_id", using: :btree
 
   create_table "cms_contents", force: :cascade do |t|
-    t.integer  "unid"
     t.integer  "site_id",        null: false
     t.integer  "concept_id"
     t.string   "state"
@@ -231,7 +229,6 @@ ActiveRecord::Schema.define(version: 20160712074857) do
   end
 
   create_table "cms_data_file_nodes", force: :cascade do |t|
-    t.integer  "unid"
     t.integer  "site_id"
     t.integer  "concept_id"
     t.datetime "created_at"
@@ -243,7 +240,6 @@ ActiveRecord::Schema.define(version: 20160712074857) do
   add_index "cms_data_file_nodes", ["concept_id", "name"], name: "index_cms_data_file_nodes_on_concept_id_and_name", using: :btree
 
   create_table "cms_data_files", force: :cascade do |t|
-    t.integer  "unid"
     t.integer  "site_id"
     t.integer  "concept_id"
     t.integer  "node_id"
@@ -263,7 +259,6 @@ ActiveRecord::Schema.define(version: 20160712074857) do
   add_index "cms_data_files", ["concept_id", "node_id", "name"], name: "index_cms_data_files_on_concept_id_and_node_id_and_name", using: :btree
 
   create_table "cms_data_texts", force: :cascade do |t|
-    t.integer  "unid"
     t.integer  "site_id"
     t.integer  "concept_id"
     t.string   "state"
@@ -297,7 +292,6 @@ ActiveRecord::Schema.define(version: 20160712074857) do
   add_index "cms_feed_entries", ["feed_id", "content_id", "entry_updated"], name: "idx_cms_feed_entries_on_f_id_and_c_id_and_e_updated", using: :btree
 
   create_table "cms_feeds", force: :cascade do |t|
-    t.integer  "unid"
     t.integer  "content_id"
     t.text     "state"
     t.datetime "created_at"
@@ -323,16 +317,13 @@ ActiveRecord::Schema.define(version: 20160712074857) do
     t.text     "tel"
     t.text     "fax"
     t.text     "email"
-    t.integer  "parent_unid"
     t.integer  "inquirable_id"
     t.string   "inquirable_type"
   end
 
   add_index "cms_inquiries", ["inquirable_type", "inquirable_id"], name: "index_cms_inquiries_on_inquirable_type_and_inquirable_id", using: :btree
-  add_index "cms_inquiries", ["parent_unid"], name: "index_cms_inquiries_on_parent_unid", using: :btree
 
   create_table "cms_kana_dictionaries", force: :cascade do |t|
-    t.integer  "unid"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "name"
@@ -342,7 +333,6 @@ ActiveRecord::Schema.define(version: 20160712074857) do
   end
 
   create_table "cms_layouts", force: :cascade do |t|
-    t.integer  "unid"
     t.integer  "concept_id"
     t.integer  "template_id"
     t.integer  "site_id",                null: false
@@ -399,7 +389,6 @@ ActiveRecord::Schema.define(version: 20160712074857) do
   add_index "cms_map_markers", ["map_id"], name: "index_cms_map_markers_on_map_id", using: :btree
 
   create_table "cms_maps", force: :cascade do |t|
-    t.integer  "unid"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "name"
@@ -429,7 +418,6 @@ ActiveRecord::Schema.define(version: 20160712074857) do
   add_index "cms_maps", ["map_attachable_type", "map_attachable_id"], name: "index_cms_maps_on_map_attachable_type_and_map_attachable_id", using: :btree
 
   create_table "cms_nodes", force: :cascade do |t|
-    t.integer  "unid"
     t.integer  "concept_id"
     t.integer  "site_id"
     t.string   "state"
@@ -499,7 +487,6 @@ ActiveRecord::Schema.define(version: 20160712074857) do
   add_index "cms_piece_settings", ["piece_id"], name: "index_cms_piece_settings_on_piece_id", using: :btree
 
   create_table "cms_pieces", force: :cascade do |t|
-    t.integer  "unid"
     t.integer  "concept_id"
     t.integer  "site_id",        null: false
     t.string   "state"
@@ -521,7 +508,6 @@ ActiveRecord::Schema.define(version: 20160712074857) do
   add_index "cms_pieces", ["concept_id", "name", "state"], name: "index_cms_pieces_on_concept_id_and_name_and_state", using: :btree
 
   create_table "cms_site_basic_auth_users", force: :cascade do |t|
-    t.integer  "unid"
     t.string   "state"
     t.integer  "site_id"
     t.string   "name"
@@ -552,7 +538,6 @@ ActiveRecord::Schema.define(version: 20160712074857) do
   add_index "cms_site_settings", ["site_id", "name"], name: "index_cms_site_settings_on_site_id_and_name", using: :btree
 
   create_table "cms_sites", force: :cascade do |t|
-    t.integer  "unid"
     t.string   "state"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -580,15 +565,16 @@ ActiveRecord::Schema.define(version: 20160712074857) do
   end
 
   create_table "cms_talk_tasks", force: :cascade do |t|
-    t.integer  "unid"
     t.string   "dependent"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "path"
     t.string   "content_hash"
+    t.string   "talk_processable_type"
+    t.integer  "talk_processable_id"
   end
 
-  add_index "cms_talk_tasks", ["unid", "dependent"], name: "index_cms_talk_tasks_on_unid_and_dependent", using: :btree
+  add_index "cms_talk_tasks", ["talk_processable_type", "talk_processable_id"], name: "index_cms_talk_tasks_on_talk_processable", using: :btree
 
   create_table "delayed_jobs", force: :cascade do |t|
     t.integer  "priority",   default: 0, null: false
@@ -1111,7 +1097,6 @@ ActiveRecord::Schema.define(version: 20160712074857) do
   add_index "sys_cache_sweepers", ["model", "uri"], name: "model", using: :btree
 
   create_table "sys_closers", force: :cascade do |t|
-    t.integer  "unid"
     t.string   "dependent"
     t.string   "path"
     t.string   "content_hash"
@@ -1120,8 +1105,6 @@ ActiveRecord::Schema.define(version: 20160712074857) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-  add_index "sys_closers", ["unid", "dependent"], name: "index_sys_closers_on_unid_and_dependent", using: :btree
 
   create_table "sys_creators", force: :cascade do |t|
     t.datetime "created_at"
@@ -1146,7 +1129,6 @@ ActiveRecord::Schema.define(version: 20160712074857) do
   add_index "sys_editable_groups", ["editable_type", "editable_id"], name: "index_sys_editable_groups_on_editable_type_and_editable_id", using: :btree
 
   create_table "sys_editors", force: :cascade do |t|
-    t.integer  "parent_unid"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
@@ -1158,9 +1140,7 @@ ActiveRecord::Schema.define(version: 20160712074857) do
   add_index "sys_editors", ["editable_type", "editable_id"], name: "index_sys_editors_on_editable_type_and_editable_id", using: :btree
 
   create_table "sys_files", force: :cascade do |t|
-    t.integer  "unid"
     t.string   "tmp_id"
-    t.integer  "parent_unid"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "name"
@@ -1175,10 +1155,8 @@ ActiveRecord::Schema.define(version: 20160712074857) do
   end
 
   add_index "sys_files", ["file_attachable_type", "file_attachable_id"], name: "index_sys_files_on_file_attachable_type_and_file_attachable_id", using: :btree
-  add_index "sys_files", ["parent_unid", "name"], name: "index_sys_files_on_parent_unid_and_name", using: :btree
 
   create_table "sys_groups", force: :cascade do |t|
-    t.integer  "unid"
     t.string   "state"
     t.string   "web_state"
     t.datetime "created_at"
@@ -1230,7 +1208,6 @@ ActiveRecord::Schema.define(version: 20160712074857) do
   add_index "sys_ldap_synchros", ["version", "parent_id", "entry_type"], name: "index_sys_ldap_synchros_on_version_and_parent_id_and_entry_type", using: :btree
 
   create_table "sys_maintenances", force: :cascade do |t|
-    t.integer  "unid"
     t.string   "state"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -1241,7 +1218,6 @@ ActiveRecord::Schema.define(version: 20160712074857) do
   end
 
   create_table "sys_messages", force: :cascade do |t|
-    t.integer  "unid"
     t.string   "state"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -1255,11 +1231,25 @@ ActiveRecord::Schema.define(version: 20160712074857) do
     t.integer  "role_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "item_unid"
     t.string   "action"
+    t.integer  "privilegable_id"
+    t.string   "privilegable_type"
+    t.integer  "concept_id"
   end
 
-  add_index "sys_object_privileges", ["item_unid", "action"], name: "index_sys_object_privileges_on_item_unid_and_action", using: :btree
+  add_index "sys_object_privileges", ["concept_id"], name: "index_sys_object_privileges_on_concept_id", using: :btree
+  add_index "sys_object_privileges", ["privilegable_type", "privilegable_id"], name: "index_sys_object_privileges_on_privilegable", using: :btree
+
+  create_table "sys_object_relations", force: :cascade do |t|
+    t.integer "source_id"
+    t.string  "source_type"
+    t.integer "related_id"
+    t.string  "related_type"
+    t.string  "relation_type"
+  end
+
+  add_index "sys_object_relations", ["related_type", "related_id"], name: "index_sys_object_relations_on_related_type_and_related_id", using: :btree
+  add_index "sys_object_relations", ["source_type", "source_id"], name: "index_sys_object_relations_on_source_type_and_source_id", using: :btree
 
   create_table "sys_operation_logs", force: :cascade do |t|
     t.integer  "loggable_id"
@@ -1274,7 +1264,6 @@ ActiveRecord::Schema.define(version: 20160712074857) do
     t.string   "action"
     t.string   "item_model"
     t.integer  "item_id"
-    t.integer  "item_unid"
     t.string   "item_name"
     t.integer  "site_id"
   end
@@ -1296,15 +1285,16 @@ ActiveRecord::Schema.define(version: 20160712074857) do
   end
 
   create_table "sys_publishers", force: :cascade do |t|
-    t.integer  "unid"
     t.string   "dependent"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "path"
     t.string   "content_hash"
+    t.integer  "publishable_id"
+    t.string   "publishable_type"
   end
 
-  add_index "sys_publishers", ["unid", "dependent"], name: "index_sys_publishers_on_unid_and_dependent", using: :btree
+  add_index "sys_publishers", ["publishable_type", "publishable_id"], name: "index_sys_publishers_on_publishable_type_and_publishable_id", using: :btree
 
   create_table "sys_recognitions", force: :cascade do |t|
     t.datetime "created_at"
@@ -1344,7 +1334,6 @@ ActiveRecord::Schema.define(version: 20160712074857) do
   end
 
   create_table "sys_tasks", force: :cascade do |t|
-    t.integer  "unid"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "process_at"
@@ -1561,4 +1550,5 @@ ActiveRecord::Schema.define(version: 20160712074857) do
     t.datetime "updated_at"
   end
 
+  add_foreign_key "sys_object_privileges", "cms_concepts", column: "concept_id"
 end

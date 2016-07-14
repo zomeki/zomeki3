@@ -2,7 +2,6 @@
 class Cms::Layout < ActiveRecord::Base
   include Sys::Model::Base
   include Cms::Model::Base::Page::Publisher
-  include Sys::Model::Rel::Unid
   include Sys::Model::Rel::Creator
   include Cms::Model::Rel::Site
   include Cms::Model::Rel::Concept
@@ -171,7 +170,6 @@ class Cms::Layout < ActiveRecord::Base
   def duplicate(rel_type = nil)
     item = self.class.new(self.attributes)
     item.id            = nil
-    item.unid          = nil
     item.created_at    = nil
     item.updated_at    = nil
     item.recognized_at = nil

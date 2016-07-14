@@ -2,7 +2,6 @@
 class Cms::DataFileNode < ActiveRecord::Base
   include Sys::Model::Base
   include Cms::Model::Base::Page
-  include Sys::Model::Rel::Unid
   include Sys::Model::Rel::Creator
   include Cms::Model::Rel::Site
   include Cms::Model::Rel::Concept

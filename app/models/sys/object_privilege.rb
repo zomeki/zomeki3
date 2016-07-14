@@ -4,31 +4,26 @@ class Sys::ObjectPrivilege < ActiveRecord::Base
   include Sys::Model::Base::Config
   include Sys::Model::Auth::Manager
 
-  belongs_to :unid_original, :foreign_key => 'item_unid', :class_name => 'Sys::Unid'
-  belongs_to :concept, :foreign_key => 'item_unid', :primary_key => 'unid', :class_name => 'Cms::Concept'
+  belongs_to :privilegable, polymorphic: true, required: true
+  belongs_to :concept, class_name: 'Cms::Concept'
   belongs_to :role_name, :foreign_key => 'role_id', :class_name => 'Sys::RoleName'
 
-  validates :role_id, :item_unid, presence: true
+  validates :role_id, presence: true
   validates :action, presence: true, if: %Q(in_actions.blank?)
 
   attr_accessor :in_actions
 
   def in_actions
-    unless @in_actions
-      @in_actions = actions
-    end
-    @in_actions
+    @in_actions ||= actions
   end
 
   def in_actions=(values)
     @_in_actions_changed = true
-    _values = []
-    unless values.blank?
-      values.each {|key, val| _values << key unless val.blank? }
-      @in_actions = _values
-    else
-      @in_actions = values
-    end
+    @in_actions = if values.kind_of?(Hash)
+                    values.map{|k, v| k if v.present? }.compact
+                  else
+                    []
+                  end
   end
 
   def action_labels(format = nil)
@@ -42,7 +37,7 @@ class Sys::ObjectPrivilege < ActiveRecord::Base
   end
 
   def privileges
-    self.class.where(:role_id => role_id, :item_unid => item_unid).order(:action)
+    self.class.where(role_id: role_id, privilegable: privilegable).order(:action)
   end
   
   def actions
@@ -72,32 +67,22 @@ class Sys::ObjectPrivilege < ActiveRecord::Base
     privileges.each {|priv| priv.destroy }
     return true
   end
-  
-protected
+
+  protected
+
   def save_actions
-    values = in_actions.clone
-    
-    old_privileges = self.class.where(role_id: role_id, item_unid: (self.item_unid_was || self.item_unid)).order(:action)
-    old_privileges.each do |priv|
-      if values.index(priv.action)
-        if item_unid != priv.item_unid
-          priv.item_unid = item_unid
-          priv.save
-        end
+    actions = in_actions.map(&:to_s)
+
+    privileges.each do |priv|
+      if actions.index(priv.action)
+        actions.delete(priv.action)
       else
         priv.destroy
       end
-      values.delete(priv.action)
     end
-    
-    values.each do |value|
-      Sys::ObjectPrivilege.new({
-        :role_id    => role_id,
-        :item_unid  => item_unid,
-        :action     => value
-      }).save
+
+    actions.each do |action|
+      privileges.create(action: action)
     end
-    
-    return true
   end
 end

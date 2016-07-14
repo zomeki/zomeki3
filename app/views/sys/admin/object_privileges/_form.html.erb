@@ -1,7 +1,7 @@
 <table class="show">
   <tr>
-    <th><%= @item.locale(:item_unid) %></th>
-    <td><%= f.select :item_unid, [["// #{h(Core.site.name)}", '']] + Core.site.concepts_for_option, :include_blank => true, :class => 'id' %></td>
+    <th><%= @item.locale(:concept_id) %></th>
+    <td><%= f.select :concept_id, [["// #{h(Core.site.name)}", '']] + Core.site.concepts_for_option, :include_blank => true, :class => 'id' %></td>
   </tr><tr>
     <th><%= @item.locale(:action) %></th>
     <td><%= f.check_boxes :in_actions, @item.action_labels, :class => 'name' %></td>

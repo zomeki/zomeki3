@@ -2,18 +2,17 @@
 require 'digest/md5'
 module Cms::Model::Base::Page::TalkTask
   def self.included(mod)
-    mod.has_many :talk_tasks, :foreign_key => 'unid', :primary_key => 'unid', :class_name => 'Cms::TalkTask',
-      :dependent => :destroy
+    mod.has_many :talk_tasks, class_name: 'Cms::TalkTask', dependent: :destroy, as: :talk_processable
     mod.after_save :delete_talk_tasks
   end
-  
+
   def publish_page(content, options = {})
     return false unless super
     pub = publishers.where(dependent: options[:dependent] ? options[:dependent].to_s : nil).first
     return true unless pub
     return true if pub.path !~ /\.html\z/
     #return true if !published? && ::File.exist?("#{pub.path}.mp3")
-    
+
     path = "#{pub.path}.mp3"
     talk = nil
     if published?
@@ -26,7 +25,6 @@ module Cms::Model::Base::Page::TalkTask
 
     if talk
       task = talk_tasks.find_or_initialize_by(dependent: pub.dependent)
-      task.unid         = pub.unid
       task.path         = pub.path
       task.content_hash = pub.content_hash
 
@@ -37,7 +35,7 @@ module Cms::Model::Base::Page::TalkTask
     end
     return true
   end
-  
+
   def delete_talk_tasks
     talk_tasks.destroy_all
     return true

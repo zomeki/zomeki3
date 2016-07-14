@@ -18,6 +18,6 @@
 <%= link_to :publish, {:do => :publish}, :data => {confirm: "公開してよろしいですか？"} if @item.publishable? %>
 <%= link_to :close, {:do => :close}, :data => {confirm: "公開を終了してよろしいですか？"} if @item.closable? %>
 <%= link_to :duplicate, {:do => :duplicate}, :data => {confirm: "複製してよろしいですか？"} %>
-<%= link_to("複製（更新用）", {:do => :duplicate_for_replace}, :data => {confirm: "複製してよろしいですか？"}) if @item.public? && !@item.unid_related? %>
+<%= link_to("複製（更新用）", {:do => :duplicate_for_replace}, :data => {confirm: "複製してよろしいですか？"}) if @item.public? && !@item.object_related? %>
 <% end %>
 </div>
