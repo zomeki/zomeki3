@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160714024558) do
+ActiveRecord::Schema.define(version: 20160714024709) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -389,7 +389,6 @@ ActiveRecord::Schema.define(version: 20160714024558) do
   add_index "cms_map_markers", ["map_id"], name: "index_cms_map_markers_on_map_id", using: :btree
 
   create_table "cms_maps", force: :cascade do |t|
-    t.integer  "unid"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "name"
