@@ -23,7 +23,7 @@ class Sys::OperationLog < ActiveRecord::Base
       when 's_action'
         rel.where!(action: v == 'recognize' ? ['recognize', 'approve'] : v)
       when 's_keyword'
-        rel = rel.search_with_text(:item_unid, :item_name, :item_model, v)
+        rel = rel.search_with_text(:item_name, :item_model, v)
       when 'start_date'
         rel.where!(arel_table[:created_at].gteq(v))
       when 'close_date'
@@ -60,7 +60,6 @@ class Sys::OperationLog < ActiveRecord::Base
     if item = options[:item]
       log.item_model  = item.class.to_s
       log.item_id     = item.id rescue nil
-      log.item_unid   = item.unid rescue nil
       log.item_name   = item.title rescue nil
       log.item_name ||= item.name rescue nil
       log.item_name ||= "##{item.id}" rescue nil
@@ -86,7 +85,6 @@ class Sys::OperationLog < ActiveRecord::Base
     if item = options[:item]
       log.item_model  = item.class.to_s
       log.item_id     = item.id rescue nil
-      log.item_unid   = item.unid rescue nil
       log.item_name   = item.title rescue nil
       log.item_name ||= item.name rescue nil
       log.item_name ||= "##{item.id}" rescue nil
