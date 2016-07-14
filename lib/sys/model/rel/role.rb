@@ -12,12 +12,9 @@ module Sys::Model::Rel::Role
     user = options[:user]
     return self if user.has_auth?(:manager)
 
-    sql = "SELECT role_id FROM #{Sys::UsersRole.table_name}" +
-      " WHERE user_id = '#{user.id}'"
-    sql = "SELECT * FROM sys_object_privileges" +
-      " WHERE action = '#{name}' AND role_id IN ( #{sql} ) "
-    sql = "INNER JOIN (#{sql}) AS sys_object_privileges" +
-      " ON sys_object_privileges.item_unid = #{self.class.table_name}.unid"
+    sql = "SELECT role_id FROM #{Sys::UsersRole.table_name} WHERE user_id = #{user.id}"
+    sql = "SELECT * FROM sys_object_privileges WHERE action = '#{name}' AND role_id IN (#{sql})"
+    sql = "INNER JOIN (#{sql}) AS sys_object_privileges ON sys_object_privileges.privilegable_id = #{self.class.table_name}.id"
 
     join sql
     return self
