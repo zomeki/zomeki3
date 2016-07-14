@@ -1,8 +1,6 @@
 class Sys::Publisher < ActiveRecord::Base
   include Sys::Model::Base
 
-  validates :unid, presence: true
-
   before_validation :modify_path
   before_save :check_path
   before_destroy :remove_files
