@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160714015502) do
+ActiveRecord::Schema.define(version: 20160714015734) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -259,7 +259,6 @@ ActiveRecord::Schema.define(version: 20160714015502) do
   add_index "cms_data_files", ["concept_id", "node_id", "name"], name: "index_cms_data_files_on_concept_id_and_node_id_and_name", using: :btree
 
   create_table "cms_data_texts", force: :cascade do |t|
-    t.integer  "unid"
     t.integer  "site_id"
     t.integer  "concept_id"
     t.string   "state"
