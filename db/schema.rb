@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160714024040) do
+ActiveRecord::Schema.define(version: 20160714024305) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -324,7 +324,6 @@ ActiveRecord::Schema.define(version: 20160714024040) do
   add_index "cms_inquiries", ["inquirable_type", "inquirable_id"], name: "index_cms_inquiries_on_inquirable_type_and_inquirable_id", using: :btree
 
   create_table "cms_kana_dictionaries", force: :cascade do |t|
-    t.integer  "unid"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "name"
