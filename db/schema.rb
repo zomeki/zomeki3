@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160714030537) do
+ActiveRecord::Schema.define(version: 20160714030648) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -567,15 +567,12 @@ ActiveRecord::Schema.define(version: 20160714030537) do
   end
 
   create_table "cms_talk_tasks", force: :cascade do |t|
-    t.integer  "unid"
     t.string   "dependent"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "path"
     t.string   "content_hash"
   end
-
-  add_index "cms_talk_tasks", ["unid", "dependent"], name: "index_cms_talk_tasks_on_unid_and_dependent", using: :btree
 
   create_table "delayed_jobs", force: :cascade do |t|
     t.integer  "priority",   default: 0, null: false
