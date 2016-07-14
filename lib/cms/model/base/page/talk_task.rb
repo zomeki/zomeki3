@@ -6,14 +6,14 @@ module Cms::Model::Base::Page::TalkTask
       :dependent => :destroy
     mod.after_save :delete_talk_tasks
   end
-  
+
   def publish_page(content, options = {})
     return false unless super
     pub = publishers.where(dependent: options[:dependent] ? options[:dependent].to_s : nil).first
     return true unless pub
     return true if pub.path !~ /\.html\z/
     #return true if !published? && ::File.exist?("#{pub.path}.mp3")
-    
+
     path = "#{pub.path}.mp3"
     talk = nil
     if published?
@@ -37,7 +37,7 @@ module Cms::Model::Base::Page::TalkTask
     end
     return true
   end
-  
+
   def delete_talk_tasks
     talk_tasks.destroy_all
     return true
