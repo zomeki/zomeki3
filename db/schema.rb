@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160714031024) do
+ActiveRecord::Schema.define(version: 20160714031244) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1138,9 +1138,7 @@ ActiveRecord::Schema.define(version: 20160714031024) do
   add_index "sys_editors", ["editable_type", "editable_id"], name: "index_sys_editors_on_editable_type_and_editable_id", using: :btree
 
   create_table "sys_files", force: :cascade do |t|
-    t.integer  "unid"
     t.string   "tmp_id"
-    t.integer  "parent_unid"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "name"
@@ -1155,7 +1153,6 @@ ActiveRecord::Schema.define(version: 20160714031024) do
   end
 
   add_index "sys_files", ["file_attachable_type", "file_attachable_id"], name: "index_sys_files_on_file_attachable_type_and_file_attachable_id", using: :btree
-  add_index "sys_files", ["parent_unid", "name"], name: "index_sys_files_on_parent_unid_and_name", using: :btree
 
   create_table "sys_groups", force: :cascade do |t|
     t.integer  "unid"
