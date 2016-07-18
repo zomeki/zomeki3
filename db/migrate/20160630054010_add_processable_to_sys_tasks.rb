@@ -1,6 +1,6 @@
 class AddProcessableToSysTasks < ActiveRecord::Migration
   KLASSES = [
-    Cms::Node,
+    Cms::Node::Page,
     GpArticle::Doc,
     Survey::Form,
   ]
