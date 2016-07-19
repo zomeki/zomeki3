@@ -64,6 +64,8 @@ class Cms::Site < ActiveRecord::Base
 
   after_save :generate_files
   after_destroy :destroy_files
+  after_save :generate_apache_configs
+  after_destroy :destroy_apache_configs
   after_save :generate_nginx_configs
   after_destroy :destroy_nginx_configs
 
@@ -217,6 +219,26 @@ class Cms::Site < ActiveRecord::Base
 
   def self.reload_virtual_hosts_text_path
     Rails.root.join('tmp/reload_virtual_hosts.txt')
+  end
+
+  def self.generate_apache_configs
+    all.each(&:generate_apache_configs)
+  end
+
+  def generate_apache_configs
+    virtual_hosts = Rails.root.join('config/apache/virtual_hosts')
+    unless (template = virtual_hosts.join('template.conf.erb')).file?
+      logger.warn 'VirtualHost template not found.'
+      return false
+    end
+    erb = ERB.new(template.read, nil, '-').result(binding)
+    virtual_hosts.join("site_#{'%08d' % id}.conf").write erb
+  end
+
+  def destroy_apache_configs
+    conf = Rails.root.join("config/apache/virtual_hosts/site_#{'%08d' % id}.conf")
+    return false unless conf.exist?
+    conf.delete
   end
 
   def self.generate_nginx_configs

@@ -53,12 +53,14 @@ namespace :zomeki do
     namespace :sites do
       desc 'Update virtual-hosts'
       task(:update_virtual_hosts => :environment) do
-        path = Cms::Site.virtual_hosts_config_path
-        conf = Cms::Site.make_virtual_hosts_config
-        if File.read(path) != conf
-          Util::File.put path, data: conf
-          FileUtils.touch Cms::Site.reload_virtual_hosts_text_path
-        end
+        Rake::Task['zomeki:cms:sites:update_server_configs'].invoke
+      end
+
+      desc 'Update server configs'
+      task(:update_server_configs => :environment) do
+        Cms::Site.put_virtual_hosts_config
+        Cms::Site.generate_apache_configs
+        Cms::Site.generate_nginx_configs
       end
     end
   end

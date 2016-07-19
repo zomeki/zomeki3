@@ -48,10 +48,8 @@ class Cms::Admin::SitesController < Cms::Controller::Admin::Base
     @item.state = 'public'
     @item.portal_group_state = 'visible'
     _create(@item, notice: "登録処理が完了しました。 （反映にはWebサーバの再起動が必要です。）") do
-      unless Core.user.root?
-        @item.users << Core.user
-      end
-      update_config
+      @item.users << Core.user unless Core.user.root?
+      update_configs
       save_sns_apps
     end
   end
@@ -63,7 +61,7 @@ class Cms::Admin::SitesController < Cms::Controller::Admin::Base
     @sns_apps = params[:sns_apps]
 
     _update @item do
-      update_config
+      update_configs
       save_sns_apps
       FileUtils.rm_rf Pathname.new(@item.public_smart_phone_path).children if ::File.exist?(@item.public_smart_phone_path) && !@item.publish_for_smart_phone?
     end
@@ -73,14 +71,16 @@ class Cms::Admin::SitesController < Cms::Controller::Admin::Base
     @item = Cms::Site.find(params[:id])
     _destroy(@item) do
       cookies.delete(:cms_site)
-      update_config
+      update_configs
     end
   end
 
   protected
 
-  def update_config
+  def update_configs
     Cms::Site.put_virtual_hosts_config
+    Cms::Site.generate_apache_configs
+    Cms::Site.generate_nginx_configs
   end
 
   private
