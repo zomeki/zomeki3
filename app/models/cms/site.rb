@@ -68,6 +68,7 @@ class Cms::Site < ActiveRecord::Base
   after_destroy :destroy_nginx_configs
 
   after_create :make_concept
+  after_save :make_node
 
   def states
     [['公開','public']]
@@ -363,5 +364,21 @@ protected
 
   def make_concept
     concepts.create(name: name, parent_id: 0, state: 'public', level_no: 1, sort_no: 1)
+  end
+
+  def make_node
+    if (node = root_node)
+      node.update_attribute(:title, name) unless node.title == name
+      return
+    end
+
+    node = nodes.create(state: 'public', published_at: Time.current,
+                        parent_id: 0, route_id: 0, model: 'Cms::Directory',
+                        directory: 1, name: '/', title: name)
+    top = nodes.create(state: 'public', published_at: Time.current,
+                       parent_id: node.id, route_id: node.id, model: 'Cms::Page',
+                       directory: 0, name: 'index.html', title: name)
+
+    update_column(:node_id, node.id)
   end
 end

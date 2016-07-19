@@ -51,7 +51,6 @@ class Cms::Admin::SitesController < Cms::Controller::Admin::Base
       unless Core.user.root?
         @item.users << Core.user
       end
-      make_node(@item)
       update_config
       save_sns_apps
     end
@@ -64,7 +63,6 @@ class Cms::Admin::SitesController < Cms::Controller::Admin::Base
     @sns_apps = params[:sns_apps]
 
     _update @item do
-      make_node(@item)
       update_config
       save_sns_apps
       FileUtils.rm_rf Pathname.new(@item.public_smart_phone_path).children if ::File.exist?(@item.public_smart_phone_path) && !@item.publish_for_smart_phone?
@@ -80,45 +78,6 @@ class Cms::Admin::SitesController < Cms::Controller::Admin::Base
   end
 
   protected
-
-  def make_node(item)
-    if node = item.root_node
-      if node.title != item.name
-        node.title = item.name
-        node.save
-      end
-      return true
-    end
-
-    node = Cms::Node.new(
-      :site_id      => item.id,
-      :state        => 'public',
-      :published_at => Core.now,
-      :parent_id    => 0,
-      :route_id     => 0,
-      :model        => 'Cms::Directory',
-      :directory    => 1,
-      :name         => '/',
-      :title        => item.name
-    )
-    node.save(:validate => false)
-
-    top = Cms::Node.new(
-      :site_id      => item.id,
-      :state        => 'public',
-      :published_at => Core.now,
-      :parent_id    => node.id,
-      :route_id     => node.id,
-      :model        => 'Cms::Page',
-      :directory    => 0,
-      :name         => 'index.html',
-      :title        => item.name
-    )
-    top.save(:validate => false)
-
-    item.node_id = node.id
-    item.save
-  end
 
   def update_config
     Cms::Site.put_virtual_hosts_config
