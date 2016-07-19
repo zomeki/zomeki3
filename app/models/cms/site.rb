@@ -67,6 +67,8 @@ class Cms::Site < ActiveRecord::Base
   after_save :generate_nginx_configs
   after_destroy :destroy_nginx_configs
 
+  after_create :make_concept
+
   def states
     [['公開','public']]
   end
@@ -357,5 +359,9 @@ protected
 
   def destroy_files
     FileUtils.rm_rf root_path
+  end
+
+  def make_concept
+    concepts.create(name: name, parent_id: 0, state: 'public', level_no: 1, sort_no: 1)
   end
 end

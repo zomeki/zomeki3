@@ -51,7 +51,6 @@ class Cms::Admin::SitesController < Cms::Controller::Admin::Base
       unless Core.user.root?
         @item.users << Core.user
       end
-      make_concept(@item)
       make_node(@item)
       update_config
       save_sns_apps
@@ -80,18 +79,7 @@ class Cms::Admin::SitesController < Cms::Controller::Admin::Base
     end
   end
 
-protected
-  def make_concept(item)
-    concept = Cms::Concept.new(
-      :parent_id => 0,
-      :site_id   => item.id,
-      :state     => 'public',
-      :level_no  => 1,
-      :sort_no   => 1,
-      :name      => item.name
-    )
-    concept.save
-  end
+  protected
 
   def make_node(item)
     if node = item.root_node
