@@ -21,4 +21,5 @@
 /config/mecab/zomeki.dic
 /config/virtual-hosts/sites.conf
 /config/virtual-hosts/zomeki.conf
+/config/apache/**/*.conf
 /config/nginx/**/*.conf

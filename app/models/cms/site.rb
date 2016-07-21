@@ -64,8 +64,13 @@ class Cms::Site < ActiveRecord::Base
 
   after_save :generate_files
   after_destroy :destroy_files
+  after_save :generate_apache_configs
+  after_destroy :destroy_apache_configs
   after_save :generate_nginx_configs
   after_destroy :destroy_nginx_configs
+
+  after_create :make_concept
+  after_save :make_node
 
   def states
     [['公開','public']]
@@ -216,6 +221,26 @@ class Cms::Site < ActiveRecord::Base
     Rails.root.join('tmp/reload_virtual_hosts.txt')
   end
 
+  def self.generate_apache_configs
+    all.each(&:generate_apache_configs)
+  end
+
+  def generate_apache_configs
+    virtual_hosts = Rails.root.join('config/apache/virtual_hosts')
+    unless (template = virtual_hosts.join('template.conf.erb')).file?
+      logger.warn 'VirtualHost template not found.'
+      return false
+    end
+    erb = ERB.new(template.read, nil, '-').result(binding)
+    virtual_hosts.join("site_#{'%08d' % id}.conf").write erb
+  end
+
+  def destroy_apache_configs
+    conf = Rails.root.join("config/apache/virtual_hosts/site_#{'%08d' % id}.conf")
+    return false unless conf.exist?
+    conf.delete
+  end
+
   def self.generate_nginx_configs
     all.each(&:generate_nginx_configs)
   end
@@ -357,5 +382,25 @@ protected
 
   def destroy_files
     FileUtils.rm_rf root_path
+  end
+
+  def make_concept
+    concepts.create(name: name, parent_id: 0, state: 'public', level_no: 1, sort_no: 1)
+  end
+
+  def make_node
+    if (node = root_node)
+      node.update_attribute(:title, name) unless node.title == name
+      return
+    end
+
+    node = nodes.create(state: 'public', published_at: Time.current,
+                        parent_id: 0, route_id: 0, model: 'Cms::Directory',
+                        directory: 1, name: '/', title: name)
+    top = nodes.create(state: 'public', published_at: Time.current,
+                       parent_id: node.id, route_id: node.id, model: 'Cms::Page',
+                       directory: 0, name: 'index.html', title: name)
+
+    update_column(:node_id, node.id)
   end
 end

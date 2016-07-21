@@ -52,6 +52,8 @@ class Sys::Admin::SettingsController < Cms::Controller::Admin::Base
 
   def update_config
     Cms::Site.put_virtual_hosts_config
+    Cms::Site.generate_apache_configs
+    Cms::Site.generate_nginx_configs
   end
 
 end

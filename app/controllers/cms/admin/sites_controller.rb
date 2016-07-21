@@ -48,12 +48,8 @@ class Cms::Admin::SitesController < Cms::Controller::Admin::Base
     @item.state = 'public'
     @item.portal_group_state = 'visible'
     _create(@item, notice: "登録処理が完了しました。 （反映にはWebサーバの再起動が必要です。）") do
-      unless Core.user.root?
-        @item.users << Core.user
-      end
-      make_concept(@item)
-      make_node(@item)
-      update_config
+      @item.users << Core.user unless Core.user.root?
+      update_configs
       save_sns_apps
     end
   end
@@ -65,8 +61,7 @@ class Cms::Admin::SitesController < Cms::Controller::Admin::Base
     @sns_apps = params[:sns_apps]
 
     _update @item do
-      make_node(@item)
-      update_config
+      update_configs
       save_sns_apps
       FileUtils.rm_rf Pathname.new(@item.public_smart_phone_path).children if ::File.exist?(@item.public_smart_phone_path) && !@item.publish_for_smart_phone?
     end
@@ -76,64 +71,16 @@ class Cms::Admin::SitesController < Cms::Controller::Admin::Base
     @item = Cms::Site.find(params[:id])
     _destroy(@item) do
       cookies.delete(:cms_site)
-      update_config
+      update_configs
     end
   end
 
-protected
-  def make_concept(item)
-    concept = Cms::Concept.new(
-      :parent_id => 0,
-      :site_id   => item.id,
-      :state     => 'public',
-      :level_no  => 1,
-      :sort_no   => 1,
-      :name      => item.name
-    )
-    concept.save
-  end
+  protected
 
-  def make_node(item)
-    if node = item.root_node
-      if node.title != item.name
-        node.title = item.name
-        node.save
-      end
-      return true
-    end
-
-    node = Cms::Node.new(
-      :site_id      => item.id,
-      :state        => 'public',
-      :published_at => Core.now,
-      :parent_id    => 0,
-      :route_id     => 0,
-      :model        => 'Cms::Directory',
-      :directory    => 1,
-      :name         => '/',
-      :title        => item.name
-    )
-    node.save(:validate => false)
-
-    top = Cms::Node.new(
-      :site_id      => item.id,
-      :state        => 'public',
-      :published_at => Core.now,
-      :parent_id    => node.id,
-      :route_id     => node.id,
-      :model        => 'Cms::Page',
-      :directory    => 0,
-      :name         => 'index.html',
-      :title        => item.name
-    )
-    top.save(:validate => false)
-
-    item.node_id = node.id
-    item.save
-  end
-
-  def update_config
+  def update_configs
     Cms::Site.put_virtual_hosts_config
+    Cms::Site.generate_apache_configs
+    Cms::Site.generate_nginx_configs
   end
 
   private
