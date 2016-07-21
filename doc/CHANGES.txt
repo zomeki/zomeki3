@@ -1,5 +1,14 @@
 ## ZOMEKI / リリース内容
 
+3.0.0
+ * 想定環境を変更
+   OS: CentOS 7.2
+   Webサーバ: nginx 1.10
+   Appサーバ: Puma 3.4
+   Database: PostgreSQL 9.5
+   Ruby: 2.3
+   Rails: 4.2
+
 2.0.0
  * Railsを4.2.3にバージョンアップ
  * Rubyを2.3.0にバージョンアップ
