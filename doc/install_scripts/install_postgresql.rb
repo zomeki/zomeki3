@@ -47,7 +47,7 @@ if __FILE__ == $0
     centos
   elsif File.exist? '/etc/lsb-release'
     unless `grep -s Ubuntu /etc/lsb-release`.empty?
-      puts 'Ubuntu will be supported shortly.'
+      puts 'Ubuntu is not yet supported.'
     else
       others
     end

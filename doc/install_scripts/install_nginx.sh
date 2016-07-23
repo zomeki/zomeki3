@@ -28,7 +28,7 @@ if [ -f /etc/centos-release ]; then
   centos
 elif [ -f /etc/lsb-release ]; then
   if grep -qs Ubuntu /etc/lsb-release; then
-    echo 'Ubuntu will be supported shortly.'
+    echo 'Ubuntu is not yet supported.'
   else
     others
   fi
