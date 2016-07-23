@@ -6,30 +6,23 @@ if [ -f $DONE_FLAG ]; then exit; fi
 echo '-- PRESS ENTER KEY --'
 read KEY
 
-ubuntu() {
-  echo 'Ubuntu will be supported shortly.'
-}
-
 centos() {
   echo "It's CentOS!"
 
-  service httpd stop
-  service httpd configtest && service httpd start && chkconfig httpd on
-
-  service mysqld stop
-  service mysqld start && chkconfig mysqld on
+  su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle exec pumactl -F config/puma/production.rb restart'
+  systemctl restart nginx && systemctl enable nginx
+  systemctl restart postgresql-9.5 && systemctl enable postgresql-9.5
 }
 
 others() {
   echo 'This OS is not supported.'
-  exit
 }
 
 if [ -f /etc/centos-release ]; then
   centos
 elif [ -f /etc/lsb-release ]; then
   if grep -qs Ubuntu /etc/lsb-release; then
-    ubuntu
+    echo 'Ubuntu is not yet supported.'
   else
     others
   fi
