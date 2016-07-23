@@ -1,1 +1,1 @@
-0,30 * * * * /root/reload_httpd.sh
+0,30 * * * * /root/reload_servers.sh
