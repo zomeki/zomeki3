@@ -78,7 +78,6 @@ class Cms::Admin::SitesController < Cms::Controller::Admin::Base
   protected
 
   def update_configs
-    Cms::Site.put_virtual_hosts_config
     Cms::Site.generate_apache_configs
     Cms::Site.generate_nginx_configs
   end
