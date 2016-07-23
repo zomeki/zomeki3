@@ -9,14 +9,10 @@ gets
 require 'fileutils'
 require 'yaml/store'
 
-def ubuntu
-  puts 'Ubuntu will be supported shortly.'
-end
-
 def centos
   puts "It's CentOS!"
 
-  core_yml = '/var/share/zomeki/config/core.yml'
+  core_yml = '/var/www/zomeki/config/core.yml'
   FileUtils.copy("#{core_yml}.sample", core_yml, preserve: true)
 
   db = YAML::Store.new(core_yml)
@@ -24,38 +20,17 @@ def centos
     db['production']['uri'] = "http://#{`hostname`.chomp}/"
   end
 
-  sns_apps_yml = '/var/share/zomeki/config/sns_apps.yml'
+  sns_apps_yml = '/var/www/zomeki/config/sns_apps.yml'
   FileUtils.copy("#{sns_apps_yml}.sample", sns_apps_yml, preserve: true)
 
-  sites_conf = '/var/share/zomeki/config/virtual-hosts/sites.conf'
-  FileUtils.copy("#{sites_conf}.sample", sites_conf, preserve: true)
+  system "su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle exec rake zomeki:configure RAILS_ENV=production'"
+  system 'ln -s /var/www/zomeki/config/nginx/nginx.conf /etc/httpd/conf.d/zomeki.conf'
 
-  zomeki_conf = '/var/share/zomeki/config/virtual-hosts/zomeki.conf'
-  FileUtils.copy("#{zomeki_conf}.sample", zomeki_conf, preserve: true)
-
-  File.open(zomeki_conf, File::RDWR) do |f|
-    f.flock(File::LOCK_EX)
-
-    conf = f.read
-
-    f.rewind
-    f.write conf.sub(/(?<= ServerName ).+$/) {|m| `hostname`.chomp }
-    f.flush
-    f.truncate(f.pos)
-
-    f.flock(File::LOCK_UN)
-  end
-
-  system "ln -s #{zomeki_conf} /etc/httpd/conf.d/zomeki.conf"
-  system 'service mysqld start'
-  sleep 1 until system 'mysqladmin ping' # Not required to connect
-  system "su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/share/zomeki && bundle exec rake db:setup RAILS_ENV=production'"
-  system 'service mysqld stop'
+  system "su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle exec rake db:setup RAILS_ENV=production'"
 end
 
 def others
   puts 'This OS is not supported.'
-  exit
 end
 
 if __FILE__ == $0
@@ -63,7 +38,7 @@ if __FILE__ == $0
     centos
   elsif File.exist? '/etc/lsb-release'
     unless `grep -s Ubuntu /etc/lsb-release`.empty?
-      ubuntu
+      puts 'Ubuntu is not yet supported.'
     else
       others
     end
