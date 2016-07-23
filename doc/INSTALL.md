@@ -51,24 +51,23 @@ yumリポジトリに追加します。
     # yum -y install http://yum.postgresql.org/9.5/redhat/rhel-7-x86_64/pgdg-centos95-9.5-2.noarch.rpm
 
 インストールします。
-    # yum install postgresql95-server postgresql95-contrib postgresql95-devel
+    # yum -y install postgresql95-server postgresql95-contrib postgresql95-devel
+
+データベースを初期化します。
+    # /usr/pgsql-9.5/bin/postgresql95-setup initdb
 
 ユーザ認証方法を変更します。
     # vim /var/lib/pgsql/9.5/data/pg_hba.conf
 ```
 host    all             all             127.0.0.1/32            md5
-host    all             all             ::1/128                 md5
 ```
 
-データベースを初期化して起動します。
-    # /usr/pgsql-9.5/bin/postgresql95-setup initdb
+データベースを起動します。
     # systemctl start postgresql-9.5
 
 ZOMEKI用のユーザを作成します。
 ※パスワードは任意の文字列を設定してください。（ここでは「zomekipass」とします。）
-    # su - postgres
-    $ createuser -e -d -P zomeki
-    $ exit
+    # su - postgres -c "psql -c \"CREATE USER zomeki WITH CREATEDB ENCRYPTED PASSWORD 'zomekipass';\""
 
 ## 7.ZOMEKIのインストール
 専用ユーザを作成します。
@@ -101,7 +100,7 @@ uri: http://zomeki.example.com/    # すべて変更
     # cp -p /var/www/zomeki/config/sns_apps.yml.sample /var/www/zomeki/config/sns_apps.yml
 
 設定ファイルを作成してリンクを作成します。
-    # su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle exec rake zomeki:configure'
+    # su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle exec rake zomeki:configure RAILS_ENV=production'
     # ln -s /var/www/zomeki/config/nginx/nginx.conf /etc/nginx/conf.d/zomeki.conf
 
 必要なデータベースを作ります。

@@ -1,7 +1,7 @@
 #!/bin/bash
 DONE_FLAG="/tmp/$0_done"
 
-echo '#### Install cron ####'
+echo "#### Install nginx ####"
 if [ -f $DONE_FLAG ]; then exit; fi
 echo '-- PRESS ENTER KEY --'
 read KEY
@@ -9,7 +9,15 @@ read KEY
 centos() {
   echo "It's CentOS!"
 
-  su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/share/zomeki && bundle exec whenever --update-crontab'
+cat <<'EOF' > /etc/yum.repos.d/nginx.repo
+[nginx]
+name=nginx repo
+baseurl=http://nginx.org/packages/centos/7/$basearch/
+gpgcheck=0
+enabled=1
+EOF
+
+  yum -y install nginx
 }
 
 others() {
