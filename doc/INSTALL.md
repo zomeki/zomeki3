@@ -53,6 +53,9 @@ yumリポジトリに追加します。
 インストールします。
     # yum -y install postgresql95-server postgresql95-contrib postgresql95-devel
 
+データベースを初期化します。
+    # /usr/pgsql-9.5/bin/postgresql95-setup initdb
+
 ユーザ認証方法を変更します。
     # vim /var/lib/pgsql/9.5/data/pg_hba.conf
 ```
@@ -60,8 +63,7 @@ host    all             all             127.0.0.1/32            md5
 host    all             all             ::1/128                 md5
 ```
 
-データベースを初期化して起動します。
-    # /usr/pgsql-9.5/bin/postgresql95-setup initdb
+データベースを起動します。
     # systemctl start postgresql-9.5
 
 ZOMEKI用のユーザを作成します。
