@@ -22,20 +22,20 @@ def centos
     f.flock File::LOCK_EX
 
     conf = f.read
+    conf.sub!(%r!^(host)\s+(all)\s+(all)\s+(127\.0\.0\.1/32)\s+(ident)$!) {|m| "#{$1} #{$2} #{$3} #{$4} md5" }
 
     f.rewind
-#    f.write conf.sub(/^#ServerName .*$/) {|m| "#{m}\nServerName #{`hostname`.chomp}" }
+    f.write conf
     f.flush
-    f.truncate(f.pos)
+    f.truncate f.pos
 
     f.flock File::LOCK_UN
   end
 
-#  system 'systemctl start postgresql-9.5'
+  system 'systemctl start postgresql-9.5'
 
-  psql_c = %q!psql -c \"CREATE USER zomeki WITH PASSWORD 'zomekipass';\"!
-#  system %Q!su - postgres -c "#{psql_c}"!
-  puts %Q!su - postgres -c "#{psql_c}"!
+  psql_c = %q!psql -c \"CREATE USER zomeki WITH CREATEDB ENCRYPTED PASSWORD 'zomekipass';\"!
+  system %Q!su - postgres -c "#{psql_c}"!
 end
 
 def others

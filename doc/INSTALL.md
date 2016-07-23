@@ -60,7 +60,6 @@ yumリポジトリに追加します。
     # vim /var/lib/pgsql/9.5/data/pg_hba.conf
 ```
 host    all             all             127.0.0.1/32            md5
-host    all             all             ::1/128                 md5
 ```
 
 データベースを起動します。
@@ -68,9 +67,7 @@ host    all             all             ::1/128                 md5
 
 ZOMEKI用のユーザを作成します。
 ※パスワードは任意の文字列を設定してください。（ここでは「zomekipass」とします。）
-    # su - postgres
-    $ createuser -e -d -P zomeki
-    $ exit
+    # su - postgres -c "psql -c \"CREATE USER zomeki WITH CREATEDB ENCRYPTED PASSWORD 'zomekipass';\""
 
 ## 7.ZOMEKIのインストール
 専用ユーザを作成します。
