@@ -14,6 +14,8 @@ def centos
   system 'yum -y install http://yum.postgresql.org/9.5/redhat/rhel-7-x86_64/pgdg-centos95-9.5-2.noarch.rpm'
   system 'yum -y install postgresql95-server postgresql95-contrib postgresql95-devel'
 
+  system '/usr/pgsql-9.5/bin/postgresql95-setup initdb'
+
   pg_hba_conf = '/var/lib/pgsql/9.5/data/pg_hba.conf'
   FileUtils.copy pg_hba_conf, "#{pg_hba_conf}.#{Time.now.strftime('%Y%m%d%H%M')}", preserve: true
   File.open pg_hba_conf, File::RDWR do |f|
@@ -29,7 +31,6 @@ def centos
     f.flock File::LOCK_UN
   end
 
-#  system '/usr/pgsql-9.5/bin/postgresql95-setup initdb'
 #  system 'systemctl start postgresql-9.5'
 
   psql_c = %q!psql -c \"CREATE USER zomeki WITH PASSWORD 'zomekipass';\"!
