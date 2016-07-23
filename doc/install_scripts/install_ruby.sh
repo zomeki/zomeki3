@@ -1,8 +1,9 @@
 #!/bin/bash
 DONE_FLAG="/tmp/$0_done"
 
-RUBY_VERSION='ruby-2.3.0'
-RUBY_SOURCE_URL="http://cache.ruby-lang.org/pub/ruby/2.3/$RUBY_VERSION.tar.bz2"
+RUBY_VERSION='ruby-2.3.1'
+RUBY_FILENAME="$RUBY_VERSION.tar.bz2"
+RUBY_SOURCE_URL="http://cache.ruby-lang.org/pub/ruby/2.3/$RUBY_FILENAME"
 
 echo "#### Install $RUBY_VERSION ####"
 if [ -f $DONE_FLAG ]; then exit; fi
@@ -19,9 +20,9 @@ centos() {
   yum -y install gcc-c++ libffi-devel libyaml-devel make openssl-devel readline-devel zlib-devel
 
   cd /usr/local/src
-  rm -rf $RUBY_VERSION.tar.bz2 $RUBY_VERSION
+  rm -rf $RUBY_FILENAME $RUBY_VERSION
   curl -fsSLO $RUBY_SOURCE_URL
-  tar jxf $RUBY_VERSION.tar.bz2 && cd $RUBY_VERSION && ./configure && make && make install
+  tar jxf $RUBY_FILENAME && cd $RUBY_VERSION && ./configure && make && make install
 
   gem install bundler
 }
