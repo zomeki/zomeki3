@@ -51,7 +51,7 @@ yumリポジトリに追加します。
     # yum -y install http://yum.postgresql.org/9.5/redhat/rhel-7-x86_64/pgdg-centos95-9.5-2.noarch.rpm
 
 インストールします。
-    # yum install postgresql95-server postgresql95-contrib postgresql95-devel
+    # yum -y install postgresql95-server postgresql95-contrib postgresql95-devel
 
 ユーザ認証方法を変更します。
     # vim /var/lib/pgsql/9.5/data/pg_hba.conf
