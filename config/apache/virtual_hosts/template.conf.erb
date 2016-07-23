@@ -8,6 +8,6 @@
     AddType text/x-component .htc
     Alias /_common/ <%= zomeki_root %>/public/_common/
     DocumentRoot <%= public_path %>
-    Include <%= zomeki_root %>/config/rewrite/base.conf
+    Include <%= zomeki_root %>/config/apache/rewrite/base.conf
     Include <%= config_path %>/rewrite.conf
 </VirtualHost>
