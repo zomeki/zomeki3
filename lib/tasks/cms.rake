@@ -58,7 +58,6 @@ namespace :zomeki do
 
       desc 'Update server configs'
       task(:update_server_configs => :environment) do
-        Cms::Site.put_virtual_hosts_config
         Cms::Site.generate_apache_configs
         Cms::Site.generate_nginx_configs
       end
