@@ -51,11 +51,6 @@ namespace :zomeki do
     end
 
     namespace :sites do
-      desc 'Update virtual-hosts'
-      task(:update_virtual_hosts => :environment) do
-        Rake::Task['zomeki:cms:sites:update_server_configs'].invoke
-      end
-
       desc 'Update server configs'
       task(:update_server_configs => :environment) do
         Cms::Site.generate_apache_configs

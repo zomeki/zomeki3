@@ -67,5 +67,5 @@ end
 
 # サイトのVirtualHost設定を定期的に更新します。
 every '25,55 * * * *' do
-  rake 'zomeki:cms:sites:update_virtual_hosts'
+  rake 'zomeki:cms:sites:update_server_configs'
 end
