@@ -82,10 +82,10 @@ ZOMEKIをインストールします。
 
     # cp /var/www/zomeki/config/samples/zomeki_logrotate /etc/logrotate.d/.
 
-    # cp /var/www/zomeki/config/samples/reload_httpd.sh /root/. && chmod 755 /root/reload_httpd.sh
+    # cp /var/www/zomeki/config/samples/reload_servers.sh /root/. && chmod 755 /root/reload_servers.sh
     # ROOT_CRON_TXT='/var/www/zomeki/config/samples/root_cron.txt'
     # crontab -l > $ROOT_CRON_TXT
-    # grep -s reload_httpd.sh $ROOT_CRON_TXT || echo '0,30 * * * * /root/reload_httpd.sh' >> $ROOT_CRON_TXT
+    # grep -s reload_servers.sh $ROOT_CRON_TXT || echo '0,30 * * * * /root/reload_servers.sh' >> $ROOT_CRON_TXT
     # crontab $ROOT_CRON_TXT
 
 ## 8.ZOMEKIの設定
