@@ -22,7 +22,7 @@ centos() {
     chmod 755 $file
   done
 
-cat <<'EOF' > install_all.sh
+cat <<'EOF' >> install_all.sh
 
 echo "
 -- インストールを完了しました。 --
@@ -35,11 +35,10 @@ echo "
     ユーザID   : zomeki
     パスワード : zomeki
 
-２．PostgreSQLのzomekiユーザはパスワードがzomekipassに設定されています。適宜変更してください。
-    mysql> SET PASSWORD FOR zomeki@localhost = PASSWORD('newpass');
-    また、変更時には /var/share/zomeki/config/database.yml も合わせて変更してください。
-    # vi /var/share/zomeki/config/database.yml
-３．OS の zomeki ユーザに cron が登録されています。
+１．PostgreSQLのzomekiユーザはパスワードがzomekipassに設定されています。適宜変更してください。
+    postgres=# ALTER USER zomeki WITH ENCRYPTED PASSWORD 'newpass';
+
+２．OS の zomeki ユーザに cron が登録されています。
     # crontab -u zomeki -e
 "
 EOF
