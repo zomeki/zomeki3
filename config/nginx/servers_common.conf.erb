@@ -14,6 +14,17 @@ location /<%= ZomekiCMS::ADMIN_URL_PREFIX %>/ {
 location / {
   try_files $uri @puma;
 
+  if ($http_user_agent ~* ^(DoCoMo|KDDI|Up\.Browser|J-PHONE|vodafone|SoftBank)) {
+    rewrite ^(?!/_mobile).+$ /_mobile$1 break;
+  }
+
+  if ($http_user_agent ~* (Mozilla|Android|iPhone|iPod|MSIEMobile|Windows\sPhone)) {
+    rewrite ^(?!/_smartphone).+$ /_smartphone$1 break;
+  }
+  if ($cookie_pc_view = 'on') {
+    rewrite ^/_smartphone(/.*)$ $1 break;
+  }
+
   if ($cookie_navigation_ruby = 'on') {
     rewrite ^(.*)/$ $1/index.html;
     rewrite ^(.+)\.html$ $1.html.r break;

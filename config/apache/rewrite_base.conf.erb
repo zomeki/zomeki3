@@ -52,17 +52,17 @@ RewriteEngine on
 #RewriteRule [^\/]+\.html$ %{REQUEST_URI}.r [L,R]
 
 ## Mobile
-RewriteCond %{HTTP_HOST} ^mobile\. [NC,OR]
-RewriteCond %{HTTP_USER_AGENT} ^(DoCoMo|KDDI|Up.Browser|J-PHONE|vodafone|SoftBank) [NC]
-RewriteCond %{REQUEST_URI} !^/_common/ [NC]
-RewriteCond %{REQUEST_URI} !^/_themes/ [NC]
-RewriteRule ^(.*)$ /_mobile$1 [L]
+#RewriteCond %{HTTP_HOST} ^mobile\. [NC,OR]
+#RewriteCond %{HTTP_USER_AGENT} ^(DoCoMo|KDDI|Up.Browser|J-PHONE|vodafone|SoftBank) [NC]
+#RewriteCond %{REQUEST_URI} !^/_common/ [NC]
+#RewriteCond %{REQUEST_URI} !^/_themes/ [NC]
+#RewriteRule ^(.*)$ /_mobile$1 [L]
 
 ## Smartphone
-RewriteCond %{HTTP_HOST} ^smartphone\. [NC,OR]
-RewriteCond %{HTTP_USER_AGENT} (Android|iPhone|iPod|MSIEMobile|Windows\sPhone) [NC]
-RewriteCond %{REQUEST_URI} !^/_common/ [NC]
-RewriteCond %{REQUEST_URI} !^/_themes/ [NC]
-RewriteCond %{HTTP_COOKIE} !pc_view=on
-RewriteCond %{DOCUMENT_ROOT}/_smartphone/index.html -f
-RewriteRule ^(.*)$ /_smartphone$1 [L]
+#RewriteCond %{HTTP_HOST} ^smartphone\. [NC,OR]
+#RewriteCond %{HTTP_USER_AGENT} (Android|iPhone|iPod|MSIEMobile|Windows\sPhone) [NC]
+#RewriteCond %{REQUEST_URI} !^/_common/ [NC]
+#RewriteCond %{REQUEST_URI} !^/_themes/ [NC]
+#RewriteCond %{HTTP_COOKIE} !pc_view=on
+#RewriteCond %{DOCUMENT_ROOT}/_smartphone/index.html -f
+#RewriteRule ^(.*)$ /_smartphone$1 [L]
