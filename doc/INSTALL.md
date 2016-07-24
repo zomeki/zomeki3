@@ -35,6 +35,10 @@ Rubyをインストールします。
     # gem install bundler
 
 ## 5.nginxのインストール
+外部からhttpでアクセス可能にします。
+
+    # firewall-cmd --add-service=http --zone=public
+
 yumリポジトリに追加します。
 
     # vi /etc/yum.repos.d/nginx.repo
@@ -86,10 +90,12 @@ ZOMEKI用のユーザを作成します。
 
 ZOMEKIをインストールします。
 
-    # yum -y install ImageMagick-devel libxml2-devel libxslt-devel mysql-community-devel openldap-devel nodejs patch
+    # curl --silent --location https://rpm.nodesource.com/setup_4.x | bash -
+    # yum -y install ImageMagick-devel libxml2-devel libxslt-devel openldap-devel nodejs patch
 
     # git clone https://github.com/zomeki/zomeki3.git /var/www/zomeki
     # chown -R zomeki:zomeki /var/www/zomeki
+    # su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle config build.pg --with-pg-config=/usr/pgsql-9.5/bin/pg_config'
     # su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle install --path vendor/bundle --without development test'
 
     # cp /var/www/zomeki/config/samples/zomeki_logrotate /etc/logrotate.d/.
@@ -113,14 +119,14 @@ uri: http://zomeki.example.com/    # すべて変更
 
     # cp -p /var/www/zomeki/config/sns_apps.yml.sample /var/www/zomeki/config/sns_apps.yml
 
+必要なデータベースを作ります。
+
+    # su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle exec rake db:setup RAILS_ENV=production'
+
 設定ファイルを作成してリンクを作成します。
 
     # su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle exec rake zomeki:configure RAILS_ENV=production'
     # ln -s /var/www/zomeki/config/nginx/nginx.conf /etc/nginx/conf.d/zomeki.conf
-
-必要なデータベースを作ります。
-
-    # su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle exec rake db:setup RAILS_ENV=production'
 
 ## 9.ふりがな・読み上げ機能のインストール
 必要なパッケージをインストールします。
@@ -173,8 +179,9 @@ MeCab-Rubyをインストールします。
     # tar zxf mecab-ruby-0.996.tar.gz && cd mecab-ruby-0.996 && ruby extconf.rb && make && make install
 
 ## 10.nginx/Pumaの起動
-    # service httpd configtest && service httpd start && chkconfig httpd on
-    # service mysqld start && chkconfig mysqld on
+    # su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle exec pumactl -F config/puma/production.rb start'
+    # systemctl start nginx && systemctl enable nginx
+    # systemctl start postgresql-9.5 && systemctl enable postgresql-9.5
 
 ## 11.定期実行処理 の設定
 ユーザzomekiのcronに処理を追加します。

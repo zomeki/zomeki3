@@ -394,12 +394,12 @@ protected
       return
     end
 
-    node = nodes.create(state: 'public', published_at: Time.current,
+    node = nodes.create(concept: concepts.first, state: 'public', published_at: Time.current,
                         parent_id: 0, route_id: 0, model: 'Cms::Directory',
                         directory: 1, name: '/', title: name)
-    top = nodes.create(state: 'public', published_at: Time.current,
+    top = nodes.create(concept: concepts.first, state: 'public', published_at: Time.current,
                        parent_id: node.id, route_id: node.id, model: 'Cms::Page',
-                       directory: 0, name: 'index.html', title: name)
+                       directory: 0, name: 'index.html', title: name, body: 'ZOMEKI')
 
     update_column(:node_id, node.id)
   end
