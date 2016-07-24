@@ -82,40 +82,4 @@ site = Cms::Site.create!(
 site.groups << first_group
 site.groups << cms_group
 
-concept = Cms::Concept.create!(
-  :parent_id => 0,
-  :site_id   => site.id,
-  :state     => 'public',
-  :level_no  => 1,
-  :sort_no   => 1,
-  :name      => core_title
-)
-
-Cms::Node.create!(
-  :site_id      => site.id,
-  :concept_id   => concept.id,
-  :parent_id    => 0,
-  :route_id     => 0,
-  :state        => 'public',
-  :published_at => Time.now,
-  :directory    => 1,
-  :model        => 'Cms::Directory',
-  :name         => '/',
-  :title        => core_title
-)
-
-Cms::Node.create!(
-  :site_id      => site.id,
-  :concept_id   => concept.id,
-  :parent_id    => 1,
-  :route_id     => 1,
-  :state        => 'public',
-  :published_at => Time.now,
-  :directory    => 0,
-  :model        => 'Cms::Page',
-  :name         => 'index.html',
-  :title        => core_title,
-  :body         => 'CMS'
-)
-
 puts 'Imported base data.'
