@@ -18,12 +18,24 @@ rootユーザに変更します。
 
     $ su -
 
-## 3.事前準備
+## 3.SELinuxの変更
+SELinuxを変更します。
+
+    # setenforce 0
+
+    # vi /etc/sysconfig/selinux
+```
+SELINUX=permissive    # 変更
+```
+
+*※セキュリティ設定は環境に応じて適切に設定してください。*
+
+## 4.事前準備
 作業に必要なパッケージをインストールします。
 
     # yum -y install git
 
-## 4.Rubyのインストール
+## 5.Rubyのインストール
 Rubyをインストールします。
 
     # yum -y install gcc-c++ libffi-devel libyaml-devel make openssl-devel readline-devel zlib-devel
@@ -34,7 +46,7 @@ Rubyをインストールします。
 
     # gem install bundler
 
-## 5.nginxのインストール
+## 6.nginxのインストール
 外部からhttpでアクセス可能にします。
 
     # firewall-cmd --add-service=http --zone=public
@@ -54,7 +66,7 @@ enabled=1
 
     # yum -y install nginx
 
-## 6.PostgreSQLのインストール
+## 7.PostgreSQLのインストール
 yumリポジトリに追加します。
 
     # yum -y install http://yum.postgresql.org/9.5/redhat/rhel-7-x86_64/pgdg-centos95-9.5-2.noarch.rpm
@@ -83,7 +95,7 @@ ZOMEKI用のユーザを作成します。
 
     # su - postgres -c "psql -c \"CREATE USER zomeki WITH CREATEDB ENCRYPTED PASSWORD 'zomekipass';\""
 
-## 7.ZOMEKIのインストール
+## 8.ZOMEKIのインストール
 専用ユーザを作成します。
 
     # useradd -m zomeki
@@ -106,7 +118,7 @@ ZOMEKIをインストールします。
     # grep -s reload_servers.sh $ROOT_CRON_TXT || echo '0,30 * * * * /root/reload_servers.sh' >> $ROOT_CRON_TXT
     # crontab $ROOT_CRON_TXT
 
-## 8.ZOMEKIの設定
+## 9.ZOMEKIの設定
 設定ファイルのサンプルをコピーして変更します。
 
     # cp -p /var/www/zomeki/config/core.yml.sample /var/www/zomeki/config/core.yml
@@ -128,7 +140,7 @@ uri: http://zomeki.example.com/    # すべて変更
     # su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle exec rake zomeki:configure RAILS_ENV=production'
     # ln -s /var/www/zomeki/config/nginx/nginx.conf /etc/nginx/conf.d/zomeki.conf
 
-## 9.ふりがな・読み上げ機能のインストール
+## 10.ふりがな・読み上げ機能のインストール
 必要なパッケージをインストールします。
 
     # yum -y install sox
@@ -178,17 +190,17 @@ MeCab-Rubyをインストールします。
     # curl -fsSLO http://mecab.googlecode.com/files/mecab-ruby-0.996.tar.gz
     # tar zxf mecab-ruby-0.996.tar.gz && cd mecab-ruby-0.996 && ruby extconf.rb && make && make install
 
-## 10.nginx/Pumaの起動
+## 11.nginx/Pumaの起動
     # su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle exec pumactl -F config/puma/production.rb start'
     # systemctl start nginx && systemctl enable nginx
     # systemctl start postgresql-9.5 && systemctl enable postgresql-9.5
 
-## 11.定期実行処理 の設定
+## 12.定期実行処理 の設定
 ユーザzomekiのcronに処理を追加します。
 
     # su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle exec whenever --update-crontab'
 
-## 12.動作確認
+## 13.動作確認
 インストールが完了しました。
 
 * 公開画面: http://zomeki.example.com/
