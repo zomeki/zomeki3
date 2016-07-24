@@ -9,7 +9,7 @@ read KEY
 centos() {
   echo "It's CentOS!"
 
-  su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/share/zomeki && bundle exec whenever --update-crontab'
+  su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle exec whenever --update-crontab'
 }
 
 others() {
