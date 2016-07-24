@@ -23,10 +23,10 @@ def centos
   sns_apps_yml = '/var/www/zomeki/config/sns_apps.yml'
   FileUtils.copy("#{sns_apps_yml}.sample", sns_apps_yml, preserve: true)
 
-  system "su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle exec rake zomeki:configure RAILS_ENV=production'"
-  system 'ln -s /var/www/zomeki/config/nginx/nginx.conf /etc/httpd/conf.d/zomeki.conf'
-
   system "su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle exec rake db:setup RAILS_ENV=production'"
+
+  system "su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle exec rake zomeki:configure RAILS_ENV=production'"
+  system 'ln -s /var/www/zomeki/config/nginx/nginx.conf /etc/nginx/conf.d/zomeki.conf'
 end
 
 def others
