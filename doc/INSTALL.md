@@ -35,6 +35,10 @@ Rubyをインストールします。
     # gem install bundler
 
 ## 5.nginxのインストール
+外部からhttpでアクセス可能にします。
+
+    # firewall-cmd --add-service=http --zone=public
+
 yumリポジトリに追加します。
 
     # vi /etc/yum.repos.d/nginx.repo
@@ -175,8 +179,9 @@ MeCab-Rubyをインストールします。
     # tar zxf mecab-ruby-0.996.tar.gz && cd mecab-ruby-0.996 && ruby extconf.rb && make && make install
 
 ## 10.nginx/Pumaの起動
-    # service httpd configtest && service httpd start && chkconfig httpd on
-    # service mysqld start && chkconfig mysqld on
+    # su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle exec pumactl -F config/puma/production.rb start'
+    # systemctl start nginx && systemctl enable nginx
+    # systemctl start postgresql-9.5 && systemctl enable postgresql-9.5
 
 ## 11.定期実行処理 の設定
 ユーザzomekiのcronに処理を追加します。

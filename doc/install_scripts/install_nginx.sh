@@ -9,6 +9,8 @@ read KEY
 centos() {
   echo "It's CentOS!"
 
+  firewall-cmd --add-service=http --zone=public
+
 cat <<'EOF' > /etc/yum.repos.d/nginx.repo
 [nginx]
 name=nginx repo

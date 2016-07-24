@@ -9,9 +9,9 @@ read KEY
 centos() {
   echo "It's CentOS!"
 
-  su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle exec pumactl -F config/puma/production.rb restart'
-  systemctl restart nginx && systemctl enable nginx
-  systemctl restart postgresql-9.5 && systemctl enable postgresql-9.5
+  su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle exec pumactl -F config/puma/production.rb start'
+  systemctl start nginx && systemctl enable nginx
+  systemctl start postgresql-9.5 && systemctl enable postgresql-9.5
 }
 
 others() {
