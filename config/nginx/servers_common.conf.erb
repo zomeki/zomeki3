@@ -3,6 +3,10 @@ location ~* /_(common|themes)/ {
   root <%= zomeki_root %>/public;
 }
 
+location /_api/ {
+  error_page 418 = @puma; return 418;
+}
+
 location /<%= ZomekiCMS::ADMIN_URL_PREFIX %>/ {
   error_page 418 = @puma; return 418;
 }
