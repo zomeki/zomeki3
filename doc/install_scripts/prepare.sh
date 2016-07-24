@@ -39,7 +39,7 @@ echo "
     postgres=# ALTER USER zomeki WITH ENCRYPTED PASSWORD 'newpass';
 
 ２．OS の zomeki ユーザに cron が登録されています。
-    # crontab -u zomeki -e
+    # crontab -u zomeki -l
 "
 EOF
   chmod 755 install_all.sh
