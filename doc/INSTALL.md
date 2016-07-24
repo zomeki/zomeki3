@@ -86,10 +86,12 @@ ZOMEKI用のユーザを作成します。
 
 ZOMEKIをインストールします。
 
-    # yum -y install ImageMagick-devel libxml2-devel libxslt-devel mysql-community-devel openldap-devel nodejs patch
+    # curl --silent --location https://rpm.nodesource.com/setup_4.x | bash -
+    # yum -y install ImageMagick-devel libxml2-devel libxslt-devel openldap-devel nodejs patch
 
     # git clone https://github.com/zomeki/zomeki3.git /var/www/zomeki
     # chown -R zomeki:zomeki /var/www/zomeki
+    # su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle config build.pg --with-pg-config=/usr/pgsql-9.5/bin/pg_config'
     # su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle install --path vendor/bundle --without development test'
 
     # cp /var/www/zomeki/config/samples/zomeki_logrotate /etc/logrotate.d/.
