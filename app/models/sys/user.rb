@@ -149,10 +149,7 @@ class Sys::User < ActiveRecord::Base
     end
     return nil unless options[:item]
 
-    item = options[:item]
-    item = item.unid if item.kind_of?(ActiveRecord::Base)
-
-    role_ids = Sys::ObjectPrivilege.where(action: action.to_s, item_unid: item).pluck(:role_id)
+    role_ids = Sys::ObjectPrivilege.where(action: action.to_s, privilegable: options[:item]).pluck(:role_id)
     return false if role_ids.size == 0
 
     users_roles.where(role_id: role_ids).exists?
