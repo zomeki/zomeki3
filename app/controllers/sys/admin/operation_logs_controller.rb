@@ -48,7 +48,7 @@ protected
 
   def export_csv(items)
     csv = CSV.generate do |csv|
-      fields = ["ログID", :created_at, :user_id, :user_name, :ipaddr, :uri, :action, :item_model, :item_id, :item_unid, :item_name]
+      fields = ["ログID", :created_at, :user_id, :user_name, :ipaddr, :uri, :action, :item_model, :item_id, :item_name]
       csv << fields.map {|c| c.is_a?(Symbol) ? Sys::OperationLog.human_attribute_name(c) : c }
 
       items.each do |item|
@@ -62,7 +62,6 @@ protected
         row << item.action_text
         row << item.item_model
         row << item.item_id
-        row << item.item_unid
         row << item.item_name
         csv << row
       end
