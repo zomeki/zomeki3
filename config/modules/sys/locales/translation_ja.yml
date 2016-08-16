@@ -4,6 +4,7 @@ ja:
       sys/user: "ユーザ"
       sys/group: "グループ"
       sys/role_name: "ロール"
+      sys/object_privilege: "権限"
     attributes:
       sys/sequence:
         created_at: "作成日時"

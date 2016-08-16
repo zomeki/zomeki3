@@ -4,11 +4,11 @@ class Sys::ObjectPrivilege < ActiveRecord::Base
   include Sys::Model::Base::Config
   include Sys::Model::Auth::Manager
 
-  belongs_to :privilegable, polymorphic: true, required: true
+  belongs_to :privilegable, polymorphic: true
   belongs_to :concept, class_name: 'Cms::Concept'
   belongs_to :role_name, :foreign_key => 'role_id', :class_name => 'Sys::RoleName'
 
-  validates :role_id, presence: true
+  validates :role_id, :concept_id, presence: true
   validates :action, presence: true, if: %Q(in_actions.blank?)
 
   attr_accessor :in_actions
@@ -82,7 +82,7 @@ class Sys::ObjectPrivilege < ActiveRecord::Base
     end
 
     actions.each do |action|
-      privileges.create(action: action)
+      privileges.create(action: action, concept_id: concept_id)
     end
   end
 end
