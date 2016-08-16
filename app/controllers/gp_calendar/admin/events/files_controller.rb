@@ -8,7 +8,7 @@ class GpCalendar::Admin::Events::FilesController < Cms::Controller::Admin::Base
     return http_error(404) unless @content = GpCalendar::Content::Event.find_by(id: params[:content])
 
     if (@event_id = params[:event_id]) =~ /^[0-9a-z]{32}$/
-      @tmp_unid = @event_id
+      @tmp_id = @event_id
     else
       @event = @content.events.find(@event_id)
     end
@@ -16,7 +16,9 @@ class GpCalendar::Admin::Events::FilesController < Cms::Controller::Admin::Base
 
   def index
     @item = Sys::File.new
-    @items = Sys::File.where(tmp_id: @tmp_unid, parent_unid: @event.try(:unid)).paginate(page: params[:page], per_page: 20).order(:name)
+    @items = Sys::File.where(tmp_id: @tmp_id).order(:name)
+    @items = @items.where(file_attachable: @event) if @event
+    @items = @items.paginate(page: params[:page], per_page: 20)
     _index @items
   end
 
@@ -28,8 +30,8 @@ class GpCalendar::Admin::Events::FilesController < Cms::Controller::Admin::Base
 
   def create
     @item = Sys::File.new(file_params)
-    @item.tmp_id = @tmp_unid
-    @item.parent_unid = @event.try(:unid)
+    @item.tmp_id = @tmp_id
+    @item.file_attachable = @event if @event
 
     if (duplicated = @item.duplicated)
       @item = duplicated
@@ -56,7 +58,9 @@ class GpCalendar::Admin::Events::FilesController < Cms::Controller::Admin::Base
   end
 
   def content
-    if (file = Sys::File.where(tmp_id: @tmp_unid, parent_unid: @event.try(:unid), name: "#{params[:basename]}.#{params[:extname]}").first)
+    file = Sys::File.where(tmp_id: @tmp_id)
+    file = file.where(file_attachable: @event) if @event
+    if (file = file.where(name: "#{params[:basename]}.#{params[:extname]}").first)
       mt = Rack::Mime.mime_type(".#{params[:extname]}")
       type, disposition = (mt =~ %r!^image/|^application/pdf$! ? [mt, 'inline'] : [mt, 'attachment'])
       disposition = 'attachment' if request.env['HTTP_USER_AGENT'] =~ /Android/
