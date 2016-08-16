@@ -1,9 +1,7 @@
-<%
-  api_key = @content.site.google_map_api_key
-%><div class="contentMapMarkers">
+<div class="contentMapMarkers">
   <div id="map_canvas" style="height: 350px; width: 700px;"></div>
 
-  <%= javascript_include_tag 'http://maps.googleapis.com/maps/api/js?key=' + api_key + '&region=jp' %>
+  <%= javascript_include_tag "http://maps.googleapis.com/maps/api/js?key=#{@content.site.google_map_api_key}&region=jp" %>
   <%= javascript_include_tag '/_common/modules/map/js/map.js' %>
   <%= javascript_tag do -%>
   var map;
