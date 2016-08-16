@@ -8,7 +8,7 @@ class GpArticle::Script::ArchivesController < Cms::Controller::Script::Publicati
       beginning_of_month += 1.month
     end
 
-    days = @node.content.public_docs.group('DATE_FORMAT(display_published_at, "%Y%m")')
+    days = @node.content.public_docs.group('TO_CHAR(display_published_at, "YYYYMM")')
                                     .pluck(:display_published_at)
                                     .map{|d| d.beginning_of_month.to_date }
 

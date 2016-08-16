@@ -13,7 +13,8 @@ class GpCalendar::Admin::HolidaysController < Cms::Controller::Admin::Base
   def index
     create_default_holidays(@content)
 
-    @items = @content.holidays.order("ifnull(`repeat`, 0) desc, ifnull(date_format(`date`,'%Y%m%d'), '00000000')").paginate(page: params[:page], per_page: 50)
+    @items = @content.holidays.order("repeat desc, COALESCE(TO_CHAR(date,'YYYYMMDD'), '00000000')")
+      .paginate(page: params[:page], per_page: 50)
     _index @items
   end
 

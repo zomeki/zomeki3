@@ -10,7 +10,7 @@ class GpArticle::Public::Piece::ArchivesController < Sys::Controller::Public::Ba
   def index
     order = (@piece.order == 'desc' ? :desc : :asc)
     @num_docs = @piece.content.public_docs
-                              .group("DATE_FORMAT(display_published_at, '%Y-%m')")
+                              .group("TO_CHAR(display_published_at, 'YYYY-MM')")
                               .order(display_published_at: order).count
     @num_docs = case @piece.term
                 when 'year_month'
