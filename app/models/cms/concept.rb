@@ -38,15 +38,12 @@ class Cms::Concept < ActiveRecord::Base
     [['現在のコンセプトから','current'], ['すべてのコンセプトから','all']]
   end
 
-  def readable_children
-    site = Core.site
-    user = Core.user
+  def readable_children(site = Core.site, user = Core.user)
     rel = self.class.where(state: 'public', site_id: site.id, parent_id: id.to_i)
 
     unless user.has_auth?(:manager)
-      priv_name = 'read'
-      rel = rel.where(unid: Sys::ObjectPrivilege.select(:item_unid).where(
-        action: priv_name, role_id: Sys::UsersRole.select(:role_id).where(user_id: user.id)
+      rel = rel.where(id: Sys::ObjectPrivilege.select(:concept_id).where(
+        action: 'read', role_id: Sys::UsersRole.select(:role_id).where(user_id: user.id)
       ))
     end
 
