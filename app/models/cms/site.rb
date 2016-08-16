@@ -148,6 +148,8 @@ class Cms::Site < ActiveRecord::Base
   def self.all_with_full_uri(full_uri)
     parsed_uri = Addressable::URI.parse(full_uri)
     parsed_uri.path = '/'
+    parsed_uri.query = nil
+    parsed_uri.fragment = nil
 
     parsed_uri.scheme = 'http'
     http_base = parsed_uri.to_s
