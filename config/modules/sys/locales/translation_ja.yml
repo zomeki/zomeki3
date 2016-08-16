@@ -71,7 +71,7 @@ ja:
         title: "ロール名"
 
       sys/object_privilege:
-        item_unid: "コンセプト"
+        concept_id: "コンセプト"
         action: "権限"
         in_actions: "権限"
 
@@ -108,7 +108,6 @@ ja:
         item: "操作アイテム"
         item_model: "操作アイテム種別"
         item_id: "操作アイテムID"
-        item_unid: "操作アイテムUNID"
         item_name: "操作アイテム名"
 
       sys/transferable_file:
