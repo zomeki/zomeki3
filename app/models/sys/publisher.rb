@@ -1,6 +1,8 @@
 class Sys::Publisher < ActiveRecord::Base
   include Sys::Model::Base
 
+  belongs_to :publishable, polymorphic: true
+
   before_validation :modify_path
   before_save :check_path
   before_destroy :remove_files
