@@ -52,7 +52,6 @@ class Cms::Admin::Tool::ImportController < Cms::Controller::Admin::Base
     exists = item.id ? true : false
     
     data.delete('id')
-    data.delete('unid')
     data.delete('site_id')
     data.delete('concept_id')
     data.delete('state')
@@ -86,7 +85,6 @@ class Cms::Admin::Tool::ImportController < Cms::Controller::Admin::Base
     exists = piece.id ? true : false
     
     data.delete('id')
-    data.delete('unid')
     data.delete('site_id')
     data.delete('concept_id')
     data.delete('content_id')
