@@ -1,9 +1,10 @@
 # encoding: utf-8
 class Sys::Recognition < ActiveRecord::Base
   include Sys::Model::Base
-  
+
   belongs_to :user,  :foreign_key => :user_id,  :class_name => 'Sys::User'
-  
+  belongs_to :recognizable, polymorphic: true, required: true
+
   attr_accessor :type
 
   def change_type(type)

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160714150614) do
+ActiveRecord::Schema.define(version: 20160816054205) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1302,8 +1302,11 @@ ActiveRecord::Schema.define(version: 20160714150614) do
     t.integer  "user_id"
     t.string   "recognizer_ids"
     t.text     "info_xml"
+    t.integer  "recognizable_id"
+    t.string   "recognizable_type"
   end
 
+  add_index "sys_recognitions", ["recognizable_type", "recognizable_id"], name: "index_sys_recognitions_on_recognizable", using: :btree
   add_index "sys_recognitions", ["user_id"], name: "index_sys_recognitions_on_user_id", using: :btree
 
   create_table "sys_role_names", force: :cascade do |t|

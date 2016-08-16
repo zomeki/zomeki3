@@ -1,9 +1,7 @@
 # encoding: utf-8
 module Sys::Model::Rel::Recognition
   def self.included(mod)
-    mod.belongs_to :recognition, :foreign_key => 'unid', :class_name => 'Sys::Recognition',
-      :dependent => :destroy
-
+    mod.has_one :recognition, class_name: 'Sys::Recognition', dependent: :destroy, as: :recognizable
     mod.after_save :save_recognition
   end
 
@@ -32,18 +30,6 @@ module Sys::Model::Rel::Recognition
     return state == 'recognized'
   end
 
-  def recognizable
-    join_creator
-    join_recognition
-    cond = Condition.new do |c|
-      c.or "sys_recognitions.user_id", Core.user.id
-      c.or 'sys_recognitions.recognizer_ids', 'REGEXP', "(^| )#{Core.user.id}( |$)"
-    end
-    self.and cond
-    self.and "#{self.class.table_name}.state", 'recognize'
-    self
-  end
-
   def recognizable?(user = nil)
     return false unless recognition
     return false unless state == "recognize"
@@ -70,13 +56,12 @@ private
   
   def save_recognition
     return true unless @_in_recognizer_ids_changed
-    return false unless unid
     return false if @sent_save_recognition
     @sent_save_recognition = true
 
     unless (rec = recognition)
       rec = Sys::Recognition.new
-      rec.id = unid
+      rec.recognizable = self
     end
 
     rec.user_id        = Core.user.id
