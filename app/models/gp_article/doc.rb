@@ -182,7 +182,7 @@ class GpArticle::Doc < ActiveRecord::Base
       assignments = Approval::Assignment.arel_table
       rel = rel.joins(:approval_requests => [:approval_flow => [:approvals => :assignments]])
                .where(approval_requests[:user_id].eq(Core.user.id)
-                      .or(assignments[:user_id].eq(Core.user.id))).uniq
+                      .or(assignments[:user_id].eq(Core.user.id))).distinct
     end
 
     if criteria[:category_id].kind_of?(Array) || criteria[:category_id].present?
@@ -192,7 +192,7 @@ class GpArticle::Doc < ActiveRecord::Base
                                                                   else
                                                                     cats[:category_id].eq(criteria[:category_id])
                                                                   end)
-      rel = rel.uniq if criteria[:category_id].kind_of?(Array)
+      rel = rel.distinct if criteria[:category_id].kind_of?(Array)
       rel = rel.joins(:categorizations).where(conditions).order(cats[:sort_no].eq(nil), cats[:sort_no].asc)
     end
 

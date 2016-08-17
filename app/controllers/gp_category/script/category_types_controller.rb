@@ -103,7 +103,7 @@ class GpCategory::Script::CategoryTypesController < Cms::Controller::Script::Pub
         docs = docs.where(tm.module_type_feature, true) if docs.columns.any?{|c| c.name == tm.module_type_feature }
 
         docs = docs.joins(:creator => :group)
-        groups = Sys::Group.where(id: docs.select(Sys::Group.arel_table[:id]).uniq)
+        groups = Sys::Group.where(id: docs.select(Sys::Group.arel_table[:id]).distinct)
 
         groups.each do |group|
           publish_link cat, view_context.more_link("g_#{group.code}", template_module: tm, ct_or_c: cat)
