@@ -38,7 +38,7 @@ module Cms::Lib::Layout
               rel.where(name: name_array[0])
                  .where(concept_id: concept_ids)
             end
-      rel.select("*, #{Cms::DataFile.connection.quote(name)} as name_with_option")
+      rel.select("*, #{Cms::DataFile.connection.quote(name)}::text as name_with_option")
         .order(concepts_order(concepts)).limit(1)
     end
 
