@@ -51,8 +51,8 @@ protected
 
     public_uri = URI.parse(Page.site.full_uri)
     public_uri.path = '/'
-    if (script_uri = Core.env['SCRIPT_URI'])
-      admin_uri = URI.parse(script_uri)
+    if Core.script_uri
+      admin_uri = URI.parse(Core.script_uri)
       admin_uri.path = '/'
     else
       admin_uri = public_uri

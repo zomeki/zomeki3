@@ -63,8 +63,8 @@ protected
     public_uri = URI.parse(Page.site.full_uri)
     public_uri.path = '/'
 
-    if (script_uri = Core.env['SCRIPT_URI'])
-      admin_uri = Addressable::URI.parse(script_uri)
+    if Core.script_uri
+      admin_uri = Addressable::URI.parse(Core.script_uri)
       admin_uri.path = '/'
     else
       admin_uri = Cms::SiteSetting::AdminProtocol.core_domain Page.site, public_uri.to_s, :freeze_protocol => true
