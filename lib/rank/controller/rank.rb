@@ -82,7 +82,7 @@ module Rank::Controller::Rank
           end
 
           rank_table = Rank::Rank.arel_table
-          Rank::Rank.select('*')
+          Rank::Rank.select(:hostname, :page_path)
                     .select(rank_table[:pageviews].sum.as('pageviews'))
                     .select(rank_table[:visitors].sum.as('visitors'))
                     .where(content_id: content.id)

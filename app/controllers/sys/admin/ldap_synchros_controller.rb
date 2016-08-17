@@ -8,7 +8,7 @@ class Sys::Admin::LdapSynchrosController < Cms::Controller::Admin::Base
   end
   
   def index
-    @items = Sys::LdapSynchro.group(:version).order(version: :desc)
+    @items = Sys::LdapSynchro.select("DISTINCT ON (version) *").order(version: :desc)
       .paginate(page: params[:page], per_page: params[:limit])
     _index @items
   end
