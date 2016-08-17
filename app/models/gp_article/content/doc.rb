@@ -30,7 +30,6 @@ class GpArticle::Content::Doc < Cms::Content
 
   has_one :organization_content_group_setting, -> { where(name: 'organization_content_group_id') },
     :foreign_key => :content_id, :class_name => 'GpArticle::Content::Setting'
-  delegate :organization_content_group, to: :organization_content_group_setting
 
   before_create :set_default_settings
 
@@ -58,6 +57,12 @@ class GpArticle::Content::Doc < Cms::Content
   def doc_node
     return @doc_node if @doc_node
     @doc_node = Cms::Node.where(state: 'public', content_id: id, model: 'GpArticle::Doc').order(:id).first
+  end
+
+  def organization_content_group
+    if organization_content_group_setting
+      @organization_content_group ||= organization_content_group_setting.organization_content_group
+    end
   end
 
   def gp_category_content_category_type

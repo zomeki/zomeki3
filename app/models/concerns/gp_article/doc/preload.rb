@@ -15,7 +15,8 @@ module Concerns::GpArticle::Doc::Preload
     end
 
     def organization_groups_and_public_node_ancestors_assocs
-      { content: { organization_content_group: { groups: organization_group_assocs } } }
+      #{ content: { organization_content_group: { groups: organization_group_assocs } } }
+      {}
     end
 
     private
