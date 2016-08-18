@@ -1,6 +1,6 @@
 module GpCategory::GpCategoryHelper
   def public_docs_with_category_id(category_id)
-    GpArticle::Doc.content_and_criteria(nil, category_id: category_id).except(:order).mobile(::Page.mobile?).public_state
+    GpArticle::Doc.categorized_into(category_id).except(:order).mobile(::Page.mobile?).public_state
   end
 
   def more_link(*options, template_module: nil, ct_or_c: nil)

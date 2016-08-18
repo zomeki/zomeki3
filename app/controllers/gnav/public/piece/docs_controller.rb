@@ -10,13 +10,13 @@ class Gnav::Public::Piece::DocsController < Sys::Controller::Public::Base
   def index
     piece_category_ids = @piece.categories.map(&:id)
 
-    piece_doc_ids = find_public_docs_by_category_ids(piece_category_ids).map(&:id)
+    piece_doc_ids = find_public_docs_by_category_ids(piece_category_ids).pluck(:id)
 
     doc_ids = 
       case @item
       when Gnav::MenuItem
         page_category_ids = @item.categories.map(&:id)
-        page_doc_ids = find_public_docs_by_category_ids(page_category_ids).map(&:id)
+        page_doc_ids = find_public_docs_by_category_ids(page_category_ids).pluck(:id)
         piece_doc_ids & page_doc_ids
       else
         piece_doc_ids
@@ -30,6 +30,6 @@ class Gnav::Public::Piece::DocsController < Sys::Controller::Public::Base
   private
 
   def find_public_docs_by_category_ids(category_ids)
-    GpArticle::Doc.content_and_criteria(nil, category_id: category_ids).mobile(::Page.mobile?).public_state
+    GpArticle::Doc.categorized_into(category_ids).mobile(::Page.mobile?).public_state
   end
 end

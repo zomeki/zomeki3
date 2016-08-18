@@ -41,8 +41,7 @@ class GpCategory::Admin::DocsController < Cms::Controller::Admin::Base
 
   def find_docs
     criteria = params[:criteria] || {}
-    criteria[:category_id] = @category.id
-    GpArticle::Doc.content_and_criteria(nil, criteria)
+    GpArticle::Doc.categorized_into(@category.id).content_and_criteria(nil, criteria)
   end
 
   def find_doc

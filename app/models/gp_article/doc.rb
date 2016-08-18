@@ -185,18 +185,14 @@ class GpArticle::Doc < ActiveRecord::Base
                       .or(assignments[:user_id].eq(Core.user.id))).distinct
     end
 
-    if criteria[:category_id].kind_of?(Array) || criteria[:category_id].present?
-      cats = GpCategory::Categorization.arel_table
-      conditions = cats[:categorized_as].eq('GpArticle::Doc').and(if criteria[:category_id].kind_of?(Array)
-                                                                    cats[:category_id].in(criteria[:category_id])
-                                                                  else
-                                                                    cats[:category_id].eq(criteria[:category_id])
-                                                                  end)
-      rel = rel.distinct if criteria[:category_id].kind_of?(Array)
-      rel = rel.joins(:categorizations).where(conditions).order(cats[:sort_no].eq(nil), cats[:sort_no].asc)
-    end
-
     return rel
+  }
+  scope :categorized_into, ->(category_ids) {
+    cats = GpCategory::Categorization.arel_table
+    where(id: GpCategory::Categorization.select(:categorizable_id)
+      .where(cats[:categorized_as].eq('GpArticle::Doc'))
+      .where(cats[:category_id].in(category_ids))
+      .order(cats[:sort_no].eq(nil), cats[:sort_no].asc))
   }
 
   def public_comments
