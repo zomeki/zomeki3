@@ -31,13 +31,10 @@ class Sys::Group < ActiveRecord::Base
   before_destroy :before_destroy
   after_save :copy_name_en_as_url_name
 
+  scope :readable, -> { all }
   scope :in_site, ->(site) { joins(:site_belongings).where(cms_site_belongings: {site_id: site.id}) }
   scope :in_group, ->(group) { where(parent_id: group.id) }
 
-  def readable
-    self
-  end
-  
   def creatable?
     Core.user.has_auth?(:manager)
   end

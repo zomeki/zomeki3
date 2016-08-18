@@ -11,6 +11,6 @@ class GpCalendar::Admin::Piece::BaseController < Cms::Admin::Piece::BaseControll
   private
 
   def find_piece
-    model.new.readable.find(params[:id])
+    model.readable.find(params[:id])
   end
 end

@@ -1,5 +1,3 @@
-require 'active_support/concern'
-
 module Cms::Model::Auth::Concept
   extend ActiveSupport::Concern
 
@@ -19,22 +17,6 @@ module Cms::Model::Auth::Concept
     }
   end
 
-  def readable
-    if Core.site
-      self.and :site_id, Core.site.id
-    else
-      self.and :site_id, 'IS', nil
-    end
-    
-    if Core.concept
-      self.and(0, 1) unless Core.user.has_priv?(:read, :item => Core.concept)
-      self.and :concept_id, Core.concept.id
-    else
-      self.and :concept_id, 'IS', nil
-    end
-    return self
-  end
-  
   def creatable?
     return false unless Core.user.has_auth?(:designer)
     return Core.user.has_priv?(:create, :item => concept(true))

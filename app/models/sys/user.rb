@@ -29,6 +29,7 @@ class Sys::User < ActiveRecord::Base
 
   before_destroy :block_root_deletion
 
+  scope :readable, -> { all }
   scope :in_site, ->(site) { joins(:users_groups => :site_belongings).where(cms_site_belongings: {site_id: site.id}) }
   scope :in_group, ->(group) { joins(:users_groups).where(sys_users_groups: {group_id: group.id}) }
 
@@ -53,10 +54,6 @@ class Sys::User < ActiveRecord::Base
     end
     rel
   }
-
-  def readable
-    self
-  end
 
   def creatable?
     Core.user.has_auth?(:manager)

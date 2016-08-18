@@ -1,18 +1,23 @@
 require 'RMagick'
-
 module Sys::Model::Base::File
+  extend ActiveSupport::Concern
+
   IMAGE_RESIZE_OPTIONS = [['120px', '120'], ['160px', '160'], ['240px', '240'], ['320px', '320'],
                           ['480px', '480'],['640px', '640'], ['800px', '800'], ['1280px', '1280'],
                           ['1600px', '1600'], ['1920px', '1920']]
 
-  def self.included(mod)
-    mod.validates :file, presence: true, unless: :skip_upload?
-    mod.validates :name, :title, presence: true
-    mod.validate :validate_file_name
-    mod.validate :validate_file_type
-    mod.validate :validate_upload_file
-    mod.after_save :upload_internal_file
-    mod.after_destroy :remove_internal_file
+  included do
+    validates :file, presence: true, unless: :skip_upload?
+    validates :name, :title, presence: true
+    validate :validate_file_name
+    validate :validate_file_type
+    validate :validate_upload_file
+    after_save :upload_internal_file
+    after_destroy :remove_internal_file
+
+    scope :readable, -> { all }
+    scope :editable, -> { all }
+    scope :deletable, -> { all }
   end
 
   @@_maxsize = 50 # MegaBytes
@@ -144,32 +149,20 @@ module Sys::Model::Base::File
     "#{Rails.root}/upload/#{md_dir}/#{id_dir}/#{id_file}"
   end
 
-  def readable
-    return self
-  end
-
-  def editable
-    return self
-  end
-
-  def deletable
-    return self
-  end
-
   def readable?
-    return true
+    true
   end
 
   def creatable?
-    return true
+    true
   end
 
   def editable?
-    return true
+    true
   end
 
   def deletable?
-    return true
+    true
   end
 
   def image_file?
