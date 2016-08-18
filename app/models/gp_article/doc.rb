@@ -194,6 +194,10 @@ class GpArticle::Doc < ActiveRecord::Base
       .where(cats[:category_id].in(category_ids))
       .order(cats[:sort_no].eq(nil), cats[:sort_no].asc))
   }
+  scope :organized_into, ->(group_ids) {
+    groups = Sys::Group.arel_table
+    joins(creator: :group).where(groups[:id].in(group_ids))
+  }
 
   def public_comments
     comments.public_state
