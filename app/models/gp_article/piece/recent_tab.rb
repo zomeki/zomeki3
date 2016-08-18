@@ -29,7 +29,7 @@ class GpArticle::Piece::RecentTab < Cms::Piece
   end
 
   def content
-    GpArticle::Content::Doc.find(super)
+    GpArticle::Content::Doc.find(super.id)
   end
 
   def category_types
