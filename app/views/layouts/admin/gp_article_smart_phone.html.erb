@@ -47,8 +47,7 @@
         <div id="contentContainer">
           <div id="contentHeader"><%= yield :content_header %></div>
           <div id="contentBody">
-            <% if flash[:notice] %><div class="notice"><%= flash[:notice] %></div><% end %>
-            <% if flash[:alert] %><div class="alert"><%= flash[:alert] %></div><% end %>
+            <%= render 'layouts/admin/notice' %>
             <%= yield %>
           </div>
           <div id="contentFooter"></div>
