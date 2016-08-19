@@ -4,7 +4,7 @@
   <tr>
 <%- if Core.user.root? -%>
     <th><%=t 'activerecord.models.cms/site' %></th>
-    <td><%= render :partial => 'cms/admin/_partial/sites/form', :locals => {f: f, item: @item} %></td>
+    <td><%= render 'cms/admin/_partial/sites/form', f: f, item: @item %></td>
   </tr><tr>
 <%- end -%>
     <th><%= @item.locale(:state) %></th>

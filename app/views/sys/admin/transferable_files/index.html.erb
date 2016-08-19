@@ -1,4 +1,4 @@
-<%= render :partial => 'search' %>
+<%= render 'search' %>
 
 <%= form_tag(transfer_all_sys_transferable_files_path, :method => :post, :id => 'form_items') do %>
 <%= hidden_field_tag 'transfer_selected', 'true' %>

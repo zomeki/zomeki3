@@ -1,8 +1,7 @@
 <div class="mainMenu">
-<%= render :partial => 'layouts/admin/cms/menu', :locals => {:current => :content} %>
+<%= render 'layouts/admin/cms/menu', current: :content %>
 </div>
 
 <div class="contentMenu">
-<%= render :partial => 'layouts/admin/cms/navi/component', :locals => {:current => :rewrite} %>
+<%= render 'layouts/admin/cms/navi/component', current: :rewrite %>
 </div>
-

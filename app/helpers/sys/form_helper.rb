@@ -1,54 +1,42 @@
 module Sys::FormHelper
   def creator_form(form)
-    item = form.object
-    item ||= instance_variable_get("@#{form.object_name}")
-    locals = {:f => form, :item => item}
-    render :partial => 'sys/admin/_partial/creators/form', :locals => locals
+    item = form.object || instance_variable_get("@#{form.object_name}")
+    render 'sys/admin/_partial/creators/form', f: form, item: item
   end
 
   def creator_form_smart_phone(form)
-    item = form.object
-    item ||= instance_variable_get("@#{form.object_name}")
-    locals = {:f => form, :item => item}
-    render :partial => 'sys/admin/_partial/creators/form_smart_phone', :locals => locals
+    item = form.object || instance_variable_get("@#{form.object_name}")
+    render 'sys/admin/_partial/creators/form_smart_phone', f: form, item: item
   end
 
   def creator_view(item)
-    locals = {:item => item}
-    render :partial => 'sys/admin/_partial/creators/view', :locals => locals
+    render 'sys/admin/_partial/creators/view', item: item
   end
   
   def recognizer_form(form)
-    item = form.object
-    item ||= instance_variable_get("@#{form.object_name}")
-    locals = {:f => form, :item => item}
-    render :partial => 'sys/admin/_partial/recognizers/form', :locals => locals
+    item = form.object || instance_variable_get("@#{form.object_name}")
+    render 'sys/admin/_partial/recognizers/form', f: form, item: item
   end
   
   def recognizer_view(item)
-    locals = {:item => item}
-    render :partial => 'sys/admin/_partial/recognizers/view', :locals => locals
+    render 'sys/admin/_partial/recognizers/view', item: item
   end
   
   def task_form(form)
     item = instance_variable_get("@#{form.object_name}")
-    locals = {:f => form, :item => item}
-    render :partial => 'sys/admin/_partial/tasks/form', :locals => locals
+    render 'sys/admin/_partial/tasks/form', f: form, item: item
   end
   
   def task_view(item)
-    locals = {:item => item}
-    render :partial => 'sys/admin/_partial/tasks/view', :locals => locals
+    render 'sys/admin/_partial/tasks/view', item: item
   end
   
   def editable_group_form(form)
     item = instance_variable_get("@#{form.object_name}")
-    locals = {:f => form, :item => item}
-    render :partial => 'sys/admin/_partial/editable_groups/form', :locals => locals
+    render 'sys/admin/_partial/editable_groups/form', f: form, item: item
   end
   
   def editable_group_view(item)
-    locals = {:item => item}
-    render :partial => 'sys/admin/_partial/editable_groups/view', :locals => locals
+    render 'sys/admin/_partial/editable_groups/view', item: item
   end
 end

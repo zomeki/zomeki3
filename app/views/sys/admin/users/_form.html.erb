@@ -50,7 +50,7 @@
 <%- end -%>
   </tr><tr>
     <th><%= @item.locale(:role_name) %></th>
-    <td><%= render :partial => 'sys/admin/_partial/role_names/form', :locals => {:f => f, :item => @item} %></td>
+    <td><%= render 'sys/admin/_partial/role_names/form', f: f, item: @item %></td>
   </tr>
 </table>
 

@@ -45,7 +45,7 @@
               <%= link_to safe{h(Core.concept ? Core.concept.name : "")}, cms_navi_concepts_path, :id => "currentNaviConcept" %>
             </td>
             <td class="menu">
-              <%= render :partial => controller.controller_path + '/header' %>
+              <%= render controller.controller_path + '/header' %>
             </td>
           </tr>
         </table>
@@ -57,7 +57,7 @@
           <div id="contentHeader">
             <% dir = "#{Rails.root}/app/views/#{controller.controller_path}" %>
             <% if FileTest.exist?("#{dir}/_menu.html.erb") %>
-            <%= render :partial => controller.controller_path + '/menu' %>
+            <%= render controller.controller_path + '/menu' %>
             <% end %>
           </div>
           <div id="contentBody">

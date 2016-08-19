@@ -1,10 +1,10 @@
-<%= render :partial => 'menu' %>
+<%= render 'menu' %>
 
 <%= form_for :item, :url => {:action => :create}, :html => {:multipart => true} do |f| %>
 
 <%= error_messages_for :item %>
 
-<%= render :partial => 'form', :locals => {:f => f} %>
+<%= render 'form', f: f %>
 
 <%= submit :register %>
 

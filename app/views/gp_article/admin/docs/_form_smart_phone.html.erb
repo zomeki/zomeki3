@@ -57,8 +57,7 @@
     </div>
 
     <div id="template_body_form">
-      <%= render partial: 'gp_template/admin/shared/form',
-                  locals: {template: @item.template, template_values: @item.template_values} if @item.template %>
+      <%= render 'gp_template/admin/shared/form', template: @item.template, template_values: @item.template_values if @item.template %>
     </div>
 
     <%- if @content.blog_functions_available? -%>
@@ -180,7 +179,7 @@
     </div>
   </div>
   <div id="tab3">
-    <%= render 'cms/admin/_partial/many_inquiries/form_smart_phone', {f: f, item: @item, content: @content} %>
+    <%= render 'cms/admin/_partial/many_inquiries/form_smart_phone', f: f, item: @item, content: @content %>
   </div>
   <div id="tab4">
     <%- if @content.approval_content_approval_flow -%>

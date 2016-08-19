@@ -1,98 +1,80 @@
 module Cms::FormHelper
   def node_navi
-    render :partial => 'cms/admin/_partial/nodes/navi'
+    render 'cms/admin/_partial/nodes/navi'
   end
 
   def concept_and_layout_form(form, options = {})
     #return form.hidden_field(:concept_id) unless Core.user.has_auth?(:manager)
     item = instance_variable_get("@#{form.object_name}")
-    locals = {:f => form, :item => item, :layout => true}.merge(options)
-    render :partial => 'cms/admin/_partial/concepts/form', :locals => locals
+    render 'cms/admin/_partial/concepts/form', {f: form, item: item, layout: true}.merge(options)
   end
 
   def concept_form(form, options = {})
     #return form.hidden_field(:concept_id) unless Core.user.has_auth?(:manager)
     item = instance_variable_get("@#{form.object_name}")
-    locals = {:f => form, :item => item}.merge(options)
-    render :partial => 'cms/admin/_partial/concepts/form', :locals => locals
+    render 'cms/admin/_partial/concepts/form', {f: form, item: item}.merge(options)
   end
 
   def concept_view(item, options = {})
-    locals = {:item => item}.merge(options)
-    render :partial => 'cms/admin/_partial/concepts/view', :locals => locals
+    render 'cms/admin/_partial/concepts/view', {item: item}.merge(options)
   end
 
   def layout_form(form, options = {})
     item = instance_variable_get("@#{form.object_name}")
-    locals = {:f => form, :item => item}.merge(options)
-    render :partial => 'cms/admin/_partial/layouts/form', :locals => locals
+    render 'cms/admin/_partial/layouts/form', {f: form, item: item}.merge(options)
   end
 
   def layout_view(item, options = {})
-    locals = {:item => item}.merge(options)
-    render :partial => 'cms/admin/_partial/layouts/view', :locals => locals
+    render 'cms/admin/_partial/layouts/view', {item: item}.merge(options)
   end
 
   def content_base_form(form, options = {})
     item = instance_variable_get("@#{form.object_name}")
-    locals = {:f => form, :item => item}.merge(options)
-    render :partial => 'cms/admin/_partial/contents/form', :locals => locals
+    render 'cms/admin/_partial/contents/form', {f: form, item: item}.merge(options)
   end
 
   def content_base_view(item, options = {})
-    locals = {:item => item}.merge(options)
-    render :partial => 'cms/admin/_partial/contents/view', :locals => locals
+    render 'cms/admin/_partial/contents/view', {item: item}.merge(options)
   end
 
   def node_base_form(form, options = {})
     item = instance_variable_get("@#{form.object_name}")
-    locals = {:f => form, :item => item}.merge(options)
-    render :partial => 'cms/admin/_partial/nodes/form', :locals => locals
+    render 'cms/admin/_partial/nodes/form', {f: form, item: item}.merge(options)
   end
 
   def node_base_view(item, options = {})
-    locals = {:item => item}.merge(options)
-    render :partial => 'cms/admin/_partial/nodes/view', :locals => locals
+    render 'cms/admin/_partial/nodes/view', {item: item}.merge(options)
   end
 
   def piece_base_form(form, options = {})
     item = instance_variable_get("@#{form.object_name}")
-    locals = {:f => form, :item => item}.merge(options)
-    render :partial => 'cms/admin/_partial/pieces/form', :locals => locals
+    render 'cms/admin/_partial/pieces/form', {f: form, item: item}.merge(options)
   end
 
   def piece_base_view(item, options = {})
-    locals = {:item => item}.merge(options)
-    render :partial => 'cms/admin/_partial/pieces/view', :locals => locals
+    render 'cms/admin/_partial/pieces/view', {item: item}.merge(options)
   end
 
   def piece_base_menu(item, options = {})
-    locals = {:item => item}.merge(options)
-    render :partial => 'cms/admin/_partial/pieces/menu', :locals => locals
+    render 'cms/admin/_partial/pieces/menu', {item: item}.merge(options)
   end
 
   def inquiry_form(form)
-    item = form.object
-    item ||= instance_variable_get("@#{form.object_name}")
-    locals = {:f => form, :item => item}
-    render :partial => 'cms/admin/_partial/inquiries/form', :locals => locals
+    item = form.object || instance_variable_get("@#{form.object_name}")
+    render 'cms/admin/_partial/inquiries/form', f: form, item: item
   end
 
   def inquiry_view(item)
-    locals = {:item => item}
-    render :partial => 'cms/admin/_partial/inquiries/view', :locals => locals
+    render 'cms/admin/_partial/inquiries/view', item: item
   end
 
   def google_map_form(form)
-    item = form.object
-    item ||= instance_variable_get("@#{form.object_name}")
-    locals = {:f => form, :item => item}
-    render :partial => 'cms/admin/_partial/maps/form', :locals => locals
+    item = form.object || instance_variable_get("@#{form.object_name}")
+    render 'cms/admin/_partial/maps/form', f: form, item: item
   end
 
   def google_map_view(item)
-    locals = {:item => item}
-    render :partial => 'cms/admin/_partial/maps/view', :locals => locals
+    render 'cms/admin/_partial/maps/view', item: item
   end
 
   def value_form(f)

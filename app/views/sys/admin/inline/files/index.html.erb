@@ -2,13 +2,13 @@
   _path = './files/'
   _form_id = 'item_body'
 
-%><%#= render :partial => 'header' %>
+%><%#= render 'header' %>
 
 <%= form_for :item, :url => {:action => :create}, :html => {:multipart => true} do |f| %>
 
 <%= error_messages_for :item %>
 
-<%= render :partial => 'form', :locals => {:f => f, :submit_label => "アップロード"} %>
+<%= render 'form', f: f, submit_label: "アップロード" %>
 
 <% end %>
 

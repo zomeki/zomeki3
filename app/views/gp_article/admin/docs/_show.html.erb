@@ -62,7 +62,7 @@
     </div>
 
     <%- if @item.template -%>
-    <%= render partial: 'gp_template/admin/shared/show', locals: {template: @item.template, template_values: @item.template_values} %>
+    <%= render 'gp_template/admin/shared/show', template: @item.template, template_values: @item.template_values %>
     <%- else -%>
     <table class="show">
       <tr>
@@ -158,10 +158,10 @@
     <%= task_view @item %>
   </div>
   <div id="tab3">
-    <%= render 'cms/admin/_partial/many_inquiries/view', {item: @item} %>
+    <%= render 'cms/admin/_partial/many_inquiries/view', item: @item %>
   </div>
   <div id="tab4">
-    <%= render 'approval/admin/_partial/view', {item: @item, content: @content} %>
+    <%= render 'approval/admin/_partial/view', item: @item, content: @content %>
   </div>
   <div id="tab5">
     <table class="show">

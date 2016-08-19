@@ -59,7 +59,7 @@
 
 <%- if @content.approval_related? -%>
 <p class="form">承認</p>
-<%= render 'approval/admin/_partial/form', {f: f, item: @item, content: @content} %>
+<%= render 'approval/admin/_partial/form', f: f, item: @item, content: @content %>
 <%- end -%>
 
 <%= creator_form f %>
