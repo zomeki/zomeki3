@@ -1,7 +1,8 @@
-<%= form_for(:item, url: gp_category_category_type_category_categories_path(content: @content,
-                                                                            category_type_id: @category_type.id,
-                                                                            category_id: @parent_category.try(:id).to_i)) do |f| %>
+<%= form_for @item, as: :item, url: { action: :create,
+                                      content: @content,
+                                      category_type_id: @category_type.id,
+                                      category_id: @parent_category.try(:id).to_i } do |f| %>
   <%= error_messages_for :item %>
-  <%= render 'form', :f => f %>
+  <%= render 'form', f: f %>
   <%= submit :create %>
 <% end %>

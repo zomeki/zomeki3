@@ -1,9 +1,6 @@
 <%= render 'menu' %>
 
-<%= form_for :item, :url => {:action => :update}, :html => {:method => :put, :multipart => true} do |f| %>
-  
-<%= error_messages_for :item %>
-
-<%= render 'form', f: f, submit_label: "編集" %>
-
+<%= form_for @item, as: :item, url: { action: :update }, html: { method: :put, multipart: true } do |f| %>
+  <%= error_messages_for :item %>
+  <%= render 'form', f: f, submit_label: "編集" %>
 <% end %>

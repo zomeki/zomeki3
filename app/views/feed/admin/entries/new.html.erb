@@ -1,9 +1,5 @@
-<%= form_for :item, :url => {:action => :create}, :html => {:multipart => true, :id => 'itemForm'} do |f| %>
-
-<%= error_messages_for :item %>
-
-<%= render 'form', f: f %>
-
-<%= submit (:create) %>
-
+<%= form_for @item, as: :item, url: { action: :create }, html: { multipart: true, id: 'itemForm' } do |f| %>
+  <%= error_messages_for :item %>
+  <%= render 'form', f: f %>
+  <%= submit (:create) %>
 <% end %>
