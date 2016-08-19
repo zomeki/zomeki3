@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'nkf'
 class Sys::Lib::Ldap
   attr_accessor :connection

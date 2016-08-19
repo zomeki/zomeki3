@@ -1,4 +1,3 @@
-# encoding: utf-8
 class GpArticle::Piece::RecentTab < Cms::Piece
   default_scope { where(model: 'GpArticle::RecentTab') }
 

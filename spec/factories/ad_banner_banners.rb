@@ -1,4 +1,3 @@
-# encoding: utf-8
 FactoryGirl.define do
   factory :ad_banner_banner_1, class: 'AdBanner::Banner' do
     name 'sample_picture.jpg'

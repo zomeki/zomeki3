@@ -1,4 +1,3 @@
-# encoding: utf-8
 class GpCalendar::Content::Setting < Cms::ContentSetting
   set_config :gp_category_content_category_type_id, name: '汎用カテゴリタイプ',
     options: lambda { GpCategory::Content::CategoryType.where(site_id: Core.site.id).map {|ct| [ct.name, ct.id] } }

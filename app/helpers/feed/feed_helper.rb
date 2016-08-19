@@ -1,4 +1,3 @@
-# encoding: utf-8
 module Feed::FeedHelper
   
   def entry_replace(entry, entry_style, date_style, time_style='')

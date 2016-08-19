@@ -1,4 +1,3 @@
-# encoding: utf-8
 class GpArticle::Piece::RecentTabXml < Cms::Model::Base::PieceExtension
   CONDITION_OPTIONS = [['すべてを含む', 'and'], ['いずれかを含む', 'or']]
   LAYER_OPTIONS = [['下層のカテゴリすべて', 'descendants'], ['該当カテゴリのみ', 'self']]

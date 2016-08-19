@@ -1,4 +1,3 @@
-# encoding: utf-8
 class GpArticle::Public::Piece::DocsController < Sys::Controller::Public::Base
   def pre_dispatch
     @piece = GpArticle::Piece::Doc.find_by(id: Page.current_piece.id)

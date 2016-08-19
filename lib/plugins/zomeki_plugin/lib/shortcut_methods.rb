@@ -1,4 +1,3 @@
-# encoding: utf-8
 def dump(data)
   ActiveSupport::Deprecation.warn("Replace dump with rails logger (#{caller[0..4].join("\n")})")
   Sys::Lib::Debugger::Dump.dump_log(data)

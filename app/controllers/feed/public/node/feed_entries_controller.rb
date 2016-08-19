@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Feed::Public::Node::FeedEntriesController < Cms::Controller::Public::Base
   include Feed::Controller::Feed
 

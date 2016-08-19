@@ -1,4 +1,3 @@
-# encoding: utf-8
 class GpCategory::Content::CategoryType < Cms::Content
   CATEGORY_TYPE_STYLE_OPTIONS = [['全カテゴリ一覧', 'all_categories'], ['全記事一覧', 'all_docs'], ['カテゴリ＋記事', 'categories_with_docs']]
   CATEGORY_STYLE_OPTIONS = [['カテゴリ一覧＋記事一覧', 'categories_and_docs'], ['カテゴリ＋記事', 'categories_with_docs']]

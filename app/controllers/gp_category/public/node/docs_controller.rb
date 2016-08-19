@@ -1,4 +1,3 @@
-# encoding: utf-8
 class GpCategory::Public::Node::DocsController < Cms::Controller::Public::Base
   include GpArticle::Controller::Feed
 

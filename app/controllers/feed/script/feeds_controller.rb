@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Feed::Script::FeedsController < ApplicationController
   include 
 

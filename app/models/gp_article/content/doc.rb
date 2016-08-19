@@ -1,4 +1,3 @@
-# encoding: utf-8
 class GpArticle::Content::Doc < Cms::Content
   CALENDAR_RELATION_OPTIONS = [['使用する', 'enabled'], ['使用しない', 'disabled']]
   MAP_RELATION_OPTIONS = [['使用する', 'enabled'], ['使用しない', 'disabled']]

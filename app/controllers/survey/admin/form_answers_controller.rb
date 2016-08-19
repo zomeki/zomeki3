@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Survey::Admin::FormAnswersController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 

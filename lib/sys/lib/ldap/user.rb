@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Sys::Lib::Ldap::User < Sys::Lib::Ldap::Entry
   cattr_accessor :primary, :filter
   

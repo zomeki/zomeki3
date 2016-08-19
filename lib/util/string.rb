@@ -1,4 +1,3 @@
-# encoding: utf-8
 module Util::String
   def self.search_platform_dependent_characters(str)
     regex = "[" +

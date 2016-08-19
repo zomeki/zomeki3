@@ -1,4 +1,3 @@
-# encoding: utf-8
 class GpCalendar::Public::Node::TodaysEventsController < GpCalendar::Public::Node::BaseController
   def index
     http_error(404) if params[:page]

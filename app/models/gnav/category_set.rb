@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Gnav::CategorySet < ActiveRecord::Base
   include Sys::Model::Base
 

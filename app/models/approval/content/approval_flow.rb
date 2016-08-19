@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Approval::Content::ApprovalFlow < Cms::Content
   default_scope { where(model: 'Approval::ApprovalFlow') }
 

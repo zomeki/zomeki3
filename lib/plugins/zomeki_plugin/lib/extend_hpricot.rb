@@ -1,4 +1,3 @@
-# encoding: utf-8
 # hpricot patch for v0.8.2 .. 0.8.4
 require 'hpricot'
 

@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Tool::Convert::PageInfo
   attr_accessor :file_path, :uri_path, :title, :body, :updated_at, :group_code, 
                 :creator_group_id, :creator_user_id, 

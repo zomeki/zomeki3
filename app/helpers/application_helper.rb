@@ -1,4 +1,3 @@
-# encoding: utf-8
 module ApplicationHelper
   ## query string
   def query(params = nil)

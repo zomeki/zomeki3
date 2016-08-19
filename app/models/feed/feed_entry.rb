@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Feed::FeedEntry < ActiveRecord::Base
   include Sys::Model::Base
   include Cms::Model::Auth::Content

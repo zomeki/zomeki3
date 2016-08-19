@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 class Sys::Script::RunnerController < ApplicationController
   def run
     Dir.chdir("#{Rails.root}")

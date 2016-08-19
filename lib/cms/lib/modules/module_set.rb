@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Cms::Lib::Modules::ModuleSet
   @@modules = nil
   

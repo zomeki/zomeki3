@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Survey::Public::Node::FormsController < Cms::Controller::Public::Base
   include SimpleCaptcha::ControllerHelpers
   before_action :set_form, only: [:show, :confirm_answers, :send_answers, :finish]

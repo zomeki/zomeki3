@@ -1,4 +1,3 @@
-# encoding: utf-8
 module GpArticle::GpArticleHelper
   def link_to_doc_options(doc)
     if doc.target.present?

@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Sys::Lib::Form::Element::CheckBox < Sys::Lib::Form::Element::Base
   def value_to_string
     return nil if @value.blank?

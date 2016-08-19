@@ -1,4 +1,3 @@
-# encoding: utf-8
 module GpArticle::Model::Rel::Doc::Rel
   attr_accessor :in_rel_doc_ids
 

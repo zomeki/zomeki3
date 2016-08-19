@@ -1,4 +1,3 @@
-# encoding: utf-8
 class GpCategory::Public::Piece::RecentTabsController < Sys::Controller::Public::Base
   def pre_dispatch
     @piece = GpCategory::Piece::RecentTab.find_by(id: Page.current_piece.id)

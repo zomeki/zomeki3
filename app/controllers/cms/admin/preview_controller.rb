@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Cms::Admin::PreviewController < Cms::Controller::Admin::Base
   after_action :replace_preview_data
 

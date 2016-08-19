@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Tool::Convert::LinkProcessor
   attr_reader :body, :after_body, :clinks
 

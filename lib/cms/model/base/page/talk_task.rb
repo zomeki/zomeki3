@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'digest/md5'
 module Cms::Model::Base::Page::TalkTask
   def self.included(mod)

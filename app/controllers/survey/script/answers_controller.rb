@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Survey::Script::AnswersController < ApplicationController
 
   def pull

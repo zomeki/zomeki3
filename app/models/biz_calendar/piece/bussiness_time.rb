@@ -1,4 +1,3 @@
-# encoding: utf-8
 class BizCalendar::Piece::BussinessTime < Cms::Piece
   TARGET_TYPE_OPTIONS = [['全て', 'all'], ['本日', 'today']]
   PAGE_FILTER_OPTIONS = [['絞り込む', 'filter'], ['絞り込まない', 'through']]

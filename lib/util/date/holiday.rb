@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Util::Date::Holiday
   def self.holiday?(year, month, day, wday = nil)
     wday ||= Date.new(year, month, day).strftime("%w").to_i

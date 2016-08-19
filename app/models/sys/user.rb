@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'digest/sha1'
 class Sys::User < ActiveRecord::Base
   include Sys::Model::Base

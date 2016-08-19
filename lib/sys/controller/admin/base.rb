@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Sys::Controller::Admin::Base < ApplicationController
   include Sys::Controller::Admin::Auth
   helper Sys::FormHelper

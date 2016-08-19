@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Rank::Public::Node::PreviousDaysController < Cms::Controller::Public::Base
   include Sys::Controller::Scaffold::Base
   include Rank::Controller::Rank

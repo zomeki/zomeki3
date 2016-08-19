@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 namespace :db do
   namespace :seed do
     task :demo => :environment do

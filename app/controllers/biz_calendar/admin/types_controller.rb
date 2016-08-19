@@ -1,4 +1,3 @@
-# encoding: utf-8
 class BizCalendar::Admin::TypesController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 

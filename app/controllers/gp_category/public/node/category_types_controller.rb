@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 require 'will_paginate/array'
 
 class GpCategory::Public::Node::CategoryTypesController < GpCategory::Public::Node::BaseController

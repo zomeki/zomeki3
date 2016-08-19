@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Feed::Public::Piece::FeedEntriesController < Sys::Controller::Public::Base
 
   def pre_dispatch

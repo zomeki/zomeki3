@@ -1,4 +1,3 @@
-# encoding: utf-8
 class GpCategory::Category < ActiveRecord::Base
   include Sys::Model::Base
   include Sys::Model::Rel::Creator

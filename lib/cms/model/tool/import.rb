@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Cms::Model::Tool::Import < ActiveRecord::Base
   self.table_name = "cms_concepts" #dummy
   

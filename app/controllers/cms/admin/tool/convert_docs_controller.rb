@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'csv'
 class Cms::Admin::Tool::ConvertDocsController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base

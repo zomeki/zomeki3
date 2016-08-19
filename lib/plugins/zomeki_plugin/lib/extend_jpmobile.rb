@@ -1,4 +1,3 @@
-# encoding: utf-8
 module Jpmobile
   module SessionID
     def self.generate_sid

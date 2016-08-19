@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'mime/types'
 class Tool::SiteContent < Sys::Model::ValidationModel::Base
   attr_reader   :site_url, :full_path, :path

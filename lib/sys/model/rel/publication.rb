@@ -1,4 +1,3 @@
-# encoding: utf-8
 module Sys::Model::Rel::Publication
   def self.included(mod)
 #    mod.belongs_to :publisher, :foreign_key => :path, :primary_key => :path, :class_name => 'Sys::Publisher',

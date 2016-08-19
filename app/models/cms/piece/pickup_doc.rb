@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Cms::Piece::PickupDoc < Cms::Piece
   default_scope { where(model: 'Cms::PickupDoc') }
 

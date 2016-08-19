@@ -1,4 +1,3 @@
-# encoding: utf-8
 class GpArticle::Admin::Piece::RecentTabs::TabsController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 

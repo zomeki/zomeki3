@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Cms::Public::Piece::BreadCrumbsController < Sys::Controller::Public::Base
   def index
     @piece = Page.current_piece

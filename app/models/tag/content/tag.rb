@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Tag::Content::Tag < Cms::Content
   default_scope { where(model: 'Tag::Tag') }
 

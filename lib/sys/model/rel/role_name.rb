@@ -1,4 +1,3 @@
-# encoding: utf-8
 module Sys::Model::Rel::RoleName
   def self.included(mod)
     mod.after_save :save_user_roles

@@ -1,4 +1,3 @@
-# encoding: utf-8
 class AdBanner::Public::Node::BannersController < Cms::Controller::Public::Base
   skip_action_callback :render_public_layout, :only => :index
 

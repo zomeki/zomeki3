@@ -1,4 +1,3 @@
-# encoding: utf-8
 class GpArticle::Hold < ActiveRecord::Base
   include Sys::Model::Base
 

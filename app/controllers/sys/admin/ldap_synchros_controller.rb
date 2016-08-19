@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Sys::Admin::LdapSynchrosController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
   

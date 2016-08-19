@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Cms::Public::CommonSslController < ApplicationController
 #  after_action :replace_preview_data
   

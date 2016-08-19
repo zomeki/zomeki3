@@ -1,4 +1,3 @@
-# encoding: utf-8
 module GpTemplate::Model::Rel::Template
   extend ActiveSupport::Concern
 

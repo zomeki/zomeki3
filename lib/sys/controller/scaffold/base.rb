@@ -1,4 +1,3 @@
-# encoding: utf-8
 module Sys::Controller::Scaffold::Base
   def edit
     show

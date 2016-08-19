@@ -1,4 +1,3 @@
-# encoding: utf-8
 class BizCalendar::Piece::Calendar < Cms::Piece
   HOLIDAY_TYPE_STATE_OPTIONS = [['表示する','visible'],['表示しない','hidden']]
   HOLIDAY_STATE_OPTIONS = [['表示する','visible'],['表示しない','hidden']]

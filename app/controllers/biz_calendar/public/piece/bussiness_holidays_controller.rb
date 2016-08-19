@@ -1,4 +1,3 @@
-# encoding: utf-8
 class BizCalendar::Public::Piece::BussinessHolidaysController < BizCalendar::Public::Piece::BaseController
   def pre_dispatch
     @piece = BizCalendar::Piece::BussinessHoliday.find_by(id: Page.current_piece.id)

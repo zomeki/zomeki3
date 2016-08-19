@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 require 'will_paginate/array'
 
 class Map::Public::Node::NavigationsController < Cms::Controller::Public::Base

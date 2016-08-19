@@ -1,4 +1,3 @@
-# encoding: utf-8
 class BizCalendar::Piece::BussinessHoliday < Cms::Piece
   TARGET_TYPE_OPTIONS = [['全て', 'all'], ['次回', 'next']]
   PAGE_FILTER_OPTIONS = [['絞り込む', 'filter'], ['絞り込まない', 'through']]

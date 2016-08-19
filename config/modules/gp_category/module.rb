@@ -1,4 +1,3 @@
-# encoding: utf-8
 Cms::Lib::Modules::ModuleSet.draw :gp_category, 'カテゴリ' do |mod|
   ## contents
   mod.content :category_types, 'カテゴリタイプ'

@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Rank::Piece::Rank < Cms::Piece
   default_scope { where(model: 'Rank::Rank') }
 

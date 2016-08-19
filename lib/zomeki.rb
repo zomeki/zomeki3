@@ -1,4 +1,3 @@
-# encoding: utf-8
 module Zomeki
   def self.version
     "3.0.0"

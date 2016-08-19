@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Sys::Admin::TransferableFilesController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
   include Sys::Lib::File::Transfer

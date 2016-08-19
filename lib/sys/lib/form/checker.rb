@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Sys::Lib::Form::Checker
   @links   = nil
   @alts    = nil

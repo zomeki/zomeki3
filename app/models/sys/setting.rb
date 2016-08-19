@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Sys::Setting < Sys::Model::Base::Setting
   include Sys::Model::Base
 

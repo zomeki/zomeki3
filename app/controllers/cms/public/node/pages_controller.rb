@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Cms::Public::Node::PagesController < Cms::Controller::Public::Base
   def pre_dispatch
     return http_error(404) unless @item = Cms::Node::Page.find_by(id: Page.current_node.id)

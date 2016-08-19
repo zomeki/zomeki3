@@ -1,4 +1,3 @@
-# encoding: utf-8
 module Map::MapHelper
   def default_lat_lng
     if @content.latitude.blank? && @content.longitude.blank?

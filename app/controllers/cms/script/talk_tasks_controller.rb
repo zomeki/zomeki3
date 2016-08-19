@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'digest/md5'
 class Cms::Script::TalkTasksController < Cms::Controller::Script::Publication
   def exec

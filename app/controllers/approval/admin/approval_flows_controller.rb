@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Approval::Admin::ApprovalFlowsController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 

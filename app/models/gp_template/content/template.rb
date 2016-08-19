@@ -1,4 +1,3 @@
-# encoding: utf-8
 class GpTemplate::Content::Template < Cms::Content
   default_scope { where(model: 'GpTemplate::Template') }
 

@@ -1,4 +1,3 @@
-# encoding: utf-8
 class GpCalendar::Admin::EventsController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 

@@ -1,4 +1,3 @@
-# encoding: utf-8
 module GpTemplate::GpTemplateHelper
   def template_body(template, template_values, files)
     template.items.inject(template.body.to_s) do |body, item|

@@ -1,4 +1,3 @@
-# encoding: utf-8
 module Sys::Model::Rel::Recognition
   def self.included(mod)
     mod.has_one :recognition, class_name: 'Sys::Recognition', dependent: :destroy, as: :recognizable

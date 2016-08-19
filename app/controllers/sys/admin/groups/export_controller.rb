@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'nkf'
 require 'csv'
 class Sys::Admin::Groups::ExportController < Cms::Controller::Admin::Base

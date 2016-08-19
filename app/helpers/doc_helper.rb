@@ -1,4 +1,3 @@
-# encoding: utf-8
 module DocHelper
   def doc_replace(doc, doc_style, date_style, time_style='')
 

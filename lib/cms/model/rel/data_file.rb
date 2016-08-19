@@ -1,4 +1,3 @@
-# encoding: utf-8
 module Cms::Model::Rel::DataFile
   def self.included(mod)
     #mod.has_one :concept, :primary_key => 'concept_id', :foreign_key => 'id', :class_name => 'Cms::Concept'

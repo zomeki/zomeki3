@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Sys::Base::Status < ActiveRecord::Base
   class Value
     attr_accessor :id

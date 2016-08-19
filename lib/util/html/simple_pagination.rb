@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Util::Html::SimplePagination
   
   attr_accessor :separator

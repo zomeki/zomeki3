@@ -1,4 +1,3 @@
-# encoding: utf-8
 module Sys::Model::ConditionBuilder
   @_cb_condition = nil
   @_cb_extention = nil

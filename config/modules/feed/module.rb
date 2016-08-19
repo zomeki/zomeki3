@@ -1,4 +1,3 @@
-# encoding: utf-8
 Cms::Lib::Modules::ModuleSet.draw :feed, 'Feed' do |mod|
   ## contents
   mod.content :feeds, 'Feed'

@@ -1,4 +1,3 @@
-# encoding: utf-8
 module Cms::FormHelper
   def node_navi
     render :partial => 'cms/admin/_partial/nodes/navi'

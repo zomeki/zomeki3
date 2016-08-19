@@ -1,4 +1,3 @@
-# encoding: utf-8
 FactoryGirl.define do
   factory :ad_banner_content_banner_1, class: 'AdBanner::Content::Banner' do
     site_id 1

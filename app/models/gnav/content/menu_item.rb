@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Gnav::Content::MenuItem < Cms::Content
   default_scope { where(model: 'Gnav::MenuItem') }
 

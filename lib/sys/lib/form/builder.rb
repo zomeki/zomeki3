@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Sys::Lib::Form::Builder
   attr_accessor :name, :template
   attr_accessor :elements

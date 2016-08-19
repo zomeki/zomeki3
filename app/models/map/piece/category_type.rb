@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Map::Piece::CategoryType < Cms::Piece
   default_scope { where(model: 'Map::CategoryType') }
 

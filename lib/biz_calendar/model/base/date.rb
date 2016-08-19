@@ -1,4 +1,3 @@
-# encoding: utf-8
 module BizCalendar::Model::Base::Date
   
   # 第n週目

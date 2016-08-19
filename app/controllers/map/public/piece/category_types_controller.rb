@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Map::Public::Piece::CategoryTypesController < Sys::Controller::Public::Base
   def pre_dispatch
     @piece = Map::Piece::CategoryType.find_by(id: Page.current_piece.id)

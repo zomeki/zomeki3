@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Cms::Admin::Node::PagesController < Cms::Admin::Node::BaseController
   set_model Cms::Node::Page
 

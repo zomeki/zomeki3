@@ -1,4 +1,3 @@
-# encoding: utf-8
 class AdBanner::Content::Setting < Cms::ContentSetting
   set_config :click_count_setting, name: 'クリック数カウント',
     options: [['有効', 'enabled'], ['無効', 'disabled']],

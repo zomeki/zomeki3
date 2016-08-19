@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Cms::Lib::BreadCrumbs
   @crumbs = []
   def initialize(crumbs = [])

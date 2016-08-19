@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Feed::Content::Setting < Cms::ContentSetting
   set_config :list_style, name: "記事表示形式",
     form_type: :text_area, comment_upper: 'doc_style_tags'

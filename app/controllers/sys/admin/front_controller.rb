@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Sys::Admin::FrontController < Cms::Controller::Admin::Base
   def index
     @messages = Core.site.messages.where(state: 'public').order(published_at: :desc)

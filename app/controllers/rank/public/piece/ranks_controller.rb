@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Rank::Public::Piece::RanksController < Sys::Controller::Public::Base
   include Rank::Controller::Rank
 

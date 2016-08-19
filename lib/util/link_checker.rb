@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Util::LinkChecker
   def self.check
     in_progress = check_in_progress

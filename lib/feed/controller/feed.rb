@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'builder'
 module Feed::Controller::Feed
   def render_feed(docs)

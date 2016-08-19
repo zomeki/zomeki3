@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Tool::Convert::DbProcessor
   PROCESS_TYPES = [['作成', 'created'], ['更新', 'updated'], ['非更新', 'nonupdated']]
   attr_reader :doc, :cdoc, :process_type

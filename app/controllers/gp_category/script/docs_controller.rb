@@ -1,4 +1,3 @@
-# encoding: utf-8
 class GpCategory::Script::DocsController < Cms::Controller::Script::Publication
   def publish
     uri  = "#{@node.public_uri}"

@@ -1,4 +1,3 @@
-# encoding: utf-8
 module Sys::Lib::File::Transfer
   require "rsync"
 

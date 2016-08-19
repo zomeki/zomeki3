@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Tag::Public::Node::TagsController < Cms::Controller::Public::Base
   def pre_dispatch
     @node = Page.current_node

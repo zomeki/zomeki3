@@ -1,4 +1,3 @@
-# encoding: utf-8
 Cms::Lib::Modules::ModuleSet.draw :cms, '標準機能' do |mod|
   ## contents
   ;

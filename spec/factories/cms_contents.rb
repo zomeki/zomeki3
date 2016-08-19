@@ -1,4 +1,3 @@
-# encoding: utf-8
 FactoryGirl.define do
   factory :cms_content_map_marker_1, class: 'Cms::Content' do
     site_id 1

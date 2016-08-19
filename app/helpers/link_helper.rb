@@ -1,4 +1,3 @@
-# encoding: utf-8
 module LinkHelper
   def action_menu(type, link = nil, options = {})
     action = params[:action]

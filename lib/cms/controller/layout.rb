@@ -1,4 +1,3 @@
-# encoding: utf-8
 module Cms::Controller::Layout
   @no_cache    = nil
   

@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Sys::Process < ActiveRecord::Base
   self.table_name = "sys_processes"
   include Sys::Model::Base

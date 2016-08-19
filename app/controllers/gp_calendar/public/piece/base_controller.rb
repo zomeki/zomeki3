@@ -1,4 +1,3 @@
-# encoding: utf-8
 class GpCalendar::Public::Piece::BaseController < Sys::Controller::Public::Base
   private
 

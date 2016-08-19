@@ -1,4 +1,3 @@
-# encoding: utf-8
 class GpCalendar::Public::Node::EventsController < GpCalendar::Public::Node::BaseController
   skip_action_callback :render_public_layout, :only => [:file_content]
 

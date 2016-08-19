@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Sys::Admin::Tests::MailController < Cms::Controller::Admin::Base
   def pre_dispatch
     return error_auth unless Core.user.has_auth?(:manager)

@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Cms::Admin::NodesController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 

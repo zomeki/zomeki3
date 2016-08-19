@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Sys::Script::CachesController < ApplicationController
   include Sys::Controller::CacheSweeper::Base
 

@@ -1,4 +1,3 @@
-# encoding: utf-8
 class GpArticle::Doc < ActiveRecord::Base
   include Sys::Model::Base
   include Sys::Model::Base::OperationLog

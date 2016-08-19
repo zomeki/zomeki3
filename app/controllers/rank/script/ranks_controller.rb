@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 class Rank::Script::RanksController < ApplicationController
   include Rank::Controller::Rank
 

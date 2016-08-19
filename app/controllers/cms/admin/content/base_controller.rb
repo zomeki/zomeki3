@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Cms::Admin::Content::BaseController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
   before_action :pre_dispatch_content

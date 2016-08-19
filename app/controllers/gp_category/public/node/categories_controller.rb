@@ -1,4 +1,3 @@
-# encoding: utf-8
 class GpCategory::Public::Node::CategoriesController < GpCategory::Public::Node::BaseController
   def show
     category_type = @content.category_types.find_by(name: params[:category_type_name])

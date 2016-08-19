@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Cms::SiteSetting::AdminProtocol < Cms::SiteSetting
 
   ADMIN_PROTOCOLS = [['http', 'http'], ['https', 'https']]

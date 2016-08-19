@@ -1,4 +1,3 @@
-# encoding: utf-8
 module Cms::Lib::Modules
   def self.modules
     Cms::Lib::Modules::ModuleSet.load_modules.sort{|a, b| a.label <=> b.label }

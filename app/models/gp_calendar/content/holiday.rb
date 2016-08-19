@@ -1,4 +1,3 @@
-# encoding: utf-8
 class GpCalendar::Content::Holiday < Cms::Content
   IMAGE_STATE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
 

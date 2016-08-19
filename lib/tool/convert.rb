@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Tool::Convert
   SITE_BASE_DIR = "#{Rails.application.root.to_s}/wget_sites/"
 

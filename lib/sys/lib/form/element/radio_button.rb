@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Sys::Lib::Form::Element::RadioButton < Sys::Lib::Form::Element::Base
   def make_tag
     tag = %Q(<div #{attributes_string}>)

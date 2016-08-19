@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Script
   cattr_reader :options
 

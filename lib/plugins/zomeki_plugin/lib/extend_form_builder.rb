@@ -1,4 +1,3 @@
-# encoding: utf-8
 class ActionView::Helpers::FormBuilder
   def array_name(method)
     pos = method.index('[')

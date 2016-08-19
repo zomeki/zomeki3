@@ -1,4 +1,3 @@
-# encoding: utf-8
 class GpCategory::Piece::CategoryType < Cms::Piece
   LAYER_OPTIONS = [['下層のカテゴリすべて', 'descendants'], ['該当カテゴリのみ', 'self']]
 

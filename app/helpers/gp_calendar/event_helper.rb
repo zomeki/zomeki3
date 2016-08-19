@@ -1,4 +1,3 @@
-# encoding: utf-8
 module GpCalendar::EventHelper
   def event_replace(event, list_style)
     link_to_options = if event.href.present?

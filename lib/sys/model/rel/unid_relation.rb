@@ -1,4 +1,3 @@
-# encoding: utf-8
 module Sys::Model::Rel::UnidRelation
   def self.included(mod)
     mod.has_many :rel_unids, :primary_key => 'unid', :foreign_key => 'unid', :class_name => 'Sys::UnidRelation',

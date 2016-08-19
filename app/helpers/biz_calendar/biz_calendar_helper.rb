@@ -1,4 +1,3 @@
-# encoding: utf-8
 module BizCalendar::BizCalendarHelper
   def localize_ampm(style, time)
     style.gsub!('%H', '%I') if style =~ /%P/

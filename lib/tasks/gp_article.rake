@@ -1,4 +1,3 @@
-# encoding: utf-8
 namespace :zomeki do
   namespace :gp_article do
     task :set_user_and_group do

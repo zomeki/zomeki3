@@ -1,4 +1,3 @@
-# encoding: utf-8
 class GpCategory::Public::Piece::CategoryListsController < Sys::Controller::Public::Base
   def pre_dispatch
     @piece = GpCategory::Piece::CategoryList.find_by(id: Page.current_piece.id)

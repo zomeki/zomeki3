@@ -1,4 +1,3 @@
-# encoding: utf-8
 module Cms::Model::Rel::Content
   def self.included(mod)
     if !mod.method_defined?(:concept)

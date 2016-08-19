@@ -1,4 +1,3 @@
-# encoding: utf-8
 module Sys::FormHelper
   def creator_form(form)
     item = form.object

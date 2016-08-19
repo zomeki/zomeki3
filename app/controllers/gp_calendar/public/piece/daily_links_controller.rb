@@ -1,4 +1,3 @@
-# encoding: utf-8
 class GpCalendar::Public::Piece::DailyLinksController < GpCalendar::Public::Piece::BaseController
   def pre_dispatch
     @piece = GpCalendar::Piece::DailyLink.find_by(id: Page.current_piece.id)

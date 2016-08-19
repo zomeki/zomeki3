@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Gnav::Admin::MenuItemsController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 

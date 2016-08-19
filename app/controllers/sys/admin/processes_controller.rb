@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Sys::Admin::ProcessesController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
   include Cms::Controller::Scaffold::Process

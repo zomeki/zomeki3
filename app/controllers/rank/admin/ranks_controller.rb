@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Rank::Admin::RanksController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
   include Rank::Controller::Rank

@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'mime/types'
 class Cms::Stylesheet < Sys::Model::ValidationModel::Base
   attr_reader   :full_path, :path

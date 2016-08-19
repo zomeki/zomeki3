@@ -1,4 +1,3 @@
-# encoding: utf-8
 module Sys::Controller::Scaffold::Recognition
   def recognize(item)
     _recognize(item)

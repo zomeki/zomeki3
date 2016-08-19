@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Cms::Public::FilesController < ApplicationController
   def down
     return http_error(404) if params[:path] !~ /^[^\/]+\/[^\/]+$/

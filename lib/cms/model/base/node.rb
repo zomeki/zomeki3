@@ -1,4 +1,3 @@
-# encoding: utf-8
 module Cms::Model::Base::Node
   def self.included(mod)
     mod.belongs_to :status, :foreign_key => :state, :class_name => 'Sys::Base::Status'

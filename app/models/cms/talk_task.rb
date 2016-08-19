@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Cms::TalkTask < ActiveRecord::Base
   include Sys::Model::Base
   

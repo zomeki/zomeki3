@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Survey::Public::Piece::FormsController < Sys::Controller::Public::Base
   def pre_dispatch
     @piece = Survey::Piece::Form.find_by(id: Page.current_piece.id)

@@ -1,4 +1,3 @@
-# encoding: utf-8
 Cms::Lib::Modules::ModuleSet.draw :survey, 'アンケート' do |mod|
   ## contents
   mod.content :forms, 'アンケート'

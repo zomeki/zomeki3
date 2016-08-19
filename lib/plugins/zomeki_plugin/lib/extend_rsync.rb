@@ -1,4 +1,3 @@
-# encoding: utf-8
 module Rsync
   class Change
     def file_type

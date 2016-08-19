@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Survey::Piece::Form < Cms::Piece
   default_scope { where(model: 'Survey::Form') }
 

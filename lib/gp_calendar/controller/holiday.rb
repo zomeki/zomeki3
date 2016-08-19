@@ -1,4 +1,3 @@
-# encoding: utf-8
 module GpCalendar::Controller::Holiday
 
   def create_default_holidays(content)

@@ -1,4 +1,3 @@
-# encoding: utf-8
 class BizCalendar::Public::Node::PlacesController < BizCalendar::Public::Node::BaseController
   skip_action_callback :render_public_layout, :only => [:bussiness_times, :bussiness_holidays]
 

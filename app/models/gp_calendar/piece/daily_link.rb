@@ -1,4 +1,3 @@
-# encoding: utf-8
 class GpCalendar::Piece::DailyLink < Cms::Piece
   default_scope { where(model: 'GpCalendar::DailyLink') }
 

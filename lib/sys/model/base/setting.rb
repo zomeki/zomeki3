@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Sys::Model::Base::Setting < ActiveRecord::Base
   self.table_name = "sys_settings"
   

@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Feed::Piece::FeedEntry < Cms::Piece
 
   default_scope { where(model: 'Feed::FeedEntry') }

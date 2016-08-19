@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Cms::Node < ActiveRecord::Base
   include Sys::Model::Base
   include Cms::Model::Base::Page

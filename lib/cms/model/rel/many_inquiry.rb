@@ -1,4 +1,3 @@
-# encoding: utf-8
 module Cms::Model::Rel::ManyInquiry
   def self.included(mod)
     mod.has_many :inquiries, class_name: 'Cms::Inquiry', dependent: :destroy, as: :inquirable

@@ -1,4 +1,3 @@
-# encoding: utf-8
 namespace :zomeki do
   namespace :feed do
     namespace :feeds do

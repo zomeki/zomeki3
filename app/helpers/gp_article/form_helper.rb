@@ -1,4 +1,3 @@
-# encoding: utf-8
 module GpArticle::FormHelper
   def value_for_datepicker(object_name, attribute)
     if object = instance_variable_get("@#{object_name}")

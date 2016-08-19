@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Util::Qrcode
 
   require 'rqrcode_png'

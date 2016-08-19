@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Cms::Public::TalkController < ApplicationController
   def down_m3u
     uri  = sound_uri

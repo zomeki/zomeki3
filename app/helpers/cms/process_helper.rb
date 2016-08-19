@@ -1,4 +1,3 @@
-# encoding: utf-8
 module Cms::ProcessHelper
 
   def script_state_view(name, options = {})

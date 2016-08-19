@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'csv'
 class Sys::Admin::Groups::ImportController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base

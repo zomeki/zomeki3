@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Survey::Content::Form < Cms::Content
   APPROVAL_RELATION_OPTIONS = [['使用する', 'enabled'], ['使用しない', 'disabled']]
   CAPTCHA_OPTIONS = [['使用する', 'enabled'], ['使用しない', 'disabled']]

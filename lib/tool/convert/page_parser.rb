@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Tool::Convert::PageParser
 
   def parse(file_path, uri_path, conf)

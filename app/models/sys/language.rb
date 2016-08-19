@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Sys::Language < ActiveRecord::Base
   include Sys::Model::Base
   include Sys::Model::Base::Config

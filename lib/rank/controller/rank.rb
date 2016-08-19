@@ -1,4 +1,3 @@
-# encoding: utf-8
 module Rank::Controller::Rank
   require 'rubygems'
   require 'garb'

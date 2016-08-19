@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Sys::Admin::AccountController < Sys::Controller::Admin::Base
   def login
     admin_uri = "/#{ZomekiCMS::ADMIN_URL_PREFIX}"

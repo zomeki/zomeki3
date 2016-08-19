@@ -1,4 +1,3 @@
-# encoding: utf-8
 Cms::Lib::Modules::ModuleSet.draw :rank, 'アクセスランキング' do |mod|
   ## contents
   mod.content :ranks, 'アクセスランキング'

@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Cms::Content < ActiveRecord::Base
   include Sys::Model::Base
   include Cms::Model::Base::Content

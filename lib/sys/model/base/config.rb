@@ -1,4 +1,3 @@
-# encoding: utf-8
 module Sys::Model::Base::Config
   def states
     [['有効','enabled'],['無効','disabled']]

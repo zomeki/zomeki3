@@ -1,4 +1,3 @@
-# encoding: utf-8
 class ApplicationController < ActionController::Base
   include Cms::Controller::Public
   helper  FormHelper

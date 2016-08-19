@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Cms::Public::Node::SitemapsController < Cms::Controller::Public::Base
   def index
     @item = Page.current_node

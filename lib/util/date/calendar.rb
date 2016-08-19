@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Util::Date::Calendar
   attr_accessor :year_uri
   attr_accessor :month_uri
