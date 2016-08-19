@@ -20,7 +20,7 @@ module Zomeki
 
   class Zomeki::Config
     def self.application
-      return $cms_config[:imap_settings] if $cms_config[:imap_settings]
+      return $cms_config[:application] if $cms_config[:application]
 
       config = Zomeki.default_config["application"]
       file   = "#{Rails.root}/config/application.yml"
