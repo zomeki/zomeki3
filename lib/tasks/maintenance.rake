@@ -41,5 +41,27 @@ namespace :zomeki do
         end
       end
     end
+
+    namespace :site_dir do
+      desc 'Rename site directory from 8 digit to 4 digit'
+      task rename: :environment do
+        Cms::Site.all.each do |site|
+          dir = format('%08d', site.id).gsub(/((..)(..)(..)(..))/, '\\2/\\3/\\4/\\5/\\1')
+          old_path = Rails.root.join("sites/#{dir}")
+          if File.exist?(old_path)
+            dir = format('%04d', site.id)
+            new_path = Rails.root.join("sites/#{dir}")
+            File.rename(old_path, new_path)
+          end
+          dir = format('%08d', site.id).gsub(/((..)(..)(..)(..))/, '\\2/\\3/\\4/\\5/\\1')
+          old_path = Rails.root.join("config/mecab/sites/#{dir}")
+          if File.exist?(old_path)
+            dir = format('%04d', site.id)
+            new_path = Rails.root.join("config/mecab/sites/#{dir}")
+            File.rename(old_path, new_path)
+          end
+        end
+      end
+    end
   end
 end

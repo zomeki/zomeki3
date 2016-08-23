@@ -23,7 +23,7 @@ class Sys::Admin::StorageFilesController < Cms::Controller::Admin::Base
     @path = ::File.join(Rails.root.to_s, params[:path].to_s)
     #return http_error(404) if params[:path] && !::Storage.exists?(@path)
 
-    return error_auth if params[:path] =~ /^sites\/\d{2}\/\d{2}\/\d{2}\// && params[:path] !~ /^#{::File.join('sites', format('%08d', Core.site.id).gsub(/((..)(..)(..)(..))/, '\\2/\\3/\\4/\\5'))}/
+    return error_auth if params[:path] =~ /^sites\/\d{4}/ && params[:path] !~ /^#{::File.join('sites', format('%04d', Core.site.id))}/
 
 
     @dir = params[:path]
@@ -75,7 +75,7 @@ class Sys::Admin::StorageFilesController < Cms::Controller::Admin::Base
     @files = []
     files  = ::Storage.entries(@path)
     files.each { |name|
-      next if params[:path] =~ /^sites\/\d{2}\/\d{2}\// && "#{@path}/#{name}" !~ /^#{::File.join(Rails.root.to_s, 'sites', format('%08d', Core.site.id).gsub(/((..)(..)(..)(..))/, '\\2/\\3/\\4/\\5'))}/
+      next if @path =~ /^#{Rails.root.join('sites')}/ && "#{@path}/#{name}" !~ /^#{Rails.root.join('sites', format('%04d', Core.site.id))}/
       @dirs << name if ::Storage.directory?("#{@path}/#{name}")
     }
     files.each {|name| @files << name if ::Storage.file?("#{@path}/#{name}")}

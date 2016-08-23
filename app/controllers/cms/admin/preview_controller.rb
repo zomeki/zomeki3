@@ -70,7 +70,7 @@ protected
     end
 
     mobile   = Page.mobile? ? 'm' : ''
-    base_uri = "#{admin_uri}_preview/#{format('%08d', Page.site.id)}#{mobile}"
+    base_uri = "#{admin_uri}_preview/#{format('%04d', Page.site.id)}#{mobile}"
 
     self.response_body = response.body.gsub(/ (href|src)="\/[^"]*?"[^>]*?>/i) do |m|
       if m =~ /(href|src)="(\/_common\/|\/\/)/

@@ -18,7 +18,7 @@ class Cms::KanaDictionary < ActiveRecord::Base
     if _site_id.blank?
       dic = ::File.join(mecab_dir, "zomeki.dic")
     else
-      site_dir  = ::File.join("#{mecab_dir}", "sites", format('%08d', _site_id).gsub(/((..)(..)(..)(..))/, '\\2/\\3/\\4/\\5/\\1'))
+      site_dir = ::File.join(mecab_dir, "sites", format('%04d', _site_id))
       dic = ::File.join(site_dir, "zomeki.dic")
     end
 
@@ -37,7 +37,7 @@ class Cms::KanaDictionary < ActiveRecord::Base
     if _site_id.blank?
       rc = ::File.join(mecab_dir, "mecabrc")
     else
-      site_dir  = ::File.join("sites", format('%08d', _site_id).gsub(/((..)(..)(..)(..))/, '\\2/\\3/\\4/\\5/\\1'))
+      site_dir = ::File.join("sites", format('%04d', _site_id))
       rc = ::File.join(mecab_dir, site_dir, "mecabrc")
     end
 

@@ -26,7 +26,7 @@ module Cms::Model::Base::Page::Publisher
     options[:params].each {|k, v| params << "#{k}=#{v}" } if options[:params]
     params = params.size > 0 ? "?#{params.join('&')}" : ""
 
-    path = "_preview/#{format('%08d', site.id)}#{mobile}#{public_uri}#{params}"
+    path = "_preview/#{format('%04d', site.id)}#{mobile}#{public_uri}#{params}"
 
     _core_uri = Cms::SiteSetting::AdminProtocol.core_domain site, site.full_uri, :freeze_protocol => true
     "#{_core_uri}#{path}"
@@ -34,7 +34,7 @@ module Cms::Model::Base::Page::Publisher
 
   def publish_uri(options = {})
     site = options[:site] || Page.site
-    "#{site.full_uri}_publish/#{format('%08d', site.id)}#{public_uri}"
+    "#{site.full_uri}_publish/#{format('%04d', site.id)}#{public_uri}"
   end
 
   def publishable

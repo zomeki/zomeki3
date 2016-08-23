@@ -76,13 +76,12 @@ class Cms::Site < ActiveRecord::Base
   end
 
   def root_path
-    dir = format('%08d', id).sub(/(..)(..)(..)(..)/, '\\1/\\2/\\3/\\4')
+    dir = format('%04d', id)
     Rails.root.join("sites/#{dir}")
   end
 
   def public_path
-    dir = format('%08d', id).gsub(/((..)(..)(..)(..))/, '\\2/\\3/\\4/\\5/\\1')
-    "#{Rails.root}/sites/#{dir}/public"
+    "#{root_path}/public"
   end
 
   def public_smart_phone_path
@@ -90,8 +89,7 @@ class Cms::Site < ActiveRecord::Base
   end
 
   def config_path
-    dir = format('%08d', id).gsub(/((..)(..)(..)(..))/, '\\2/\\3/\\4/\\5/\\1')
-    "#{Rails.root}/sites/#{dir}/config"
+    "#{root_path}/config"
   end
 
   def rewrite_config_path
@@ -114,13 +112,13 @@ class Cms::Site < ActiveRecord::Base
   end
 
   def publish_uri
-    "#{Core.full_uri}_publish/#{format('%08d', id)}/"
+    "#{Core.full_uri}_publish/#{format('%04d', id)}/"
   end
 
   def full_ssl_uri
     return nil unless Sys::Setting.use_common_ssl?
     url  = Sys::Setting.setting_extra_value(:common_ssl, :common_ssl_uri)
-    url += "_ssl/#{format('%08d', id)}/"
+    url += "_ssl/#{format('%04d', id)}/"
     return url
   end
 
@@ -233,11 +231,11 @@ class Cms::Site < ActiveRecord::Base
       return false
     end
     erb = ERB.new(template.read, nil, '-').result(binding)
-    virtual_hosts.join("site_#{'%08d' % id}.conf").write erb
+    virtual_hosts.join("site_#{'%04d' % id}.conf").write erb
   end
 
   def destroy_apache_configs
-    conf = Rails.root.join("config/apache/virtual_hosts/site_#{'%08d' % id}.conf")
+    conf = Rails.root.join("config/apache/virtual_hosts/site_#{'%04d' % id}.conf")
     return false unless conf.exist?
     conf.delete
   end
@@ -253,11 +251,11 @@ class Cms::Site < ActiveRecord::Base
       return false
     end
     erb = ERB.new(template.read, nil, '-').result(binding)
-    servers.join("site_#{'%08d' % id}.conf").write erb
+    servers.join("site_#{'%04d' % id}.conf").write erb
   end
 
   def destroy_nginx_configs
-    conf = Rails.root.join("config/nginx/servers/site_#{'%08d' % id}.conf")
+    conf = Rails.root.join("config/nginx/servers/site_#{'%04d' % id}.conf")
     return false unless conf.exist?
     conf.delete
   end
