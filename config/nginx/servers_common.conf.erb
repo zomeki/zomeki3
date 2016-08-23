@@ -1,13 +1,13 @@
 <% zomeki_root = Rails.root -%>
-location ~* /_(common|themes)/ {
+location ^~ /_(common|themes)/ {
   root <%= zomeki_root %>/public;
 }
 
-location /_api/ {
+location ^~ /_api/ {
   error_page 418 = @puma; return 418;
 }
 
-location /<%= ZomekiCMS::ADMIN_URL_PREFIX %>/ {
+location ^~ /<%= ZomekiCMS::ADMIN_URL_PREFIX %>/ {
   error_page 418 = @puma; return 418;
 }
 
@@ -18,7 +18,7 @@ location / {
     rewrite ^(?!/_mobile).+$ /_mobile$1 break;
   }
 
-  if ($http_user_agent ~* (Mozilla|Android|iPhone|iPod|MSIEMobile|Windows\sPhone)) {
+  if ($http_user_agent ~* (Android|iPhone|iPod|MSIEMobile|Windows\sPhone)) {
     rewrite ^(?!/_smartphone).+$ /_smartphone$1 break;
   }
   if ($cookie_pc_view = 'on') {
