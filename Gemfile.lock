@@ -214,7 +214,7 @@ GEM
       rest-builder
     rest-more (3.3.4)
       rest-core (>= 3.3.0)
-    rmagick (2.13.4)
+    rmagick (2.15.4)
     rqrcode (0.10.1)
       chunky_png (~> 1.0)
     rqrcode_png (0.1.5)
@@ -325,7 +325,7 @@ DEPENDENCIES
   rails_autolink (~> 1.1.6)
   rails_best_practices
   rest-more (~> 3.3.4)
-  rmagick (~> 2.13.4)
+  rmagick (~> 2.15.4)
   rqrcode_png (~> 0.1.5)
   rspec-rails (~> 3.4, >= 3.4.2)
   rsync (~> 1.0.9)
