@@ -15,7 +15,7 @@ class GpArticle::Admin::Docs::FilesController < Cms::Controller::Admin::Base
   end
 
   def index
-    @item = Sys::File.new
+    @item = Sys::File.new(site_id: Core.site.id)
     @items = Sys::File.where(tmp_id: @tmp_id).paginate(page: params[:page], per_page: 20).order(:name)
     @items = @items.where(file_attachable_id: @doc.id, file_attachable_type: @doc.class.name) if @doc
     if Page.smart_phone?
@@ -32,7 +32,7 @@ class GpArticle::Admin::Docs::FilesController < Cms::Controller::Admin::Base
   end
 
   def create
-    @item = Sys::File.new
+    @item = Sys::File.new(site_id: Core.site.id)
 
     files = params[:files].presence || []
     names = params[:names].presence || []
@@ -42,6 +42,7 @@ class GpArticle::Admin::Docs::FilesController < Cms::Controller::Admin::Base
     files.each_with_index do |file, i|
       attrs = {file: files[i], name: names[i], title: titles[i]}
       item = Sys::File.new(attrs)
+      item.site_id = Core.site.id
       item.tmp_id = @tmp_id
       item.file_attachable = @doc if @doc
 

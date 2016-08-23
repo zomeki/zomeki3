@@ -63,5 +63,26 @@ namespace :zomeki do
         end
       end
     end
+
+    namespace :upload_dir do
+      desc 'Rename upload directory with site id'
+      task rename: :environment do
+        [Sys::File, Cms::DataFile, AdBanner::Banner].each do |model|
+          model.find_each do |item|
+            next unless item.site_id
+            site_dir = "sites/#{format('%04d', item.site_id)}"
+            md_dir  = item.class.to_s.underscore.pluralize
+            id_dir  = format('%08d', item.id).gsub(/(.*)(..)(..)(..)$/, '\1/\2/\3/\4/\1\2\3\4')
+            id_file = format('%07d', item.id) + '.dat'
+            old_path = Rails.root.join("upload/#{md_dir}/#{id_dir}/#{id_file}")
+            if File.exist?(old_path)
+              new_path = Rails.root.join("#{site_dir}/upload/#{md_dir}/#{id_dir}/#{id_file}")
+              FileUtils.mkdir_p(File.dirname(new_path))
+              File.rename(old_path, new_path)
+            end
+          end
+        end
+      end
+    end
   end
 end

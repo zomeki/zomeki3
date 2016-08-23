@@ -28,11 +28,12 @@ class AdBanner::Admin::BannersController < Cms::Controller::Admin::Base
   end
 
   def new
-    @item = @content.banners.build
+    @item = @content.banners.build(site_id: Core.site.id)
   end
 
   def create
     @item = @content.banners.build(banner_params)
+    @item.site_id = Core.site.id
     _create @item
   end
 

@@ -14,7 +14,7 @@ class GpCalendar::Admin::Events::FilesController < Cms::Controller::Admin::Base
   end
 
   def index
-    @item = Sys::File.new
+    @item = Sys::File.new(site_id: Core.site.id)
     @items = Sys::File.where(tmp_id: @tmp_id).order(:name)
     @items = @items.where(file_attachable: @event) if @event
     @items = @items.paginate(page: params[:page], per_page: 20)
@@ -29,6 +29,7 @@ class GpCalendar::Admin::Events::FilesController < Cms::Controller::Admin::Base
 
   def create
     @item = Sys::File.new(file_params)
+    @item.site_id = Core.site.id
     @item.tmp_id = @tmp_id
     @item.file_attachable = @event if @event
 

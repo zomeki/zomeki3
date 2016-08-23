@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160816054205) do
+ActiveRecord::Schema.define(version: 20160823071818) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -39,6 +39,7 @@ ActiveRecord::Schema.define(version: 20160816054205) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "target"
+    t.integer  "site_id"
   end
 
   add_index "ad_banner_banners", ["token"], name: "index_ad_banner_banners_on_token", unique: true, using: :btree
@@ -1152,6 +1153,7 @@ ActiveRecord::Schema.define(version: 20160816054205) do
     t.integer  "image_height"
     t.integer  "file_attachable_id"
     t.string   "file_attachable_type"
+    t.integer  "site_id"
   end
 
   add_index "sys_files", ["file_attachable_type", "file_attachable_id"], name: "index_sys_files_on_file_attachable_type_and_file_attachable_id", using: :btree
