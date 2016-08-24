@@ -1,5 +1,5 @@
 class Map::Content::Setting < Cms::ContentSetting
-  set_config :gp_category_content_category_type_id, name: '汎用カテゴリタイプ',
+  set_config :gp_category_content_category_type_id, name: 'カテゴリグループ',
     options: lambda { GpCategory::Content::CategoryType.where(site_id: Core.site.id).map {|ct| [ct.name, ct.id] } }
   set_config :lat_lng, name: '地図/デフォルト座標',
     comment: '（緯度,経度）'

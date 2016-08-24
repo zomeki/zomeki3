@@ -1,9 +1,9 @@
 Cms::Lib::Modules::ModuleSet.draw :gp_category, 'カテゴリ' do |mod|
   ## contents
-  mod.content :category_types, 'カテゴリタイプ'
+  mod.content :category_types, 'カテゴリグループ'
 
   ## directories
-  mod.directory :category_types, 'カテゴリタイプページ'
+  mod.directory :category_types, 'カテゴリグループページ'
   mod.directory :docs, '新着記事一覧ページ'
 
   ## pieces

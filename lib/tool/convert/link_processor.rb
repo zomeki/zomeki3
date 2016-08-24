@@ -117,6 +117,7 @@ private
   def create_file(doc, clink)
     file = Sys::File.new
     file.file = Sys::Lib::File::NoUploadedFile.new(clink.file_path, :skip_image => true)
+    file.site_id = doc.content.site_id if doc.content
     file.file_attachable = doc
     file.name = clink.filename
     file.title = clink.filename

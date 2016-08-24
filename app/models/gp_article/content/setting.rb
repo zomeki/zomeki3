@@ -1,5 +1,5 @@
 class GpArticle::Content::Setting < Cms::ContentSetting
-  set_config :gp_category_content_category_type_id, name: '汎用カテゴリタイプ',
+  set_config :gp_category_content_category_type_id, name: 'カテゴリグループ',
     options: lambda { GpCategory::Content::CategoryType.where(site_id: Core.site.id).map {|ct| [ct.name, ct.id] } }
   set_config :basic_setting, name: '基本設定',
     form_type: :select_with_tree, lower_text: "未設定の場合、記事ディレクトリの設定が記事へ反映されます"
@@ -22,7 +22,7 @@ class GpArticle::Content::Setting < Cms::ContentSetting
   set_config :feed, name: "フィード",
     options: GpArticle::Content::Doc::FEED_DISPLAY_OPTIONS,
     form_type: :radio_buttons
-  set_config :calendar_relation, name: '汎用カレンダー',
+  set_config :calendar_relation, name: 'カレンダー',
     options: GpArticle::Content::Doc::CALENDAR_RELATION_OPTIONS,
     form_type: :radio_buttons
   set_config :tag_relation, name: '関連ワード',

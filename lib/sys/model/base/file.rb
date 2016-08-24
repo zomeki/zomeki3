@@ -143,10 +143,11 @@ module Sys::Model::Base::File
   end
 
   def upload_path
-    md_dir  = "#{self.class.to_s.underscore.pluralize}"
+    site_dir = site_id ? "sites/#{format('%04d', site_id)}" : ""
+    md_dir  = self.class.to_s.underscore.pluralize
     id_dir  = format('%08d', id).gsub(/(.*)(..)(..)(..)$/, '\1/\2/\3/\4/\1\2\3\4')
     id_file = format('%07d', id) + '.dat'
-    "#{Rails.root}/upload/#{md_dir}/#{id_dir}/#{id_file}"
+    Rails.root.join("#{site_dir}/upload/#{md_dir}/#{id_dir}/#{id_file}").to_s
   end
 
   def readable?

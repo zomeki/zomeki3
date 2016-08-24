@@ -3,7 +3,7 @@ ja:
     models:
       gp_article/content/doc: 記事コンテンツ
       gp_article/doc: 記事
-      gp_article/category_type: カテゴリタイプ
+      gp_article/category_type: カテゴリグループ
       gp_article/category: カテゴリ
       gp_article/tag: 関連ワード
       gp_article/comment: コメント
@@ -59,8 +59,8 @@ ja:
         inquiries/email: 連絡先（メールアドレス）
         inquiries/note: 連絡先（備考）
       gp_article/category_type:
-        name: カテゴリタイプID
-        title: カテゴリタイプ名
+        name: カテゴリグループID
+        title: カテゴリグループ名
         sort_no: 並び順
         updated_at: 更新日時
         state: 状態

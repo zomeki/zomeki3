@@ -7,8 +7,8 @@ FactoryGirl.define do
     state 'public'
     model 'Survey::Form'
     code 'SF1'
-    name '汎用アンケート１'
-    note '汎用アンケート１のメモ'
+    name 'アンケート１'
+    note 'アンケート１のメモ'
     created_at time_now
     updated_at time_now
   end
@@ -19,8 +19,8 @@ FactoryGirl.define do
     state 'public'
     model 'Survey::Form'
     code 'SF2'
-    name '汎用アンケート２'
-    note '汎用アンケート２のメモ'
+    name 'アンケート２'
+    note 'アンケート２のメモ'
     created_at time_now
     updated_at time_now
   end

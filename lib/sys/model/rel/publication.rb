@@ -22,12 +22,12 @@ module Sys::Model::Rel::Publication
     return nil unless public_uri
     site = options[:site] || Page.site
     mb   = options[:mobile] ? 'm' : nil
-    "#{Core.full_uri}_preview/#{format('%08d', site.id)}#{mb}#{public_uri}" 
+    "#{Core.full_uri}_preview/#{format('%04d', site.id)}#{mb}#{public_uri}" 
   end
 
   def publish_uri(options = {})
     site = options[:site] || Page.site
-    "#{Core.full_uri}_publish/#{format('%08d', site.id)}#{public_uri}" 
+    "#{Core.full_uri}_publish/#{format('%04d', site.id)}#{public_uri}" 
   end
 
   def publishable
