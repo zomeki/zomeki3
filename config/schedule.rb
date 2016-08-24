@@ -50,7 +50,7 @@ every :day, at: '3:00 am' do
   rake 'zomeki:rank:ranks:exec'
 end
 
-# 汎用アンケートの回答データを取り込みます。
+# アンケートの回答データを取り込みます。
 every '9-54/15 * * * *' do
   rake 'zomeki:survey:answers:pull'
 end
