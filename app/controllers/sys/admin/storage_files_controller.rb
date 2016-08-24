@@ -11,10 +11,7 @@ class Sys::Admin::StorageFilesController < Cms::Controller::Admin::Base
     return error_auth unless Core.user.has_auth?(:designer)
     
     sites   = Cms::Site.order(:id).all
-    @roots  = []
-    @roots << ["sites", "sites"]
-    @roots << ["public", "public"] if Core.user.root?
-    @roots << ["upload", "upload"] if Core.user.root?
+    @roots  = [["sites", "sites"]]
   end
   
   def validate_path
