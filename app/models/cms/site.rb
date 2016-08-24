@@ -70,6 +70,7 @@ class Cms::Site < ActiveRecord::Base
 
   after_create :make_concept
   after_save :make_node
+  after_save :copy_common_directory
 
   def states
     [['公開','public']]
@@ -381,6 +382,14 @@ protected
 
   def destroy_files
     FileUtils.rm_rf root_path
+  end
+
+  def copy_common_directory
+    src_path = Rails.public_path.join("_common")
+    dst_path = Rails.root.join("#{public_path}/_common")
+    if File.exists?(src_path) && !File.exists?(dst_path)
+      FileUtils.cp_r(src_path, dst_path)
+    end
   end
 
   def make_concept
