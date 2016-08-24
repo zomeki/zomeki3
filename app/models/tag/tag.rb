@@ -18,7 +18,7 @@ class Tag::Tag < ActiveRecord::Base
   def public_uri
     return @public_uri if @public_uri
     return '' unless node = content.tag_node
-    @public_uri = "#{node.public_uri}#{CGI::escape(word)}/"
+    @public_uri = "#{node.public_uri}#{ERB::Util.url_encode(word)}/"
   end
 
   def public_path
