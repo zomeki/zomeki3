@@ -17,4 +17,11 @@ class Organization::Script::GroupsController < Cms::Controller::Script::Publicat
     error_log e.message
     render text: e.message
   end
+
+  def publish_group
+    @node.content.groups.where(id: params[:organization_group_id], state: 'public').each do |og|
+      publish_page(og, uri: og.public_uri)
+    end
+    render text: 'OK'
+  end
 end

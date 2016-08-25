@@ -11,6 +11,13 @@ class GpArticle::Script::DocsController < Cms::Controller::Script::Publication
     render text: 'OK'
   end
 
+  def publish_doc
+    @node.content.public_docs.where(id: params[:doc_id]).each do |doc|
+      publish_page(doc, uri: doc.public_uri)
+    end
+    render text: 'OK'
+  end
+
   def publish_by_task
     if (item = params[:item]).try(:state_approved?)
       Script.current

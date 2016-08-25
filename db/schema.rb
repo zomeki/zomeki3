@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160823071818) do
+ActiveRecord::Schema.define(version: 20160824075835) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -189,6 +189,17 @@ ActiveRecord::Schema.define(version: 20160823071818) do
   end
 
   add_index "biz_calendar_places", ["content_id"], name: "index_biz_calendar_places_on_content_id", using: :btree
+
+  create_table "cms_brackets", force: :cascade do |t|
+    t.integer  "owner_id"
+    t.string   "owner_type"
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "cms_brackets", ["name"], name: "index_cms_brackets_on_name", using: :btree
+  add_index "cms_brackets", ["owner_type", "owner_id"], name: "index_cms_brackets_on_owner_type_and_owner_id", using: :btree
 
   create_table "cms_concepts", force: :cascade do |t|
     t.integer  "parent_id"
@@ -417,6 +428,14 @@ ActiveRecord::Schema.define(version: 20160823071818) do
   end
 
   add_index "cms_maps", ["map_attachable_type", "map_attachable_id"], name: "index_cms_maps_on_map_attachable_type_and_map_attachable_id", using: :btree
+
+  create_table "cms_node_publishers", force: :cascade do |t|
+    t.integer  "node_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "cms_node_publishers", ["node_id"], name: "index_cms_node_publishers_on_node_id", using: :btree
 
   create_table "cms_nodes", force: :cascade do |t|
     t.integer  "concept_id"
@@ -754,6 +773,14 @@ ActiveRecord::Schema.define(version: 20160823071818) do
     t.datetime "updated_at"
   end
 
+  create_table "gp_article_publishers", force: :cascade do |t|
+    t.integer  "doc_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "gp_article_publishers", ["doc_id"], name: "index_gp_article_publishers_on_doc_id", using: :btree
+
   create_table "gp_calendar_events", force: :cascade do |t|
     t.integer  "content_id"
     t.string   "state"
@@ -953,6 +980,14 @@ ActiveRecord::Schema.define(version: 20160823071818) do
   end
 
   add_index "organization_groups", ["sys_group_code"], name: "index_organization_groups_on_sys_group_code", using: :btree
+
+  create_table "organization_publishers", force: :cascade do |t|
+    t.integer  "organization_group_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "organization_publishers", ["organization_group_id"], name: "index_organization_publishers_on_organization_group_id", using: :btree
 
   create_table "rank_categories", force: :cascade do |t|
     t.integer  "content_id"

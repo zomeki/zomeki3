@@ -7,8 +7,11 @@ class Cms::Piece < ActiveRecord::Base
   include Cms::Model::Rel::Concept
   include Cms::Model::Rel::Content
   include Sys::Model::Rel::ObjectRelation
+  include Cms::Model::Rel::Bracket
+  include Cms::Model::Rel::Bracketee
   include Cms::Model::Auth::Concept
 
+  include Concerns::Cms::Piece::Queue
   include StateText
 
   has_many :settings, -> { order(:sort_no) }, :foreign_key => :piece_id,

@@ -60,7 +60,7 @@ module GpArticle::DocsCommon
                        result | item.ancestors.map(&:id)
                      }
                    end
-    GpCategory::Publisher.register_categories(category_ids)
+    GpCategory::Publisher.enqueue_categories(category_ids)
     GpCategory::Publisher.delay(queue: 'publish_category_pages').publish_categories
   end
 end

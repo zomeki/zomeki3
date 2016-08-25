@@ -10,9 +10,11 @@ class Cms::Node < ActiveRecord::Base
   include Cms::Model::Rel::Concept
   include Cms::Model::Rel::Content
   include Sys::Model::Rel::ObjectRelation
+  include Cms::Model::Rel::Bracket
   include Cms::Model::Auth::Concept
 
   include StateText
+  include Concerns::Cms::Node::Queue
   include Concerns::Cms::Node::Preload
 
   SITEMAP_STATE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]

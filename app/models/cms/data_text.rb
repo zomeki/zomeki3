@@ -4,9 +4,11 @@ class Cms::DataText < ActiveRecord::Base
   include Sys::Model::Rel::Creator
   include Cms::Model::Rel::Site
   include Cms::Model::Rel::Concept
+  include Cms::Model::Rel::Bracketee
   include Cms::Model::Auth::Concept
 
   include StateText
+  include Concerns::Cms::DataText::Queue
 
   belongs_to :concept, :foreign_key => :concept_id, :class_name => 'Cms::Concept'
   

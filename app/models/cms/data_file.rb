@@ -4,9 +4,11 @@ class Cms::DataFile < ActiveRecord::Base
   include Sys::Model::Rel::Creator
   include Cms::Model::Rel::Site
   include Cms::Model::Rel::Concept
+  include Cms::Model::Rel::Bracketee
   include Cms::Model::Auth::Concept
 
   include StateText
+  include Concerns::Cms::DataFile::Queue
 
   belongs_to :concept, :foreign_key => :concept_id, :class_name => 'Cms::Concept'
   belongs_to :site   , :foreign_key => :site_id   , :class_name => 'Cms::Site'
