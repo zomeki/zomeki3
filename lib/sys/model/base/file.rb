@@ -1,4 +1,3 @@
-require 'RMagick'
 module Sys::Model::Base::File
   extend ActiveSupport::Concern
 

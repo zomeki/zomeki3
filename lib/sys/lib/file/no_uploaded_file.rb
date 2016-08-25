@@ -1,5 +1,4 @@
 require 'mime/types'
-require 'RMagick'
 require 'shellwords'
 
 class Sys::Lib::File::NoUploadedFile
