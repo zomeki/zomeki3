@@ -37,22 +37,6 @@ module Cms::Model::Base::Page::Publisher
     "#{site.full_uri}_publish/#{format('%04d', site.id)}#{public_uri}"
   end
 
-  def publishable
-    editable
-    if respond_to?(:state_approved?)
-      self.and "#{self.class.table_name}.state", 'approved'
-    else
-      self.and "#{self.class.table_name}.state", 'recognized'
-    end
-    return self
-  end
-
-  def closable
-    editable
-    public
-    return self
-  end
-
   def publishable?
     return false unless editable?
     if respond_to?(:state_approved?)
@@ -84,7 +68,6 @@ module Cms::Model::Base::Page::Publisher
   def publish_page(content, options = {})
     @published = false
     return false if content.nil?
-    save(validate: false)
 
     content = content.gsub(%r!zdel_.+?/!i, '')
 
@@ -116,6 +99,7 @@ else
 end
 
     pub ||= Sys::Publisher.new
+    pub.publishable  = self
     pub.dependent    = options[:dependent] ? options[:dependent].to_s : nil
     pub.path         = path
     pub.content_hash = hash
