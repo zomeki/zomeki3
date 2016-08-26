@@ -13,7 +13,15 @@ class GpArticle::Script::DocsController < Cms::Controller::Script::Publication
 
   def publish_doc
     @node.content.public_docs.where(id: params[:doc_id]).each do |doc|
-      publish_page(doc, uri: doc.public_uri)
+      uri = doc.public_uri
+      path = doc.public_path
+      if doc.publish(render_public_as_string(uri, site: doc.content.site))
+        uri_ruby = (uri =~ /\?/) ? uri.gsub(/\?/, 'index.html.r?') : "#{uri}index.html.r"
+        path_ruby = "#{path}.r"
+        doc.publish_page(render_public_as_string(uri_ruby, site: doc.content.site), path: path_ruby, dependent: :ruby)
+        doc.publish_page(render_public_as_string(uri, site: doc.content.site, jpmobile: envs_to_request_as_smart_phone),
+                    path: doc.public_smart_phone_path, dependent: :smart_phone)
+      end
     end
     render text: 'OK'
   end
