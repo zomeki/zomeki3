@@ -5,7 +5,9 @@ class Organization::Script::GroupsController < Cms::Controller::Script::Publicat
     smart_phone_path = @node.public_smart_phone_path.to_s
     publish_more(@node, uri: uri, path: path, smart_phone_path: smart_phone_path, dependent: uri)
 
-    @node.content.groups.each do |group|
+    groups = @node.content.groups.where(state: 'public')
+    groups = groups.where(id: params[:organization_group_id]) if params[:organization_group_id]
+    groups.each do |group|
       g_uri = group.public_uri
       g_path = group.public_path
       g_smart_phone_path = group.public_smart_phone_path
@@ -16,12 +18,5 @@ class Organization::Script::GroupsController < Cms::Controller::Script::Publicat
   rescue => e
     error_log e.message
     render text: e.message
-  end
-
-  def publish_group
-    @node.content.groups.where(id: params[:organization_group_id], state: 'public').each do |og|
-      publish_page(og, uri: og.public_uri)
-    end
-    render text: 'OK'
   end
 end

@@ -28,7 +28,7 @@ class Organization::Publisher < ActiveRecord::Base
       self.find_each do |item|
         item.destroy
         if (og = item.organization_group) && og.content && (node = og.content.public_node)
-          ::Script.run("organization/script/groups/publish_group?all=all&node_id=#{node.id}&organization_group_id=#{og.id}", force: true)
+          ::Script.run("cms/script/nodes/publish?target_module=cms&target_node_id=#{node.id}&organization_group_id=#{og.id}", force: true)
         end
       end
     end
