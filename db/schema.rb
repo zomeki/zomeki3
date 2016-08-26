@@ -589,6 +589,7 @@ ActiveRecord::Schema.define(version: 20160830075865) do
     t.string   "smart_phone_publication"
     t.string   "spp_target"
     t.string   "google_map_api_key"
+    t.string   "admin_full_uri"
   end
 
   create_table "cms_talk_tasks", force: :cascade do |t|

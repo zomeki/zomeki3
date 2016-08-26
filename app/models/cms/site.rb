@@ -246,38 +246,9 @@ class Cms::Site < ActiveRecord::Base
     conf
   end
 
-
-  def self.make_admin_virtual_hosts_config
-    conf = '';
-    order(:id).each do |site|
-      next unless ::File.exist?(site.public_path)
-      domain = site.admin_domain
-      next unless domain.to_s =~ /^[1-9a-z\.\-\_]+$/i
-
-      conf.concat(<<-EOT)
-<VirtualHost *:80>
-    ServerName #{domain}
-    AddType text/x-component .htc
-    Alias /_common/ "#{Rails.root}/public/_common/"
-    DocumentRoot #{site.public_path}
-    Include #{Rails.root}/config/rewrite/base.conf
-    Include #{site.config_path}/rewrite.conf
-</VirtualHost>
-
-      EOT
-    end
-    conf
-  end
-
-  def self.put_virtual_hosts_config
+ def self.put_virtual_hosts_config
     conf = make_virtual_hosts_config
     Util::File.put virtual_hosts_config_path, data: conf
-
-    if !Cms::SiteSetting::AdminProtocol.core_domain?
-      admin_conf = make_admin_virtual_hosts_config
-      Util::File.put admin_virtual_hosts_config_path, data: admin_conf
-      FileUtils.touch reload_admin_virtual_hosts_text_path
-    end
     FileUtils.touch reload_virtual_hosts_text_path
   end
 
@@ -285,12 +256,87 @@ class Cms::Site < ActiveRecord::Base
     Rails.root.join('config/virtual-hosts/sites.conf')
   end
 
-  def self.admin_virtual_hosts_config_path
-    Rails.root.join('config/virtual-hosts/admin_sites.conf')
-  end
-
   def self.reload_virtual_hosts_text_path
     Rails.root.join('tmp/reload_virtual_hosts.txt')
+  end
+
+  def self.generate_apache_configs
+    all.each(&:generate_apache_configs)
+  end
+
+  def generate_apache_configs
+    virtual_hosts = Rails.root.join('config/apache/virtual_hosts')
+    unless (template = virtual_hosts.join('template.conf.erb')).file?
+      logger.warn 'VirtualHost template not found.'
+      return false
+    end
+    erb = ERB.new(template.read, nil, '-').result(binding)
+    virtual_hosts.join("site_#{'%04d' % id}.conf").write erb
+  end
+
+  def destroy_apache_configs
+    conf = Rails.root.join("config/apache/virtual_hosts/site_#{'%04d' % id}.conf")
+    return false unless conf.exist?
+    conf.delete
+  end
+
+  def self.generate_apache_admin_configs
+    all.each(&:generate_apache_admin_configs)
+  end
+
+  def generate_apache_admin_configs
+    virtual_hosts = Rails.root.join('config/apache/virtual_hosts')
+    unless (template = virtual_hosts.join('admin_template.conf.erb')).file?
+      logger.warn 'VirtualHost template not found.'
+      return false
+    end
+    erb = ERB.new(template.read, nil, '-').result(binding)
+    virtual_hosts.join("admin_site_#{'%04d' % id}.conf").write erb
+  end
+
+  def destroy_apache_admin_configs
+    conf = Rails.root.join("config/apache/virtual_hosts/admin_site_#{'%04d' % id}.conf")
+    return false unless conf.exist?
+    conf.delete
+  end
+
+  def self.generate_nginx_configs
+    all.each(&:generate_nginx_configs)
+  end
+
+  def generate_nginx_configs
+    servers = Rails.root.join('config/nginx/servers')
+    unless (template = servers.join('template.conf.erb')).file?
+      logger.warn 'Server template not found.'
+      return false
+    end
+    erb = ERB.new(template.read, nil, '-').result(binding)
+    servers.join("site_#{'%04d' % id}.conf").write erb
+  end
+
+  def self.generate_nginx_admin_configs
+    all.each(&:generate_nginx_admin_configs)
+  end
+
+  def generate_nginx_admin_configs
+    servers = Rails.root.join('config/nginx/servers')
+    unless (template = servers.join('admin_template.conf.erb')).file?
+      logger.warn 'Server template not found.'
+      return false
+    end
+    erb = ERB.new(template.read, nil, '-').result(binding)
+    servers.join("admin_site_#{'%04d' % id}.conf").write erb
+  end
+
+  def destroy_nginx_configs
+    conf = Rails.root.join("config/nginx/servers/site_#{'%04d' % id}.conf")
+    return false unless conf.exist?
+    conf.delete
+  end
+  def destroy_nginx_admin_configs
+    conf = Rails.root.join("config/nginx/servers/admin_site_#{'%04d' % id}.conf")
+    return false unless conf.exist?
+    conf.delete
   end
   def basic_auth_enabled?
     pw_file = "#{::File.dirname(public_path)}/.htpasswd"
@@ -418,8 +464,8 @@ protected
   def copy_common_directory
     src_path = Rails.public_path.join("_common")
     dst_path = Rails.root.join("#{public_path}/_common")
-    if File.exists?(src_path) && !File.exists?(dst_path)
-      FileUtils.cp_r(src_path, dst_path)
+    if ::File.exists?(src_path) && !::File.exists?(dst_path)
+      ::FileUtils.cp_r(src_path, dst_path)
     end
   end
 

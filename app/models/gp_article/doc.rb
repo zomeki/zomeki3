@@ -185,7 +185,6 @@ class GpArticle::Doc < ActiveRecord::Base
       assignments = Approval::Assignment.arel_table
       rel = rel.joins(:approval_requests => [:approval_flow => [:approvals => :assignments]])
                .where(approval_requests[:user_id].eq(Core.user.id)
-
                       .or(assignments[:user_id].eq(Core.user.id))).distinct
     end
 
