@@ -6,6 +6,7 @@ class GpCalendar::Event < ActiveRecord::Base
 
   include StateText
   include GpCalendar::EventSync
+  include Concerns::GpCalendar::Event::Queue
 
   STATE_OPTIONS = [['公開中', 'public'], ['非公開', 'closed']]
   TARGET_OPTIONS = [['同一ウィンドウ', '_self'], ['別ウィンドウ', '_blank']]

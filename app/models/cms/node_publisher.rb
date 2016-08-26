@@ -16,7 +16,7 @@ class Cms::NodePublisher < ActiveRecord::Base
     def register(node_ids)
       return if node_ids.blank?
 
-      ids = Array(node_ids) - self.all.pluck(&:node_id)
+      ids = Array(node_ids) - self.all.pluck(:node_id)
       return if ids.blank?
 
       items = ids.map { |id| self.new(node_id: id) }

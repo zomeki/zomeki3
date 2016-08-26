@@ -16,7 +16,7 @@ class GpCategory::Publisher < ActiveRecord::Base
     def register(category_ids)
       return if category_ids.blank?
 
-      ids = Array(category_ids) - self.all.pluck(&:category_id) 
+      ids = Array(category_ids) - self.all.pluck(:category_id) 
       return if ids.blank?
 
       items = ids.map { |id| self.new(category_id: id) }

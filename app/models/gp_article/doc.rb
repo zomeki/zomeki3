@@ -769,6 +769,10 @@ class GpArticle::Doc < ActiveRecord::Base
     EVENT_WILL_SYNC_OPTIONS.detect{|o| o.last == event_will_sync }.try(:first).to_s
   end
 
+  def event_state_visible?
+    event_state == 'visible'
+  end
+
   private
 
   def name_validity

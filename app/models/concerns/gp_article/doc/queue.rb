@@ -11,6 +11,7 @@ module Concerns::GpArticle::Doc::Queue
     register_piece_publisher
     register_organization_publisher
     register_category_publisher
+    register_calendar_publisher
     register_map_publisher
     register_tag_publisher
   end
@@ -59,23 +60,43 @@ module Concerns::GpArticle::Doc::Queue
     end
   end
 
+  def register_calendar_publisher
+    return unless content.calendar_related?
+
+    calendar_content = content.gp_calendar_content_event
+    return unless calendar_content
+
+    node_ids = Cms::Node.where(content_id: calendar_content.id).pluck(:id)
+    Cms::NodePublisher.register(node_ids)
+
+    Cms::Piece.where(content_id: calendar_content.id).each do |piece|
+      piece.register_publisher
+    end
+  end
+
   def register_map_publisher
+    return unless content.map_related?
+
     map_content = content.map_content_marker
     return unless map_content
 
-    node_ids = Cms::Node.where(content_id: map_content.id).pluck(&:id)
+    node_ids = Cms::Node.where(content_id: map_content.id).pluck(:id)
     Cms::NodePublisher.register(node_ids)
+
     Cms::Piece.where(content_id: map_content.id).each do |piece|
       piece.register_publisher
     end
   end
 
   def register_tag_publisher
+    return unless content.tag_related?
+
     tag_content = content.tag_content_tag
     return unless tag_content
 
-    node_ids = Cms::Node.where(content_id: tag_content.id).pluck(&:id)
+    node_ids = Cms::Node.where(content_id: tag_content.id).pluck(:id)
     Cms::NodePublisher.register(node_ids)
+
     Cms::Piece.where(content_id: tag_content.id).each do |piece|
       piece.register_publisher
     end

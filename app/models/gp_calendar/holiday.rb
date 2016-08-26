@@ -6,6 +6,7 @@ class GpCalendar::Holiday < ActiveRecord::Base
 
   include StateText
   include GpCalendar::EventSync
+  include Concerns::GpCalendar::Holiday::Queue
 
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
   KIND_OPTIONS = [['休日', 'holiday'], ['イベント', 'event']]
