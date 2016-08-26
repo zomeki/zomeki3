@@ -3,7 +3,7 @@ module Cms::Model::Rel::Bracketee
 
   def bracket_name
     return nil if name.blank?
-    "#{Cms::Lib::Bracket.bracket_type(self.class)}/#{name}"
+    "#{Cms::Lib::Bracket.bracket_type(self)}/#{name}"
   end
 
   def bracketees

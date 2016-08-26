@@ -1,12 +1,13 @@
 module Cms::Lib::Bracket
   class << self
-    def bracket_type(klass)
-      if klass.ancestors.include?(Cms::Piece)
+    def bracket_type(item)
+      case
+      when item.is_a?(Cms::Piece)
         'piece'
-      elsif klass == Cms::DataText
+      when item.is_a?(Cms::DataText)
         'text'
-      elsif klass == Cms::DataFile
-        'file'
+      when item.is_a?(Cms::DataFile)
+        item.node ? "file/#{item.node.name}" : 'file'
       else
         ''
       end
