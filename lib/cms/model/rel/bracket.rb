@@ -24,7 +24,7 @@ module Cms::Model::Rel::Bracket
   def save_brackets
     brackets.destroy_all
     bracket_names.each do |name|
-      brackets.create(name: name)
+      brackets.create(site_id: site_id, name: name)
     end
   end
 end

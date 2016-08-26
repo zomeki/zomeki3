@@ -11,6 +11,7 @@ class MigrateCmsBrackets < ActiveRecord::Migration
           end
         body.scan(/\[\[(piece|text|file)\/([^\]]+)\]\]/).each do |name1, name2|
           Cms::Bracket.create(
+            site_id: item.site_id,
             owner_id: item.id,
             owner_type: item.class,
             name: "#{name1}/#{name2}"

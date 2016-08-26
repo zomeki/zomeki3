@@ -5,23 +5,31 @@ class Organization::Publisher < ActiveRecord::Base
   validates :organization_group_id, presence: true, uniqueness: true
 
   class << self
-    def enqueue_organization_groups(groups)
-      enqueue_organization_group_ids(Array(groups).map(&:id))
+    def queue_name
+      self.table_name
     end
 
-    def enqueue_organization_group_ids(group_ids)
+    def queued?
+      Delayed::Job.where(queue: queue_name, locked_at: nil).exists?
+    end
+
+    def register(group_ids)
+      return if group_ids.blank?
+
       ids = Array(group_ids) - self.all.pluck(:organization_group_id)
-      ids.each do |id|
-        self.create(organization_group_id: id)
-      end
+      return if ids.blank?
+
+      items = ids.map { |id| self.new(organization_group_id: id) }
+      self.import(items)
+      self.delay(queue: queue_name).perform unless queued?
     end
 
-    def publish_groups
-      self.find_each do |publisher|
-        if (og = publisher.organization_group) && og.content && (node = og.content.public_node)
+    def perform
+      self.find_each do |item|
+        item.destroy
+        if (og = item.organization_group) && og.content && (node = og.content.public_node)
           ::Script.run("organization/script/groups/publish_group?all=all&node_id=#{node.id}&organization_group_id=#{og.id}", force: true)
         end
-        publisher.destroy
       end
     end
   end

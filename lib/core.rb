@@ -164,6 +164,10 @@ class Core
     end
   end
 
+  def self.mode_system?
+    @@mode == ZomekiCMS::ADMIN_URL_PREFIX.sub(/\A_/, '')
+  end
+
 private
   def self.recognize_mode
     if @@request_uri =~ %r!^/_[a-z]+(/|$)!

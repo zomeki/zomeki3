@@ -1,31 +1,30 @@
 class GpCategory::Publisher < ActiveRecord::Base
   include Sys::Model::Base
 
-  #TODO: migrate to strong_parameters
-  #attr_accessible :category_id
-
   belongs_to :category
-
-  validates :category_id, :presence => true, :uniqueness => true
+  validates :category_id, presence: true, uniqueness: true
 
   class << self
-    def enqueue_category_ids(category_ids)
+    def queue_name
+      self.table_name
+    end
+
+    def queued?
+      Delayed::Job.where(queue: queue_name, locked_at: nil).exists?
+    end
+
+    def register(category_ids)
+      return if category_ids.blank?
+
       ids = Array(category_ids) - self.all.pluck(&:category_id) 
-      ids.each do |id|
-        self.create(category_id: id)
-      end
+      return if ids.blank?
+
+      items = ids.map { |id| self.new(category_id: id) }
+      self.import(items)
+      self.delay(queue: queue_name).perform unless queued? 
     end
 
-    def enqueue_category(category)
-      category_id = category.kind_of?(GpCategory::Category) ? category.id : category.to_i
-      self.where(category_id: category_id).first_or_create if category_id > 0
-    end
-
-    def enqueue_categories(categories)
-      categories.each{|c| self.enqueue_category(c) }
-    end
-
-    def publish_categories
+    def perform
       category_ids = {}
       self.all.each do |publisher|
         unless (c = publisher.category)

@@ -8,6 +8,7 @@ class GpCategory::Category < ActiveRecord::Base
   include Cms::Model::Base::Page::TalkTask
 
   include StateText
+  include Concerns::GpCategory::Category::Queue
   include Concerns::GpCategory::Category::Preload
 
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
@@ -215,9 +216,7 @@ class GpCategory::Category < ActiveRecord::Base
   end
 
   def publish_ancestor_pages
-    Delayed::Job.where(queue: 'publish_category_pages').destroy_all
-    GpCategory::Publisher.enqueue_categories(ancestors)
-    GpCategory::Publisher.delay(queue: 'publish_category_pages').publish_categories
+    GpCategory::Publisher.register(ancestors.map(&:id))
   end
 
   def clean_published_files

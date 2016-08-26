@@ -19,6 +19,7 @@ class GpArticle::Doc < ActiveRecord::Base
   include GpTemplate::Model::Rel::Template
 
   include StateText
+  include Concerns::GpArticle::Doc::Queue
   include Concerns::GpArticle::Doc::Preload
 
   STATE_OPTIONS = [['下書き保存', 'draft'], ['承認依頼', 'approvable'], ['即時公開', 'public']]

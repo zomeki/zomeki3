@@ -65,6 +65,7 @@ end
 gem 'hpricot', '0.8.6'
 gem 'tamtam', '0.0.3'
 
+gem 'activerecord-import', '~> 0.15.0'
 gem 'addressable', '~> 2.3.8'
 gem 'delayed_job_active_record', '~> 4.0.3'
 gem 'daemons', '~> 1.2.3'

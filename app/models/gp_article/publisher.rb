@@ -5,23 +5,31 @@ class GpArticle::Publisher < ActiveRecord::Base
   validates :doc_id, presence: true, uniqueness: true
 
   class << self
-    def enqueue_docs(docs)
-      enqueue_doc_ids(Array(docs).map(&:id))
+    def queue_name
+      self.table_name
     end
 
-    def enqueue_doc_ids(doc_ids)
+    def queued?
+      Delayed::Job.where(queue: queue_name, locked_at: nil).exists?
+    end
+
+    def register(doc_ids)
+      return if doc_ids.blank?
+
       ids = Array(doc_ids) - self.all.pluck(:doc_id)
-      ids.each do |id|
-        self.create(doc_id: id)
-      end
+      return if ids.blank?
+
+      items = ids.map { |id| self.new(doc_id: id) }
+      self.import(items)
+      self.delay(queue: queue_name).perform unless queued?
     end
 
-    def publish_docs
-      self.find_each do |publisher|
-        if (doc = publisher.doc) && doc.content && (node = doc.content.public_node)
+    def perform
+      self.find_each do |item|
+        item.destroy
+        if (doc = item.doc) && doc.content && (node = doc.content.public_node)
           ::Script.run("gp_article/script/docs/publish_doc?all=all&node_id=#{node.id}&doc_id=#{doc.id}", force: true)
         end
-        publisher.destroy
       end
     end
   end
