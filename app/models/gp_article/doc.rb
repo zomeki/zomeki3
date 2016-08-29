@@ -286,6 +286,7 @@ class GpArticle::Doc < ActiveRecord::Base
     filename = without_filename || filename_base == 'index' ? '' : "#{filename_base}.html"
 
     path = "_preview/#{format('%04d', site.id)}#{mobile ? 'm' : ''}#{public_uri(without_filename: true)}preview/#{id}/#{filename}#{params.present? ? "?#{params}" : ''}"
+    d = Cms::SiteSetting::AdminProtocol.core_domain site, :freeze_protocol => true
     "#{d}#{path}"
   end
 

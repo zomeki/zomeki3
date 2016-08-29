@@ -285,17 +285,17 @@ class Cms::Site < ActiveRecord::Base
   end
 
   def generate_apache_admin_configs
-    virtual_hosts = Rails.root.join('config/apache/virtual_hosts')
-    unless (template = virtual_hosts.join('admin_template.conf.erb')).file?
+    virtual_hosts = Rails.root.join('config/apache/admin_virtual_hosts')
+    unless (template = virtual_hosts.join('template.conf.erb')).file?
       logger.warn 'VirtualHost template not found.'
       return false
     end
     erb = ERB.new(template.read, nil, '-').result(binding)
-    virtual_hosts.join("admin_site_#{'%04d' % id}.conf").write erb
+    virtual_hosts.join("site_#{'%04d' % id}.conf").write erb
   end
 
   def destroy_apache_admin_configs
-    conf = Rails.root.join("config/apache/virtual_hosts/admin_site_#{'%04d' % id}.conf")
+    conf = Rails.root.join("config/apache/admin_virtual_hosts/site_#{'%04d' % id}.conf")
     return false unless conf.exist?
     conf.delete
   end
@@ -319,13 +319,13 @@ class Cms::Site < ActiveRecord::Base
   end
 
   def generate_nginx_admin_configs
-    servers = Rails.root.join('config/nginx/servers')
-    unless (template = servers.join('admin_template.conf.erb')).file?
+    servers = Rails.root.join('config/nginx/admin_servers')
+    unless (template = servers.join('template.conf.erb')).file?
       logger.warn 'Server template not found.'
       return false
     end
     erb = ERB.new(template.read, nil, '-').result(binding)
-    servers.join("admin_site_#{'%04d' % id}.conf").write erb
+    servers.join("site_#{'%04d' % id}.conf").write erb
   end
 
   def destroy_nginx_configs

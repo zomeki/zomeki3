@@ -27,14 +27,17 @@ class Sys::Admin::AccountController < Sys::Controller::Admin::Base
 
     cookies.delete :sys_login_referrer
     Sys::OperationLog.log(request, :user => current_user)
-
-    # システム管理者以外は所属サイトにのみログインできる
-    unless current_user.root? || current_user.sites.include?(Core.site)
-      logger.warn %Q!"#{current_user.name}" doesn't belong to "#{Core.site.name}", logged out.!
-      logout
-      flash.now[:alert] = 'ユーザＩＤ・パスワードを正しく入力してください。'
-      return
+    if Cms::SiteSetting::AdminProtocol.core_domain?
+      @uri += "?cms_navi[site]=#{current_user.site_ids.first}" if @uri == admin_uri
+    else
+      unless current_user.root? || current_user.sites.include?(Core.site)
+        logger.warn %Q!"#{current_user.name}" doesn't belong to "#{Core.site.name}", logged out.!
+        logout
+        flash.now[:alert] = 'ユーザＩＤ・パスワードを正しく入力してください。'
+        return
+      end
     end
+
 
     respond_to do |format|
       format.html { redirect_to @uri }
