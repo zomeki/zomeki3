@@ -327,9 +327,8 @@
         <table class="noDesign">
         <%- @content.sns_share_content_account.accounts.each do |account| -%>
         <tr>
-          <td><%= check_box_tag 'share_accounts[]', account.id, (@params_share_accounts ? @params_share_accounts.include?(account.id.to_s)
-                                                                                        : @item.sns_accounts.include?(account)) , id: "share_accounts_#{account.id}" %>
-            <%= label_tag "share_accounts_#{account.id}", '投稿する' %></td>
+          <td><%= check_box_tag 'item[in_share_accounts][]', account.id, @item.in_share_account_params.include?(account.id.to_s), id: "item_in_share_accounts_#{account.id}" %>
+              <%= label_tag "item_in_share_accounts_#{account.id}", '投稿する' %></td>
           <td><%= account.provider.humanize %></td>
           <td><%= image_tag account.info_image, style: 'height: 50px; width: 50px;' if account.info_image.present? %></td>
           <td>

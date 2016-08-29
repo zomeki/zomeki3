@@ -17,6 +17,7 @@ class GpArticle::Doc < ActiveRecord::Base
 
   include GpArticle::Model::Rel::Doc
   include GpArticle::Model::Rel::Category
+  include GpArticle::Model::Rel::Sns
   include GpTemplate::Model::Rel::Template
 
   include StateText

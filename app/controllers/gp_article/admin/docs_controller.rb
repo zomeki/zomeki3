@@ -26,7 +26,6 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     @params_item_in_maps = if (im = params[:item].try('[]', :in_maps)).kind_of?(Hash)
                              im
                            end
-    @params_share_accounts = params[:share_accounts] if params[:share_accounts].kind_of?(Array)
   end
 
   def index
@@ -148,7 +147,6 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
     location = ->(d){ edit_gp_article_doc_url(@content, d) } if @item.state_draft?
     _create(@item, location: location, failed_template: failed_template) do
-      set_share_accounts
       @item.fix_tmp_files(params[:_tmp])
 
       @item.approval_requests.each(&:reset) if @item.state_approvable?
@@ -211,7 +209,6 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
     location = url_for(action: 'edit') if @item.state_draft?
     _update(@item, location: location, failed_template: failed_template) do
-      set_share_accounts
       update_file_names
 
       @item.approval_requests.each(&:reset) if @item.state_approvable?
@@ -329,15 +326,6 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     end
   end
 
-  def set_share_accounts
-    share_account_ids = if params[:share_accounts].kind_of?(Array)
-                          params[:share_accounts].map{|a| a.to_i if a.present? }.compact.uniq
-                        else
-                          []
-                        end
-    @item.sns_account_ids = share_account_ids
-  end
-
   def hold_document
     unless (holds = @item.holds).empty?
       holds = holds.each{|h| h.destroy if h.user == Core.user }.reject(&:destroyed?)
@@ -447,12 +435,13 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
       :concept_id, :layout_id, :name, :filename_base, :terminal_pc_or_smart_phone, :terminal_mobile,
       :meta_description, :meta_keywords, :share_to_sns_with, :og_type, :og_title, :og_description, :og_image,
       :template_values => params[:item][:template_values].try(:keys),
-      :in_rel_doc_ids => [],
       :in_tasks => [:publish, :close],
       :inquiries_attributes => [:id, :state, :_destroy,:group_id],
       :in_maps => [:name, :title, :map_lat, :map_lng, :map_zoom, :markers => [:name, :lat, :lng]],
       :in_creator => [:group_id, :user_id],
       :in_editable_groups => [],
+      :in_rel_doc_ids => [],
+      :in_share_accounts => [],
     ).tap do |whitelisted|
       whitelisted[:in_category_ids] = params[:item][:in_category_ids]
       whitelisted[:in_event_category_ids] = params[:item][:in_event_category_ids]
