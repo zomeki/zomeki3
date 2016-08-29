@@ -6,6 +6,8 @@ class Cms::DataFileNode < ActiveRecord::Base
   include Cms::Model::Rel::Concept
   include Cms::Model::Auth::Concept
 
+  include Concerns::Cms::DataFileNode::Queue
+
   has_many :files, :foreign_key => :node_id, :class_name => 'Cms::DataFile', :primary_key => :id
 
   validates :name, presence: true, uniqueness: { scope: :concept_id }

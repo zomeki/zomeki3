@@ -20,9 +20,7 @@ module Concerns::Cms::Layout::Queue
   end
 
   def register_publisher?
-    return false unless Core.mode_system?
-    return false if name.blank?
-    true
+    name.present?
   end
 
   def register_node_publisher
@@ -42,8 +40,8 @@ module Concerns::Cms::Layout::Queue
   end
 
   def register_organization_group_publisher
-    group_ids = Organization::Group.where(layout_id: id).pluck(:id)
-    Organization::Publisher.register(group_ids)
+    og_ids = Organization::Group.with_layout(id).pluck(:id)
+    Organization::Publisher.register(og_ids)
   end
 
   def register_doc_publisher

@@ -1,4 +1,4 @@
-module Concerns::Cms::DataFile::Queue
+module Concerns::Cms::DataFileNode::Queue
   extend ActiveSupport::Concern
 
   included do
@@ -7,7 +7,7 @@ module Concerns::Cms::DataFile::Queue
   end
 
   def register_publisher
-    register_bracketee_publisher
+    register_data_file_publisher
   end
 
   private
@@ -20,8 +20,8 @@ module Concerns::Cms::DataFile::Queue
     name.present?
   end
 
-  def register_bracketee_publisher
-    bracketees = Cms::Bracket.where(site_id: site_id, name: changed_bracket_names).all
+  def register_data_file_publisher
+    bracketees = Cms::Bracket.where(site_id: site_id).with_prefix(changed_node_names).all
     return if bracketees.blank?
 
     owner_map = bracketees.map(&:owner).group_by { |owner| owner.class.name }
@@ -35,9 +35,8 @@ module Concerns::Cms::DataFile::Queue
     end
   end
 
-  def changed_bracket_names
-    type = Cms::Lib::Bracket.bracket_type(self)
+  def changed_node_names
     names = [name, name_was].select(&:present?).uniq
-    names.map { |name| "#{type}/#{name}" }
+    names.map { |name| "file/#{name}/" }
   end
 end

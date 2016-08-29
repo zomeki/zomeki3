@@ -17,12 +17,11 @@ module Concerns::Cms::DataText::Queue
   end
 
   def register_publisher?
-    return false unless Core.mode_system?
-    return false if name.blank?
-    true
+    name.present?
   end
 
   def register_bracketee_publisher
+    bracketees = Cms::Bracket.where(site_id: site_id, name: changed_bracket_names).all
     return if bracketees.blank?
 
     owner_map = bracketees.map(&:owner).group_by { |owner| owner.class.name }
@@ -34,5 +33,11 @@ module Concerns::Cms::DataText::Queue
         end
       end
     end
+  end
+
+  def changed_bracket_names
+    type = Cms::Lib::Bracket.bracket_type(self)
+    names = [name, name_was].select(&:present?).uniq
+    names.map { |name| "#{type}/#{name}" }
   end
 end

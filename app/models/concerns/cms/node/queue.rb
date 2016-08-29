@@ -3,7 +3,6 @@ module Concerns::Cms::Node::Queue
 
   included do
     after_save :register_publisher_callback, if: :changed?
-    before_destroy :register_publisher_callback
   end
 
   def register_publisher
@@ -17,10 +16,7 @@ module Concerns::Cms::Node::Queue
   end
 
   def register_publisher?
-    return false unless Core.mode_system?
-    return false if name.blank?
-    return false if model.in?(%w(Cms::Page Cms::Directory Cms::SiteMap))
-    true
+    name.present? && state == 'public' && !model.in?(%w(Cms::Page Cms::Directory Cms::SiteMap))
   end
 
   def register_node_publisher

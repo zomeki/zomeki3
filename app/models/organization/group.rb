@@ -14,7 +14,6 @@ class Organization::Group < ActiveRecord::Base
                         ['公開日（昇順）', 'display_published_at ASC, published_at ASC']]
 
   default_scope { order("#{self.table_name}.sort_no IS NULL, #{self.table_name}.sort_no") }
-  scope :public_state, -> { where(state: 'public') }
 
   # Page
   belongs_to :concept, :class_name => 'Cms::Concept'
@@ -41,6 +40,12 @@ class Organization::Group < ActiveRecord::Base
   validates :sys_group_code, :presence => true, :uniqueness => true
   validates :name, :presence => true, :format => /\A[0-9A-Za-z\._-]*\z/i
   validate :name_uniqueness_in_siblings
+
+  scope :public_state, -> { where(state: 'public') }
+  scope :with_layout, ->(layout_id) {
+    conds = [:layout_id, :more_layout_id].map { |c| arel_table[c].eq(layout_id) }
+    where(conds.reduce(:or))
+  }
 
   def sitemap_state_text
     SITEMAP_STATE_OPTIONS.detect{|o| o.last == self.sitemap_state }.try(:first).to_s
