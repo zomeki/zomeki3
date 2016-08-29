@@ -47,7 +47,7 @@ module GpArticle::Docs::PublishQueue
     og_ids << prev_edition.organization_group.id if prev_edition && prev_edition.organization_group
     Organization::Publisher.register(og_ids.uniq)
 
-    Cms::Piece.where(content_id: organization_content.id).each do |piece|
+    organization_content.pieces.public_state.each do |piece|
       piece.enqueue_publisher
     end 
   end
@@ -60,7 +60,7 @@ module GpArticle::Docs::PublishQueue
     cat_ids += prev_edition.categories.map {|c| c.ancestors.map(&:id) }.flatten if prev_edition
     GpCategory::Publisher.register(cat_ids.uniq)
 
-    Cms::Piece.where(content_id: category_content.id).each do |piece|
+    category_content.pieces.public_state.each do |piece|
       piece.enqueue_publisher
     end
   end
@@ -71,10 +71,10 @@ module GpArticle::Docs::PublishQueue
     calendar_content = content.gp_calendar_content_event
     return unless calendar_content
 
-    node_ids = Cms::Node.where(content_id: calendar_content.id).pluck(:id)
+    node_ids = calendar_content.nodes.public_state.pluck(:id)
     Cms::NodePublisher.register(node_ids)
 
-    Cms::Piece.where(content_id: calendar_content.id).each do |piece|
+    calendar_content.pieces.public_state.each do |piece|
       piece.enqueue_publisher
     end
   end
@@ -85,10 +85,10 @@ module GpArticle::Docs::PublishQueue
     map_content = content.map_content_marker
     return unless map_content
 
-    node_ids = Cms::Node.where(content_id: map_content.id).pluck(:id)
+    node_ids = map_content.nodes.public_state.pluck(:id)
     Cms::NodePublisher.register(node_ids)
 
-    Cms::Piece.where(content_id: map_content.id).each do |piece|
+    map_content.pieces.public_state.each do |piece|
       piece.enqueue_publisher
     end
   end
@@ -99,10 +99,10 @@ module GpArticle::Docs::PublishQueue
     tag_content = content.tag_content_tag
     return unless tag_content
 
-    node_ids = Cms::Node.where(content_id: tag_content.id).pluck(:id)
+    node_ids = tag_content.nodes.public_state.pluck(:id)
     Cms::NodePublisher.register(node_ids)
 
-    Cms::Piece.where(content_id: tag_content.id).each do |piece|
+    tag_content.pieces.public_state.each do |piece|
       piece.enqueue_publisher
     end
   end
