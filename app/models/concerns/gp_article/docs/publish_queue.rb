@@ -2,44 +2,44 @@ module GpArticle::Docs::PublishQueue
   extend ActiveSupport::Concern
 
   included do
-    after_save :register_publisher_callback, if: :changed?
-    before_destroy :register_publisher_callback
+    after_save :enqueue_publisher_callback, if: :changed?
+    before_destroy :enqueue_publisher_callback
   end
 
-  def register_publisher
-    register_piece_publisher
-    register_node_publisher
-    register_organization_publisher
-    register_category_publisher
-    register_calendar_publisher
-    register_map_publisher
-    register_tag_publisher
+  def enqueue_publisher
+    enqueue_publisher_for_piece
+    enqueue_publisher_for_node
+    enqueue_publisher_for_organization
+    enqueue_publisher_for_category
+    enqueue_publisher_for_calendar
+    enqueue_publisher_for_map
+    enqueue_publisher_for_tag
   end
 
   private
 
-  def register_publisher_callback
-    register_publisher if register_publisher?
+  def enqueue_publisher_callback
+    enqueue_publisher if enqueue_publisher?
   end
 
-  def register_publisher?
+  def enqueue_publisher?
     name.present? && state.in?(%w(public closed))
   end
 
-  def register_piece_publisher
+  def enqueue_publisher_for_piece
     pieces = content.pieces.public_state
     pieces = pieces.sort { |p| p.model == 'GpArticle::RecentTab' ? 1 : 9 }
     pieces.each do |piece|
-      piece.register_publisher
+      piece.enqueue_publisher
     end
   end
 
-  def register_node_publisher
+  def enqueue_publisher_for_node
     node_ids = content.nodes.public_state.pluck(:id)
     Cms::NodePublisher.register(node_ids)
   end
 
-  def register_organization_publisher
+  def enqueue_publisher_for_organization
     return unless organization_content = content.organization_content_group
     return unless organization_group
 
@@ -48,11 +48,11 @@ module GpArticle::Docs::PublishQueue
     Organization::Publisher.register(og_ids.uniq)
 
     Cms::Piece.where(content_id: organization_content.id).each do |piece|
-      piece.register_publisher
+      piece.enqueue_publisher
     end 
   end
 
-  def register_category_publisher
+  def enqueue_publisher_for_category
     category_content = content.gp_category_content_category_type
     return unless category_content
 
@@ -61,11 +61,11 @@ module GpArticle::Docs::PublishQueue
     GpCategory::Publisher.register(cat_ids.uniq)
 
     Cms::Piece.where(content_id: category_content.id).each do |piece|
-      piece.register_publisher
+      piece.enqueue_publisher
     end
   end
 
-  def register_calendar_publisher
+  def enqueue_publisher_for_calendar
     return unless content.calendar_related?
 
     calendar_content = content.gp_calendar_content_event
@@ -75,11 +75,11 @@ module GpArticle::Docs::PublishQueue
     Cms::NodePublisher.register(node_ids)
 
     Cms::Piece.where(content_id: calendar_content.id).each do |piece|
-      piece.register_publisher
+      piece.enqueue_publisher
     end
   end
 
-  def register_map_publisher
+  def enqueue_publisher_for_map
     return unless content.map_related?
 
     map_content = content.map_content_marker
@@ -89,11 +89,11 @@ module GpArticle::Docs::PublishQueue
     Cms::NodePublisher.register(node_ids)
 
     Cms::Piece.where(content_id: map_content.id).each do |piece|
-      piece.register_publisher
+      piece.enqueue_publisher
     end
   end
 
-  def register_tag_publisher
+  def enqueue_publisher_for_tag
     return unless content.tag_related?
 
     tag_content = content.tag_content_tag
@@ -103,7 +103,7 @@ module GpArticle::Docs::PublishQueue
     Cms::NodePublisher.register(node_ids)
 
     Cms::Piece.where(content_id: tag_content.id).each do |piece|
-      piece.register_publisher
+      piece.enqueue_publisher
     end
   end
 end

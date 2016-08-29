@@ -2,21 +2,21 @@ module Cms::Pieces::PublishQueue
   extend ActiveSupport::Concern
 
   included do
-    after_save :register_publisher_callback, if: :changed?
-    before_destroy :register_publisher_callback
+    after_save :enqueue_publisher_callback, if: :changed?
+    before_destroy :enqueue_publisher_callback
   end
 
-  def register_publisher
+  def enqueue_publisher
     register_bracketee_publiser
   end
 
   private
 
-  def register_publisher_callback
-    register_publisher if register_publisher?
+  def enqueue_publisher_callback
+    enqueue_publisher if enqueue_publisher?
   end
 
-  def register_publisher?
+  def enqueue_publisher?
     name.present?
   end
 
@@ -29,7 +29,7 @@ module Cms::Pieces::PublishQueue
     %w(Cms::Node Cms::Layout).each do |klass_name|
       if owner_map[klass_name].present?
         owner_map[klass_name].each do |item|
-          item.register_publisher
+          item.enqueue_publisher
         end
       end
     end

@@ -2,39 +2,39 @@ module GpCategory::Categories::PublishQueue
   extend ActiveSupport::Concern
 
   included do
-    after_save :register_publisher_callback, if: :changed?
-    before_destroy :register_publisher_callback
+    after_save :enqueue_publisher_callback, if: :changed?
+    before_destroy :enqueue_publisher_callback
   end
 
-  def register_publisher
-    register_piece_publisher
-    register_category_publisher
-    register_doc_publisher
+  def enqueue_publisher
+    enqueue_publisher_for_piece
+    enqueue_publisher_for_category
+    enqueue_publisher_for_doc
   end
 
   private
 
-  def register_publisher_callback
-    register_publisher if register_publisher?
+  def enqueue_publisher_callback
+    enqueue_publisher if enqueue_publisher?
   end
 
-  def register_publisher?
+  def enqueue_publisher?
     true
   end
 
-  def register_piece_publisher
+  def enqueue_publisher_for_piece
     pieces = content.pieces.public_state
     pieces = pieces.sort { |p| p.model == 'GpCategory::RecentTab' ? 1 : 9 }
     pieces.each do |piece|
-      piece.register_publisher
+      piece.enqueue_publisher
     end
   end
 
-  def register_category_publisher
+  def enqueue_publisher_for_category
     GpCategory::Publisher.register(ancestors.map(&:id))
   end
 
-  def register_doc_publisher
+  def enqueue_publisher_for_doc
     doc_ids = public_descendants.map {|c| c.docs.public_state.pluck(:id) }.flatten
     GpArticle::Publisher.register(doc_ids.uniq)
   end

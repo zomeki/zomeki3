@@ -2,24 +2,24 @@ module Cms::Nodes::PublishQueue
   extend ActiveSupport::Concern
 
   included do
-    after_save :register_publisher_callback, if: :changed?
+    after_save :enqueue_publisher_callback, if: :changed?
   end
 
-  def register_publisher
-    register_node_publisher
+  def enqueue_publisher
+    enqueue_publisher_for_node
   end
 
   private
 
-  def register_publisher_callback
-    register_publisher if register_publisher?
+  def enqueue_publisher_callback
+    enqueue_publisher if enqueue_publisher?
   end
 
-  def register_publisher?
+  def enqueue_publisher?
     name.present? && state == 'public' && !model.in?(%w(Cms::Page Cms::Directory Cms::SiteMap))
   end
 
-  def register_node_publisher
+  def enqueue_publisher_for_node
     Cms::NodePublisher.register(id)
   end
 end
