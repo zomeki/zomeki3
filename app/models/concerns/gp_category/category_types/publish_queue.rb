@@ -7,8 +7,8 @@ module GpCategory::CategoryTypes::PublishQueue
   end
 
   def register_publisher
-    register_category_publisher
     register_piece_publisher
+    register_category_publisher
     register_doc_publisher
   end
 
@@ -19,21 +19,23 @@ module GpCategory::CategoryTypes::PublishQueue
   end
 
   def register_publisher?
-    return false unless Core.mode_system?
     true
   end
 
-  def register_category_publisher
-    GpCategory::Publisher.register(categories.map(&:id))
-  end
-
   def register_piece_publisher
-    Cms::Piece.where(content_id: id).each do |piece|
+    pieces = content.pieces.public_state
+    pieces = pieces.sort { |p| p.model == 'GpCategory::RecentTab' ? 1 : 9 }
+    pieces.each do |piece|
       piece.register_publisher
     end
   end
 
+  def register_category_publisher
+    GpCategory::Publisher.register(public_categories.pluck(:id))
+  end
+
   def register_doc_publisher
-    GpArticle::Publisher.register(docs.map(&:id))
+    doc_ids = public_categories.map {|c| c.docs.public_state.pluck(:id) }.flatten
+    GpArticle::Publisher.register(doc_ids.uniq)
   end
 end

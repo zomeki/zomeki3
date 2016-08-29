@@ -18,18 +18,16 @@ module GpCalendar::Events::PublishQueue
   end
 
   def register_publisher?
-    return false unless Core.mode_system?
-    return false unless state.in?(%w(public closed))
     true
   end
 
   def register_node_publisher
-    node_ids = Cms::Node.where(content_id: content_id).pluck(:id)
+    node_ids = content.nodes.public_state.pluck(:id)
     Cms::NodePublisher.register(node_ids)
   end
 
   def register_piece_publisher
-    Cms::Piece.where(content_id: content_id).each do |piece|
+    content.pieces.public_state.each do |piece|
       piece.register_publisher
     end
   end

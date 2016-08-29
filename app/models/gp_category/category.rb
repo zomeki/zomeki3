@@ -55,11 +55,9 @@ class GpCategory::Category < ActiveRecord::Base
   scope :with_root, -> { where(parent_id: nil) }
   scope :public_state, -> { where(state: 'public') }
 
-  after_save :publish_ancestor_pages
   after_update :move_published_files
   after_update :clean_published_files
   after_destroy :clean_published_files
-  after_destroy :publish_ancestor_pages
 
   def content
     category_type.content
@@ -213,10 +211,6 @@ class GpCategory::Category < ActiveRecord::Base
     else
       self.level_no = 1
     end
-  end
-
-  def publish_ancestor_pages
-    GpCategory::Publisher.register(ancestors.map(&:id))
   end
 
   def clean_published_files
