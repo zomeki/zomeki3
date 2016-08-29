@@ -78,8 +78,8 @@ class GpArticle::Doc < ActiveRecord::Base
   has_many :approval_requests, :class_name => 'Approval::ApprovalRequest', :as => :approvable, :dependent => :destroy
   has_many :comments, :dependent => :destroy
 
-  has_many :shs_shares, :class_name => 'SnsShare::Share', :as => :sharable, :dependent => :destroy
-  has_many :sns_accounts, :class_name => 'SnsShare::Account', :through => :shs_shares, :source => :account
+  has_many :sns_shares, :class_name => 'SnsShare::Share', :as => :sharable, :dependent => :destroy
+  has_many :sns_accounts, :class_name => 'SnsShare::Account', :through => :sns_shares, :source => :account
 
   before_save :make_file_contents_path_relative
   before_save :set_name
