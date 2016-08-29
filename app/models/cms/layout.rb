@@ -7,7 +7,7 @@ class Cms::Layout < ActiveRecord::Base
   include Cms::Model::Rel::Bracket
   include Cms::Model::Auth::Concept
 
-  include Concerns::Cms::Layout::Queue
+  include Cms::Layouts::PublishQueue
 
   belongs_to :status,  :foreign_key => :state, :class_name => 'Sys::Base::Status'
   

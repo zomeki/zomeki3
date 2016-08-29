@@ -7,7 +7,8 @@ class GpCategory::CategoryType < ActiveRecord::Base
   include Cms::Model::Base::Page::TalkTask
 
   include StateText
-  include Concerns::GpCategory::CategoryType::Preload
+  include GpCategory::CategoryTypes::PublishQueue
+  include GpCategory::CategoryTypes::Preload
 
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
   SITEMAP_STATE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]

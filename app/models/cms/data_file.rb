@@ -8,7 +8,7 @@ class Cms::DataFile < ActiveRecord::Base
   include Cms::Model::Auth::Concept
 
   include StateText
-  include Concerns::Cms::DataFile::Queue
+  include Cms::DataFiles::PublishQueue
 
   belongs_to :concept, :foreign_key => :concept_id, :class_name => 'Cms::Concept'
   belongs_to :site   , :foreign_key => :site_id   , :class_name => 'Cms::Site'

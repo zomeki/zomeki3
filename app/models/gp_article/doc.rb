@@ -19,8 +19,8 @@ class GpArticle::Doc < ActiveRecord::Base
   include GpTemplate::Model::Rel::Template
 
   include StateText
-  include Concerns::GpArticle::Doc::Queue
-  include Concerns::GpArticle::Doc::Preload
+  include GpArticle::Docs::PublishQueue
+  include GpArticle::Docs::Preload
 
   STATE_OPTIONS = [['下書き保存', 'draft'], ['承認依頼', 'approvable'], ['即時公開', 'public']]
   TARGET_OPTIONS = [['無効', ''], ['同一ウィンドウ', '_self'], ['別ウィンドウ', '_blank'], ['添付ファイル', 'attached_file']]

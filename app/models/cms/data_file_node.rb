@@ -6,7 +6,7 @@ class Cms::DataFileNode < ActiveRecord::Base
   include Cms::Model::Rel::Concept
   include Cms::Model::Auth::Concept
 
-  include Concerns::Cms::DataFileNode::Queue
+  include Cms::DataFileNodes::PublishQueue
 
   has_many :files, :foreign_key => :node_id, :class_name => 'Cms::DataFile', :primary_key => :id
 

@@ -1,6 +1,7 @@
 class Tag::Tag < ActiveRecord::Base
   include Sys::Model::Base
-  include Concerns::Tag::Tag::Preload
+
+  include Tag::Tags::Preload
 
   # Content
   belongs_to :content, :foreign_key => :content_id, :class_name => 'Tag::Content::Tag'

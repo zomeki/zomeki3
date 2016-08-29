@@ -6,7 +6,7 @@ class Organization::Group < ActiveRecord::Base
   include Cms::Model::Auth::Content
 
   include StateText
-  include Concerns::Organization::Group::Preload
+  include Organization::Groups::Preload
 
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
   SITEMAP_STATE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
