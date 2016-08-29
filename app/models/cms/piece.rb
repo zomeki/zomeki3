@@ -26,6 +26,8 @@ class Cms::Piece < ActiveRecord::Base
   after_save :save_settings
   after_save :replace_new_piece
 
+  scope :public_state, -> { where(state: 'public') }
+
   def replace_new_piece
     if state == "public" && rep = replaced_page
       rep.destroy

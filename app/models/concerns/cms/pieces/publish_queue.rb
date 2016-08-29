@@ -26,7 +26,7 @@ module Cms::Pieces::PublishQueue
 
     owner_map = bracketees.map(&:owner).group_by { |owner| owner.class.name }
 
-    %w(Cms::Layout Cms::Node).each do |klass_name|
+    %w(Cms::Node Cms::Layout).each do |klass_name|
       if owner_map[klass_name].present?
         owner_map[klass_name].each do |item|
           item.register_publisher

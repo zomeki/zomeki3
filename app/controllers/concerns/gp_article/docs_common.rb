@@ -43,23 +43,4 @@ module GpArticle::DocsCommon
       end
     end
   end
-
-  def publish_related_pages(item)
-    Delayed::Job.where(queue: 'publish_top_page').destroy_all
-    if (root_node = item.content.site.nodes.public_state.where(parent_id: 0).first) &&
-       (top_page = root_node.children.where(name: 'index.html').first)
-      ::Script.new.delay(queue: 'publish_top_page')
-              .run_from_delayed_job("cms/script/nodes/publish?target_module=cms&target_node_id=#{top_page.id}", force: true)
-    end
-
-    Delayed::Job.where(queue: 'publish_category_pages').destroy_all
-    category_ids = if (@old_category_ids.kind_of?(Array) && @new_category_ids.kind_of?(Array))
-                     @old_category_ids | @new_category_ids
-                   else
-                     item.categories.inject([]){|result, item|
-                       result | item.ancestors.map(&:id)
-                     }
-                   end
-    GpCategory::Publisher.register(category_ids)
-  end
 end

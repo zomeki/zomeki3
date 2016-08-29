@@ -19,9 +19,6 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     @marker_category_types = @content.marker_category_types
 
     @item = @content.docs.find(params[:id]) if params[:id].present?
-    @params_categories = params[:categories].kind_of?(Hash) ? params[:categories] : {}
-    @params_event_categories = params[:event_categories].kind_of?(Hash) ? params[:event_categories] : {}
-    @params_marker_categories = params[:marker_categories].kind_of?(Hash) ? params[:marker_categories] : {}
 
     @params_item_in_editable_groups = if (ieg = params[:item].try('[]', :in_editable_groups)).kind_of?(Array)
                                         ieg
@@ -104,6 +101,11 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
   def new
     @item = @content.docs.build
+
+    if @content.default_category
+      @item.in_category_ids = { @content.default_category.content_type_id.to_s => [@content.default_category.id.to_s] }
+    end
+
     render 'new_smart_phone', layout: 'admin/gp_article_smart_phone' if Page.smart_phone?
   end
 
@@ -147,9 +149,6 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     location = ->(d){ edit_gp_article_doc_url(@content, d) } if @item.state_draft?
     _create(@item, location: location, failed_template: failed_template) do
       set_share_accounts
-      set_categories
-      set_event_categories
-      set_marker_categories
       @item.fix_tmp_files(params[:_tmp])
 
       @item.approval_requests.each(&:reset) if @item.state_approvable?
@@ -160,7 +159,6 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
       publish_by_update(@item) if @item.state_public?
 
       share_to_sns(@item) if @item.state_public?
-      publish_related_pages(@item) if @item.state_public?
       sync_events_export
     end
   end
@@ -214,9 +212,6 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     location = url_for(action: 'edit') if @item.state_draft?
     _update(@item, location: location, failed_template: failed_template) do
       set_share_accounts
-      set_categories
-      set_event_categories
-      set_marker_categories
       update_file_names
 
       @item.approval_requests.each(&:reset) if @item.state_approvable?
@@ -229,7 +224,6 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
       @item.close if !@item.public? && !@item.will_replace? # Never use "state_public?" here
 
       share_to_sns(@item) if @item.state_public?
-      publish_related_pages(@item) if @item.state_public?
       sync_events_export
 
       release_document
@@ -237,11 +231,8 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   end
 
   def destroy
-    @old_category_ids = @item.categories.inject([]){|ids, category| ids | category.ancestors.map(&:id) }
-    @new_category_ids = []
     _destroy(@item) do
       send_broken_link_notification(@item) if @content.notify_broken_link? && @item.backlinks.present?
-      publish_related_pages(@item)
       sync_events_export
     end
   end
@@ -254,13 +245,6 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   end
 
   def publish
-    @old_category_ids = if @item.will_replace?
-                          @item.prev_edition.categories.inject([]){|ids, category| ids | category.ancestors.map(&:id) }
-                        else
-                          []
-                        end
-    @new_category_ids = @item.categories.inject([]){|ids, category| ids | category.ancestors.map(&:id) }
-
     @item.update_attribute(:state, 'public')
     _publish(@item) do
       publish_ruby(@item)
@@ -268,7 +252,6 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
                     :path => @item.public_smart_phone_path, :dependent => :smart_phone)
 
       share_to_sns(@item)
-      publish_related_pages(@item)
       sync_events_export
     end
   end
@@ -287,10 +270,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
   def close(item)
     _close(@item) do
-      @old_category_ids = @item.categories.inject([]){|ids, category| ids | category.ancestors.map(&:id) }
-      @new_category_ids = []
       send_broken_link_notification(@item) if @content.notify_broken_link? && @item.backlinks.present?
-      publish_related_pages(@item)
       sync_events_export
     end
   end
@@ -356,45 +336,6 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
                           []
                         end
     @item.sns_account_ids = share_account_ids
-  end
-
-  def set_categories
-    @old_category_ids = @item.categories.inject([]){|ids, category| ids | category.ancestors.map(&:id) }
-    category_ids = if params[:categories].is_a?(Hash)
-                     params[:categories].values.flatten.map{|c| c.to_i if c.present? }.compact.uniq
-                   else
-                     []
-                   end
-    if @category_types.include?(@content.group_category_type)
-      if (group_category = @content.group_category_type.categories.find_by(group_code: @item.creator.group.code))
-        category_ids |= [group_category.id]
-      end
-    end
-
-    if @content.default_category && @category_types.include?(@content.default_category_type)
-      category_ids |= [@content.default_category.id]
-    end
-    @item.category_ids = category_ids
-
-    @new_category_ids = @item.categories.inject([]){|ids, category| ids | category.ancestors.map(&:id) }
-  end
-
-  def set_event_categories
-    event_category_ids = if params[:event_categories].is_a?(Hash)
-                           params[:event_categories].values.flatten.map{|c| c.to_i if c.present? }.compact.uniq
-                         else
-                           []
-                         end
-    @item.event_category_ids = event_category_ids
-  end
-
-  def set_marker_categories
-    marker_category_ids = if params[:marker_categories].is_a?(Hash)
-                            params[:marker_categories].values.flatten.map{|c| c.to_i if c.present? }.compact.uniq
-                          else
-                            []
-                          end
-    @item.marker_category_ids = marker_category_ids
   end
 
   def hold_document
@@ -511,6 +452,11 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
       :inquiries_attributes => [:id, :state, :_destroy,:group_id],
       :in_maps => [:name, :title, :map_lat, :map_lng, :map_zoom, :markers => [:name, :lat, :lng]],
       :in_creator => [:group_id, :user_id],
-      :in_editable_groups => [])
+      :in_editable_groups => [],
+    ).tap do |whitelisted|
+      whitelisted[:in_category_ids] = params[:item][:in_category_ids]
+      whitelisted[:in_event_category_ids] = params[:item][:in_event_category_ids]
+      whitelisted[:in_marker_category_ids] = params[:item][:in_marker_category_ids]
+    end
   end
 end

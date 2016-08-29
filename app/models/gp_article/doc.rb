@@ -15,7 +15,8 @@ class GpArticle::Doc < ActiveRecord::Base
   include Cms::Model::Auth::Concept
   include Sys::Model::Auth::EditableGroup
 
-  include GpArticle::Model::Rel::Doc::Rel
+  include GpArticle::Model::Rel::Doc
+  include GpArticle::Model::Rel::Category
   include GpTemplate::Model::Rel::Template
 
   include StateText

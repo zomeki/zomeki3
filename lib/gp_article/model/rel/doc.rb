@@ -1,4 +1,4 @@
-module GpArticle::Model::Rel::Doc::Rel
+module GpArticle::Model::Rel::Doc
   attr_accessor :in_rel_doc_ids
 
   def rel_docs

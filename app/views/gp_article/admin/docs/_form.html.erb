@@ -124,18 +124,11 @@
           <div id="category_type_<%= category_type.id %>_categories">
             <%= render 'category', category_type: category_type, category: nil,
                                    categories_for_option: category_type.categories_for_option %>
-            <%- if (pc = @params_categories[category_type.id.to_s]).kind_of?(Array) -%>
-              <%- pc.each do |c| next unless (category = category_type.categories.find_by_id(c)) -%>
-              <%= render 'category', category_type: category_type, category: category,
-                                     categories_for_option: category_type.categories_for_option %>
-              <%- end -%>
-            <%- elsif @item.new_record? && category_type.id == @content.default_category_type.try(:id) && @content.default_category -%>
-              <%= render 'category', category_type: category_type, category: @content.default_category,
-                                     categories_for_option: category_type.categories_for_option %>
-            <%- else -%>
-              <%- @item.categories.where(category_type_id: category_type.id).each do |category| -%>
-              <%= render 'category', category_type: category_type, category: category,
-                                     categories_for_option: category_type.categories_for_option %>
+            <%- if (pc = @item.in_category_params[category_type.id.to_s]) -%>
+              <%- pc.each do |c| -%>
+                <%- next unless (category = category_type.categories.find_by(id: c)) -%>
+                <%= render 'category', category_type: category_type, category: category,
+                                       categories_for_option: category_type.categories_for_option %>
               <%- end -%>
             <%- end -%>
             <span><%= button_tag '追加', type: 'button', class: 'add_category' %></span>
@@ -261,17 +254,12 @@
             <%= render 'category', category_type: category_type, category: nil,
                                    categories_for_option: @content.event_category_type_categories_for_option(category_type),
                                    prefix: 'event_' %>
-            <%- if (pec = @params_event_categories[category_type.id.to_s]).kind_of?(Array) -%>
-              <%- pec.each do |c| next unless (category = category_type.categories.find_by_id(c)) -%>
-              <%= render 'category', category_type: category_type, category: category,
-                                     categories_for_option: @content.event_category_type_categories_for_option(category_type),
-                                     prefix: 'event_' %>
-              <%- end -%>
-            <%- else -%>
-            <%- @item.event_categories.where(category_type_id: category_type.id).each do |category| -%>
-              <%= render 'category', category_type: category_type, category: category,
-                                     categories_for_option: @content.event_category_type_categories_for_option(category_type),
-                                     prefix: 'event_' %>
+            <%- if (pec = @item.in_event_category_params[category_type.id.to_s]) -%>
+              <%- pec.each do |c| -%>
+                <%- next unless (category = category_type.categories.find_by_id(c))  -%>
+                <%= render 'category', category_type: category_type, category: category,
+                                       categories_for_option: @content.event_category_type_categories_for_option(category_type),
+                                       prefix: 'event_' %>
               <%- end -%>
             <%- end -%>
             <span><%= button_tag '追加', type: 'button', class: 'add_category' %></span>
@@ -316,17 +304,12 @@
             <%= render 'category', category_type: category_type, category: nil,
                                    categories_for_option: @content.marker_category_type_categories_for_option(category_type),
                                    prefix: 'marker_' %>
-            <%- if (pmc = @params_marker_categories[category_type.id.to_s]).kind_of?(Array) -%>
-              <%- pmc.each do |c| next unless (category = category_type.categories.find_by_id(c)) -%>
-              <%= render 'category', category_type: category_type, category: category,
-                                     categories_for_option: @content.marker_category_type_categories_for_option(category_type),
-                                     prefix: 'marker_' %>
-              <%- end -%>
-            <%- else -%>
-              <%- @item.marker_categories.where(category_type_id: category_type.id).each do |category| -%>
-              <%= render 'category', category_type: category_type, category: category,
-                                     categories_for_option: @content.marker_category_type_categories_for_option(category_type),
-                                     prefix: 'marker_' %>
+            <%- if (pmc = @item.in_marker_category_params[category_type.id.to_s]) -%>
+              <%- pmc.each do |c| -%>
+                <%- next unless (category = category_type.categories.find_by_id(c)) -%>
+                <%= render 'category', category_type: category_type, category: category,
+                                       categories_for_option: @content.marker_category_type_categories_for_option(category_type),
+                                       prefix: 'marker_' %>
               <%- end -%>
             <%- end -%>
             <span><%= button_tag '追加', type: 'button', class: 'add_category' %></span>

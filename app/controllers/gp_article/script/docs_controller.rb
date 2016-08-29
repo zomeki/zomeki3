@@ -50,7 +50,6 @@ class GpArticle::Script::DocsController < Cms::Controller::Script::Publication
                           :path => path_ruby, :dependent => :ruby)
 
         share_to_sns(item)
-        publish_related_pages(item)
       end
 
       info_log %Q!OK: Published to "#{path}"!
@@ -69,7 +68,6 @@ class GpArticle::Script::DocsController < Cms::Controller::Script::Publication
       info_log "-- Close: #{item.class}##{item.id}"
 
       item.close
-      publish_related_pages(item)
 
       Sys::OperationLog.script_log(:item => item, :site => item.content.site, :action => 'close')
 
