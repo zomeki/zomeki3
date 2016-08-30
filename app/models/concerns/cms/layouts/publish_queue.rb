@@ -24,28 +24,27 @@ module Cms::Layouts::PublishQueue
   end
 
   def enqueue_publisher_for_node
-    node_ids = Cms::Node.public_state.where(layout_id: id).pluck(:id)
-    Cms::NodePublisher.register(node_ids)
+    nodes = Cms::Node.public_state.where(layout_id: id).select(:id)
+    Cms::Publisher.register(nodes)
   end
 
   def enqueue_publisher_for_category
     cat_types = GpCategory::CategoryType.public_state.where(layout_id: id).all
     cat_types.each do |cat_type|
-      cat_ids = cat_type.categories.pluck(:id)
-      GpCategory::Publisher.register(cat_ids)
+      Cms::Publisher.register(cat_type.public_categories.select(:id))
     end
 
-    cat_ids = GpCategory::Category.public_state.where(layout_id: id).pluck(:id)
-    GpCategory::Publisher.register(cat_ids)
+    cats = GpCategory::Category.public_state.where(layout_id: id).select(:id)
+    Cms::Publisher.register(cats)
   end
 
   def enqueue_publisher_for_organization_group
-    og_ids = Organization::Group.public_state.with_layout(id).pluck(:id)
-    Organization::Publisher.register(og_ids)
+    ogs = Organization::Group.public_state.with_layout(id).select(:id)
+    Cms::Publisher.register(ogs)
   end
 
   def enqueue_publisher_for_doc
-    doc_ids = GpArticle::Doc.public_state.where(layout_id: id).pluck(:id)
-    GpArticle::Publisher.register(doc_ids)
+    docs = GpArticle::Doc.public_state.where(layout_id: id).select(:id)
+    Cms::Publisher.register(docs)
   end
 end

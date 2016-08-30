@@ -22,12 +22,11 @@ module GpCalendar::Events::PublishQueue
   end
 
   def enqueue_publisher_for_node
-    node_ids = content.nodes.public_state.pluck(:id)
-    Cms::NodePublisher.register(node_ids)
+    Cms::Publisher.register(content.public_nodes.select(:id))
   end
 
   def enqueue_publisher_for_piece
-    content.pieces.public_state.each do |piece|
+    content.public_pieces.each do |piece|
       piece.enqueue_publisher
     end
   end

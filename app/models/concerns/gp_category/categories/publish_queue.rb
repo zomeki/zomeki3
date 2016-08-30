@@ -23,19 +23,18 @@ module GpCategory::Categories::PublishQueue
   end
 
   def enqueue_publisher_for_piece
-    pieces = content.pieces.public_state
-    pieces = pieces.sort { |p| p.model == 'GpCategory::RecentTab' ? 1 : 9 }
+    pieces = content.public_pieces.sort { |p| p.model == 'GpCategory::RecentTab' ? 1 : 9 }
     pieces.each do |piece|
       piece.enqueue_publisher
     end
   end
 
   def enqueue_publisher_for_category
-    GpCategory::Publisher.register(ancestors.map(&:id))
+    Cms::Publisher.register(ancestors)
   end
 
   def enqueue_publisher_for_doc
-    doc_ids = public_descendants.map {|c| c.docs.public_state.pluck(:id) }.flatten
-    GpArticle::Publisher.register(doc_ids.uniq)
+    docs = public_descendants.map {|c| c.docs.public_state.select(:id) }.flatten
+    Cms::Publisher.register(docs)
   end
 end

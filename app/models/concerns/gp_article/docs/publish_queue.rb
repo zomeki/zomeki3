@@ -27,7 +27,7 @@ module GpArticle::Docs::PublishQueue
   end
 
   def enqueue_publisher_for_piece
-    pieces = content.pieces.public_state
+    pieces = content.public_pieces
     pieces = pieces.sort { |p| p.model == 'GpArticle::RecentTab' ? 1 : 9 }
     pieces.each do |piece|
       piece.enqueue_publisher
@@ -35,19 +35,18 @@ module GpArticle::Docs::PublishQueue
   end
 
   def enqueue_publisher_for_node
-    node_ids = content.nodes.public_state.pluck(:id)
-    Cms::NodePublisher.register(node_ids)
+    Cms::Publisher.register(content.public_nodes.select(:id))
   end
 
   def enqueue_publisher_for_organization
     return unless organization_content = content.organization_content_group
     return unless organization_group
 
-    og_ids = [organization_group.id]
-    og_ids << prev_edition.organization_group.id if prev_edition && prev_edition.organization_group
-    Organization::Publisher.register(og_ids.uniq)
+    ogs = [organization_group]
+    ogs << prev_edition.organization_group if prev_edition && prev_edition.organization_group
+    Cms::Publisher.register(ogs.uniq)
 
-    organization_content.pieces.public_state.each do |piece|
+    organization_content.public_pieces.each do |piece|
       piece.enqueue_publisher
     end 
   end
@@ -56,11 +55,11 @@ module GpArticle::Docs::PublishQueue
     category_content = content.gp_category_content_category_type
     return unless category_content
 
-    cat_ids = categories.map {|c| c.ancestors.map(&:id) }.flatten
-    cat_ids += prev_edition.categories.map {|c| c.ancestors.map(&:id) }.flatten if prev_edition
-    GpCategory::Publisher.register(cat_ids.uniq)
+    cats = categories.map {|c| c.ancestors }.flatten
+    cats += prev_edition.categories.map {|c| c.ancestors }.flatten if prev_edition
+    Cms::Publisher.register(cats.uniq)
 
-    category_content.pieces.public_state.each do |piece|
+    category_content.public_pieces.each do |piece|
       piece.enqueue_publisher
     end
   end
@@ -71,10 +70,9 @@ module GpArticle::Docs::PublishQueue
     calendar_content = content.gp_calendar_content_event
     return unless calendar_content
 
-    node_ids = calendar_content.nodes.public_state.pluck(:id)
-    Cms::NodePublisher.register(node_ids)
+    Cms::Publisher.register(calendar_content.public_nodes.select(:id))
 
-    calendar_content.pieces.public_state.each do |piece|
+    calendar_content.public_pieces.each do |piece|
       piece.enqueue_publisher
     end
   end
@@ -85,10 +83,9 @@ module GpArticle::Docs::PublishQueue
     map_content = content.map_content_marker
     return unless map_content
 
-    node_ids = map_content.nodes.public_state.pluck(:id)
-    Cms::NodePublisher.register(node_ids)
+    Cms::Publisher.register(map_content.public_nodes.select(:id))
 
-    map_content.pieces.public_state.each do |piece|
+    map_content.public_pieces.each do |piece|
       piece.enqueue_publisher
     end
   end
@@ -99,10 +96,9 @@ module GpArticle::Docs::PublishQueue
     tag_content = content.tag_content_tag
     return unless tag_content
 
-    node_ids = tag_content.nodes.public_state.pluck(:id)
-    Cms::NodePublisher.register(node_ids)
+    Cms::Publisher.register(tag_content.public_nodes.select(:id))
 
-    tag_content.pieces.public_state.each do |piece|
+    tag_content.public_pieces.each do |piece|
       piece.enqueue_publisher
     end
   end

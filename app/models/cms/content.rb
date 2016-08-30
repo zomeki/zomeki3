@@ -15,6 +15,7 @@ class Cms::Content < ActiveRecord::Base
 
   # conditional
   has_many :public_nodes, -> { public_state }, foreign_key: :content_id, class_name: 'Cms::Node'
+  has_many :public_pieces, -> { public_state }, foreign_key: :content_id, class_name: 'Cms::Piece'
 
   validates :concept_id, :state, :model, :name, presence: true
   validates :code, presence: true, uniqueness: { scope: [:site_id] }
