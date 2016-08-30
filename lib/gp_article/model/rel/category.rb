@@ -2,40 +2,33 @@ module GpArticle::Model::Rel::Category
   extend ActiveSupport::Concern
 
   included do
-    attr_accessor :in_category_ids, :in_event_category_ids, :in_marker_category_ids
-    after_save :save_categories, if: 'in_category_ids.present?'
-    after_save :save_event_categories, if: 'in_event_category_ids.present?'
-    after_save :save_marker_categories, if: 'in_marker_category_ids.present?'
+    after_save :save_categories, if: -> { in_category_ids.present? }
+    after_save :save_event_categories, if: -> { in_event_category_ids.present? }
+    after_save :save_marker_categories, if: -> { in_marker_category_ids.present? }
   end
 
-  def in_category_params
-    return @in_category_params if defined? @in_category_params
-    @in_category_params =
-      if in_category_ids.present?
-        in_category_ids
-      else
-        make_category_params(categories)
-      end
+  def in_category_ids=(val)
+    @in_category_ids = val
   end
 
-  def in_event_category_params
-    return @in_event_category_params if defined? @in_event_category_params
-    @in_event_category_params =
-      if in_event_category_ids.present?
-        in_event_category_ids
-      else
-        make_category_params(event_categories)
-      end
+  def in_category_ids
+    @in_category_ids ||= make_category_params(categories)
   end
 
-  def in_marker_category_params
-    return @in_marker_category_params if defined? @in_marker_category_params
-    @in_marker_category_params =
-      if in_marker_category_ids.present?
-        in_marker_category_ids
-      else
-        make_category_params(marker_categories)
-      end
+  def in_event_category_ids=(val)
+    @in_event_category_ids = val
+  end
+
+  def in_event_category_ids
+    @in_event_category_ids ||= make_category_params(event_categories)
+  end
+
+  def in_marker_category_ids=(val)
+    @in_marker_category_ids = val
+  end
+
+  def in_marker_category_ids
+    @in_marker_category_ids ||= make_category_params(marker_categories)
   end
 
   private

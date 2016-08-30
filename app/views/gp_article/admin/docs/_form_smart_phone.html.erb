@@ -93,7 +93,7 @@
     <div id="category_type_<%= category_type.id %>_categories">
       <%= render 'category', category_type: category_type, category: nil,
                              categories_for_option: category_type.categories_for_option %>
-      <%- if (pc = @item.in_category_params[category_type.id.to_s]) -%>
+      <%- if (pc = @item.in_category_ids[category_type.id.to_s]) -%>
         <%- pc.each do |c| -%>
           <%- next unless (category = category_type.categories.find_by_id(c)) -%>
           <%= render 'category', category_type: category_type, category: category,
@@ -224,7 +224,7 @@
         <%= render 'category', category_type: category_type, category: nil,
                                categories_for_option: @content.event_category_type_categories_for_option(category_type),
                                prefix: 'event_' %>
-        <%- if (pec = @item.in_event_category_params[category_type.id.to_s]) -%>
+        <%- if (pec = @item.in_event_category_ids[category_type.id.to_s]) -%>
           <%- pec.each do |c| next unless (category = category_type.categories.find_by_id(c)) -%>
           <%= render 'category', category_type: category_type, category: category,
                                  categories_for_option: @content.event_category_type_categories_for_option(category_type),
@@ -258,7 +258,7 @@
             <%= render 'category', category_type: category_type, category: nil,
                                    categories_for_option: @content.marker_category_type_categories_for_option(category_type),
                                    prefix: 'marker_' %>
-            <%- if (pmc = @item.in_marker_category_params[category_type.id.to_s]) -%>
+            <%- if (pmc = @item.in_marker_category_ids[category_type.id.to_s]) -%>
               <%- pmc.each do |c| -%>
                 <%- next unless (category = category_type.categories.find_by_id(c)) -%>
                 <%= render 'category', category_type: category_type, category: category,
@@ -327,7 +327,7 @@
         <table class="noDesign">
         <%- @content.sns_share_content_account.accounts.each do |account| -%>
         <tr>
-          <td><%= check_box_tag 'item[in_share_accounts][]', account.id, @item.in_share_account_params.include?(account.id.to_s), id: "item_in_share_accounts_#{account.id}" %>
+          <td><%= check_box_tag 'item[in_share_accounts][]', account.id, @item.in_share_accounts.include?(account.id.to_s), id: "item_in_share_accounts_#{account.id}" %>
               <%= label_tag "item_in_share_accounts_#{account.id}", '投稿する' %></td>
           <td><%= account.provider.humanize %></td>
           <td><%= image_tag account.info_image, style: 'height: 50px; width: 50px;' if account.info_image.present? %></td>

@@ -2,18 +2,15 @@ module GpArticle::Model::Rel::Sns
   extend ActiveSupport::Concern
 
   included do
-    attr_accessor :in_share_accounts
-    after_save :save_share_accounts, if: 'in_share_accounts.present?'
+    after_save :save_share_accounts, if: -> { in_share_accounts.present? }
   end
 
-  def in_share_account_params
-    return @in_share_account_params if defined? @in_share_account_params
-    @in_share_account_params =
-      if in_share_accounts.present?
-        in_share_accounts
-      else
-        sns_accounts.map(&:id)
-      end
+  def in_share_accounts=(val)
+    @in_share_accounts = val
+  end
+
+  def in_share_accounts
+    @in_share_accounts ||= sns_accounts.map(&:id)
   end
 
   private
