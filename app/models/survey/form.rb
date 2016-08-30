@@ -8,6 +8,8 @@ class Survey::Form < ActiveRecord::Base
   include Cms::Model::Auth::Concept
   include Sys::Model::Auth::EditableGroup
 
+  include Approval::Model::Rel::Approval
+
   include StateText
 
   STATE_OPTIONS = [['下書き保存', 'draft'], ['承認依頼', 'approvable'], ['即時公開', 'public']]

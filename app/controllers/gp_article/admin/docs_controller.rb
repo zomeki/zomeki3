@@ -142,14 +142,9 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
     @item.state = new_state if new_state.present? && @item.class::STATE_OPTIONS.any?{|v| v.last == new_state }
 
-    validate_approval_requests if @item.state_approvable?
-    return render(failed_template) unless @item.errors.empty?
-
     location = ->(d){ edit_gp_article_doc_url(@content, d) } if @item.state_draft?
     _create(@item, location: location, failed_template: failed_template) do
 
-      @item.approval_requests.each(&:reset) if @item.state_approvable?
-      set_approval_requests
       @item = @content.docs.find_by(id: @item.id)
       @item.send_approval_request_mail if @item.state_approvable?
 
@@ -203,15 +198,10 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
     @item.state = new_state if new_state.present? && @item.class::STATE_OPTIONS.any?{|v| v.last == new_state }
 
-    validate_approval_requests if @item.state_approvable?
-    return render(failed_template) unless @item.errors.empty?
-
     location = url_for(action: 'edit') if @item.state_draft?
     _update(@item, location: location, failed_template: failed_template) do
       update_file_names
 
-      @item.approval_requests.each(&:reset) if @item.state_approvable?
-      set_approval_requests
       @item = @content.docs.find_by(id: @item.id)
       @item.send_approval_request_mail if @item.state_approvable?
 
@@ -349,62 +339,6 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     @item.holds.destroy_all
   end
 
-  def set_approval_requests
-    approval_flow_ids = if params[:approval_flows].is_a?(Array)
-                          params[:approval_flows].map{|a| a.to_i if a.present? }.compact.uniq
-                        else
-                          []
-                        end
-
-    approval_flow_ids.each do |approval_flow_id|
-      request = @item.approval_requests.find_by(approval_flow_id: approval_flow_id)
-
-      assignments = {}.with_indifferent_access
-      if params.member?("assignment_ids_#{approval_flow_id}")
-        if params["assignment_ids_#{approval_flow_id}"].is_a?(Hash)
-          params["assignment_ids_#{approval_flow_id}"].each do |approval_id, value|
-            assignments["approval_#{approval_id}"] = "#{value}"
-          end
-        end
-      end
-
-      unless request
-        @item.approval_requests.create(user_id: Core.user.id, approval_flow_id: approval_flow_id)
-        request = @item.approval_requests.find_by(approval_flow_id: approval_flow_id)
-      end
-      request.select_assignment = assignments
-      request.user_id = Core.user.id
-      request.save! if request.changed?
-      request.reset
-    end
-
-    @item.approval_requests.each do |approval_request|
-      approval_request.destroy unless approval_flow_ids.include?(approval_request.approval_flow_id)
-    end
-  end
-
-  def validate_approval_requests
-    approval_flow_ids = if params[:approval_flows].is_a?(Array)
-                          params[:approval_flows].map{|a| a.to_i if a.present? }.compact.uniq
-                        else
-                          []
-                        end
-
-    if approval_flow_ids.empty?
-      @item.errors.add(:base, '承認フローを選択してください。')
-    else
-      approval_flow_ids.each do |approval_flow_id|
-        if params.member?("assignment_ids_#{approval_flow_id}") && params["assignment_ids_#{approval_flow_id}"].is_a?(Hash)
-          if params["assignment_ids_#{approval_flow_id}"].is_a?(Hash)
-            params["assignment_ids_#{approval_flow_id}"].each do |approval_id, value|
-              @item.errors["承認者"] = "を選択してください。" if value.blank?
-            end
-          end
-        end
-      end
-    end
-  end
-
   def update_file_names
     if (file_names = params[:file_names]).kind_of?(Hash)
       new_body = @item.body
@@ -442,10 +376,12 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
       :in_editable_groups => [],
       :in_rel_doc_ids => [],
       :in_share_accounts => [],
+      :in_approval_flow_ids => [],
     ).tap do |whitelisted|
       whitelisted[:in_category_ids] = params[:item][:in_category_ids]
       whitelisted[:in_event_category_ids] = params[:item][:in_event_category_ids]
       whitelisted[:in_marker_category_ids] = params[:item][:in_marker_category_ids]
+      whitelisted[:in_approval_assignment_ids] = params[:item][:in_approval_assignment_ids]
     end
   end
 end
