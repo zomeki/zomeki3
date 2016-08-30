@@ -1,4 +1,4 @@
-<%- inline_id = @item.id || params[:_tmp].presence || Util::Sequencer.next_id(:tmp, md5: true) -%>
+<%- inline_id = @item.id || (@item.in_tmp_id ||= Util::Sequencer.next_id(:tmp, md5: true)) -%>
 
 <span class="note">※は必須項目です。</span>
 
@@ -110,7 +110,7 @@
     </table>
 
     <div id="inline_files" style="display: none;">
-      <%= hidden_field_tag :_tmp, inline_id %>
+      <%= f.hidden_field :in_tmp_id %>
       <iframe src="<%= gp_article_doc_files_path(@content, inline_id) %>" style="width: 100%; height: 400px;"></iframe>
     </div>
 

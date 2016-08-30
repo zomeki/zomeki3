@@ -147,7 +147,6 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
     location = ->(d){ edit_gp_article_doc_url(@content, d) } if @item.state_draft?
     _create(@item, location: location, failed_template: failed_template) do
-      @item.fix_tmp_files(params[:_tmp])
 
       @item.approval_requests.each(&:reset) if @item.state_approvable?
       set_approval_requests
@@ -434,6 +433,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
       :marker_state, :marker_icon_category_id, :mobile_title, :mobile_body,
       :concept_id, :layout_id, :name, :filename_base, :terminal_pc_or_smart_phone, :terminal_mobile,
       :meta_description, :meta_keywords, :share_to_sns_with, :og_type, :og_title, :og_description, :og_image,
+      :in_tmp_id,
       :template_values => params[:item][:template_values].try(:keys),
       :in_tasks => [:publish, :close],
       :inquiries_attributes => [:id, :state, :_destroy,:group_id],

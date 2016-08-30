@@ -1,8 +1,13 @@
 module Sys::Model::Rel::File
-  def self.included(mod)
-    mod.has_many :files, class_name: 'Sys::File', dependent: :destroy, as: :file_attachable
-    mod.before_save :publish_files
-    mod.before_save :close_files
+  extend ActiveSupport::Concern
+
+  attr_accessor :in_tmp_id
+
+  included do
+    has_many :files, class_name: 'Sys::File', dependent: :destroy, as: :file_attachable
+    before_save :publish_files
+    before_save :close_files
+    after_create { fix_tmp_files(in_tmp_id) if in_tmp_id.present? }
   end
 
   ## Remove the temporary flag.
