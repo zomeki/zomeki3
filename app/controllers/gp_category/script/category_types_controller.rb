@@ -4,12 +4,8 @@ class GpCategory::Script::CategoryTypesController < Cms::Controller::Script::Pub
     path = @node.public_path
     publish_more(@node, :uri => uri, :path => path, :dependent => :more)
 
-    category_types = if (id = params[:target_id]).present?
-                       @node.content.public_category_types.where(id: id)
-                     else
-                       @node.content.public_category_types
-                     end
-
+    category_types = @node.content.public_category_types
+    category_types = category_types.where(id: params[:target_category_type_id]) if params[:target_category_type_id].present?
     category_types.each do |category_type|
       uri = "#{@node.public_uri}#{category_type.name}/"
       path = "#{@node.public_path}#{category_type.name}/"
@@ -22,7 +18,7 @@ class GpCategory::Script::CategoryTypesController < Cms::Controller::Script::Pub
       publish_more(category_type, :uri => uri, :path => path, :file => 'more', :dependent => "#{category_type.name}/more_docs")
       publish_more(category_type, :uri => uri, :path => smart_phone_path, :file => 'more', :dependent => "#{category_type.name}/more_docs_smart_phone", :smart_phone => true)
 
-      if (child_id = params[:target_child_id]).present?
+      if (child_id = params[:target_category_id]).present?
         category_type.public_categories.where(id: child_id).each do |category|
           publish_category(category, follow_children: false)
         end

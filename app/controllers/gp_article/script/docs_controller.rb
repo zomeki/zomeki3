@@ -12,7 +12,7 @@ class GpArticle::Script::DocsController < Cms::Controller::Script::Publication
   end
 
   def publish_doc
-    @node.content.public_docs.where(id: params[:doc_id]).each do |doc|
+    @node.content.public_docs.where(id: params[:target_doc_id]).each do |doc|
       uri = doc.public_uri
       path = doc.public_path
       if doc.publish(render_public_as_string(uri, site: doc.content.site))

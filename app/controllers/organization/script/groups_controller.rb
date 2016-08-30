@@ -6,7 +6,7 @@ class Organization::Script::GroupsController < Cms::Controller::Script::Publicat
     publish_more(@node, uri: uri, path: path, smart_phone_path: smart_phone_path, dependent: uri)
 
     groups = @node.content.groups.where(state: 'public')
-    groups = groups.where(id: params[:organization_group_id]) if params[:organization_group_id]
+    groups = groups.where(id: params[:target_organization_group_id]) if params[:target_organization_group_id]
     groups.each do |group|
       g_uri = group.public_uri
       g_path = group.public_path

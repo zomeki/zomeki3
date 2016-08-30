@@ -13,6 +13,9 @@ class Cms::Content < ActiveRecord::Base
   has_many :nodes, :foreign_key => :content_id, :class_name => 'Cms::Node',
     :dependent => :destroy
 
+  # conditional
+  has_many :public_nodes, -> { public_state }, foreign_key: :content_id, class_name: 'Cms::Node'
+
   validates :concept_id, :state, :model, :name, presence: true
   validates :code, presence: true, uniqueness: { scope: [:site_id] }
 

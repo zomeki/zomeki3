@@ -29,6 +29,8 @@ module ZomekiCMS
 
     config.autoload_paths += %W(#{config.root}/lib)
 
+    config.active_job.queue_adapter = :delayed_job
+
     config.generators do |g|
       g.test_framework :rspec,
         fixtures: true,
