@@ -232,11 +232,23 @@ libmecabのパスを設定します。
     # sudo ldconfig
     # ldconfig -p | grep "/usr/local/lib"
 
-## 11.nginx/Pumaの起動
+## 11.サーバーの起動
+
+postgresqlを起動します。
+
+    # systemctl start postgresql-9.5 && systemctl enable postgresql-9.5
+
+pumaを起動します。
 
     # su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle exec pumactl -F config/puma/production.rb start'
+
+nginxを起動します。
+
     # systemctl start nginx && systemctl enable nginx
-    # systemctl start postgresql-9.5 && systemctl enable postgresql-9.5
+
+delayed_jobを起動します。
+
+    # su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle exec rake delayed_job:start RAILS_ENV=production'
 
 ## 12.定期実行処理 の設定
 
