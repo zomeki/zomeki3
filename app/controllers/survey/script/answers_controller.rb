@@ -60,7 +60,7 @@ protected
   end
 
   def send_answer_mail
-    CommonMailer.survey_receipt(form_answer: @form_answer, from: @content.mail_from, to: @content.mail_to)
+    Survey::Public::Mailer.survey_receipt(form_answer: @form_answer, from: @content.mail_from, to: @content.mail_to)
                 .deliver_now if @content.mail_from.present? && @content.mail_to.present?
   end
 
