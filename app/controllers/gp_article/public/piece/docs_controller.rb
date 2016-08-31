@@ -10,11 +10,11 @@ class GpArticle::Public::Piece::DocsController < Sys::Controller::Public::Base
     @docs = @piece.content.public_docs.limit(@piece.docs_number)
     @docs = case @piece.docs_order
             when 'published_at_desc'
-              @docs.order('display_published_at DESC, published_at DESC')
+              @docs.order(display_published_at: :desc, published_at: :desc)
             when 'published_at_asc'
-              @docs.order('display_published_at ASC, published_at ASC')
+              @docs.order(display_published_at: :asc, published_at: :asc)
             when 'random'
-              @docs.order('RAND()')
+              @docs.order('RANDOM()')
             else
               @docs
             end

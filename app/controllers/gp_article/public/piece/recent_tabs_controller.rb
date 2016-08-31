@@ -34,9 +34,9 @@ class GpArticle::Public::Piece::RecentTabsController < Sys::Controller::Public::
         else
           doc_ids = []
         end
-        docs = @piece.content.public_docs.where(id: doc_ids).order('display_published_at DESC, published_at DESC').limit(@piece.list_count)
+        docs = @piece.content.public_docs.where(id: doc_ids).order(display_published_at: :desc, published_at: :desc).limit(@piece.list_count)
       else
-        docs = @piece.content.public_docs.order('display_published_at DESC, published_at DESC').limit(@piece.list_count)
+        docs = @piece.content.public_docs.order(display_published_at: :desc, published_at: :desc).limit(@piece.list_count)
       end
       docs = docs.preload_assocs(:public_node_ancestors_assocs, :public_index_assocs)
 

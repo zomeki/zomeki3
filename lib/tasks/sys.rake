@@ -4,7 +4,7 @@ namespace :zomeki do
     task(:clean_sequence => :environment) do
       Sys::Sequence.transaction do
         before_key = {}
-        Sys::Sequence.order(:name, :version, 'id DESC').each do |sequence|
+        Sys::Sequence.order(name: :asc, version: :asc, id: :desc).each do |sequence|
           if before_key[:name] == sequence.name && before_key[:version] == sequence.version
             sequence.destroy
             puts "[DELETED] name: #{sequence.name}, version: #{sequence.version}"

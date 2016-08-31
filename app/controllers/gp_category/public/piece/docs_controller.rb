@@ -48,7 +48,7 @@ class GpCategory::Public::Piece::DocsController < Sys::Controller::Public::Base
             when 'published_at_asc'
               @docs.order(display_published_at: :asc, published_at: :asc)
             when 'random'
-              @docs.order('RAND()')
+              @docs.order('RANDOM()')
             else
               @docs
             end

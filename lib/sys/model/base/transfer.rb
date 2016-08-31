@@ -63,7 +63,7 @@ module Sys::Model::Base::Transfer
       "#{parent_dir}#{_path}" =~ /sites\/.*\/(.*?)\/public\/_files\/.*\/(.*?)\/(.*?)$/i
       _site_id = $1.to_i rescue 0;
       _id      = $2[0 .. -2].to_i rescue 0;
-      if log = Sys::OperationLog.where(:site_id => _site_id, :item_id => _id, :item_model => 'Cms::DataFile').order('id DESC').first
+      if log = Sys::OperationLog.where(:site_id => _site_id, :item_id => _id, :item_model => 'Cms::DataFile').order(id: :desc).first
         @item_info = {}
         @item_info[:item_id]       = log.item_id
         @item_info[:item_unid]     = log.item_unid
@@ -85,10 +85,10 @@ module Sys::Model::Base::Transfer
     end
 
     # sys_publishers
-    pub = Sys::Publisher.where(:path => "#{parent_dir}#{_path}").order('id DESC').first
-    pub ||= Sys::Closer.where(:path => "#{parent_dir}#{_path}").order('id DESC').first
+    pub = Sys::Publisher.where(:path => "#{parent_dir}#{_path}").order(id: :desc).first
+    pub ||= Sys::Closer.where(:path => "#{parent_dir}#{_path}").order(id: :desc).first
     if pub
-      if log = Sys::OperationLog.where(:item_unid => pub.unid).order('id DESC').first
+      if log = Sys::OperationLog.where(:item_unid => pub.unid).order(id: :desc).first
         @item_info = {}
         @item_info[:item_id]       = log.item_id
         @item_info[:item_unid]     = log.item_unid

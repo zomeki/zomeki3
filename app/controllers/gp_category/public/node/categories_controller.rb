@@ -57,15 +57,15 @@ class GpCategory::Public::Node::CategoriesController < GpCategory::Public::Node:
 
         @docs = case @content.docs_order
           when 'published_at_desc'
-            @docs.order('display_published_at DESC, published_at DESC')
+            @docs.order(display_published_at: :desc, published_at: :desc)
           when 'published_at_asc'
-            @docs.order('display_published_at ASC, published_at ASC')
+            @docs.order(display_published_at: :asc, published_at: :asc)
           when 'updated_at_desc'
-            @docs.order('display_updated_at DESC, updated_at DESC')
+            @docs.order(display_updated_at: :desc, updated_at: :desc)
           when 'updated_at_asc'
-            @docs.order('display_updated_at ASC, updated_at ASC')
+            @docs.order(display_updated_at: :asc, updated_at: :asc)
           else
-            @docs.order('display_published_at DESC, published_at DESC')
+            @docs.order(display_published_at: :desc, published_at: :desc)
           end
 
         @docs = @docs.paginate(page: params[:page], per_page: per_page)
@@ -113,15 +113,15 @@ class GpCategory::Public::Node::CategoriesController < GpCategory::Public::Node:
 
                 all_docs = case @content.docs_order
                   when 'published_at_desc'
-                    docs.order('display_published_at DESC, published_at DESC')
+                    docs.order(display_published_at: :desc, published_at: :desc)
                   when 'published_at_asc'
-                    docs.order('display_published_at ASC, published_at ASC')
+                    docs.order(display_published_at: :asc, published_at: :asc)
                   when 'updated_at_desc'
-                    docs.order('display_updated_at DESC, updated_at DESC')
+                    docs.order(display_updated_at: :desc, updated_at: :desc)
                   when 'updated_at_asc'
-                    docs.order('display_updated_at ASC, updated_at ASC')
+                    docs.order(display_updated_at: :asc, updated_at: :asc)
                   else
-                    docs.order('display_published_at DESC, published_at DESC')
+                    docs.order(display_published_at: :desc, published_at: :desc)
                   end
 
                 docs = all_docs.limit(tm.num_docs)

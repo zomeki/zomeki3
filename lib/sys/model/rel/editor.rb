@@ -1,6 +1,6 @@
 module Sys::Model::Rel::Editor
   def self.included(mod)
-    mod.has_many :editors, -> { order('updated_at DESC, created_at DESC') },
+    mod.has_many :editors, -> { order(updated_at: :desc, created_at: :desc) },
       class_name: 'Sys::Editor', dependent: :destroy, as: :editable
 
     mod.after_save :save_editor

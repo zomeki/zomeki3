@@ -12,7 +12,7 @@ class Cms::Script::NodesController < Cms::Controller::Script::Publication
         publish_node(node)
       end
     else
-      Cms::Node.public_state.where(parent_id: 0).order('name, id').each do |node|
+      Cms::Node.public_state.where(parent_id: 0).order(:name, :id).each do |node|
         publish_node(node)
       end
     end
@@ -78,7 +78,7 @@ class Cms::Script::NodesController < Cms::Controller::Script::Publication
     nodes = Cms::Node.arel_table
     Cms::Node.where(parent_id: node.id)
              .where(nodes[:name].not_eq(nil).and(nodes[:name].not_eq('')).and(nodes[:name].not_eq(last_name)))
-             .order('directory, name, id').each do |child_node|
+             .order(:directory, :name, :id).each do |child_node|
       last_name = child_node.name
       publish_node(child_node)
     end

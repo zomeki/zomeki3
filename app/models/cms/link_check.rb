@@ -1,7 +1,7 @@
 class Cms::LinkCheck < ActiveRecord::Base
   include Sys::Model::Base
 
-  default_scope { order("#{self.table_name}.id DESC") }
+  default_scope { order(id: :desc) }
 
   has_many :logs, class_name: 'Cms::LinkCheckLog', :dependent => :destroy
 

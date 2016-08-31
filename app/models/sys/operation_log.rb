@@ -1,7 +1,7 @@
 class Sys::OperationLog < ActiveRecord::Base
   include Sys::Model::Base
 
-  default_scope { order('updated_at DESC') }
+  default_scope { order(updated_at: :desc) }
 
   ACTION_OPTIONS = [["作成","create"], ["更新","update"], ["承認","recognize"], ["承認","approve"], ["削除","destroy"], ["公開","publish"], ["非公開","close"], ["ログイン","login"], ["ログアウト","logout"]]
 

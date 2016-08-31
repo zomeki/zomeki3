@@ -17,7 +17,7 @@ class GpArticle::Public::Node::ArchivesController < Cms::Controller::Public::Bas
     docs = GpArticle::Doc.arel_table
     @docs = @content.public_docs.where(docs[:display_published_at].gteq(started_at)
                                        .and(docs[:display_published_at].lteq(ended_at)))
-                                .order('display_published_at DESC, published_at DESC')
+                                .order(display_published_at: :desc, published_at: :desc)
 
     if @docs.empty?
       warn_log 'No archived docs'

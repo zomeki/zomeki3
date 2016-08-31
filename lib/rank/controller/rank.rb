@@ -188,7 +188,7 @@ module Rank::Controller::Rank
                                         .where(category_id: category_ids).exists)
     end
 
-    ranks = ranks.order('accesses DESC').paginate(page: params[:page], per_page: per_page)
+    ranks = ranks.order(accesses: :desc).paginate(page: params[:page], per_page: per_page)
   end
 
   def ranking_targets

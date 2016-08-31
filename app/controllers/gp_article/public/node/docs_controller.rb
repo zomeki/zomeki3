@@ -24,7 +24,7 @@ class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
   end
 
   def index
-    @docs = public_or_preview_docs.order('display_published_at DESC, published_at DESC')
+    @docs = public_or_preview_docs.order(display_published_at: :desc, published_at: :desc)
     if params[:format].in?(['rss', 'atom'])
       @docs = @docs.display_published_after(@content.feed_docs_period.to_i.days.ago) if @content.feed_docs_period.present?
       @docs = @docs.includes(:next_edition).reject{|d| d.will_be_replaced? } unless Core.publish

@@ -33,7 +33,7 @@ class GpCategory::Category < ActiveRecord::Base
   validates :title, :presence => true
   validates :state, :presence => true
 
-  has_and_belongs_to_many :events, -> { order('started_on, ended_on') },
+  has_and_belongs_to_many :events, -> { order(:started_on, :ended_on) },
                           class_name: 'GpCalendar::Event', join_table: 'gp_calendar_events_gp_category_categories'
 
   has_many :categorizations, -> { where(categorized_as: 'GpArticle::Doc') }, :dependent => :destroy

@@ -80,8 +80,9 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
       criteria[:editable] = true
     end
 
-    docs = GpArticle::Doc.arel_table
-    @items = GpArticle::Doc.content_and_criteria(@content, criteria).order(docs[:updated_at].desc).paginate(page: params[:page], per_page: 30)
+    @items = GpArticle::Doc.content_and_criteria(@content, criteria)
+      .order(updated_at: :desc)
+      .paginate(page: params[:page], per_page: 30)
 
     _index @items
   end
