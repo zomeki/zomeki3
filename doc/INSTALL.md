@@ -3,6 +3,7 @@
 ## 1.想定環境
 
 ### システム
+
 * OS: CentOS 7.2
 * Webサーバ: nginx 1.10
 * Appサーバ: Puma 3.4
@@ -11,14 +12,17 @@
 * Rails: 4.2
 
 ### 設定
+
 * ホスト名: zomeki.example.com
 
 ## 2.作業ユーザの変更
+
 rootユーザに変更します。
 
     $ su -
 
 ## 3.SELinuxの変更
+
 SELinuxを変更します。
 
     # setenforce 0
@@ -31,22 +35,40 @@ SELINUX=permissive    # 変更
 *※セキュリティ設定は環境に応じて適切に設定してください。*
 
 ## 4.事前準備
+
 作業に必要なパッケージをインストールします。
 
     # yum -y install git
 
 ## 5.Rubyのインストール
-Rubyをインストールします。
+
+必要なパッケージをインストールします。
 
     # yum -y install gcc-c++ libffi-devel libyaml-devel make openssl-devel readline-devel zlib-devel
 
-    # cd /usr/local/src
-    # curl -fsSLO http://cache.ruby-lang.org/pub/ruby/2.3/ruby-2.3.1.tar.bz2
-    # tar jxf ruby-2.3.1.tar.bz2 && cd ruby-2.3.1 && ./configure && make && make install
+rbenvをインストールします。
+
+    # git clone git://github.com/sstephenson/rbenv.git /usr/local/rbenv
+    # git clone git://github.com/sstephenson/ruby-build.git /usr/local/rbenv/plugins/ruby-build
+
+    # echo 'export RBENV_ROOT="/usr/local/rbenv"' >> /etc/profile.d/rbenv.sh
+    # echo 'export PATH="${RBENV_ROOT}/bin:${PATH}"' >> /etc/profile.d/rbenv.sh
+    # echo 'eval "$(rbenv init -)"' >> /etc/profile.d/rbenv.sh
+    # source /etc/profile.d/rbenv.sh
+
+rubyをインストールします。
+
+    # rbenv install 2.3.1
+    # rbenv global 2.3.1
+    # rbenv rehash
+    # ruby -v
+
+bundlerをインストールします。
 
     # gem install bundler
 
 ## 6.nginxのインストール
+
 外部からhttpでアクセス可能にします。
 
     # firewall-cmd --add-service=http --zone=public
@@ -67,6 +89,7 @@ enabled=1
     # yum -y install nginx
 
 ## 7.PostgreSQLのインストール
+
 yumリポジトリに追加します。
 
     # yum -y install http://yum.postgresql.org/9.5/redhat/rhel-7-x86_64/pgdg-centos95-9.5-2.noarch.rpm
@@ -96,6 +119,7 @@ ZOMEKI用のユーザを作成します。
     # su - postgres -c "psql -c \"CREATE USER zomeki WITH CREATEDB ENCRYPTED PASSWORD 'zomekipass';\""
 
 ## 8.ZOMEKIのインストール
+
 専用ユーザを作成します。
 
     # useradd -m zomeki
@@ -119,6 +143,7 @@ ZOMEKIをインストールします。
     # crontab $ROOT_CRON_TXT
 
 ## 9.ZOMEKIの設定
+
 設定ファイルのサンプルをコピーして変更します。
 
     # cp -p /var/www/zomeki/config/core.yml.sample /var/www/zomeki/config/core.yml
@@ -131,6 +156,16 @@ uri: http://zomeki.example.com/    # すべて変更
 
     # cp -p /var/www/zomeki/config/sns_apps.yml.sample /var/www/zomeki/config/sns_apps.yml
 
+シークレットキーを設定します。
+
+    # su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle exec rake secret RAILS_ENV=production'
+      (出力されたシークレットキーをコピーします)
+    # vi /var/www/zomeki/config/secrets.yml
+    ---
+    production:
+      secret_key_base: (コピーしたシークレットキーを貼り付けます)
+    ---
+
 必要なデータベースを作ります。
 
     # su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle exec rake db:setup RAILS_ENV=production'
@@ -141,6 +176,7 @@ uri: http://zomeki.example.com/    # すべて変更
     # ln -s /var/www/zomeki/config/nginx/nginx.conf /etc/nginx/conf.d/zomeki.conf
 
 ## 10.ふりがな・読み上げ機能のインストール
+
 必要なパッケージをインストールします。
 
     # yum -y install sox
@@ -164,7 +200,7 @@ Dictionaryをインストールします。
     # cd /usr/local/src
     # curl -fsSLO http://downloads.sourceforge.net/open-jtalk/open_jtalk_dic_utf_8-1.08.tar.gz
     # tar zxf open_jtalk_dic_utf_8-1.08.tar.gz
-    # mkdir /usr/local/www/open_jtalk && mv open_jtalk_dic_utf_8-1.08 /usr/local/www/open_jtalk/dic
+    # mkdir /usr/local/share/open_jtalk && mv open_jtalk_dic_utf_8-1.08 /usr/local/share/open_jtalk/dic
 
 LAMEをインストールします。
 
@@ -175,32 +211,41 @@ LAMEをインストールします。
 MeCabをインストールします。
 
     # cd /usr/local/src
-    # curl -fsSLO http://mecab.googlecode.com/files/mecab-0.996.tar.gz
+    # curl -fsSL 'https://drive.google.com/uc?export=download&id=0B4y35FiV1wh7cENtOXlicTFaRUE' -o mecab-0.996.tar.gz
     # tar zxf mecab-0.996.tar.gz && cd mecab-0.996 && ./configure --enable-utf8-only && make && make install
 
 MeCab-IPAdicをインストールします。
 
     # cd /usr/local/src
-    # curl -fsSLO http://mecab.googlecode.com/files/mecab-ipadic-2.7.0-20070801.tar.gz
+    # curl -fsSL 'https://drive.google.com/uc?export=download&id=0B4y35FiV1wh7MWVlSDBCSXZMTXM' -o mecab-ipadic-2.7.0-20070801.tar.gz
     # tar zxf mecab-ipadic-2.7.0-20070801.tar.gz && cd mecab-ipadic-2.7.0-20070801 && ./configure --with-charset=utf8 && make && make install
 
 MeCab-Rubyをインストールします。
 
     # cd /usr/local/src
-    # curl -fsSLO http://mecab.googlecode.com/files/mecab-ruby-0.996.tar.gz
+    # curl -fsSL 'https://drive.google.com/uc?export=download&id=0B4y35FiV1wh7VUNlczBWVDZJbE0' -o mecab-ruby-0.996.tar.gz
     # tar zxf mecab-ruby-0.996.tar.gz && cd mecab-ruby-0.996 && ruby extconf.rb && make && make install
 
+libmecabのパスを設定します。
+
+    # echo '/usr/local/lib' >> /etc/ld.so.conf.d/usrlocal.conf
+    # sudo ldconfig
+    # ldconfig -p | grep "/usr/local/lib"
+
 ## 11.nginx/Pumaの起動
+
     # su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle exec pumactl -F config/puma/production.rb start'
     # systemctl start nginx && systemctl enable nginx
     # systemctl start postgresql-9.5 && systemctl enable postgresql-9.5
 
 ## 12.定期実行処理 の設定
+
 ユーザzomekiのcronに処理を追加します。
 
     # su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle exec whenever --update-crontab'
 
 ## 13.動作確認
+
 インストールが完了しました。
 
 * 公開画面: http://zomeki.example.com/
