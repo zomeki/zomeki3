@@ -89,8 +89,7 @@ addEvent(window, 'load', function() {
   google.maps.event.addListener(map, 'zoom_changed', function(){ me.syncMap(); } );
   google.maps.event.addListener(map, 'click', function(event){ me.syncClick(event); } );
 
-  <%- if @params_item_in_maps.kind_of?(Hash) &&
-         (params_markers = @params_item_in_maps['0'].try('[]', 'markers')).kind_of?(Hash) -%>
+  <%- if params_markers = item.in_maps.dig('0', 'markers') -%>
     <%- params_markers.each do |key, value| next if value['lat'].blank? || value['lng'].blank? -%>
     var marker<%= key %> = new google.maps.Marker({
       // title: '<%= value['name'] %>'
@@ -175,31 +174,18 @@ addEvent(window, 'load', function() {
     <tr>
       <th style="width: 90px;">マップ名</th>
       <td class="name">
-        <%- if @params_item_in_maps.kind_of?(Hash) -%>
-        <%= text_field_tag 'item[in_maps][0][title]', @params_item_in_maps['0'].try('[]', 'title') %>
-        <%- else -%>
-        <%= f.array_text_field "in_maps[0][title]" %>
-        <%- end -%>
+        <%= text_field_tag "item[in_maps][0][title]", item.in_maps.dig('0', 'title') %>
       </td>
     </tr><tr>
       <th style="width: 90px;">座標</th>
       <td class="point">
-        <%- if @params_item_in_maps.kind_of?(Hash) -%>
-        <%= text_field_tag 'item[in_maps][0][map_lat]', @params_item_in_maps['0'].try('[]', 'map_lat'), id: 'item_in_maps_0_mapLat' %><!--
-        -->.<%= text_field_tag 'item[in_maps][0][map_lng]', @params_item_in_maps['0'].try('[]', 'map_lng'), id: 'item_in_maps_0_mapLng' %>
-        <%- else -%>
-        <%= f.array_text_field "in_maps[0][map_lat]", :id => "item_in_maps_0_mapLat" %><!--
-        -->.<%= f.array_text_field "in_maps[0][map_lng]", :id => "item_in_maps_0_mapLng" %>
-        <%- end -%>
+        <%= text_field_tag 'item[in_maps][0][map_lat]', item.in_maps.dig('0', 'map_lat'), id: 'item_in_maps_0_mapLat' %><!--
+        -->.<%= text_field_tag 'item[in_maps][0][map_lng]', item.in_maps.dig('0', 'map_lng'), id: 'item_in_maps_0_mapLng' %>
       </td>
     </tr><tr>
       <th style="width: 90px;">縮尺</th>
       <td class="zoom">
-        <%- if @params_item_in_maps.kind_of?(Hash) -%>
-        <%= text_field_tag 'item[in_maps][0][map_zoom]', @params_item_in_maps['0'].try('[]', 'map_zoom'), id: 'item_in_maps_0_mapZoom' %>
-        <%- else -%>
-        <%= f.array_text_field "in_maps[0][map_zoom]", :id => "item_in_maps_0_mapZoom" %>
-        <%- end -%>
+        <%= text_field_tag 'item[in_maps][0][map_zoom]', item.in_maps.dig('0', 'map_zoom'), id: 'item_in_maps_0_mapZoom' %>
         <a href="#" onclick="me.setMapInfo('item_in_maps_0_map'); return false;">≪現在の座標と縮尺を設定する</a></td>
     </tr>
   </table>
@@ -211,26 +197,14 @@ addEvent(window, 'load', function() {
     <tr>
       <th class="name">名称</th>
       <td class="name">
-        <%- if @params_item_in_maps.kind_of?(Hash) -%>
-        <%= text_field_tag "item[in_maps][0][markers][#{i}][name]", @params_item_in_maps['0'].try('[]', 'markers')
-                                                                                             .try('[]', i.to_s)
-                                                                                             .try('[]', 'name'), id: "item_in_maps_0_markers#{i}Name" %>
-        <%- else -%>
-        <%= f.array_text_field "in_maps[0][markers][#{i}][name]", :id => "item_in_maps_0_markers#{i}Name" %></td>
-        <%- end -%>
+        <%= text_field_tag "item[in_maps][0][markers][#{i}][name]",
+            item.in_maps.dig('0', 'markers', i.to_s, 'name'), id: "item_in_maps_0_markers#{i}Name" %>
       <th class="point">座標</th>
       <td class="point">
-        <%- if @params_item_in_maps.kind_of?(Hash) -%>
-        <%= text_field_tag "item[in_maps][0][markers][#{i}][lat]", @params_item_in_maps['0'].try('[]', 'markers')
-                                                                                            .try('[]', i.to_s)
-                                                                                            .try('[]', 'lat'), id: "item_in_maps_0_markers#{i}Lat" %><!--
-        -->.<%= text_field_tag "item[in_maps][0][markers][#{i}][lng]", @params_item_in_maps['0'].try('[]', 'markers')
-                                                                                                .try('[]', i.to_s)
-                                                                                                .try('[]', 'lng'), id: "item_in_maps_0_markers#{i}Lng" %>
-        <%- else -%>
-        <%= f.array_text_field "in_maps[0][markers][#{i}][lat]", :id => "item_in_maps_0_markers#{i}Lat" %><!--
-        -->.<%= f.array_text_field "in_maps[0][markers][#{i}][lng]", :id => "item_in_maps_0_markers#{i}Lng" %>
-        <%- end -%>
+        <%= text_field_tag "item[in_maps][0][markers][#{i}][lat]",
+            item.in_maps.dig('0', 'markers', i.to_s, 'lat'), id: "item_in_maps_0_markers#{i}Lat" %><!--
+        -->.<%= text_field_tag "item[in_maps][0][markers][#{i}][lng]",
+            item.in_maps.dig('0', 'markers', i.to_s, 'lng'), id: "item_in_maps_0_markers#{i}Lng" %>
       </td>
       <td class="action">
         <a href="#" onclick="me.setMarker('item_in_maps_0_markers<%= i %>'); return false;">≪クリックした座標を設定する</a>

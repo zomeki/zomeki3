@@ -14,10 +14,6 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     return redirect_to(request.env['PATH_INFO']) if params[:reset_criteria]
 
     @item = @content.docs.find(params[:id]) if params[:id].present?
-
-    @params_item_in_maps = if (im = params[:item].try('[]', :in_maps)).kind_of?(Hash)
-                             im
-                           end
   end
 
   def index

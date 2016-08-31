@@ -1,52 +1,64 @@
 module Cms::Model::Rel::Map
-  def self.included(mod)
-    mod.has_many :maps, class_name: 'Cms::Map', dependent: :destroy, as: :map_attachable
-    mod.after_save :save_maps
+  extend ActiveSupport::Concern
+
+  included do
+    has_many :maps, class_name: 'Cms::Map', dependent: :destroy, as: :map_attachable
+    after_save :save_maps
   end
 
   # setter always returns supplied argument
-  def in_maps=(values)
-    @maps_attributes = (case values
-                        when Array
-                          values
-                        when Hash
-                          values.values
-                        else
-                          []
-                        end)
+  def in_maps=(val)
+    @maps_attributes = val
   end
 
   def in_maps
-    @maps_attributes ||= maps.map {|m| m.in_attributes }
+    return @maps_attributes if defined? @maps_attributes
+
+    maps_attrs = {}.with_indifferent_access
+    maps.each_with_index do |map, i|
+      maps_attrs[i.to_s] = {
+        name: map.name,
+        title: map.title,
+        map_lat: map.map_lat,
+        map_lng: map.map_lng,
+        map_zoom: map.map_zoom
+      }
+      markers_attrs = {}.with_indifferent_access
+      map.markers.each_with_index do |marker, j|
+        markers_attrs[j.to_s] = {
+          name: marker.name,
+          lat: marker.lat,
+          lng: marker.lng
+        }
+      end
+      maps_attrs[i.to_s][:markers] = markers_attrs
+    end
+    @maps_attributes = maps_attrs
   end
 
   def default_map_position
     '35.702708,139.560831' # Mitaka
   end
 
-  def find_map_by_name(name)
-    maps.find_by(name: name)
-  end
-
   private
 
   def save_maps
-    return false unless @maps_attributes.kind_of?(Array)
+    return false unless @maps_attributes.kind_of?(Hash)
 
     ma = @maps_attributes
     @maps_attributes = nil
 
-    ma.each do |map_attributes|
-      name = map_attributes[:name] || '1'
+    ma.values.each do |map_attrs|
+      name = map_attrs[:name] || '1'
       map = maps.find_or_initialize_by(name: name)
-      map.title = map_attributes[:title]
-      map.map_lat = map_attributes[:map_lat]
-      map.map_lng = map_attributes[:map_lng]
-      map.map_zoom = map_attributes[:map_zoom]
+      map.title = map_attrs[:title]
+      map.map_lat = map_attrs[:map_lat]
+      map.map_lng = map_attrs[:map_lng]
+      map.map_zoom = map_attrs[:map_zoom]
       next unless map.save
 
-      if (markers_attributes = map_attributes[:markers]).kind_of?(Hash)
-        attrs = markers_attributes.values.delete_if {|a| a.values.all?(&:blank?) }
+      if (markers_attrs = map_attrs[:markers]).kind_of?(Hash)
+        attrs = markers_attrs.values.delete_if {|a| a.values.all?(&:blank?) }
         markers = map.markers
         (attrs.size > markers.size ? attrs.size : markers.size).times do |n|
           attr = attrs[n]
@@ -59,12 +71,10 @@ module Cms::Model::Rel::Map
               markers.create(attr)
             end
           else
-            marker.destroy if map.new_marker_format?
+            marker.destroy
           end
         end
       end
-
-      map.convert_to_new_marker_format
     end
 
     return true
