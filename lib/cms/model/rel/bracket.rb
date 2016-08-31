@@ -7,7 +7,7 @@ module Cms::Model::Rel::Bracket
   end
 
   def bracket_names
-    names = body_with_bracket.to_s.scan(/\[\[(piece|text|file)\/([^\]]+)\]\]/)
+    names = body_with_bracket.to_s.scan(/\[\[(\w+)\/([^\]]+)\]\]/)
     names.map { |n1, n2| "#{n1}/#{n2}" }.uniq
   end
 

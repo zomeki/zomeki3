@@ -9,13 +9,13 @@ class MigrateCmsBrackets < ActiveRecord::Migration
           else
             item.body
           end
-        body.scan(/\[\[(piece|text|file)\/([^\]]+)\]\]/).each do |name1, name2|
+        body.scan(/\[\[(\w+)\/([^\]]+)\]\]/).each do |type, name|
           Cms::Bracket.create(
             site_id: item.site_id,
             concept_id: item.concept_id,
             owner_id: item.id,
             owner_type: item.class,
-            name: "#{name1}/#{name2}"
+            name: "#{type}/#{name}"
           )
         end
       end
