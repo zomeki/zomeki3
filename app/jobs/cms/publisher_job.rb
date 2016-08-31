@@ -7,15 +7,14 @@ class Cms::PublisherJob < ApplicationJob
       publishers = Cms::Publisher.order(:priority, :id).limit(30).all
       break if publishers.blank?
   
-      publishers.update_all(state: 'running')
+      publishers.update_all(state: 'performing')
 
       publisher_map = publishers.group_by(&:publishable_type)
       publisher_map.each do |pub_type, pubs|
         pub_model = pub_type.gsub(/(\w+::)(\w+)/, '\\1Publisher::\\2').constantize
         pub_model.perform_publish(pubs)
+        pubs.each(&:destroy)
       end
-
-      publishers.destroy_all
     end
   end
 end
