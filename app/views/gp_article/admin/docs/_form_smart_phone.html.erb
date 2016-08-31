@@ -88,7 +88,7 @@
 
     <p class="form">記事設定</p>
 
-    <%- @visible_category_types.each do |category_type| -%>
+    <%- @content.visible_category_types.each do |category_type| -%>
     <div class="label1"><%= category_type.title %></div>
     <div id="category_type_<%= category_type.id %>_categories">
       <%= render 'category', category_type: category_type, category: nil,
@@ -217,7 +217,7 @@
       <%= f.text_field :event_ended_on, :value => value_for_datepicker(f.object_name, :event_ended_on),
                                         :style => 'width: 150px;', :class => 'datepicker' %>
     </div>
-    <%- @event_category_types.each do |category_type| -%>
+    <%- @content.event_category_types.each do |category_type| -%>
     <div>
       <div class="label1"><%= category_type.title %></div>
       <div id="event_category_type_<%= category_type.id %>_categories">
@@ -250,7 +250,7 @@
         <td><%= f.radio_buttons :marker_state, @item.class::MARKER_STATE_OPTIONS %></td>
       </tr>
       <%- end -%>
-      <%- @marker_category_types.each do |category_type| -%>
+      <%- @content.marker_category_types.each do |category_type| -%>
       <tr>
         <th><%= category_type.title %></th>
         <td>
@@ -376,16 +376,15 @@
       <div class="label1"><%= f.label :in_editable_groups %></div>
       <div id="editable_groups">
         <%= render 'editable_group', groups_for_option: Core.site.groups_for_option, group: Core.site.groups.build, available: false %>
-        <%- Sys::Group.where(id: (@params_item_in_editable_groups.kind_of?(Array) ? @params_item_in_editable_groups
-                                                                                  : @item.in_editable_groups)).each do |group| -%>
+        <%- Sys::Group.where(id: @item.in_editable_groups.reject{|g| g == 'ALL'}).each do |group| -%>
         <%= render 'editable_group', groups_for_option: Core.site.groups_for_option, group: group, available: true %>
         <%- end -%>
         <span><%= button_tag '追加', type: 'button', id: 'add_editable_group' %></span>
       </div>
-      <div><%= check_box_tag 'item[in_editable_groups][]', 'ALL',
-                             @params_item_in_editable_groups.kind_of?(Array) ? @params_item_in_editable_groups.include?('ALL')
-                                                                             : @item.editable_group.try(:all?),
-                             id: 'all_group' %> <%= label_tag 'all_group', 'すべてのグループ' %></div>
+      <div>
+        <%= check_box_tag 'item[in_editable_groups][]', 'ALL', @item.in_editable_groups.include?('ALL'), id: 'all_group' %>
+        <%= label_tag 'all_group', 'すべてのグループ' %>
+      </div>
     </div>
 
     <%= creator_form_smart_phone f %>
@@ -416,15 +415,15 @@ $(document).ready(function () {
   <%= enable_datepicker_script -%>
   <%= enable_datetimepicker_script -%>
 
-  <%- @visible_category_types.each do |category_type| -%>
+  <%- @content.visible_category_types.each do |category_type| -%>
   set_click_event_handler('<%= category_type.id %>');
   <%- end -%>
 
-  <%- @event_category_types.each do |category_type| -%>
+  <%- @content.event_category_types.each do |category_type| -%>
   set_click_event_handler('<%= category_type.id %>', 'event_');
   <%- end -%>
 
-  <%- @marker_category_types.each do |category_type| -%>
+  <%- @content.marker_category_types.each do |category_type| -%>
   set_click_event_handler('<%= category_type.id %>', 'marker_');
   <%- end -%>
 

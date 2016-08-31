@@ -4,6 +4,10 @@ class Sys::EditableGroup < ActiveRecord::Base
   belongs_to :editable, polymorphic: true, required: true
 
   def groups
-    Sys::Group.where(id: group_ids.to_s.split)
+    Sys::Group.where(id: group_ids_as_array)
+  end
+
+  def group_ids_as_array
+    group_ids.to_s.split.uniq
   end
 end

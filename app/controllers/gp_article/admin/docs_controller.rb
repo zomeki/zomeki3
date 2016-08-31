@@ -5,24 +5,16 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   include Cms::ApiGpCalendar
   include GpArticle::DocsCommon
 
-  before_action :hold_document, :only => [ :edit ]
-  before_action :check_intercepted, :only => [ :update ]
+  before_action :hold_document, only: [:edit]
+  before_action :check_intercepted, only: [:update]
 
   def pre_dispatch
     return http_error(404) unless @content = GpArticle::Content::Doc.find_by(id: params[:content])
     return error_auth unless Core.user.has_priv?(:read, :item => @content.concept)
     return redirect_to(request.env['PATH_INFO']) if params[:reset_criteria]
 
-    @category_types = @content.category_types
-    @visible_category_types = @content.visible_category_types
-    @event_category_types = @content.event_category_types
-    @marker_category_types = @content.marker_category_types
-
     @item = @content.docs.find(params[:id]) if params[:id].present?
 
-    @params_item_in_editable_groups = if (ieg = params[:item].try('[]', :in_editable_groups)).kind_of?(Array)
-                                        ieg
-                                      end
     @params_item_in_maps = if (im = params[:item].try('[]', :in_maps)).kind_of?(Hash)
                              im
                            end
