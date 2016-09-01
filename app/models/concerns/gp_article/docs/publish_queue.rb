@@ -96,10 +96,16 @@ module GpArticle::Docs::PublishQueue
     tag_content = content.tag_content_tag
     return unless tag_content
 
-    Cms::Publisher.register(tag_content.public_nodes.select(:id))
+    changed_tags = tags
+    changed_tags += prev_edition.tags if prev_edition
+    changed_tags.uniq!
 
-    tag_content.public_pieces.each do |piece|
-      piece.enqueue_publisher
+    if changed_tags.present?
+      Cms::Publisher.register(changed_tags)
+
+      tag_content.public_pieces.each do |piece|
+        piece.enqueue_publisher
+      end
     end
   end
 end
