@@ -4,6 +4,7 @@ class Map::Marker < ActiveRecord::Base
   include Cms::Model::Auth::Content
 
   include StateText
+  include Map::Markers::PublishQueue
 
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
 
