@@ -18,6 +18,7 @@ class GpArticle::Doc < ActiveRecord::Base
   include GpArticle::Model::Rel::Doc
   include GpArticle::Model::Rel::Category
   include GpArticle::Model::Rel::Sns
+  include GpArticle::Model::Rel::Tag
   include Approval::Model::Rel::Approval
   include GpTemplate::Model::Rel::Template
 
@@ -105,7 +106,6 @@ class GpArticle::Doc < ActiveRecord::Base
   validate :validate_accessibility_check, :unless => :state_draft?
 
   after_initialize :set_defaults
-  after_save :set_tags
   after_save :set_display_attributes
   after_save :save_links
 
@@ -223,10 +223,6 @@ class GpArticle::Doc < ActiveRecord::Base
     docs << self
     next_edition.next_editions(docs) if next_edition
     return docs
-  end
-
-  def raw_tags=(new_raw_tags)
-    super (new_raw_tags.nil? ? new_raw_tags : new_raw_tags.to_s.gsub('　', ' '))
   end
 
   def public_path
@@ -736,20 +732,6 @@ class GpArticle::Doc < ActiveRecord::Base
         errors.add attr, :platform_dependent_characters, :chars => chars
       end
     end
-  end
-
-  def set_tags
-    return tags.clear unless content.tag_content_tag
-    all_tags = content.tag_content_tag.tags
-    return tags.clear if raw_tags.blank?
-
-    words = Moji.normalize_zen_han(raw_tags).downcase.split(/[、,]/).map{|w| w.presence }.compact.uniq
-    self.tags = words.map do |word|
-        all_tags.where(word: word).first || all_tags.create(word: word)
-      end
-    self.tags.each {|t| t.update_last_tagged_at }
-
-    all_tags.each {|t| t.destroy if t.public_docs.empty? }
   end
 
   def make_file_contents_path_relative
