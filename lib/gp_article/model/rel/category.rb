@@ -2,9 +2,9 @@ module GpArticle::Model::Rel::Category
   extend ActiveSupport::Concern
 
   included do
-    after_save :save_categories, if: -> { in_category_ids.present? }
-    after_save :save_event_categories, if: -> { in_event_category_ids.present? }
-    after_save :save_marker_categories, if: -> { in_marker_category_ids.present? }
+    after_save :save_categories, if: -> { defined? @in_category_ids }
+    after_save :save_event_categories, if: -> { defined? @in_event_category_ids }
+    after_save :save_marker_categories, if: -> { defined? @in_marker_category_ids }
   end
 
   def in_category_ids=(val)
