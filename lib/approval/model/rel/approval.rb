@@ -4,6 +4,7 @@ module Approval::Model::Rel::Approval
   attr_accessor :in_approval_flow_ids, :in_approval_assignment_ids
 
   included do
+    has_many :approval_requests, class_name: 'Approval::ApprovalRequest', as: :approvable, dependent: :destroy
     with_options if: -> { !in_approval_flow_ids.nil? && state_approvable? } do
       validate :validate_approval_requests
       after_save :save_approval_requests
