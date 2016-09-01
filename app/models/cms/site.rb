@@ -67,8 +67,10 @@ class Cms::Site < ActiveRecord::Base
   after_destroy :destroy_files
   after_save :generate_apache_configs
   after_destroy :destroy_apache_configs
+  after_destroy :destroy_apache_admin_configs
   after_save :generate_nginx_configs
   after_destroy :destroy_nginx_configs
+  after_destroy :destroy_nginx_admin_configs
 
   after_create :make_concept
   after_save :make_node
@@ -334,7 +336,7 @@ class Cms::Site < ActiveRecord::Base
     conf.delete
   end
   def destroy_nginx_admin_configs
-    conf = Rails.root.join("config/nginx/servers/admin_site_#{'%04d' % id}.conf")
+    conf = Rails.root.join("config/nginx/admin_servers/site_#{'%04d' % id}.conf")
     return false unless conf.exist?
     conf.delete
   end

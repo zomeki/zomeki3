@@ -76,6 +76,7 @@ class Cms::Admin::SitesController < Cms::Controller::Admin::Base
     end
   end
 
+  protected
 
   def update_configs
     Cms::Site.generate_apache_configs

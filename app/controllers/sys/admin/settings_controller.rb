@@ -52,6 +52,8 @@ class Sys::Admin::SettingsController < Cms::Controller::Admin::Base
   def update_config
     Cms::Site.generate_apache_configs
     Cms::Site.generate_nginx_configs
+    Cms::Site.generate_apache_admin_configs
+    Cms::Site.generate_nginx_admin_configs
   end
 
 end
