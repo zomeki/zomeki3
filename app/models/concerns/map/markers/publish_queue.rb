@@ -28,6 +28,6 @@ module Map::Markers::PublishQueue
   end
 
   def enqueue_publisher_for_node
-    Cms::Publisher.register(content.public_nodes.select(:id))
+    Cms::Publisher.register(content.site_id, content.public_nodes.select(:id))
   end
 end

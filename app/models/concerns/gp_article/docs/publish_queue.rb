@@ -35,7 +35,7 @@ module GpArticle::Docs::PublishQueue
   end
 
   def enqueue_publisher_for_node
-    Cms::Publisher.register(content.public_nodes.select(:id))
+    Cms::Publisher.register(content.site_id, content.public_nodes.select(:id))
   end
 
   def enqueue_publisher_for_organization
@@ -44,7 +44,7 @@ module GpArticle::Docs::PublishQueue
 
     ogs = [organization_group]
     ogs << prev_edition.organization_group if prev_edition && prev_edition.organization_group
-    Cms::Publisher.register(ogs.uniq)
+    Cms::Publisher.register(content.site_id, ogs.uniq)
 
     organization_content.public_pieces.each do |piece|
       piece.enqueue_publisher
@@ -57,7 +57,7 @@ module GpArticle::Docs::PublishQueue
 
     cats = categories.map {|c| c.ancestors }.flatten
     cats += prev_edition.categories.map {|c| c.ancestors }.flatten if prev_edition
-    Cms::Publisher.register(cats.uniq)
+    Cms::Publisher.register(content.site_id, cats.uniq)
 
     category_content.public_pieces.each do |piece|
       piece.enqueue_publisher
@@ -70,7 +70,7 @@ module GpArticle::Docs::PublishQueue
     calendar_content = content.gp_calendar_content_event
     return unless calendar_content
 
-    Cms::Publisher.register(calendar_content.public_nodes.select(:id))
+    Cms::Publisher.register(content.site_id, calendar_content.public_nodes.select(:id))
 
     calendar_content.public_pieces.each do |piece|
       piece.enqueue_publisher
@@ -83,7 +83,7 @@ module GpArticle::Docs::PublishQueue
     map_content = content.map_content_marker
     return unless map_content
 
-    Cms::Publisher.register(map_content.public_nodes.select(:id))
+    Cms::Publisher.register(content.site_id, map_content.public_nodes.select(:id))
 
     map_content.public_pieces.each do |piece|
       piece.enqueue_publisher
@@ -101,7 +101,7 @@ module GpArticle::Docs::PublishQueue
     changed_tags.uniq!
 
     if changed_tags.present?
-      Cms::Publisher.register(changed_tags)
+      Cms::Publisher.register(content.site_id, changed_tags)
 
       tag_content.public_pieces.each do |piece|
         piece.enqueue_publisher

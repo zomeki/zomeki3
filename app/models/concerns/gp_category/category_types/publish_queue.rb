@@ -30,11 +30,11 @@ module GpCategory::CategoryTypes::PublishQueue
   end
 
   def enqueue_publisher_for_category
-    Cms::Publisher.register(public_categories.select(:id))
+    Cms::Publisher.register(content.site_id, public_categories.select(:id))
   end
 
   def enqueue_publisher_for_doc
     docs = public_categories.map {|c| c.docs.public_state.select(:id) }.flatten
-    Cms::Publisher.register(docs.uniq)
+    Cms::Publisher.register(content.site_id, docs.uniq)
   end
 end

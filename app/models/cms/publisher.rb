@@ -8,11 +8,11 @@ class Cms::Publisher < ActiveRecord::Base
   validates :publishable_id, uniqueness: { scope: [:publishable_type, :state] }
 
   class << self
-    def register(items)
+    def register(site_id, items)
       items = Array(items)
       return if items.blank?
 
-      pubs = items.map { |item| self.new(publishable: item, state: 'queued') }
+      pubs = items.map { |item| self.new(site_id: site_id, publishable: item, state: 'queued') }
       self.import(pubs)
 
       Cms::PublisherJob.perform_later unless Cms::PublisherJob.queued?
