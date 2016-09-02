@@ -81,7 +81,13 @@ module GpArticle::Docs::PublishQueue
     changed_dates.uniq!.compact!
 
     if changed_dates.present?
-      Cms::Publisher.register(content.site_id, calendar_content.public_nodes.select(:id))
+      min_date = changed_dates.min.beginning_of_month
+      max_date = changed_dates.max.beginning_of_month
+
+      Cms::Publisher.register(content.site_id, calendar_content.public_nodes.select(:id),
+        target_min_date: min_date.strftime('%Y-%m-%d'),
+        target_max_date: max_date.strftime('%Y-%m-%d')
+      )
       calendar_content.public_pieces.each do |piece|
         piece.enqueue_publisher
       end
