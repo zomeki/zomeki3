@@ -105,28 +105,16 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     @item.set_inquiry_group if Core.user.root?
 
     @item.validate_word_dictionary # replace validate word
-    @item.ignore_accessibility_check = params[:ignore_accessibility_check]
 
-    if Zomeki.config.application['cms.enable_accessibility_check']
-      if params[:accessibility_check_modify] && params[:ignore_accessibility_check].nil?
-        @item.body = Util::AccessibilityChecker.modify @item.body
-      end
+    if params[:link_check_in_body]
+      @item.link_check_results = @item.check_links_in_body
+      return render(failed_template)
     end
 
-    if params[:link_check_in_body] || (new_state == 'public' && params[:ignore_link_check].nil?)
-      check_results = @item.check_links_in_body
-      self.class.helpers.large_flash(flash, :key => :link_check_result,
-                                     :value => render_to_string(partial: 'link_check_result', locals: {results: check_results}))
-      return render(failed_template) if params[:link_check_in_body]
-    end
-
-    if Zomeki.config.application['cms.enable_accessibility_check']
-      if params[:accessibility_check] || ((new_state == 'public' || new_state == 'approvable') && params[:ignore_accessibility_check].nil?)
-        check_results = Util::AccessibilityChecker.check @item.body
-        self.class.helpers.large_flash(flash, :key => :accessibility_check_result,
-                                       :value => render_to_string(partial: 'accessibility_check_result', locals: {results: check_results}))
-        return render(failed_template) if params[:accessibility_check]
-      end
+    if params[:accessibility_check]
+      @item.modify_accessibility if @item.in_modify_accessibility_check == '1'
+      @item.accessibility_check_results = @item.check_accessibility
+      return render(failed_template)
     end
 
     @item.state = new_state if new_state.present? && @item.class::STATE_OPTIONS.any?{|v| v.last == new_state }
@@ -161,28 +149,16 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     @item.set_inquiry_group if Core.user.root?
 
     @item.validate_word_dictionary #replace validate word
-    @item.ignore_accessibility_check = params[:ignore_accessibility_check]
 
-    if Zomeki.config.application['cms.enable_accessibility_check']
-      if params[:accessibility_check_modify] && params[:ignore_accessibility_check].nil?
-        @item.body = Util::AccessibilityChecker.modify @item.body
-      end
+    if params[:link_check_in_body]
+      @item.link_check_results = @item.check_links_in_body
+      return render(failed_template)
     end
 
-    if params[:link_check_in_body] || (new_state == 'public' && params[:ignore_link_check].nil?)
-      check_results = @item.check_links_in_body
-      self.class.helpers.large_flash(flash, :key => :link_check_result,
-                                     :value => render_to_string(partial: 'link_check_result', locals: {results: check_results}))
-      return render(failed_template) if params[:link_check_in_body]
-    end
-
-    if Zomeki.config.application['cms.enable_accessibility_check']
-      if params[:accessibility_check] || ((new_state == 'public' || new_state == 'approvable') && params[:ignore_accessibility_check].nil?)
-        check_results = Util::AccessibilityChecker.check @item.body
-        self.class.helpers.large_flash(flash, :key => :accessibility_check_result,
-                                       :value => render_to_string(partial: 'accessibility_check_result', locals: {results: check_results}))
-        return render(failed_template) if params[:accessibility_check]
-      end
+    if params[:accessibility_check]
+      @item.modify_accessibility if @item.in_modify_accessibility_check == '1'
+      @item.accessibility_check_results = @item.check_accessibility
+      return render(failed_template)
     end
 
     @item.state = new_state if new_state.present? && @item.class::STATE_OPTIONS.any?{|v| v.last == new_state }
@@ -356,7 +332,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
       :marker_state, :marker_icon_category_id, :mobile_title, :mobile_body,
       :concept_id, :layout_id, :name, :filename_base, :terminal_pc_or_smart_phone, :terminal_mobile,
       :meta_description, :meta_keywords, :share_to_sns_with, :og_type, :og_title, :og_description, :og_image,
-      :in_tmp_id,
+      :in_tmp_id, :in_ignore_link_check, :in_ignore_accessibility_check, :in_modify_accessibility_check,
       :template_values => params[:item][:template_values].try(:keys),
       :in_tasks => [:publish, :close],
       :inquiries_attributes => [:id, :state, :_destroy,:group_id],

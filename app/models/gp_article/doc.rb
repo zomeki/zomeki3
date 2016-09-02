@@ -91,6 +91,9 @@ class GpArticle::Doc < ActiveRecord::Base
   before_destroy :keep_edition_relation
   after_destroy :close_page
 
+  attr_accessor :link_check_results, :in_ignore_link_check
+  attr_accessor :accessibility_check_results, :in_ignore_accessibility_check, :in_modify_accessibility_check
+
   validates :title, :presence => true, :length => {maximum: 200}
   validates :mobile_title, :length => {maximum: 200}
   validates :body, :length => {maximum: 300000}
@@ -101,15 +104,13 @@ class GpArticle::Doc < ActiveRecord::Base
   validate :name_validity
   validate :node_existence
   validate :event_dates_range
-  validate :broken_link_existence, :unless => :state_draft?
   validate :body_limit_for_mobile
-  validate :validate_accessibility_check, :unless => :state_draft?
+  validate :validate_accessibility_check, unless: :state_draft?
+  validate :validate_broken_link_existence, unless: :state_draft?
 
   after_initialize :set_defaults
   after_save :set_display_attributes
   after_save :save_links
-
-  attr_accessor :ignore_accessibility_check
 
   scope :event_scheduled_between, ->(start_date, end_date) {
     where(arel_table[:event_ended_on].gteq(start_date)).where(arel_table[:event_started_on].lt(end_date + 1))
@@ -510,9 +511,7 @@ class GpArticle::Doc < ActiveRecord::Base
   end
 
   def check_links_in_body
-    check_results = check_links(links_in_body)
-    @broken_link_exists_in_body = check_results.any? {|r| !r[:result] }
-    return check_results
+    check_links(links_in_body)
   end
 
   def links_in_mobile_body(all=false)
@@ -521,10 +520,6 @@ class GpArticle::Doc < ActiveRecord::Base
 
   def links_in_string(str, all=false)
     extract_links(str, all)
-  end
-
-  def broken_link_exists?
-    @broken_link_exists_in_body
   end
 
   def backlinks
@@ -536,6 +531,14 @@ class GpArticle::Doc < ActiveRecord::Base
   def backlinked_docs
     return [] if backlinks.blank?
     self.class.where(id: backlinks.pluck(:doc_id))
+  end
+
+  def check_accessibility
+    Util::AccessibilityChecker.check(body)
+  end
+
+  def modify_accessibility
+    self.body = Util::AccessibilityChecker.modify(body)
   end
 
   def validate_word_dictionary
@@ -774,8 +777,14 @@ class GpArticle::Doc < ActiveRecord::Base
     }.compact
   end
 
-  def broken_link_existence
-    errors.add(:base, 'リンクチェック結果を確認してください。') if broken_link_exists?
+  def validate_broken_link_existence
+    return if in_ignore_link_check == '1'
+
+    results = check_links_in_body
+    if results.any? {|r| !r[:result] }
+      self.link_check_results = results
+      errors.add(:base, 'リンクチェック結果を確認してください。')
+    end
   end
 
   def save_links
@@ -797,10 +806,12 @@ class GpArticle::Doc < ActiveRecord::Base
 
   def validate_accessibility_check
     return unless Zomeki.config.application['cms.enable_accessibility_check']
-    check_results = Util::AccessibilityChecker.check body
 
-    if check_results != [] && !ignore_accessibility_check
-     errors.add(:base, 'アクセシビリティチェック結果を確認してください')
+    modify_accessibility if in_modify_accessibility_check == '1'
+    results = check_accessibility
+    if (results.present? && in_ignore_accessibility_check != '1') || errors.present?
+      self.accessibility_check_results = results
+      errors.add(:base, 'アクセシビリティチェック結果を確認してください。')
     end
   end
 
