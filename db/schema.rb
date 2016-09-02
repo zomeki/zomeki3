@@ -529,6 +529,7 @@ ActiveRecord::Schema.define(version: 20160830075865) do
     t.string   "publishable_type"
     t.string   "state"
     t.integer  "priority"
+    t.jsonb    "extra_flag",       default: {}
     t.datetime "created_at"
     t.datetime "updated_at"
   end
