@@ -5,6 +5,7 @@ class AdBanner::Banner < ActiveRecord::Base
   include Cms::Model::Auth::Content
 
   include StateText
+  include Cms::Base::PublishQueue::Content
 
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
   TARGET_OPTIONS = [['同一ウィンドウ', '_self'], ['別ウィンドウ', '_blank']]

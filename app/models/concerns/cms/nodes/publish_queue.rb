@@ -20,6 +20,6 @@ module Cms::Nodes::PublishQueue
   end
 
   def enqueue_publisher_for_node
-    Cms::Publisher.register(self)
+    Cms::Publisher.register(site_id, self)
   end
 end

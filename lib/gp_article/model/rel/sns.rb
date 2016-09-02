@@ -2,7 +2,7 @@ module GpArticle::Model::Rel::Sns
   extend ActiveSupport::Concern
 
   included do
-    after_save :save_share_accounts, if: -> { in_share_accounts.present? }
+    after_save :save_share_accounts, if: -> { defined? @in_share_accounts }
   end
 
   def in_share_accounts=(val)

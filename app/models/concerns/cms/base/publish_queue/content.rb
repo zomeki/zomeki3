@@ -1,4 +1,4 @@
-module Organization::Groups::PublishQueue
+module Cms::Base::PublishQueue::Content::Content
   extend ActiveSupport::Concern
 
   included do
@@ -7,7 +7,10 @@ module Organization::Groups::PublishQueue
   end
 
   def enqueue_publisher
-    enqueue_publisher_for_group
+    Cms::Publisher.register(content.site_id, content.public_nodes.select(:id))
+    content.public_pieces.each do |piece|
+      piece.enqueue_publisher
+    end
   end
 
   private
@@ -18,9 +21,5 @@ module Organization::Groups::PublishQueue
 
   def enqueue_publisher?
     true
-  end
-
-  def enqueue_publisher_for_group
-    Cms::Publisher.register(content.site_id, ancestors)
   end
 end

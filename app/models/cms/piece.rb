@@ -11,8 +11,8 @@ class Cms::Piece < ActiveRecord::Base
   include Cms::Model::Rel::Bracketee
   include Cms::Model::Auth::Concept
 
-  include Cms::Pieces::PublishQueue
   include StateText
+  include Cms::Base::PublishQueue::Bracketee
 
   has_many :settings, -> { order(:sort_no) }, :foreign_key => :piece_id,
     :class_name => 'Cms::PieceSetting', :dependent => :destroy

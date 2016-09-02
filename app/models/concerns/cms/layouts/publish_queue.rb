@@ -25,26 +25,26 @@ module Cms::Layouts::PublishQueue
 
   def enqueue_publisher_for_node
     nodes = Cms::Node.public_state.where(layout_id: id).select(:id)
-    Cms::Publisher.register(nodes)
+    Cms::Publisher.register(site_id, nodes)
   end
 
   def enqueue_publisher_for_category
     cat_types = GpCategory::CategoryType.public_state.where(layout_id: id).all
     cat_types.each do |cat_type|
-      Cms::Publisher.register(cat_type.public_categories.select(:id))
+      Cms::Publisher.register(site_id, cat_type.public_categories.select(:id))
     end
 
     cats = GpCategory::Category.public_state.where(layout_id: id).select(:id)
-    Cms::Publisher.register(cats)
+    Cms::Publisher.register(site_id, cats)
   end
 
   def enqueue_publisher_for_organization_group
     ogs = Organization::Group.public_state.with_layout(id).select(:id)
-    Cms::Publisher.register(ogs)
+    Cms::Publisher.register(site_id, ogs)
   end
 
   def enqueue_publisher_for_doc
     docs = GpArticle::Doc.public_state.where(layout_id: id).select(:id)
-    Cms::Publisher.register(docs)
+    Cms::Publisher.register(site_id, docs)
   end
 end

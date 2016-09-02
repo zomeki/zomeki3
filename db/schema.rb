@@ -524,15 +524,18 @@ ActiveRecord::Schema.define(version: 20160830075865) do
   add_index "cms_pieces", ["concept_id", "name", "state"], name: "index_cms_pieces_on_concept_id_and_name_and_state", using: :btree
 
   create_table "cms_publishers", force: :cascade do |t|
+    t.integer  "site_id"
     t.integer  "publishable_id"
     t.string   "publishable_type"
     t.string   "state"
     t.integer  "priority"
+    t.jsonb    "extra_flag",       default: {}
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   add_index "cms_publishers", ["publishable_type", "publishable_id"], name: "index_cms_publishers_on_publishable_type_and_publishable_id", using: :btree
+  add_index "cms_publishers", ["site_id"], name: "index_cms_publishers_on_site_id", using: :btree
 
   create_table "cms_site_basic_auth_users", force: :cascade do |t|
     t.string   "state"
