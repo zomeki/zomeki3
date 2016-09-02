@@ -103,8 +103,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     new_state = params.keys.detect{|k| k =~ /^commit_/ }.try(:sub, /^commit_/, '')
     @item = @content.docs.build(doc_params)
     @item.set_inquiry_group if Core.user.root?
-
-    @item.validate_word_dictionary # replace validate word
+    @item.replace_words_with_dictionary
 
     if params[:link_check_in_body]
       @item.link_check_results = @item.check_links_in_body
@@ -147,8 +146,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     new_state = params.keys.detect{|k| k =~ /^commit_/ }.try(:sub, /^commit_/, '')
     @item.attributes = doc_params
     @item.set_inquiry_group if Core.user.root?
-
-    @item.validate_word_dictionary #replace validate word
+    @item.replace_words_with_dictionary
 
     if params[:link_check_in_body]
       @item.link_check_results = @item.check_links_in_body

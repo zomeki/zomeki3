@@ -541,7 +541,7 @@ class GpArticle::Doc < ActiveRecord::Base
     self.body = Util::AccessibilityChecker.modify(body)
   end
 
-  def validate_word_dictionary
+  def replace_words_with_dictionary
     dic = content.setting_value(:word_dictionary)
     return if dic.blank?
 
