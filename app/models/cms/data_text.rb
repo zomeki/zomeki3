@@ -8,7 +8,7 @@ class Cms::DataText < ActiveRecord::Base
   include Cms::Model::Auth::Concept
 
   include StateText
-  include Cms::DataTexts::PublishQueue
+  include Cms::Base::PublishQueue::Bracketee
 
   belongs_to :concept, :foreign_key => :concept_id, :class_name => 'Cms::Concept'
   

@@ -11,7 +11,7 @@ class Survey::Form < ActiveRecord::Base
   include Approval::Model::Rel::Approval
 
   include StateText
-  include Cms::Base::PublishQueue
+  include Cms::Base::PublishQueue::Content
 
   STATE_OPTIONS = [['下書き保存', 'draft'], ['承認依頼', 'approvable'], ['即時公開', 'public']]
   CONFIRMATION_OPTIONS = [['あり', true], ['なし', false]]
