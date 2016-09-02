@@ -1,14 +1,22 @@
-<div class="noticeExplanation" id="noticeExplanation">
- <h2>アクセシビリティチェック結果</h2>
-  <%- if results.empty? -%>
-    <p>エラーはありませんでした。</p>
-  <%- else -%>
-    <p>以下のエラーがあります。</p>
-    <ul>
-      <%- results.each do |result| -%>
-      <li><%= result %></li>
-      <%- end -%>
-    </ul>
-    <div style="margin: 5px; text-align: right;"><%= check_box_tag 'ignore_accessibility_check' %> <%= label_tag 'ignore_accessibility_check', '無視' %>　<%= check_box_tag 'accessibility_check_modify' %> <%= label_tag 'accessibility_check_modify', '自動修正' %></div>
-  <%- end -%>
-</div>
+<%- if results.nil? -%>
+  <%= f.hidden_field :in_ignore_accessibility_check %>
+  <%= f.hidden_field :in_modify_accessibility_check %>
+<%- else -%>
+  <div class="noticeExplanation" id="noticeExplanation">
+   <h2>アクセシビリティチェック結果</h2>
+    <%- if results.empty? -%>
+      <p>エラーはありませんでした。</p>
+    <%- else -%>
+      <p>以下のエラーがあります。</p>
+      <ul>
+        <%- results.each do |result| -%>
+        <li><%= result %></li>
+        <%- end -%>
+      </ul>
+      <div style="margin: 5px; text-align: right;">
+        <%= f.check_box :in_ignore_accessibility_check %><%= f.label :in_ignore_accessibility_check, '無視' %>　
+        <%= f.check_box :in_modify_accessibility_check %><%= f.label :in_modify_accessibility_check, '自動修正' %>
+      </div>
+    <%- end -%>
+  </div>
+<%- end -%>
