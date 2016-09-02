@@ -243,4 +243,5 @@ private
   def self.find_site_by_script_uri(uri)
     Cms::Site.all_with_full_uri(uri).first
   end
+
 end

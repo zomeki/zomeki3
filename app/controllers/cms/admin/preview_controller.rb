@@ -15,25 +15,25 @@ class Cms::Admin::PreviewController < Cms::Controller::Admin::Base
     Page.site   = options[:site] || Core.site
     Page.uri    = path
     Page.mobile = options[:mobile]
-    
+
     if path =~ /^\/_files\//
       ## _files
       file_path = path.gsub(/^\/_files\//, '')
       format    = ::File.extname(file_path)
-      
+
       opt  = {
         :path   => file_path.gsub(format, ''),
         :format => format.gsub(/^\./, '')
       }
       ctl  = "cms/public/files"
       act  = "down"
-      
+
     elsif path =~ /^\/_themes\//
       ## _themes
       root      = "#{Core.site.public_path}/_themes"
       full_path = "#{root}/#{path.gsub(/^\/_themes\//, '')}"
       base_uri  = ["#{Core.site.public_path}/", "/"]
-      
+
       stylesheet = Cms::Stylesheet.find(full_path, :root => root, :base_uri => base_uri)
       return http_error(404) unless ::File.exist?(full_path)
       return send_file(full_path, :type => stylesheet.mime_type, :filename => stylesheet.name, :disposition => 'inline')
@@ -66,7 +66,7 @@ protected
       admin_uri = Addressable::URI.parse(Core.script_uri)
       admin_uri.path = '/'
     else
-      admin_uri = Cms::SiteSetting::AdminProtocol.core_domain Page.site, public_uri.to_s, :freeze_protocol => true
+      admin_uri = Cms::SiteSetting::AdminProtocol.core_domain Page.site, :freeze_protocol => true
     end
 
     mobile   = Page.mobile? ? 'm' : ''

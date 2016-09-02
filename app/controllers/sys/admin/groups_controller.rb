@@ -12,11 +12,11 @@ class Sys::Admin::GroupsController < Cms::Controller::Admin::Base
     @groups = Core.site.groups.in_group(@parent).order(:sort_no, :code, :id).all
     @users = Core.site.users.in_group(@parent).order(:account).all
   end
-  
+
   def index
     _index @groups
   end
-  
+
   def show
     @item = Sys::Group.find(params[:id])
     return error_auth unless @item.readable?
@@ -37,9 +37,7 @@ class Sys::Admin::GroupsController < Cms::Controller::Admin::Base
     @item.parent_id = @parent.id
     parent = Sys::Group.find_by(id: @item.parent_id)
     @item.level_no = parent ? parent.level_no + 1 : 1
-    _create(@item) do
-      @item.sites << Core.site if @item.sites.empty?
-    end
+    _create(@item)
   end
 
   def update
@@ -47,11 +45,9 @@ class Sys::Admin::GroupsController < Cms::Controller::Admin::Base
     @item.attributes = group_params
     parent = Sys::Group.find_by(id: @item.parent_id)
     @item.level_no = parent ? parent.level_no + 1 : 1
-    _update(@item) do
-      @item.sites << Core.site if @item.sites.empty?
-    end
+    _update(@item)
   end
-  
+
   def destroy
     @item = Sys::Group.find(params[:id])
     _destroy @item
