@@ -1,4 +1,4 @@
-module Cms::Base::PublishQueue::Content::Content
+module Cms::Base::PublishQueue::Content
   extend ActiveSupport::Concern
 
   included do
