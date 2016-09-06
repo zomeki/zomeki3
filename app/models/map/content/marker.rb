@@ -6,21 +6,12 @@ class Map::Content::Marker < Cms::Content
 
   has_many :markers, :foreign_key => :content_id, :class_name => 'Map::Marker', :dependent => :destroy
 
+  has_many :public_nodes, -> { public_state },
+    foreign_key: :content_id, class_name: 'Cms::Node'
+  has_one :public_node, -> { public_state.where(model: 'Map::Marker').order(:id) },
+    foreign_key: :content_id, class_name: 'Cms::Node'
+
   after_initialize :set_default_settings
-
-  def public_nodes
-    nodes.public_state
-  end
-
-  def public_node
-    public_nodes.order(:id).first
-  end
-
-#TODO: DEPRECATED
-  def marker_node
-    return @marker_node if @marker_node
-    @marker_node = Cms::Node.where(state: 'public', content_id: id, model: 'Map::Marker').order(:id).first
-  end
 
   def public_markers
     markers.public_state
