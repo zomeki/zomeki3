@@ -28,7 +28,7 @@ class Sys::Admin::SettingsController < Cms::Controller::Admin::Base
     @item = Sys::Setting.config(params[:id])
     @item.value = params[:item][:value]
 
-    if @item.name =~ /^(common_ssl|file_upload_max_size)$/
+    if @item.name =~ /^(common_ssl|file_upload_max_size|maintenance_mode)$/
       extra_values = @item.extra_values
 
       case @item.name
@@ -36,6 +36,9 @@ class Sys::Admin::SettingsController < Cms::Controller::Admin::Base
         extra_values[:common_ssl_uri] = params[:common_ssl_uri]
       when 'file_upload_max_size'
         extra_values[:extension_upload_max_size] = params[:extension_upload_max_size]
+      when 'maintenance_mode'
+        extra_values[:maintenance_start_at] = params[:maintenance_start_at]
+        extra_values[:maintenance_end_at] = params[:maintenance_end_at]
       end
 
       @item.extra_values = extra_values

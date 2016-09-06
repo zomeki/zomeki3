@@ -51,3 +51,25 @@ lower_text = @item.lower_text ? %Q(<div style="margin: 5px; line-height: 1.2;">#
   </tr>
 </table>
 <%- end -%>
+<%- if @item.name == 'maintenance_mode' -%>
+<table class="show">
+  <tr>
+    <th>メンテナンス開始時刻</th>
+    <td><%= text_field_tag :maintenance_start_at, @item.extra_values[:maintenance_start_at],
+      size: 'width: 150px;', class: 'datetimepicker' %>
+    </td>
+  </tr>
+  <tr>
+    <th>メンテナンス終了時刻</th>
+    <td><%= text_field_tag :maintenance_end_at, @item.extra_values[:maintenance_end_at],
+      size: 'width: 150px;', class: 'datetimepicker' %>
+    </td>
+  </tr>
+</table>
+<%= javascript_tag do -%>
+$(document).ready(function () {
+  <%= enable_datetimepicker_script -%>
+});
+<%- end -%>
+
+<%- end -%>
