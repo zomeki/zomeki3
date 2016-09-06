@@ -86,8 +86,7 @@ class Feed::Feed < ActiveRecord::Base
         entry_id      = e.elements['link'].text
         entry_updated = (e.elements['pubDate'] || e.elements['dc:date']).text
         
-        cond  = {:feed_id => self.id, :entry_id => entry_id}
-        if entry = Feed::FeedEntry.new.find(:first, :conditions => cond)
+        if entry = Feed::FeedEntry.where(feed_id: id, entry_id: entry_id).first
           arr = Date._parse(entry_updated, false).values_at(:year, :mon, :mday, :hour, :min, :sec, :zone, :wday)
 
           newt = Time::local(*arr[0..-3]).strftime('%s').to_i
@@ -136,10 +135,7 @@ class Feed::Feed < ActiveRecord::Base
     end
 
     if latest.size > 0
-      cond = Condition.new
-      cond.and "NOT id", "IN", latest
-      cond.and :feed_id, self.id
-      Feed::FeedEntry.destroy_all(cond.where)
+      Feed::FeedEntry.where(feed_id: id).where.not(id: latest).destroy_all
     end
     return errors.size == 0
   end
@@ -166,8 +162,7 @@ class Feed::Feed < ActiveRecord::Base
         entry_id      = e.elements['id'].text
         entry_updated = e.elements['updated'].text
 
-        cond  = {:feed_id => self.id, :entry_id => entry_id}
-        if entry = Feed::FeedEntry.new.find(:first, :conditions => cond)
+        if entry = Feed::FeedEntry.where(feed_id: id, entry_id: entry_id).first
           arr  = Date._parse(entry_updated, false).values_at(:year, :mon, :mday, :hour, :min, :sec, :zone, :wday)
           newt = Time::local(*arr[0..-3]).strftime('%s').to_i
           oldt = entry.entry_updated.strftime('%s').to_i
@@ -229,10 +224,7 @@ class Feed::Feed < ActiveRecord::Base
     end
 
     if latest.size > 0
-      cond = Condition.new
-      cond.and "NOT id", "IN", latest
-      cond.and :feed_id, self.id
-      Feed::FeedEntry.destroy_all(cond.where)
+      Feed::FeedEntry.where(feed_id: id).where.not(id: latest).destroy_all
     end
     return errors.size == 0
   end
