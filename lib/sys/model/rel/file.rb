@@ -24,15 +24,20 @@ module Sys::Model::Rel::File
     return true unless @save_mode == :publish
     return true if files.empty?
 
-    dir = public_files_path
-    FileUtils.mkdir_p(dir) unless FileTest.exist?(dir)
+    public_dir = public_files_path
+    FileUtils.mkdir_p(public_dir) unless FileTest.exist?(public_dir)
 
     files.each do |file|
-      next unless FileTest.exist?(file.upload_path)
-      if FileTest.exist?(new_file = "#{dir}/#{file.name}")
-        next if File::stat(new_file).mtime >= File::stat(file.upload_path).mtime
+      paths = {
+        file.upload_path               => "#{public_dir}/#{file.name}",
+        file.upload_path(type: :thumb) => "#{public_dir}/thumb/#{file.name}"
+      }
+      paths.each do |fr, to|
+        next unless FileTest.exists?(fr)
+        next if FileTest.exists?(to) && ( ::File.mtime(to) >= ::File.mtime(fr) )
+        FileUtils.mkdir_p(::File.dirname(to)) unless FileTest.exists?(::File.dirname(to))
+        FileUtils.cp(fr, to)
       end
-      FileUtils.cp(file.upload_path, new_file) if FileTest.exist?(file.upload_path)
     end
 
     return true

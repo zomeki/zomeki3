@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160830075865) do
+ActiveRecord::Schema.define(version: 20160907024635) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -40,6 +40,9 @@ ActiveRecord::Schema.define(version: 20160830075865) do
     t.datetime "updated_at"
     t.text     "target"
     t.integer  "site_id"
+    t.integer  "thumb_width"
+    t.integer  "thumb_height"
+    t.integer  "thumb_size"
   end
 
   add_index "ad_banner_banners", ["token"], name: "index_ad_banner_banners_on_token", unique: true, using: :btree
@@ -270,6 +273,9 @@ ActiveRecord::Schema.define(version: 20160830075865) do
     t.integer  "image_is"
     t.integer  "image_width"
     t.integer  "image_height"
+    t.integer  "thumb_width"
+    t.integer  "thumb_height"
+    t.integer  "thumb_size"
   end
 
   add_index "cms_data_files", ["concept_id", "node_id", "name"], name: "index_cms_data_files_on_concept_id_and_node_id_and_name", using: :btree
@@ -1184,6 +1190,9 @@ ActiveRecord::Schema.define(version: 20160830075865) do
     t.integer  "file_attachable_id"
     t.string   "file_attachable_type"
     t.integer  "site_id"
+    t.integer  "thumb_width"
+    t.integer  "thumb_height"
+    t.integer  "thumb_size"
   end
 
   add_index "sys_files", ["file_attachable_type", "file_attachable_id"], name: "index_sys_files_on_file_attachable_type_and_file_attachable_id", using: :btree

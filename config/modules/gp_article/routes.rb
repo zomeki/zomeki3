@@ -18,7 +18,7 @@ ZomekiCMS::Application.routes.draw do
     resources(:docs,
       :controller => 'admin/docs',
       :path       => ':content/docs') do
-      get 'file_contents/:basename.:extname' => 'admin/docs/files#content'
+      get 'file_contents/(*path)' => 'admin/docs/files#content'
       member do
         post :approve
         post :passback
@@ -69,10 +69,10 @@ ZomekiCMS::Application.routes.draw do
     get 'node_docs/:name/comments/new' => 'public/node/comments#new', :format => false
     post 'node_docs/:name/comments/confirm' => 'public/node/comments#confirm', :format => false
     post 'node_docs/:name/comments' => 'public/node/comments#create', :format => false
-    get 'node_docs/:name/preview/:id/file_contents/:basename.:extname' => 'public/node/docs#file_content'
+    get 'node_docs/:name/preview/:id/file_contents/(*path)' => 'public/node/docs#file_content'
     get 'node_docs/:name/preview/:id/qrcode.:extname' => 'public/node/docs#qrcode'
     get 'node_docs/:name/preview/:id(/(:filename_base.:format))' => 'public/node/docs#show'
-    get 'node_docs/:name/file_contents/:basename.:extname' => 'public/node/docs#file_content'
+    get 'node_docs/:name/file_contents/(*path)' => 'public/node/docs#file_content'
     get 'node_docs/:name/qrcode.:extname' => 'public/node/docs#qrcode'
     get 'node_docs/:name(/(:filename_base.:format))' => 'public/node/docs#show'
     get 'node_archives/:year(/(index))' => 'public/node/archives#index'

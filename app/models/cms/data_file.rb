@@ -30,13 +30,26 @@ class Cms::DataFile < ActiveRecord::Base
     "#{site.public_path}/_files/#{dir}/#{escaped_name}"
   end
 
+  def public_thumbnail_path
+    "#{::File.dirname(public_path)}/thumb/#{escaped_name}"
+  end
+
   def public_uri
     dir = Util::String::CheckDigit.check(format('%07d', id))
     "/_files/#{dir}/#{escaped_name}"
   end
 
+  def public_thumbnail_uri
+    uri = public_uri
+    "#{::File.dirname(uri)}/thumb/#{::File.basename(uri)}"
+  end
+
   def public_full_uri
     "#{site.full_uri}#{public_uri.sub(/^\//, '')}"
+  end
+
+  def public_thumbnail_full_uri
+    "#{site.full_uri}#{public_thumbnail_uri.sub(/^\//, '')}"
   end
 
   def public
@@ -99,18 +112,22 @@ class Cms::DataFile < ActiveRecord::Base
   def remove_old_name_public_file(old_name)
     public_dir = ::File.dirname(public_path)
     old_path = "#{public_dir}/#{old_name}"
+    old_thumb_path = "#{public_dir}/thumb/#{old_name}"
     ::Storage.rm_rf(old_path) if ::Storage.exists?(old_path)
+    ::Storage.rm_rf(old_thumb_path) if ::Storage.exists?(old_thumb_path)
   end
 
   def remove_public_file
-    return true unless FileTest.exist?(public_path)
-    FileUtils.remove_entry_secure(public_path)
+    FileUtils.remove_entry_secure(public_path) if FileTest.exist?(public_path)
+    FileUtils.remove_entry_secure(public_thumbnail_path) if FileTest.exist?(public_thumbnail_path)
     return true
   end
 
-private
+  private
+
   def upload_public_file
-    return false unless FileTest.exist?(upload_path)
-    Util::File.put(public_path, :src => upload_path, :mkdir => true)
+    Util::File.put(public_path, src: upload_path, mkdir: true) if FileTest.exist?(upload_path)
+    Util::File.put(public_thumbnail_path, src: upload_path(type: :thumb), mkdir: true) if FileTest.exist?(upload_path(type: :thumb))
+    return true
   end
 end
