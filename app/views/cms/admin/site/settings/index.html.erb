@@ -1,0 +1,29 @@
+<table class="index">
+
+  <tr>
+    <th style="width: 60px; text-align: center;">編集</th>
+    <th style="width: 300px;">設定名</th>
+    <th style="">設定値</th>
+  </tr>
+
+  <% @items.each do |item| %>
+  <%
+  value = case item[:name]
+  when 'common_ssl'
+    @site.in_setting_common_ssl || "未設定"
+  when 'pass_reminder_mail_sender'
+    @site.in_setting_site_pass_reminder_mail_sender || "未設定"
+  when 'file_upload_max_size'
+    @site.in_setting_site_file_upload_max_size || "未設定"
+  else
+    @site[item[:setting_name]] || "未設定"
+  end
+  %>
+  <tr class="<%= cycle '', 'cycle' %>">
+    <td style="text-align: center;"><%= link_to :edit, url_for(:action => :edit, :id => item[:id]) %></td>
+    <td><%= item[:name] %></td>
+    <td><%= value %></td>
+  </tr>
+  <% end %>
+
+</table>

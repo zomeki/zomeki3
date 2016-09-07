@@ -160,6 +160,7 @@ class Cms::Admin::SitesController < Cms::Controller::Admin::Base
       :in_setting_transfer_dest_domain, :in_setting_transfer_dest_host, :in_setting_transfer_dest_user,
       :mobile_full_uri, :admin_full_uri, :name, :og_description, :og_image, :og_title, :og_type, :related_site,
       :smart_phone_publication, :spp_target, :site_image, :del_site_image, :google_map_api_key,
+      :in_setting_pass_reminder_mail_sender, :in_setting_file_upload_max_size, :in_setting_extension_upload_max_size,
       :in_creator => [:group_id, :user_id])
   end
 end

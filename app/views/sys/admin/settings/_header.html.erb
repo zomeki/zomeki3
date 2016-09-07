@@ -3,5 +3,9 @@
 </div>
 
 <div class="contentMenu">
-<%= render 'layouts/admin/cms/navi/setting', current: :setting %>
+<%-
+current = :setting
+current = params[:id].to_sym if params[:id].present?
+-%>
+<%= render 'layouts/admin/cms/navi/setting', current: current %>
 </div>

@@ -1,3 +1,4 @@
 <%= link_to 'コンセプト', cms_concepts_path(0), :class => (current == :concept ? 'current' : '') %>
 <%= link_to "非常時", cms_emergencies_path, :class => (current == :emergency ? 'current' : '') %>
 <%= link_to "ドメイン", cms_sites_path, :class => (current == :domain ? 'current' : '') %>
+<%= link_to "設定", cms_site_settings_path(Core.site), :class => (current == :setting ? 'current' : '') %>

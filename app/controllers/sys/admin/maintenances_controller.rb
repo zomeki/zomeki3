@@ -3,7 +3,7 @@ class Sys::Admin::MaintenancesController < Cms::Controller::Admin::Base
 
   def pre_dispatch
     return error_auth unless Core.user.has_auth?(:manager)
-    @maintenances = Core.site.maintenances
+    @maintenances = Sys::Maintenance
   end
 
   def index
@@ -26,7 +26,7 @@ class Sys::Admin::MaintenancesController < Cms::Controller::Admin::Base
     @item = @maintenances.build(maintenance_params)
     _create @item
   end
-  
+
   def update
     @item = @maintenances.find(params[:id])
     @item.attributes = maintenance_params

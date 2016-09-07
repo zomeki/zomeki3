@@ -43,7 +43,7 @@ class Sys::Admin::SettingsController < Cms::Controller::Admin::Base
 
       @item.extra_values = extra_values
     end
-    _update(@item) do
+    _update(@item, location: edit_sys_setting_path(id: params[:id])) do
       update_config if @item.name.in?('ssl')
     end
   end
