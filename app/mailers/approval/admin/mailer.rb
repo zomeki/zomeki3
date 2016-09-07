@@ -53,7 +53,7 @@ class Approval::Admin::Mailer < ApplicationMailer
   end
 
   def host
-    Cms::SiteSetting::AdminProtocol.core_domain(@item.content.site, @item.content.site.full_uri).sub(/\/+$/, '')
+    Cms::SiteSetting::AdminProtocol.core_domain(@item.content.site).sub(/\/+$/, '')
   end
 
   def admin_controller

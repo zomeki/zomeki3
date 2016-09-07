@@ -6,7 +6,7 @@ class Cms::DataFileNode < ActiveRecord::Base
   include Cms::Model::Rel::Concept
   include Cms::Model::Auth::Concept
 
-  include Cms::DataFileNodes::PublishQueue
+  include Cms::Base::PublishQueue::Bracketee
 
   has_many :files, :foreign_key => :node_id, :class_name => 'Cms::DataFile', :primary_key => :id
 
@@ -36,5 +36,10 @@ private
   def remove_files
     files.each {|file| file.destroy }
     return true
+  end
+
+  def changed_bracket_names
+    names = [name, name_was].select(&:present?).uniq
+    names.map { |name| files.map { |file| "file/#{name}/#{file.name}" } }.flatten
   end
 end

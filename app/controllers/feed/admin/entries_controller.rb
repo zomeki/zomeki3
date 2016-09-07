@@ -11,16 +11,13 @@ class Feed::Admin::EntriesController < Cms::Controller::Admin::Base
     return update_entries if params[:do] == "update_entries"
     return delete_entries if params[:do] == "delete_entries"
     
-    item = Feed::FeedEntry.new
-    item.and :feed_id, @feed.id
-    item.page  params[:page], params[:limit]
-    item.order params[:sort],  entry_updated: :desc, id: :desc
-    @items = item.find(:all)
+    @items = Feed::FeedEntry.where(feed_id: @feed.id).order(entry_updated: :desc, id: :desc)
+      .paginate(page: params[:page], per_page: params[:limit])
     _index @items
   end
 
   def show
-    @item = Feed::FeedEntry.new.find(params[:id])
+    @item = Feed::FeedEntry.find(params[:id])
     _show @item
   end
 
@@ -33,7 +30,7 @@ class Feed::Admin::EntriesController < Cms::Controller::Admin::Base
   end
 
   def update
-    @item = Feed::FeedEntry.new.find(params[:id])
+    @item = Feed::FeedEntry.find(params[:id])
     @item.attributes = entry_params
     _update @item
   end

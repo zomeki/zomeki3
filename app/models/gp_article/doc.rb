@@ -18,6 +18,7 @@ class GpArticle::Doc < ActiveRecord::Base
   include GpArticle::Model::Rel::Doc
   include GpArticle::Model::Rel::Category
   include GpArticle::Model::Rel::Sns
+  include GpArticle::Model::Rel::Tag
   include Approval::Model::Rel::Approval
   include GpTemplate::Model::Rel::Template
 
@@ -90,6 +91,9 @@ class GpArticle::Doc < ActiveRecord::Base
   before_destroy :keep_edition_relation
   after_destroy :close_page
 
+  attr_accessor :link_check_results, :in_ignore_link_check
+  attr_accessor :accessibility_check_results, :in_ignore_accessibility_check, :in_modify_accessibility_check
+
   validates :title, :presence => true, :length => {maximum: 200}
   validates :mobile_title, :length => {maximum: 200}
   validates :body, :length => {maximum: 300000}
@@ -100,16 +104,13 @@ class GpArticle::Doc < ActiveRecord::Base
   validate :name_validity
   validate :node_existence
   validate :event_dates_range
-  validate :broken_link_existence, :unless => :state_draft?
   validate :body_limit_for_mobile
-  validate :validate_accessibility_check, :unless => :state_draft?
+  validate :validate_accessibility_check, unless: :state_draft?
+  validate :validate_broken_link_existence, unless: :state_draft?
 
   after_initialize :set_defaults
-  after_save :set_tags
   after_save :set_display_attributes
   after_save :save_links
-
-  attr_accessor :ignore_accessibility_check
 
   scope :event_scheduled_between, ->(start_date, end_date) {
     where(arel_table[:event_ended_on].gteq(start_date)).where(arel_table[:event_started_on].lt(end_date + 1))
@@ -225,10 +226,6 @@ class GpArticle::Doc < ActiveRecord::Base
     return docs
   end
 
-  def raw_tags=(new_raw_tags)
-    super (new_raw_tags.nil? ? new_raw_tags : new_raw_tags.to_s.gsub('　', ' '))
-  end
-
   def public_path
     return '' if public_uri.blank?
     "#{content.public_path}#{public_uri(without_filename: true)}#{filename_base}.html"
@@ -285,7 +282,7 @@ class GpArticle::Doc < ActiveRecord::Base
     filename = without_filename || filename_base == 'index' ? '' : "#{filename_base}.html"
 
     path = "_preview/#{format('%04d', site.id)}#{mobile ? 'm' : ''}#{public_uri(without_filename: true)}preview/#{id}/#{filename}#{params.present? ? "?#{params}" : ''}"
-    d = Cms::SiteSetting::AdminProtocol.core_domain site, site.full_uri, :freeze_protocol => true
+    d = Cms::SiteSetting::AdminProtocol.core_domain site, :freeze_protocol => true
     "#{d}#{path}"
   end
 
@@ -514,9 +511,7 @@ class GpArticle::Doc < ActiveRecord::Base
   end
 
   def check_links_in_body
-    check_results = check_links(links_in_body)
-    @broken_link_exists_in_body = check_results.any? {|r| !r[:result] }
-    return check_results
+    check_links(links_in_body)
   end
 
   def links_in_mobile_body(all=false)
@@ -525,10 +520,6 @@ class GpArticle::Doc < ActiveRecord::Base
 
   def links_in_string(str, all=false)
     extract_links(str, all)
-  end
-
-  def broken_link_exists?
-    @broken_link_exists_in_body
   end
 
   def backlinks
@@ -542,7 +533,15 @@ class GpArticle::Doc < ActiveRecord::Base
     self.class.where(id: backlinks.pluck(:doc_id))
   end
 
-  def validate_word_dictionary
+  def check_accessibility
+    Util::AccessibilityChecker.check(body)
+  end
+
+  def modify_accessibility
+    self.body = Util::AccessibilityChecker.modify(body)
+  end
+
+  def replace_words_with_dictionary
     dic = content.setting_value(:word_dictionary)
     return if dic.blank?
 
@@ -619,6 +618,7 @@ class GpArticle::Doc < ActiveRecord::Base
     "#{::File.dirname(public_path)}/file_contents"
   end
 
+
   def qrcode_path
     return @public_qrcode_path if @public_qrcode_path
     "#{::File.dirname(public_path)}/qrcode.png"
@@ -639,7 +639,7 @@ class GpArticle::Doc < ActiveRecord::Base
   def event_will_sync_text
     EVENT_WILL_SYNC_OPTIONS.detect{|o| o.last == event_will_sync }.try(:first).to_s
   end
-
+  
   def event_state_visible?
     event_state == 'visible'
   end
@@ -738,20 +738,6 @@ class GpArticle::Doc < ActiveRecord::Base
     end
   end
 
-  def set_tags
-    return tags.clear unless content.tag_content_tag
-    all_tags = content.tag_content_tag.tags
-    return tags.clear if raw_tags.blank?
-
-    words = Moji.normalize_zen_han(raw_tags).downcase.split(/[、,]/).map{|w| w.presence }.compact.uniq
-    self.tags = words.map do |word|
-        all_tags.where(word: word).first || all_tags.create(word: word)
-      end
-    self.tags.each {|t| t.update_last_tagged_at }
-
-    all_tags.each {|t| t.destroy if t.public_docs.empty? }
-  end
-
   def make_file_contents_path_relative
     self.body = self.body.gsub(%r!("|')[^"'(]*?/(file_contents/)!, '\1\2') if self.body.present?
     self.mobile_body = self.mobile_body.gsub(%r!("|')[^"'(]*?/(file_contents/)!, '\1\2') if self.mobile_body.present?
@@ -792,8 +778,14 @@ class GpArticle::Doc < ActiveRecord::Base
     }.compact
   end
 
-  def broken_link_existence
-    errors.add(:base, 'リンクチェック結果を確認してください。') if broken_link_exists?
+  def validate_broken_link_existence
+    return if in_ignore_link_check == '1'
+
+    results = check_links_in_body
+    if results.any? {|r| !r[:result] }
+      self.link_check_results = results
+      errors.add(:base, 'リンクチェック結果を確認してください。')
+    end
   end
 
   def save_links
@@ -815,10 +807,12 @@ class GpArticle::Doc < ActiveRecord::Base
 
   def validate_accessibility_check
     return unless Zomeki.config.application['cms.enable_accessibility_check']
-    check_results = Util::AccessibilityChecker.check body
 
-    if check_results != [] && !ignore_accessibility_check
-     errors.add(:base, 'アクセシビリティチェック結果を確認してください')
+    modify_accessibility if in_modify_accessibility_check == '1'
+    results = check_accessibility
+    if (results.present? && in_ignore_accessibility_check != '1') || errors.present?
+      self.accessibility_check_results = results
+      errors.add(:base, 'アクセシビリティチェック結果を確認してください。')
     end
   end
 

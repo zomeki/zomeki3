@@ -1,20 +1,28 @@
 class GpCalendar::Script::BaseController < Cms::Controller::Script::Publication
   private
 
-  def publish_with_months
-    min_date = 1.year.ago(Date.today.beginning_of_month)
-    max_date = 2.years.since(min_date)
-
-    prms = []
-    date = min_date
-    while (date < max_date)
-      unless prms.include?(y = date.strftime('%Y/'))
-        prms << y
-      end
-      prms << date.strftime('%Y/%m/')
-
-      date = date.since(1.month).to_date
+  def get_min_date
+    if params[:target_min_date].present?
+      Date.parse(params[:target_min_date])
+    else
+      1.year.ago(Date.today.beginning_of_month).to_date
     end
+  end
+
+  def get_max_date(min_date)
+    if params[:target_max_date].present?
+      Date.parse(params[:target_max_date])
+    else
+      2.years.since(min_date).to_date
+    end
+  end
+
+  def publish_with_months
+    min_date = get_min_date
+    max_date = get_max_date(min_date)
+
+    prms = (min_date.year..max_date.year).to_a.map { |y| "#{y}/" }
+    prms += (min_date..max_date).to_a.select { |d| d.day == 1 }.map { |d| d.strftime('%Y/%m/') }
 
     uri = @node.public_uri.to_s
     path = @node.public_path.to_s

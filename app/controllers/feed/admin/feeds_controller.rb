@@ -30,14 +30,14 @@ class Feed::Admin::FeedsController < Cms::Controller::Admin::Base
   end
 
   def update
-    @item = Feed::Feed.new.find(params[:id])
+    @item = Feed::Feed.find(params[:id])
     @item.attributes = feed_params
 
     _update(@item)
   end
 
   def destroy
-    @item = Feed::Feed.new.find(params[:id])
+    @item = Feed::Feed.find(params[:id])
     _destroy @item
   end
 

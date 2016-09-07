@@ -5,6 +5,7 @@ class Gnav::MenuItem < ActiveRecord::Base
   include Cms::Model::Base::Page
 
   include StateText
+  include Cms::Base::PublishQueue::Content
   include Gnav::MenuItems::Preload
 
   SITEMAP_STATE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]

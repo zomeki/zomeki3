@@ -1,6 +1,7 @@
 class Cms::Site < ActiveRecord::Base
   include Sys::Model::Base
   include Sys::Model::Base::Page
+
   include Sys::Model::Rel::Creator
   include Sys::Model::Auth::Manager
   include Cms::Model::Rel::DataFile
@@ -43,6 +44,7 @@ class Cms::Site < ActiveRecord::Base
   validates :state, :name, :full_uri, presence: true
   validates :full_uri, uniqueness: true
   validates :mobile_full_uri, uniqueness: true, if: "mobile_full_uri.present?"
+  validates :admin_full_uri, uniqueness: true, if: "admin_full_uri.present?"
   validate :validate_attributes
 
   after_initialize :set_defaults
@@ -65,8 +67,10 @@ class Cms::Site < ActiveRecord::Base
   after_destroy :destroy_files
   after_save :generate_apache_configs
   after_destroy :destroy_apache_configs
+  after_destroy :destroy_apache_admin_configs
   after_save :generate_nginx_configs
   after_destroy :destroy_nginx_configs
+  after_destroy :destroy_nginx_admin_configs
 
   after_create :make_concept
   after_save :make_node
@@ -77,6 +81,7 @@ class Cms::Site < ActiveRecord::Base
   end
 
   def root_path
+
     dir = format('%04d', id)
     Rails.root.join("sites/#{dir}")
   end
@@ -112,6 +117,12 @@ class Cms::Site < ActiveRecord::Base
     URI.parse(mobile_full_uri).host
   end
 
+  def admin_domain
+    admin_uri = admin_full_uri || full_uri
+    return '' if admin_uri.blank?
+    URI.parse(admin_uri).host
+  end
+
   def publish_uri
     "#{Core.full_uri}_publish/#{format('%04d', id)}/"
   end
@@ -125,6 +136,27 @@ class Cms::Site < ActiveRecord::Base
 
   def has_mobile?
     !mobile_full_uri.blank?
+  end
+
+  def site_domain?(script_uri)
+    return false if Cms::SiteSetting::AdminProtocol.core_domain?
+    parsed_uri = Addressable::URI.parse(script_uri)
+    parsed_uri.path = '/'
+
+    parsed_uri.scheme = 'http'
+    http_base = parsed_uri.to_s
+    parsed_uri.scheme = 'https'
+    https_base = parsed_uri.to_s
+    return true if site_domains.index(http_base).present? || site_domains.index(https_base).present?
+    return false
+  end
+
+  def site_domains
+    domains = []
+    domains << "#{full_uri}" if !full_uri.blank?
+    domains << "#{mobile_full_uri}" if !mobile_full_uri.blank?
+    domains << "#{admin_full_uri}" if !admin_full_uri.blank?
+    domains
   end
 
   def related_sites(options = {})
@@ -153,13 +185,22 @@ class Cms::Site < ActiveRecord::Base
     http_base = parsed_uri.to_s
     parsed_uri.scheme = 'https'
     https_base = parsed_uri.to_s
-
     sites = self.arel_table
-    self.where(sites[:full_uri].matches("#{http_base}%")
-               .or(sites[:full_uri].matches("#{https_base}%"))
-               .or(sites[:mobile_full_uri].matches("#{http_base}%"))
-               .or(sites[:mobile_full_uri].matches("#{https_base}%")))
-        .order(:id)
+    if Cms::SiteSetting::AdminProtocol.core_domain?
+      self.where(sites[:full_uri].matches("#{http_base}%")
+                     .or(sites[:full_uri].matches("#{https_base}%"))
+                     .or(sites[:mobile_full_uri].matches("#{http_base}%"))
+                     .or(sites[:mobile_full_uri].matches("#{https_base}%")))
+          .order(:id)
+    else
+      self.where(sites[:full_uri].matches("#{http_base}%")
+                     .or(sites[:full_uri].matches("#{https_base}%"))
+                     .or(sites[:mobile_full_uri].matches("#{http_base}%"))
+                     .or(sites[:mobile_full_uri].matches("#{https_base}%"))
+                     .or(sites[:admin_full_uri].matches("#{http_base}%"))
+                     .or(sites[:admin_full_uri].matches("#{https_base}%")))
+          .order(:id)
+    end
   end
 
   def self.find_by_script_uri(script_uri)
@@ -207,7 +248,7 @@ class Cms::Site < ActiveRecord::Base
     conf
   end
 
-  def self.put_virtual_hosts_config
+ def self.put_virtual_hosts_config
     conf = make_virtual_hosts_config
     Util::File.put virtual_hosts_config_path, data: conf
     FileUtils.touch reload_virtual_hosts_text_path
@@ -241,6 +282,26 @@ class Cms::Site < ActiveRecord::Base
     conf.delete
   end
 
+  def self.generate_apache_admin_configs
+    all.each(&:generate_apache_admin_configs)
+  end
+
+  def generate_apache_admin_configs
+    virtual_hosts = Rails.root.join('config/apache/admin_virtual_hosts')
+    unless (template = virtual_hosts.join('template.conf.erb')).file?
+      logger.warn 'VirtualHost template not found.'
+      return false
+    end
+    erb = ERB.new(template.read, nil, '-').result(binding)
+    virtual_hosts.join("site_#{'%04d' % id}.conf").write erb
+  end
+
+  def destroy_apache_admin_configs
+    conf = Rails.root.join("config/apache/admin_virtual_hosts/site_#{'%04d' % id}.conf")
+    return false unless conf.exist?
+    conf.delete
+  end
+
   def self.generate_nginx_configs
     all.each(&:generate_nginx_configs)
   end
@@ -255,12 +316,30 @@ class Cms::Site < ActiveRecord::Base
     servers.join("site_#{'%04d' % id}.conf").write erb
   end
 
+  def self.generate_nginx_admin_configs
+    all.each(&:generate_nginx_admin_configs)
+  end
+
+  def generate_nginx_admin_configs
+    servers = Rails.root.join('config/nginx/admin_servers')
+    unless (template = servers.join('template.conf.erb')).file?
+      logger.warn 'Server template not found.'
+      return false
+    end
+    erb = ERB.new(template.read, nil, '-').result(binding)
+    servers.join("site_#{'%04d' % id}.conf").write erb
+  end
+
   def destroy_nginx_configs
     conf = Rails.root.join("config/nginx/servers/site_#{'%04d' % id}.conf")
     return false unless conf.exist?
     conf.delete
   end
-
+  def destroy_nginx_admin_configs
+    conf = Rails.root.join("config/nginx/admin_servers/site_#{'%04d' % id}.conf")
+    return false unless conf.exist?
+    conf.delete
+  end
   def basic_auth_enabled?
     pw_file = "#{::File.dirname(public_path)}/.htpasswd"
     return ::File.exists?(pw_file)
@@ -387,8 +466,8 @@ protected
   def copy_common_directory
     src_path = Rails.public_path.join("_common")
     dst_path = Rails.root.join("#{public_path}/_common")
-    if File.exists?(src_path) && !File.exists?(dst_path)
-      FileUtils.cp_r(src_path, dst_path)
+    if ::File.exists?(src_path) && !::File.exists?(dst_path)
+      ::FileUtils.cp_r(src_path, dst_path)
     end
   end
 
