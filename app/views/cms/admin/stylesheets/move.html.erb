@@ -2,14 +2,16 @@
   
 <%= error_messages_for :item %>
 
+<p class="form">移動</p>
+
 <table class="show">
   <tr>
     <th><%= @item.locale :path %></th>
-    <td><%= @root.gsub(@base_uri[0], @base_uri[1]) %>/
+    <td><%= @item.base_uri %>
       <%= f.text_field :path, :class => "nameEn", :style => "width: 500px;" %></td>
   </tr>
 </table>
 
-<%= submit :update %>
+<%= submit :edit %>
 
 <% end %>
