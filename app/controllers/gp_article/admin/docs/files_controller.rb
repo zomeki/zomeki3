@@ -53,6 +53,7 @@ class GpArticle::Admin::Docs::FilesController < Cms::Controller::Admin::Base
 
       item.allowed_type = @content.setting_value(:allowed_attachment_type)
       item.image_resize = params[:image_resize]
+      item.use_thumbnail(@content.setting_value(:attachment_thumbnail_size))
       if item.creatable? && item.save
         success += 1
       else
@@ -84,34 +85,22 @@ class GpArticle::Admin::Docs::FilesController < Cms::Controller::Admin::Base
     _destroy @item
   end
 
-  def content
-    files = Sys::File.where(tmp_id: @tmp_id, name: "#{params[:basename]}.#{params[:extname]}")
-    files = files.where(file_attachable_id: @doc.id, file_attachable_type: @doc.class.name) if @doc
-    if (file = files.first)
-      mt = Rack::Mime.mime_type(".#{params[:extname]}")
-      if mt == 'text/csv' && params[:convert] == 'csv:table'
-        begin
-          csv = File.read(file.upload_path)
-          csv.force_encoding(Encoding::WINDOWS_31J) if csv.encoding == Encoding::UTF_8 && !csv.valid_encoding?
-          csv = csv.encode(Encoding::UTF_8, invalid: :replace, undef: :replace)
-          rows = CSV.parse(csv)
 
-          render text: if rows.empty?
-                         ''
-                       else
-                         thead = "<thead><tr><th>#{rows.shift.join('</th><th>')}</th></tr></thead>"
-                         trs = rows.map{|r| "<tr><td>#{r.join('</td><td>')}</td></tr>" }
-                         tbody = "<tbody>#{trs.join}</tbody>"
-                         "<table>#{thead}#{tbody}</table>"
-                       end
-        rescue => e
-          warn_log e
-          render text: ''
-        end
+  def content
+    params[:name]  = File.basename(params[:path])
+    params[:thumb] = true if params[:path] =~ /(\/|^)thumb\//
+
+    files = Sys::File.where(tmp_id: @tmp_id, name: "#{params[:name]}.#{params[:format]}")
+    files = files.where(file_attachable: @doc) if @doc
+    if (file = files.first)
+      mt = Rack::Mime.mime_type(".#{params[:format]}")
+      if mt == 'text/csv' && params[:convert] == 'csv:table'
+        convert_csv_table
       else
         type, disposition = (mt =~ %r!\Aimage/|\Aapplication/pdf\z! ? [mt, 'inline'] : [mt, 'attachment'])
         disposition = 'attachment' if request.env['HTTP_USER_AGENT'] =~ /Android/
-        send_file file.upload_path, type: type, filename: file.name, disposition: disposition
+        file_path = file.upload_path(type: params[:thumb] ? :thumb : nil)
+        send_file file_path, :type => type, :filename => file.name, :disposition => disposition
       end
     else
       http_error(404)
@@ -131,8 +120,9 @@ class GpArticle::Admin::Docs::FilesController < Cms::Controller::Admin::Base
   def crop
     @item = Sys::File.find(params[:id])
     return error_auth unless @item.readable?
-
+    
     unless params[:x].to_i == 0 && params[:y].to_i == 0
+      @item.use_thumbnail(@content.setting_value(:attachment_thumbnail_size))
       if @item.crop(params[:x].to_i, params[:y].to_i, params[:w].to_i, params[:h].to_i)
         flash[:notice] = "トリミングしました。"
       else
@@ -147,5 +137,26 @@ class GpArticle::Admin::Docs::FilesController < Cms::Controller::Admin::Base
 
   def file_params
     params.require(:item).permit(:name, :title)
+  end
+
+  def convert_csv_table
+    begin
+      csv = File.read(file.upload_path)
+      csv.force_encoding(Encoding::WINDOWS_31J) if csv.encoding == Encoding::UTF_8 && !csv.valid_encoding?
+      csv = csv.encode(Encoding::UTF_8, invalid: :replace, undef: :replace)
+      rows = CSV.parse(csv)
+
+      render text: if rows.empty?
+                     ''
+                   else
+                     thead = "<thead><tr><th>#{rows.shift.join('</th><th>')}</th></tr></thead>"
+                     trs = rows.map{|r| "<tr><td>#{r.join('</td><td>')}</td></tr>" }
+                     tbody = "<tbody>#{trs.join}</tbody>"
+                     "<table>#{thead}#{tbody}</table>"
+                   end
+    rescue => e
+      warn_log e
+      render text: ''
+    end
   end
 end

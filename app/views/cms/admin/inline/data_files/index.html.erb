@@ -40,7 +40,19 @@ end
       <% end %>
     </td>
     <td><%= safe{item.node.name} %><br /><%= "（#{item.node.title}）" if safe{item.node.title}.to_s != '' %></td>
-    <td><%= item.name %><br /><%= "（#{item.title}）" if item.name != item.title %></td>
+    <td>
+      <%= item.name %><br /><%= "（#{item.title}）" if item.name != item.title %>
+      <div class="pasteLinks">
+        <% if item.image_file? %>
+          <input type="hidden" id="srcImage<%= item.id %>" value="<%= %Q(<img src="#{item.public_uri}" alt="#{item.alt}" title="#{item.alt}" />) %>" />
+          <a href="#" onclick="parent.setText(parent.document.getElementById('item_body'), $('#srcImage<%= item.id %>').val());">画像貼付 (<%= "#{item.image_width}x#{item.image_height}" %>)</a>
+          <% if item.has_thumbnail? %>
+          <input type="hidden" id="srcThumb<%= item.id %>" value="<%= %Q(<img src="#{item.public_thumbnail_uri}" alt="" title="" />) %>" />
+          | <a href="#" onclick="parent.setText(parent.document.getElementById('item_body'), $('#srcThumb<%= item.id %>').val());">画像貼付 (<%= "#{item.thumb_width}x#{item.thumb_height}" %>)</a>
+          <% end %>
+        <% end %>
+      </div>
+    </td>
     <td style="text-align: center;"><%= item.eng_unit %><br /><%= item.image_size %></td>
     <td style="text-align: center;"><%= _input.call('file_url', i, safe{item.public_uri}, 120) %></td>
     
