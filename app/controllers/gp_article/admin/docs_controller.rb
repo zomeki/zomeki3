@@ -59,13 +59,13 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
       # No criteria
     when 'draft'
       criteria[:state] = 'draft'
-      criteria[:touched_user_id] = Core.user.id
+      criteria[:touched_user] = Core.user
     when 'public'
       criteria[:state] = 'public'
-      criteria[:touched_user_id] = Core.user.id
+      criteria[:touched_user] = Core.user
     when 'closed'
       criteria[:state] = 'closed'
-      criteria[:touched_user_id] = Core.user.id
+      criteria[:touched_user] = Core.user
     when 'approvable'
       criteria[:approvable] = true
       criteria[:state] = 'approvable'
