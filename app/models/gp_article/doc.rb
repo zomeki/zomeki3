@@ -632,6 +632,12 @@ class GpArticle::Doc < ActiveRecord::Base
     event_state == 'visible'
   end
 
+  def send_broken_link_notification
+    backlinked_docs.each do |doc|
+      GpArticle::Admin::Mailer.broken_link_notification(self, doc).deliver_now
+    end
+  end
+
   private
 
   def name_validity
