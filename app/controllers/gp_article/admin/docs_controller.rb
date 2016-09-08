@@ -59,13 +59,13 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
       # No criteria
     when 'draft'
       criteria[:state] = 'draft'
-      criteria[:touched_user_id] = Core.user.id
+      criteria[:touched_user] = Core.user
     when 'public'
       criteria[:state] = 'public'
-      criteria[:touched_user_id] = Core.user.id
+      criteria[:touched_user] = Core.user
     when 'closed'
       criteria[:state] = 'closed'
-      criteria[:touched_user_id] = Core.user.id
+      criteria[:touched_user] = Core.user
     when 'approvable'
       criteria[:approvable] = true
       criteria[:state] = 'approvable'
@@ -181,7 +181,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
   def destroy
     _destroy(@item) do
-      send_broken_link_notification(@item) if @content.notify_broken_link? && @item.backlinks.present?
+      @item.send_broken_link_notification if @content.notify_broken_link? && @item.backlinks.present?
       sync_events_export
     end
   end
@@ -219,7 +219,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
   def close(item)
     _close(@item) do
-      send_broken_link_notification(@item) if @content.notify_broken_link? && @item.backlinks.present?
+      @item.send_broken_link_notification if @content.notify_broken_link? && @item.backlinks.present?
       sync_events_export
     end
   end
@@ -256,27 +256,6 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   end
 
   protected
-
-  def send_broken_link_notification(item)
-    mail_from = 'noreply'
-
-    item.backlinked_docs.each do |doc|
-      subject = "【#{doc.content.site.name.presence || 'CMS'}】リンク切れ通知"
-
-      body = <<-EOT
-「#{doc.title}」からリンクしている「#{item.title}」が削除されました。
-  対象のリンクは次の通りです。
-
-#{item.backlinks.where(doc_id: doc.id).map{|l| "  ・#{l.body} ( #{l.url} )" }.join("\n")}
-
-  次のURLをクリックしてリンクを確認してください。
-
-  #{gp_article_doc_url(content: @content, id: doc.id)}
-      EOT
-
-      send_mail(mail_from, doc.creator.user.email, subject, body)
-    end
-  end
 
   def hold_document
     unless (holds = @item.holds).empty?

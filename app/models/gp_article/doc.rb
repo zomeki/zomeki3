@@ -115,80 +115,68 @@ class GpArticle::Doc < ActiveRecord::Base
   scope :event_scheduled_between, ->(start_date, end_date) {
     where(arel_table[:event_ended_on].gteq(start_date)).where(arel_table[:event_started_on].lt(end_date + 1))
   }
-
   scope :content_and_criteria, ->(content, criteria){
     docs = self.arel_table
 
-    creators = Sys::Creator.arel_table
-
-    rel = if criteria[:group].blank? && criteria[:group_id].blank? && criteria[:user].blank?
-            joins(:creator)
-          else
-            inners = []
-
-            if criteria[:group].present? || criteria[:group_id].present?
-              groups = Sys::Group.arel_table
-              inners << :group
-            end
-
-            if criteria[:user].present?
-              users = Sys::User.arel_table
-              inners << :user
-            end
-
-            self.joins(:creator => inners)
-          end
-
+    rel = all
     rel = rel.where(docs[:content_id].eq(content.id)) if content.kind_of?(GpArticle::Content::Doc)
 
     rel = rel.where(docs[:id].eq(criteria[:id])) if criteria[:id].present?
     rel = rel.where(docs[:state].eq(criteria[:state])) if criteria[:state].present?
     rel = rel.search_with_text(:title, criteria[:title]) if criteria[:title].present?
     rel = rel.search_with_text(:title, :body, :name, criteria[:free_word]) if criteria[:free_word].present?
-    rel = rel.where(groups[:name].matches("%#{criteria[:group]}%")) if criteria[:group].present?
-    if criteria[:group_id].present?
-      rel = rel.where(if criteria[:group_id].kind_of?(Array)
-                        groups[:id].in(criteria[:group_id])
-                      else
-                        groups[:id].eq(criteria[:group_id])
-                      end)
-    end
-    rel = rel.where(users[:name].matches("%#{criteria[:user]}%")
-                    .or(users[:name_en].matches("%#{criteria[:user]}%"))) if criteria[:user].present?
 
-    if criteria[:touched_user_id].present?
-      operation_logs = Sys::OperationLog.arel_table
+    rel = rel.with_creator_group_id(criteria[:group_id]) if criteria[:group_id].present?
+    rel = rel.with_creator_group_name(criteria[:group]) if criteria[:group].present?
+    rel = rel.with_creator_user_name(criteria[:user]) if criteria[:user].present?
 
-      rel = rel.eager_load(:operation_logs)
-                .where(operation_logs[:user_id].eq(criteria[:touched_user_id])
-                .or(creators[:user_id].eq(criteria[:touched_user_id])))
-    end
-
-    if criteria[:editable].present?
+    rel = rel.created_or_operated_docs_for_user(criteria[:touched_user]) if criteria[:touched_user].present?
+    rel = rel.editable_docs_for_user(Core.user) if criteria[:editable].present?
+    rel = rel.approval_related_docs_for_user(Core.user) if criteria[:approvable].present?
+    rel
+  }
+  scope :with_creator_group_id, ->(group_id) {
+    groups = Sys::Group.arel_table
+    joins(creator: :group).where(groups[:id].in(group_id))
+  }
+  scope :with_creator_group_name, ->(group_name) {
+    groups = Sys::Group.arel_table
+    joins(creator: :group).where(groups[:name].matches("%#{group_name}%"))
+  }
+  scope :with_creator_user_name, ->(user_name) {
+    users = Sys::User.arel_table
+    joins(creator: :user).where([
+      users[:name].matches("%#{user_name}%"),
+      users[:name_en].matches("%#{user_name}%")
+    ].reduce(:or))
+  }
+  scope :created_or_operated_docs_for_user, ->(user) {
+    creators = Sys::Creator.arel_table
+    operation_logs = Sys::OperationLog.arel_table
+    joins(:creator).eager_load(:operation_logs)
+      .where([creators[:user_id].eq(user.id), operation_logs[:user_id].eq(user.id)].reduce(:or))
+  }
+  scope :editable_docs_for_user, ->(user) {
+    if user.has_auth?(:manager)
+      all
+    else
+      creators = Sys::Creator.arel_table
       editable_groups = Sys::EditableGroup.arel_table
-
-      rel = unless Core.user.has_auth?(:manager)
-              rel.eager_load(:editable_group)
-                  .where(creators[:group_id].eq(Core.user.group.id)
-                  .or(editable_groups[:all].eq(true)
-                  .or(editable_groups[:group_ids].eq(Core.user.group.id.to_s)
-                  .or(editable_groups[:group_ids].matches("#{Core.user.group.id} %")
-                  .or(editable_groups[:group_ids].matches("% #{Core.user.group.id} %")
-                  .or(editable_groups[:group_ids].matches("% #{Core.user.group.id}")))))))
-            else
-              rel
-            end
+      joins(:creator).eager_load(:editable_group).where([
+        creators[:group_id].eq(user.group.id),
+        editable_groups[:all].eq(true),
+        editable_groups[:group_ids].eq(user.group.id.to_s),
+        editable_groups[:group_ids].matches("#{user.group.id} %"),
+        editable_groups[:group_ids].matches("% #{user.group.id} %"),
+        editable_groups[:group_ids].matches("% #{user.group.id}")
+      ].reduce(:or))
     end
-
-    if criteria[:approvable].present?
-      approval_requests = Approval::ApprovalRequest.arel_table
-      assignments = Approval::Assignment.arel_table
-      rel = rel.joins(:approval_requests => [:approval_flow => [:approvals => :assignments]])
-               .where(approval_requests[:user_id].eq(Core.user.id)
-                      .or(assignments[:user_id].eq(Core.user.id))).distinct
-    end
-
-    return rel
+  }
+  scope :approval_related_docs_for_user, ->(user) {
+    approval_requests = Approval::ApprovalRequest.arel_table
+    assignments = Approval::Assignment.arel_table
+    distinct.joins(approval_requests: [approval_flow: [approvals: :assignments]])
+      .where([approval_requests[:user_id].eq(user.id), assignments[:user_id].eq(user.id)].reduce(:or))
   }
   scope :categorized_into, ->(category_ids) {
     cats = GpCategory::Categorization.arel_table
@@ -642,6 +630,12 @@ class GpArticle::Doc < ActiveRecord::Base
   
   def event_state_visible?
     event_state == 'visible'
+  end
+
+  def send_broken_link_notification
+    backlinked_docs.each do |doc|
+      GpArticle::Admin::Mailer.broken_link_notification(self, doc).deliver_now
+    end
   end
 
   private
