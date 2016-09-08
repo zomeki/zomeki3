@@ -5,9 +5,9 @@ module Cms::Model::Rel::SiteSetting
   attr_accessor :in_setting_site_file_upload_max_size
   attr_accessor :in_setting_site_extension_upload_max_size
 
-  #SITE_SETTINGS = [:admin_protocol, :common_ssl,
-  #  :pass_reminder_mail_sender, :file_upload_max_size, :extension_upload_max_size]
-  SITE_SETTINGS = [:admin_protocol]
+  SITE_SETTINGS = [:admin_protocol, :common_ssl,
+    :pass_reminder_mail_sender, :file_upload_max_size, :extension_upload_max_size]
+  #SITE_SETTINGS = [:admin_protocol]
 
   def self.included(mod)
   end
@@ -15,6 +15,10 @@ module Cms::Model::Rel::SiteSetting
   def setting_site_admin_protocol
     setting = Cms::SiteSetting::AdminProtocol.where(site_id: id).first
     setting ? setting.value : nil;
+  end
+
+  def use_common_ssl?
+    Sys::Setting.use_common_ssl? && setting_site_common_ssl == 'enabled'
   end
 
   def setting_site_common_ssl
@@ -25,7 +29,7 @@ module Cms::Model::Rel::SiteSetting
   def setting_site_common_ssl_label
     setting = Cms::SiteSetting.where(:site_id => id, :name => 'common_ssl').first
     state = setting ? setting.value : nil;
-    Cms::SiteSetting::SSL_OPTIONS.each{|a| return a if a[1] == state}
+    Cms::SiteSetting::SSL_OPTIONS.each{|a| return a[0] if a[1] == state}
     return nil
   end
 
@@ -44,9 +48,16 @@ module Cms::Model::Rel::SiteSetting
     setting ? setting.value : nil;
   end
 
+  def get_upload_max_size(ext)
+    ext.gsub!(/^\./, '')
+    list = ext_upload_max_size_list
+    return list[ext.to_s] if list.include?(ext.to_s)
+    return nil
+  end
+
   def ext_upload_max_size_list
     return @ext_upload_max_size_list if @ext_upload_max_size_list
-    csv = setting_extension_upload_max_size.to_s
+    csv = setting_site_extension_upload_max_size.to_s
     @ext_upload_max_size_list = {}
 
     csv.split(/(\r\n|\n)/u).each_with_index do |line, idx|
@@ -65,7 +76,7 @@ module Cms::Model::Rel::SiteSetting
 
   def load_site_settings
     @in_setting_site_admin_protocol              = setting_site_admin_protocol
-    @in_setting_site_setting_common_ssl          = setting_site_common_ssl
+    @in_setting_site_common_ssl                  = setting_site_common_ssl
     @in_setting_site_pass_reminder_mail_sender   = setting_site_pass_reminder_mail_sender
     @in_setting_site_file_upload_max_size        = setting_site_file_upload_max_size
     @in_setting_site_extension_upload_max_size   = setting_site_extension_upload_max_size

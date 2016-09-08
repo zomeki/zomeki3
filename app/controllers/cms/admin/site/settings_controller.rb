@@ -9,7 +9,7 @@ class Cms::Admin::Site::SettingsController < Cms::Controller::Admin::Base
   end
 
   def index
-    @items = Cms::SiteSetting.site_configs
+    @items = Cms::SiteSetting::SITE_CONFIGS
     _index @items
   end
 
