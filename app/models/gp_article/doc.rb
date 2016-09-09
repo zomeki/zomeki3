@@ -373,6 +373,15 @@ class GpArticle::Doc < ActiveRecord::Base
       end
     end
 
+    if organization = content.organization_content_group
+      if (node = organization.public_node) &&
+         (og = organization.groups.where(state: 'public', sys_group_id: creator.group_id).first)
+        crumb = node.bread_crumbs.crumbs.first
+        og.ancestors.each {|a| crumb << [a.sys_group.name, "#{node.public_uri}#{a.name}/"] }
+        crumbs << crumb
+      end
+    end
+
     if crumbs.empty?
       doc_node.routes.each do |r|
         crumb = []
