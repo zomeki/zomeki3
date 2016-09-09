@@ -2,7 +2,7 @@ require 'csv'
 class GpArticle::Admin::Docs::FilesController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 
-  layout 'admin/files'
+  layout :select_layout
 
   def pre_dispatch
     return http_error(404) unless @content = GpArticle::Content::Doc.find_by(id: params[:content])
@@ -18,11 +18,8 @@ class GpArticle::Admin::Docs::FilesController < Cms::Controller::Admin::Base
     @item = Sys::File.new(site_id: Core.site.id)
     @items = Sys::File.where(tmp_id: @tmp_id).paginate(page: params[:page], per_page: 20).order(:name)
     @items = @items.where(file_attachable_id: @doc.id, file_attachable_type: @doc.class.name) if @doc
-    if Page.smart_phone?
-      render 'index_smart_phone', layout: 'admin/gp_article_files_smart_phone'
-    else
-      _index @items
-    end
+
+    _index @items
   end
 
   def show
@@ -85,7 +82,6 @@ class GpArticle::Admin::Docs::FilesController < Cms::Controller::Admin::Base
     _destroy @item
   end
 
-
   def content
     params[:name]  = File.basename(params[:path])
     params[:thumb] = true if params[:path] =~ /(\/|^)thumb\//
@@ -120,7 +116,7 @@ class GpArticle::Admin::Docs::FilesController < Cms::Controller::Admin::Base
   def crop
     @item = Sys::File.find(params[:id])
     return error_auth unless @item.readable?
-    
+
     unless params[:x].to_i == 0 && params[:y].to_i == 0
       @item.use_thumbnail(@content.setting_value(:attachment_thumbnail_size))
       if @item.crop(params[:x].to_i, params[:y].to_i, params[:w].to_i, params[:h].to_i)
@@ -137,6 +133,14 @@ class GpArticle::Admin::Docs::FilesController < Cms::Controller::Admin::Base
 
   def file_params
     params.require(:item).permit(:name, :title)
+  end
+
+  def select_layout
+    if request.smart_phone?
+      'admin/gp_article_files'
+    else
+      'admin/files'
+    end
   end
 
   def convert_csv_table

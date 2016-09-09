@@ -5,6 +5,8 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   include Cms::ApiGpCalendar
   include GpArticle::DocsCommon
 
+  layout :select_layout
+
   before_action :hold_document, only: [:edit]
   before_action :check_intercepted, only: [:update]
 
@@ -93,33 +95,29 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     if @content.default_category
       @item.in_category_ids = { @content.default_category.content_type_id.to_s => [@content.default_category.id.to_s] }
     end
-
-    render 'new_smart_phone', layout: 'admin/gp_article_smart_phone' if Page.smart_phone?
   end
 
   def create
-    failed_template = Page.smart_phone? ? {template: "#{controller_path}/new_smart_phone", layout: 'admin/gp_article_smart_phone'}
-                                        : {action: 'new'}
-    new_state = params.keys.detect{|k| k =~ /^commit_/ }.try(:sub, /^commit_/, '')
     @item = @content.docs.build(doc_params)
     @item.set_inquiry_group if Core.user.root?
     @item.replace_words_with_dictionary
 
     if params[:link_check_in_body]
       @item.link_check_results = @item.check_links_in_body
-      return render(failed_template)
+      return render :new
     end
 
     if params[:accessibility_check]
       @item.modify_accessibility if @item.in_modify_accessibility_check == '1'
       @item.accessibility_check_results = @item.check_accessibility
-      return render(failed_template)
+      return render :new
     end
 
+    new_state = params.keys.detect{|k| k =~ /^commit_/ }.try(:sub, /^commit_/, '')
     @item.state = new_state if new_state.present? && @item.class::STATE_OPTIONS.any?{|v| v.last == new_state }
 
     location = ->(d){ edit_gp_article_doc_url(@content, d) } if @item.state_draft?
-    _create(@item, location: location, failed_template: failed_template) do
+    _create(@item, location: location) do
 
       @item = @content.docs.find_by(id: @item.id)
       @item.send_approval_request_mail if @item.state_approvable?
@@ -137,32 +135,29 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     elsif @item.state_public?
       return redirect_to(edit_gp_article_doc_url(@content, @item.duplicate(:replace)))
     end
-    render 'edit_smart_phone', layout: 'admin/gp_article_smart_phone' if Page.smart_phone?
   end
 
   def update
-    failed_template = Page.smart_phone? ? {template: "#{controller_path}/edit_smart_phone", layout: 'admin/gp_article_smart_phone'}
-                                        : {action: 'edit'}
-    new_state = params.keys.detect{|k| k =~ /^commit_/ }.try(:sub, /^commit_/, '')
     @item.attributes = doc_params
     @item.set_inquiry_group if Core.user.root?
     @item.replace_words_with_dictionary
 
     if params[:link_check_in_body]
       @item.link_check_results = @item.check_links_in_body
-      return render(failed_template)
+      return render :edit
     end
 
     if params[:accessibility_check]
       @item.modify_accessibility if @item.in_modify_accessibility_check == '1'
       @item.accessibility_check_results = @item.check_accessibility
-      return render(failed_template)
+      return render :edit
     end
 
+    new_state = params.keys.detect{|k| k =~ /^commit_/ }.try(:sub, /^commit_/, '')
     @item.state = new_state if new_state.present? && @item.class::STATE_OPTIONS.any?{|v| v.last == new_state }
 
     location = url_for(action: 'edit') if @item.state_draft?
-    _update(@item, location: location, failed_template: failed_template) do
+    _update(@item, location: location) do
       update_file_names
 
       @item = @content.docs.find_by(id: @item.id)
@@ -256,6 +251,12 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   end
 
   protected
+
+  def select_layout
+    if request.smart_phone? && action_name.in?(%w(new create edit update))
+      'admin/gp_article'
+    end
+  end
 
   def hold_document
     unless (holds = @item.holds).empty?
