@@ -1,8 +1,9 @@
 <%= link_to 'コンセプト', cms_concepts_path(0), :class => (current == :concept ? 'current' : '') %>
 <%= link_to "ドメイン", cms_sites_path, :class => (current == :domain ? 'current' : '') %>
 <%= link_to "辞書", cms_kana_dictionaries_path, :class => (current == :dictionary ? 'current' : '') %>
+<%= link_to "プロセス", sys_processes_path, :class => (current == :process  ? 'current' : '') %>
 <%= link_to 'エクスポート', tool_export_path, class: (current == :export ? 'current' : '') %>
 <%= link_to 'インポート', tool_import_path, class: (current == :import ? 'current' : '') %>
-<%= link_to "プロセス", sys_processes_path, :class => (current == :process  ? 'current' : '') %>
-<%= link_to "非常時", cms_emergencies_path, :class => (current == :emergency ? 'current' : '') %>
 <%= link_to "設定", cms_site_settings_path(Core.site), :class => (current == :setting ? 'current' : '') %>
+<%= link_to "非常時", cms_emergencies_path, :class => (current == :emergency ? 'current' : '') %>
+
