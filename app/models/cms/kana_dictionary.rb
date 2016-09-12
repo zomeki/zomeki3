@@ -94,7 +94,10 @@ class Cms::KanaDictionary < ActiveRecord::Base
     data   = []
 
     items = self.order(:id)
-    items = items.where(site_id: _site_id) if _site_id.present?
+    if _site_id.present?
+      dictionary = Cms::KanaDictionary.arel_table
+      items = items.where(dictionary[:site_id].eq(_site_id).or(dictionary[:site_id].eq(nil)))
+    end
     items.each do |item|
       if item.mecab_csv == nil
         data << item.mecab_csv if item.convert_csv == true
