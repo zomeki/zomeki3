@@ -1,0 +1,40 @@
+
+<%- if @item.name == 'common_ssl' -%>
+<table class="show">
+  <tr>
+    <th><%= @site.locale(:setting_common_ssl) %></th>
+    <td><%= f.radio_buttons(:in_setting_site_common_ssl, @item.class::SSL_OPTIONS) %></td>
+  </tr>
+</table>
+</table>
+<%- end -%>
+
+<%- if @item.name == 'pass_reminder_mail_sender' -%>
+<table class="show">
+  <tr>
+    <th><%= @site.locale(:setting_pass_reminder_mail_sender) %></th>
+    <td><%= f.text_field(:in_setting_site_pass_reminder_mail_sender, class: 'name') %></td>
+  </tr>
+</table>
+</table>
+<%- end -%>
+
+<%- if @item.name == 'file_upload_max_size' -%>
+<table class="show">
+  <tr>
+    <th><%= @site.locale(:setting_file_upload_max_size) %></th>
+    <td><%= f.text_field(:in_setting_site_file_upload_max_size) %></td>
+  </tr><tr>
+    <th><%= @site.locale(:setting_extension_upload_max_size) %></th>
+    <td>
+    <%= f.text_area :in_setting_site_extension_upload_max_size, :size => '100x10' %>
+      <div>
+        例：jpgファイルは1MB、gifファイルは5MBをアップロードサイズ上限として設定する。<br />
+        jpg, 1<br />
+        gif, 5
+      </div>
+    </td>
+  </tr>
+</table>
+<%- end -%>
+

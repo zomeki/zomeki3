@@ -1,6 +1,6 @@
 module Cms::Controller::Layout
   @no_cache    = nil
-  
+
   def render_public_as_string(path, options = {})
     Core.publish = true unless options[:preview]
     mode = Core.set_mode('preview')
@@ -43,7 +43,7 @@ module Cms::Controller::Layout
 
     return error ? nil : body
   end
-  
+
   def render_public_layout
     if Rails.env.to_s == 'production' && !@no_cache
       # enable cache
@@ -53,20 +53,20 @@ module Cms::Controller::Layout
       #response.headers["Pragma"] = "no-cache"
       #response.headers["Expires"] = "Fri, 01 Jan 1990 00:00:00 GMT"
     end
-    
+
     Page.current_item = Page.current_node unless Page.current_item
-    
+
     return true if @performed_redirect
     return true if params[:format] && params[:format] != 'html'
     return true if Page.error
-    
+
     ## content
     Page.content = response.body
     self.response_body = nil
-    
+
     ## concept
     concepts = Cms::Lib::Layout.inhertited_concepts
-    
+
     ## layout
     if Core.set_mode('preview') && params[:layout_id]
       Page.layout = Cms::Layout.find(params[:layout_id])
@@ -87,14 +87,14 @@ module Cms::Controller::Layout
     end
 
     body = Page.layout.body_tag(request).clone.to_s
-    
+
     ## render the piece
     Cms::Lib::Layout.find_design_pieces(body, concepts).each do |name, item|
       Page.current_piece = item
       begin
         next if item.content_id && !item.content
         mnames= item.model.underscore.pluralize.split('/')
-        
+
         data = render_component_into_view :params => params,
           :controller => mnames[0] + '/public/piece/' + mnames[1], :action => 'index'
         if data =~ /^<html/ && Rails.env.to_s == 'production'
@@ -109,13 +109,13 @@ module Cms::Controller::Layout
 
     ## render the content
     body.gsub!("[[content]]", Page.content)
-    
+
     ## render the data/text
     Cms::Lib::Layout.find_data_texts(body, concepts).each do |name, item|
       data = item.body
       body.gsub!("[[text/#{name}]]", data)
     end
-    
+
     ## render the data/file
     Cms::Lib::Layout.find_data_files(body, concepts).each do |name, item|
       data = ''
@@ -126,7 +126,7 @@ module Cms::Controller::Layout
       end
       body.gsub!("[[file/#{name}]]", data)
     end
-    
+
     ## render the emoji
     require 'jpmobile' #v0.0.4
     body.gsub!(/\[\[emoji\/([0-9a-zA-Z\._-]+)\]\]/) do |m|
@@ -136,7 +136,7 @@ module Cms::Controller::Layout
 
     ## removes the unknown components
     body.gsub!(/\[\[[a-z]+\/[^\]]+\]\]/, '') #if Core.mode.to_s != 'preview'
-    
+
     ## mobile
     if request.mobile?
       begin
@@ -148,7 +148,7 @@ module Cms::Controller::Layout
       rescue => e #InvalidStyleException
         error_log(e.message)
       end
-      
+
       case request.mobile
       when Jpmobile::Mobile::Docomo
         # for docomo
@@ -163,12 +163,12 @@ module Cms::Controller::Layout
         # for PC
       end
     end
-    
+
     ## ruby(kana)
     if Page.ruby
       body = Cms::Lib::Navi::Kana.convert(body, Page.site.id)
     end
-    
+
 #    ## for preview
 #    if Core.mode.to_s == 'preview'
 #      body.gsub!(/<a .*?href="\/[^_].*?>/i) do |m|
@@ -176,7 +176,7 @@ module Cms::Controller::Layout
 #        m.gsub(/(<a .*?href=")(\/[^_].*?>)/i, '\1' + prefix + '\2')
 #      end
 #    end
-    
+
 #    dump body
     body = convert_ssl_uri(body)
 
@@ -188,7 +188,7 @@ module Cms::Controller::Layout
 
   def convert_ssl_uri(body)
     return body if Core.request_uri =~ /^\/_preview\//
-    return body unless Sys::Setting.use_common_ssl?
+    return body unless Core.site.use_common_ssl?
 
     # フォームへのリンクをhttpsに、その他はhttpに変換
     form_nodes = Cms::Node.where(model: 'Survey::Form', site_id: Page.site.id)
@@ -233,17 +233,17 @@ module Cms::Controller::Layout
 
     return body
   end
-  
+
   def last_convert_body(body)
     body
   end
-  
+
   def piece_container_html(piece, body)
     return "" if body.blank?
-    
+
     title = piece.view_title
     return body if piece.model == 'Cms::Free' && title.blank?
-    
+
     html  = %Q(<div#{piece.css_attributes}>\n)
     html += %Q(<div class="pieceContainer">\n)
     html += %Q(<div class="pieceHeader"><h2>#{title}</h2></div>\n) if !title.blank?

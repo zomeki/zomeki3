@@ -6,6 +6,9 @@ class Sys::Setting < Sys::Model::Base::Setting
     form_type: :radio_buttons
   set_config :pass_reminder_mail_sender, :name => "パスワード変更メール送信元アドレス", :default => 'noreply'
   set_config :file_upload_max_size, :name => "添付ファイル最大サイズ", :comment => 'MB', :default => 50
+  set_config :maintenance_mode, :name => "メンテナンスモード", :default => 'disabled',
+    options: [['有効にする', 'enabled'], ['無効にする', 'disabled']],
+    form_type: :radio_buttons
 
   validates :name, presence: true
 
@@ -14,7 +17,7 @@ class Sys::Setting < Sys::Model::Base::Setting
     return false if Sys::Setting.setting_extra_value(:common_ssl, :common_ssl_uri).blank?
     return true
   end
-  
+
   def self.ext_upload_max_size_list
     return @ext_upload_max_size_list if @ext_upload_max_size_list
     csv = Sys::Setting.setting_extra_value(:file_upload_max_size, :extension_upload_max_size).to_s
@@ -32,6 +35,22 @@ class Sys::Setting < Sys::Model::Base::Setting
       @ext_upload_max_size_list[ext.to_s] = size.to_i
     end
     return @ext_upload_max_size_list
+  end
+
+  def self.is_maintenance_mode?
+    return false if Sys::Setting.value(:maintenance_mode) != 'enabled'
+    #return false if Sys::Setting.setting_extra_value(:maintenance_mode).blank?
+    return true
+  end
+
+  def self.get_maintenance_start_at
+    return nil if Sys::Setting.setting_extra_value(:maintenance_mode, :maintenance_start_at).blank?
+    "#{Sys::Setting.setting_extra_value(:maintenance_mode, :maintenance_start_at)}　から"
+  end
+
+  def self.get_maintenance_end_at
+    return nil if Sys::Setting.setting_extra_value(:maintenance_mode, :maintenance_end_at).blank?
+    "#{Sys::Setting.setting_extra_value(:maintenance_mode, :maintenance_end_at)}　まで"
   end
 
   def self.get_upload_max_size(ext)

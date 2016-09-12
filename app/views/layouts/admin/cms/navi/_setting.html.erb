@@ -1,6 +1,6 @@
-<%= link_to "操作ログ", sys_operation_logs_path, :class => (current == :log ? 'current' : '') %>
-<%= link_to "プロセス", sys_processes_path, :class => (current == :process  ? 'current' : '') %>
+<%= link_to "メンテナンス情報", sys_maintenances_path, :class => (current == :maintenace ? 'current' : '') %>
+<%= link_to "モード設定", edit_sys_setting_path(id: 'maintenance_mode'), :class => (current == :maintenance_mode ? 'current' : '') %>
 <%= link_to "辞書", cms_kana_dictionaries_path, :class => (current == :dictionary ? 'current' : '') %>
-<%#= link_to "言語", sys_languages_path, :class => (current == :language ? 'current' : '') %>
-<%= link_to "動作確認", sys_tests_path, :class => (current == :test ? 'current' : '') %>
-<%= link_to "設定", sys_settings_path, :class => (current == :setting ? 'current' : '') if Core.user.root? %>
+<%= link_to "メール", sys_tests_path, :class => (current == :test ? 'current' : '') %>
+<%= link_to "SSL", edit_sys_setting_path(id: 'common_ssl'), :class => (current == :common_ssl ? 'current' : '') %>
+<%= link_to "操作ログ", sys_operation_logs_path, :class => (current == :log ? 'current' : '') %>
