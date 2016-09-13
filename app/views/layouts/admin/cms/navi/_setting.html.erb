@@ -3,4 +3,3 @@
 <%= link_to "辞書", cms_kana_dictionaries_path, :class => (current == :dictionary ? 'current' : '') %>
 <%= link_to "メール", sys_tests_path, :class => (current == :test ? 'current' : '') %>
 <%= link_to "SSL", edit_sys_setting_path(id: 'common_ssl'), :class => (current == :common_ssl ? 'current' : '') %>
-<%= link_to "操作ログ", sys_operation_logs_path, :class => (current == :log ? 'current' : '') %>
