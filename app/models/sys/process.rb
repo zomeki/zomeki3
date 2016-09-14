@@ -2,18 +2,18 @@ class Sys::Process < ActiveRecord::Base
   self.table_name = "sys_processes"
   include Sys::Model::Base
 
-  PROCESSE_LIST =     [
-      ["日時指定処理"      , "sys/script/tasks/exec"],
-      ["ページ書き出し"    , "cms/script/nodes/publish"],
-      ["音声書き出し"      , "cms/script/talk_tasks/exec"],
-      ["アクセスランキング取り込み" , "rank/script/ranks/exec"],
-      ["Feed取り込み" , "feed/script/feeds/read"],
-    ]
+  PROCESSE_LIST = [
+    ["日時指定処理" , "sys/script/tasks/exec"],
+    ["ページ書き出し" , "cms/script/nodes/publish"],
+    ["音声書き出し"  , "cms/script/talk_tasks/exec"],
+    ["アクセスランキング取り込み" , "rank/script/ranks/exec"],
+    ["Feed取り込み" , "feed/script/feeds/read"],
+  ]
 
   attr_accessor :title
   after_save :update_history
 
-  has_many :histories, :class_name=>"Sys::ProcessLog", :foreign_key => "parent_id", :dependent => :destroy
+  has_many :histories, class_name: "Sys::ProcessLog", foreign_key: "process_id", dependent: :destroy
 
   def status
     labels = {

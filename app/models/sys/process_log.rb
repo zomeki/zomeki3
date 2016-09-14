@@ -1,8 +1,8 @@
 class Sys::ProcessLog < ActiveRecord::Base
   include Sys::Model::Base
 
-  belongs_to :user, :class_name => 'Sys::User'
-  belongs_to :parent, :foreign_key => :parent_id ,:class_name => 'Sys::Process'
+  belongs_to :user, class_name: 'Sys::User'
+  belongs_to :parent, foreign_key: :parent_id, class_name: 'Sys::Process'
   attr_accessor :title
 
   def summary_lael
@@ -11,7 +11,7 @@ class Sys::ProcessLog < ActiveRecord::Base
   end
 
   def to_base_model
-    item = Sys::Process.new(attributes.except(self.class.primary_key, 'parent_id'))
+    item = Sys::Process.new(attributes.except(self.class.primary_key, 'process_id'))
     item
   end
 
