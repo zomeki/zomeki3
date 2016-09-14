@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160907070836) do
+ActiveRecord::Schema.define(version: 20160914064745) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1318,6 +1318,23 @@ ActiveRecord::Schema.define(version: 20160907070836) do
     t.integer  "item_id"
     t.string   "item_name"
     t.integer  "site_id"
+  end
+
+  create_table "sys_process_logs", force: :cascade do |t|
+    t.integer  "process_id"
+    t.datetime "started_at"
+    t.datetime "closed_at"
+    t.integer  "user_id"
+    t.string   "state"
+    t.string   "name"
+    t.string   "interrupt"
+    t.integer  "total"
+    t.integer  "current"
+    t.integer  "success"
+    t.integer  "error"
+    t.text     "message"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "sys_processes", force: :cascade do |t|
