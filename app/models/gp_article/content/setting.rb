@@ -7,6 +7,9 @@ class GpArticle::Content::Setting < Cms::ContentSetting
     options: lambda { GpTemplate::Content::Template.where(site_id: Core.site.id).map {|t| [t.name, t.id] } }
   set_config :allowed_attachment_type, name: '添付ファイル/許可する種類',
     comment: '（例 gif,jpg,png,pdf,doc,xls,ppt,odt,ods,odp ）'
+  set_config :attachment_thumbnail_size, :name => "添付ファイル/サムネイルサイズ",
+    :comment => "（例 120x90 ）",
+    :style   => 'width: 100px;'
   set_config :word_dictionary, name: "本文/単語変換辞書",
     form_type: :text, lower_text: "CSV形式（例　対象文字,変換後文字 ）"
   set_config :doc_list_style, name: "#{GpArticle::Doc.model_name.human}一覧表示形式",

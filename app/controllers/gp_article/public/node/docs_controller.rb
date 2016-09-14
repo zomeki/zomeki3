@@ -27,13 +27,11 @@ class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
     @docs = public_or_preview_docs.order(display_published_at: :desc, published_at: :desc)
     if params[:format].in?(['rss', 'atom'])
       @docs = @docs.display_published_after(@content.feed_docs_period.to_i.days.ago) if @content.feed_docs_period.present?
-      @docs = @docs.includes(:next_edition).reject{|d| d.will_be_replaced? } unless Core.publish
       @docs = @docs.paginate(page: params[:page], per_page: @content.feed_docs_number)
       return render_feed(@docs)
     end
-    @docs = @docs.preload_assocs(:public_node_ancestors_assocs, :public_index_assocs)
-    @docs = @docs.includes(:next_edition).reject{|d| d.will_be_replaced? } unless Core.publish
     @docs = @docs.paginate(page: params[:page], per_page: 30)
+                 .preload_assocs(:public_node_ancestors_assocs, :public_index_assocs)
     return http_error(404) if @docs.current_page > @docs.total_pages
 
     @items = @docs.inject([]) do |result, doc|

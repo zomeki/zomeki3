@@ -41,6 +41,10 @@ ja:
         setting_transfer_dest_dir: "転送先サーバディレクトリ"
         setting_transfer_dest_domain: "転送先サイトURL"
         setting_site_admin_protocol: "プロトコル"
+        setting_common_ssl: "共有SSL"
+        setting_pass_reminder_mail_sender: "送信元アドレス"
+        setting_file_upload_max_size: "添付ファイル最大サイズ"
+        setting_extension_upload_max_size: "拡張子別アップロードサイズ"
         og_type: タイプ
         og_title: タイトル
         og_description: 説明

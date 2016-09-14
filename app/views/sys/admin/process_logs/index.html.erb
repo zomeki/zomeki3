@@ -1,0 +1,32 @@
+<%= render 'search' %>
+
+<table class="index">
+  <tr>
+    <th style="width: 60px; padding: 0px; text-align: center;">詳細</th>
+    <th style="width: 200px;"><%= @item.locale(:name) %></th>
+    <th style="width: 200px;"><%= @item.locale(:summary) %></th>
+    <th style="width: 120px; text-align: center;"><%= @item.locale(:started_at) %></th>
+    <th style="width: 120px; text-align: center;"><%= @item.locale(:updated_at) %></th>
+    <th style="width: 120px; text-align: center;"><%= @item.locale(:closed_at) %></th>
+    <th style="width: 80px;"><%= @item.locale(:total) %></th>
+    <th style="width: 60px;"><%= @item.locale(:success) %></th>
+    <th style="width: 60px;"><%= @item.locale(:error) %></th>
+
+  </tr>
+  <% @items.each do |item| %>
+  <tr class="<%= cycle '', 'cycle' %>">
+    <td style="text-align: center;"><%= link_to :show, sys_process_log_path(:id => item.id) %></td>
+    <td><%= item.name %></td>
+    <td><%= item.summary_lael %></td>
+    <td style="text-align: center;"><%= safe{item.started_at.strftime('%Y-%m-%d %H:%M')} %></td>
+    <td style="text-align: center;"><%= safe{item.updated_at.strftime('%Y-%m-%d %H:%M')} %></td>
+    <td style="text-align: center;"><%= safe{item.closed_at.strftime('%Y-%m-%d %H:%M')} %></td>
+    <td style="text-align: center;"><%= item.current %><%= "/#{item.total}" if item.total %></td>
+    <td style="text-align: center;"><%= item.success %></td>
+    <td style="text-align: center;"><%= item.error %></td>
+  </tr>
+  <% end %>
+</table>
+
+<%= paginate @items %>
+

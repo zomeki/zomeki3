@@ -39,6 +39,9 @@ ZomekiCMS::Application.routes.draw do
           get :disable_auth
         end
       end
+    resources :site_settings,
+      :controller  => "admin/site/settings",
+      :path        => ":site/settings"
     resources :kana_dictionaries,
       :controller  => "admin/kana_dictionaries" do
         collection do

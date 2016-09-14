@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160830075865) do
+ActiveRecord::Schema.define(version: 20160914064745) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -40,6 +40,9 @@ ActiveRecord::Schema.define(version: 20160830075865) do
     t.datetime "updated_at"
     t.text     "target"
     t.integer  "site_id"
+    t.integer  "thumb_width"
+    t.integer  "thumb_height"
+    t.integer  "thumb_size"
   end
 
   add_index "ad_banner_banners", ["token"], name: "index_ad_banner_banners_on_token", unique: true, using: :btree
@@ -270,6 +273,9 @@ ActiveRecord::Schema.define(version: 20160830075865) do
     t.integer  "image_is"
     t.integer  "image_width"
     t.integer  "image_height"
+    t.integer  "thumb_width"
+    t.integer  "thumb_height"
+    t.integer  "thumb_size"
   end
 
   add_index "cms_data_files", ["concept_id", "node_id", "name"], name: "index_cms_data_files_on_concept_id_and_node_id_and_name", using: :btree
@@ -594,6 +600,17 @@ ActiveRecord::Schema.define(version: 20160830075865) do
     t.string   "google_map_api_key"
     t.string   "admin_full_uri"
   end
+
+  create_table "cms_stylesheets", force: :cascade do |t|
+    t.integer  "concept_id"
+    t.integer  "site_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "path"
+  end
+
+  add_index "cms_stylesheets", ["concept_id"], name: "index_cms_stylesheets_on_concept_id", using: :btree
+  add_index "cms_stylesheets", ["site_id"], name: "index_cms_stylesheets_on_site_id", using: :btree
 
   create_table "cms_talk_tasks", force: :cascade do |t|
     t.string   "dependent"
@@ -1184,6 +1201,9 @@ ActiveRecord::Schema.define(version: 20160830075865) do
     t.integer  "file_attachable_id"
     t.string   "file_attachable_type"
     t.integer  "site_id"
+    t.integer  "thumb_width"
+    t.integer  "thumb_height"
+    t.integer  "thumb_size"
   end
 
   add_index "sys_files", ["file_attachable_type", "file_attachable_id"], name: "index_sys_files_on_file_attachable_type_and_file_attachable_id", using: :btree
@@ -1298,6 +1318,23 @@ ActiveRecord::Schema.define(version: 20160830075865) do
     t.integer  "item_id"
     t.string   "item_name"
     t.integer  "site_id"
+  end
+
+  create_table "sys_process_logs", force: :cascade do |t|
+    t.integer  "process_id"
+    t.datetime "started_at"
+    t.datetime "closed_at"
+    t.integer  "user_id"
+    t.string   "state"
+    t.string   "name"
+    t.string   "interrupt"
+    t.integer  "total"
+    t.integer  "current"
+    t.integer  "success"
+    t.integer  "error"
+    t.text     "message"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "sys_processes", force: :cascade do |t|

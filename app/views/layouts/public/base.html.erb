@@ -9,7 +9,7 @@
   <%- if Page.current_node.content.class.in?([Survey::Content::Form]) -%>
   <%= csrf_meta_tags %>
   <%- end -%>
-  <%- if Core.request_uri =~ /^\/_ssl/ && Sys::Setting.use_common_ssl? && Page.current_node.model == 'Survey::Form'
+  <%- if Core.request_uri =~ /^\/_ssl/ && Core.site.use_common_ssl? && Page.current_node.model == 'Survey::Form'
     if Survey::Content::Form.find_by_id(Page.current_node.content.id).use_common_ssl?
       ssl_uri = Page.site.full_ssl_uri.sub(/\/\z/, '')
       tag = "#{Page.layout.head_tag(request)}".gsub(/href=("|')\/_(layouts|themes)/) {

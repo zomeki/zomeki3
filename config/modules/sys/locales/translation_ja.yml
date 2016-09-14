@@ -111,6 +111,20 @@ ja:
         item_id: "操作アイテムID"
         item_name: "操作アイテム名"
 
+      sys/process:
+        id: "ID"
+        started_at: "開始日時"
+        closed_at: "終了日時"
+        created_at: "操作日時"
+        updated_at: "更新日時"
+        user_id: "ユーザID（内部ID）"
+        user_name: "ユーザ名"
+        name: "プロセス"
+        total: "処理数"
+        success: "成功"
+        error: "失敗"
+        summary: "概要"
+
       sys/transferable_file:
         site_id: "サイト"
         version: "バージョン"

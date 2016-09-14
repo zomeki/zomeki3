@@ -20,6 +20,7 @@ module Sys::Model::Base::File
   end
 
   @@_maxsize = 50 # MegaBytes
+  @@_thumbnail_size = { width: 120, height: 90 }
 
   attr_accessor :file, :allowed_type, :image_resize
 
@@ -29,6 +30,37 @@ module Sys::Model::Base::File
 
   def skip_upload?
     @skip_upload
+  end
+
+  def has_thumbnail?
+    thumb_width.nil? ? false : true
+  end
+
+  def thumbnail_size
+    return nil if @thumbnail_size == false
+    @thumbnail_size ? @thumbnail_size : @@_thumbnail_size
+  end
+
+  def use_thumbnail(width_or_size, height = nil)
+    if width_or_size == false
+      return @thumbnail_size = false
+    elsif width_or_size.blank?
+      return @thumbnail_size = nil
+    end
+
+    if height
+      width  = width_or_size.to_i
+      height = height.to_i
+    elsif width_or_size.to_s.index('x')
+      size   = width_or_size.to_s.split('x')
+      width  = size[0].to_i
+      height = size[1].to_i
+    else
+      width  = width_or_size.to_i
+      height = width
+    end
+
+    @thumbnail_size = { :width => width, :height => height }
   end
 
   def validate_file_name
@@ -74,10 +106,10 @@ module Sys::Model::Base::File
   def validate_upload_file
     return true if file.blank?
 
-    maxsize = @maxsize || Sys::Setting.value(:file_upload_max_size).to_i
+    maxsize = @maxsize || Core.site.setting_site_file_upload_max_size
 
     ext = ::File.extname(name.to_s).downcase
-    if _maxsize = Sys::Setting.get_upload_max_size(ext)
+    if _maxsize = Core.site.get_upload_max_size(ext)
       maxsize = _maxsize
     end
 
@@ -91,6 +123,8 @@ module Sys::Model::Base::File
     self.image_is     = 2
     self.image_width  = nil
     self.image_height = nil
+    self.thumb_width  = nil
+    self.thumb_height = nil
 
     begin
       image = case file
@@ -133,6 +167,14 @@ module Sys::Model::Base::File
         self.image_is = 1
         self.image_width = image.columns
         self.image_height = image.rows
+
+        if size = thumbnail_size
+          size = @@_thumbnail_size if size[:width] > 640 || size[:height] > 480
+          @thumbnail_image  = image.resize_to_fill(size[:width], size[:height], Magick::CenterGravity)
+          self.thumb_width  = size[:width]
+          self.thumb_height = size[:height]
+          self.thumb_size   = @thumbnail_image.to_blob.size
+        end
       end
     rescue => e
       warn_log("#{self.mime_type}: #{e.message}")
@@ -141,11 +183,12 @@ module Sys::Model::Base::File
     @file_content = file.read
   end
 
-  def upload_path
+  def upload_path(options = {})
     site_dir = site_id ? "sites/#{format('%04d', site_id)}" : ""
     md_dir  = self.class.to_s.underscore.pluralize
     id_dir  = format('%08d', id).gsub(/(.*)(..)(..)(..)$/, '\1/\2/\3/\4/\1\2\3\4')
-    id_file = format('%07d', id) + '.dat'
+    id_file = options[:type] ? options[:type].to_s : format('%07d', id)
+    id_file += '.dat'
     Rails.root.join("#{site_dir}/upload/#{md_dir}/#{id_dir}/#{id_file}").to_s
   end
 
@@ -275,16 +318,28 @@ module Sys::Model::Base::File
 
   def crop(x, y, w, h)
     return false unless image_file?
-    image = Magick::Image.from_blob(File.read(upload_path)).first
 
+    image = Magick::Image.from_blob(File.read(upload_path)).first
     if image && image.format.in?(%w!GIF JPEG PNG!)
       image.crop!(Magick::NorthWestGravity, x, y, w, h)
       image.write(upload_path)
-    end
+      update_attributes(
+        size: File.size(upload_path),
+        image_width: image.columns,
+        image_height: image.rows
+      )
 
-    update_attribute(:size, File.size(upload_path))
-    update_attribute(:image_width,  image.columns)
-    update_attribute(:image_height, image.rows)
+      if size = thumbnail_size
+        thumb = Magick::Image.from_blob(File.read(upload_path)).first
+        thumb = thumb.resize_to_fill(size[:width], size[:height], Magick::CenterGravity)
+        thumb.write(upload_path(type: :thumb))
+        update_attributes(
+          thumb_width: size[:width],
+          thumb_height: size[:height],
+          thumb_size: thumb.to_blob.size
+        )
+      end
+    end
 
     return true
   end
@@ -298,13 +353,19 @@ module Sys::Model::Base::File
   ## filter/aftar_save
   def upload_internal_file
     Util::File.put(upload_path, :data => @file_content, :mkdir => true) unless @file_content.nil?
+
+    if @thumbnail_image
+      thumb_path = ::File.dirname(upload_path) + "/thumb.dat"
+      Util::File.put(thumb_path, :data => @thumbnail_image.to_blob, :mkdir => true)
+    end
+
     return true
   end
 
   ## filter/aftar_destroy
   def remove_internal_file
-    return true unless file_exist?
-    FileUtils.remove_entry_secure(upload_path)
+    FileUtils.remove_entry_secure(upload_path) if ::File.exist?(upload_path)
+    FileUtils.remove_entry_secure(upload_path(type: :thumb)) if ::File.exist?(upload_path(type: :thumb))
     return true
   end
 end

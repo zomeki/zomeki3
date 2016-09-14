@@ -128,7 +128,7 @@ class Cms::Site < ActiveRecord::Base
   end
 
   def full_ssl_uri
-    return nil unless Sys::Setting.use_common_ssl?
+    return nil unless use_common_ssl?
     url  = Sys::Setting.setting_extra_value(:common_ssl, :common_ssl_uri)
     url += "_ssl/#{format('%04d', id)}/"
     return url
