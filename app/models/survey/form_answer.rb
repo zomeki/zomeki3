@@ -8,7 +8,7 @@ class Survey::FormAnswer < ActiveRecord::Base
   belongs_to :form
   validates :form_id, presence: true
 
-  has_many :answers, :dependent => :destroy
+  has_many :answers, -> { order(:id) }, dependent: :destroy
 
   validate :validate_base
 
