@@ -5,6 +5,9 @@ server {
   root <%= public_path %>;
   access_log <%= zomeki_root %>/log/access_site_<%= '%04d' % id %>.log main;
   error_log <%= zomeki_root %>/log/error_site_<%= '%04d' % id %>.log warn;
-
+  <%- if basic_auth_enabled? %>
+  auth_basic_user_file <%="#{::File.dirname(public_path)}/.htpasswd"%>;
+  auth_basic "Please enter your ID and password";
+  <%- end -%>
   include <%= zomeki_root %>/config/nginx/servers_common.conf;
 }
