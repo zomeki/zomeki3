@@ -17,10 +17,6 @@
     <td><%= @item.admin_full_uri %></td>
   </tr>
   <%- end -%>
-  <tr>
-    <th><%= @item.locale(:related_site) %></th>
-    <td><%=hbr @item.related_site %></td>
-  </tr>
 </table>
 
 <br />
@@ -70,26 +66,6 @@
 </table>
 
 <br />
-<p class="form">SNS設定</p>
-
-<table class="show">
-  <tr>
-    <th>Facebook App ID</th>
-    <td><%= @sns_apps['facebook_app_id'] %></td>
-  </tr>
-  <tr>
-    <th>Facebook App Secret</th>
-    <td><%= @sns_apps['facebook_app_secret'] %></td>
-  </tr>
-  <tr>
-    <th>Twitter API key</th>
-    <td><%= @sns_apps['twitter_consumer_key'] %></td>
-  </tr>
-  <tr>
-    <th>Twitter API secret</th>
-    <td><%= @sns_apps['twitter_consumer_secret'] %></td>
-  </tr>
-</table>
 
 <p class="form">OGP</p>
 
@@ -128,23 +104,5 @@
   <% end %>
 </table>
 <% end %>
-
-<p class="form">ファイル転送設定</p>
-
-<table class="show">
-  <tr>
-    <th><%= @item.locale(:setting_transfer_dest_user) %></th>
-    <td><%= @item.setting_transfer_dest_user %></td>
-  </tr><tr>
-    <th><%= @item.locale(:setting_transfer_dest_host) %></th>
-    <td><%= @item.setting_transfer_dest_host %></td>
-  </tr><tr>
-    <th><%= @item.locale(:setting_transfer_dest_dir) %></th>
-    <td><%= @item.setting_transfer_dest_dir %></td>
-  </tr><tr>
-    <th><%= @item.locale(:setting_transfer_dest_domain) %></th>
-    <td><%= @item.setting_transfer_dest_domain %></td>
-  </tr>
-</table>
 
 <%= creator_view @item %>

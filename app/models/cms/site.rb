@@ -369,8 +369,9 @@ class Cms::Site < ActiveRecord::Base
     basic_auth_users.where(state: 'enabled').each do |user|
       conf += %Q(#{user.name}:#{user.password.crypt(salt)}\n)
     end
-    Util::File.put(pw_file, :data => conf)
 
+    Util::File.put(pw_file, :data => conf)
+    generate_nginx_configs
     return true
   end
 
@@ -379,7 +380,7 @@ class Cms::Site < ActiveRecord::Base
     pw_file = "#{::File.dirname(public_path)}/.htpasswd"
     FileUtils.rm_f(ac_file)
     FileUtils.rm_f(pw_file)
-
+    generate_nginx_configs
     return true
   end
 

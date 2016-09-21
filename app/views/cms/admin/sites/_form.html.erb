@@ -19,10 +19,6 @@
     <td><%= f.text_field :admin_full_uri, :class => 'url' %></td>
   </tr>
   <%- end -%>
-  <tr>
-    <th><%= @item.locale(:related_site) %>（改行区切り）</th>
-    <td><%= f.text_area :related_site, :class => 'head', :style => 'ime-mode: disabled;' %></td>
-  </tr>
 </table>
 
 <br />
@@ -81,26 +77,6 @@
 </table>
 
 <br />
-<p class="form">SNS設定</p>
-
-<table class="show">
-  <tr>
-    <th><%= label_tag 'sns_apps[facebook_app_id]', 'Facebook App ID' %></th>
-    <td><%= text_field_tag 'sns_apps[facebook_app_id]', @sns_apps['facebook_app_id'], style: 'width: 400px;' %></td>
-  </tr>
-  <tr>
-    <th><%= label_tag 'sns_apps[facebook_app_secret]', 'Facebook App Secret' %></th>
-    <td><%= text_field_tag 'sns_apps[facebook_app_secret]', @sns_apps['facebook_app_secret'], style: 'width: 400px;' %></td>
-  </tr>
-  <tr>
-    <th><%= label_tag 'sns_apps[twitter_consumer_key]', 'Twitter API key' %></th>
-    <td><%= text_field_tag 'sns_apps[twitter_consumer_key]', @sns_apps['twitter_consumer_key'], style: 'width: 400px;' %></td>
-  </tr>
-  <tr>
-    <th><%= label_tag 'sns_apps[twitter_consumer_secret]', 'Twitter API secret' %></th>
-    <td><%= text_field_tag 'sns_apps[twitter_consumer_secret]', @sns_apps['twitter_consumer_secret'], style: 'width: 400px;' %></td>
-  </tr>
-</table>
 
 <p class="form">OGP</p>
 
@@ -120,25 +96,6 @@
   <tr>
     <th><%= f.label :og_image %></th>
     <td><%= f.text_field :og_image, :style => 'width: 200px;' %></td>
-  </tr>
-</table>
-
-
-<p class="form">ファイル転送設定</p>
-
-<table class="show">
-  <tr>
-    <th><%= @item.locale(:setting_transfer_dest_user) %></th>
-    <td><%= f.text_field :in_setting_transfer_dest_user, :class => 'name' %></td>
-  </tr><tr>
-    <th><%= @item.locale(:setting_transfer_dest_host) %></th>
-    <td><%= f.text_field :in_setting_transfer_dest_host, :class => 'name' %></td>
-  </tr><tr>
-    <th><%= @item.locale(:setting_transfer_dest_dir) %></th>
-    <td><%= f.text_field :in_setting_transfer_dest_dir, :class => 'url' %></td>
-  </tr><tr>
-    <th><%= @item.locale(:setting_transfer_dest_domain) %></th>
-    <td><%= f.text_field :in_setting_transfer_dest_domain, :class => 'url' %></td>
   </tr>
 </table>
 
