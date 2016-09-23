@@ -3,7 +3,7 @@ class Cms::Admin::Data::FileNodesController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Publication
 
   def pre_dispatch
-    return error_auth unless Core.user.has_auth?(:designer)
+    return error_auth unless Core.user.has_auth?(:creator)
   end
 
   def pre_dispatch
@@ -40,7 +40,7 @@ class Cms::Admin::Data::FileNodesController < Cms::Controller::Admin::Base
     @item = Cms::DataFileNode.find(params[:id])
     @item.attributes = file_node_params
     @old_concept_id  = @item.concept_id_was
-    
+
     _update(@item) do
       if @old_concept_id != @item.concept_id
         Cms::DataFile.where(concept_id: @old_concept_id, node_id: @item.id).update_all(concept_id: @item.concept_id)
