@@ -1,14 +1,14 @@
 <table class="show">
   <tr>
-    <th><%= f.label :name %> <span class="note">※</span></th>
+    <th><%= GpCategory::Piece::RecentTabXml.human_attribute_name(:name) %> <span class="note">※</span></th>
     <td><%= f.text_field :name, :class => 'id' %></td>
   </tr>
   <tr>
-    <th><%= f.label :title %> <span class="note">※</span></th>
+    <th><%= GpCategory::Piece::RecentTabXml.human_attribute_name(:title) %> <span class="note">※</span></th>
     <td><%= f.text_field :title %></td>
   </tr>
   <tr>
-    <th><%= f.label :more %></th>
+    <th><%= GpCategory::Piece::RecentTabXml.human_attribute_name(:more) %></th>
     <td><%= f.text_field :more %></td>
   </tr>
   <tr>
@@ -16,19 +16,29 @@
     <td>
       <table class="noDesign">
         <tr>
-          <td><%= f.label :condition %></td>
+          <td><%= GpCategory::Piece::RecentTabXml.human_attribute_name(:condition) %></td>
           <td><%= f.radio_buttons :condition, @item.class::CONDITION_OPTIONS %></td>
         </tr>
         <tr>
           <td>表示カテゴリ</td>
           <td>
+            <%- category_types_for_option = @piece.category_types_for_option -%>
+            <%- if category_types_for_option.present? -%>
             <table id="categories">
               <tbody>
-                <%= render 'category', category_types_for_option: @piece.category_types_for_option, layers_for_option: @item.class::LAYER_OPTIONS,
-                                       index: nil, layer: @item.class::LAYER_OPTIONS.first.last, category: nil, available: false -%>
+                <%= render 'category', category_types_for_option: category_types_for_option,
+                                       layers_for_option: @item.class::LAYER_OPTIONS,
+                                       index: nil,
+                                       layer: @item.class::LAYER_OPTIONS.first.last,
+                                       category: nil,
+                                       available: false -%>
                 <%- @item.categories_with_layer.each_with_index do |category_with_layer, index| -%>
-                <%= render 'category', category_types_for_option: @piece.category_types_for_option, layers_for_option: @item.class::LAYER_OPTIONS,
-                                       index: index, layer: category_with_layer[:layer], category: category_with_layer[:category], available: true -%>
+                <%= render 'category', category_types_for_option: @piece.category_types_for_option,
+                                       layers_for_option: @item.class::LAYER_OPTIONS,
+                                       index: index,
+                                       layer: category_with_layer[:layer],
+                                       category: category_with_layer[:category],
+                                       available: true -%>
                 <%- end -%>
                 <tr>
                   <td colspan="2">&nbsp;</td>
@@ -36,13 +46,14 @@
                 </tr>
               </tbody>
             </table>
+            <%- end -%>
           </td>
         </tr>
       </table>
     </td>
   </tr>
   <tr>
-    <th><%= f.label :sort_no %> <span class="note">※</span></th>
+    <th><%= GpCategory::Piece::RecentTabXml.human_attribute_name(:sort_no) %> <span class="note">※</span></th>
     <td><%= f.text_field :sort_no, :class => 'number' %></td>
   </tr>
 </table>
