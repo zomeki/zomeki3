@@ -12,14 +12,17 @@ end
   <%- if action_name == 'index' -%>
   <%= link_to '新規作成', new_gp_article_doc_path %>
   <span class="separator"></span>
-  <%= link_to "#{GpArticle::Doc.model_name.human}一覧", gp_article_docs_path, (params[:target].blank? ? {class: 'current'} : {}) %>
-  <%= link_to "全#{GpArticle::Doc.model_name.human}一覧", gp_article_docs_path(target: 'all'), (params[:target] == 'all' ? {class: 'current'} : {}) %>
+  <%= link_to '作成記事', gp_article_docs_path(target: 'user', target_state: params[:target_state], target_public: nil), (params[:target] == 'user' ? {class: 'current'} : {}) %>
+  <%= link_to '所属記事', gp_article_docs_path(target: 'group', target_state: params[:target_state], target_public: nil), (params[:target] == 'group' ? {class: 'current'} : {}) %>
+  <%- if Core.user.has_auth?(:manager) -%>
+  <%= link_to '全記事', gp_article_docs_path(target: 'all', target_state: params[:target_state], target_public: nil), (params[:target] == 'all' ? {class: 'current'} : {}) %>
+  <%- end -%>
   <span class="separator"></span>
-  <%= link_to '下書き', gp_article_docs_path(target: 'draft'), (params[:target] == 'draft' ? {class: 'current'} : {}) %>
-  <%= link_to '承認待ち', gp_article_docs_path(target: 'approvable'), (params[:target] == 'approvable' ? {class: 'current'} : {}) %>
-  <%= link_to '公開待ち', gp_article_docs_path(target: 'approved'), (params[:target] == 'approved' ? {class: 'current'} : {}) %>
-  <%= link_to '公開中', gp_article_docs_path(target: 'public'), (params[:target] == 'public' ? {class: 'current'} : {}) %>
-  <%= link_to '非公開', gp_article_docs_path(target: 'closed'), (params[:target] == 'closed' ? {class: 'current'} : {}) %>
+  <%= link_to '処理中', gp_article_docs_path(target: params[:target], target_state: 'processing', target_public: nil), (params[:target_state] == 'processing' ? {class: 'current'} : {}) %>
+  <%= link_to '公開中', gp_article_docs_path(target: params[:target], target_state: 'public', target_public: nil), (params[:target_state] == 'public' ? {class: 'current'} : {}) %>
+  <%= link_to '公開終了', gp_article_docs_path(target: params[:target], target_state: 'closed', target_public: nil), (params[:target_state] == 'closed' ? {class: 'current'} : {}) %>
+  <span class="separator"></span>
+  <%= link_to '公開記事', gp_article_docs_path(target: '', target_state: '', target_public: 1), (params[:target_public] == '1' ? {class: 'current'} : {}) %>
   <%- end -%>
 
   <%- if %w|new create|.include?(action_name) -%>
