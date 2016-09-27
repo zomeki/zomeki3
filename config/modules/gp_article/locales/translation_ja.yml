@@ -18,7 +18,6 @@ ja:
         body: 内容
         body_more: 追記
         updated_at: 更新日時
-        display_published_at: 公開日時
         href: リンクURL
         subtitle: サブタイトル
         summary: 概要
@@ -47,8 +46,8 @@ ja:
         feature_1: 新着記事表示
         feature_2: 記事表示
         marker_icon_category_id: マーカーアイコン用カテゴリ
-        display_published_at: 公開日時
-        display_updated_at: 最終更新日時
+        display_published_at: 公開日
+        display_updated_at: 最終更新日
         keep_display_updated_at: 自動更新しない
         qrcode_state: QRコード
         inquiries/group_id: 連絡先（課）

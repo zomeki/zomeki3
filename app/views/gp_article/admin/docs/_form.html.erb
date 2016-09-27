@@ -202,14 +202,16 @@
         <td>
           <%= f.text_field :display_updated_at, :value => value_for_datetimepicker(f.object_name, :display_updated_at),
                                                 :style => 'width: 150px;', :class => 'datetimepicker' %>
+          <span style="margin-left: 12px;">
           <%= f.check_box :keep_display_updated_at %> <%= f.label :keep_display_updated_at %>
+          </span>
         </td>
       </tr>
       <%- end -%>
     </table>
     <%- end -%>
 
-    <p class="form">公開日時設定</p>
+    <p class="form">公開予約設定</p>
 
     <table class="show">
       <tr>
