@@ -24,13 +24,7 @@ class GpCategory::Piece::RecentTabXml < Cms::Model::Base::PieceExtension
   end
 
   def categories_with_layer
-    categories_with_layer_array = []
-
-    elem_category_ids.each_with_index do |category_id, index|
-      category = GpCategory::Category.find_by(id: category_id)
-      categories_with_layer_array << {category: category, layer: elem_layers[index].sub(Regexp.new("^#{index}_"), '')} if category
-    end
-
+    categories_with_layer_array = load_categories_with_layer_array
     categories_with_layer_array.sort do |a, b|
       next a[:category].category_type.sort_no <=> b[:category].category_type.sort_no unless a[:category].category_type.sort_no == b[:category].category_type.sort_no
       next a[:category].category_type.id      <=> b[:category].category_type.id      unless a[:category].category_type.id      == b[:category].category_type.id
@@ -39,5 +33,22 @@ class GpCategory::Piece::RecentTabXml < Cms::Model::Base::PieceExtension
       next a[:category].sort_no               <=> b[:category].sort_no               unless a[:category].sort_no               == b[:category].sort_no
            a[:category].id                    <=> b[:category].id
     end
+  end
+
+  private
+
+  def load_categories_with_layer_array
+    return [] if elem_category_ids.blank? || elem_layers.blank?
+
+    array = []
+    elem_category_ids.each_with_index do |category_id, index|
+      if (category = GpCategory::Category.find_by(id: category_id))
+        array << {
+          category: category,
+          layer: elem_layers[index].sub(Regexp.new("^#{index}_"), '')
+        }
+      end
+    end
+    array
   end
 end

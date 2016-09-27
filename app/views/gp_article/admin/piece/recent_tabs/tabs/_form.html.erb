@@ -22,13 +22,23 @@
         <tr>
           <td>表示カテゴリ</td>
           <td>
+            <%- category_types_for_option = @piece.category_types_for_option -%>
+            <%- if category_types_for_option.present? -%>
             <table id="categories">
               <tbody>
-                <%= render 'category', category_types_for_option: @piece.category_types_for_option, layers_for_option: @item.class::LAYER_OPTIONS,
-                                       index: nil, layer: @item.class::LAYER_OPTIONS.first.last, category: nil, available: false -%>
+                <%= render 'category', category_types_for_option: category_types_for_option,
+                                       layers_for_option: @item.class::LAYER_OPTIONS,
+                                       index: nil,
+                                       layer: @item.class::LAYER_OPTIONS.first.last,
+                                       category: nil,
+                                       available: false -%>
                 <%- @item.categories_with_layer.each_with_index do |category_with_layer, index| -%>
-                <%= render 'category', category_types_for_option: @piece.category_types_for_option, layers_for_option: @item.class::LAYER_OPTIONS,
-                                       index: index, layer: category_with_layer[:layer], category: category_with_layer[:category], available: true -%>
+                <%= render 'category', category_types_for_option: category_types_for_option,
+                                       layers_for_option: @item.class::LAYER_OPTIONS,
+                                       index: index,
+                                       layer: category_with_layer[:layer],
+                                       category: category_with_layer[:category],
+                                       available: true -%>
                 <%- end -%>
                 <tr>
                   <td colspan="2">&nbsp;</td>
@@ -36,6 +46,7 @@
                 </tr>
               </tbody>
             </table>
+            <%- end -%>
           </td>
         </tr>
       </table>
