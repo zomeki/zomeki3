@@ -36,7 +36,7 @@ module Sys::Model::Rel::Task
     schedules.each do |key, value|
       tasks.where(name: key).each(&:destroy)
       next if value.blank?
-      tasks.create(name: key, process_at: value)
+      tasks.create(name: key, process_at: value, site_id: Core.site.try(:id))
     end
   end
 end
