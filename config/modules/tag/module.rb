@@ -1,4 +1,4 @@
-Cms::Lib::Modules::ModuleSet.draw :tag, '関連ワード' do |mod|
+Cms::Lib::Modules::ModuleSet.draw :tag, '関連ワード', 40 do |mod|
   ## contents
   mod.content :tags, '関連ワード'
 

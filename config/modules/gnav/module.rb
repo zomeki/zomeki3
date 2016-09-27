@@ -1,4 +1,4 @@
-Cms::Lib::Modules::ModuleSet.draw :gnav, 'グローバルナビ' do |mod|
+Cms::Lib::Modules::ModuleSet.draw :gnav, 'グローバルナビ', 100 do |mod|
   ## contents
   mod.content :menu_items, 'グローバルナビ'
 

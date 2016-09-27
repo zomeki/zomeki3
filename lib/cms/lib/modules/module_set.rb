@@ -3,6 +3,7 @@ class Cms::Lib::Modules::ModuleSet
   
   attr_accessor :name
   attr_accessor :label
+  attr_accessor :sort_no
   attr_accessor :contents
   attr_accessor :directories
   attr_accessor :pages
@@ -18,11 +19,12 @@ class Cms::Lib::Modules::ModuleSet
     @@modules
   end
   
-  def self.draw(name, label, &block)
+  def self.draw(name, label, sort_no, &block)
     @@modules = [] unless @@modules
     yield mod = self.new
     mod.name  = name
     mod.label = label
+    mod.sort_no = sort_no
     @@modules << mod
   end
   

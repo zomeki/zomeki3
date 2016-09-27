@@ -1,4 +1,4 @@
-Cms::Lib::Modules::ModuleSet.draw :ad_banner, '広告バナー' do |mod|
+Cms::Lib::Modules::ModuleSet.draw :ad_banner, '広告バナー', 90 do |mod|
   ## contents
   mod.content :banners, '広告バナー'
 
