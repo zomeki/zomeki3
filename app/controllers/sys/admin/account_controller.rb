@@ -10,7 +10,7 @@ class Sys::Admin::AccountController < Sys::Controller::Admin::Base
 
 
     unless new_login(params[:account], params[:password])
-      flash.now[:alert] = 'ユーザＩＤ・パスワードを正しく入力してください。'
+      flash.now[:alert] = 'ユーザーＩＤ・パスワードを正しく入力してください。'
       respond_to do |format|
         format.html { render }
         format.xml  { render(:xml => '<errors />') }
@@ -40,7 +40,7 @@ class Sys::Admin::AccountController < Sys::Controller::Admin::Base
       else
         logger.warn %Q!"#{current_user.name}" doesn't belong to "#{Core.site.name}", logged out.!
         logout
-        flash.now[:alert] = 'ユーザＩＤ・パスワードを正しく入力してください。'
+        flash.now[:alert] = 'ユーザーＩＤ・パスワードを正しく入力してください。'
         return
       end
     end
@@ -73,7 +73,7 @@ class Sys::Admin::AccountController < Sys::Controller::Admin::Base
 
   def create_password_reminder
     if params[:account].blank? || params[:email].blank?
-      redirect_to new_admin_password_reminder_url, alert: 'ユーザIDと登録されているメールアドレスを<br />入力してください。'.html_safe
+      redirect_to new_admin_password_reminder_url, alert: 'ユーザーIDと登録されているメールアドレスを<br />入力してください。'.html_safe
       return
     end
 

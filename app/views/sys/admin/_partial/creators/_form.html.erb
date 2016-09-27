@@ -32,7 +32,7 @@ end
 <%- end -%>
   </tr>
   <tr class="onlyManager">
-    <th>ユーザ</th>
+    <th>ユーザー</th>
     <td><%= f.array_select "in_creator[user_id]", users.map {|i| [i.name_with_account, i.id] }, :include_blank => true %></td>
   </tr>
 </table>

@@ -12,7 +12,7 @@
     <td><%= select_tag 's_file_type', options_for_select(Sys::Model::Base::Transfer.file_types, params[:s_file_type]), :include_blank => true %></td>
     <th>操作</th>
     <td><%= select_tag 's_operation', options_for_select(Sys::Model::Base::Transfer.operations, params[:s_operation]), :include_blank => true %></td>
-    <th>操作ユーザ</th>
+    <th>操作ユーザー</th>
     <td ><%= text_field_tag 's_operator_name', params[:s_operator_name], :style => 'width: 120px;' %></td>
 
     <td class="submitters">

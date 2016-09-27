@@ -5,8 +5,8 @@ ja:
     attributes:
       sns_share/account:
         provider: SNS名
-        uid: ユーザID
-        info_nickname: ユーザ名
+        uid: ユーザーID
+        info_nickname: ユーザー名
         info_image: アイコン
         info_name: 名前
         credential_expires_at: 有効期限

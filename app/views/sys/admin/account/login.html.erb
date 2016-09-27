@@ -9,7 +9,7 @@
       <div class="alert">現在メンテナンス中です。</div>
       <div class="alert">期間：<%= Sys::Setting.get_maintenance_start_at %><%= Sys::Setting.get_maintenance_end_at %></div>
       <%- end -%>
-      <%= text_field_tag :account, nil, placeholder: 'ユーザID', title: 'ユーザID' %><br />
+      <%= text_field_tag :account, nil, placeholder: 'ユーザーID', title: 'ユーザーID' %><br />
       <%= password_field_tag :password, nil, placeholder: 'パスワード', title: 'パスワード' %>
     </div>
     <div class="submitters">

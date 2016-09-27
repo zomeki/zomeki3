@@ -1,7 +1,5 @@
 <%- inline_id = @item.id || (@item.in_tmp_id ||= Util::Sequencer.next_id(:tmp, md5: true)) -%>
 
-<span class="note">※は必須項目です。</span>
-
 <div class="tabs">
   <ul>
     <li><a href="#tab8">オプション</a></li>
@@ -23,10 +21,10 @@
       </tr>
       <%- end -%>
       <tr>
-        <th><%= f.label :title %> <span class="note">※</span></th>
-        <td><%= f.text_field :title, :class => 'title', :style => 'width: 440px;' %></td>
-        <th>タイトル設定</th>
-        <td><%= link_to '開く▼', 'javascript:void(0);', 'data-toggle-form' => '#title_settings' %></td>
+        <th><%= f.label :title %> <span class="note">（※入力必須）</span></th>
+        <td><%= f.text_field :title, class: 'title', style: 'width: 96%;' %></td>
+        <th style="width: 110px;">タイトル設定</th>
+        <td style="width: 80px;"><%= link_to '開く▼', 'javascript:void(0);', 'data-toggle-form' => '#title_settings' %></td>
       </tr>
     </table>
 
@@ -202,14 +200,16 @@
         <td>
           <%= f.text_field :display_updated_at, :value => value_for_datetimepicker(f.object_name, :display_updated_at),
                                                 :style => 'width: 150px;', :class => 'datetimepicker' %>
+          <span style="margin-left: 12px;">
           <%= f.check_box :keep_display_updated_at %> <%= f.label :keep_display_updated_at %>
+          </span>
         </td>
       </tr>
       <%- end -%>
     </table>
     <%- end -%>
 
-    <p class="form">公開日時設定</p>
+    <p class="form">公開予約設定</p>
 
     <table class="show">
       <tr>

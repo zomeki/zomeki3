@@ -31,6 +31,6 @@ end
 <%- end -%>
 </div>
 <div class="onlyManager">
-  <div class="label1">ユーザ</div>
+  <div class="label1">ユーザー</div>
   <%= f.array_select "in_creator[user_id]", users.map {|i| [i.name_with_account, i.id] }, :include_blank => true %>
 </div>
