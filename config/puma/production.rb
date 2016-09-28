@@ -74,7 +74,7 @@ stdout_redirect "#{zomeki_root}/log/puma_access.log", "#{zomeki_root}/log/puma_e
 # The default is "0, 16".
 #
 # threads 0, 16
-threads 0, 16
+threads 1, 1
 
 # Bind the server to "url". "tcp://", "unix://" and "ssl://" are the only
 # accepted protocols.
@@ -120,7 +120,7 @@ bind "unix://#{zomeki_root}/tmp/sockets/puma.sock"
 # The default is "0".
 #
 # workers 2
-workers 0
+workers 6
 
 # Code to run immediately before the master starts workers.
 #
