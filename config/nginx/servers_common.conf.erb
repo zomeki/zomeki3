@@ -6,24 +6,42 @@ location ^~ /<%= ZomekiCMS::ADMIN_URL_PREFIX %>/ {
   error_page 418 = @puma; return 418;
 }
 
+
+if ($http_user_agent ~* ^(DoCoMo|KDDI|Up\.Browser|J-PHONE|vodafone|SoftBank)) {
+  set $is_mobile 1;
+}
+
+if ($http_user_agent ~* (Android|iPhone|iPod|MSIEMobile|Windows\sPhone)) {
+  set $is_smartphone 1;
+}
+
 location / {
   try_files $uri @puma;
 
-  if ($http_user_agent ~* ^(DoCoMo|KDDI|Up\.Browser|J-PHONE|vodafone|SoftBank)) {
-    rewrite ^(?!/_mobile).+$ /_mobile$1 break;
+  if ($is_mobile = 1) {
+    rewrite ^(?!/_mobile)(.+)$ /_mobile$1 last;
   }
 
-  if ($http_user_agent ~* (Android|iPhone|iPod|MSIEMobile|Windows\sPhone)) {
-    rewrite ^(?!/_smartphone).+$ /_smartphone$1 break;
+  if ($is_smartphone = 1) {
+    rewrite ^(?!/_smartphone)(.+)$ /_smartphone$1 last;
   }
+
   if ($cookie_pc_view = 'on') {
-    rewrite ^/_smartphone(/.*)$ $1 break;
+    rewrite ^/_smartphone(/.*)$ $1 last;
   }
 
   if ($cookie_navigation_ruby = 'on') {
     rewrite ^(.*)/$ $1/index.html;
-    rewrite ^(.+)\.html$ $1.html.r break;
+    rewrite ^(.+)\.html$ $1.html.r last;
   }
+}
+
+location /_smartphone {
+  try_files $uri @puma;
+}
+
+location /_mobile {
+  try_files $uri @puma;
 }
 
 location @puma {
