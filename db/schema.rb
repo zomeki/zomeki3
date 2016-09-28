@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160914064745) do
+ActiveRecord::Schema.define(version: 20160927095929) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -620,6 +620,7 @@ ActiveRecord::Schema.define(version: 20160914064745) do
     t.string   "content_hash"
     t.string   "talk_processable_type"
     t.integer  "talk_processable_id"
+    t.integer  "site_id"
   end
 
   add_index "cms_talk_tasks", ["talk_processable_type", "talk_processable_id"], name: "index_cms_talk_tasks_on_talk_processable", using: :btree
@@ -771,6 +772,7 @@ ActiveRecord::Schema.define(version: 20160914064745) do
     t.text     "qrcode_state"
     t.string   "event_will_sync"
     t.integer  "serial_no"
+    t.string   "lang"
   end
 
   add_index "gp_article_docs", ["concept_id"], name: "index_gp_article_docs_on_concept_id", using: :btree
@@ -1335,6 +1337,7 @@ ActiveRecord::Schema.define(version: 20160914064745) do
     t.text     "message"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer  "site_id"
   end
 
   create_table "sys_processes", force: :cascade do |t|
@@ -1351,6 +1354,7 @@ ActiveRecord::Schema.define(version: 20160914064745) do
     t.integer  "success"
     t.integer  "error"
     t.text     "message"
+    t.integer  "site_id"
   end
 
   create_table "sys_publishers", force: :cascade do |t|
@@ -1412,6 +1416,7 @@ ActiveRecord::Schema.define(version: 20160914064745) do
     t.string   "name"
     t.integer  "processable_id"
     t.string   "processable_type"
+    t.integer  "site_id"
   end
 
   add_index "sys_tasks", ["processable_type", "processable_id"], name: "index_sys_tasks_on_processable_type_and_processable_id", using: :btree

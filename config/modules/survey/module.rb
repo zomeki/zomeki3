@@ -1,6 +1,6 @@
-Cms::Lib::Modules::ModuleSet.draw :survey, 'アンケート' do |mod|
+Cms::Lib::Modules::ModuleSet.draw :survey, '問合せ', 110 do |mod|
   ## contents
-  mod.content :forms, 'アンケート'
+  mod.content :forms, '問合せ'
 
   ## directories
   mod.directory :forms, 'フォーム一覧'

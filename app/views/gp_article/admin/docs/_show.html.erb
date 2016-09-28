@@ -1,6 +1,32 @@
 <%= render 'gp_article/admin/docs/replacement_notification' %>
 
-<div class="tabs">
+<script type="text/javascript">
+$(document).ready(function () {
+  var active_tab_index = $('#tabs > ul > li').length - 1;
+
+  <%- if (active_tab = params[:active_tab]) -%>
+  $('#tabs > ul > li').each(function (index, item) {
+    if ($(item).hasClass('<%= active_tab %>')) {
+      active_tab_index = index;
+      return false;
+    }
+  });
+  <%- end -%>
+
+  $('#tabs').tabs({
+    active: active_tab_index,
+    show: function (event, ui) {
+      if ((typeof map) !== 'undefined' && map) {
+        google.maps.event.trigger(map, 'resize');
+      }
+    }
+  });
+  $('#tabs .ui-tabs-nav > li').css('float', 'right');
+  $('#tabs').show();
+});
+</script>
+
+<div id="tabs" class="tabs" style="display: none;">
   <ul>
     <li class="options"><a href="#tab8">オプション</a></li>
     <li class="mobile"><a href="#tab7">携帯</a></li>
@@ -32,8 +58,8 @@
       <tr>
         <th><%= @item.locale :title %></th>
         <td><%= @item.title %></td>
-        <th>タイトル設定</th>
-        <td><%= link_to '開く▼', 'javascript:void(0);', 'data-toggle-form' => '#title_settings' %></td>
+        <th style="width: 110px;">タイトル設定</th>
+        <td style="width: 80px;"><%= link_to '開く▼', 'javascript:void(0);', 'data-toggle-form' => '#title_settings' %></td>
       </tr>
     </table>
 
@@ -61,13 +87,17 @@
       </table>
     </div>
 
+    <table class="show">
+      <tr>
+        <th><%= @item.locale :body %></th>
+        <th style="text-align: right;"><span style="margin-right: 10px;"><%= @item.lang_text %></span></th>
+      </tr>
+    </table>
+
     <%- if @item.template -%>
     <%= render 'gp_template/admin/shared/show', template: @item.template, template_values: @item.template_values %>
     <%- else -%>
     <table class="show">
-      <tr>
-        <th colspan="2"><%= @item.locale :body %></th>
-      </tr>
       <tr>
         <td colspan="2"><%=raw @item.body.gsub(/("|')file_contents\//, '\1' + %Q(#{gp_article_doc_path(@content, id: @item.id)}/file_contents/)) %></td>
       </tr>
@@ -338,33 +368,4 @@
 
 <%= javascript_tag do -%>
 <%= toggle_form_function %>
-
-$(document).ready(function () {
-  var active_tab_index = $('.tabs > ul > li').length - 1;
-
-  <%- if (active_tab = params[:active_tab]) -%>
-  $('.tabs > ul > li').each(function (index, item) {
-    if ($(item).hasClass('<%= active_tab %>')) {
-      active_tab_index = index;
-      return false;
-    }
-  });
-  <%- end -%>
-
-  $('.tabs').tabs({
-    active: active_tab_index,
-    show: function (event, ui) {
-        if ((typeof me) !== 'undefined' && me) {
-          var lat = $('#centerDispLat').val();
-          var lng = $('#centerDispLng').val();
-          if (lat === undefined) { lat = 0; }
-          if (lng === undefined) { lng = 0; }
-
-          google.maps.event.trigger(me.map, 'resize');
-          me.map.panTo(new google.maps.LatLng(lat, lng));
-        }
-      }
-  });
-  $('.tabs .ui-tabs-nav > li').css('float', 'right');
-});
 <%- end -%>

@@ -12,6 +12,7 @@ class Script
       proc.attributes = {
         :state      => nil,
         :user_id    => Core.user.id,
+        :site_id    => Core.site.try(:id),
         :started_at => nil,
         :closed_at  => nil,
         :interrupt  => nil,
@@ -23,7 +24,6 @@ class Script
       }
       proc.save
     end
-
     ## run
     ruby   = "#{RbConfig::CONFIG["bindir"]}/ruby"
     runner = "#{Rails.root}/bin/rails runner"

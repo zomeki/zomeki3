@@ -1,4 +1,4 @@
-Cms::Lib::Modules::ModuleSet.draw :gp_article, '記事' do |mod|
+Cms::Lib::Modules::ModuleSet.draw :gp_article, '記事', 10 do |mod|
   ## contents
   mod.content :docs, '記事'
 

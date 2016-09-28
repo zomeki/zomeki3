@@ -115,25 +115,46 @@ class GpArticle::Doc < ActiveRecord::Base
   scope :event_scheduled_between, ->(start_date, end_date) {
     where(arel_table[:event_ended_on].gteq(start_date)).where(arel_table[:event_started_on].lt(end_date + 1))
   }
-  scope :content_and_criteria, ->(content, criteria){
+  scope :content_and_criteria, ->(content, criteria) {
     docs = self.arel_table
 
     rel = all
     rel = rel.where(docs[:content_id].eq(content.id)) if content.kind_of?(GpArticle::Content::Doc)
 
-    rel = rel.where(docs[:id].eq(criteria[:id])) if criteria[:id].present?
-    rel = rel.where(docs[:state].eq(criteria[:state])) if criteria[:state].present?
-    rel = rel.search_with_text(:title, criteria[:title]) if criteria[:title].present?
+    rel = rel.with_target(criteria[:target]) if criteria[:target].present?
+    rel = rel.with_target_state(criteria[:target_state]) if criteria[:target_state].present?
+
     rel = rel.search_with_text(:title, :body, :name, criteria[:free_word]) if criteria[:free_word].present?
 
-    rel = rel.with_creator_group_id(criteria[:group_id]) if criteria[:group_id].present?
-    rel = rel.with_creator_group_name(criteria[:group]) if criteria[:group].present?
-    rel = rel.with_creator_user_name(criteria[:user]) if criteria[:user].present?
-
-    rel = rel.created_or_operated_docs_for_user(criteria[:touched_user]) if criteria[:touched_user].present?
-    rel = rel.editable_docs_for_user(Core.user) if criteria[:editable].present?
-    rel = rel.approval_related_docs_for_user(Core.user) if criteria[:approvable].present?
     rel
+  }
+  scope :with_target, ->(target, user = Core.user) {
+    case target
+    when 'user'
+      creators = Sys::Creator.arel_table
+      joins(:creator).where(creators[:user_id].eq(user.id))
+    when 'group'
+      creators = Sys::Creator.arel_table
+      editable_groups = Sys::EditableGroup.arel_table
+      joins(:creator).eager_load(:editable_group).where([
+        creators[:group_id].eq(user.group.id),
+        editable_groups[:all].eq(true),
+        editable_groups[:group_ids].eq(user.group.id.to_s),
+        editable_groups[:group_ids].matches("#{user.group.id} %"),
+        editable_groups[:group_ids].matches("% #{user.group.id} %"),
+        editable_groups[:group_ids].matches("% #{user.group.id}")
+      ].reduce(:or))
+    end
+  }
+  scope :with_target_state, ->(target_state) {
+    case target_state
+    when 'processing'
+      where(state: %w(draft approval approved))
+    when 'public'
+      where(state: 'public')
+    when 'closed'
+      where(state: 'closed')
+    end
   }
   scope :with_creator_group_id, ->(group_id) {
     groups = Sys::Group.arel_table
@@ -263,13 +284,16 @@ class GpArticle::Doc < ActiveRecord::Base
     without_filename || filename_base == 'index' ? uri : "#{uri}#{filename_base}.html"
   end
 
-  def preview_uri(site: nil, mobile: false, without_filename: false, **params)
-    return nil unless public_uri(without_filename: true)
+  def preview_uri(site: nil, mobile: false, smart_phone: false, without_filename: false, **params)
+    base_uri = public_uri(without_filename: true)
+    return nil unless base_uri
+
     site ||= ::Page.site
     params = params.map{|k, v| "#{k}=#{v}" }.join('&')
     filename = without_filename || filename_base == 'index' ? '' : "#{filename_base}.html"
+    page_flag = mobile ? 'm' : smart_phone ? 's' : '' 
 
-    path = "_preview/#{format('%04d', site.id)}#{mobile ? 'm' : ''}#{public_uri(without_filename: true)}preview/#{id}/#{filename}#{params.present? ? "?#{params}" : ''}"
+    path = "_preview/#{format('%04d', site.id)}#{page_flag}#{base_uri}preview/#{id}/#{filename}#{params.present? ? "?#{params}" : ''}"
     d = Cms::SiteSetting::AdminProtocol.core_domain site, :freeze_protocol => true
     "#{d}#{path}"
   end
@@ -645,6 +669,10 @@ class GpArticle::Doc < ActiveRecord::Base
     backlinked_docs.each do |doc|
       GpArticle::Admin::Mailer.broken_link_notification(self, doc).deliver_now
     end
+  end
+
+  def lang_text
+    content.lang_options.rassoc(lang).try(:first)
   end
 
   private

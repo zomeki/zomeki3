@@ -1,4 +1,4 @@
-Cms::Lib::Modules::ModuleSet.draw :gp_calendar, 'カレンダー' do |mod|
+Cms::Lib::Modules::ModuleSet.draw :gp_calendar, 'カレンダー', 60 do |mod|
   ## contents
   mod.content :events, 'カレンダー'
 

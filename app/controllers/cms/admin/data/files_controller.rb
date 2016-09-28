@@ -3,7 +3,7 @@ class Cms::Admin::Data::FilesController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Publication
 
   def pre_dispatch
-    return error_auth unless Core.user.has_auth?(:designer)
+    return error_auth unless Core.user.has_auth?(:creator)
 
     return redirect_to(url_for(:action => "index", :parent => '0')) if params[:reset] || (params['s_node_id'] == '' && params[:s_keyword] == '' && params[:s_target] == '')
 
@@ -68,7 +68,7 @@ class Cms::Admin::Data::FilesController < Cms::Controller::Admin::Base
     @item.node_id    = nil if @item.concept_id_changed?
     @item.image_resize = params[:image_resize]
     old_name = @item.name_changed? ? Cms::DataFile.find(params[:id]).try(:escaped_name) : nil
-    
+
     @item.skip_upload if @item.file.blank?
     _update @item do
       @item.remove_old_name_public_file(old_name) unless old_name.blank?

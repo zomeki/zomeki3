@@ -60,6 +60,9 @@ module Cms::Controller::Layout
     return true if params[:format] && params[:format] != 'html'
     return true if Page.error
 
+    ## lang
+    Page.lang = Page.current_item.lang if Page.current_item.respond_to?(:lang)
+
     ## content
     Page.content = response.body
     self.response_body = nil

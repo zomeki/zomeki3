@@ -2,7 +2,7 @@ class Sys::Script::TasksController < ApplicationController
   def exec
     tasks = Sys::Task.where(Sys::Task.arel_table[:process_at].lteq(3.minutes.since))
                      .order(:process_at).includes(:processable)
-
+    tasks = tasks.where(site_id: Script.options[:site_id]) if Script.options && Script.options[:site_id]
     Script.total tasks.size
 
     return render(text: 'No Tasks') if tasks.empty?

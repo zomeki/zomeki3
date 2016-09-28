@@ -6,37 +6,31 @@ module Sys::Model::Rel::Creator
     mod.after_save :save_creator
   end
 
-  # setter always returns supplied argument
-  def in_creator=(values)
-    values = (values.kind_of?(Hash) ? values : {}).with_indifferent_access
-    ATTRIBUTE_NAMES.each {|n| creator_attributes[n] = values[n].presence }
+  def in_creator=(value)
+    @in_creator = value.with_indifferent_access
   end
 
   def in_creator
-    creator_attributes
-  end
-
-  def join_creator
-    ActiveSupport::Deprecation.warn("Replace condition_builder with arel (#{caller[0..4].join("\n")})")
-    return true if @joined_creator
-    @joined_creator = true
-    join :creator
+    if @in_creator
+      @in_creator
+    elsif creator
+      creator.attributes.slice('group_id', 'user_id').with_indifferent_access
+    else
+      {}.with_indifferent_access
+    end
   end
 
   private
 
-  def creator_attributes
-    return @creator_attributes if @creator_attributes
-    @creator_attributes = {}.with_indifferent_access.tap do |attrs|
-      next unless creator
-      ATTRIBUTE_NAMES.each {|n| attrs[n] = creator[n].presence }
-    end
-  end
-
   def save_creator
-    return true if creator
-    c = build_creator(group_id: creator_attributes[:group_id].presence || Core.user_group.try!(:id),
-                      user_id: creator_attributes[:user_id].presence || Core.user.try!(:id))
-    c.save
+    build_creator unless creator
+
+    if @in_creator
+      creator.group_id = @in_creator['group_id']
+      creator.user_id = @in_creator['user_id']
+    end
+    creator.group_id ||= Core.user_group.try!(:id)
+    creator.user_id ||= Core.user.try!(:id)
+    creator.save
   end
 end

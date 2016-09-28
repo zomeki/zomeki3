@@ -17,6 +17,8 @@ function addEvent(element, listener, func) {
   }
 }
 
+var map = null;
+
 addEvent(window, 'load', function() {
   var mapOptions = {
     center: new google.maps.LatLng(<%= map.map_lat %>, <%= map.map_lng %>),
@@ -25,7 +27,7 @@ addEvent(window, 'load', function() {
     scaleControl: true,
     scrollwheel: false
   };
-  var map = new google.maps.Map(document.getElementById("map1"), mapOptions);
+  map = new google.maps.Map(document.getElementById("map1"), mapOptions);
   
   <% markers.each_with_index do |marker, idx| %>
     var marker<%= idx %> = new google.maps.Marker({

@@ -70,7 +70,7 @@ function getMakerInputTag(idx, name) {
   return h;
 }
 
-var me = null;
+var map = null;
 
 addEvent(window, 'load', function() {
   // map
@@ -81,9 +81,9 @@ addEvent(window, 'load', function() {
     scaleControl: true,
     scrollwheel: false
   };
-  var map = new google.maps.Map(document.getElementById("map1"), mapOptions);
-  
-  me = new MapEditor(map);
+  map = new google.maps.Map(document.getElementById("map1"), mapOptions);
+
+  var me = new MapEditor(map);
   me.syncMap();
   google.maps.event.addListener(map, 'dragend', function(){ me.syncMap(); } );
   google.maps.event.addListener(map, 'zoom_changed', function(){ me.syncMap(); } );

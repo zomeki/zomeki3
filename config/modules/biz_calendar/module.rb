@@ -1,4 +1,4 @@
-Cms::Lib::Modules::ModuleSet.draw :biz_calendar, '業務カレンダー' do |mod|
+Cms::Lib::Modules::ModuleSet.draw :biz_calendar, '業務カレンダー', 70 do |mod|
   ## contents
   mod.content :places, '業務カレンダー'
   

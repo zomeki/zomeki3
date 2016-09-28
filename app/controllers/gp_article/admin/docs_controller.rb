@@ -13,69 +13,31 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   def pre_dispatch
     return http_error(404) unless @content = GpArticle::Content::Doc.find_by(id: params[:content])
     return error_auth unless Core.user.has_priv?(:read, :item => @content.concept)
-    return redirect_to(request.env['PATH_INFO']) if params[:reset_criteria]
+    return redirect_to url_for(params.permit(:target, :target_state, :target_public).merge(action: :index)) if params[:reset_criteria]
 
     @item = @content.docs.find(params[:id]) if params[:id].present?
   end
 
   def index
-    if params[:options]
-      @items = if params[:category_id]
-                 if (category = GpCategory::Category.find_by(id: params[:category_id]))
-                   params[:public] ? category.public_docs : category.docs
-                 else
-                   category.docs.none
-                 end
-               else
-                 params[:public] ? @content.public_docs : @content.docs
-               end
+    return index_options if params[:options]
 
-      if params[:exclude]
-        docs_table = @items.table
-        @items = @items.where(docs_table[:name].not_eq(params[:exclude]))
+    if params[:target_public].blank?
+      if Core.user.has_auth?(:manager)
+        params[:target] = 'all' if params[:target].blank?
+        params[:target_state] = 'processing' if params[:target_state].blank?
+      else
+        params[:target] = 'user' if params[:target].blank? || params[:target] == 'all'
+        params[:target_state] = 'processing' if params[:target_state].blank?
       end
-
-      if params[:group_id] || params[:user_id]
-        inners = []
-        if params[:group_id]
-            groups = Sys::Group.arel_table
-            inners << :group
-        end
-        if params[:user_id]
-            users = Sys::User.arel_table
-            inners << :user
-        end
-        @items = @items.joins(:creator => inners)
-
-        @items = @items.where(groups[:id].eq(params[:group_id])) if params[:group_id]
-        @items = @items.where(users[:id].eq(params[:user_id])) if params[:user_id]
-      end
-
-      return render('index_options', layout: false)
     end
 
     criteria = params[:criteria] || {}
-
-    case params[:target]
-    when 'all'
-      # No criteria
-    when 'draft'
-      criteria[:state] = 'draft'
-      criteria[:touched_user] = Core.user
-    when 'public'
-      criteria[:state] = 'public'
-      criteria[:touched_user] = Core.user
-    when 'closed'
-      criteria[:state] = 'closed'
-      criteria[:touched_user] = Core.user
-    when 'approvable'
-      criteria[:approvable] = true
-      criteria[:state] = 'approvable'
-    when 'approved'
-      criteria[:approvable] = true
-      criteria[:state] = 'approved'
+    if params[:target] == '' && params[:target_state] == ''
+      criteria[:target] = 'all'
+      criteria[:target_state] = 'public'
     else
-      criteria[:editable] = true
+      criteria[:target] = params[:target]
+      criteria[:target_state] = params[:target_state]
     end
 
     @items = GpArticle::Doc.content_and_criteria(@content, criteria)
@@ -83,6 +45,41 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
       .paginate(page: params[:page], per_page: 30)
 
     _index @items
+  end
+
+  def index_options
+    @items = if params[:category_id]
+               if (category = GpCategory::Category.find_by(id: params[:category_id]))
+                 params[:public] ? category.public_docs : category.docs
+               else
+                 category.docs.none
+               end
+             else
+               params[:public] ? @content.public_docs : @content.docs
+             end
+
+    if params[:exclude]
+      docs_table = @items.table
+      @items = @items.where(docs_table[:name].not_eq(params[:exclude]))
+    end
+
+    if params[:group_id] || params[:user_id]
+      inners = []
+      if params[:group_id]
+          groups = Sys::Group.arel_table
+          inners << :group
+      end
+      if params[:user_id]
+          users = Sys::User.arel_table
+          inners << :user
+      end
+      @items = @items.joins(:creator => inners)
+
+      @items = @items.where(groups[:id].eq(params[:group_id])) if params[:group_id]
+      @items = @items.where(users[:id].eq(params[:user_id])) if params[:user_id]
+    end
+
+    render 'index_options', layout: false
   end
 
   def show
@@ -304,7 +301,8 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
   def doc_params
     params.require(:item).permit(
-      :template_id, :title, :href, :target, :subtitle, :summary, :list_image, :body, :body_more, :body_more_link_text,
+      :template_id, :title, :href, :target, :subtitle, :summary, :list_image,
+      :lang, :body, :body_more, :body_more_link_text,
       :feature_1, :feature_2, :raw_tags, :qrcode_state, :display_published_at, :display_updated_at, :keep_display_updated_at,
       :event_state, :event_started_on, :event_ended_on, :event_will_sync,
       :marker_state, :marker_icon_category_id, :mobile_title, :mobile_body,
