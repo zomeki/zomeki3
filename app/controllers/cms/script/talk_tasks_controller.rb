@@ -7,7 +7,7 @@ class Cms::Script::TalkTasksController < Cms::Controller::Script::Publication
     end
 
     tasks = Cms::TalkTask.select(:id).order(:id)
-
+    tasks = tasks.where(site_id: Script.options[:site_id]) if Script.options && Script.options[:site_id]
     Script.total tasks.size
 
     tasks.each do |v|

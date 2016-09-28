@@ -1,15 +1,19 @@
 class Feed::Script::FeedsController < ApplicationController
-  include 
+  include
 
   def read
     success = 0
     error   = 0
     feeds = Feed::Feed.where(state: 'public').all
+    if Script.options && Script.options[:site_id]
+      site_content_ids = Feed::Content::Feed.where(site_id: Script.options[:site_id]).pluck(:id)
+      feeds = feeds.where(content_id: site_content_ids) if site_content_ids.present?
+    end
     Script.total feeds.size
-    
+
     feeds.each do |feed|
       Script.current
-      
+
       begin
         if feed.update_feed
           Script.success

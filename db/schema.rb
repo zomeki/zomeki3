@@ -620,6 +620,7 @@ ActiveRecord::Schema.define(version: 20160927095929) do
     t.string   "content_hash"
     t.string   "talk_processable_type"
     t.integer  "talk_processable_id"
+    t.integer  "site_id"
   end
 
   add_index "cms_talk_tasks", ["talk_processable_type", "talk_processable_id"], name: "index_cms_talk_tasks_on_talk_processable", using: :btree
@@ -1336,6 +1337,7 @@ ActiveRecord::Schema.define(version: 20160927095929) do
     t.text     "message"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer  "site_id"
   end
 
   create_table "sys_processes", force: :cascade do |t|
@@ -1352,6 +1354,7 @@ ActiveRecord::Schema.define(version: 20160927095929) do
     t.integer  "success"
     t.integer  "error"
     t.text     "message"
+    t.integer  "site_id"
   end
 
   create_table "sys_publishers", force: :cascade do |t|
@@ -1413,6 +1416,7 @@ ActiveRecord::Schema.define(version: 20160927095929) do
     t.string   "name"
     t.integer  "processable_id"
     t.string   "processable_type"
+    t.integer  "site_id"
   end
 
   add_index "sys_tasks", ["processable_type", "processable_id"], name: "index_sys_tasks_on_processable_type_and_processable_id", using: :btree
