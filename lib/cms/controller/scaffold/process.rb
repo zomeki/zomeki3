@@ -8,7 +8,6 @@ protected
 
   def start_process(process_name = @process_name, options = {})
     raise "undefined process_name" if process_name.blank?
-    options[:site_id] = Core.site.id
     begin
       ::Script.run_from_web(@process_name, options)
       flash[:notice] = "プロセスを開始しました。"
@@ -19,7 +18,7 @@ protected
     end
   end
 
-  def stop_process(process_name = @process_name)
+  def stop_process(process_name = @process_name, options = {})
     raise "undefined process_name" if process_name.blank?
 
     proc = Sys::Process.find_by(name: process_name)

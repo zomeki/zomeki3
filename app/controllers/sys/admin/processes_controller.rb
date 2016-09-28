@@ -26,8 +26,9 @@ class Sys::Admin::ProcessesController < Cms::Controller::Admin::Base
 
     @process = Sys::Process.find_by(name: @process_name) || Sys::Process.new(name: @process_name)
     Sys::Process::PROCESSE_LIST.each {|title, name| @process.title = title if name == @process_name }
+    options = {site_id: Core.site.id}
 
-    return send(params[:do]) if params[:do] =~ /^(start|stop)_process/
+    return send(params[:do], @process_name, options) if params[:do] =~ /^(start|stop)_process/
   end
 
 protected
