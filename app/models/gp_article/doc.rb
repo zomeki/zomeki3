@@ -671,6 +671,10 @@ class GpArticle::Doc < ActiveRecord::Base
     end
   end
 
+  def lang_text
+    content.lang_options.rassoc(lang).try(:first)
+  end
+
   private
 
   def name_validity

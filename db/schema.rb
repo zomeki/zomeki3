@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160914064745) do
+ActiveRecord::Schema.define(version: 20160927095929) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -771,6 +771,7 @@ ActiveRecord::Schema.define(version: 20160914064745) do
     t.text     "qrcode_state"
     t.string   "event_will_sync"
     t.integer  "serial_no"
+    t.string   "lang"
   end
 
   add_index "gp_article_docs", ["concept_id"], name: "index_gp_article_docs_on_concept_id", using: :btree
