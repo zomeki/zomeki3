@@ -58,6 +58,9 @@ $(document).ready(function () {
     </div>
 
     <div id="normal_body_form" style="<%= 'display:none;' if @item.template %>">
+      <div>
+        <%= f.select :lang, options_for_select(@content.lang_options, @item.lang) %>
+      </div>
       <div class="label1"><%= f.label :body %></div>
       <div class="cke_editor_wrapper">
         <%= init_ckeditor :baseHref => "#{gp_article_doc_path(@content, inline_id)}/" %>
