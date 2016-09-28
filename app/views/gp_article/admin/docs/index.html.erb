@@ -11,7 +11,7 @@
     <th style="text-align: center; width: 150px">作成者</th>
     <th style="text-align: center; width: 150px;"><%= GpArticle::Doc.human_attribute_name :updated_at %></th>
     <th style="text-align: center; width: 60px;"><%= GpArticle::Doc.human_attribute_name :state %></th>
-    <th style="text-align: center; width: 65px;">プレビュー</th>
+    <th style="text-align: center; width: 100px;">プレビュー</th>
   </tr>
 
   <%- @items.each do |item| -%>
@@ -25,8 +25,11 @@
     <td style="text-align: center;"><%=i18n_l item.updated_at %></td>
     <td style="text-align: center;" class="<%= 'approvable' if item.state_approvable? && item.approvers.include?(Core.user) %>"><%= item.status.name %></td>
     <td style="text-align: center;">
-      <%= link_to_if item.terminal_pc_or_smart_phone, 'PC', item.preview_uri, target: 'preview' if @content.doc_node && item.preview_uri.present? %>
-      <%= link_to_if item.terminal_mobile, '携帯', item.preview_uri(mobile: true), target: 'preview' if @content.doc_node && item.preview_uri.present? %>
+      <% if @content.doc_node && item.preview_uri.present? %>
+        <%= link_to_if item.terminal_pc_or_smart_phone, 'PC', item.preview_uri, target: 'preview' %>
+        <%= link_to_if item.terminal_pc_or_smart_phone, 'スマホ', item.preview_uri(smart_phone: true), target: 'preview' %>
+        <%= link_to_if item.terminal_mobile, '携帯', item.preview_uri(mobile: true), target: 'preview' %>
+      <%- end -%>
     </td>
   </tr>
   <%- end -%>

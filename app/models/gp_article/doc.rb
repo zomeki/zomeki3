@@ -284,13 +284,16 @@ class GpArticle::Doc < ActiveRecord::Base
     without_filename || filename_base == 'index' ? uri : "#{uri}#{filename_base}.html"
   end
 
-  def preview_uri(site: nil, mobile: false, without_filename: false, **params)
-    return nil unless public_uri(without_filename: true)
+  def preview_uri(site: nil, mobile: false, smart_phone: false, without_filename: false, **params)
+    base_uri = public_uri(without_filename: true)
+    return nil unless base_uri
+
     site ||= ::Page.site
     params = params.map{|k, v| "#{k}=#{v}" }.join('&')
     filename = without_filename || filename_base == 'index' ? '' : "#{filename_base}.html"
+    page_flag = mobile ? 'm' : smart_phone ? 's' : '' 
 
-    path = "_preview/#{format('%04d', site.id)}#{mobile ? 'm' : ''}#{public_uri(without_filename: true)}preview/#{id}/#{filename}#{params.present? ? "?#{params}" : ''}"
+    path = "_preview/#{format('%04d', site.id)}#{page_flag}#{base_uri}preview/#{id}/#{filename}#{params.present? ? "?#{params}" : ''}"
     d = Cms::SiteSetting::AdminProtocol.core_domain site, :freeze_protocol => true
     "#{d}#{path}"
   end
