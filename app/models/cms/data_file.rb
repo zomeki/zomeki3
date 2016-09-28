@@ -5,7 +5,7 @@ class Cms::DataFile < ActiveRecord::Base
   include Cms::Model::Rel::Site
   include Cms::Model::Rel::Concept
   include Cms::Model::Rel::Bracketee
-  include Cms::Model::Auth::Concept
+  include Cms::Model::Auth::Concept::Creator
 
   include StateText
   include Cms::Base::PublishQueue::Bracketee

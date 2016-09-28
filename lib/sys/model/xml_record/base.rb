@@ -180,7 +180,7 @@ class Sys::Model::XmlRecord::Base
       return false unless valid?
     end
     return false unless before_save
-    eval("@_record.#{self.class.column_name} = build_xml.to_s")
+    @_record.send("#{self.class.column_name}=", build_xml.to_s)
     return false unless @_record.save(:validate => false)
     after_save
     return true
@@ -200,7 +200,7 @@ class Sys::Model::XmlRecord::Base
   
   def destroy
     return false unless before_destroy
-    eval("@_record.#{self.class.column_name} = build_xml(:destroy).to_s")
+    @_record.send("#{self.class.column_name}=", build_xml(:destroy).to_s)
     return false unless @_record.save(:validate => false)
     after_destroy
     return true
@@ -217,7 +217,7 @@ class Sys::Model::XmlRecord::Base
         arr = val
         if val.class != Array
           arr = []
-          val.each {|k,v| arr << v unless v.blank?}
+          val.each {|k,v| arr << v unless v.blank?} if val.present?
         end
         arr.delete("")
         arr.uniq.each do |v|

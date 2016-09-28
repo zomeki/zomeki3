@@ -32,8 +32,8 @@
       <tr>
         <th><%= @item.locale :title %></th>
         <td><%= @item.title %></td>
-        <th>タイトル設定</th>
-        <td><%= link_to '開く▼', 'javascript:void(0);', 'data-toggle-form' => '#title_settings' %></td>
+        <th style="width: 110px;">タイトル設定</th>
+        <td style="width: 80px;"><%= link_to '開く▼', 'javascript:void(0);', 'data-toggle-form' => '#title_settings' %></td>
       </tr>
     </table>
 
@@ -61,13 +61,17 @@
       </table>
     </div>
 
+    <table class="show">
+      <tr>
+        <th><%= @item.locale :body %></th>
+        <th style="text-align: right;"><span style="margin-right: 10px;"><%= @item.lang_text %></span></th>
+      </tr>
+    </table>
+
     <%- if @item.template -%>
     <%= render 'gp_template/admin/shared/show', template: @item.template, template_values: @item.template_values %>
     <%- else -%>
     <table class="show">
-      <tr>
-        <th colspan="2"><%= @item.locale :body %></th>
-      </tr>
       <tr>
         <td colspan="2"><%=raw @item.body.gsub(/("|')file_contents\//, '\1' + %Q(#{gp_article_doc_path(@content, id: @item.id)}/file_contents/)) %></td>
       </tr>

@@ -11,7 +11,7 @@ $(document).ready(function () {
   $('[placeholder]').placeholder().css('color', '#999').focus(function () {
     $(this).css('color', '#000');
   }).blur(function () {
-    if($(this).val() == 'ユーザID' || $(this).val() == 'パスワード' || $(this).val() == 'パスワード確認') {
+    if($(this).val() == 'ユーザーID' || $(this).val() == 'パスワード' || $(this).val() == 'パスワード確認') {
       $(this).css('color', '#999').focus(function () {
         $(this).css('color', '#000');
       });

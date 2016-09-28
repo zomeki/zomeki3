@@ -4,7 +4,7 @@ class Cms::Admin::PreviewController < Cms::Controller::Admin::Base
   def index
     path = Core.request_uri.gsub(/^#{Regexp.escape(cms_preview_path)}/, "")
 
-    render_preview(path, :mobile => Page.mobile?, :preview => true)
+    render_preview(path, mobile: Page.mobile?, smart_phone: Page.smart_phone?, preview: true)
   end
 
   def render_preview(path, options = {})
@@ -15,6 +15,7 @@ class Cms::Admin::PreviewController < Cms::Controller::Admin::Base
     Page.site   = options[:site] || Core.site
     Page.uri    = path
     Page.mobile = options[:mobile]
+    Page.smart_phone = options[:smart_phone]
 
     if path =~ /^\/_files\//
       ## _files

@@ -68,6 +68,10 @@ class GpArticle::Content::Setting < Cms::ContentSetting
   set_config :serial_no_settings, name: '記事番号表示',
     options: GpArticle::Content::Doc::SERIALNO_SETTINGS_OPTIONS,
     form_type: :radio_buttons
+  set_config :lang, name: '言語',
+    comment: "例: 日本語 ja,英語 en"
+
+  DEFAULT_LANG = '日本語 ja,英語 en,中国語（簡体） zh-CN,中国語（繁体） zh-tw,韓国語 ko'
 
   after_initialize :set_defaults
 
@@ -155,6 +159,8 @@ class GpArticle::Content::Setting < Cms::ContentSetting
       self.extra_values = { state: 'hidden' } if extra_values.blank?
     when 'serial_no_settings'
       self.value = 'disabled' if value.blank?
+    when 'lang'
+      self.value = DEFAULT_LANG if self.value.blank?
     end
   end
 end

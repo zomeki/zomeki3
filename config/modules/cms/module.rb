@@ -1,4 +1,4 @@
-Cms::Lib::Modules::ModuleSet.draw :cms, '標準機能' do |mod|
+Cms::Lib::Modules::ModuleSet.draw :cms, '標準機能', 1 do |mod|
   ## contents
   ;
   

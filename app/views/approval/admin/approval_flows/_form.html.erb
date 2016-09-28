@@ -21,7 +21,7 @@
       <div style="margin-bottom: 10px;"><%= select_tag 'groups', options_for_select(Core.site.groups_for_option), prompt: '-- グループを選択してください --', name: nil %></div>
 
       <div>
-        ユーザ<br />
+        ユーザー<br />
         <%= select_tag 'candidates', options_for_select([]), multiple: true, style: 'height: 150px; width: 150px;' %>
       </div>
       <div style="margin: 10px;">

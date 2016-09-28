@@ -1,4 +1,4 @@
-Cms::Lib::Modules::ModuleSet.draw :feed, 'Feed' do |mod|
+Cms::Lib::Modules::ModuleSet.draw :feed, 'Feed', 140 do |mod|
   ## contents
   mod.content :feeds, 'Feed'
 

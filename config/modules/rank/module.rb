@@ -1,4 +1,4 @@
-Cms::Lib::Modules::ModuleSet.draw :rank, 'アクセスランキング' do |mod|
+Cms::Lib::Modules::ModuleSet.draw :rank, 'アクセスランキング', 120 do |mod|
   ## contents
   mod.content :ranks, 'アクセスランキング'
 

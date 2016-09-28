@@ -46,7 +46,7 @@ class GpCategory::Admin::Piece::RecentTabs::TabsController < Cms::Controller::Ad
     @item.elem_category_ids = params[:categories]
 
     elem_layers = {}
-    params[:layers].each {|k, v| elem_layers[k] = "#{k}_#{v}" }
+    params[:layers].each {|k, v| elem_layers[k] = "#{k}_#{v}" } if params[:layers]
     @item.elem_layers = elem_layers
   end
 end
