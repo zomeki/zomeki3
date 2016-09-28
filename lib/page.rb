@@ -4,6 +4,7 @@ class Page
   cattr_accessor :layout
   cattr_accessor :content
   cattr_accessor :title
+  cattr_accessor :lang
   cattr_accessor :current_node
   cattr_accessor :current_item
   cattr_accessor :current_piece
@@ -18,6 +19,7 @@ class Page
     @@layout        = nil
     @@content       = nil
     @@title         = nil
+    @@lang          = 'ja'
     @@current_node  = nil
     @@current_item  = nil
     @@current_piece = nil

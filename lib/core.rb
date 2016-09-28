@@ -186,13 +186,13 @@ private
       Page.site       = @@site
       @@internal_uri  = @@request_uri
     when 'preview'
-      site_id         = @@request_uri.gsub(/^\/_[a-z]+\/([0-9]+).*/, '\1').to_i
-      site_mobile     = @@request_uri =~ /^\/_[a-z]+\/([0-9]+)m/
-      @@site          = Cms::Site.find(site_id)
-      Page.site       = @@site
-      Page.mobile     = site_mobile
-      @@internal_uri  = @@request_uri
-      @@internal_uri += "index.html" if @@internal_uri =~ /\/$/
+      site_id          = @@request_uri.gsub(/^\/_[a-z]+\/([0-9]+).*/, '\1').to_i
+      @@site           = Cms::Site.find(site_id)
+      Page.site        = @@site
+      Page.mobile      = @@request_uri =~ /^\/_[a-z]+\/([0-9]+)m/
+      Page.smart_phone = @@request_uri =~ /^\/_[a-z]+\/([0-9]+)s/
+      @@internal_uri   = @@request_uri
+      @@internal_uri  += "index.html" if @@internal_uri =~ /\/$/
     when 'ssl'
       site_id         = @@request_uri.gsub(/^\/_[a-z]+\/([0-9]+).*/, '\1').to_i
       site_mobile     = @@request_uri =~ /^\/_[a-z]+\/([0-9]+)m/

@@ -312,6 +312,11 @@ class GpArticle::Content::Doc < Cms::Content
     setting_extra_value(:serial_no_settings, :title)
   end
 
+  def lang_options
+    lang = setting_value(:lang, GpArticle::Content::Setting::DEFAULT_LANG)
+    lang.to_s.split(',').map { |str| str.split(' ') }
+  end
+
   private
 
   def set_default_settings

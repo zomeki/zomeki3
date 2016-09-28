@@ -50,11 +50,19 @@
       </table>
     </div>
 
+    <table class="show">
+      <tr>
+        <th><%= f.label :body %></th>
+        <th style="text-align: right;">
+          <span style="margin-right: 10px;">
+            <%= f.select :lang, options_for_select(@content.lang_options, @item.lang) %>
+          </span>
+        </th>
+      </tr>
+    </table>
+
     <div id="normal_body_form" style="<%= 'display:none;' if @item.template %>">
       <table class="show">
-        <tr>
-          <th><%= f.label :body %></th>
-        </tr>
         <tr>
           <td class="cke_editor_wrapper">
             <%= init_ckeditor :baseHref => "#{gp_article_doc_path(@content, inline_id)}/" %>
