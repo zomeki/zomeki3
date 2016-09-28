@@ -1,6 +1,32 @@
 <%= render 'gp_article/admin/docs/replacement_notification' %>
 
-<div class="tabs">
+<script type="text/javascript">
+$(document).ready(function () {
+  var active_tab_index = $('#tabs > ul > li').length - 1;
+
+  <%- if (active_tab = params[:active_tab]) -%>
+  $('#tabs > ul > li').each(function (index, item) {
+    if ($(item).hasClass('<%= active_tab %>')) {
+      active_tab_index = index;
+      return false;
+    }
+  });
+  <%- end -%>
+
+  $('#tabs').tabs({
+    active: active_tab_index,
+    show: function (event, ui) {
+      if ((typeof map) !== 'undefined' && map) {
+        google.maps.event.trigger(map, 'resize');
+      }
+    }
+  });
+  $('#tabs .ui-tabs-nav > li').css('float', 'right');
+  $('#tabs').show();
+});
+</script>
+
+<div id="tabs" class="tabs" style="display: none;">
   <ul>
     <li class="options"><a href="#tab8">オプション</a></li>
     <li class="mobile"><a href="#tab7">携帯</a></li>
@@ -342,33 +368,4 @@
 
 <%= javascript_tag do -%>
 <%= toggle_form_function %>
-
-$(document).ready(function () {
-  var active_tab_index = $('.tabs > ul > li').length - 1;
-
-  <%- if (active_tab = params[:active_tab]) -%>
-  $('.tabs > ul > li').each(function (index, item) {
-    if ($(item).hasClass('<%= active_tab %>')) {
-      active_tab_index = index;
-      return false;
-    }
-  });
-  <%- end -%>
-
-  $('.tabs').tabs({
-    active: active_tab_index,
-    show: function (event, ui) {
-        if ((typeof me) !== 'undefined' && me) {
-          var lat = $('#centerDispLat').val();
-          var lng = $('#centerDispLng').val();
-          if (lat === undefined) { lat = 0; }
-          if (lng === undefined) { lng = 0; }
-
-          google.maps.event.trigger(me.map, 'resize');
-          me.map.panTo(new google.maps.LatLng(lat, lng));
-        }
-      }
-  });
-  $('.tabs .ui-tabs-nav > li').css('float', 'right');
-});
 <%- end -%>
