@@ -1,8 +1,21 @@
 <%- inline_id = @item.id || (@item.in_tmp_id ||= Util::Sequencer.next_id(:tmp, md5: true)) -%>
 
+<script type="text/javascript">
+$(document).ready(function () {
+  $('#tabs').tabs({
+    active: 0,
+    show: function (event, ui) {
+      if ((typeof map) !== 'undefined' && map) {
+        google.maps.event.trigger(map, 'resize');
+      }
+    }
+  });
+});
+</script>
+
 <span class="note">※は必須項目です。</span>
 
-<div class="tabs">
+<div id="tabs" class="tabs">
   <ul>
     <li><a href="#tab1">記事</a></li>
     <li><a href="#tab2">公開日</a></li>
@@ -45,6 +58,9 @@
     </div>
 
     <div id="normal_body_form" style="<%= 'display:none;' if @item.template %>">
+      <div>
+        <%= f.select :lang, options_for_select(@content.lang_options, @item.lang) %>
+      </div>
       <div class="label1"><%= f.label :body %></div>
       <div class="cke_editor_wrapper">
         <%= init_ckeditor :baseHref => "#{gp_article_doc_path(@content, inline_id)}/" %>
@@ -149,21 +165,21 @@
 
     <%- if @content.display_dates(:published_at) -%>
     <div>
-      <div class="label1">公開日時</div>
+      <div class="label1"><%= f.label :display_published_at %></div>
       <%= f.text_field :display_published_at, :value => value_for_datetimepicker(f.object_name, :display_published_at),
                        :style => 'width: 150px;', :class => 'datetimepicker' %>
     </div>
     <%- end -%>
     <%- if @content.display_dates(:updated_at) -%>
     <div>
-      <div class="label1">最終更新日時</div>
+      <div class="label1"><%= f.label :display_updated_at %></div>
       <%= f.text_field :display_updated_at, :value => value_for_datetimepicker(f.object_name, :display_updated_at),
                        :style => 'width: 150px;', :class => 'datetimepicker' %>
     </div>
     <%- end -%>
     <%- end -%>
 
-    <p class="form">公開日時設定</p>
+    <p class="form">公開予約設定</p>
 
     <div>
       <div class="label1">公開開始日時</div>
@@ -476,21 +492,6 @@ $(document).ready(function () {
     new_doc.append(rel_doc.children(':selected').clone(true)).val(rel_doc.val());
     $('<div>', {style: 'margin-top: 10px; width: 700px;'}).append(new_doc).appendTo($('#rel_docs'));
     rel_doc.val('');
-  });
-
-  $('.tabs').tabs({
-    active: 0,
-    show: function (event, ui) {
-        if ((typeof me) !== 'undefined' && me) {
-          var lat = $('#centerDispLat').val();
-          var lng = $('#centerDispLng').val();
-          if (lat === undefined) { lat = 0; }
-          if (lng === undefined) { lng = 0; }
-
-          google.maps.event.trigger(me.map, 'resize');
-          me.map.panTo(new google.maps.LatLng(lat, lng));
-        }
-      }
   });
 
   set_copy_date('#item_event_started_on', '#item_event_ended_on');
