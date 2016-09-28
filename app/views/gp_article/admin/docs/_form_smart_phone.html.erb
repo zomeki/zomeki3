@@ -162,21 +162,21 @@ $(document).ready(function () {
 
     <%- if @content.display_dates(:published_at) -%>
     <div>
-      <div class="label1">公開日時</div>
+      <div class="label1"><%= f.label :display_published_at %></div>
       <%= f.text_field :display_published_at, :value => value_for_datetimepicker(f.object_name, :display_published_at),
                        :style => 'width: 150px;', :class => 'datetimepicker' %>
     </div>
     <%- end -%>
     <%- if @content.display_dates(:updated_at) -%>
     <div>
-      <div class="label1">最終更新日時</div>
+      <div class="label1"><%= f.label :display_updated_at %></div>
       <%= f.text_field :display_updated_at, :value => value_for_datetimepicker(f.object_name, :display_updated_at),
                        :style => 'width: 150px;', :class => 'datetimepicker' %>
     </div>
     <%- end -%>
     <%- end -%>
 
-    <p class="form">公開日時設定</p>
+    <p class="form">公開予約設定</p>
 
     <div>
       <div class="label1">公開開始日時</div>
