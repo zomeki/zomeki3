@@ -108,7 +108,12 @@ class Survey::Admin::FormsController < Cms::Controller::Admin::Base
   end
 
   def approve
-    @item.approve(Core.user, request) if @item.state_approvable? && @item.approvers.include?(Core.user)
+    if @item.state_approvable? && @item.approvers.include?(Core.user)
+      @item.approve(Core.user) do
+        @item.update_column(:state, 'approved')
+        Sys::OperationLog.log(request, item: @item)
+      end
+    end
     redirect_to url_for(:action => :show), notice: '承認処理が完了しました。'
   end
 

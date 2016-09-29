@@ -225,13 +225,20 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   end
 
   def approve
-    @item.approve(Core.user, request) if @item.approvers.include?(Core.user)
+    if @item.approvers.include?(Core.user)
+      @item.approve(Core.user) do
+        @item.update_column(:state, @item.tasks.present? ? 'prepared' : 'approved')
+        Sys::OperationLog.log(request, item: @item)
+      end
+    end
     redirect_to url_for(:action => :show), notice: '承認処理が完了しました。'
   end
 
   def passback
     if @item.state_approvable? && @item.approvers.include?(Core.user)
-      @item.passback(Core.user, comment: params[:comment])
+      @item.passback(Core.user, comment: params[:comment]) do
+        @item.update_column(:state, 'draft')
+      end
       redirect_to gp_article_doc_url(@content, @item), notice: '差し戻しが完了しました。'
     else
       redirect_to gp_article_doc_url(@content, @item), notice: '差し戻しに失敗しました。'
@@ -240,7 +247,9 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
   def pullback
     if @item.state_approvable? && @item.approval_requesters.include?(Core.user)
-      @item.pullback(comment: params[:comment])
+      @item.pullback(comment: params[:comment]) do
+        @item.update_column(:state, 'draft')
+      end
       redirect_to gp_article_doc_url(@content, @item), notice: '引き戻しが完了しました。'
     else
       redirect_to gp_article_doc_url(@content, @item), notice: '引き戻しに失敗しました。'

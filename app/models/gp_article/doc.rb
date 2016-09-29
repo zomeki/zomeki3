@@ -149,7 +149,7 @@ class GpArticle::Doc < ActiveRecord::Base
   scope :with_target_state, ->(target_state) {
     case target_state
     when 'processing'
-      where(state: %w(draft approvable approved))
+      where(state: %w(draft approvable approved prepared))
     when 'public'
       where(state: 'public')
     when 'closed'
@@ -321,6 +321,10 @@ class GpArticle::Doc < ActiveRecord::Base
 
   def state_approved?
     state == 'approved'
+  end
+
+  def state_prepared?
+    state == 'prepared'
   end
 
   def state_public?
@@ -589,7 +593,7 @@ class GpArticle::Doc < ActiveRecord::Base
   end
 
   def will_replace?
-    prev_edition && (state_draft? || state_approvable? || state_approved?)
+    prev_edition && (state_draft? || state_approvable? || state_approved? || state_prepared?)
   end
 
   def will_be_replaced?
