@@ -27,7 +27,7 @@ class GpArticle::Script::DocsController < Cms::Controller::Script::Publication
   end
 
   def publish_by_task
-    if (item = params[:item]).try(:state_approved?)
+    if (item = params[:item]) && (item.state_approved? || item.state_prepared?)
       Script.current
       info_log "-- Publish: #{item.class}##{item.id}"
 
@@ -63,7 +63,7 @@ class GpArticle::Script::DocsController < Cms::Controller::Script::Publication
   end
 
   def close_by_task
-    if (item = params[:item]).try(:state_public?)
+    if (item = params[:item]) && item.state_public?
       Script.current
       info_log "-- Close: #{item.class}##{item.id}"
 

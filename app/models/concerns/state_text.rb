@@ -13,7 +13,7 @@ module StateText
       when 'approvable'; '承認待ち'
       when 'recognized'; '公開待ち'
       when 'approved'; '公開待ち'
-      when 'prepared'; '公開'
+      when 'prepared'; '公開日時待ち'
       when 'public'; '公開中'
       when 'closed'; '非公開'
       when 'completed'; '完了'

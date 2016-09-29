@@ -1,9 +1,9 @@
-location ^~ /_api/ {
-  error_page 418 = @puma; return 418;
+location ^~ /_api {
+  error_page 418 = @proxy; return 418;
 }
 
-location ^~ /<%= ZomekiCMS::ADMIN_URL_PREFIX %>/ {
-  error_page 418 = @puma; return 418;
+location ^~ /<%= ZomekiCMS::ADMIN_URL_PREFIX %> {
+  error_page 418 = @proxy; return 418;
 }
 
 
@@ -16,7 +16,7 @@ if ($http_user_agent ~* (Android|iPhone|iPod|MSIEMobile|Windows\sPhone)) {
 }
 
 location / {
-  try_files $uri @puma;
+  try_files $uri @proxy;
 
   if ($is_mobile = 1) {
     rewrite ^(?!/_mobile)(.+)$ /_mobile$1 last;
@@ -37,17 +37,17 @@ location / {
 }
 
 location /_smartphone {
-  try_files $uri @puma;
+  try_files $uri @proxy;
 }
 
 location /_mobile {
-  try_files $uri @puma;
+  try_files $uri @proxy;
 }
 
-location @puma {
+location @proxy {
   proxy_set_header X-Forwarded-Host $host;
   proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
   proxy_set_header X-Forwarded-Proto $scheme;
 
-  proxy_pass http://zomeki_puma;
+  proxy_pass http://zomeki_unicorn;
 }

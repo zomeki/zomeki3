@@ -39,7 +39,7 @@ end
   <%= link_to :duplicate, {:do => :duplicate}, :confirm => '複製してよろしいですか？' %>
   <%= link_to '承認', approve_gp_article_doc_path, :method => :post, :confirm => '承認してよろしいですか？' if @item.state_approvable? &&
                                                                                                                @item.approvers.include?(Core.user) %>
-  <%= link_to :publish, publish_gp_article_doc_path, :method => :post, :confirm => pubmsg if @item.state_approved? &&
+  <%= link_to :publish, publish_gp_article_doc_path, :method => :post, :confirm => pubmsg if (@item.state_approved? || @item.state_prepared?) &&
                                                                                              @item.approval_participators.include?(Core.user) %>
   <%= link_to :close, {:do => :close}, :confirm => '公開を終了してよろしいですか？' if @item.closable? %>
   <%- end -%>
