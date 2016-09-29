@@ -124,7 +124,7 @@ bind "unix://#{zomeki_root}/tmp/sockets/puma.sock"
 # The default is "0".
 #
 # workers 2
-workers 6
+workers 2
 
 # Code to run immediately before the master starts workers.
 #
