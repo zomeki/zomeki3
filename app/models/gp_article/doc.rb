@@ -149,7 +149,7 @@ class GpArticle::Doc < ActiveRecord::Base
   scope :with_target_state, ->(target_state) {
     case target_state
     when 'processing'
-      where(state: %w(draft approval approved))
+      where(state: %w(draft approvable approved))
     when 'public'
       where(state: 'public')
     when 'closed'
