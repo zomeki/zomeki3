@@ -44,6 +44,7 @@ class GpArticle::Public::Piece::RecentTabsController < Sys::Controller::Public::
                  title: tab.title,
                  class: tab_class,
                  more: tab.more.presence,
+                 more_dir: tab.more_dir,
                  current: current,
                  docs: docs)
     end

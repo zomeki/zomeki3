@@ -37,6 +37,11 @@ class GpArticle::Piece::RecentTabXml < Cms::Model::Base::PieceExtension
     end
   end
 
+  def more_dir
+    return if more.blank?
+    more.end_with?('/') ? more : "#{File.dirname(more)}/"
+  end
+
   private
 
   def load_categories_with_layer_array
