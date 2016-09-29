@@ -34,6 +34,13 @@ ZomekiCMS::Application.routes.draw do
           post :synchronize
         end
       end
+    resources :kana_dictionaries,
+      :controller  => "admin/kana_dictionaries" do
+        collection do
+          get  :make
+          post :make
+        end
+      end
     resources :users,
       :controller  => "admin/users"
     resources :groups,
