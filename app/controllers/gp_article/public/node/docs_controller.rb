@@ -72,11 +72,16 @@ class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
       return http_error(404) unless @doc.creator.group == @group.sys_group
     end
 
-    if (file = @doc.files.find_by(name: "#{params[:basename]}.#{params[:extname]}"))
-      mt = Rack::Mime.mime_type(".#{params[:extname]}")
+    paths = params[:path].split('/')
+    basename = paths.last
+    extname = params[:format]
+    thumb = paths[0].to_sym if paths.size == 2
+
+    if (file = @doc.files.find_by(name: "#{basename}.#{extname}"))
+      mt = Rack::Mime.mime_type(".#{extname}")
       type, disposition = (mt =~ %r!^image/|^application/pdf$! ? [mt, 'inline'] : [mt, 'attachment'])
       disposition = 'attachment' if request.env['HTTP_USER_AGENT'] =~ /Android/
-      send_file file.upload_path, :type => type, :filename => file.name, :disposition => disposition
+      send_file file.upload_path(type: thumb), type: type, filename: file.name, disposition: disposition
     else
       http_error(404)
     end
