@@ -76,4 +76,8 @@ class Page
     return title if title == @@site.name
     return title + ' | ' + @@site.name
   end
+
+  def self.preview_terminal
+    mobile? ? 'm' : smart_phone? ? 's' : ''
+  end
 end
