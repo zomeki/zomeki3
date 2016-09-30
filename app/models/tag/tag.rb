@@ -66,4 +66,11 @@ class Tag::Tag < ActiveRecord::Base
   def update_last_tagged_at(doc=nil)
     update_column(:last_tagged_at, Time.now)
   end
+
+  class << self
+    def split_raw_string(str)
+      str = Moji.normalize_zen_han(str).downcase
+      str.split(/"([^"]*)"|[ 　,、，]+/).select(&:present?).uniq
+    end
+  end
 end
