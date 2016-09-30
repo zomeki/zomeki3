@@ -124,7 +124,8 @@ class GpArticle::Doc < ActiveRecord::Base
     rel = rel.with_target(criteria[:target]) if criteria[:target].present?
     rel = rel.with_target_state(criteria[:target_state]) if criteria[:target_state].present?
 
-    rel = rel.search_with_text(:title, :body, :name, criteria[:free_word]) if criteria[:free_word].present?
+    search_columns = [:name, :title, :body, :subtitle, :summary, :mobile_title, :mobile_body]
+    rel = rel.search_with_text(*search_columns, criteria[:free_word]) if criteria[:free_word].present?
 
     rel
   }
