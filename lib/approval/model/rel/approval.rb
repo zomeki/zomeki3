@@ -33,7 +33,7 @@ module Approval::Model::Rel::Approval
     return users.uniq
   end
 
-  def approve(user, request = nil)
+  def approve(user)
     return unless state_approvable?
 
     approval_requests.each do |approval_request|
