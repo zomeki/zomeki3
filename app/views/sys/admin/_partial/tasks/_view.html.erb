@@ -1,21 +1,21 @@
 <%-
 return '' if item.tasks.empty?
 
-published_at = item.find_task_by_name('publish')
-closed_at = item.find_task_by_name('close')
+publish_task = item.tasks.detect(&:publish_task?)
+close_task = item.tasks.detect(&:close_task?)
 -%>
 
-<%- if published_at || closed_at -%>
-<p class="form">公開日時設定</p>
+<%- if publish_task || close_task -%>
+<p class="form">公開予約設定</p>
 
 <table class="show">
   <tr>
     <th>公開開始日時</th>
-    <td><%=l published_at if published_at %></td>
+    <td><%=l publish_task.process_at if publish_task && publish_task.process_at %></td>
   </tr>
   <tr>
     <th>公開終了日時</th>
-    <td><%=l closed_at if closed_at %></td>
+    <td><%=l close_task.process_at if close_task && close_task.process_at %></td>
   </tr>
 </table>
 <%- end -%>

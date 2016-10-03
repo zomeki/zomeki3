@@ -24,6 +24,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     @items = GpArticle::Doc.content_and_criteria(@content, doc_criteria)
       .order(updated_at: :desc)
       .paginate(page: params[:page], per_page: 30)
+      .preload(:prev_edition, :content, creator: [:user, :group])
 
     _index @items
   end
@@ -327,7 +328,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
       :meta_description, :meta_keywords, :share_to_sns_with, :og_type, :og_title, :og_description, :og_image,
       :in_tmp_id, :in_ignore_link_check, :in_ignore_accessibility_check, :in_modify_accessibility_check,
       :template_values => params[:item][:template_values].try(:keys),
-      :in_tasks => [:publish, :close],
+      :tasks_attributes => [:id, :name, :process_at],
       :inquiries_attributes => [:id, :state, :_destroy,:group_id],
       :in_maps => [:name, :title, :map_lat, :map_lng, :map_zoom, :markers => [:name, :lat, :lng]],
       :in_creator => [:group_id, :user_id],
