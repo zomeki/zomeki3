@@ -1,7 +1,14 @@
 module Sys::Model::Rel::Task
-  def self.included(mod)
-    mod.has_many :tasks, class_name: 'Sys::Task', dependent: :destroy, as: :processable
-    mod.after_save :save_tasks
+  extend ActiveSupport::Concern
+
+  included do
+    has_many :tasks, class_name: 'Sys::Task', dependent: :destroy, as: :processable
+    after_save :save_tasks
+
+    scope :with_task_name, ->(name) {
+      tasks = Sys::Task.arel_table
+      joins(:tasks).where(tasks[:name].eq(name))
+    }
   end
 
   def find_task_by_name(name)

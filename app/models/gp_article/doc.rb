@@ -1,6 +1,5 @@
 class GpArticle::Doc < ActiveRecord::Base
   include Sys::Model::Base
-  include Sys::Model::Base::OperationLog
   include Sys::Model::Rel::Creator
   include Sys::Model::Rel::Editor
   include Sys::Model::Rel::EditableGroup
@@ -49,6 +48,9 @@ class GpArticle::Doc < ActiveRecord::Base
   # Page
   belongs_to :concept, :foreign_key => :concept_id, :class_name => 'Cms::Concept'
   belongs_to :layout, :foreign_key => :layout_id, :class_name => 'Cms::Layout'
+
+  has_many :operation_logs, -> { where(item_model: 'GpArticle::Doc') },
+    foreign_key: :item_id, class_name: 'Sys::OperationLog'
 
   belongs_to :prev_edition, :class_name => self.name
   has_one :next_edition, :foreign_key => :prev_edition_id, :class_name => self.name
@@ -116,13 +118,51 @@ class GpArticle::Doc < ActiveRecord::Base
     where(arel_table[:event_ended_on].gteq(start_date)).where(arel_table[:event_started_on].lt(end_date + 1))
   }
   scope :content_and_criteria, ->(content, criteria) {
-    docs = self.arel_table
-
     rel = all
-    rel = rel.where(docs[:content_id].eq(content.id)) if content.kind_of?(GpArticle::Content::Doc)
+    rel = rel.where(arel_table[:content_id].eq(content.id)) if content
 
     rel = rel.with_target(criteria[:target]) if criteria[:target].present?
     rel = rel.with_target_state(criteria[:target_state]) if criteria[:target_state].present?
+
+    [:state, :event_state, :marker_state].each do |key|
+      rel = rel.where(key => criteria[key]) if criteria[key].present?
+    end
+
+    if criteria[:creator_user_name].present?
+      rel = rel.operated_by_user_name('create', criteria[:creator_user_name])
+    end
+
+    if criteria[:creator_group_id].present?
+      rel = rel.operated_by_group('create', criteria[:creator_group_id])
+    end
+
+    if criteria[:category_ids].present? && (category_ids = criteria[:category_ids].select(&:present?)).present?
+      rel = rel.categorized_into_all(category_ids)
+    end
+
+    if criteria[:user_operation].present?
+      rel = rel.operated_by_user_name(criteria[:user_operation], criteria[:user_name]) if criteria[:user_name].present?
+      rel = rel.operated_by_group(criteria[:user_operation], criteria[:user_group_id]) if criteria[:user_group_id].present?
+    end
+
+    if criteria[:date_column].present? && criteria[:date_operation].present?
+      dates = criteria[:dates].to_a.map { |date| date.present? ? (Date.parse(date) rescue nil) : nil }.compact
+      rel = rel.search_date_column(criteria[:date_column], criteria[:date_operation], dates)
+    end
+
+    if criteria[:assocs].present?
+      criteria[:assocs].each { |assoc| rel = rel.joins(assoc.to_sym) }
+    end
+
+    if criteria[:tasks].present?
+      criteria[:tasks].each { |task| rel = rel.with_task_name(task) }
+    end
+
+    if criteria[:texts].present?
+      criteria[:texts].each do |column|
+        rel = rel.where.not(arel_table[column].eq('')).where.not(arel_table[column].eq(nil))
+      end
+    end
 
     search_columns = [:name, :title, :body, :subtitle, :summary, :mobile_title, :mobile_body]
     rel = rel.search_with_text(*search_columns, criteria[:free_word]) if criteria[:free_word].present?
@@ -145,6 +185,8 @@ class GpArticle::Doc < ActiveRecord::Base
         editable_groups[:group_ids].matches("% #{user.group.id} %"),
         editable_groups[:group_ids].matches("% #{user.group.id}")
       ].reduce(:or))
+    else
+      all
     end
   }
   scope :with_target_state, ->(target_state) {
@@ -155,57 +197,81 @@ class GpArticle::Doc < ActiveRecord::Base
       where(state: 'public')
     when 'closed'
       where(state: 'closed')
-    end
-  }
-  scope :with_creator_group_id, ->(group_id) {
-    groups = Sys::Group.arel_table
-    joins(creator: :group).where(groups[:id].in(group_id))
-  }
-  scope :with_creator_group_name, ->(group_name) {
-    groups = Sys::Group.arel_table
-    joins(creator: :group).where(groups[:name].matches("%#{group_name}%"))
-  }
-  scope :with_creator_user_name, ->(user_name) {
-    users = Sys::User.arel_table
-    joins(creator: :user).where([
-      users[:name].matches("%#{user_name}%"),
-      users[:name_en].matches("%#{user_name}%")
-    ].reduce(:or))
-  }
-  scope :created_or_operated_docs_for_user, ->(user) {
-    creators = Sys::Creator.arel_table
-    operation_logs = Sys::OperationLog.arel_table
-    joins(:creator).eager_load(:operation_logs)
-      .where([creators[:user_id].eq(user.id), operation_logs[:user_id].eq(user.id)].reduce(:or))
-  }
-  scope :editable_docs_for_user, ->(user) {
-    if user.has_auth?(:manager)
-      all
     else
-      creators = Sys::Creator.arel_table
-      editable_groups = Sys::EditableGroup.arel_table
-      joins(:creator).eager_load(:editable_group).where([
-        creators[:group_id].eq(user.group.id),
-        editable_groups[:all].eq(true),
-        editable_groups[:group_ids].eq(user.group.id.to_s),
-        editable_groups[:group_ids].matches("#{user.group.id} %"),
-        editable_groups[:group_ids].matches("% #{user.group.id} %"),
-        editable_groups[:group_ids].matches("% #{user.group.id}")
-      ].reduce(:or))
+      none
     end
   }
-  scope :approval_related_docs_for_user, ->(user) {
-    approval_requests = Approval::ApprovalRequest.arel_table
-    assignments = Approval::Assignment.arel_table
-    distinct.joins(approval_requests: [approval_flow: [approvals: :assignments]])
-      .where([approval_requests[:user_id].eq(user.id), assignments[:user_id].eq(user.id)].reduce(:or))
+  scope :operated_by_user_name, ->(action, user_name) {
+    case action
+    when 'create'
+      users = Sys::User.arel_table
+      joins(creator: :user).where([
+        users[:name].matches("%#{user_name}%"),
+        users[:name_en].matches("%#{user_name}%")
+      ].reduce(:or))
+    else
+      operation_logs = Sys::OperationLog.arel_table
+      users = Sys::User.arel_table
+      joins(operation_logs: :user)
+        .where(operation_logs[:action].eq(action))
+        .where([
+          users[:name].matches("%#{user_name}%"),
+          users[:name_en].matches("%#{user_name}%")
+        ].reduce(:or))
+    end
+  }
+  scope :operated_by_group, ->(action, group_id) {
+    case action
+    when 'create'
+      creators = Sys::Creator.arel_table
+      joins(:creator).where(creators[:group_id].eq(group_id))
+    else
+      operation_logs = Sys::OperationLog.arel_table
+      users_groups = Sys::UsersGroup.arel_table
+      joins(operation_logs: { user: :users_groups })
+        .where(operation_logs[:action].eq(action))
+        .where(users_groups[:group_id].eq(group_id))
+    end
+  }
+  scope :search_date_column, ->(column, operation, dates = nil) {
+    case operation
+    when 'today'
+      today = Date.today
+      with_date_between(column, today, today)
+    when 'this_week'
+      today = Date.today
+      with_date_between(column, today.beginning_of_week, today.end_of_week)
+    when 'last_week'
+      last_week = 1.week.ago
+      with_date_between(column, last_week.beginning_of_week, last_week.end_of_week)
+    when 'equal'
+      with_date_between(column, dates[0], dates[0]) if dates[0]
+    when 'before'
+      where(arel_table[column].lteq(dates[0].end_of_day)) if dates[0]
+    when 'after'
+      where(arel_table[column].gteq(dates[0].beginning_of_day)) if dates[0]
+    when 'between'
+      with_date_between(column, dates[0], dates[1]) if dates[0] && dates[1]
+    else
+      none
+    end
+  }
+  scope :with_date_between, ->(column, date1, date2) {
+    where(arel_table[column].in(date1.beginning_of_day..date2.end_of_day))
   }
   scope :categorized_into, ->(category_ids) {
     cats = GpCategory::Categorization.arel_table
     where(id: GpCategory::Categorization.select(:categorizable_id)
       .where(cats[:categorized_as].eq('GpArticle::Doc'))
-      .where(cats[:category_id].in(category_ids))
-      .order(cats[:sort_no].eq(nil), cats[:sort_no].asc))
+      .where(cats[:category_id].in(category_ids)))
+  }
+  scope :categorized_into_all, ->(category_ids) {
+    cats = GpCategory::Categorization.arel_table
+    category_ids.inject(all) do |rel, category_id|
+      rel = rel.where(id: GpCategory::Categorization.select(:categorizable_id)
+        .where(cats[:categorized_as].eq('GpArticle::Doc'))
+        .where(cats[:category_id].eq(category_id)))
+    end
   }
   scope :organized_into, ->(group_ids) {
     groups = Sys::Group.arel_table

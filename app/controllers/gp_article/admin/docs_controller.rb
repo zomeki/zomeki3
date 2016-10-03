@@ -21,26 +21,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   def index
     return index_options if params[:options]
 
-    if params[:target_public].blank?
-      if Core.user.has_auth?(:manager)
-        params[:target] = 'all' if params[:target].blank?
-        params[:target_state] = 'processing' if params[:target_state].blank?
-      else
-        params[:target] = 'user' if params[:target].blank? || params[:target] == 'all'
-        params[:target_state] = 'processing' if params[:target_state].blank?
-      end
-    end
-
-    criteria = params[:criteria] || {}
-    if params[:target] == '' && params[:target_state] == ''
-      criteria[:target] = 'all'
-      criteria[:target_state] = 'public'
-    else
-      criteria[:target] = params[:target]
-      criteria[:target_state] = params[:target_state]
-    end
-
-    @items = GpArticle::Doc.content_and_criteria(@content, criteria)
+    @items = GpArticle::Doc.content_and_criteria(@content, doc_criteria)
       .order(updated_at: :desc)
       .paginate(page: params[:page], per_page: 30)
 
@@ -307,6 +288,30 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   end
 
   private
+
+  def doc_criteria
+    criteria = params[:criteria] || {}
+
+    if params[:target_public].blank?
+      if Core.user.has_auth?(:manager)
+        params[:target] = 'all' if params[:target].blank?
+        params[:target_state] = 'processing' if params[:target_state].blank?
+      else
+        params[:target] = 'user' if params[:target].blank? || params[:target] == 'all'
+        params[:target_state] = 'processing' if params[:target_state].blank?
+      end
+    end
+
+    if params[:target] == '' && params[:target_state] == ''
+      criteria[:target] = 'all'
+      criteria[:target_state] = 'public'
+    else
+      criteria[:target] = params[:target]
+      criteria[:target_state] = params[:target_state]
+    end
+
+    criteria
+  end
 
   def doc_params
     params.require(:item).permit(

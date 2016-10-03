@@ -1,12 +1,24 @@
+<%-
+category_types = @content.visible_category_types
+category_type_options = category_types.map { |type| [type.name, type.id] }
+category_type_ids = params.dig(:criteria, :category_type_ids) || []
+category_ids = params.dig(:criteria, :category_ids) || []
+-%>
+
+<div style="float: right; margin: 10px;">
+  <a href="#" id="toggleSearch"><%= params[:detail_flag] != '1' ? '拡張検索' : '基本検索' %></a>
+</div>
+
 <%= form_tag '', method: 'get', class: 'search' do -%>
-<%= hidden_field_tag :target, params[:target] if params[:target].present? %>
-<%= hidden_field_tag :target_state, params[:target_state] if params[:target_state].present? %>
-<%= hidden_field_tag :target_public, params[:target_public] if params[:target_public].present? %>
+<%= hidden_field_tag :target, params[:target] %>
+<%= hidden_field_tag :target_state, params[:target_state] %>
+<%= hidden_field_tag :target_public, params[:target_public] %>
+<%= hidden_field_tag :detail_flag, params[:detail_flag] %>
 <table>
   <tr>
     <th>タイトル・内容・ディレクトリ名など</th>
-    <th>所属</th>
-    <th>作成者</th>
+    <th>カテゴリグループ</th>
+    <th>カテゴリ<a href="#" id="addCategory" style="margin-left: 10px; <%= 'display: none;' if params[:detail_flag] != '1' %>">追加</a></th>
     <td rowspan="2" class="submitters">
       <%= submit_tag '検索' %>
       <%= submit_tag 'リセット', name: 'reset_criteria' %>
@@ -14,14 +26,152 @@
   </tr>
   <tr>
     <td><%= text_field_tag 'criteria[free_word]', params.dig(:criteria, :free_word), style: 'width: 400px;' %></td>
-    <td><%-
-          belongings = Cms::SiteBelonging.arel_table
-          groups = Sys::Group.joins(:site_belongings).where(parent_id: 1).where(belongings[:site_id].eq(Core.site.id))
-          options = groups.inject([]){|r, c| r.concat(c.descendants_for_option) }
-        -%>
-        <%= select_tag 'criteria[group_id]',
-                       options_for_select(options, params.dig(:criteria, :group_id)), include_blank: true %></td>
-    <td><%= text_field_tag 'criteria[user]', params.dig(:criteria, :user), style: 'width: 150px;' %></td>
+    <%- if @content.visible_category_types.present? -%>
+    <td>
+      <%-
+        selected_category_type = category_types.detect { |type| type.id.to_s == category_type_ids[0] }
+        category_options = selected_category_type ? selected_category_type.categories_for_option : []
+      -%>
+      <%= select_tag 'criteria[category_type_ids][]', options_for_select(category_type_options, category_type_ids[0]),
+            include_blank: true, id: "criteria_category_type_ids_0" %>
+    </td>
+    <td>
+      <%= select_tag 'criteria[category_ids][]', options_for_select(category_options, category_ids[0]),
+            include_blank: true, id: "criteria_category_ids_0" %>
+    </td>
+    <%- end -%>
   </tr>
 </table>
+
+<div id="detailSearch" style="<%= 'display: none;' if params[:detail_flag] != '1' %>">
+  <%- if @content.visible_category_types.present? -%>
+  <table id="categoryContainer">
+    <tr>
+      <%- category_type_ids.drop(1).each_with_index do |_, i| -%>
+        <th>カテゴリグループ</th>
+        <th>カテゴリ</th>
+      <%- end -%>
+    </tr>
+    <tr>
+      <%- category_type_ids.drop(1).each_with_index do |_, i| -%>
+      <td>
+        <%-
+          selected_category_type = category_types.detect { |type| type.id.to_s == category_type_ids[i+1] }
+          category_options = selected_category_type ? selected_category_type.categories_for_option : []
+        -%>
+        <%= select_tag 'criteria[category_type_ids][]', options_for_select(category_type_options, category_type_ids[i+1]),
+              include_blank: true, id: "criteria_category_type_ids_#{i+1}" %>
+      </td>
+      <td>
+        <%= select_tag 'criteria[category_ids][]', options_for_select(category_options, category_ids[i+1]),
+              include_blank: true, id: "criteria_category_ids_#{i+1}" %>
+      </td>
+      <%- end -%>
+    </tr>
+  </table>
+  <%- end -%>
+  
+  <table>
+    <tr>
+      <th>日付</th>
+      <th>状態</th>
+    </tr>
+    <tr>
+      <td>
+        <%= select_tag 'criteria[date_column]', options_for_select([['作成','created_at'], ['承認','recognized_at'], ['公開','published_at']], params.dig(:criteria, :date_column)), include_blank: true %>
+        <%= select_tag 'criteria[date_operation]', options_for_select([['本日','today'],['今週','this_week'],['先週','last_week'],['指定日','equal'],['以前','before'],['以後','after'],['期間','between']], params.dig(:criteria, :date_operation)), include_blank: true %>
+        <%= text_field_tag 'criteria[dates][]', params.dig(:criteria, :dates, 0), id: 'criteria_dates_0', class: 'datepicker', style: 'width: 120px;' %> ～
+        <%= text_field_tag 'criteria[dates][]', params.dig(:criteria, :dates, 1), id: 'criteria_dates_1', class: 'datepicker', style: 'width: 120px;' %>
+      </td>
+      <td><%= select_tag 'criteria[state]', options_for_select([['下書き','draft'],['承認待ち','approvable'],['公開待ち','approved'],['公開日時待ち','prepared']], params.dig(:criteria, :state)), include_blank: true %></td>
+    </tr>
+  </table>
+  <table>
+    <tr>
+      <th>ユーザー</th>
+    </tr>
+    <tr>
+      <td>
+        <%= select_tag 'criteria[user_operation]', options_for_select([['作成','create'], ['承認','approve'], ['公開','publish']], params.dig(:criteria, :user_operation)), include_blank: true %>
+        <%= select_tag 'criteria[user_group_id]', options_for_select(Core.site.groups_for_option, params.dig(:criteria, :user_group_id)), include_blank: true %>
+        <%= text_field_tag 'criteria[user_name]', params.dig(:criteria, :user_name), style: 'width: 200px;' %>
+      </td>
+    </tr>
+  </table>
+  
+  <table style="margin-top: 20px;">
+    <tr>
+      <td><label><%= check_box_tag 'criteria[texts][]', 'summary', params.dig(:criteria, :texts).to_a.include?('summary') %> 概要</label></td>
+      <td><label><%= check_box_tag 'criteria[assocs][]', 'files', params.dig(:criteria, :assocs).to_a.include?('files') %> 添付ファイル</label></td>
+      <td><label><%= check_box_tag 'criteria[marker_state]', 'visible', params.dig(:criteria, :marker_state) == 'visible' %> 地図</label></td>
+      <td><label><%= check_box_tag 'criteria[tasks][]', 'publish', params.dig(:criteria, :tasks).to_a.include?('publish') %> 公開開始日時</label></td>
+    </tr>
+    <tr>
+      <td><label><%= check_box_tag 'criteria[texts][]', 'subtitle', params.dig(:criteria, :texts).to_a.include?('subtitle') %> サブタイトル</label></td>
+      <td><label><%= check_box_tag 'criteria[texts][]', 'raw_tags', params.dig(:criteria, :texts).to_a.include?('raw_tags') %> 関連ワード</label></td>
+      <td><label><%= check_box_tag 'criteria[event_state]', 'visible', params.dig(:criteria, :event_state) == 'visible' %> イベント</label></td>
+      <td><label><%= check_box_tag 'criteria[tasks][]', 'close', params.dig(:criteria, :tasks).to_a.include?('close') %> 公開終了日時</label></td>
+    </tr>
+    <tr>
+      <td><label><%= check_box_tag 'criteria[texts][]', 'summary', params.dig(:criteria, :texts).to_a.include?('summary') %> リンクURL</label></td>
+      <td><label><%= check_box_tag 'criteria[texts][]', 'rel_doc_ids', params.dig(:criteria, :texts).to_a.include?('rel_doc_ids') %> 関連記事</label></td>
+      <td><label><%= check_box_tag 'criteria[texts][]', 'mobile_body', params.dig(:criteria, :texts).to_a.include?('mobile_body') %> 携帯記事</label></td>
+    </tr>
+  </table>
+</div>
 <%- end -%>
+
+<table id="categoryTemplate" style="display: none;">
+  <tr>
+    <th>カテゴリグループ</th>
+    <th>カテゴリ</th>
+  </tr>
+  <tr>
+    <td>
+      <%= select_tag 'criteria[category_type_ids][]', options_for_select(category_type_options),
+            include_blank: true, id: "criteria_category_type_ids_0" %>
+    </td>
+    <td>
+      <%= select_tag 'criteria[category_ids][]', options_for_select([]),
+            include_blank: true, id: "criteria_category_ids_0" %>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+$(function() {
+  <%= enable_datepicker_script -%>
+
+  $('#toggleSearch').on('click', function() {
+    $('#addCategory').toggle();
+    var detailSearch = $('#detailSearch').toggle();
+    if (detailSearch.is(':visible')) {
+      $(this).text('基本検索');
+      $('#detail_flag').val('1');
+    } else {
+      $(this).text('拡張検索');
+      $('#detail_flag').val('0');
+      detailSearch.find('input[type="text"], input[type="checkbox"], select')
+        .val('')
+        .removeAttr('checked')
+        .removeAttr('selected');
+    }
+    return false;
+  });
+  $('#addCategory').on('click', function() {
+    var categoryNum = $('select[name="criteria[category_type_ids][]"]').length;
+    var template1 = $('#categoryTemplate tr:nth-child(1)').html();
+    var template2 = $('#categoryTemplate tr:nth-child(2)').html()
+      .replace(/criteria_category_type_ids_\d+/, 'criteria_category_type_ids_' + (categoryNum + 1))
+      .replace(/criteria_category_ids_\d+/, 'criteria_category_ids_' + (categoryNum + 1));
+    $('#categoryContainer tr:nth-child(1)').append(template1);
+    $('#categoryContainer tr:nth-child(2)').append(template2);
+    return false;
+  });
+  $(document).on('change', 'select[name="criteria[category_type_ids][]"]', function() {
+    var id = $(this).attr('id').replace(/category_type/, 'category');
+    $('#' + id).html('<option value="">更新中...</option>');
+    $('form').submit();
+  });
+});
+</script>
