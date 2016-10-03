@@ -10,6 +10,7 @@ class GpArticle::Doc < ActiveRecord::Base
   include Cms::Model::Base::Page::TalkTask
   include Cms::Model::Rel::ManyInquiry
   include Cms::Model::Rel::Map
+  include Cms::Model::Rel::Bracket
 
   include Cms::Model::Auth::Concept
   include Sys::Model::Auth::EditableGroup
