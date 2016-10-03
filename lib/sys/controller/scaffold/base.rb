@@ -33,7 +33,7 @@ protected
       end
     else
       failed_template = options[:failed_template] || {:action => :new}
-      flash[:alert] = '登録処理に失敗しました。'
+      flash.now[:alert] = '登録処理に失敗しました。'
       respond_to do |format|
         format.html { render failed_template }
         format.xml  { render :xml => item.errors, :status => :unprocessable_entity }
