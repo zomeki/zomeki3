@@ -12,7 +12,7 @@ module Cms::Base::PublishQueue::Bracketee
 
     owner_map = bracketees.map(&:owner).group_by { |owner| owner.class.name }
 
-    %w(Cms::Layout Cms::Piece Cms::Node).each do |klass_name|
+    %w(Cms::Layout Cms::Piece Cms::Node GpArticle::Doc).each do |klass_name|
       if klass_name != self.class.name && owner_map[klass_name].present?
         owner_map[klass_name].each do |item|
           item.enqueue_publisher

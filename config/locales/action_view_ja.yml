@@ -1,92 +1,51 @@
 ja:
-  number:
-    # Used in number_with_delimiter()
-    # These are also the defaults for 'currency', 'percentage', 'precision', and 'human'
-    format:
-      # Sets the separator between the units, for more precision (e.g. 1.0 / 2.0 == 0.5)
-      separator: "."
-      # Delimets thousands (e.g. 1,000,000 is a million) (always in groups of three)
-      delimiter: ","
-      # Number of decimals, behind the separator (the number 1 with a precision of 2 gives: 1.00)
-      precision: 3
-      
-    # Used in number_to_currency()
-    currency:
-      format:
-        # Where is the currency sign? %u is the currency unit, %n the number (default: $5.00)
-        format: "%u%n"
-        unit: "$"
-        # These three are to override number.format and are optional
-        separator: "."
-        delimiter: ","
-        precision: 2
-        
-    # Used in number_to_percentage()
-    percentage:
-      format:
-        # These three are to override number.format and are optional
-        # separator: 
-        delimiter: ""
-        # precision: 
-        
-    # Used in number_to_precision()
-    precision:
-      format:
-        # These three are to override number.format and are optional
-        # separator:
-        delimiter: ""
-        # precision:
-        
-    # Used in number_to_human_size()
-    human:
-      format:
-        # These three are to override number.format and are optional
-        # separator: 
-        delimiter: ""
-        precision: 1
-
-  # Used in distance_of_time_in_words(), distance_of_time_in_words_to_now(), time_ago_in_words()
   datetime:
     distance_in_words:
-      half_a_minute: "30秒前後"
-      less_than_x_seconds:
-        one:   "less than 1 second"
-        other: "less than %{count} seconds"
-      x_seconds:
-        one:   "1 second"
-        other: "%{count} seconds"
-      less_than_x_minutes:
-        one:   "less than a minute"
-        other: "less than %{count} minutes"
-      x_minutes:
-        one: "1分"
-        other: "%{count}分"
       about_x_hours:
-        one: "約1時間"
-        other: "約%{count}時間"
-      x_days:
-        one: "1日"
-        other: "%{count}日"
+        one: 約1時間
+        other: 約%{count}時間
       about_x_months:
-        one:   "about 1 month"
-        other: "about %{count} months"
-      x_months:
-        one: "1ヶ月"
-        other: "%{count}ヶ月"
+        one: 約1ヶ月
+        other: 約%{count}ヶ月
       about_x_years:
-        one:   "about 1 year"
-        other: "about %{count} years"
+        one: 約1年
+        other: 約%{count}年
+      almost_x_years:
+        one: 1年弱
+        other: "%{count}年弱"
+      half_a_minute: 30秒前後
+      less_than_x_minutes:
+        one: 1分以内
+        other: "%{count}分未満"
+      less_than_x_seconds:
+        one: 1秒以内
+        other: "%{count}秒未満"
       over_x_years:
-        one: "%{count}年以上"
+        one: 1年以上
         other: "%{count}年以上"
-
-  activerecord:
-    errors:
-      template:
-        header:
-          #one: "%{model}にエラーが発生しました。"
-          one: "入力もれがあります。"
-          #other: "%{model}に%{count}つのエラーが発生しました。"
-          other: "%{count}個の入力もれがあります。"
-        # The variable :count is also available
-        body: "次の項目を確認してください。"
+      x_days:
+        one: 1日
+        other: "%{count}日"
+      x_minutes:
+        one: 1分
+        other: "%{count}分"
+      x_months:
+        one: 1ヶ月
+        other: "%{count}ヶ月"
+      x_seconds:
+        one: 1秒
+        other: "%{count}秒"
+    prompts:
+      day: 日
+      hour: 時
+      minute: 分
+      month: 月
+      second: 秒
+      year: 年
+  helpers:
+    select:
+      prompt: 選択してください
+    submit:
+      create: 登録する
+      submit: 保存する
+      update: 編集する

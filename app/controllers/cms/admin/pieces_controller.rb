@@ -8,6 +8,7 @@ class Cms::Admin::PiecesController < Cms::Controller::Admin::Base
   def index
     @items = Cms::Piece.readable.order(:name, :id)
                        .paginate(page: params[:page], per_page: params[:limit])
+                       .preload(:related_objects_for_replace)
     _index @items
   end
 
