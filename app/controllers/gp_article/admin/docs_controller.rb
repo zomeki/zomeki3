@@ -24,6 +24,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     @items = GpArticle::Doc.content_and_criteria(@content, doc_criteria)
       .order(updated_at: :desc)
       .paginate(page: params[:page], per_page: 30)
+      .preload(:prev_edition, :content, creator: [:user, :group])
 
     _index @items
   end
