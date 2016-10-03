@@ -494,6 +494,7 @@ class GpArticle::Doc < ActiveRecord::Base
     new_attributes[:state] = 'draft'
     new_attributes[:id] = nil
     new_attributes[:created_at] = nil
+    new_attributes[:recognized_at] = nil
     new_attributes[:prev_edition_id] = nil
 
     new_doc = self.class.new(new_attributes)

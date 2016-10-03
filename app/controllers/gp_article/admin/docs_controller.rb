@@ -208,7 +208,10 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   def approve
     if @item.approvers.include?(Core.user)
       @item.approve(Core.user) do
-        @item.update_column(:state, @item.tasks.where(name: 'publish').exists? ? 'prepared' : 'approved')
+        @item.update_columns(
+          state: (@item.tasks.where(name: 'publish').exists? ? 'prepared' : 'approved'),
+          recognized_at: Time.now
+        )
         Sys::OperationLog.log(request, item: @item)
       end
     end
