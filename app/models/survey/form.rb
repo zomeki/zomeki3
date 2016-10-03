@@ -129,7 +129,6 @@ class Survey::Form < ActiveRecord::Base
     item.id            = nil
     item.created_at    = nil
     item.updated_at    = nil
-    item.in_tasks      = nil
 
     item.name  = nil
     item.title = item.title.gsub(/^(【複製】)*/, "【複製】")
