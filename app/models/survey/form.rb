@@ -1,6 +1,5 @@
 class Survey::Form < ActiveRecord::Base
   include Sys::Model::Base
-  include Sys::Model::Base::OperationLog
   include Sys::Model::Rel::Creator
   include Sys::Model::Rel::EditableGroup
   include Sys::Model::Rel::Task
@@ -23,6 +22,9 @@ class Survey::Form < ActiveRecord::Base
   # Content
   belongs_to :content, :foreign_key => :content_id, :class_name => 'Survey::Content::Form'
   validates :content_id, presence: true
+
+  has_many :operation_logs, -> { where(item_model: 'Survey::Form') },
+    foreign_key: :item_id, class_name: 'Sys::OperationLog'
 
   has_many :questions, :dependent => :destroy
   has_many :form_answers, :dependent => :destroy
