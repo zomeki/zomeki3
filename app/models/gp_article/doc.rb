@@ -354,7 +354,7 @@ class GpArticle::Doc < ActiveRecord::Base
 
   def preview_uri(site: nil, mobile: false, smart_phone: false, without_filename: false, **params)
     base_uri = public_uri(without_filename: true)
-    return nil unless base_uri
+    return nil if base_uri.blank?
 
     site ||= ::Page.site
     params = params.map{|k, v| "#{k}=#{v}" }.join('&')
