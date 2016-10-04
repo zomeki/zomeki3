@@ -1,19 +1,36 @@
+<%-
+publish_task = f.object.tasks.detect(&:publish_task?) || f.object.tasks.build(name: 'publish')
+close_task = f.object.tasks.detect(&:close_task?) || f.object.tasks.build(name: 'close')
+-%>
+
 <p class="form">公開日時設定</p>
 
 <table class="show">
   <tr>
     <th>表示日時</th>
-    <td><%= f.text_field :published_at, :value => value_for_datetimepicker(f.object_name, :published_at),
-                                        :style => 'width: 150px;', :class => 'datetimepicker' %></td>
+    <td><%= f.text_field :published_at, value: value_for_datetimepicker(f.object_name, :published_at),
+                                        style: 'width: 150px;', class: 'datetimepicker' %></td>
   </tr>
+  <%= f.fields_for :tasks, publish_task do |f2| %>
   <tr>
     <th>公開開始日時</th>
-    <td><%= f.array_text_field 'in_tasks[publish]', :style => 'width: 150px;', :class => 'datetimepicker' %></td>
+    <td>
+      <%= f2.hidden_field :name %>
+      <%= f2.text_field :process_at, value: publish_task.process_at.try(:strftime, '%Y-%m-%d %H:%M'),
+            style: 'width: 150px;', class: 'datetimepicker' %>
+    </td>
   </tr>
+  <%- end -%>
+  <%= f.fields_for :tasks, close_task do |f2| %>
   <tr>
     <th>公開終了日時</th>
-    <td><%= f.array_text_field 'in_tasks[close]', :style => 'width: 150px;', :class => 'datetimepicker' %></td>
+    <td>
+      <%= f2.hidden_field :name %>
+      <%= f2.text_field :process_at, value: close_task.process_at.try(:strftime, '%Y-%m-%d %H:%M'),
+            style: 'width: 150px;', class: 'datetimepicker' %>
+    </td>
   </tr>
+  <%- end -%>
 </table>
 
 <%= javascript_tag do -%>

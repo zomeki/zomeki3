@@ -10,6 +10,7 @@ class GpArticle::Doc < ActiveRecord::Base
   include Cms::Model::Base::Page::TalkTask
   include Cms::Model::Rel::ManyInquiry
   include Cms::Model::Rel::Map
+  include Cms::Model::Rel::Bracket
 
   include Cms::Model::Auth::Concept
   include Sys::Model::Auth::EditableGroup
@@ -107,8 +108,8 @@ class GpArticle::Doc < ActiveRecord::Base
   validate :node_existence
   validate :event_dates_range
   validate :body_limit_for_mobile
-  validate :validate_accessibility_check, unless: :state_draft?
-  validate :validate_broken_link_existence, unless: :state_draft?
+  validate :validate_accessibility_check, if: -> { !state_draft? && errors.blank? }
+  validate :validate_broken_link_existence, if: -> { !state_draft? && errors.blank? }
 
   after_initialize :set_defaults
   after_save :set_display_attributes
@@ -502,7 +503,9 @@ class GpArticle::Doc < ActiveRecord::Base
     case dup_for
     when :replace
       new_doc.prev_edition = self
-      new_doc.in_tasks = self.in_tasks
+      self.tasks.each do |task|
+        new_doc.tasks.build(site_id: task.site_id, name: task.name, process_at: task.process_at)
+      end
       new_doc.in_creator = {'group_id' => creator.group_id, 'user_id' => creator.user_id}
     else
       new_doc.name = nil
@@ -511,7 +514,6 @@ class GpArticle::Doc < ActiveRecord::Base
       new_doc.display_updated_at = nil
       new_doc.published_at = nil
       new_doc.display_published_at = nil
-      new_doc.in_tasks = nil
       new_doc.serial_no = nil
     end
 

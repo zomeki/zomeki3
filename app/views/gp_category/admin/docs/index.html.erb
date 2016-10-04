@@ -24,7 +24,7 @@
     <td><%= item.creator.user.try(:name) %></td>
     <td style="text-align: center;"><%=i18n_l item.updated_at %></td>
     <td style="text-align: center;"><%= item.status.name %></td>
-    <td style="text-align: right;"><%= item.categorizations.find_by(category_id: @category.id).try(:sort_no) %></td>
+    <td style="text-align: right;"><%= item.categorizations.detect { |cat| cat.category_id == @category.id }.try(:sort_no) %></td>
   </tr>
   <%- end -%>
 </table>
