@@ -124,7 +124,7 @@ module Cms::ApiGpCalendar
                 warn_log "#{__FILE__}:#{__LINE__} #{e.errors.inspect} #{event.inspect}" unless e.update_attributes(attrs)
               else
                 e = content.events.build(key.merge attrs)
-                e.in_creator = {group_id: content.creator.group_id, user_id: content.creator.user_id}
+                e.creator_attributes = { group_id: content.creator.group_id, user_id: content.creator.user_id }
                 warn_log "#{__FILE__}:#{__LINE__} #{e.errors.inspect} #{event.inspect}" unless e.save
               end
             end

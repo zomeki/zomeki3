@@ -149,7 +149,7 @@ class Survey::Admin::FormsController < Cms::Controller::Admin::Base
     params.require(:item).permit(
       :closed_at, :confirmation, :description, :index_link, :name, :opened_at,
       :receipt, :sitemap_state, :sort_no, :summary, :title,
-      :in_creator => [:group_id, :user_id],
+      :creator_attributes => [:id, :group_id, :user_id],
       :tasks_attributes => [:id, :name, :process_at],
       :in_approval_flow_ids => []
     ).tap do |whitelisted|

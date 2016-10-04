@@ -54,6 +54,6 @@ class Cms::Admin::ContentsController < Cms::Controller::Admin::Base
 
   def content_params
     params.require(:item).permit(:code, :concept_id, :model, :name, :note, :sort_no,
-      :in_creator => [:group_id, :user_id])
+      :creator_attributes => [:id, :group_id, :user_id])
   end
 end

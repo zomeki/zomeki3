@@ -9,22 +9,24 @@ else
   users = Core.site.users_for_option
 end
 
-if item.in_creator.blank?
-  item.in_creator = {
-    'group_id' => Core.user_group.id,
-    'user_id'  => Core.user.id
-  }
+if item.creator.blank?
+  item.build_creator(
+    group_id: Core.user_group.id,
+    user_id: Core.user.id
+  )
 end
 
 %><br />
 
 <p class="managerForm">作成者</p>
 
+<%= f.fields_for :creator do |f2| %>
 <div class="onlyManager">
   <div class="label1">グループ</div>
-  <%= select_tag "item[in_creator][group_id]", options_for_select(groups, item.in_creator['group_id']), include_blank: true %>
+  <%= f2.select :group_id, groups, include_blank: true %>
 </div>
 <div class="onlyManager">
   <div class="label1">ユーザー</div>
-  <%= select_tag "item[in_creator][user_id]", options_for_select(users, item.in_creator['user_id']), include_blank: true %>
+  <%= f2.select :user_id, users, include_blank: true %>
 </div>
+<%- end -%>

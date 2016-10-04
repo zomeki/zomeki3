@@ -137,7 +137,7 @@ protected
       :body, :concept_id, :in_recognizer_ids,
       :layout_id, :mobile_body, :mobile_title, :name, :parent_id, :published_at,
       :route_id, :sitemap_sort_no, :sitemap_state, :title,
-      :in_creator => [:group_id, :user_id],
+      :creator_attributes => [:id, :group_id, :user_id],
       :inquiries_attributes => [:id, :state, :group_id, :_destroy],
       :tasks_attributes => [:id, :name, :process_at],
       :in_recognizer_ids => []

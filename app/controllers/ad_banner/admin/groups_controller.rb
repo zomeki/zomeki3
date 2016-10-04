@@ -39,6 +39,6 @@ class AdBanner::Admin::GroupsController < Cms::Controller::Admin::Base
   private
 
   def group_params
-    params.require(:item).permit(:name, :sort_no, :title, :in_creator => [:group_id, :user_id])
+    params.require(:item).permit(:name, :sort_no, :title, :creator_attributes => [:id, :group_id, :user_id])
   end
 end

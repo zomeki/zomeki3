@@ -88,6 +88,6 @@ class Cms::Admin::ConceptsController < Cms::Controller::Admin::Base
   private
 
   def concept_params
-    params.require(:item).permit(:name, :parent_id, :sort_no, :state, :in_creator => [:group_id, :user_id])
+    params.require(:item).permit(:name, :parent_id, :sort_no, :state, :creator_attributes => [:id, :group_id, :user_id])
   end
 end

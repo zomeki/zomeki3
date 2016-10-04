@@ -1,7 +1,7 @@
 class Sys::Creator < ActiveRecord::Base
   include Sys::Model::Base
 
-  belongs_to :creatable, polymorphic: true, required: true
+  belongs_to :creatable, polymorphic: true
 
   belongs_to :user, class_name: 'Sys::User', required: true
   belongs_to :group, class_name: 'Sys::Group', required: true

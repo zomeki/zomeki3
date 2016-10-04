@@ -506,7 +506,7 @@ class GpArticle::Doc < ActiveRecord::Base
       self.tasks.each do |task|
         new_doc.tasks.build(site_id: task.site_id, name: task.name, process_at: task.process_at)
       end
-      new_doc.in_creator = {'group_id' => creator.group_id, 'user_id' => creator.user_id}
+      new_doc.creator_attributes = { group_id: creator.group_id, user_id: creator.user_id }
     else
       new_doc.name = nil
       new_doc.title = new_doc.title.gsub(/^(【複製】)*/, '【複製】')
