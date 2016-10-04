@@ -152,15 +152,15 @@ class GpArticle::Doc < ActiveRecord::Base
     end
 
     if criteria[:assocs].present?
-      criteria[:assocs].each { |assoc| rel = rel.joins(assoc.to_sym) }
+      criteria[:assocs].select(&:present?).each { |assoc| rel = rel.joins(assoc.to_sym) }
     end
 
     if criteria[:tasks].present?
-      criteria[:tasks].each { |task| rel = rel.with_task_name(task) }
+      criteria[:tasks].select(&:present?).each { |task| rel = rel.with_task_name(task) }
     end
 
     if criteria[:texts].present?
-      criteria[:texts].each do |column|
+      criteria[:texts].select(&:present?).each do |column|
         rel = rel.where.not(arel_table[column].eq('')).where.not(arel_table[column].eq(nil))
       end
     end
