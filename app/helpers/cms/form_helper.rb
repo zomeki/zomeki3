@@ -59,15 +59,6 @@ module Cms::FormHelper
     render 'cms/admin/_partial/pieces/menu', {item: item}.merge(options)
   end
 
-  def inquiry_form(form)
-    item = form.object || instance_variable_get("@#{form.object_name}")
-    render 'cms/admin/_partial/inquiries/form', f: form, item: item
-  end
-
-  def inquiry_view(item)
-    render 'cms/admin/_partial/inquiries/view', item: item
-  end
-
   def google_map_form(form)
     item = form.object || instance_variable_get("@#{form.object_name}")
     render 'cms/admin/_partial/maps/form', f: form, item: item
