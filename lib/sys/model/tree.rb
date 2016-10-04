@@ -1,10 +1,6 @@
 module Sys::Model::Tree
   extend ActiveSupport::Concern
 
-  def parents_tree(options = {})
-    climb_parents_tree(id, :class => self.class)
-  end
-
   def root?
     parent_id.in?([0, nil])
   end
@@ -22,7 +18,7 @@ module Sys::Model::Tree
     items
   end
 
-  module ClassMethods
+  class_methods do
     def roots
       self.where(parent_id: [0, nil])
     end
@@ -30,18 +26,5 @@ module Sys::Model::Tree
     def root
       roots.first
     end
-  end
-
-private
-  def climb_parents_tree(id, options = {})
-    climbed = [id]
-    tree    = []
-    while current = options[:class].find_by(id: id)
-      tree.unshift(current)
-      id = current.parent_id
-      break if climbed.index(id)
-      climbed << id
-    end
-    return tree
   end
 end

@@ -2,7 +2,7 @@
 
 <%- if @parent_sys_group -%>
 <div class="navi">
-  <%- @parent_sys_group.parents_tree.reject{|g| g == @content.root_sys_group }.each_with_index do |g, i| -%>
+  <%- @parent_sys_group.ancestors.reject { |g| g == @content.root_sys_group }.each_with_index do |g, i| -%>
   <%- if i > 0 -%>
   <span class="separator">&gt;</span>
   <%- end -%>

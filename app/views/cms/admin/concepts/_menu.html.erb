@@ -1,8 +1,10 @@
 <div class="navi">
 <%= link_to 'コンセプト', cms_concepts_path(0) %>
-<% tree = @parent.parents_tree; tree.each_with_index do |c, k| %>
-<span class="separator">&gt;</span><%= link_to c.name, url_for(:action => :index, :parent => c ) %>
-<% end %>
+<%- if @parent.id != 0 -%>
+<% @parent.ancestors.each_with_index do |c, k| %>
+<span class="separator">&gt;</span><%= link_to c.name, { action: :index, parent: c } %>
+<%- end -%>
+<%- end -%>
 </div>
 
 <div class="actionMenu">
