@@ -17,8 +17,10 @@ category_ids = params.dig(:criteria, :category_ids) || []
 <table>
   <tr>
     <th>タイトル・内容・ディレクトリ名など</th>
+    <%- if @content.visible_category_types.present? -%>
     <th>カテゴリグループ</th>
     <th>カテゴリ<a href="#" id="addCategory" style="margin-left: 10px; <%= 'display: none;' if params[:detail_flag] != '1' %>">追加</a></th>
+    <%- end -%>
     <td rowspan="2" class="submitters">
       <%= submit_tag '検索' %>
       <%= submit_tag 'リセット', name: 'reset_criteria' %>
