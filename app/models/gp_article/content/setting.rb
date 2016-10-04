@@ -2,7 +2,8 @@ class GpArticle::Content::Setting < Cms::ContentSetting
   set_config :gp_category_content_category_type_id, name: 'カテゴリグループ',
     options: lambda { GpCategory::Content::CategoryType.where(site_id: Core.site.id).map {|ct| [ct.name, ct.id] } }
   set_config :basic_setting, name: '基本設定',
-    form_type: :select_with_tree, lower_text: "未設定の場合、記事ディレクトリの設定が記事へ反映されます"
+    options: lambda { Core.site.public_concepts_for_option.to_a },
+    lower_text: "未設定の場合、記事ディレクトリの設定が記事へ反映されます"
   set_config :gp_template_content_template_id, name: 'テンプレート',
     options: lambda { GpTemplate::Content::Template.where(site_id: Core.site.id).map {|t| [t.name, t.id] } }
   set_config :allowed_attachment_type, name: '添付ファイル/許可する種類',
@@ -127,17 +128,6 @@ class GpArticle::Content::Setting < Cms::ContentSetting
 
   def default_layout_id
     extra_values[:default_layout_id] || 0
-  end
-
-  def config_options
-    case name
-    when 'basic_setting'
-      return {
-        :root => Cms::Concept.where(site_id: Core.site.id, parent_id: 0, level_no: 1, state: 'public'),
-        :configs => {:conditions => {:state => 'public'}, :include_blank => true}
-      }
-    end
-    super
   end
 
   private
