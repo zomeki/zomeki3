@@ -10,7 +10,41 @@
   </tr><tr>
     <th><%= @item.locale(:password) %></th>
     <td><%= f.text_field :password, :class => 'nameEn' %></td>
+  </tr><tr>
+    <th><%= @item.locale(:target_type) %></th>
+    <td><%= f.radio_buttons :target_type, @item.class::TARGET_TYPE_LIST, :class => 'status' %></td>
+  </tr><tr id="targetLocation">
+    <th><%= @item.locale(:target_location) %></th>
+    <td>/<%= f.text_field :target_location, :class => 'nameEn' %></td>
   </tr>
 </table>
 
 <%= creator_form f %>
+
+<%= javascript_tag do -%>
+(function($) {
+  $(function() {
+    $(document).ready(function () {
+      toggleTargetLocation();
+    });
+    $('input[name="item[target_type]"]').on('change', function (event) {
+      toggleTargetLocation()
+    });
+
+    function toggleTargetLocation(){
+      var value = $('input[name="item[target_type]"]:checked').val();
+      switch (value){
+        case 'all':
+          $('#targetLocation').hide();
+          break;
+        case '_system':
+          $('#targetLocation').hide();
+          break;
+        case 'directory':
+          $('#targetLocation').show();
+          break;
+      }
+    }
+  });
+})(jQuery);
+<%- end -%>
