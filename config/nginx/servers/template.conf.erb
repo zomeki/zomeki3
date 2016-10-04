@@ -40,7 +40,7 @@ server {
     }
   }
 
-  <%- directory_basic_auth.each do |d| -%>
+  <%- basic_auth_users.directory_auth.each do |d| -%>
   location /<%=d.target_location%> {
     try_files $uri @proxy;
     <%- if basic_auth_enabled? %>
@@ -65,5 +65,5 @@ server {
       rewrite ^(.+)\.html$ $1.html.r last;
     }
   }
-  <%- end if directory_basic_auth.present? -%>
+  <%- end if basic_auth_users.directory_auth.present? -%>
 }

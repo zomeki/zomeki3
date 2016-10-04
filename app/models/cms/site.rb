@@ -352,8 +352,9 @@ class Cms::Site < ActiveRecord::Base
     return ::File.exists?(pw_file)
   end
 
-  def directory_basic_auth
-    basic_auth_users.directory_auth
+  def directory_basic_auth_enabled?(directory)
+    pw_file = "#{::File.dirname(public_path)}/.htpasswd_#{directory}"
+    return ::File.exists?(pw_file)
   end
 
   def enable_basic_auth
@@ -397,8 +398,6 @@ class Cms::Site < ActiveRecord::Base
         conf += %Q(#{user.name}:#{user.password.crypt(salt)}\n)
       end
       Util::File.put(system_pw_file, :data => conf)
-    else
-      FileUtils.rm_f(system_pw_file)
     end
   end
 
@@ -418,11 +417,14 @@ class Cms::Site < ActiveRecord::Base
   def disable_basic_auth
     ac_file = "#{::File.dirname(public_path)}/.htaccess"
     pw_file = "#{::File.dirname(public_path)}/.htpasswd"
-    system_pw_file    = "#{::File.dirname(public_path)}/.htpasswd_system"
     FileUtils.rm_f(ac_file)
     FileUtils.rm_f(pw_file)
-    FileUtils.rm_f(system_pw_file)
+    Dir::entries("#{::File.dirname(public_path)}").each do |file|
+      next if file !~ /\.htpasswd_.*$/
+      FileUtils.rm_f("#{::File.dirname(public_path)}/#{file}")
+    end
     generate_nginx_configs
+    generate_nginx_admin_configs
     return true
   end
 
