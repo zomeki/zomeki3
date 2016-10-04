@@ -5,7 +5,7 @@
   <span class="separator">&gt;</span>
   <%= link_to @category_type.title, map_category_type_categories_path(content: @content, category_type_id: @category_type.id) %>
   <%- if @parent_category -%>
-    <%- @parent_category.parents_tree.each do |c| -%>
+    <%- @parent_category.ancestors.each do |c| -%>
     <span class="separator">&gt;</span>
     <%= link_to c.title, map_category_type_category_categories_path(content: @content,
                                                                     category_type_id: @category_type.id,
