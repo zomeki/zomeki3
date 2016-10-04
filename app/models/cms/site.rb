@@ -335,14 +335,25 @@ class Cms::Site < ActiveRecord::Base
     return false unless conf.exist?
     conf.delete
   end
+
   def destroy_nginx_admin_configs
     conf = Rails.root.join("config/nginx/admin_servers/site_#{'%04d' % id}.conf")
     return false unless conf.exist?
     conf.delete
   end
+
   def basic_auth_enabled?
     pw_file = "#{::File.dirname(public_path)}/.htpasswd"
     return ::File.exists?(pw_file)
+  end
+
+  def system_basic_auth_enabled?
+    pw_file = "#{::File.dirname(public_path)}/.htpasswd_system"
+    return ::File.exists?(pw_file)
+  end
+
+  def directory_basic_auth
+    basic_auth_users.directory_auth
   end
 
   def enable_basic_auth
@@ -366,23 +377,55 @@ class Cms::Site < ActiveRecord::Base
 
     salt = Zomeki.config.application['sys.crypt_pass']
     conf = ""
-    basic_auth_users.where(state: 'enabled').each do |user|
+    basic_auth_users.root_location.enabled.each do |user|
       conf += %Q(#{user.name}:#{user.password.crypt(salt)}\n)
     end
 
     Util::File.put(pw_file, :data => conf)
+    enable_system_basic_auth(salt)
+    enable_directory_basic_auth(salt)
     generate_nginx_configs
+    generate_nginx_admin_configs
     return true
+  end
+
+  def enable_system_basic_auth(salt)
+    system_pw_file = "#{::File.dirname(public_path)}/.htpasswd_system"
+    if auth_users = basic_auth_users.system_location.enabled
+      conf = ""
+      auth_users.system_location.where(state: 'enabled').each do |user|
+        conf += %Q(#{user.name}:#{user.password.crypt(salt)}\n)
+      end
+      Util::File.put(system_pw_file, :data => conf)
+    else
+      FileUtils.rm_f(system_pw_file)
+    end
+  end
+
+  def enable_directory_basic_auth(salt)
+    if auth_users = basic_auth_users.directory_auth
+      auth_users.each do |d|
+        directory_pw_file = "#{::File.dirname(public_path)}/.htpasswd_#{d.target_location}"
+        conf = ""
+        basic_auth_users.directory_location.enabled.where(target_location: d.target_location).each do |user|
+          conf += %Q(#{user.name}:#{user.password.crypt(salt)}\n)
+        end
+        Util::File.put(directory_pw_file, :data => conf)
+      end
+    end
   end
 
   def disable_basic_auth
     ac_file = "#{::File.dirname(public_path)}/.htaccess"
     pw_file = "#{::File.dirname(public_path)}/.htpasswd"
+    system_pw_file    = "#{::File.dirname(public_path)}/.htpasswd_system"
     FileUtils.rm_f(ac_file)
     FileUtils.rm_f(pw_file)
+    FileUtils.rm_f(system_pw_file)
     generate_nginx_configs
     return true
   end
+
 
   def last?
     self.class.count == 1
