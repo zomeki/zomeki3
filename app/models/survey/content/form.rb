@@ -7,18 +7,13 @@ class Survey::Content::Form < Cms::Content
 
   has_many :forms, :foreign_key => :content_id, :class_name => 'Survey::Form', :dependent => :destroy
 
+  has_one :public_node, -> { public_state.where(model: 'Survey::Form').order(:id) },
+    foreign_key: :content_id, class_name: 'Cms::Node'
+
   before_create :set_default_settings
 
   def public_forms
     forms.public_state
-  end
-
-  def public_nodes
-    nodes.public_state
-  end
-
-  def public_node
-    public_nodes.first
   end
 
   def mail_from

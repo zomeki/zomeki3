@@ -36,6 +36,7 @@ class Survey::Admin::FormsController < Cms::Controller::Admin::Base
 
     @items = Survey::Form.all_with_content_and_criteria(@content, criteria).reorder(created_at: :desc)
       .paginate(page: params[:page], per_page: 30)
+      .preload(content: { public_node: :site })
 
     _index @items
   end
