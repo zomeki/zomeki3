@@ -530,28 +530,11 @@ class GpArticle::Doc < ActiveRecord::Base
       new_doc.inquiries.build(attrs)
     end
 
-    unless maps.empty?
-      new_maps = {}
-      maps.each_with_index do |m, i|
-        new_markers = {}
-        m.markers.each_with_index do |mm, j|
-          new_markers[j.to_s] = {
-           'name' => mm.name,
-           'lat'  => mm.lat,
-           'lng'  => mm.lng
-          }.with_indifferent_access
-        end
-
-        new_maps[i.to_s] = {
-          'name'     => m.name,
-          'title'    => m.title,
-          'map_lat'  => m.map_lat,
-          'map_lng'  => m.map_lng,
-          'map_zoom' => m.map_zoom,
-          'markers'  => new_markers
-        }.with_indifferent_access
+    maps.each do |map|
+      new_map = new_doc.maps.build(map.attributes.slice('name', 'title', 'map_lat', 'map_lng', 'map_zoom'))
+      map.markers.each do |marker|
+        new_map.markers.build(marker.attributes.slice('name', 'lat', 'lng'))
       end
-      new_doc.in_maps = new_maps
     end
 
     new_doc.save!
