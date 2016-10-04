@@ -25,11 +25,12 @@
     <td style="text-align: center;"><%=i18n_l item.updated_at %></td>
     <td style="text-align: center;" class="<%= 'approvable' if item.state_approvable? && item.approvers.include?(Core.user) %>"><%= item.status.name %></td>
     <td style="text-align: center;">
-      <% if @content.doc_node && item.preview_uri.present? %>
-        <%= link_to_if item.terminal_pc_or_smart_phone, 'PC', item.preview_uri, target: 'preview' %>
-        <%= link_to_if item.terminal_pc_or_smart_phone, 'スマホ', item.preview_uri(smart_phone: true), target: 'preview' %>
-        <%= link_to_if item.terminal_mobile, '携帯', item.preview_uri(mobile: true), target: 'preview' %>
-      <%- end -%>
+      <%- preview_uri = item.preview_uri -%>
+      <%= link_to_if preview_uri.present? && item.terminal_pc_or_smart_phone, 'PC', preview_uri, target: 'preview' %>
+      <%- preview_uri = item.preview_uri(smart_phone: true) -%>
+      <%= link_to_if preview_uri.present? && item.terminal_pc_or_smart_phone, 'スマホ', preview_uri, target: 'preview' %>
+      <%- preview_uri = item.preview_uri(mobile: true) -%>
+      <%= link_to_if preview_uri.present? && item.terminal_mobile, '携帯', preview_uri, target: 'preview' %>
     </td>
   </tr>
   <%- end -%>

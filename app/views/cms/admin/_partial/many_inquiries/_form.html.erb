@@ -24,10 +24,7 @@ item.build_default_inquiry
     <table class="show">
       <tr>
         <th><%= f2.label :group_id -%></th>
-        <td>
-          <%- groups = Sys::Group.joins(:sites).where(level_no: 2).where("cms_sites.id=?", Page.site.id).order(:sort_no) -%>
-          <%= f2.select_with_tree :group_id, groups, :include_blank => true %>
-        </td>
+        <td><%= f2.select :group_id, Core.site.groups_for_option, include_blank: true %></td>
       </tr>
     </table>
     </span>
@@ -36,7 +33,7 @@ item.build_default_inquiry
       <tr>
         <th><%= f2.label :group_id -%></th>
         <td>
-          <%- group = Sys::Group.find_by_id(inquiry.group_id) || Core.user_group -%>
+          <%- group = inquiry.group || Core.user_group -%>
           <span id="inquiryGroupLabel<%= i %>"><%= safe{group.full_name} if i == 0 && !Core.user.has_auth?(:manager) or Core.user.has_auth?(:manager) or !inquiry.group_id.blank? %></span>
         </td>
       </tr>

@@ -57,7 +57,7 @@ module Cms::Model::Rel::ManyInquiry
   end
 
   def set_inquiry_group
-    return if (group_id = in_creator[:group_id]).blank?
+    return if (group_id = creator.try(:group_id)).blank?
     return if group_id.to_i.in?(inquiries.map(&:group_id))
     inquiries.build(group_id: group_id)
   end

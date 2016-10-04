@@ -1,10 +1,4 @@
-<%
-
-@parent ||= 0
-cond   = {}
-root   = Cms::Concept.where(site_id: Core.site.id, parent_id: 0, level_no: 1, state: 'public').order(:sort_no).all
-
-%><p class="form">デザイン</p>
+<p class="form">デザイン</p>
 
 <%= form_for :item do |f| %>
 
@@ -13,7 +7,7 @@ root   = Cms::Concept.where(site_id: Core.site.id, parent_id: 0, level_no: 1, st
 <table class="show" >
   <tr>
     <th>対象コンセプト</th>
-    <td><%= f.select_with_tree :concept_id, root, :conditions => {:state => 'public'}, :include_blank => "　" %></td>
+    <td><%= f.select :concept_id, Core.site.public_concepts_for_option, include_blank: "　" %></td>
   </tr><tr>
     <th>コンポーネント</th>
     <td>

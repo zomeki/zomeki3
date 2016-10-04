@@ -81,6 +81,6 @@ class Cms::Admin::KanaDictionariesController < Cms::Controller::Admin::Base
   private
 
   def kana_dictionary_params
-    params.require(:item).permit(:body, :name, :in_creator => [:group_id, :user_id])
+    params.require(:item).permit(:body, :name, :creator_attributes => [:id, :group_id, :user_id])
   end
 end

@@ -37,7 +37,10 @@ class Cms::Site < ActiveRecord::Base
   belongs_to :root_node, foreign_key: :node_id, class_name: 'Cms::Node'
 
   # conditional relations
-  has_many :root_concepts, -> { where(level_no: 1).order(:sort_no, :name, :id) }, class_name: 'Cms::Concept'
+  has_many :root_concepts, -> { where(level_no: 1).order(:sort_no, :name, :id) },
+    class_name: 'Cms::Concept'
+  has_many :public_root_concepts, -> { where(level_no: 1, state: 'public').order(:sort_no, :name, :id) },
+    class_name: 'Cms::Concept'
   has_many :admin_protocol_settings, class_name: 'Cms::SiteSetting::AdminProtocol'
   has_many :emergency_layout_settings, class_name: 'Cms::SiteSetting::EmergencyLayout'
 
@@ -389,15 +392,37 @@ class Cms::Site < ActiveRecord::Base
   end
 
   def concepts_for_option
-    root_concepts.map(&:descendants).flatten(1).map{|c| [c.tree_name, c.id] }
+    @concepts_for_option ||= root_concepts.preload_children.map(&:descendants).flatten(1)
+      .map { |c| [c.tree_name, c.id] }
+  end
+
+  def public_concepts_for_option
+    @public_concepts_for_option ||= public_root_concepts.preload_public_children.map(&:public_descendants).flatten(1)
+      .map { |c| [c.tree_name, c.id] }
   end
 
   def users
     Sys::User.in_site(self)
   end
 
+  def users_for_option
+    @users_for_option ||= users.where(state: 'enabled').order(:id)
+      .map { |u| [u.name_with_account, u.id] }
+  end
+
+  def all_users_for_option
+    @all_users_for_option = Sys::User.where(state: 'enabled').order(:id)
+      .map { |u| [u.name_with_account, u.id] }
+  end
+
   def groups_for_option
-    Sys::Group.root.descendants_in_site(self).drop(1).map{|g| [g.tree_name(depth: -1), g.id] }
+    @groups_for_option ||= Sys::Group.root.descendants_in_site(self).drop(1)
+      .map { |g| [g.tree_name(depth: -1), g.id] }
+  end
+
+  def all_groups_for_option
+    @all_groups_for_option = Sys::Group.where(level_no: 2).map(&:descendants).flatten(1)
+      .map { |g| [g.tree_name(depth: -1), g.id] }
   end
 
   def og_type_text

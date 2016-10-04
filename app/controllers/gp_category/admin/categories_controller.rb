@@ -54,6 +54,6 @@ class GpCategory::Admin::CategoriesController < Cms::Controller::Admin::Base
 
   def category_params
     params.require(:item).permit(:concept_id, :description, :docs_order, :layout_id, :name, :sitemap_state,
-      :sort_no, :state, :template_id, :title, :in_creator => [:group_id, :user_id])
+      :sort_no, :state, :template_id, :title, :creator_attributes => [:id, :group_id, :user_id])
   end
 end

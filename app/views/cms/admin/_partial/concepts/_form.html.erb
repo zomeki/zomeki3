@@ -1,37 +1,39 @@
 <%
 @parent ||= 0
-cond = {:site_id => Core.site.id, :parent_id => 0, :level_no => 1, :state => 'public'}
-root = Cms::Concept.where(cond).order(:sort_no)
-
 blank = defined?(includ_blank) && includ_blank == false ? false : true
-%>  <tr>
+%>
+  <tr>
     <th><%= f.label :concept_id, 'コンセプト' %></th>
-    <td><%= f.select_with_tree :concept_id, root, :conditions => {:state => 'public'}, :include_blank => blank %></td>
+    <td><%= f.select :concept_id, Core.site.public_concepts_for_option, include_blank: blank %></td>
   </tr>
-<%
-
-if defined?(layout) && layout == true
-
-  layouts = []
-  if concept = safe{@item.inherited_concept} || safe{@parent.inherited_concept} || safe{@item.concept}
-    concept.parents_tree.each{|c| layouts += c.layouts}
-    layouts = layouts.collect{|i| ["#{i.concept.name} : #{i.title}", i.id]}
-  else
-    #layouts << ['// コンセプトを選択してください', nil]
-  end
-
-%>  <tr>
+<%- if defined?(layout) && layout == true -%>
+  <%
+    layouts = []
+    if concept = safe{@item.inherited_concept} || safe{@parent.inherited_concept} || safe{@item.concept}
+      concept.ancestors.each { |c| layouts += c.layouts }
+      layouts = layouts.map { |l| [l.concept_name_and_title, l.id] }
+    else
+      #layouts << ['// コンセプトを選択してください', nil]
+    end
+  %>
+  <tr>
     <th><%= f.label :layout_id, 'レイアウト' %></th>
-    <td><%= f.select(:layout_id, layouts, :include_blank => '　　　　') %></td>
+    <td><%= f.select :layout_id, layouts, include_blank: '　　　　' %></td>
   </tr>
-  <%= observe_field(:item_concept_id, :update => :item_layout_id,
-        :with => 'concept_id', :on => 'change', :url => layouts_cms_concepts_path(@parent)) %>
   <%- if defined?(more) && more -%>
   <tr>
     <th><%= f.label :more_layout_id, '一覧レイアウト' %></th>
-    <td><%= f.select :more_layout_id, layouts, :include_blank => '　　　　' %></td>
+    <td><%= f.select :more_layout_id, layouts, include_blank: '　　　　' %></td>
   </tr>
-  <%= observe_field(:item_concept_id, :update => :item_more_layout_id,
-      :with => 'concept_id', :on => 'change', :url => layouts_cms_concepts_path(@parent)) %>
   <%- end -%>
-<% end %>
+  <script type="text/javascript">
+  $(function() {
+    $('#item_concept_id').on('change', function() {
+      $.get('<%= layouts_cms_concepts_path(@parent) %>', { concept_id: $(this).val() }, function(data) {
+        $('#item_layout_id').html(data);
+        $('#item_more_layout_id').html(data);
+      });
+    });
+  });
+  </script>
+<%- end -%>

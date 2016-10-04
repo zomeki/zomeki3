@@ -19,10 +19,12 @@ module Cms::Model::Rel::Bracket
   end
 
   def save_brackets
+    _site_id = respond_to?(:site_id) ? site_id : respond_to?(:content) && content ? content.site_id : nil
+    _concept_id = respond_to?(:concept_id) ? concept_id : nil
+    return unless _site_id
+
     brackets.destroy_all
     bracket_names.each do |name|
-      _site_id = respond_to?(:content) ? content.site_id : site_id
-      _concept_id = respond_to?(:concept_id) ? concept_id : nil
       brackets.create(site_id: _site_id, concept_id: _concept_id, name: name)
     end
   end

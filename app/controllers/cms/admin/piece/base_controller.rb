@@ -94,7 +94,7 @@ class Cms::Admin::Piece::BaseController < Cms::Controller::Admin::Base
   end
 
   def base_params
-    nested = {in_creator: base_params_item_in_creator,
+    nested = {creator_attributes: base_params_item_in_creator,
               in_settings: base_params_item_in_settings}
     params.require(:item).permit(*base_params_item, nested)
   end
@@ -104,7 +104,7 @@ class Cms::Admin::Piece::BaseController < Cms::Controller::Admin::Base
   end
 
   def base_params_item_in_creator
-    [:group_id, :user_id]
+    [:id, :group_id, :user_id]
   end
 
   def base_params_item_in_settings
