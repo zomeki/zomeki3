@@ -1,14 +1,12 @@
 <%
-
 return unless Core.user.has_auth?(:manager)
 
-groups = Sys::Group.where(level_no: 2).order(:sort_no)
-
-unless Core.user.root?
-  sites = Cms::Site.arel_table
-  users = Sys::User.where(state: 'enabled').order(:id).joins(:groups => :sites).where(sites[:id].eq(Core.site.id))
+if Core.user.root?
+  groups = Core.site.all_groups_for_option
+  users = Core.site.all_users_for_option
 else
-  users = Sys::User.where(state: 'enabled').order(:id)
+  groups = Core.site.groups_for_option
+  users = Core.site.users_for_option
 end
 
 if item.in_creator.blank?
@@ -24,13 +22,9 @@ end
 
 <div class="onlyManager">
   <div class="label1">グループ</div>
-<%- unless Core.user.root? -%>
-  <%= f.select_group_with_tree "in_creator[group_id]", groups, :include_blank => true %>
-<%- else -%>
-  <%= f.select_with_tree "in_creator[group_id]", groups, :include_blank => true %>
-<%- end -%>
+  <%= select_tag "item[in_creator][group_id]", options_for_select(groups, item.in_creator['group_id']), include_blank: true %>
 </div>
 <div class="onlyManager">
   <div class="label1">ユーザー</div>
-  <%= f.array_select "in_creator[user_id]", users.map {|i| [i.name_with_account, i.id] }, :include_blank => true %>
+  <%= select_tag "item[in_creator][user_id]", options_for_select(users, item.in_creator['user_id']), include_blank: true %>
 </div>

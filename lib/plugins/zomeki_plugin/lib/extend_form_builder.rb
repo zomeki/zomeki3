@@ -57,39 +57,6 @@ class ActionView::Helpers::FormBuilder
     @template.select_tag(method, choices, options)
   end
 
-  def select_group_with_tree(method, root, options = {})
-    options[:selected] ||= array_value(method)
-    method = method.to_s.index('[') ? array_name(method) : "#{@object_name}[#{method}]"
-
-    value   = options[:value] || :id
-    label   = options[:label] || :name
-    order   = options[:order] || :sort_no
-    cond    = options[:conditions] || {}
-
-    choices = []
-    roots = root.to_a
-    if roots.size > 0
-      iclass  = roots[0].class
-      indstr  = '　　'
-      down = lambda do |_parent, _indent|
-        choices << [(indstr * _indent) + _parent.send(label), _parent.send(value).to_s]
-        iclass.where(cond.merge({:parent_id => _parent.id})).order(order).each do |_child|
-          next unless _child.sites.include?(Core.site)
-          down.call(_child, _indent + 1)
-        end
-      end
-      roots.to_a.each do |item|
-        next unless item.parent_id.zero? || item.sites.include?(Core.site)
-        down.call(item, 0)
-      end
-      choices = @template.options_for_select(choices, options[:selected].to_s)
-      options.delete(:selected)
-    end
-    options.delete(:conditions)
-
-    return @template.select_tag(method, choices, options).html_safe
-  end
-
   def select_with_tree(method, root, options = {})
     options[:selected] ||= array_value(method)
     method = method.to_s.index('[') ? array_name(method) : "#{@object_name}[#{method}]"
