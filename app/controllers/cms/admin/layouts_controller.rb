@@ -68,6 +68,6 @@ class Cms::Admin::LayoutsController < Cms::Controller::Admin::Base
   def layout_params
     params.require(:item).permit(:body, :concept_id, :head, :mobile_body, :mobile_head, :mobile_stylesheet,
       :name, :smart_phone_body, :smart_phone_head, :smart_phone_stylesheet, :stylesheet, :title,
-      :in_creator => [:group_id, :user_id])
+      :creator_attributes => [:id, :group_id, :user_id])
   end
 end

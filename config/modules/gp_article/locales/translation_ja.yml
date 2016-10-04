@@ -58,6 +58,9 @@ ja:
         inquiries/fax: 連絡先（ファクシミリ）
         inquiries/email: 連絡先（メールアドレス）
         inquiries/note: 連絡先（備考）
+      gp_article/doc/maps/markers:
+        lat: 緯度
+        lng: 経度
       gp_article/category_type:
         name: カテゴリグループID
         title: カテゴリグループ名

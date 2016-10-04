@@ -44,6 +44,6 @@ class BizCalendar::Admin::TypesController < Cms::Controller::Admin::Base
   private
 
   def holiday_type_params
-    params.require(:item).permit(:state, :title, :name, :in_creator => [:group_id, :user_id])
+    params.require(:item).permit(:state, :title, :name, :creator_attributes => [:id, :group_id, :user_id])
   end
 end

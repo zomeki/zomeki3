@@ -19,8 +19,10 @@
     <td style="text-align: center;"><%=l item.updated_at %></td>
     <td style="text-align: center;" class="<%= 'approvable' if item.state_approvable? && item.approvers.include?(Core.user) %>"><%= item.status.name %></td>
     <td style="text-align: center;">
-      <%= link_to_if @content.public_node && item.preview_uri.present?, 'PC', item.preview_uri, target: '_blank' %>
-      <%= link_to_if @content.public_node && item.preview_uri.present?, '携帯', item.preview_uri(mobile: true), target: '_blank' %>
+      <%- preview_uri = item.preview_uri -%>
+      <%= link_to_if preview_uri.present?, 'PC', preview_uri, target: '_blank' %>
+      <%- preview_uri = item.preview_uri(mobile: true) -%>
+      <%= link_to_if preview_uri.present?, '携帯', preview_uri, target: '_blank' %>
     </td>
   </tr>
   <%- end -%>

@@ -36,6 +36,7 @@ class Survey::Admin::FormsController < Cms::Controller::Admin::Base
 
     @items = Survey::Form.all_with_content_and_criteria(@content, criteria).reorder(created_at: :desc)
       .paginate(page: params[:page], per_page: 30)
+      .preload(content: { public_node: :site })
 
     _index @items
   end
@@ -149,7 +150,7 @@ class Survey::Admin::FormsController < Cms::Controller::Admin::Base
     params.require(:item).permit(
       :closed_at, :confirmation, :description, :index_link, :name, :opened_at,
       :receipt, :sitemap_state, :sort_no, :summary, :title,
-      :in_creator => [:group_id, :user_id],
+      :creator_attributes => [:id, :group_id, :user_id],
       :tasks_attributes => [:id, :name, :process_at],
       :in_approval_flow_ids => []
     ).tap do |whitelisted|

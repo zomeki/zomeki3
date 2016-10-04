@@ -62,6 +62,6 @@ class AdBanner::Admin::BannersController < Cms::Controller::Admin::Base
   def banner_params
     params.require(:item).permit(:advertiser_contact, :advertiser_email, :advertiser_name, :advertiser_phone,
       :closed_at, :file, :group_id, :name, :published_at, :sort_no, :state, :title, :url, :target,
-      :in_creator => [:group_id, :user_id])
+      :creator_attributes => [:id, :group_id, :user_id])
   end
 end

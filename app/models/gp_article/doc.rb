@@ -152,15 +152,15 @@ class GpArticle::Doc < ActiveRecord::Base
     end
 
     if criteria[:assocs].present?
-      criteria[:assocs].each { |assoc| rel = rel.joins(assoc.to_sym) }
+      criteria[:assocs].select(&:present?).each { |assoc| rel = rel.joins(assoc.to_sym) }
     end
 
     if criteria[:tasks].present?
-      criteria[:tasks].each { |task| rel = rel.with_task_name(task) }
+      criteria[:tasks].select(&:present?).each { |task| rel = rel.with_task_name(task) }
     end
 
     if criteria[:texts].present?
-      criteria[:texts].each do |column|
+      criteria[:texts].select(&:present?).each do |column|
         rel = rel.where.not(arel_table[column].eq('')).where.not(arel_table[column].eq(nil))
       end
     end
@@ -354,7 +354,7 @@ class GpArticle::Doc < ActiveRecord::Base
 
   def preview_uri(site: nil, mobile: false, smart_phone: false, without_filename: false, **params)
     base_uri = public_uri(without_filename: true)
-    return nil unless base_uri
+    return nil if base_uri.blank?
 
     site ||= ::Page.site
     params = params.map{|k, v| "#{k}=#{v}" }.join('&')
@@ -506,7 +506,7 @@ class GpArticle::Doc < ActiveRecord::Base
       self.tasks.each do |task|
         new_doc.tasks.build(site_id: task.site_id, name: task.name, process_at: task.process_at)
       end
-      new_doc.in_creator = {'group_id' => creator.group_id, 'user_id' => creator.user_id}
+      new_doc.creator_attributes = { group_id: creator.group_id, user_id: creator.user_id }
     else
       new_doc.name = nil
       new_doc.title = new_doc.title.gsub(/^(【複製】)*/, '【複製】')
@@ -530,28 +530,11 @@ class GpArticle::Doc < ActiveRecord::Base
       new_doc.inquiries.build(attrs)
     end
 
-    unless maps.empty?
-      new_maps = {}
-      maps.each_with_index do |m, i|
-        new_markers = {}
-        m.markers.each_with_index do |mm, j|
-          new_markers[j.to_s] = {
-           'name' => mm.name,
-           'lat'  => mm.lat,
-           'lng'  => mm.lng
-          }.with_indifferent_access
-        end
-
-        new_maps[i.to_s] = {
-          'name'     => m.name,
-          'title'    => m.title,
-          'map_lat'  => m.map_lat,
-          'map_lng'  => m.map_lng,
-          'map_zoom' => m.map_zoom,
-          'markers'  => new_markers
-        }.with_indifferent_access
+    maps.each do |map|
+      new_map = new_doc.maps.build(map.attributes.slice('name', 'title', 'map_lat', 'map_lng', 'map_zoom'))
+      map.markers.each do |marker|
+        new_map.markers.build(marker.attributes.slice('name', 'lat', 'lng'))
       end
-      new_doc.in_maps = new_maps
     end
 
     new_doc.save!

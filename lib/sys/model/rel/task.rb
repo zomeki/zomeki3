@@ -6,7 +6,7 @@ module Sys::Model::Rel::Task
     accepts_nested_attributes_for :tasks
 
     with_options if: :save_tasks? do
-      before_save :prepare_to_save_tasks
+      before_save :prepare_tasks
       validate :validate_tasks, if: -> { state != 'draft' }
     end
 
@@ -44,7 +44,7 @@ module Sys::Model::Rel::Task
     end
   end
 
-  def prepare_to_save_tasks
+  def prepare_tasks
     tasks.each do |task|
       task.site_id = Core.site.id if Core.site
       task.mark_for_destruction if task.name.blank? || task.process_at.blank?

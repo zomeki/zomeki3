@@ -474,7 +474,6 @@ $(document).ready(function () {
 
     <p class="form">編集権限</p>
 
-    <%- groups = Core.site.groups.where(level_no: 2).order(:sort_no) -%>
     <table class="show">
       <tr>
         <th><%= f.label :in_editable_groups %></th>

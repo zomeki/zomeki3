@@ -31,7 +31,7 @@ class GpCategory::Admin::CategoryTypesController < Cms::Controller::Admin::Base
     @item = GpCategory::CategoryType.new(category_type_params)
     @item.concept = @content.concept
     @item.content = @content
-    @item.in_creator = {'group_id' => Core.user_group.id, 'user_id' => Core.user.id}
+    @item.creator_attributes = { group_id: Core.user_group.id, user_id: Core.user.id }
     _create @item
   end
 
@@ -54,6 +54,7 @@ class GpCategory::Admin::CategoryTypesController < Cms::Controller::Admin::Base
 
   def category_type_params
     params.require(:item).permit(:concept_id, :docs_order, :internal_category_type_id, :layout_id, :name,
-      :sitemap_state, :sort_no, :state, :template_id, :title, :description, :in_creator => [:group_id, :user_id])
+      :sitemap_state, :sort_no, :state, :template_id, :title, :description,
+      :creator_attributes => [:id, :group_id, :user_id])
   end
 end

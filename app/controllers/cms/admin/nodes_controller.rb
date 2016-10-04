@@ -135,6 +135,6 @@ class Cms::Admin::NodesController < Cms::Controller::Admin::Base
 
   def node_params
     params.require(:item).permit(:concept_id, :content_id, :layout_id, :model, :parent_id, :route_id, 
-      :sitemap_sort_no, :sitemap_state, :in_creator => [:group_id, :user_id])
+      :sitemap_sort_no, :sitemap_state, :creator_attributes => [:id, :group_id, :user_id])
   end
 end

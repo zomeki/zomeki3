@@ -65,6 +65,6 @@ class Cms::Admin::Node::BaseController < Cms::Controller::Admin::Base
 
   def base_params
     params.require(:item).permit(:concept_id, :layout_id, :name, :parent_id, :route_id,
-      :sitemap_sort_no, :sitemap_state, :title, :in_creator => [:group_id, :user_id])
+      :sitemap_sort_no, :sitemap_state, :title, :creator_attributes => [:id, :group_id, :user_id])
   end
 end

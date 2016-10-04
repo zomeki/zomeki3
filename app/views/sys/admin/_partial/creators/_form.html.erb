@@ -1,38 +1,34 @@
 <%
-
 return unless Core.user.has_auth?(:manager)
 
-groups = Sys::Group.where(level_no: 2).order(:sort_no)
-
-unless Core.user.root?
-  sites = Cms::Site.arel_table
-  users = Sys::User.where(state: 'enabled').order(:id).joins(:groups => :sites).where(sites[:id].eq(Core.site.id))
+if Core.user.root?
+  groups = Core.site.all_groups_for_option
+  users = Core.site.all_users_for_option
 else
-  users = Sys::User.where(state: 'enabled').order(:id)
+  groups = Core.site.groups_for_option
+  users = Core.site.users_for_option
 end
 
-if item.in_creator.blank?
-  item.in_creator = {
-    'group_id' => Core.user_group.id,
-    'user_id'  => Core.user.id
-  }
+if item.creator.blank?
+  item.build_creator(
+    group_id: Core.user_group.id,
+    user_id: Core.user.id
+  )
 end
 
 %><br />
 
 <p class="managerForm">作成者</p>
 
+<%= f.fields_for :creator do |f2| %>
 <table class="show">
   <tr class="onlyManager">
     <th>グループ</th>
-<%- unless Core.user.root? -%>
-    <td><%= f.select_group_with_tree "in_creator[group_id]", groups, :include_blank => true %></td>
-<%- else -%>
-    <td><%= f.select_with_tree "in_creator[group_id]", groups, :include_blank => true %></td>
-<%- end -%>
+    <td><%= f2.select :group_id, groups, include_blank: true %></td>
   </tr>
   <tr class="onlyManager">
     <th>ユーザー</th>
-    <td><%= f.array_select "in_creator[user_id]", users.map {|i| [i.name_with_account, i.id] }, :include_blank => true %></td>
+    <td><%= f2.select :user_id, users, include_blank: true %></td>
   </tr>
 </table>
+<%- end -%>

@@ -57,6 +57,7 @@ class Cms::Admin::Content::BaseController < Cms::Controller::Admin::Base
   private
 
   def base_params
-    params.require(:item).permit(:code, :concept_id, :name, :note, :sort_no, :in_creator => [:group_id, :user_id])
+    params.require(:item).permit(:code, :concept_id, :name, :note, :sort_no,
+      :creator_attributes => [:id, :group_id, :user_id])
   end
 end
