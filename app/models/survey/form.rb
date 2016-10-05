@@ -1,11 +1,8 @@
 class Survey::Form < ActiveRecord::Base
   include Sys::Model::Base
   include Sys::Model::Rel::Creator
-  include Sys::Model::Rel::EditableGroup
   include Sys::Model::Rel::Task
-
   include Cms::Model::Auth::Concept
-  include Sys::Model::Auth::EditableGroup
 
   include Approval::Model::Rel::Approval
 
@@ -52,19 +49,6 @@ class Survey::Form < ActiveRecord::Base
       operation_logs = Sys::OperationLog.arel_table
       rel = rel.eager_load(:operation_logs).where(operation_logs[:user_id].eq(criteria[:touched_user_id])
                                                 .or(creators[:user_id].eq(criteria[:touched_user_id])))
-    end
-
-    if criteria[:editable].present?
-      editable_groups = Sys::EditableGroup.arel_table
-      rel = unless Core.user.has_auth?(:manager)
-              rel.eager_load(:editable_group).where(creators[:group_id].eq(Core.user.group.id)
-                                                  .or(editable_groups[:group_ids].eq(Core.user.group.id.to_s)
-                                                  .or(editable_groups[:group_ids].matches("#{Core.user.group.id} %")
-                                                  .or(editable_groups[:group_ids].matches("% #{Core.user.group.id} %")
-                                                  .or(editable_groups[:group_ids].matches("% #{Core.user.group.id}"))))))
-            else
-              rel
-            end
     end
 
     if criteria[:approvable].present?
