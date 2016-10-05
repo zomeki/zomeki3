@@ -1,11 +1,35 @@
 <p class="form">本文検索</p>
-<div style="margin-bottom: 2px;">ページ本文、記事本文から文字列を検索します。</div>
-
 <%= form_for :item, :html => {:method => :post} do |f| %>
 <%= hidden_field_tag :do, 'search' %>
-<%= f.text_field :keyword, :style => "width: 400px;" %>
-<%= submit_tag '検索'    , :name => :search %>
-<%= submit_tag 'リセット', :name => :reset %>
+<table>
+  <tr>
+    <th>検索対象</th>
+    <td colspan="2">
+      <%= check_box_tag 'target[gp_article]', true, false, {checked: params[:target].present? ? params[:target][:gp_article].present? : true }%>
+      <label for="target_gp_article">記事コンテンツ</label>
+      <%- if Core.user.has_auth?(:designer) -%>
+      <%= check_box_tag 'target[node_page]', true, false, {checked: params[:target].present? ? params[:target][:node_page].present? : true }%>
+      <label for="target_node_page">固定ページ</label>
+      <%= check_box_tag 'target[piece]', true, false, {checked: params[:target].present? ? params[:target][:piece].present? : true }%>
+      <label for="target_piece">ピース</label>
+      <%= check_box_tag 'target[layout]', true, false, {checked: params[:target].present? ? params[:target][:layout].present? : true }%>
+      <label for="target_layout">レイアウト</label>
+      <%- end -%>
+      <%= check_box_tag 'target[data_text]', true, false, {checked: params[:target].present? ? params[:target][:data_text].present? : true }%>
+      <label for="target_data_text">テキスト</label>
+      <%= check_box_tag 'target[data_file]', true, false, {checked: params[:target].present? ? params[:target][:data_file].present? : true }%>
+      <label for="target_data_file">ファイル</label>
+    </td>
+  </tr>
+  <tr>
+    <th>キーワード</th>
+    <td><%= f.text_field :keyword, :style => "width: 400px;" %></td>
+    <td class="submitters">
+      <%= submit_tag '検索'    , :name => :search %>
+      <%= submit_tag 'リセット', :name => :reset %>
+    </td>
+  </tr>
+</table>
 <% end %>
 
 <% if @items.size > 0 %>

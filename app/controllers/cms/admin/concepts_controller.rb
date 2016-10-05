@@ -74,7 +74,7 @@ class Cms::Admin::ConceptsController < Cms::Controller::Admin::Base
                 end
               end
 
-    concept.parents_tree.each{|c| layouts += c.layouts} if concept
+    concept.ancestors.each { |c| layouts += c.layouts } if concept
 
     layouts = layouts.collect{|i| ["#{i.concept.name} : #{i.title}", i.id]}
     layouts.unshift ["// 一覧を更新しました（#{layouts.size}件）", '']
@@ -88,6 +88,6 @@ class Cms::Admin::ConceptsController < Cms::Controller::Admin::Base
   private
 
   def concept_params
-    params.require(:item).permit(:name, :parent_id, :sort_no, :state, :in_creator => [:group_id, :user_id])
+    params.require(:item).permit(:name, :parent_id, :sort_no, :state, :creator_attributes => [:id, :group_id, :user_id])
   end
 end

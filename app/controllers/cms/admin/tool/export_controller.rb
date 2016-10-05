@@ -44,7 +44,7 @@ class Cms::Admin::Tool::ExportController < Cms::Controller::Admin::Base
         data[:settings]  = piece.settings
         if piece.content
           data[:content]          = piece.content
-          data[:content_concepts] = piece.content.concept.parents_tree.collect{|c| c.name}
+          data[:content_concepts] = piece.content.concept.ancestors.map(&:name)
         end
 
         if piece.model == "Cms::Link"

@@ -34,6 +34,13 @@ ZomekiCMS::Application.routes.draw do
           post :synchronize
         end
       end
+    resources :kana_dictionaries,
+      :controller  => "admin/kana_dictionaries" do
+        collection do
+          get  :make
+          post :make
+        end
+      end
     resources :users,
       :controller  => "admin/users"
     resources :groups,
@@ -72,15 +79,6 @@ ZomekiCMS::Application.routes.draw do
       :controller => "admin/storage_files",
       :path       => "storage_files(/*path)",
       :format     => false
-    resources :transferable_files,
-      :controller  => "admin/transferable_files" do
-        collection do
-          get  :refresh
-          post :transfer_all
-        end
-      end
-    resources :transferred_files,
-      :controller  => "admin/transferred_files"
     resources :operation_logs,
       :controller => "admin/operation_logs"
     resources :processes,

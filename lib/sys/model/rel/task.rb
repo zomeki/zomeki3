@@ -1,42 +1,53 @@
 module Sys::Model::Rel::Task
-  def self.included(mod)
-    mod.has_many :tasks, class_name: 'Sys::Task', dependent: :destroy, as: :processable
-    mod.after_save :save_tasks
-  end
+  extend ActiveSupport::Concern
 
-  def find_task_by_name(name)
-    tasks.find_by(name: name).try!(:process_at)
-  end
+  included do
+    has_many :tasks, class_name: 'Sys::Task', dependent: :destroy, as: :processable
+    accepts_nested_attributes_for :tasks
 
-  # setter always returns supplied argument
-  def in_tasks=(values)
-    values = (values.kind_of?(Hash) ? values : {}).with_indifferent_access
-    values.each {|k, v| task_schedules[k] = v }
-  end
-
-  def in_tasks
-    tasks.inject(task_schedules) do |result, task|
-      next result unless task.process_at
-      result.tap {|r| r[task.name] = task.process_at.strftime('%Y-%m-%d %H:%M') }
+    with_options if: :save_tasks? do
+      before_save :prepare_tasks
+      validate :validate_tasks, if: -> { state != 'draft' }
     end
+
+    scope :with_task_name, ->(name) {
+      tasks = Sys::Task.arel_table
+      joins(:tasks).where(tasks[:name].eq(name))
+    }
+  end
+
+  def tasks_attributes=(val)
+    @save_tasks = true
+    super
+  end
+
+  def save_tasks?
+    @save_tasks
   end
 
   private
 
-  def task_schedules
-    @task_schedules ||= {}.with_indifferent_access
+  def validate_tasks
+    publish_task = tasks.detect(&:publish_task?)
+    close_task = tasks.detect(&:close_task?)
+
+    if publish_task && publish_task.process_at && publish_task.process_at < Time.now
+      errors.add(:base, '公開開始日時は現在日時より後の日時を入力してください。')
+      publish_task.errors.add(:process_at)
+    end
+
+    if publish_task && close_task
+      if publish_task.process_at && close_task.process_at && publish_task.process_at > close_task.process_at
+        errors.add(:base, '公開開始日時は公開終了日時より前の日時を入力してください。')
+        publish_task.errors.add(:process_at)
+      end 
+    end
   end
 
-  def save_tasks
-    return true unless @task_schedules.kind_of?(Hash)
-
-    schedules = @task_schedules
-    @task_schedules = nil
-
-    schedules.each do |key, value|
-      tasks.where(name: key).each(&:destroy)
-      next if value.blank?
-      tasks.create(name: key, process_at: value, site_id: Core.site.try(:id))
+  def prepare_tasks
+    tasks.each do |task|
+      task.site_id = Core.site.id if Core.site
+      task.mark_for_destruction if task.name.blank? || task.process_at.blank?
     end
   end
 end

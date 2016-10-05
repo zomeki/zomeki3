@@ -1,9 +1,11 @@
 module Sys::Model::Rel::Editor
-  def self.included(mod)
-    mod.has_many :editors, -> { order(updated_at: :desc, created_at: :desc) },
+  extend ActiveSupport::Concern
+
+  included do
+    has_many :editors, -> { order(updated_at: :desc, created_at: :desc) },
       class_name: 'Sys::Editor', dependent: :destroy, as: :editable
 
-    mod.after_save :save_editor
+    after_save :save_editor
   end
 
   def last_editor
@@ -11,7 +13,7 @@ module Sys::Model::Rel::Editor
   end
 
   def save_editor
-    e = editors.build(group_id: Core.user_group.try!(:id), user_id: Core.user.try!(:id))
-    e.save
+    return if Core.user_group.blank? || Core.user.blank?
+    editors.create(group_id: Core.user_group.id, user_id: Core.user.id)
   end
 end

@@ -1,11 +1,3 @@
-<%-
-pubdate = @item.find_task_by_name('publish').try(:strftime, '%Y-%m-%d %H:%M') if @item
-if pubdate
-  pubmsg = "公開日時が設定されています。\n（ #{pubdate} ）\n直ちに公開してよろしいですか？" if pubdate
-else
-  pubmsg = '公開してよろしいですか？'
-end
--%>
 <h2><%= @content.name %><%= sub ? " ： #{sub}" : '' %></h2>
 
 <div class="actionMenu">
@@ -39,7 +31,11 @@ end
   <%= link_to :duplicate, {:do => :duplicate}, :confirm => '複製してよろしいですか？' %>
   <%= link_to '承認', approve_gp_article_doc_path, :method => :post, :confirm => '承認してよろしいですか？' if @item.state_approvable? &&
                                                                                                                @item.approvers.include?(Core.user) %>
-  <%= link_to :publish, publish_gp_article_doc_path, :method => :post, :confirm => pubmsg if @item.state_approved? &&
+  <%-
+  pubdate = @item.tasks.find_by(name: 'publish').try(:strftime, '%Y-%m-%d %H:%M')
+  pubmsg = pubdate ? "公開日時が設定されています。\n（ #{pubdate} ）\n直ちに公開してよろしいですか？" : '公開してよろしいですか？'
+  -%>
+  <%= link_to :publish, publish_gp_article_doc_path, :method => :post, :confirm => pubmsg if (@item.state_approved? || @item.state_prepared?) &&
                                                                                              @item.approval_participators.include?(Core.user) %>
   <%= link_to :close, {:do => :close}, :confirm => '公開を終了してよろしいですか？' if @item.closable? %>
   <%- end -%>

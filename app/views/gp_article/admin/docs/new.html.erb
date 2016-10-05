@@ -2,8 +2,8 @@
 
 <%= form_for @item, as: :item, url: { action: :create } do |f| %>
   <%= error_messages_for :item %>
-  <%= render 'link_check_result', results: @item.link_check_results if @item.link_check_results %>
-  <%= render 'accessibility_check_result', results: @item.accessibility_check_results if @item.accessibility_check_results %>
+  <%= render 'link_check_result', f: f, results: @item.link_check_results %>
+  <%= render 'accessibility_check_result', f: f, results: @item.accessibility_check_results %>
   <%= render 'form', f: f %>
   <%= submit @item.state_options %>
 <% end %>

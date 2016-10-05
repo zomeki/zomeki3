@@ -180,14 +180,25 @@ $(document).ready(function () {
     <%- end -%>
 
     <p class="form">公開予約設定</p>
-
+    <%-
+    publish_task = @item.tasks.detect(&:publish_task?) || @item.tasks.build(name: 'publish')
+    close_task = @item.tasks.detect(&:close_task?) || @item.tasks.build(name: 'close')
+    -%>
     <div>
-      <div class="label1">公開開始日時</div>
-      <%= f.array_text_field 'in_tasks[publish]', :style => 'width: 150px;', :class => 'datetimepicker' %>
+      <%= f.fields_for :tasks, publish_task do |f2| -%>
+        <div class="label1">公開開始日時</div>
+        <%= f2.hidden_field :name %>
+        <%= f2.text_field :process_at, value: publish_task.process_at.try(:strftime, '%Y-%m-%d %H:%M'),
+              style: 'width: 150px;', class: 'datetimepicker' %>
+      <%- end -%>
     </div>
     <div>
-      <div class="label1">公開終了日時</div>
-      <%= f.array_text_field 'in_tasks[close]', :style => 'width: 150px;', :class => 'datetimepicker' %>
+      <%= f.fields_for :tasks, close_task do |f2| -%>
+        <div class="label1">公開終了日時</div>
+        <%= f2.hidden_field :name %>
+        <%= f2.text_field :process_at, value: close_task.process_at.try(:strftime, '%Y-%m-%d %H:%M'),
+              style: 'width: 150px;', class: 'datetimepicker' %>
+      <%- end -%>
     </div>
   </div>
   <div id="tab3">

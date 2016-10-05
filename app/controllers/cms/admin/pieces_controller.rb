@@ -8,6 +8,7 @@ class Cms::Admin::PiecesController < Cms::Controller::Admin::Base
   def index
     @items = Cms::Piece.readable.order(:name, :id)
                        .paginate(page: params[:page], per_page: params[:limit])
+                       .preload(:related_objects_for_replace)
     _index @items
   end
 
@@ -103,6 +104,6 @@ class Cms::Admin::PiecesController < Cms::Controller::Admin::Base
 
   def piece_params
     params.require(:item).permit(:concept_id, :content_id, :model, :name, :state, :title, :view_title,
-      :in_creator => [:group_id, :user_id])
+      :creator_attributes => [:id, :group_id, :user_id])
   end
 end

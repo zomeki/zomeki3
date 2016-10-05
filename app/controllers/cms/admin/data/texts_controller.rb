@@ -43,6 +43,7 @@ class Cms::Admin::Data::TextsController < Cms::Controller::Admin::Base
   private
 
   def text_params
-    params.require(:item).permit(:body, :concept_id, :name, :state, :title, :in_creator => [:group_id, :user_id])
+    params.require(:item).permit(:body, :concept_id, :name, :state, :title,
+      :creator_attributes => [:id, :group_id, :user_id])
   end
 end

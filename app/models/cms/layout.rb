@@ -14,11 +14,15 @@ class Cms::Layout < ActiveRecord::Base
   validates :state, :title, presence: true
   validates :name, presence: true, uniqueness: { scope: :concept_id },
     format: { with: /\A[0-9a-zA-Z\-_]+\z/, if: "name.present?", message: "は半角英数字、ハイフン、アンダースコアで入力してください。" }
-  
+
   def states
     [['公開','public']]
   end
-  
+
+  def concept_name_and_title
+    "#{concept.try(:name)} : #{title}"
+  end
+
   def publishable? # TODO dummy
     return true
   end

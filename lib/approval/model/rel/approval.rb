@@ -33,7 +33,7 @@ module Approval::Model::Rel::Approval
     return users.uniq
   end
 
-  def approve(user, request = nil)
+  def approve(user)
     return unless state_approvable?
 
     approval_requests.each do |approval_request|
@@ -48,8 +48,7 @@ module Approval::Model::Rel::Approval
     end
 
     if approval_requests.all?(&:finished?)
-      update_column(:state, 'approved')
-      Sys::OperationLog.log(request, item: self) if request.present?
+      yield if block_given?
     end
   end
 
@@ -59,7 +58,7 @@ module Approval::Model::Rel::Approval
       send_passbacked_notification_mail(approval_request: approval_request, approver: approver, comment: comment)
       approval_request.passback(approver, comment: comment)
     end
-    update_column(:state, 'draft')
+    yield if block_given?
   end
 
   def pullback(comment: '')
@@ -68,7 +67,7 @@ module Approval::Model::Rel::Approval
       send_pullbacked_notification_mail(approval_request: approval_request, comment: comment)
       approval_request.pullback(comment: comment)
     end
-    update_column(:state, 'draft')
+    yield if block_given?
   end
 
   def send_approval_request_mail

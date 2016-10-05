@@ -6,7 +6,7 @@ module Cms::Lib::Layout
   
   def self.inhertited_concepts
     return [] unless current_concept
-    current_concept.parents_tree.reverse
+    current_concept.ancestors.reverse
   end
   
   def self.inhertited_layout

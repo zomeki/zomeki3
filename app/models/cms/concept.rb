@@ -1,7 +1,6 @@
 class Cms::Concept < ActiveRecord::Base
   include Sys::Model::Base
   include Sys::Model::Rel::Creator
-  include Sys::Model::Rel::Role
   include Sys::Model::Tree
   include Sys::Model::Base::Page
   include Sys::Model::Auth::Manager
@@ -9,8 +8,12 @@ class Cms::Concept < ActiveRecord::Base
   include StateText
 
   has_many :children, -> { order(:sort_no) },
-    :foreign_key => :parent_id, :class_name => 'Cms::Concept', :dependent => :destroy
-  belongs_to :parent, :foreign_key => :parent_id, :class_name => 'Cms::Concept'
+    foreign_key: :parent_id, class_name: self.name, dependent: :destroy
+  has_many :public_children, -> { where(state: 'public').order(:sort_no) },
+    foreign_key: :parent_id, class_name: self.name
+
+  belongs_to :parent, foreign_key: :parent_id, class_name: self.name
+
   has_many :layouts, -> { order(:name) },
     :foreign_key => :concept_id, :class_name => 'Cms::Layout', :dependent => :destroy
   has_many :pieces, -> { order(:name) },
@@ -21,11 +24,18 @@ class Cms::Concept < ActiveRecord::Base
     :class_name => 'Cms::DataFile', :dependent => :destroy
   has_many :data_file_nodes , :foreign_key => :concept_id,
     :class_name => 'Cms::DataFileNode', :dependent => :destroy
-  
+
   validates :site_id, :state, :level_no, :name, presence: true
 
   validate {
     errors.add :parent_id, :invalid if id != nil && id == parent_id
+  }
+
+  scope :preload_children, ->(depth = 5) {
+    preload(:children).preload_children(depth - 1) if depth > 0
+  }
+  scope :preload_public_children, ->(depth = 5) {
+    preload(:public_children).preload_public_children(depth - 1) if depth > 0
   }
 
   def tree_name(opts = {})
@@ -83,5 +93,11 @@ class Cms::Concept < ActiveRecord::Base
     concepts = concepts.where.not(id: id) if id
     concepts = concepts.map{|c| c.descendants{|child| child.where.not(id: id) if id } }.flatten(1)
     concepts.map{|c| [c.tree_name, c.id] }
+  end
+
+  def public_descendants(items = [])
+    items << self
+    public_children.each { |child| child.public_descendants(items) }
+    items
   end
 end

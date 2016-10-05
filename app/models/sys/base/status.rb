@@ -17,7 +17,7 @@ class Sys::Base::Status < ActiveRecord::Base
       when 'approvable'; return '承認待ち'
       when 'recognized'; return '公開待ち'
       when 'approved';   return '公開待ち'
-      when 'prepared';   return '公開'
+      when 'prepared';   return '公開日時待ち'
       when 'public';     return '公開中'
       when 'closed';     return '非公開'
       when 'completed';  return '完了'

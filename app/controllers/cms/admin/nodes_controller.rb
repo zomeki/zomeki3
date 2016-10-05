@@ -12,11 +12,11 @@ class Cms::Admin::NodesController < Cms::Controller::Admin::Base
   def index
     @dirs = Cms::Node.where(site_id: Core.site.id, parent_id: @parent.id, directory: 1)
                      .order('sitemap_sort_no IS NULL, sitemap_sort_no, name')
-                     .includes(:site)
+                     .preload(:site, :parent)
 
     @pages = Cms::Node.where(site_id: Core.site.id, parent_id: @parent.id, directory: [nil, 0])
                       .order('sitemap_sort_no IS NULL, sitemap_sort_no, name')
-                      .includes(:site)
+                      .preload(:site, :parent, :related_objects_for_replace)
     _index @pages
   end
 
@@ -135,6 +135,6 @@ class Cms::Admin::NodesController < Cms::Controller::Admin::Base
 
   def node_params
     params.require(:item).permit(:concept_id, :content_id, :layout_id, :model, :parent_id, :route_id, 
-      :sitemap_sort_no, :sitemap_state, :in_creator => [:group_id, :user_id])
+      :sitemap_sort_no, :sitemap_state, :creator_attributes => [:id, :group_id, :user_id])
   end
 end

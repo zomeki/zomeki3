@@ -7,7 +7,16 @@
   </tr><tr>
     <th><%= @item.locale(:password) %></th>
     <td><%= @item.password %></td>
+  </tr><tr>
+    <th><%= @item.locale(:target_type) %></th>
+    <td><%= @item.target_type_label %></td>
   </tr>
+  <%-if @item.is_directory? -%>
+  <tr>
+    <th><%= @item.locale(:target_location) %></th>
+    <td>/<%= @item.target_location %></td>
+  </tr>
+  <%- end -%>
 </table>
 
 <%= creator_view @item %>

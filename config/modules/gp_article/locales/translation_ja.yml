@@ -3,7 +3,7 @@ ja:
     models:
       gp_article/content/doc: 記事コンテンツ
       gp_article/doc: 記事
-      gp_article/category_type: カテゴリグループ
+      gp_article/category_type: カテゴリ種別
       gp_article/category: カテゴリ
       gp_article/tag: 関連ワード
       gp_article/comment: コメント
@@ -58,9 +58,12 @@ ja:
         inquiries/fax: 連絡先（ファクシミリ）
         inquiries/email: 連絡先（メールアドレス）
         inquiries/note: 連絡先（備考）
+      gp_article/doc/maps/markers:
+        lat: 緯度
+        lng: 経度
       gp_article/category_type:
-        name: カテゴリグループID
-        title: カテゴリグループ名
+        name: カテゴリ種別ID
+        title: カテゴリ種別名
         sort_no: 並び順
         updated_at: 更新日時
         state: 状態

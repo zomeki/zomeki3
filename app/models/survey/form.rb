@@ -1,12 +1,8 @@
 class Survey::Form < ActiveRecord::Base
   include Sys::Model::Base
-  include Sys::Model::Base::OperationLog
   include Sys::Model::Rel::Creator
-  include Sys::Model::Rel::EditableGroup
   include Sys::Model::Rel::Task
-
   include Cms::Model::Auth::Concept
-  include Sys::Model::Auth::EditableGroup
 
   include Approval::Model::Rel::Approval
 
@@ -23,6 +19,9 @@ class Survey::Form < ActiveRecord::Base
   # Content
   belongs_to :content, :foreign_key => :content_id, :class_name => 'Survey::Content::Form'
   validates :content_id, presence: true
+
+  has_many :operation_logs, -> { where(item_model: 'Survey::Form') },
+    foreign_key: :item_id, class_name: 'Sys::OperationLog'
 
   has_many :questions, :dependent => :destroy
   has_many :form_answers, :dependent => :destroy
@@ -50,19 +49,6 @@ class Survey::Form < ActiveRecord::Base
       operation_logs = Sys::OperationLog.arel_table
       rel = rel.eager_load(:operation_logs).where(operation_logs[:user_id].eq(criteria[:touched_user_id])
                                                 .or(creators[:user_id].eq(criteria[:touched_user_id])))
-    end
-
-    if criteria[:editable].present?
-      editable_groups = Sys::EditableGroup.arel_table
-      rel = unless Core.user.has_auth?(:manager)
-              rel.eager_load(:editable_group).where(creators[:group_id].eq(Core.user.group.id)
-                                                  .or(editable_groups[:group_ids].eq(Core.user.group.id.to_s)
-                                                  .or(editable_groups[:group_ids].matches("#{Core.user.group.id} %")
-                                                  .or(editable_groups[:group_ids].matches("% #{Core.user.group.id} %")
-                                                  .or(editable_groups[:group_ids].matches("% #{Core.user.group.id}"))))))
-            else
-              rel
-            end
     end
 
     if criteria[:approvable].present?
@@ -127,7 +113,6 @@ class Survey::Form < ActiveRecord::Base
     item.id            = nil
     item.created_at    = nil
     item.updated_at    = nil
-    item.in_tasks      = nil
 
     item.name  = nil
     item.title = item.title.gsub(/^(【複製】)*/, "【複製】")

@@ -37,7 +37,10 @@ class Cms::Site < ActiveRecord::Base
   belongs_to :root_node, foreign_key: :node_id, class_name: 'Cms::Node'
 
   # conditional relations
-  has_many :root_concepts, -> { where(level_no: 1).order(:sort_no, :name, :id) }, class_name: 'Cms::Concept'
+  has_many :root_concepts, -> { where(level_no: 1).order(:sort_no, :name, :id) },
+    class_name: 'Cms::Concept'
+  has_many :public_root_concepts, -> { where(level_no: 1, state: 'public').order(:sort_no, :name, :id) },
+    class_name: 'Cms::Concept'
   has_many :admin_protocol_settings, class_name: 'Cms::SiteSetting::AdminProtocol'
   has_many :emergency_layout_settings, class_name: 'Cms::SiteSetting::EmergencyLayout'
 
@@ -335,13 +338,25 @@ class Cms::Site < ActiveRecord::Base
     return false unless conf.exist?
     conf.delete
   end
+
   def destroy_nginx_admin_configs
     conf = Rails.root.join("config/nginx/admin_servers/site_#{'%04d' % id}.conf")
     return false unless conf.exist?
     conf.delete
   end
+
   def basic_auth_enabled?
     pw_file = "#{::File.dirname(public_path)}/.htpasswd"
+    return ::File.exists?(pw_file)
+  end
+
+  def system_basic_auth_enabled?
+    pw_file = "#{::File.dirname(public_path)}/.htpasswd_system"
+    return ::File.exists?(pw_file)
+  end
+
+  def directory_basic_auth_enabled?(directory)
+    pw_file = "#{::File.dirname(public_path)}/.htpasswd_#{directory}"
     return ::File.exists?(pw_file)
   end
 
@@ -366,13 +381,40 @@ class Cms::Site < ActiveRecord::Base
 
     salt = Zomeki.config.application['sys.crypt_pass']
     conf = ""
-    basic_auth_users.where(state: 'enabled').each do |user|
+    basic_auth_users.root_location.enabled.each do |user|
       conf += %Q(#{user.name}:#{user.password.crypt(salt)}\n)
     end
 
     Util::File.put(pw_file, :data => conf)
+    enable_system_basic_auth(salt)
+    enable_directory_basic_auth(salt)
     generate_nginx_configs
+    generate_nginx_admin_configs
     return true
+  end
+
+  def enable_system_basic_auth(salt)
+    system_pw_file = "#{::File.dirname(public_path)}/.htpasswd_system"
+    if auth_users = basic_auth_users.system_location.enabled
+      conf = ""
+      auth_users.system_location.where(state: 'enabled').each do |user|
+        conf += %Q(#{user.name}:#{user.password.crypt(salt)}\n)
+      end
+      Util::File.put(system_pw_file, :data => conf)
+    end
+  end
+
+  def enable_directory_basic_auth(salt)
+    if auth_users = basic_auth_users.directory_auth
+      auth_users.each do |d|
+        directory_pw_file = "#{::File.dirname(public_path)}/.htpasswd_#{d.target_location}"
+        conf = ""
+        basic_auth_users.directory_location.enabled.where(target_location: d.target_location).each do |user|
+          conf += %Q(#{user.name}:#{user.password.crypt(salt)}\n)
+        end
+        Util::File.put(directory_pw_file, :data => conf)
+      end
+    end
   end
 
   def disable_basic_auth
@@ -380,24 +422,52 @@ class Cms::Site < ActiveRecord::Base
     pw_file = "#{::File.dirname(public_path)}/.htpasswd"
     FileUtils.rm_f(ac_file)
     FileUtils.rm_f(pw_file)
+    Dir::entries("#{::File.dirname(public_path)}").each do |file|
+      next if file !~ /\.htpasswd_.*$/
+      FileUtils.rm_f("#{::File.dirname(public_path)}/#{file}")
+    end
     generate_nginx_configs
+    generate_nginx_admin_configs
     return true
   end
+
 
   def last?
     self.class.count == 1
   end
 
   def concepts_for_option
-    root_concepts.map(&:descendants).flatten(1).map{|c| [c.tree_name, c.id] }
+    @concepts_for_option ||= root_concepts.preload_children.map(&:descendants).flatten(1)
+      .map { |c| [c.tree_name, c.id] }
+  end
+
+  def public_concepts_for_option
+    @public_concepts_for_option ||= public_root_concepts.preload_public_children.map(&:public_descendants).flatten(1)
+      .map { |c| [c.tree_name, c.id] }
   end
 
   def users
     Sys::User.in_site(self)
   end
 
+  def users_for_option
+    @users_for_option ||= users.where(state: 'enabled').order(:id)
+      .map { |u| [u.name_with_account, u.id] }
+  end
+
+  def all_users_for_option
+    @all_users_for_option = Sys::User.where(state: 'enabled').order(:id)
+      .map { |u| [u.name_with_account, u.id] }
+  end
+
   def groups_for_option
-    Sys::Group.root.descendants_in_site(self).drop(1).map{|g| [g.tree_name(depth: -1), g.id] }
+    @groups_for_option ||= Sys::Group.root.descendants_in_site(self).drop(1)
+      .map { |g| [g.tree_name(depth: -1), g.id] }
+  end
+
+  def all_groups_for_option
+    @all_groups_for_option = Sys::Group.where(level_no: 2).map(&:descendants).flatten(1)
+      .map { |g| [g.tree_name(depth: -1), g.id] }
   end
 
   def og_type_text

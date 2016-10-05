@@ -71,6 +71,6 @@ class Cms::Admin::Site::BasicAuthUsersController < Cms::Controller::Admin::Base
   private
 
   def basic_auth_user_params
-    params.require(:item).permit(:name, :password, :state, :in_creator => [:group_id, :user_id])
+    params.require(:item).permit(:name, :password, :state, :target_type, :target_location, :creator_attributes => [:id, :group_id, :user_id])
   end
 end

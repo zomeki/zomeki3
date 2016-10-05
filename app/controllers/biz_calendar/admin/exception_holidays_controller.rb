@@ -40,6 +40,6 @@ class BizCalendar::Admin::ExceptionHolidaysController < Cms::Controller::Admin::
   private
 
   def exception_holiday_params
-    params.require(:item).permit(:state, :start_date, :end_date, :in_creator => [:group_id, :user_id])
+    params.require(:item).permit(:state, :start_date, :end_date, :creator_attributes => [:id, :group_id, :user_id])
   end
 end

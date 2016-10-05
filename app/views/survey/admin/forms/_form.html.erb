@@ -35,26 +35,40 @@
     <td><%= f.text_field :sort_no, :class => 'number' %></td>
   </tr>
   <tr>
-  	<th><%= f.label :confirmation %></th>
-  	<td><%= f.radio_buttons :confirmation, @item.class::CONFIRMATION_OPTIONS %></td>
+    <th><%= f.label :confirmation %></th>
+    <td><%= f.radio_buttons :confirmation, @item.class::CONFIRMATION_OPTIONS %></td>
   </tr>
-  </table>
+</table>
   
-  <p class="form">公開日時設定</p>
-  
-  <table class="show">
+<p class="form">公開日時設定</p>
+
+<%-
+publish_task = @item.tasks.detect(&:publish_task?) || @item.tasks.build(name: 'publish')
+close_task = @item.tasks.detect(&:close_task?) || @item.tasks.build(name: 'close')
+-%>
+<table class="show">
   <%- if @content.approval_related? -%>
-  <tr>
-  	<th>公開開始日時</th>
-  	<td><%= f.array_text_field 'in_tasks[publish]', :style => 'width: 150px;', :class => 'datetimepicker' %></td>
-  </tr>
-  <%- else -%>
-    <%= hidden_field_tag 'item[in_tasks][publish]', '' -%>
+    <%= f.fields_for :tasks, publish_task do |f2| -%>
+    <tr>
+      <th>公開開始日時</th>
+      <td>
+        <%= f2.hidden_field :name %>
+        <%= f2.text_field :process_at, value: publish_task.process_at.try(:strftime, '%Y-%m-%d %H:%M'),
+              style: 'width: 150px;', class: 'datetimepicker' %>
+      </td>
+    </tr>
+    <%- end -%>
   <%- end -%>
-  <tr>
-    <th>公開終了日時</th>
-    <td><%= f.array_text_field 'in_tasks[close]', :style => 'width: 150px;', :class => 'datetimepicker' %></td>
-  </tr>
+  <%= f.fields_for :tasks, close_task do |f2| -%>
+    <tr>
+      <th>公開終了日時</th>
+      <td>
+        <%= f2.hidden_field :name %>
+        <%= f2.text_field :process_at, value: close_task.process_at.try(:strftime, '%Y-%m-%d %H:%M'),
+              style: 'width: 150px;', class: 'datetimepicker' %>
+      </td>
+    </tr>
+  <%- end -%>
 </table>
 
 <%- if @content.approval_related? -%>

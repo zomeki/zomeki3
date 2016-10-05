@@ -47,6 +47,6 @@ class BizCalendar::Admin::PlacesController < Cms::Controller::Admin::Base
   def place_params
     params.require(:item).permit(:state, :url, :title, :summary, :description,
       :business_hours_state, :business_hours_title, :business_holiday_state, :business_holiday_title, :sort_no,
-      :in_creator => [:group_id, :user_id])
+      :creator_attributes => [:id, :group_id, :user_id])
   end
 end

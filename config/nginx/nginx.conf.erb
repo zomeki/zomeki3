@@ -7,4 +7,8 @@ upstream zomeki_puma {
   server unix://<%= zomeki_root %>/tmp/sockets/puma.sock;
 }
 
+upstream zomeki_unicorn {
+  server unix://<%= zomeki_root %>/tmp/sockets/unicorn.sock;
+}
+
 include <%= zomeki_root %>/config/nginx/servers/*.conf;

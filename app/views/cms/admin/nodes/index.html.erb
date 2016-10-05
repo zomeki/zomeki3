@@ -36,7 +36,7 @@
   <tr class="file <%= cycle '', 'cycle' %>">
     <td style="text-align: center;"><%= link_to :show, item.admin_uri %></td>
     <td class="name"><%= truncate(item.name, :length => 20) %></td>
-    <td><%= truncate(item.title, :length => 36) %><%= " （更新用）" if item.replace_page? %></td>
+    <td><%= truncate(item.title, :length => 36) %><%= " （更新用）" if item.related_objects_for_replace.present? %></td>
     <td><%= item.content_model_name(:wo_type) %></td>
     <td><%= item.class::SITEMAP_STATE_OPTIONS.detect{|o| o.last == item.sitemap_state }.try(:first) %></td>
     <td><%= item.sitemap_sort_no %></td>

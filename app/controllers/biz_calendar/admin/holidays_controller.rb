@@ -42,6 +42,7 @@ class BizCalendar::Admin::HolidaysController < Cms::Controller::Admin::Base
   def holiday_params
     params.require(:item).permit(:state, :type_id, :holiday_start_date, :holiday_end_date, :repeat_type,
       :repeat_interval, :repeat_criterion, :start_date, :end_type, :end_times, :end_date,
-      :repeat_week => [:_, :mon, :tue, :wed, :thurs, :fri, :sat, :sun], :in_creator => [:group_id, :user_id])
+      :repeat_week => [:_, :mon, :tue, :wed, :thurs, :fri, :sat, :sun],
+      :creator_attributes => [:id, :group_id, :user_id])
   end
 end

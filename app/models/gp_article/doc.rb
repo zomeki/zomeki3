@@ -1,6 +1,5 @@
 class GpArticle::Doc < ActiveRecord::Base
   include Sys::Model::Base
-  include Sys::Model::Base::OperationLog
   include Sys::Model::Rel::Creator
   include Sys::Model::Rel::Editor
   include Sys::Model::Rel::EditableGroup
@@ -11,6 +10,7 @@ class GpArticle::Doc < ActiveRecord::Base
   include Cms::Model::Base::Page::TalkTask
   include Cms::Model::Rel::ManyInquiry
   include Cms::Model::Rel::Map
+  include Cms::Model::Rel::Bracket
 
   include Cms::Model::Auth::Concept
   include Sys::Model::Auth::EditableGroup
@@ -49,6 +49,9 @@ class GpArticle::Doc < ActiveRecord::Base
   # Page
   belongs_to :concept, :foreign_key => :concept_id, :class_name => 'Cms::Concept'
   belongs_to :layout, :foreign_key => :layout_id, :class_name => 'Cms::Layout'
+
+  has_many :operation_logs, -> { where(item_model: 'GpArticle::Doc') },
+    foreign_key: :item_id, class_name: 'Sys::OperationLog'
 
   belongs_to :prev_edition, :class_name => self.name
   has_one :next_edition, :foreign_key => :prev_edition_id, :class_name => self.name
@@ -105,8 +108,8 @@ class GpArticle::Doc < ActiveRecord::Base
   validate :node_existence
   validate :event_dates_range
   validate :body_limit_for_mobile
-  validate :validate_accessibility_check, unless: :state_draft?
-  validate :validate_broken_link_existence, unless: :state_draft?
+  validate :validate_accessibility_check, if: -> { !state_draft? && errors.blank? }
+  validate :validate_broken_link_existence, if: -> { !state_draft? && errors.blank? }
 
   after_initialize :set_defaults
   after_save :set_display_attributes
@@ -116,15 +119,54 @@ class GpArticle::Doc < ActiveRecord::Base
     where(arel_table[:event_ended_on].gteq(start_date)).where(arel_table[:event_started_on].lt(end_date + 1))
   }
   scope :content_and_criteria, ->(content, criteria) {
-    docs = self.arel_table
-
     rel = all
-    rel = rel.where(docs[:content_id].eq(content.id)) if content.kind_of?(GpArticle::Content::Doc)
+    rel = rel.where(arel_table[:content_id].eq(content.id)) if content
 
     rel = rel.with_target(criteria[:target]) if criteria[:target].present?
     rel = rel.with_target_state(criteria[:target_state]) if criteria[:target_state].present?
 
-    rel = rel.search_with_text(:title, :body, :name, criteria[:free_word]) if criteria[:free_word].present?
+    [:state, :event_state, :marker_state].each do |key|
+      rel = rel.where(key => criteria[key]) if criteria[key].present?
+    end
+
+    if criteria[:creator_user_name].present?
+      rel = rel.operated_by_user_name('create', criteria[:creator_user_name])
+    end
+
+    if criteria[:creator_group_id].present?
+      rel = rel.operated_by_group('create', criteria[:creator_group_id])
+    end
+
+    if criteria[:category_ids].present? && (category_ids = criteria[:category_ids].select(&:present?)).present?
+      rel = rel.categorized_into_all(category_ids)
+    end
+
+    if criteria[:user_operation].present?
+      rel = rel.operated_by_user_name(criteria[:user_operation], criteria[:user_name]) if criteria[:user_name].present?
+      rel = rel.operated_by_group(criteria[:user_operation], criteria[:user_group_id]) if criteria[:user_group_id].present?
+    end
+
+    if criteria[:date_column].present? && criteria[:date_operation].present?
+      dates = criteria[:dates].to_a.map { |date| date.present? ? (Date.parse(date) rescue nil) : nil }.compact
+      rel = rel.search_date_column(criteria[:date_column], criteria[:date_operation], dates)
+    end
+
+    if criteria[:assocs].present?
+      criteria[:assocs].select(&:present?).each { |assoc| rel = rel.joins(assoc.to_sym) }
+    end
+
+    if criteria[:tasks].present?
+      criteria[:tasks].select(&:present?).each { |task| rel = rel.with_task_name(task) }
+    end
+
+    if criteria[:texts].present?
+      criteria[:texts].select(&:present?).each do |column|
+        rel = rel.where.not(arel_table[column].eq('')).where.not(arel_table[column].eq(nil))
+      end
+    end
+
+    search_columns = [:name, :title, :body, :subtitle, :summary, :mobile_title, :mobile_body]
+    rel = rel.search_with_text(*search_columns, criteria[:free_word]) if criteria[:free_word].present?
 
     rel
   }
@@ -144,67 +186,93 @@ class GpArticle::Doc < ActiveRecord::Base
         editable_groups[:group_ids].matches("% #{user.group.id} %"),
         editable_groups[:group_ids].matches("% #{user.group.id}")
       ].reduce(:or))
+    else
+      all
     end
   }
   scope :with_target_state, ->(target_state) {
     case target_state
     when 'processing'
-      where(state: %w(draft approval approved))
+      where(state: %w(draft approvable approved prepared))
     when 'public'
       where(state: 'public')
     when 'closed'
       where(state: 'closed')
-    end
-  }
-  scope :with_creator_group_id, ->(group_id) {
-    groups = Sys::Group.arel_table
-    joins(creator: :group).where(groups[:id].in(group_id))
-  }
-  scope :with_creator_group_name, ->(group_name) {
-    groups = Sys::Group.arel_table
-    joins(creator: :group).where(groups[:name].matches("%#{group_name}%"))
-  }
-  scope :with_creator_user_name, ->(user_name) {
-    users = Sys::User.arel_table
-    joins(creator: :user).where([
-      users[:name].matches("%#{user_name}%"),
-      users[:name_en].matches("%#{user_name}%")
-    ].reduce(:or))
-  }
-  scope :created_or_operated_docs_for_user, ->(user) {
-    creators = Sys::Creator.arel_table
-    operation_logs = Sys::OperationLog.arel_table
-    joins(:creator).eager_load(:operation_logs)
-      .where([creators[:user_id].eq(user.id), operation_logs[:user_id].eq(user.id)].reduce(:or))
-  }
-  scope :editable_docs_for_user, ->(user) {
-    if user.has_auth?(:manager)
-      all
     else
-      creators = Sys::Creator.arel_table
-      editable_groups = Sys::EditableGroup.arel_table
-      joins(:creator).eager_load(:editable_group).where([
-        creators[:group_id].eq(user.group.id),
-        editable_groups[:all].eq(true),
-        editable_groups[:group_ids].eq(user.group.id.to_s),
-        editable_groups[:group_ids].matches("#{user.group.id} %"),
-        editable_groups[:group_ids].matches("% #{user.group.id} %"),
-        editable_groups[:group_ids].matches("% #{user.group.id}")
-      ].reduce(:or))
+      none
     end
   }
-  scope :approval_related_docs_for_user, ->(user) {
-    approval_requests = Approval::ApprovalRequest.arel_table
-    assignments = Approval::Assignment.arel_table
-    distinct.joins(approval_requests: [approval_flow: [approvals: :assignments]])
-      .where([approval_requests[:user_id].eq(user.id), assignments[:user_id].eq(user.id)].reduce(:or))
+  scope :operated_by_user_name, ->(action, user_name) {
+    case action
+    when 'create'
+      users = Sys::User.arel_table
+      joins(creator: :user).where([
+        users[:name].matches("%#{user_name}%"),
+        users[:name_en].matches("%#{user_name}%")
+      ].reduce(:or))
+    else
+      operation_logs = Sys::OperationLog.arel_table
+      users = Sys::User.arel_table
+      joins(operation_logs: :user)
+        .where(operation_logs[:action].eq(action))
+        .where([
+          users[:name].matches("%#{user_name}%"),
+          users[:name_en].matches("%#{user_name}%")
+        ].reduce(:or))
+    end
+  }
+  scope :operated_by_group, ->(action, group_id) {
+    case action
+    when 'create'
+      creators = Sys::Creator.arel_table
+      joins(:creator).where(creators[:group_id].eq(group_id))
+    else
+      operation_logs = Sys::OperationLog.arel_table
+      users_groups = Sys::UsersGroup.arel_table
+      joins(operation_logs: { user: :users_groups })
+        .where(operation_logs[:action].eq(action))
+        .where(users_groups[:group_id].eq(group_id))
+    end
+  }
+  scope :search_date_column, ->(column, operation, dates = nil) {
+    case operation
+    when 'today'
+      today = Date.today
+      with_date_between(column, today, today)
+    when 'this_week'
+      today = Date.today
+      with_date_between(column, today.beginning_of_week, today.end_of_week)
+    when 'last_week'
+      last_week = 1.week.ago
+      with_date_between(column, last_week.beginning_of_week, last_week.end_of_week)
+    when 'equal'
+      with_date_between(column, dates[0], dates[0]) if dates[0]
+    when 'before'
+      where(arel_table[column].lteq(dates[0].end_of_day)) if dates[0]
+    when 'after'
+      where(arel_table[column].gteq(dates[0].beginning_of_day)) if dates[0]
+    when 'between'
+      with_date_between(column, dates[0], dates[1]) if dates[0] && dates[1]
+    else
+      none
+    end
+  }
+  scope :with_date_between, ->(column, date1, date2) {
+    where(arel_table[column].in(date1.beginning_of_day..date2.end_of_day))
   }
   scope :categorized_into, ->(category_ids) {
     cats = GpCategory::Categorization.arel_table
     where(id: GpCategory::Categorization.select(:categorizable_id)
       .where(cats[:categorized_as].eq('GpArticle::Doc'))
-      .where(cats[:category_id].in(category_ids))
-      .order(cats[:sort_no].eq(nil), cats[:sort_no].asc))
+      .where(cats[:category_id].in(category_ids)))
+  }
+  scope :categorized_into_all, ->(category_ids) {
+    cats = GpCategory::Categorization.arel_table
+    category_ids.inject(all) do |rel, category_id|
+      rel = rel.where(id: GpCategory::Categorization.select(:categorizable_id)
+        .where(cats[:categorized_as].eq('GpArticle::Doc'))
+        .where(cats[:category_id].eq(category_id)))
+    end
   }
   scope :organized_into, ->(group_ids) {
     groups = Sys::Group.arel_table
@@ -286,7 +354,7 @@ class GpArticle::Doc < ActiveRecord::Base
 
   def preview_uri(site: nil, mobile: false, smart_phone: false, without_filename: false, **params)
     base_uri = public_uri(without_filename: true)
-    return nil unless base_uri
+    return nil if base_uri.blank?
 
     site ||= ::Page.site
     params = params.map{|k, v| "#{k}=#{v}" }.join('&')
@@ -321,6 +389,10 @@ class GpArticle::Doc < ActiveRecord::Base
 
   def state_approved?
     state == 'approved'
+  end
+
+  def state_prepared?
+    state == 'prepared'
   end
 
   def state_public?
@@ -423,6 +495,7 @@ class GpArticle::Doc < ActiveRecord::Base
     new_attributes[:state] = 'draft'
     new_attributes[:id] = nil
     new_attributes[:created_at] = nil
+    new_attributes[:recognized_at] = nil
     new_attributes[:prev_edition_id] = nil
 
     new_doc = self.class.new(new_attributes)
@@ -430,8 +503,10 @@ class GpArticle::Doc < ActiveRecord::Base
     case dup_for
     when :replace
       new_doc.prev_edition = self
-      new_doc.in_tasks = self.in_tasks
-      new_doc.in_creator = {'group_id' => creator.group_id, 'user_id' => creator.user_id}
+      self.tasks.each do |task|
+        new_doc.tasks.build(site_id: task.site_id, name: task.name, process_at: task.process_at)
+      end
+      new_doc.creator_attributes = { group_id: creator.group_id, user_id: creator.user_id }
     else
       new_doc.name = nil
       new_doc.title = new_doc.title.gsub(/^(【複製】)*/, '【複製】')
@@ -439,7 +514,6 @@ class GpArticle::Doc < ActiveRecord::Base
       new_doc.display_updated_at = nil
       new_doc.published_at = nil
       new_doc.display_published_at = nil
-      new_doc.in_tasks = nil
       new_doc.serial_no = nil
     end
 
@@ -456,28 +530,11 @@ class GpArticle::Doc < ActiveRecord::Base
       new_doc.inquiries.build(attrs)
     end
 
-    unless maps.empty?
-      new_maps = {}
-      maps.each_with_index do |m, i|
-        new_markers = {}
-        m.markers.each_with_index do |mm, j|
-          new_markers[j.to_s] = {
-           'name' => mm.name,
-           'lat'  => mm.lat,
-           'lng'  => mm.lng
-          }.with_indifferent_access
-        end
-
-        new_maps[i.to_s] = {
-          'name'     => m.name,
-          'title'    => m.title,
-          'map_lat'  => m.map_lat,
-          'map_lng'  => m.map_lng,
-          'map_zoom' => m.map_zoom,
-          'markers'  => new_markers
-        }.with_indifferent_access
+    maps.each do |map|
+      new_map = new_doc.maps.build(map.attributes.slice('name', 'title', 'map_lat', 'map_lng', 'map_zoom'))
+      map.markers.each do |marker|
+        new_map.markers.build(marker.attributes.slice('name', 'lat', 'lng'))
       end
-      new_doc.in_maps = new_maps
     end
 
     new_doc.save!
@@ -589,7 +646,7 @@ class GpArticle::Doc < ActiveRecord::Base
   end
 
   def will_replace?
-    prev_edition && (state_draft? || state_approvable? || state_approved?)
+    prev_edition && (state_draft? || state_approvable? || state_approved? || state_prepared?)
   end
 
   def will_be_replaced?
