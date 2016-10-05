@@ -15,7 +15,7 @@ class Cms::Admin::Tool::SearchController < Cms::Controller::Admin::Base
     return true if params[:item][:keyword].blank?
     @item.keyword = params[:item][:keyword]
 
-    if params[:target] && params[:target][:node_page]
+    if params[:target] && params[:target][:node_page] && Core.user.has_auth?(:designer)
       group = [ "固定ページ", [] ]
       Cms::Node.where(site_id: Core.site.id, model: "Cms::Page", concept_id: Core.concept(:id))
         .search_with_text(:title, :body, :mobile_title, :mobile_body, @item.keyword)
@@ -35,7 +35,7 @@ class Cms::Admin::Tool::SearchController < Cms::Controller::Admin::Base
       end
     end
 
-    if params[:target] && params[:target][:piece]
+    if params[:target] && params[:target][:piece] && Core.user.has_auth?(:designer)
       group = [ "ピース", [] ]
       Cms::Piece.where(site_id: Core.site.id, concept_id: Core.concept(:id))
         .search_with_text(:name, :title, :view_title, :head, :body, @item.keyword)
@@ -44,7 +44,7 @@ class Cms::Admin::Tool::SearchController < Cms::Controller::Admin::Base
       @items << group
     end
 
-    if params[:target] && params[:target][:layout]
+    if params[:target] && params[:target][:layout] && Core.user.has_auth?(:designer)
       group = [ "レイアウト", [] ]
       Cms::Layout.where(site_id: Core.site.id, concept_id: Core.concept(:id))
         .search_with_text(:name, :title, :head, :body, :mobile_head, :mobile_body, @item.keyword)

@@ -7,12 +7,14 @@
     <td colspan="2">
       <%= check_box_tag 'target[gp_article]', true, false, {checked: params[:target].present? ? params[:target][:gp_article].present? : true }%>
       <label for="target_gp_article">記事コンテンツ</label>
+      <%- if Core.user.has_auth?(:designer) -%>
       <%= check_box_tag 'target[node_page]', true, false, {checked: params[:target].present? ? params[:target][:node_page].present? : true }%>
       <label for="target_node_page">固定ページ</label>
       <%= check_box_tag 'target[piece]', true, false, {checked: params[:target].present? ? params[:target][:piece].present? : true }%>
       <label for="target_piece">ピース</label>
       <%= check_box_tag 'target[layout]', true, false, {checked: params[:target].present? ? params[:target][:layout].present? : true }%>
       <label for="target_layout">レイアウト</label>
+      <%- end -%>
       <%= check_box_tag 'target[data_text]', true, false, {checked: params[:target].present? ? params[:target][:data_text].present? : true }%>
       <label for="target_data_text">テキスト</label>
       <%= check_box_tag 'target[data_file]', true, false, {checked: params[:target].present? ? params[:target][:data_file].present? : true }%>
