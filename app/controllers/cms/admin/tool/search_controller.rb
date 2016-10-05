@@ -40,7 +40,7 @@ class Cms::Admin::Tool::SearchController < Cms::Controller::Admin::Base
       Cms::Piece.where(site_id: Core.site.id, concept_id: Core.concept(:id))
         .search_with_text(:name, :title, :view_title, :head, :body, @item.keyword)
         .order(:id)
-        .each {|c| group[1] << [c.id, c.title, cms_piece_path(c.concept_id, c.id)] }
+        .each {|c| group[1] << [c.id, c.title, c.admin_uri] }
       @items << group
     end
 
