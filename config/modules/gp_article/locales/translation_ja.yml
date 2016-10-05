@@ -43,7 +43,7 @@ ja:
         og_image: 画像（添付ファイル名）
         template_id: テンプレート
         body_more_link_text: 追記リンク表記
-        feature_1: 新着記事表示
+        feature_1: 記事一覧表示
         feature_2: 記事表示
         marker_icon_category_id: マーカーアイコン用カテゴリ
         display_published_at: 公開日
