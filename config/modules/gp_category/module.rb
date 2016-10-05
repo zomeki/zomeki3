@@ -3,7 +3,7 @@ Cms::Lib::Modules::ModuleSet.draw :gp_category, 'カテゴリ', 20 do |mod|
   mod.content :category_types, 'カテゴリ'
 
   ## directories
-  mod.directory :category_types, 'カテゴリグループページ'
+  mod.directory :category_types, 'カテゴリ種別ページ'
   mod.directory :docs, '新着記事一覧ページ'
 
   ## pieces

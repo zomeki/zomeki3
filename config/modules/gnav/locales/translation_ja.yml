@@ -11,12 +11,12 @@ ja:
         updated_at: 更新日時
         state: 状態
       gnav/piece/doc:
-        category_type_id: 表示カテゴリグループ
+        category_type_id: 表示カテゴリ種別
         category_id: 表示カテゴリ
         list_count: 表示件数
         list_style: 表示形式
         date_style: 日付形式
       gnav/piece/category_type:
-        category_type_id: 表示カテゴリグループ
+        category_type_id: 表示カテゴリ種別
         category_id: 表示カテゴリ
         layer: 表示カテゴリ階層

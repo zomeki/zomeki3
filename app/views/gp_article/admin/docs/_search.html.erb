@@ -18,7 +18,7 @@ category_ids = params.dig(:criteria, :category_ids) || []
   <tr>
     <th>タイトル・内容・ディレクトリ名など</th>
     <%- if @content.visible_category_types.present? -%>
-    <th>カテゴリグループ</th>
+    <th>カテゴリ種別</th>
     <th>カテゴリ<a href="#" id="addCategory" style="margin-left: 10px; <%= 'display: none;' if params[:detail_flag] != '1' %>">追加</a></th>
     <%- end -%>
     <td rowspan="2" class="submitters">
@@ -50,7 +50,7 @@ category_ids = params.dig(:criteria, :category_ids) || []
   <table id="categoryContainer">
     <tr>
       <%- category_type_ids.drop(1).each_with_index do |_, i| -%>
-        <th>カテゴリグループ</th>
+        <th>カテゴリ種別</th>
         <th>カテゴリ</th>
       <%- end -%>
     </tr>
@@ -125,7 +125,7 @@ category_ids = params.dig(:criteria, :category_ids) || []
 
 <table id="categoryTemplate" style="display: none;">
   <tr>
-    <th>カテゴリグループ</th>
+    <th>カテゴリ種別</th>
     <th>カテゴリ</th>
   </tr>
   <tr>
