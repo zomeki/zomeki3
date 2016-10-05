@@ -1,21 +1,21 @@
 ja:
   activerecord:
     models:
-      gp_category/category_type: カテゴリグループ
+      gp_category/category_type: カテゴリ種別
       gp_category/category: カテゴリ
       gp_category/template: テンプレート
       gp_category/template_module: モジュール
     attributes:
       gp_category/category_type:
-        name: カテゴリグループID
-        title: カテゴリグループ名
+        name: カテゴリ種別ID
+        title: カテゴリ種別名
         sort_no: 並び順
         updated_at: 更新日時
         state: 状態
         sitemap_state: サイトマップ
         docs_order: 記事表示順
         template_id: テンプレート
-        internal_category_type_id: ネストカテゴリグループ
+        internal_category_type_id: ネストカテゴリ種別
         description: 説明
       gp_category/category:
         name: カテゴリID
@@ -52,18 +52,18 @@ ja:
         more_link_body: 一覧リンク文字
         more_link_url: 一覧リンクURL
       gp_category/piece/category_type:
-        category_type_id: 表示カテゴリグループ
+        category_type_id: 表示カテゴリ種別
         category_id: 表示カテゴリ
         layer: 表示カテゴリ階層
         list_style: 表示形式
         date_style: 日付形式
       gp_category/piece/category_list:
         setting_state: 詳細設定
-        category_type_id: 表示カテゴリグループ
+        category_type_id: 表示カテゴリ種別
         category_id: 表示カテゴリ
         layer: 表示カテゴリ階層
       gp_category/piece/category:
-        in_settings_category_type_id: 表示カテゴリグループ
+        in_settings_category_type_id: 表示カテゴリ種別
         in_settings_num_docs_visibility: 記事数表示
       gp_category/piece/recent_tab:
         list_count: 表示件数

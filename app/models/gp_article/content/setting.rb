@@ -1,5 +1,5 @@
 class GpArticle::Content::Setting < Cms::ContentSetting
-  set_config :gp_category_content_category_type_id, name: 'カテゴリグループ',
+  set_config :gp_category_content_category_type_id, name: 'カテゴリ種別',
     options: lambda { GpCategory::Content::CategoryType.where(site_id: Core.site.id).map {|ct| [ct.name, ct.id] } }
   set_config :basic_setting, name: '基本設定',
     options: lambda { Core.site.public_concepts_for_option.to_a },
