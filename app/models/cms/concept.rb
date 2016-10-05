@@ -1,7 +1,6 @@
 class Cms::Concept < ActiveRecord::Base
   include Sys::Model::Base
   include Sys::Model::Rel::Creator
-  include Sys::Model::Rel::Role
   include Sys::Model::Tree
   include Sys::Model::Base::Page
   include Sys::Model::Auth::Manager
