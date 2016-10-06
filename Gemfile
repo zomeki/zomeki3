@@ -85,5 +85,5 @@ gem 'rmagick', '~> 2.15.4'
 gem 'rqrcode_png', '~> 0.1.5'
 gem 'rsync', '~> 1.0.9'
 gem 'simple_captcha2', '~> 0.3.4', require: 'simple_captcha'
-gem 'will_paginate', '~> 3.0.7'
+gem 'will_paginate', '~> 3.1.3'
 gem 'whenever', require: false
