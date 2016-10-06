@@ -134,10 +134,5 @@ class Approval::ApprovalRequest < ActiveRecord::Base
 
   def set_defaults
     self.current_index = min_index if has_attribute?(:current_index) && current_index.nil?
-    if current_approvers.empty?
-      current_approval.assignments.each do |assignment|
-        current_assignments.build(user_id: assignment.user_id, or_group_id: assignment.or_group_id) 
-      end
-    end
   end
 end
