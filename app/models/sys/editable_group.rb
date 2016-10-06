@@ -1,13 +1,12 @@
 class Sys::EditableGroup < ActiveRecord::Base
   include Sys::Model::Base
 
-  belongs_to :editable, polymorphic: true, required: true
+  ALL_GROUP = 0
 
-  def groups
-    Sys::Group.where(id: group_ids_as_array)
-  end
+  belongs_to :editable, polymorphic: true
+  belongs_to :group, class_name: 'Sys::Group'
 
-  def group_ids_as_array
-    group_ids.to_s.split.uniq
+  def all_group?
+    group_id == ALL_GROUP
   end
 end

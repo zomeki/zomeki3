@@ -32,7 +32,7 @@ ja:
         mobile_body: 携帯用内容
         terminal_pc_or_smart_phone: PC・スマートフォン
         terminal_mobile: 携帯
-        in_editable_groups: 編集可能グループ
+        editable_groups: 編集可能グループ
         in_rel_doc_ids: 関連記事
         marker_state: マップ表示
         meta_description: 説明文

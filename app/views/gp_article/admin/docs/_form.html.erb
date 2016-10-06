@@ -467,28 +467,7 @@ $(document).ready(function () {
         <td><%= f.text_field :og_image, :style => 'width: 200px;' %></td>
       </tr>
     </table>
-
-    <p class="form">編集権限</p>
-
-    <table class="show">
-      <tr>
-        <th><%= f.label :in_editable_groups %></th>
-        <td>
-          <div id="editable_groups">
-            <%= render 'editable_group', groups_for_option: Core.site.groups_for_option, group: Core.site.groups.build, available: false %>
-            <%- Sys::Group.where(id: @item.in_editable_groups.reject{|g| g == 'ALL'}).each do |group| -%>
-            <%= render 'editable_group', groups_for_option: Core.site.groups_for_option, group: group, available: true %>
-            <%- end -%>
-            <span><%= button_tag '追加', type: 'button', id: 'add_editable_group' %></span>
-          </div>
-          <div>
-            <%= check_box_tag 'item[in_editable_groups][]', 'ALL', @item.in_editable_groups.include?('ALL'), id: 'all_group' %>
-            <%= label_tag 'all_group', 'すべてのグループ' %>
-          </div>
-        </td>
-      </tr>
-    </table>
-
+    <%= editable_group_form f %>
     <%= creator_form f %>
   </div>
 </div>
@@ -532,13 +511,6 @@ $(document).ready(function () {
   <%- @content.marker_category_types.each do |category_type| -%>
   set_click_event_handler('<%= category_type.id %>', 'marker_');
   <%- end -%>
-
-  $('#add_editable_group').on('click', function () {
-    var editable_groups_wrapper = $('#editable_groups');
-    var new_group = editable_groups_wrapper.children(':first-child').clone(true);
-    new_group.find(':disabled').removeAttr('disabled');
-    new_group.insertBefore(editable_groups_wrapper.children(':last-child')).show();
-  }).trigger('click');
 
   <%- if @content.gp_category_content_category_type -%>
   $('#rel_category_type').on('change', function (event) {

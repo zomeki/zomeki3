@@ -19,28 +19,6 @@ module GpArticle::GpArticleHelper
     end
   end
 
-  def large_flash(flash, key: nil, value: nil)
-    fail ArgumentError.new("flash required. (was #{flash.class.name})") if !flash.kind_of?(ActionDispatch::Flash::FlashHash) &&
-                                                                           !flash.kind_of?(Hash)
-
-    if value.nil?
-      v = flash[key]
-      matched = /^flash:(\d+)$/.match(v)
-      return v unless matched
-
-      if (text = Sys::TempText.find_by(id: matched[1]))
-        text.destroy.content
-      else
-        nil
-      end
-    else
-      text = Sys::TempText.create(content: value)
-      flash[key] = "flash:#{text.id}"
-      value
-
-    end
-  end
-
   def og_tags(item)
     return '' if item.nil?
     %w!type title description image!.map{ |key|
