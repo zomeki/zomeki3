@@ -4,11 +4,6 @@ module Sys::FormHelper
     render 'sys/admin/_partial/creators/form', f: form, item: item
   end
 
-  def creator_form_smart_phone(form)
-    item = form.object || instance_variable_get("@#{form.object_name}")
-    render 'sys/admin/_partial/creators/form_smart_phone', f: form, item: item
-  end
-
   def creator_view(item)
     render 'sys/admin/_partial/creators/view', item: item
   end

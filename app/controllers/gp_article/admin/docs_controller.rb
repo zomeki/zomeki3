@@ -332,7 +332,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
       :tasks_attributes => [:id, :name, :process_at],
       :inquiries_attributes => [:id, :state, :_destroy,:group_id],
       :maps_attributes => [:id, :name, :title, :map_lat, :map_lng, :map_zoom, :markers_attributes => [:id, :name, :lat, :lng]],
-      :in_editable_groups => [],
+      :editable_groups_attributes => [:id, :group_id],
       :in_rel_doc_ids => [],
       :in_share_accounts => [],
       :in_approval_flow_ids => [],

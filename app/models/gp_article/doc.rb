@@ -176,16 +176,7 @@ class GpArticle::Doc < ActiveRecord::Base
       creators = Sys::Creator.arel_table
       joins(:creator).where(creators[:user_id].eq(user.id))
     when 'group'
-      creators = Sys::Creator.arel_table
-      editable_groups = Sys::EditableGroup.arel_table
-      joins(:creator).eager_load(:editable_group).where([
-        creators[:group_id].eq(user.group.id),
-        editable_groups[:all].eq(true),
-        editable_groups[:group_ids].eq(user.group.id.to_s),
-        editable_groups[:group_ids].matches("#{user.group.id} %"),
-        editable_groups[:group_ids].matches("% #{user.group.id} %"),
-        editable_groups[:group_ids].matches("% #{user.group.id}")
-      ].reduce(:or))
+      editable
     else
       all
     end
@@ -517,10 +508,8 @@ class GpArticle::Doc < ActiveRecord::Base
       new_doc.serial_no = nil
     end
 
-    if editable_group
-      gids = editable_group.group_ids.split
-      gids << 'ALL' if editable_group.all
-      new_doc.in_editable_groups = gids
+    editable_groups.each do |eg|
+      new_doc.editable_groups.build(group_id: eg.group_id)
     end
 
     inquiries.each_with_index do |inquiry, i|
@@ -565,7 +554,7 @@ class GpArticle::Doc < ActiveRecord::Base
   def editable?
     result = super
     return result unless result.nil? # See "Sys::Model::Auth::EditableGroup"
-    return editable_group.all? || approval_participators.include?(Core.user)
+    return approval_participators.include?(Core.user)
   end
 
   def publishable?

@@ -1,7 +1,8 @@
 <%
-return '' unless group = item.editable_group
-groups = group.groups
-return '' if groups.empty?
+return '' if item.editable_groups.blank?
+
+all_group = item.editable_groups.any?(&:all_group?)
+groups = item.editable_groups.map(&:group).compact
 %>
 
 <p class="form">編集権限</p>
@@ -10,9 +11,13 @@ return '' if groups.empty?
   <tr>
     <th>編集可能グループ</th>
     <td>
-      <% groups.each do |group| %>
-      <%= group.full_name %><br />
-      <% end %>
+      <%- if all_group -%>
+        <span>すべてのグループ</span>
+      <%- else -%>
+        <% groups.each do |group| %>
+          <%= group.full_name %><br />
+        <%- end -%>
+      <%- end -%>
     </td>
   </tr>
 </table>

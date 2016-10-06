@@ -5,29 +5,25 @@ all_editable_groups << item.editable_groups.build if all_editable_groups.blank?
 -%>
 <p class="form">編集権限</p>
 
-<table class="show">
-  <tr>
-    <th><%= f.label :editable_groups %></th>
-    <td>
-      <div id="editable_groups">
-        <%- editable_groups.each_with_index do |eg, idx| -%>
-          <%= f.fields_for :editable_groups, eg, child_index: idx + 1 do |f2| %>
-            <%= f2.select :group_id, Core.site.groups_for_option, include_blank: true %>
-          <%- end -%>
-        <%- end -%>
-        <span><%= button_tag '追加', type: 'button', id: 'add_editable_group' %></span>
-      </div>
-      <div>
-        <%- all_editable_groups.each do |eg| -%>
-          <%= f.fields_for :editable_groups, eg, child_index: 0 do |f2| %>
-            <%= f2.check_box :group_id, { id: 'all_group' }, '0', '' %>
-          <%- end -%>
-        <%- end -%>
-        <%= label_tag 'all_group', 'すべてのグループ' %>
-      </div>
-    </td>
-  </tr>
-</table>
+<div>
+  <div class="label1"><%= f.label :editable_groups %></div>
+  <div id="editable_groups">
+    <%- editable_groups.each_with_index do |eg, idx| -%>
+      <%= f.fields_for :editable_groups, eg, child_index: idx + 1 do |f2| %>
+        <%= f2.select :group_id, Core.site.groups_for_option, include_blank: true %>
+      <%- end -%>
+    <%- end -%>
+    <span><%= button_tag '追加', type: 'button', id: 'add_editable_group' %></span>
+  </div>
+  <div>
+    <%- all_editable_groups.each do |eg| -%>
+      <%= f.fields_for :editable_groups, eg, child_index: 0 do |f2| %>
+        <%= f2.check_box :group_id, { id: 'all_group' }, '0', '' %>
+      <%- end -%>
+    <%- end -%>
+    <%= label_tag 'all_group', 'すべてのグループ' %>
+  </div>
+</div>
 
 <script type="text/javascript">
 $(function() {
