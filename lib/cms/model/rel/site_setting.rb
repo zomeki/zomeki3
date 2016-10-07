@@ -1,11 +1,12 @@
 module Cms::Model::Rel::SiteSetting
   attr_accessor :in_setting_site_admin_protocol
+  attr_accessor :in_setting_site_basic_auth_state
   attr_accessor :in_setting_site_common_ssl
   attr_accessor :in_setting_site_pass_reminder_mail_sender
   attr_accessor :in_setting_site_file_upload_max_size
   attr_accessor :in_setting_site_extension_upload_max_size
 
-  SITE_SETTINGS = [:admin_protocol, :common_ssl,
+  SITE_SETTINGS = [:admin_protocol, :basic_auth_state, :common_ssl,
     :pass_reminder_mail_sender, :file_upload_max_size, :extension_upload_max_size]
   #SITE_SETTINGS = [:admin_protocol]
 
@@ -15,6 +16,15 @@ module Cms::Model::Rel::SiteSetting
   def setting_site_admin_protocol
     setting = Cms::SiteSetting::AdminProtocol.where(site_id: id).first
     setting ? setting.value : nil;
+  end
+
+  def setting_site_basic_auth_state
+    setting = Cms::SiteSetting::BasicAuth.where(site_id: id).first
+    setting ? setting.value : nil;
+  end
+
+  def use_basic_auth?
+    setting_site_basic_auth_state == 'enabled'
   end
 
   def use_common_ssl?
@@ -76,6 +86,7 @@ module Cms::Model::Rel::SiteSetting
 
   def load_site_settings
     @in_setting_site_admin_protocol              = setting_site_admin_protocol
+    @in_setting_site_basic_auth_state            = setting_site_basic_auth_state
     @in_setting_site_common_ssl                  = setting_site_common_ssl
     @in_setting_site_pass_reminder_mail_sender   = setting_site_pass_reminder_mail_sender
     @in_setting_site_file_upload_max_size        = setting_site_file_upload_max_size
