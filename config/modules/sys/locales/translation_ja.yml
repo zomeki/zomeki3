@@ -13,6 +13,10 @@ ja:
         version: "バージョン"
         value: "値"
 
+      sys/creator:
+        group_id: "所属"
+        user_id: "作成者"
+
       sys/language:
         state: "状態"
         created_at: "作成日時"

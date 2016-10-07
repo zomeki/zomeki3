@@ -174,6 +174,13 @@ $(document).ready(function () {
         <td>
           <table class="noDesign">
             <tr>
+              <td style="width: 100px;"><%= Sys::Creator.human_attribute_name(:group_id) %></td>
+              <td style="width: 200px;"><%= select_tag 'rel_group_id', options_for_select(Core.site.groups_for_option, Core.user_group.id), include_blank: true %></td>
+              <td style="width: 100px;"><%= Sys::Creator.human_attribute_name(:user_id) %></td>
+              <td><%= select_tag 'rel_user_id',
+                options_from_collection_for_select(Core.site.users.in_group(Core.user_group).order(:account), :id, :name, Core.user.id), include_blank: true %></td>
+            </tr>
+            <tr>
               <td style="width: 100px;"><%= GpCategory::CategoryType.model_name.human %></td>
               <td style="width: 200px;"><%= select_tag 'rel_category_type', options_for_select(@content.category_types_for_option), include_blank: true %></td>
               <td style="width: 100px;"><%= GpCategory::Category.model_name.human %></td>
@@ -182,7 +189,7 @@ $(document).ready(function () {
             <tr>
               <td><%= GpArticle::Doc.model_name.human %></td>
               <td colspan="2"><%= select_tag 'rel_doc', '', include_blank: true %></td>
-              <td><%= button_tag '追加', type: 'button', id: 'add_rel_doc' %></td>
+              <td><%= button_tag '選択', type: 'button', id: 'add_rel_doc' %></td>
             </tr>
           </table>
           <hr />
@@ -511,6 +518,19 @@ $(document).ready(function () {
   <%- @content.marker_category_types.each do |category_type| -%>
   set_click_event_handler('<%= category_type.id %>', 'marker_');
   <%- end -%>
+
+
+  $('#rel_group_id').on('change', function (event) {
+    var group_id = parseInt(event.target.value);
+    if (isNaN(group_id)) {
+      $('#rel_user_id').html('<option value=""></option>');
+    } else {
+      $('#rel_user_id').html('<option value="">更新中...</option>');
+      $.get('<%= sys_group_users_path(parent: 'PARENT', options: 'true') %>'.replace('PARENT', group_id), function (data) {
+        $('#rel_user_id').html('<option value=""></option>' + data);
+      });
+    }
+  });
 
   <%- if @content.gp_category_content_category_type -%>
   $('#rel_category_type').on('change', function (event) {
