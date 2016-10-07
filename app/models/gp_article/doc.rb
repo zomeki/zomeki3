@@ -8,7 +8,7 @@ class GpArticle::Doc < ActiveRecord::Base
   include Cms::Model::Base::Page
   include Cms::Model::Base::Page::Publisher
   include Cms::Model::Base::Page::TalkTask
-  include Cms::Model::Rel::ManyInquiry
+  include Cms::Model::Rel::Inquiry
   include Cms::Model::Rel::Map
   include Cms::Model::Rel::Bracket
 

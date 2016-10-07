@@ -1,23 +1,26 @@
-<%
+<%-
 
-return if !item.inquiry || !item.inquiry.visible?
+return if item.inquiries.size == 0
+return if !item.inquiries.any?(&:visible?)
 
-%><div class="inquiry">
+-%><div class="inquiry">
   <h2>お問い合わせ</h2>
-  <address>
-  <% if item.inquiry.group
-   %><div class="section"><%= item.inquiry.group.name %></div><% end %>
-  <% if !item.inquiry.charge.blank?
-   %><div class="charge"><%= item.inquiry.charge %></div><% end %>
-  <% if !item.inquiry.address.blank?
-   %><div class="address"><span class="label">住所</span>：<%= item.inquiry.address %></div><% end %>
-  <% if !item.inquiry.tel.blank?
-   %><div class="tel"><span class="label">電話</span>：<%= item.inquiry.tel %><%= item.inquiry.tel_attend %></div><% end %>
-  <% if !item.inquiry.fax.blank?
-   %><div class="fax"><span class="label">ファクシミリ</span>：<%= item.inquiry.fax %></div><% end %>
-  <% if item.inquiry_email_setting != "hidden" && safe{item.inquiry.email} && !item.inquiry.email.blank?
-   %><div class="email"><span class="label">E-Mail</span>：<%= email_to item.inquiry.email %></div><% end %>
-  <% if !item.inquiry.note.blank?
-   %><div class="note"><span class="label">備考</span>：<%= item.inquiry.note %></div><% end %>
-   </address>
+  <%- item.inquiries.each do |inquiry| -%>
+    <%- next unless inquiry.visible? -%>
+    <address>
+       <div class="section"><%= inquiry.group.full_name %></div>
+    <% if item.inquiry_display_field?(:charge) && inquiry.charge.present?
+     %><div class="charge"><%= inquiry.charge %></div><% end %>
+    <% if item.inquiry_display_field?(:address) && inquiry.address.present?
+     %><div class="address"><span class="label">住所</span>：<%= inquiry.address %></div><% end %>
+    <% if item.inquiry_display_field?(:tel) && inquiry.tel.present?
+     %><div class="tel"><span class="label">TEL</span>：<%= inquiry.tel %><%= inquiry.tel_attend %></div><% end %>
+    <% if item.inquiry_display_field?(:fax) && inquiry.fax.present?
+     %><div class="fax"><span class="label">FAX</span>：<%= inquiry.fax %></div><% end %>
+    <% if item.inquiry_display_field?(:email) && inquiry.email.present?
+     %><div class="email"><span class="label">E-Mail</span>：<%= email_to inquiry.email %></div><% end %>
+    <% if item.inquiry_display_field?(:note) && inquiry.note.present?
+     %><div class="note"><span class="label">備考</span>：<%= inquiry.note %></div><% end %>
+    </address>
+  <%- end -%>
 </div>

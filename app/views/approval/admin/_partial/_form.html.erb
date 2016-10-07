@@ -8,9 +8,9 @@
         <%- approval_flows.each do |approval_flow| -%>
         <tr>
           <%= hidden_field_tag 'item[in_approval_flow_ids][]', approval_flow.id, id: "item_in_approval_flow_ids_#{approval_flow.id}" %>
-          <td><%= approval_flow.approvals.map{|approval|
-            if approval.select_approve?
-              render 'approval/admin/_partial/select_assignments', item: item, approval: approval, approval_flow_id: approval_flow.id
+          <td><%= approval_flow.approvals.map { |approval|
+            if approval.approval_type_select?
+              render 'approval/admin/_partial/form_select', item: item, approval_flow: approval_flow, approval: approval
             else
               content_tag(:span, approval.approvers_label, style: 'padding: 4px;')
             end

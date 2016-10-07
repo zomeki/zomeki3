@@ -2,7 +2,7 @@ class Survey::Form < ActiveRecord::Base
   include Sys::Model::Base
   include Sys::Model::Rel::Creator
   include Sys::Model::Rel::Task
-  include Cms::Model::Auth::Concept
+  include Cms::Model::Auth::Content
 
   include Approval::Model::Rel::Approval
 
