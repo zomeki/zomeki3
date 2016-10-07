@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161005052624) do
+ActiveRecord::Schema.define(version: 20161006065546) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -113,9 +113,11 @@ ActiveRecord::Schema.define(version: 20161005052624) do
     t.datetime "updated_at"
     t.datetime "approved_at"
     t.integer  "or_group_id"
+    t.integer  "selected_index"
   end
 
   add_index "approval_assignments", ["assignable_type", "assignable_id"], name: "index_approval_assignments_on_assignable_type_and_assignable_id", using: :btree
+  add_index "approval_assignments", ["selected_index"], name: "index_approval_assignments_on_selected_index", using: :btree
   add_index "approval_assignments", ["user_id"], name: "index_approval_assignments_on_user_id", using: :btree
 
   create_table "biz_calendar_bussiness_holidays", force: :cascade do |t|
