@@ -20,7 +20,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
   def index
     return index_options if params[:options]
-
+    return user_options if params[:user_options]
     @items = GpArticle::Doc.content_and_criteria(@content, doc_criteria)
       .order(updated_at: :desc)
       .paginate(page: params[:page], per_page: 30)
@@ -30,7 +30,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   end
 
   def index_options
-    @items = if params[:category_id]
+    @items = if params[:category_id].present?
                if (category = GpCategory::Category.find_by(id: params[:category_id]))
                  params[:public] ? category.public_docs : category.docs
                else
@@ -62,6 +62,11 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     end
 
     render 'index_options', layout: false
+  end
+
+  def user_options
+    @parent = Sys::Group.find(params[:group_id])
+    render 'user_options', layout: false
   end
 
   def show
@@ -239,6 +244,15 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     else
       redirect_to gp_article_doc_url(@content, @item), notice: '引き戻しに失敗しました。'
     end
+  end
+
+  def select
+    @doc = {
+      id: @item.id, title: @item.title, full_uri: @item.state_public? ? @item.public_full_uri : nil,
+      updated: @item.updated_at.strftime('%Y/%m/%d %H:%M'), status: @item.status.name,
+      user: @item.creator.user.try(:name), group: @item.creator.group.try(:name)
+    }
+    _show @doc
   end
 
   protected
