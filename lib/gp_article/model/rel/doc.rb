@@ -1,13 +1,18 @@
 module GpArticle::Model::Rel::Doc
   attr_accessor :in_rel_doc_ids
 
-  def rel_docs
+  def rel_docs(options={})
     docs = []
     ids = rel_doc_ids.to_s.split(' ').uniq
     return docs if ids.size == 0
     ids.each do |id|
       doc = GpArticle::Doc.find_by(id: id)
-      doc ||= GpArticle::Doc.where(:name => id , :state=>'public').first
+      if options[:edit]
+        doc ||= GpArticle::Doc.where(:name => id ).first
+      else
+        doc ||= GpArticle::Doc.where(:name => id , :state=>'public').first
+      end
+
       docs << doc if doc
     end
     docs
