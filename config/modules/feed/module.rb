@@ -1,6 +1,6 @@
-Cms::Lib::Modules::ModuleSet.draw :feed, 'Feed', 140 do |mod|
+Cms::Lib::Modules::ModuleSet.draw :feed, 'フィード', 140 do |mod|
   ## contents
-  mod.content :feeds, 'Feed'
+  mod.content :feeds, 'フィード'
 
   ## directories
   mod.directory :feed_entries, '新着記事一覧'
