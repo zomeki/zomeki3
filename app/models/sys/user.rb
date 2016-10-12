@@ -2,20 +2,15 @@ require 'digest/sha1'
 class Sys::User < ActiveRecord::Base
   include Sys::Model::Base
   include Sys::Model::Base::Config
-  include Sys::Model::Rel::RoleName
   include Sys::Model::Auth::Manager
 
   include StateText
 
-  has_many :users_groups, :foreign_key => :user_id,
-    :class_name => 'Sys::UsersGroup'
-  has_many :groups, :through => :users_groups,
-    :source => :group
-  has_many :users_roles, :foreign_key => :user_id,
-    :class_name => 'Sys::UsersRole'
-  has_many :role_names, :through => :users_roles,
-    :source => :role_name
-  has_many :operation_logs, :class_name => 'Sys::OperationLog'
+  has_many :users_groups, foreign_key: :user_id, class_name: 'Sys::UsersGroup', dependent: :destroy
+  has_many :groups, through: :users_groups, source: :group
+  has_many :users_roles, foreign_key: :user_id, class_name: 'Sys::UsersRole', dependent: :destroy
+  has_many :role_names, through: :users_roles, source: :role_name
+  has_many :operation_logs, class_name: 'Sys::OperationLog'
 
   attr_accessor :in_group_id
 

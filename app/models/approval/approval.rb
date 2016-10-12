@@ -15,23 +15,21 @@ class Approval::Approval < ActiveRecord::Base
 
   after_initialize :set_defaults
 
-  def select_approve?
+  def approval_type_select?
     approval_type == 'select'
   end
 
-  def approvers_label
-    a = assignments.group_by{|assignments| assignments.or_group_id }.map{|og, assignments_by_og|
-      assignments_by_og.map{|a| a.user_label}.join(" or ")
-    }
-    if self.select_approve?
-      return (a.size > 1) ? "[#{a.map{|aa| aa =~ / or / ? "（#{aa}）" : aa  }.join(' or ')}]" : a
-    else
-      return a.join(" and ")
-    end
+  def approval_type_title
+    TYPE_OPTIONS.detect { |o| o.last == approval_type }.try(:first)
   end
 
-  def approval_type_title
-    ATYPE_OPTIONS.detect{|o| o.last == approval_type }.try(:first)
+  def approvers_label
+    a = assignments.group_by(&:or_group_id).map { |_, assigns| assigns.map(&:user_label).join(" or ") }
+    if approval_type_select?
+      (a.size > 1) ? "[#{a.map{|aa| aa =~ / or / ? "（#{aa}）" : aa }.join(' or ')}]" : a.join
+    else
+      a.join(" and ")
+    end
   end
 
   private

@@ -20,7 +20,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
   def index
     return index_options if params[:options]
-
+    return user_options if params[:user_options]
     @items = GpArticle::Doc.content_and_criteria(@content, doc_criteria)
       .order(updated_at: :desc)
       .paginate(page: params[:page], per_page: 30)
@@ -30,7 +30,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   end
 
   def index_options
-    @items = if params[:category_id]
+    @items = if params[:category_id].present?
                if (category = GpCategory::Category.find_by(id: params[:category_id]))
                  params[:public] ? category.public_docs : category.docs
                else
@@ -62,6 +62,11 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     end
 
     render 'index_options', layout: false
+  end
+
+  def user_options
+    @parent = Sys::Group.find(params[:group_id])
+    render 'user_options', layout: false
   end
 
   def show
@@ -169,18 +174,25 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
   def publish
     @item.update_attribute(:state, 'public')
-    _publish(@item) do
-      publish_ruby(@item)
-      @item.rebuild(render_public_as_string(@item.public_uri, jpmobile: envs_to_request_as_smart_phone),
-                    :path => @item.public_smart_phone_path, :dependent => :smart_phone)
+    if @item.target.blank? && @item.target.blank?
+      _publish(@item) do
+        publish_ruby(@item)
+        @item.rebuild(render_public_as_string(@item.public_uri, jpmobile: envs_to_request_as_smart_phone),
+                      :path => @item.public_smart_phone_path, :dependent => :smart_phone)
 
+        share_to_sns(@item)
+        sync_events_export
+      end
+    else
       share_to_sns(@item)
       sync_events_export
+      redirect_to url_for(:action => :index), notice: '公開処理が完了しました。'
     end
   end
 
   def publish_by_update(item)
     return unless item.terminal_pc_or_smart_phone
+    return if item.target.present? && item.href.present?
     if item.publish(render_public_as_string(item.public_uri))
       publish_ruby(item)
       item.rebuild(render_public_as_string(item.public_uri, jpmobile: envs_to_request_as_smart_phone),
@@ -239,6 +251,15 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     else
       redirect_to gp_article_doc_url(@content, @item), notice: '引き戻しに失敗しました。'
     end
+  end
+
+  def select
+    @doc = {
+      id: @item.id, title: @item.title, full_uri: @item.state_public? ? @item.public_full_uri : nil,
+      updated: @item.updated_at.strftime('%Y/%m/%d %H:%M'), status: @item.status.name,
+      user: @item.creator.user.try(:name), group: @item.creator.group.try(:name)
+    }
+    _show @doc
   end
 
   protected
@@ -332,7 +353,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
       :tasks_attributes => [:id, :name, :process_at],
       :inquiries_attributes => [:id, :state, :_destroy,:group_id],
       :maps_attributes => [:id, :name, :title, :map_lat, :map_lng, :map_zoom, :markers_attributes => [:id, :name, :lat, :lng]],
-      :in_editable_groups => [],
+      :editable_groups_attributes => [:id, :group_id],
       :in_rel_doc_ids => [],
       :in_share_accounts => [],
       :in_approval_flow_ids => [],

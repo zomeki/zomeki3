@@ -7,6 +7,14 @@ module Sys::Model::Scope
       columns = args
       where(words.map{|w| columns.map{|c| arel_table[c].matches("%#{escape_like(w)}%") }.reduce(:or) }.reduce(:and))
     }
+    scope :search_with_logical_query, ->(*args) {
+      if (tree = LogicalQueryParser.new.parse(args.last.to_s))
+        args.pop
+        where(tree.to_sql(model: self, columns: args))
+      else
+        search_with_text(*args)
+      end
+    }
   end
 
   module ClassMethods

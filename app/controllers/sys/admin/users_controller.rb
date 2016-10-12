@@ -57,7 +57,9 @@ class Sys::Admin::UsersController < Cms::Controller::Admin::Base
   private
 
   def user_params
-    params.require(:item).permit(:admin_creatable, :site_creatable, :in_group_id,
-      :account, :name, :name_en, :email, :state, :auth_no, :in_role_name_ids, :ldap, :password)
+    params.require(:item).permit(
+      :admin_creatable, :site_creatable, :in_group_id,
+      :account, :name, :name_en, :email, :state, :auth_no, :ldap, :password, :role_name_ids => []
+    )
   end
 end

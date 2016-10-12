@@ -251,7 +251,7 @@ protected
 
   class Page < Cms::Node
     include Sys::Model::Rel::Recognition
-    include Cms::Model::Rel::ManyInquiry
+    include Cms::Model::Rel::Inquiry
     include Sys::Model::Rel::Task
 
 #    validate :validate_inquiry,

@@ -138,6 +138,15 @@ $(document).ready(function () {
 
     <div class="label1"><%= f.label :in_rel_doc_ids %></div>
     <div>
+      <div class="label2"><%= Sys::Creator.human_attribute_name(:group_id) %></div>
+      <%= select_tag 'rel_group_id', options_for_select(Core.site.groups_for_option, Core.user_group.id), include_blank: true %>
+    </div>
+    <div>
+      <div class="label2"><%= Sys::Creator.human_attribute_name(:user_id) %></div>
+      <%= select_tag 'rel_user_id',
+        options_from_collection_for_select(Core.site.users.in_group(Core.user_group).order(:account), :id, :name, Core.user.id), include_blank: true %>
+    </div>
+    <div>
       <div class="label2"><%= GpCategory::CategoryType.model_name.human %></div>
       <%= select_tag 'rel_category_type', options_for_select(@content.category_types_for_option), include_blank: true %>
     </div>
@@ -154,10 +163,25 @@ $(document).ready(function () {
     <hr />
 
     <div id="rel_docs">
-      <%- @item.rel_docs.each do |doc| -%>
-      <div style="margin-top: 10px; width: 700px;"><%= select_tag 'item[in_rel_doc_ids][]', options_from_collection_for_select([doc], :id, :title, doc.id), include_blank: true %></div>
+      <%- @item.rel_docs({edit: true}).each do |doc| -%>
+      <div style="margin-top: 10px; width: 700px;">
+        <span>
+        <%= hidden_field_tag 'item[in_rel_doc_ids][]', doc.id%>
+        <%- if doc.state_public? %>
+          <%= link_to doc.title, doc.public_full_uri, target: 'preview' %>
+        <%- else -%>
+          <%= doc.title %>
+        <%- end -%>
+        </span>
+        <span><%= doc.creator.user.try(:name) %></span>
+        <span><%= doc.creator.group.try(:name) %></span>
+        <span><%= i18n_l doc.updated_at %></span>
+        <span><%= doc.status.name %></span>
+        <span><%= link_to '削除', '#', class: 'remove_related_doc' %></span>
+      </div>
       <%- end -%>
     </div>
+    <div id="deleted_rel_docs"></div>
   </div>
   <div id="tab2">
     <%- if @content.display_dates(:published_at) || @content.display_dates(:updated_at) -%>
@@ -202,7 +226,7 @@ $(document).ready(function () {
     </div>
   </div>
   <div id="tab3">
-    <%= render 'cms/admin/_partial/many_inquiries/form_smart_phone', f: f, item: @item, content: @content %>
+    <%= render 'cms/admin/_partial/inquiries/form', f: f, item: @item, content: @content %>
   </div>
   <div id="tab4">
     <%- if @content.approval_content_approval_flow -%>
@@ -395,26 +419,8 @@ $(document).ready(function () {
       <div class="label1"><%= f.label :og_image %></div>
       <%= f.text_field :og_image, :style => 'width: 200px;' %>
     </div>
-
-    <p class="form">編集権限</p>
-
-    <%- groups = Core.site.groups.where(level_no: 2).order(:sort_no) -%>
-    <div>
-      <div class="label1"><%= f.label :in_editable_groups %></div>
-      <div id="editable_groups">
-        <%= render 'editable_group', groups_for_option: Core.site.groups_for_option, group: Core.site.groups.build, available: false %>
-        <%- Sys::Group.where(id: @item.in_editable_groups.reject{|g| g == 'ALL'}).each do |group| -%>
-        <%= render 'editable_group', groups_for_option: Core.site.groups_for_option, group: group, available: true %>
-        <%- end -%>
-        <span><%= button_tag '追加', type: 'button', id: 'add_editable_group' %></span>
-      </div>
-      <div>
-        <%= check_box_tag 'item[in_editable_groups][]', 'ALL', @item.in_editable_groups.include?('ALL'), id: 'all_group' %>
-        <%= label_tag 'all_group', 'すべてのグループ' %>
-      </div>
-    </div>
-
-    <%= creator_form_smart_phone f %>
+    <%= editable_group_form f %>
+    <%= creator_form f %>
   </div>
 </div>
 
@@ -454,12 +460,24 @@ $(document).ready(function () {
   set_click_event_handler('<%= category_type.id %>', 'marker_');
   <%- end -%>
 
-  $('#add_editable_group').on('click', function () {
-    var editable_groups_wrapper = $('#editable_groups');
-    var new_group = editable_groups_wrapper.children(':first-child').clone(true);
-    new_group.find(':disabled').removeAttr('disabled');
-    new_group.insertBefore(editable_groups_wrapper.children(':last-child')).show();
-  }).trigger('click');
+
+  searchRelatedDocs();
+
+  $('#rel_group_id').on('change', function (event) {
+    var group_id = parseInt(event.target.value);
+    if (isNaN(group_id)) {
+      $('#rel_user_id').html('<option value=""></option>');
+    } else {
+      $('#rel_user_id').html('<option value="">更新中...</option>');
+      $.get('<%= gp_article_docs_path(content: @content) %>?user_options=true&group_id=' + group_id, function (data) {
+        $('#rel_user_id').html('<option value=""></option>' + data);
+        searchRelatedDocs();
+      });
+    }
+  });
+  $('#rel_user_id').on('change', function (event) {
+    searchRelatedDocs();
+  });
 
   <%- if @content.gp_category_content_category_type -%>
   $('#rel_category_type').on('change', function (event) {
@@ -484,13 +502,21 @@ $(document).ready(function () {
     if (isNaN(category_id)) {
       doc_select.html('<option value=""></option>');
     } else {
-      doc_select.html('<option value="">更新中...</option>');
-      $.get('<%= gp_article_docs_path(content: @content) %>?options=true&public=true&exclude=<%= @item.name %>&category_id=' + category_id, function (data) {
-        doc_select.html(data);
-      });
+      searchRelatedDocs();
     }
   });
   <%- end -%>
+
+  function searchRelatedDocs(){
+    var category_id = $('#rel_category').val();
+    var group_id = $('#rel_group_id').val();
+    var user_id = $('#rel_user_id').val();
+    var doc_select = $('#rel_doc');
+    doc_select.html('<option value="">更新中...</option>');
+    $.get('<%= gp_article_docs_path(content: @content) %>?options=true&exclude=<%= @item.name %>&category_id=' + category_id + '&group_id=' + group_id + '&user_id=' + user_id, function (data) {
+      doc_select.html(data);
+    });
+  }
 
   $('#add_rel_doc').on('click', function () {
     var rel_doc = $('#rel_doc');
@@ -498,11 +524,75 @@ $(document).ready(function () {
       alert('記事を選択してください。');
       return;
     }
+    var duplicate = false;
+    $('input[name="item[in_rel_doc_ids][]"]').each(function(index, element){
+      if($(this).val() == rel_doc.val()){
+        alert('すでに選択されています。');
+        duplicate = true;
+      }
+    });
+    if(duplicate){
+      rel_doc.val('');
+      return false;
+    }
 
-    var new_doc = $('<select>', {name: 'item[in_rel_doc_ids][]'}).append($('<option>', {value: ''}));
-    new_doc.append(rel_doc.children(':selected').clone(true)).val(rel_doc.val());
-    $('<div>', {style: 'margin-top: 10px; width: 700px;'}).append(new_doc).appendTo($('#rel_docs'));
-    rel_doc.val('');
+    $.get('<%= select_gp_article_doc_path(content: @content, id: '_ID_') %>.xml'.replace(/_ID_/, rel_doc.val()), function (data) {
+      var new_doc = $('<div>', {style: 'margin-top: 10px; width: 700px;'});
+      $(data).find('item').each(function() {
+        var rel_doc_span = $('<span>');
+        var rel_doc_field = $('<input>', {
+          type: 'hidden',
+          name: 'item[in_rel_doc_ids][]',
+          value: $(this).find('id').text()
+        });
+        rel_doc_span.append(rel_doc_field);
+
+        var full_uri = $(this).find('full_uri').text();
+        if(full_uri != ''){
+          var title_link = $('<a>', {
+            href: $(data).find('full_uri').text(),
+            text: $(this).find('title').text(),
+            target: "preview"
+          });
+        }else{
+          var title_link = $('<span>').text($(this).find('title').text());
+        }
+
+        rel_doc_span.append(title_link);
+        new_doc.append(rel_doc_span);
+        var user_name = $('<span>').text($(this).find('user').text());
+        var group_name = $('<span>').text($(this).find('group').text());
+        new_doc.append(user_name);
+        new_doc.append(group_name);
+        var updated = $('<span>').text($(this).find('updated').text());
+        new_doc.append(updated);
+        var status = $('<span>').text($(this).find('status').text());
+        new_doc.append(status);
+
+      });
+      var remove_span = $('<span>');
+      var remove_btn = $("<a>", {
+        href: '#',
+        text: '削除',
+        class: 'remove_related_doc'
+      });
+      remove_span.append(remove_btn);
+      new_doc.append(remove_span);
+      $('#rel_docs').append(new_doc);
+      rel_doc.val('');
+    });
+  });
+
+  $('#rel_docs').on("click", "a.remove_related_doc", function (e) {
+    $(this).parent().parent().remove();
+    $('#deleted_rel_docs').append(
+      $('<input>', {
+        type: 'hidden',
+        name: 'item[in_rel_doc_ids][]',
+        value: null
+      })
+    );
+    return false;
   });
 
   set_copy_date('#item_event_started_on', '#item_event_ended_on');

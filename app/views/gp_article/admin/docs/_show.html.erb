@@ -113,6 +113,11 @@ $(document).ready(function () {
         </td>
       </tr>
       <%- end -%>
+    </table>
+    <%- end -%>
+
+    <%- if @content.blog_functions_available? -%>
+    <table class="show">
       <tr>
         <th colspan="2"><%= @item.locale :body_more %></th>
       </tr>
@@ -145,12 +150,12 @@ $(document).ready(function () {
         <td><%= @item.raw_tags %></td>
       </tr>
       <%- end -%>
-      <%- unless @item.rel_docs.empty? -%>
+      <%- unless @item.rel_docs({edit: true}).empty? -%>
       <tr>
         <th><%= @item.locale :in_rel_doc_ids %></th>
         <td>
           <ul>
-            <%- @item.rel_docs.each do |doc| -%>
+            <%- @item.rel_docs({edit: true}).each do |doc| -%>
             <li><%= doc.title %></li>
             <%- end -%>
           </ul>
@@ -188,7 +193,7 @@ $(document).ready(function () {
     <%= task_view @item %>
   </div>
   <div id="tab3">
-    <%= render 'cms/admin/_partial/many_inquiries/view', item: @item %>
+    <%= render 'cms/admin/_partial/inquiries/view', item: @item %>
   </div>
   <div id="tab4">
     <%= render 'approval/admin/_partial/view', item: @item, content: @content %>

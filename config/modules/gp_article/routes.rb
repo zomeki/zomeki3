@@ -24,6 +24,7 @@ ZomekiCMS::Application.routes.draw do
         post :passback
         post :pullback
         post :publish
+        get  :select
       end
       resources(:files,
         :controller => 'admin/docs/files') do

@@ -7,30 +7,21 @@ module Approval::Model::Rel::Approval
     has_many :approval_requests, class_name: 'Approval::ApprovalRequest', as: :approvable, dependent: :destroy
     with_options if: -> { !in_approval_flow_ids.nil? && state_approvable? } do
       validate :validate_approval_requests
+      validate :validate_approval_assignments
       after_save :save_approval_requests
     end
   end
 
   def approvers
-    approval_requests.inject([]){|u, r| u | r.current_assignments.map{|a| a.user unless a.approved_at }.compact }
+    approval_requests.map(&:current_approvable_approvers).flatten.compact.uniq
   end
 
   def approval_requesters
-    approval_requests.inject([]){|u, r| u.include?(r.requester) ? u : u.push(r.requester) }
+    approval_requests.map(&:requester).flatten.compact.uniq
   end
 
   def approval_participators
-    users = []
-    approval_requests.each do |approval_request|
-      users << approval_request.requester
-      approval_request.approval_flow.approvals.each do |approval|
-        _approvers = approval.approvers
-        ids = approval_request.select_assignments_ids(approval)
-        _approvers = _approvers.select{|a| ids.index(a.id.to_s)} if approval.select_approve?
-        users.concat(_approvers)
-      end
-    end
-    return users.uniq
+    approval_requests.map(&:participators).flatten.compact.uniq
   end
 
   def approve(user)
@@ -72,9 +63,7 @@ module Approval::Model::Rel::Approval
 
   def send_approval_request_mail
     approval_requests.each do |approval_request|
-      assginments = approval_request.current_select_assignments
-      approval_request.current_assignments.map{|a| a.user unless a.approved_at }.compact.each do |approver|
-        next if !assginments.blank? && !assginments.include?(approver.id.to_s)
+      approval_request.current_approvable_approvers.each do |approver|
         next if approval_request.requester.email.blank? || approver.email.blank?
   
         Approval::Admin::Mailer.approval_request(from: approval_request.requester.email, to: approver.email, 
@@ -114,14 +103,16 @@ module Approval::Model::Rel::Approval
     in_approval_flow_ids.reject!(&:blank?)
     if in_approval_flow_ids.blank?
       errors.add(:base, '承認フローを選択してください。')
-    else
-      if in_approval_assignment_ids
-        in_approval_flow_ids.each do |approval_flow_id|
-          if in_approval_assignment_ids[approval_flow_id]
-            in_approval_assignment_ids[approval_flow_id].each do |approval_id, value|
-              errors.add("承認者", "を選択してください。") if value.blank?
-            end
-          end
+    end
+  end
+
+  def validate_approval_assignments
+    return unless in_approval_assignment_ids
+
+    in_approval_flow_ids.each do |approval_flow_id|
+      if in_approval_assignment_ids[approval_flow_id]
+        in_approval_assignment_ids[approval_flow_id].each do |approval_id, user_ids|
+          errors.add("承認者", "を選択してください。") if user_ids.blank?
         end
       end
     end
@@ -133,14 +124,19 @@ module Approval::Model::Rel::Approval
       request = approval_requests.find_by(approval_flow_id: approval_flow_id) ||
         approval_requests.create(user_id: Core.user.id, approval_flow_id: approval_flow_id)
 
-      assignments = {}.with_indifferent_access
-      if in_approval_assignment_ids && in_approval_assignment_ids[approval_flow_id]
-        in_approval_assignment_ids[approval_flow_id].each do |approval_id, value|
-          assignments["approval_#{approval_id}"] = "#{value}"
+      if in_approval_assignment_ids && (assignments = in_approval_assignment_ids[approval_flow_id])
+        request.selected_assignments.destroy_all
+        assignments.each do |approval_id, uid_str|
+          approval = Approval::Approval.find_by(id: approval_id)
+          next unless approval
+          uid_str.split(' ').each_with_index do |uids, i|
+            uids.split(',').each do |uid|
+              request.selected_assignments.create(user_id: uid, selected_index: approval.index, or_group_id: i)
+            end
+          end
         end
       end
 
-      request.select_assignment = assignments
       request.user_id = Core.user.id
       request.save! if request.changed?
       request.reset

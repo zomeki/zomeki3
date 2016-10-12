@@ -7,12 +7,13 @@
         <table class="approval noDesign">
           <%- item.approval_requests.each do |approval_request| -%>
           <tr>
-            <td><%= approval_request.approval_flow.approvals.map{|approval|
-              approvers = if approval.select_approve?
-                approval_request.select_assignments_label(approval)
-              else
-                approval.approvers_label
-              end
+            <td><%= approval_request.approval_flow.approvals.map { |approval|
+              approvers =
+                if approval.approval_type_select?
+                  approval_request.selected_assignments_label(approval)
+                else
+                  approval.approvers_label
+                end
               approval == approval_request.current_approval ? content_tag(:span, approvers, class: 'current', style: 'background-color: #fce1de; padding: 4px;')
                                                             : content_tag(:span, approvers, style: 'padding: 4px;')
               }.join(' ＞ ').html_safe %></td>
@@ -24,7 +25,7 @@
     </tr>
   </table>
   
-  <%- if item.state_approvable? && item.approvers.include?(Core.user) -%>
+  <%- if item.state_approvable? && item.approvers.include?(Core.user) && respond_to?(:passback) -%>
     <%= form_tag url_for(content: content, action: 'passback') do %>
     <table class="show">
       <tr>
@@ -36,7 +37,7 @@
     <%- end -%>
   <%- end -%>
   
-  <%- if item.state_approvable? && item.approval_requesters.include?(Core.user) -%>
+  <%- if item.state_approvable? && item.approval_requesters.include?(Core.user) && respond_to?(:pullback) -%>
     <%= form_tag url_for(content: content, action: 'pullback') do %>
     <table class="show">
       <tr>

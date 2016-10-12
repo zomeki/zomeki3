@@ -84,7 +84,6 @@ class Cms::Site < ActiveRecord::Base
   end
 
   def root_path
-
     dir = format('%04d', id)
     Rails.root.join("sites/#{dir}")
   end
@@ -361,6 +360,10 @@ class Cms::Site < ActiveRecord::Base
   end
 
   def enable_basic_auth
+    self.load_site_settings
+    self.in_setting_site_basic_auth_state = 'enabled'
+    self.save
+
     ac_file = "#{::File.dirname(public_path)}/.htaccess"
     pw_file = "#{::File.dirname(public_path)}/.htpasswd"
 
@@ -390,6 +393,7 @@ class Cms::Site < ActiveRecord::Base
     enable_directory_basic_auth(salt)
     generate_nginx_configs
     generate_nginx_admin_configs
+
     return true
   end
 
@@ -418,14 +422,11 @@ class Cms::Site < ActiveRecord::Base
   end
 
   def disable_basic_auth
+    self.load_site_settings
+    self.in_setting_site_basic_auth_state = 'disabled'
+    self.save
     ac_file = "#{::File.dirname(public_path)}/.htaccess"
-    pw_file = "#{::File.dirname(public_path)}/.htpasswd"
     FileUtils.rm_f(ac_file)
-    FileUtils.rm_f(pw_file)
-    Dir::entries("#{::File.dirname(public_path)}").each do |file|
-      next if file !~ /\.htpasswd_.*$/
-      FileUtils.rm_f("#{::File.dirname(public_path)}/#{file}")
-    end
     generate_nginx_configs
     generate_nginx_admin_configs
     return true
@@ -526,6 +527,7 @@ protected
   def generate_files
     FileUtils.mkdir_p public_path
     FileUtils.mkdir_p "#{public_path}/_dynamic"
+    FileUtils.mkdir_p "#{public_path}/_themes"
     FileUtils.mkdir_p config_path
     FileUtils.touch "#{config_path}/rewrite.conf"
   end

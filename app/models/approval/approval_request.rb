@@ -1,15 +1,18 @@
 class Approval::ApprovalRequest < ActiveRecord::Base
   include Sys::Model::Base
 
-  belongs_to :requester, :foreign_key => :user_id, :class_name => 'Sys::User'
+  belongs_to :requester, foreign_key: :user_id, class_name: 'Sys::User'
   validates :user_id, presence: true
-  belongs_to :approvable, :polymorphic => true
+  belongs_to :approvable, polymorphic: true
   validates :approvable_type, :approvable_id, presence: true
   belongs_to :approval_flow
   validates :approval_flow_id, presence: true
 
-  has_many :current_assignments, :class_name => 'Approval::Assignment', :as => :assignable, :dependent => :destroy
-  has_many :current_approvers, :through => :current_assignments, :source => :user
+  has_many :current_assignments, -> { where(selected_index: nil).order(:or_group_id, :id) },
+    class_name: 'Approval::Assignment', as: :assignable, dependent: :destroy
+  has_many :selected_assignments, -> { where.not(selected_index: nil).order(:or_group_id, :id) },
+    class_name: 'Approval::Assignment', as: :assignable, dependent: :destroy
+  has_many :current_approvers, through: :current_assignments, source: :user
   has_many :histories, -> { order(updated_at: :desc, created_at: :desc) },
            foreign_key: :request_id, class_name: 'Approval::ApprovalRequestHistory', dependent: :destroy
 
@@ -17,10 +20,6 @@ class Approval::ApprovalRequest < ActiveRecord::Base
 
   def current_approval
     approval_flow.approvals.find_by(index: current_index)
-  end
-
-  def current_select_assignments
-    select_assignment["approval_#{current_approval.id}"].to_s.split(/ |,/).uniq || []
   end
 
   def min_index
@@ -42,19 +41,13 @@ class Approval::ApprovalRequest < ActiveRecord::Base
       current_assignments.reload # flush cache
     end
 
-    if current_assignments.all?{|a| a.approved_at }
+    if current_assignments.all?(&:approved_at)
       if current_index == max_index
         yield('finish') if block_given?
       else
         transaction do
           increment!(:current_index)
-          current_assignments.destroy_all
-          assginments = current_select_assignments
-          current_approval.assignments.each do |assignment|
-            next if !assginments.blank? && !assginments.include?(assignment.user_id.to_s)
-            current_assignments.create(user_id: assignment.user_id, or_group_id: assignment.or_group_id) 
-          end
-          reload # flush cache
+          create_current_assignments
         end
         yield('progress') if block_given?
       end
@@ -84,60 +77,66 @@ class Approval::ApprovalRequest < ActiveRecord::Base
   end
 
   def finished?
-    current_index == max_index && current_assignments.all?{|a| a.approved_at }
+    current_index == max_index && current_assignments.all?(&:approved_at)
   end
 
   def reset
     transaction do
       update_column(:current_index, min_index)
-      current_assignments.destroy_all
-      assginments = current_select_assignments
-      current_approval.assignments.each do |assignment|
-        next if !assginments.blank? && !assginments.include?(assignment.user_id.to_s)
-        current_assignments.create(user_id: assignment.user_id, or_group_id: assignment.or_group_id) 
-      end
-      reload # flush cache
+      create_current_assignments
     end
   end
 
-  def select_assignment=(ev)
-    self.select_assignments = YAML.dump(ev) if ev.is_a?(Hash)
-    return ev
+  def current_selected_assignments
+    selected_assignments.where(selected_index: current_index)
   end
 
-  def select_assignment
-    sa_string = self.select_assignments
-    sa = sa_string.kind_of?(String) ? YAML.load(sa_string) : {}.with_indifferent_access
-    sa = {}.with_indifferent_access unless sa.kind_of?(Hash)
-    sa = sa.with_indifferent_access unless sa.kind_of?(ActiveSupport::HashWithIndifferentAccess)
-    if block_given?
-      yield sa
-      self.select_assignment = sa
+  def selected_assignments_label(approval)
+    selected_assignments.where(selected_index: approval.index)
+      .group_by(&:or_group_id)
+      .map { |_, assignments| assignments.map(&:user_label).join('or') }
+      .join(' and ')
+  end
+
+  def current_approvable_approvers
+    current_assignments.reject(&:approved_at).map(&:user).compact
+  end
+
+  def participators
+    users = [requester]
+    approval_flow.approvals.each do |approval|
+      users +=
+        if approval.approval_type_select?
+          assignments = selected_assignments.where(selected_index: approval.index).all
+          assignments.present? ? assignments.map(&:user) : approval.assignments.map(&:user)
+        else
+          approval.assignments.map(&:user)
+        end
     end
-    return sa
-  end
-
-  def select_assignments_label(approval=nil)
-    approval = current_approval if approval.blank?
-    ids = select_assignment["approval_#{approval.id}"].to_s.split(' ').uniq
-    assignments_by_ogid = approval.assignments.group_by{|g| g.or_group_id }
-    users = assignments_by_ogid.select{|_,assignments| ids.index(assignments.map{|a| a.user_id_label}.join(','))}.map{|_,assignments| assignments.map{|a| a.user_label}.join("or")}
-    users.join(' and ')
-  end
-
-  def select_assignments_ids(approval=nil)
-    approval = current_approval if approval.blank?
-    ids = select_assignment["approval_#{approval.id}"].to_s.split(/ |,/).uniq
+    users.compact.uniq
   end
 
   private
 
   def set_defaults
     self.current_index = min_index if has_attribute?(:current_index) && current_index.nil?
-    if current_approvers.empty?
-      current_approval.assignments.each do |assignment|
-        current_assignments.build(user_id: assignment.user_id, or_group_id: assignment.or_group_id) 
-      end
+  end
+
+  def create_current_assignments
+    current_assignments.destroy_all
+
+    load_current_assignments.each do |assignment|
+      current_assignments.create(user_id: assignment.user_id, or_group_id: assignment.or_group_id) 
+    end
+    reload # flush cache
+  end
+
+  def load_current_assignments
+    if current_approval.approval_type_select?
+      assignments = current_selected_assignments
+      assignments.present? ? assignments : current_approval.assignments
+    else
+      current_approval.assignments
     end
   end
 end
