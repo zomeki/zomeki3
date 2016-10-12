@@ -13,6 +13,7 @@ class GpArticle::Script::DocsController < Cms::Controller::Script::Publication
 
   def publish_doc
     @node.content.public_docs.where(id: params[:target_doc_id]).each do |doc|
+      next if doc.target.present? && doc.href.present?
       uri = doc.public_uri
       path = doc.public_path
       if doc.publish(render_public_as_string(uri, site: doc.content.site))
@@ -36,21 +37,26 @@ class GpArticle::Script::DocsController < Cms::Controller::Script::Publication
 
       # Renew edition before render_public_as_string
       item.update_attribute(:state, 'public')
+      if item.target.blank? && item.href.blank?
+        if item.publish(render_public_as_string(uri, :site => item.content.site))
+          Sys::OperationLog.script_log(:item => item, :site => item.content.site, :action => 'publish')
+        else
+          raise item.errors.full_messages
+        end
 
-      if item.publish(render_public_as_string(uri, :site => item.content.site))
-        Sys::OperationLog.script_log(:item => item, :site => item.content.site, :action => 'publish')
+        if item.published? || !::File.exist?("#{path}.r")
+          uri_ruby = (uri =~ /\?/) ? uri.gsub(/\?/, 'index.html.r?') : "#{uri}index.html.r"
+          path_ruby = "#{path}.r"
+          item.publish_page(render_public_as_string(uri_ruby, :site => item.content.site),
+                            :path => path_ruby, :dependent => :ruby)
+
+          share_to_sns(item)
+        end
       else
-        raise item.errors.full_messages
-      end
-
-      if item.published? || !::File.exist?("#{path}.r")
-        uri_ruby = (uri =~ /\?/) ? uri.gsub(/\?/, 'index.html.r?') : "#{uri}index.html.r"
-        path_ruby = "#{path}.r"
-        item.publish_page(render_public_as_string(uri_ruby, :site => item.content.site),
-                          :path => path_ruby, :dependent => :ruby)
-
+        Sys::OperationLog.script_log(:item => item, :site => item.content.site, :action => 'publish')
         share_to_sns(item)
       end
+
 
       info_log %Q!OK: Published to "#{path}"!
       params[:task].destroy
