@@ -177,8 +177,10 @@ class GpArticle::Doc < ActiveRecord::Base
       joins(:creator).where(creators[:user_id].eq(user.id))
     when 'group'
       editable
-    else
+    when 'all'
       all
+    else
+      none
     end
   }
   scope :with_target_state, ->(target_state) {
@@ -189,6 +191,8 @@ class GpArticle::Doc < ActiveRecord::Base
       where(state: 'public')
     when 'closed'
       where(state: 'closed')
+    when 'all'
+      all
     else
       none
     end
