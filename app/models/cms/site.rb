@@ -84,7 +84,6 @@ class Cms::Site < ActiveRecord::Base
   end
 
   def root_path
-
     dir = format('%04d', id)
     Rails.root.join("sites/#{dir}")
   end
@@ -528,6 +527,7 @@ protected
   def generate_files
     FileUtils.mkdir_p public_path
     FileUtils.mkdir_p "#{public_path}/_dynamic"
+    FileUtils.mkdir_p "#{public_path}/_themes"
     FileUtils.mkdir_p config_path
     FileUtils.touch "#{config_path}/rewrite.conf"
   end
