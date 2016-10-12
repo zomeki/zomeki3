@@ -113,6 +113,11 @@ $(document).ready(function () {
         </td>
       </tr>
       <%- end -%>
+    </table>
+    <%- end -%>
+
+    <%- if @content.blog_functions_available? -%>
+    <table class="show">
       <tr>
         <th colspan="2"><%= @item.locale :body_more %></th>
       </tr>
