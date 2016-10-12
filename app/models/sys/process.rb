@@ -6,7 +6,7 @@ class Sys::Process < ActiveRecord::Base
     ["日時指定処理" , "sys/script/tasks/exec"],
     ["音声書き出し"  , "cms/script/talk_tasks/exec"],
     ["アクセスランキング取り込み" , "rank/script/ranks/exec"],
-    ["Feed取り込み" , "feed/script/feeds/read"],
+    ["フィード取り込み" , "feed/script/feeds/read"],
   ]
 
   attr_accessor :title

@@ -166,7 +166,7 @@ class GpArticle::Doc < ActiveRecord::Base
     end
 
     search_columns = [:name, :title, :body, :subtitle, :summary, :mobile_title, :mobile_body]
-    rel = rel.search_with_text(*search_columns, criteria[:free_word]) if criteria[:free_word].present?
+    rel = rel.search_with_logical_query(*search_columns, criteria[:free_word]) if criteria[:free_word].present?
 
     rel
   }

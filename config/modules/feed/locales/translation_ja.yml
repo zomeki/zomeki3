@@ -1,7 +1,7 @@
 ja:
   activerecord:
     models:
-      feed/feed: Feed
+      feed/feed: フィード
       feed/feed_entry: エントリ
     attributes:
       feed/feed:

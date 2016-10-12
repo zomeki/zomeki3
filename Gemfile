@@ -87,3 +87,5 @@ gem 'rsync', '~> 1.0.9'
 gem 'simple_captcha2', '~> 0.3.4', require: 'simple_captcha'
 gem 'will_paginate', '~> 3.1.3'
 gem 'whenever', require: false
+
+gem 'logical_query_parser', '~> 0.1.0'
