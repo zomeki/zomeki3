@@ -1,22 +1,19 @@
 class Cms::Admin::StylesheetsController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 
-  @@mkdir_root = nil
-
   def pre_dispatch
     return error_auth unless Core.user.has_auth?(:designer)
-
-    unless @@mkdir_root
-      dir = Cms::Stylesheet.new_by_path('').upload_path
-      ::Storage.mkdir_p(dir) unless ::Storage.exists?(dir)
-      @@mkdir_root = true
-    end
 
     @root      = "#{Core.site.public_path}/_themes"
     @path      = params[:path].to_s
     @full_path = "#{@root}/#{@path}"
     @base_uri  = ["#{Core.site.public_path}/", "/"]
     @item      = Cms::Stylesheet.new_by_path(@path)
+
+    if @path == ''
+      root_dir = @item.upload_path
+      ::Storage.mkdir_p(root_dir) unless ::Storage.exists?(root_dir)
+    end
 
     unless ::Storage.exists?(@item.upload_path)
       return http_error(404) if flash[:notice]
