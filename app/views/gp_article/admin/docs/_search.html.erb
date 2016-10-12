@@ -85,7 +85,7 @@ category_ids = params.dig(:criteria, :category_ids) || []
         <%= text_field_tag 'criteria[dates][]', params.dig(:criteria, :dates, 0), id: 'criteria_dates_0', class: 'datepicker', style: 'width: 120px;' %> ～
         <%= text_field_tag 'criteria[dates][]', params.dig(:criteria, :dates, 1), id: 'criteria_dates_1', class: 'datepicker', style: 'width: 120px;' %>
       </td>
-      <td><%= select_tag 'criteria[state]', options_for_select([['下書き','draft'],['承認待ち','approvable'],['公開待ち','approved'],['公開日時待ち','prepared']], params.dig(:criteria, :state)), include_blank: true %></td>
+      <td><%= select_tag 'criteria[state]', options_for_select([['下書き','draft'],['承認待ち','approvable'],['公開待ち','approved'],['公開日時待ち','prepared'],['公開中','public'],['非公開','closed']], params.dig(:criteria, :state)), include_blank: true %></td>
     </tr>
   </table>
   <table>
