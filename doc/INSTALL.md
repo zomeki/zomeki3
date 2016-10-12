@@ -6,7 +6,7 @@
 
 * OS: CentOS 7.2
 * Webサーバ: nginx 1.10
-* Appサーバ: Puma 3.4
+* Appサーバ: unicorn 5.1
 * Database: PostgreSQL 9.5
 * Ruby: 2.3
 * Rails: 4.2
@@ -238,9 +238,9 @@ postgresqlを起動します。
 
     # systemctl start postgresql-9.5 && systemctl enable postgresql-9.5
 
-pumaを起動します。
+unicornを起動します。
 
-    # su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle exec pumactl -F config/puma/production.rb start'
+    # su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle exec unicorn_rails -c config/unicorn/production.rb -E production -D'
 
 nginxを起動します。
 
