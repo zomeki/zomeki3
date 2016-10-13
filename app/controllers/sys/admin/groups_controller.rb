@@ -37,7 +37,9 @@ class Sys::Admin::GroupsController < Cms::Controller::Admin::Base
     @item.parent_id = @parent.id
     parent = Sys::Group.find_by(id: @item.parent_id)
     @item.level_no = parent ? parent.level_no + 1 : 1
-    _create(@item)
+    _create(@item) do
+      @item.sites << Core.site if @item.sites.empty? && !Core.user.root?
+    end
   end
 
   def update
@@ -45,7 +47,9 @@ class Sys::Admin::GroupsController < Cms::Controller::Admin::Base
     @item.attributes = group_params
     parent = Sys::Group.find_by(id: @item.parent_id)
     @item.level_no = parent ? parent.level_no + 1 : 1
-    _update(@item)
+    _update(@item) do
+      @item.sites << Core.site if @item.sites.empty? && !Core.user.root?
+    end
   end
 
   def destroy
