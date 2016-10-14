@@ -39,7 +39,11 @@ module RenderComponent
     def request_for_component(controller_path, options)
       component_params = options.delete(:params)
       jpmobile_params = options.delete(:jpmobile)
-      options.merge!(component_params) if component_params
+
+      if component_params
+        component_params = component_params.to_unsafe_h if component_params.is_a?(ActionController::Parameters)
+        options.merge!(component_params.with_indifferent_access)
+      end
 
       request_params = options.symbolize_keys
       request_env = request.env.dup
