@@ -1,4 +1,4 @@
-class Approval::ApprovalRequestHistory < ActiveRecord::Base
+class Approval::ApprovalRequestHistory < ApplicationRecord
   include Sys::Model::Base
 
   REASON_OPTIONS = [['承認', 'approve'], ['差し戻し', 'passback'], ['引き戻し', 'pullback']]

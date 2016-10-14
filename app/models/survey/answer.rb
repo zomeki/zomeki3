@@ -1,4 +1,4 @@
-class Survey::Answer < ActiveRecord::Base
+class Survey::Answer < ApplicationRecord
   include Sys::Model::Base
 
   belongs_to :form_answer

@@ -1,4 +1,4 @@
-class Cms::Publisher < ActiveRecord::Base
+class Cms::Publisher < ApplicationRecord
   include Sys::Model::Base
 
   STATE_OPTIONS = [['待機中','queued'],['実行中','performing']]

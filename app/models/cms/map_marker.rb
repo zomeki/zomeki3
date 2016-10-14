@@ -1,4 +1,4 @@
-class Cms::MapMarker < ActiveRecord::Base
+class Cms::MapMarker < ApplicationRecord
   include Sys::Model::Base
   
   validates :lat, :lng, presence: true

@@ -1,4 +1,4 @@
-class Cms::PieceLinkItem < ActiveRecord::Base
+class Cms::PieceLinkItem < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Base::Page
   include Cms::Model::Auth::Concept

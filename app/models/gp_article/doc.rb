@@ -1,4 +1,4 @@
-class GpArticle::Doc < ActiveRecord::Base
+class GpArticle::Doc < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Rel::Creator
   include Sys::Model::Rel::Editor

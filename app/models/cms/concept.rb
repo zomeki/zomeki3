@@ -1,4 +1,4 @@
-class Cms::Concept < ActiveRecord::Base
+class Cms::Concept < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Rel::Creator
   include Sys::Model::Tree

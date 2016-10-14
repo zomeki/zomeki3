@@ -1,4 +1,4 @@
-class GpTemplate::Template < ActiveRecord::Base
+class GpTemplate::Template < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Rel::Creator
   include Cms::Model::Auth::Content

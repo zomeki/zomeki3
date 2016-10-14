@@ -1,4 +1,4 @@
-class GpArticle::Comment < ActiveRecord::Base
+class GpArticle::Comment < ApplicationRecord
   include Sys::Model::Base
 
   #TODO: migrate to strong_parameters

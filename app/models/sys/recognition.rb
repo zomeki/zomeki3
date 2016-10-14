@@ -1,4 +1,4 @@
-class Sys::Recognition < ActiveRecord::Base
+class Sys::Recognition < ApplicationRecord
   include Sys::Model::Base
 
   belongs_to :user,  :foreign_key => :user_id,  :class_name => 'Sys::User'

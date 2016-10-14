@@ -1,4 +1,4 @@
-class Cms::OAuthUser < ActiveRecord::Base
+class Cms::OAuthUser < ApplicationRecord
   include Sys::Model::Base
 
   has_many :threads, :foreign_key => :user_id, :class_name => 'PublicBbs::Thread'

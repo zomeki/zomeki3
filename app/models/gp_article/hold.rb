@@ -1,4 +1,4 @@
-class GpArticle::Hold < ActiveRecord::Base
+class GpArticle::Hold < ApplicationRecord
   include Sys::Model::Base
 
   belongs_to :holdable, :polymorphic => true

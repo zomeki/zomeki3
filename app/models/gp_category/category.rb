@@ -1,4 +1,4 @@
-class GpCategory::Category < ActiveRecord::Base
+class GpCategory::Category < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Rel::Creator
   include Sys::Model::Tree

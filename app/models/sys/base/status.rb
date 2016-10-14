@@ -1,4 +1,4 @@
-class Sys::Base::Status < ActiveRecord::Base
+class Sys::Base::Status < ApplicationRecord
   class Value
     attr_accessor :id
 

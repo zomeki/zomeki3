@@ -1,4 +1,4 @@
-class Cms::LinkCheck < ActiveRecord::Base
+class Cms::LinkCheck < ApplicationRecord
   include Sys::Model::Base
 
   default_scope { order(id: :desc) }

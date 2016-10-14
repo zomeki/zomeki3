@@ -1,4 +1,4 @@
-class BizCalendar::Place < ActiveRecord::Base
+class BizCalendar::Place < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Rel::Creator
   include Cms::Model::Auth::Content

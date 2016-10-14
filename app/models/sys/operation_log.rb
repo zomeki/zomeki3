@@ -1,4 +1,4 @@
-class Sys::OperationLog < ActiveRecord::Base
+class Sys::OperationLog < ApplicationRecord
   include Sys::Model::Base
 
   default_scope { order(updated_at: :desc) }

@@ -1,4 +1,4 @@
-class BizCalendar::BussinessHour < ActiveRecord::Base
+class BizCalendar::BussinessHour < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Rel::Creator
   include Cms::Model::Auth::Content

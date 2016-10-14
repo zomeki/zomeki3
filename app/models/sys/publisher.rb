@@ -1,4 +1,4 @@
-class Sys::Publisher < ActiveRecord::Base
+class Sys::Publisher < ApplicationRecord
   include Sys::Model::Base
 
   belongs_to :publishable, polymorphic: true

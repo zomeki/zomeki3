@@ -1,4 +1,4 @@
-class Sys::RoleName < ActiveRecord::Base
+class Sys::RoleName < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Base::Config
   include Sys::Model::Auth::Manager

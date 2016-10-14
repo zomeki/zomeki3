@@ -1,4 +1,4 @@
-class Sys::Creator < ActiveRecord::Base
+class Sys::Creator < ApplicationRecord
   include Sys::Model::Base
 
   belongs_to :creatable, polymorphic: true

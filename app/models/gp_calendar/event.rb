@@ -1,4 +1,4 @@
-class GpCalendar::Event < ActiveRecord::Base
+class GpCalendar::Event < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Rel::Creator
   include Sys::Model::Rel::File

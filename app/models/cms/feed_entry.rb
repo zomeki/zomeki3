@@ -1,4 +1,4 @@
-class Cms::FeedEntry < ActiveRecord::Base
+class Cms::FeedEntry < ApplicationRecord
   include Sys::Model::Base
   include Cms::Model::Base::Page
   include Sys::Model::Auth::Free

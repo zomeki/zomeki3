@@ -1,4 +1,4 @@
-class Sys::Group < ActiveRecord::Base
+class Sys::Group < ApplicationRecord
   include Sys::Model::Base
   include Cms::Model::Base::Page
   include Sys::Model::Base::Config

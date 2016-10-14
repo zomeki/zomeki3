@@ -1,4 +1,4 @@
-class Sys::Closer < ActiveRecord::Base
+class Sys::Closer < ApplicationRecord
   include Sys::Model::Base
 
 end

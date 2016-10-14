@@ -1,4 +1,4 @@
-class Cms::Site < ActiveRecord::Base
+class Cms::Site < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Base::Page
 

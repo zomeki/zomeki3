@@ -1,4 +1,4 @@
-class Rank::Total < ActiveRecord::Base
+class Rank::Total < ApplicationRecord
   include Sys::Model::Base
 
   # Content

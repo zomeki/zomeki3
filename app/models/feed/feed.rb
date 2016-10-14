@@ -1,4 +1,4 @@
-class Feed::Feed < ActiveRecord::Base
+class Feed::Feed < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Rel::Creator
   include Cms::Model::Auth::Content

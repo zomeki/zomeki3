@@ -1,4 +1,4 @@
-class Tag::Tag < ActiveRecord::Base
+class Tag::Tag < ApplicationRecord
   include Sys::Model::Base
 
   include Tag::Tags::Preload

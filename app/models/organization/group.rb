@@ -1,4 +1,4 @@
-class Organization::Group < ActiveRecord::Base
+class Organization::Group < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Rel::Creator
   include Cms::Model::Base::Page::Publisher

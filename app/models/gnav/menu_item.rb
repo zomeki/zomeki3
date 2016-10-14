@@ -1,4 +1,4 @@
-class Gnav::MenuItem < ActiveRecord::Base
+class Gnav::MenuItem < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Rel::Creator
   include Cms::Model::Auth::Content

@@ -1,4 +1,4 @@
-class GpCalendar::Holiday < ActiveRecord::Base
+class GpCalendar::Holiday < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Rel::Creator
   include Sys::Model::Rel::File

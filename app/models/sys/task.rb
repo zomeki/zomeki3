@@ -1,4 +1,4 @@
-class Sys::Task < ActiveRecord::Base
+class Sys::Task < ApplicationRecord
   include Sys::Model::Base
 
   belongs_to :processable, polymorphic: true

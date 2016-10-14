@@ -1,4 +1,4 @@
-class Cms::Feed < ActiveRecord::Base
+class Cms::Feed < ApplicationRecord
   include Sys::Model::Base
   include Cms::Model::Base::Page
   include Sys::Model::Rel::Creator
