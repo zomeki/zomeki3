@@ -25,6 +25,6 @@ class Rank::Admin::Tool::RanksController < Cms::Controller::Admin::Base
     messages = ["-- 成功 #{results[:ok]}件", "-- 失敗 #{results[:ng]}件"]
     messages.concat(errors)
 
-    render text: messages.join('<br />')
+    render plain: messages.join('<br />')
   end
 end

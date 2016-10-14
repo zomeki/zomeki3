@@ -18,6 +18,6 @@ class Sys::Script::RunnerController < ApplicationController
   
   def runn
     puts "runn"
-    render :text => "runn"
+    render plain: "runn"
   end
 end

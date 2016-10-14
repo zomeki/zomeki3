@@ -27,6 +27,6 @@ class Map::Script::MarkersController < Cms::Controller::Script::Publication
       end
     end
 
-    render text: 'OK'
+    render plain: 'OK'
   end
 end

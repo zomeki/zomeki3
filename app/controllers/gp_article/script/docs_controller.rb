@@ -8,7 +8,7 @@ class GpArticle::Script::DocsController < Cms::Controller::Script::Publication
     publish_page(@node, :uri => "#{uri}index.rss", :path => "#{path}index.rss", :dependent => :rss)
     publish_page(@node, :uri => "#{uri}index.atom", :path => "#{path}index.atom", :dependent => :atom)
     publish_more(@node, :uri => uri, :path => path, :smart_phone_path => smart_phone_path)
-    render text: 'OK'
+    render plain: 'OK'
   end
 
   def publish_doc
@@ -24,7 +24,7 @@ class GpArticle::Script::DocsController < Cms::Controller::Script::Publication
                     path: doc.public_smart_phone_path, dependent: :smart_phone)
       end
     end
-    render text: 'OK'
+    render plain: 'OK'
   end
 
   def publish_by_task
@@ -62,10 +62,10 @@ class GpArticle::Script::DocsController < Cms::Controller::Script::Publication
       params[:task].destroy
       Script.success
     end
-    render text: 'OK'
+    render plain: 'OK'
   rescue => e
     error_log "#{__FILE__}:#{__LINE__} #{e.message}"
-    render text: 'NG'
+    render plain: 'NG'
   end
 
   def close_by_task
@@ -81,9 +81,9 @@ class GpArticle::Script::DocsController < Cms::Controller::Script::Publication
       params[:task].destroy
       Script.success
     end
-    render text: 'OK'
+    render plain: 'OK'
   rescue => e
     error_log "#{__FILE__}:#{__LINE__} #{e.message}"
-    render text: 'NG'
+    render plain: 'NG'
   end
 end

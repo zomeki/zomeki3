@@ -54,7 +54,7 @@ class GpCategory::Public::Node::CategoryTypesController < GpCategory::Public::No
           end
         end
 
-      render text: vc.content_tag(:div, rendered.html_safe, class: 'contentGpCategory contentGpCategoryCategoryTypes')
+      render plain: vc.content_tag(:div, rendered.html_safe, class: 'contentGpCategory contentGpCategoryCategoryTypes')
     else
       @category_types = @content.public_category_types.paginate(page: params[:page], per_page: 20)
         .preload_assocs(:public_node_ancestors_assocs)
@@ -218,7 +218,7 @@ class GpCategory::Public::Node::CategoryTypesController < GpCategory::Public::No
             end
           end
 
-        render text: vc.content_tag(:div, rendered.html_safe, class: 'contentGpCategory contentGpCategoryCategoryType')
+        render plain: vc.content_tag(:div, rendered.html_safe, class: 'contentGpCategory contentGpCategoryCategoryType')
       end
     else
       case @content.category_type_style

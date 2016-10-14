@@ -49,9 +49,9 @@ class GpArticle::Script::ArchivesController < Cms::Controller::Script::Publicati
                           dependent: dependent)
     end
 
-    render text: 'OK'
+    render plain: 'OK'
   rescue => e
     error_log e.message
-    render text: e.message
+    render plain: e.message
   end
 end

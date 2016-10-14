@@ -1,7 +1,7 @@
 class Organization::Public::Piece::CategorizedDocsController < Sys::Controller::Public::Base
   def pre_dispatch
     @piece = Organization::Piece::CategorizedDoc.where(id: Page.current_piece.id).first
-    render :text => '' unless @piece
+    render plain: '' unless @piece
 
     @item = Page.current_item
   end
@@ -30,7 +30,7 @@ class Organization::Public::Piece::CategorizedDocsController < Sys::Controller::
                                                   .and(categorizations[:category_id].in(@piece.category_ids)))
       @docs = @docs.preload_assocs(:organization_groups_and_public_node_ancestors_assocs, :public_index_assocs)
     else
-      render :text => ''
+      render plain: ''
     end
   end
 

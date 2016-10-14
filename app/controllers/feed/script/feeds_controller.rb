@@ -31,10 +31,10 @@ class Feed::Script::FeedsController < ApplicationController
 
     if error > 0
       puts "Finished. Success: #{success}, Error: #{error}"
-      render :text => "NG"
+      render plain: "NG"
     else
       puts "Finished. Success: #{success}"
-      render :text => "OK"
+      render plain: "OK"
     end
   end
 end

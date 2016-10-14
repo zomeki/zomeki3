@@ -1,7 +1,7 @@
 class Cms::Public::Piece::PickupDocsController < Sys::Controller::Public::Base
   def pre_dispatch
     @piece = Cms::Piece::PickupDoc.find_by(id: Page.current_piece.id)
-    render :text => '' unless @piece
+    render plain: '' unless @piece
   end
 
   def index

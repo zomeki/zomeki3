@@ -16,7 +16,7 @@ module RenderComponent
       if response.redirect_url
         redirect_to response.redirect_url
       else
-        render :text => response.body, :status => response.status
+        render plain: response.body, status: response.status
         response
       end
     end

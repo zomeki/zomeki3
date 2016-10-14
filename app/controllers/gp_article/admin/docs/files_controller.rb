@@ -150,7 +150,7 @@ class GpArticle::Admin::Docs::FilesController < Cms::Controller::Admin::Base
       csv = csv.encode(Encoding::UTF_8, invalid: :replace, undef: :replace)
       rows = CSV.parse(csv)
 
-      render text: if rows.empty?
+      render plain: if rows.empty?
                      ''
                    else
                      thead = "<thead><tr><th>#{rows.shift.join('</th><th>')}</th></tr></thead>"
@@ -160,7 +160,7 @@ class GpArticle::Admin::Docs::FilesController < Cms::Controller::Admin::Base
                    end
     rescue => e
       warn_log e
-      render text: ''
+      render plain: ''
     end
   end
 end

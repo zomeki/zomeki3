@@ -1,7 +1,7 @@
 class Organization::Public::Piece::AllGroupsController < Sys::Controller::Public::Base
   def pre_dispatch
     @piece = Organization::Piece::AllGroup.where(id: Page.current_piece.id).first
-    render :text => '' unless @piece
+    render plain: '' unless @piece
 
     @item = Page.current_item
   end
