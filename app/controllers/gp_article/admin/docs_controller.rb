@@ -252,6 +252,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   def select
     @doc = {
       id: @item.id, title: @item.title, full_uri: @item.state_public? ? @item.public_full_uri : nil,
+      name: @item.name, content_id: @item.id,
       updated: @item.updated_at.strftime('%Y/%m/%d %H:%M'), status: @item.status.name,
       user: @item.creator.user.try(:name), group: @item.creator.group.try(:name)
     }
