@@ -18,18 +18,18 @@ module Cms::Model::Auth::Concept::Creator
   end
 
   def creatable?
-    Core.user.has_priv?(:create, :item => concept(true))
+    Core.user.has_priv?(:create, item: concept.reload)
   end
   
   def readable?
-    Core.user.has_priv?(:read, :item => concept(true))
+    Core.user.has_priv?(:read, item: concept.reload)
   end
   
   def editable?
-    Core.user.has_priv?(:update, :item => concept(true))
+    Core.user.has_priv?(:update, item: concept.reload)
   end
 
   def deletable?
-    Core.user.has_priv?(:delete, :item => concept(true))
+    Core.user.has_priv?(:delete, item: concept.reload)
   end
 end
