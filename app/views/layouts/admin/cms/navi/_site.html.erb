@@ -6,4 +6,5 @@
 <%= link_to 'インポート', tool_import_path, class: (current == :import ? 'current' : '') %>
 <%= link_to '設定', cms_site_settings_path(Core.site), :class => (current == :setting ? 'current' : '') %>
 <%= link_to '非常時', cms_emergencies_path, :class => (current == :emergency ? 'current' : '') %>
+<%= link_to 'メッセージ', sys_messages_path, :class => (current == :message ? 'current' : '') %>
 
