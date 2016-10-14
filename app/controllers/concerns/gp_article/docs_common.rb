@@ -5,6 +5,7 @@ module GpArticle::DocsCommon
   end
 
   def share_to_sns(item)
+    return if item.external_link?
     view_helpers = self.class.helpers
 
     item.sns_accounts.each do |account|
