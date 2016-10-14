@@ -1,5 +1,5 @@
 class GpCalendar::Public::Node::EventsController < GpCalendar::Public::Node::BaseController
-  skip_action_callback :render_public_layout, :only => [:file_content]
+  skip_after_action :render_public_layout, :only => [:file_content]
 
   def index
     http_error(404) if params[:page]

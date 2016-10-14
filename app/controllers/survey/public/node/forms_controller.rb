@@ -1,7 +1,7 @@
 class Survey::Public::Node::FormsController < Cms::Controller::Public::Base
   include SimpleCaptcha::ControllerHelpers
   before_action :set_form, only: [:show, :confirm_answers, :send_answers, :finish]
-  skip_action_callback :render_public_layout
+  skip_after_action :render_public_layout
   after_action :call_render_public_layout
 
   def pre_dispatch

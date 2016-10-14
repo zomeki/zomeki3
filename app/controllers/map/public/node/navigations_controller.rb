@@ -1,7 +1,7 @@
 require 'will_paginate/array'
 
 class Map::Public::Node::NavigationsController < Cms::Controller::Public::Base
-  skip_action_callback :render_public_layout, :only => [:file_content]
+  skip_after_action :render_public_layout, :only => [:file_content]
 
   def pre_dispatch
     @node = Page.current_node
