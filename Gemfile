@@ -7,6 +7,8 @@ gem 'rails', '5.0.0.1'
 gem 'pg', '~> 0.15'
 # Use Puma as the app server
 #gem 'puma', '~> 3.0'
+# Use Unicorn as the app server
+gem 'unicorn'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets
@@ -27,12 +29,6 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
-
-# Use Puma as the app server
-# gem 'puma'
-
-# Use Unicorn as the app server
-gem 'unicorn'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
@@ -83,7 +79,7 @@ gem 'google-oauth2-installed', '0.0.3'
 gem 'jpmobile', '~> 5.0.0'
 gem 'mail-iso-2022-jp', '~> 2.0.3'
 gem 'moji', '~> 1.6'
-gem 'nokogiri', '~> 1.6.6.2'
+gem 'nokogiri', '~> 1.6.8.1'
 gem 'omniauth-facebook', '~> 2.0.0'
 gem 'omniauth-twitter', '~> 1.1.0'
 gem 'parallel', '~> 1.6.1'
