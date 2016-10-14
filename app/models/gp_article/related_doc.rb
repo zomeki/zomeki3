@@ -7,6 +7,8 @@ class GpArticle::RelatedDoc < ActiveRecord::Base
 
   belongs_to :relatable, polymorphic: true
 
-  has_one :target_doc, foreign_key: :name, primary_key: :name, class_name: 'GpArticle::Doc'
+  def target_doc
+    GpArticle::Doc.where(name: name, content_id: content_id).first
+  end
 
 end

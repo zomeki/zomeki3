@@ -157,7 +157,7 @@ $(document).ready(function () {
     <div>
       <div class="label2"><%= GpArticle::Doc.model_name.human %></div>
       <%= select_tag 'rel_doc', '', include_blank: true %><br />
-      <%= button_tag '追加', type: 'button', id: 'add_rel_doc' %>
+      <%= button_tag '選択', type: 'button', id: 'add_rel_doc' %>
     </div>
 
     <hr />
@@ -190,7 +190,6 @@ $(document).ready(function () {
         </div>
       <%- end if @item.related_docs.present?-%>
     </div>
-    <div id="deleted_rel_docs"></div>
   </div>
   <div id="tab2">
     <%- if @content.display_dates(:published_at) || @content.display_dates(:updated_at) -%>
@@ -469,14 +468,7 @@ $(document).ready(function () {
   set_click_event_handler('<%= category_type.id %>', 'marker_');
   <%- end -%>
 
-
-  var next_index;
   searchRelatedDocs();
-  setRelatedIndex();
-
-  function setRelatedIndex(){
-    next_index = $('#rel_docs').children().length;
-  }
 
   $('#rel_group_id').on('change', function (event) {
     var group_id = parseInt(event.target.value);
@@ -542,6 +534,7 @@ $(document).ready(function () {
 
     $.get('<%= select_gp_article_doc_path(content: @content, id: '_ID_') %>.xml'.replace(/_ID_/, rel_doc.val()), function (data) {
       var new_doc = $('<div>', {style: 'margin-top: 10px; width: 700px;'});
+      var next_index = $('#rel_docs').children().length;
       $(data).find('item').each(function() {
         var rel_doc_span = $('<span>');
         var rel_doc_field = $('<input>', {
@@ -590,7 +583,6 @@ $(document).ready(function () {
       new_doc.append(remove_span);
       $('#rel_docs').append(new_doc);
       rel_doc.val('');
-      next_index++;
     });
   });
 
@@ -601,10 +593,9 @@ $(document).ready(function () {
         if($(this).attr('id') && $(this).attr('id').match(/destroy/)){
           $(this).val(true);
         }
-        $('#deleted_rel_docs').append($(this).clone());
       });
     }
-    $(this).parent().parent().remove();
+    $(this).parent().parent().hide();
 
     return false;
   });

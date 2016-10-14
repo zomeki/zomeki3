@@ -220,7 +220,6 @@ $(document).ready(function () {
               <%- end -%>
             <%- end if @item.related_docs.present?-%>
            </table>
-          <div id="deleted_rel_docs"></div>
         </td>
       </tr>
       <%- if @content.qrcode_related? -%>
@@ -542,9 +541,7 @@ $(document).ready(function () {
   set_click_event_handler('<%= category_type.id %>', 'marker_');
   <%- end -%>
 
-  var next_index;
   searchRelatedDocs();
-  setRelatedIndex();
 
   $('#rel_group_id').on('change', function (event) {
     var group_id = parseInt(event.target.value);
@@ -594,11 +591,6 @@ $(document).ready(function () {
     });
   }
 
-  function setRelatedIndex(){
-    next_index = $('#rel_docs').children().length;
-  }
-
-
   $('#add_rel_doc').on('click', function () {
     var rel_doc = $('#rel_doc');
     if (rel_doc.val() === '') {
@@ -608,6 +600,7 @@ $(document).ready(function () {
 
     $.get('<%= select_gp_article_doc_path(content: @content, id: '_ID_') %>.xml'.replace(/_ID_/, rel_doc.val()), function (data) {
       var newDoc = $('<tr>');
+      var next_index = $('#rel_docs').find('tr').length;
       $(data).find('item').each(function() {
         var title_column = $('<td>');
         var rel_doc_field = $('<input>', {
@@ -655,7 +648,6 @@ $(document).ready(function () {
       newDoc.append(remove_column);
       $('#rel_docs').append(newDoc);
       rel_doc.val('');
-      next_index++;
     });
   });
 
@@ -666,10 +658,9 @@ $(document).ready(function () {
         if($(this).attr('id') && $(this).attr('id').match(/destroy/)){
           $(this).val(true);
         }
-        $('#deleted_rel_docs').append($(this).clone());
       });
     }
-    $(this).parent().parent().remove();
+    $(this).parent().parent().hide();
 
     return false;
   });
