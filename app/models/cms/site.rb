@@ -29,7 +29,6 @@ class Cms::Site < ActiveRecord::Base
   has_many :site_belongings, :dependent => :destroy, :class_name => 'Cms::SiteBelonging'
   has_many :groups, :through => :site_belongings, :class_name => 'Sys::Group'
   has_many :nodes, :dependent => :destroy
-  has_many :maintenances, class_name: 'Sys::Maintenance', dependent: :destroy
   has_many :messages, class_name: 'Sys::Message', dependent: :destroy
   has_many :operation_logs, class_name: 'Sys::OperationLog'
   has_many :transferred_files, class_name: 'Sys::TransferredFile'
