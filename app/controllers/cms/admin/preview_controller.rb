@@ -69,7 +69,9 @@ private
     admin_uri = admin_uri_for_replace
     preview_uri = "#{admin_uri}_preview/#{format('%04d', Page.site.id)}#{Page.preview_terminal}"
 
-    doc = Nokogiri::HTML.parse(response.body)
+    doc = Page.mobile? ?
+      Nokogiri::XML(response.body, nil, 'utf-8') :
+      Nokogiri::HTML(response.body, nil, 'utf-8')
 
     %w(href src).each do |attr|
       doc.css(%Q![#{attr}]!).each do |node|
@@ -88,7 +90,9 @@ private
       end
     end
 
-    self.response_body = doc.to_s
+    self.response_body = Page.mobile? ?
+      doc.to_xhtml :
+      doc.to_html
   end
 
   def public_uri_for_replace
