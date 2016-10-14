@@ -31,7 +31,8 @@ module RenderComponent
     def component_response(options)
       controller = "#{options[:controller].to_s.camelize}Controller".constantize.new
       component_request = request_for_component(controller.controller_path, options)
-      status, headers, body = controller.dispatch(options[:action], component_request)
+      component_response = response_for_component(request)
+      status, headers, body = controller.dispatch(options[:action], component_request, component_response)
       return status, headers, controller.response
     end
 
@@ -50,6 +51,12 @@ module RenderComponent
         request_env['rack.jpmobile'] = jpmobile_params['rack.jpmobile']
       end
       ActionDispatch::Request.new(request_env)
+    end
+
+    def response_for_component(request)
+      ActionDispatch::Response.create.tap do |res|
+        res.request = request
+      end
     end
   end
 end
