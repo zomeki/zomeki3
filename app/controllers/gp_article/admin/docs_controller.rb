@@ -252,6 +252,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   def select
     @doc = {
       id: @item.id, title: @item.title, full_uri: @item.state_public? ? @item.public_full_uri : nil,
+      name: @item.name, content_id: @item.content_id,
       updated: @item.updated_at.strftime('%Y/%m/%d %H:%M'), status: @item.status.name,
       user: @item.creator.user.try(:name), group: @item.creator.group.try(:name)
     }
@@ -350,6 +351,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
       :inquiries_attributes => [:id, :state, :_destroy,:group_id],
       :maps_attributes => [:id, :name, :title, :map_lat, :map_lng, :map_zoom, :markers_attributes => [:id, :name, :lat, :lng]],
       :editable_groups_attributes => [:id, :group_id],
+      :related_docs_attributes => [:id, :name, :content_id, :_destroy],
       :in_rel_doc_ids => [],
       :in_share_accounts => [],
       :in_approval_flow_ids => [],

@@ -21,6 +21,7 @@ class GpArticle::Doc < ActiveRecord::Base
   include GpArticle::Model::Rel::Tag
   include Approval::Model::Rel::Approval
   include GpTemplate::Model::Rel::Template
+  include GpArticle::Model::Rel::RelatedDoc
 
   include StateText
   include GpArticle::Docs::PublishQueue
@@ -519,6 +520,11 @@ class GpArticle::Doc < ActiveRecord::Base
     editable_groups.each do |eg|
       new_doc.editable_groups.build(group_id: eg.group_id)
     end
+
+    related_docs.each do |rd|
+      new_doc.related_docs.build(name: rd.name, content_id: rd.content_id)
+    end
+
 
     inquiries.each_with_index do |inquiry, i|
       attrs = inquiry.attributes
