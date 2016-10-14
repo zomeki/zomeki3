@@ -101,7 +101,7 @@ module GpArticle::Docs::PublishQueue
     return unless map_content
     return unless maps[0]
 
-    changed_markers = maps[0].markers
+    changed_markers = maps[0].markers.to_a
     changed_markers += prev_edition.maps[0].markers if prev_edition && prev_edition.maps[0]
     changed_markers.uniq!
 
@@ -119,7 +119,7 @@ module GpArticle::Docs::PublishQueue
     tag_content = content.tag_content_tag
     return unless tag_content
 
-    changed_tags = tags
+    changed_tags = tags.to_a
     changed_tags += prev_edition.tags if prev_edition
     changed_tags.uniq!
 
