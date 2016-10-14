@@ -185,7 +185,7 @@ module Cms::Controller::Layout
     body = last_convert_body(body)
 
     ## render the true layout
-    self.response_body = render_to_string(plain: body.to_s.force_encoding('UTF-8'), layout: 'layouts/public/base')
+    self.response_body = render_to_string(inline: body.to_s.force_encoding('UTF-8'), layout: 'layouts/public/base')
   end
 
   def convert_ssl_uri(body)
