@@ -354,7 +354,7 @@ class GpArticle::Doc < ActiveRecord::Base
     site ||= ::Page.site
     params = params.map{|k, v| "#{k}=#{v}" }.join('&')
     filename = without_filename || filename_base == 'index' ? '' : "#{filename_base}.html"
-    page_flag = mobile ? 'm' : smart_phone ? 's' : '' 
+    page_flag = mobile ? 'm' : smart_phone ? 's' : ''
 
     path = "_preview/#{format('%04d', site.id)}#{page_flag}#{base_uri}preview/#{id}/#{filename}#{params.present? ? "?#{params}" : ''}"
     d = Cms::SiteSetting::AdminProtocol.core_domain site, :freeze_protocol => true
@@ -449,6 +449,10 @@ class GpArticle::Doc < ActiveRecord::Base
     @public_files_path = nil if options[:dependent] == :smart_phone
     @public_qrcode_path = nil if options[:dependent] == :smart_phone
     return result
+  end
+
+  def external_link?
+    target.present? && href.present?
   end
 
   def bread_crumbs(doc_node)
@@ -710,7 +714,7 @@ class GpArticle::Doc < ActiveRecord::Base
   def event_will_sync_text
     EVENT_WILL_SYNC_OPTIONS.detect{|o| o.last == event_will_sync }.try(:first).to_s
   end
-  
+
   def event_state_visible?
     event_state == 'visible'
   end

@@ -70,6 +70,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   end
 
   def show
+
     _show @item
   end
 
@@ -174,25 +175,20 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
   def publish
     @item.update_attribute(:state, 'public')
-    if @item.target.blank? && @item.target.blank?
-      _publish(@item) do
-        publish_ruby(@item)
-        @item.rebuild(render_public_as_string(@item.public_uri, jpmobile: envs_to_request_as_smart_phone),
-                      :path => @item.public_smart_phone_path, :dependent => :smart_phone)
 
-        share_to_sns(@item)
-        sync_events_export
-      end
-    else
+    _publish(@item) do
+      publish_ruby(@item)
+      @item.rebuild(render_public_as_string(@item.public_uri, jpmobile: envs_to_request_as_smart_phone),
+                    :path => @item.public_smart_phone_path, :dependent => :smart_phone)
+
       share_to_sns(@item)
       sync_events_export
-      redirect_to url_for(:action => :index), notice: '公開処理が完了しました。'
     end
+
   end
 
   def publish_by_update(item)
     return unless item.terminal_pc_or_smart_phone
-    return if item.target.present? && item.href.present?
     if item.publish(render_public_as_string(item.public_uri))
       publish_ruby(item)
       item.rebuild(render_public_as_string(item.public_uri, jpmobile: envs_to_request_as_smart_phone),
