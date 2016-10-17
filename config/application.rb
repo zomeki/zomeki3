@@ -22,6 +22,7 @@ module ZomekiCMS
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
+    config.i18n.load_path += Dir[Rails.root.join('config', 'modules', '**', 'locales', '*.yml').to_s]
     config.i18n.default_locale = :ja
 
     # Custom directories with classes and modules you want to be autoloadable.
@@ -39,12 +40,6 @@ module ZomekiCMS
         controller_specs: true,
         request_specs: false
       g.fixture_replacement :factory_girl, dir: 'spec/factories'
-    end
-
-    Dir::entries("#{Rails.root}/config/modules").each do |mod|
-      next if mod =~ /^\./
-      file = "#{Rails.root}/config/modules/#{mod}/locales/translation_ja.yml"
-      config.i18n.load_path << file if FileTest.exist?(file)
     end
 
     config.action_view.sanitized_allowed_tags = ActionView::Base.sanitized_allowed_tags.to_a | %w(table caption tr th td iframe)

@@ -1,14 +1,23 @@
+<% grouped_items = items.group_by { |item| item.config[:menu] } %>
 <table class="index">
   <tr>
     <th style="width: 60px; text-align: center;">設定</th>
     <th style="width: 250px;">設定名</th>
     <th>設定値</th>
   </tr>
-  <%- items.each do |item| -%>
-  <tr class="<%= cycle '', 'cycle' %>">
-    <td style="text-align: center;"><%= link_to :set, { action: :edit, id: item.name } %></td>
-    <td><%= item.config_name %></td>
-    <td><%=truncate (item.persisted? ? item.value_name : ''), length: 60 %></td>
-  </tr>
+  <%- grouped_items.each do |menu, items| -%>
+    <%- if menu -%>
+      <tr class="<%= cycle '', 'cycle' %>">
+        <td colspan="3" style="background-color: #ddd;"><%= i18n_view("menus.#{menu}") %></td>
+      </tr>
+    <%- end -%>
+    <%- reset_cycle -%>
+    <%- items.each do |item| -%>
+      <tr class="<%= cycle '', 'cycle' %>">
+        <td style="text-align: center;"><%= link_to :set, { action: :edit, id: item.name } %></td>
+        <td><%= item.config_name %></td>
+        <td><%=truncate (item.persisted? ? item.value_name : ''), length: 60 %></td>
+      </tr>
+    <%- end -%>
   <%- end -%>
 </table>
