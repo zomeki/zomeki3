@@ -1,4 +1,4 @@
-class Cms::LinkCheckLog < ActiveRecord::Base
+class Cms::LinkCheckLog < ApplicationRecord
   include Sys::Model::Base
 
   belongs_to :link_check

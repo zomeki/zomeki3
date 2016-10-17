@@ -81,8 +81,8 @@ Rails.application.routes.draw do
   get "/_auth/failure"            => "cms/public/o_auth#failure"  # Used only by OmniAuth
 
   # Tool
-  get "/_tools/captcha/:action" => "simple_captcha",
-    :as => "simple_captcha"
+  get "/_tools/captcha/index"  => "simple_captcha#index"
+  get "/_tools/captcha/talk"   => "simple_captcha#talk"
 
   # Files
   get "_files/*path"           => "cms/public/files#down"

@@ -5,7 +5,7 @@ class Sys::Script::TasksController < ApplicationController
     tasks = tasks.where(site_id: Script.options[:site_id]) if Script.options && Script.options[:site_id]
     Script.total tasks.size
 
-    return render(text: 'No Tasks') if tasks.empty?
+    return render plain: 'No Tasks' if tasks.empty?
 
     tasks.each do |task|
       begin
@@ -29,6 +29,6 @@ class Sys::Script::TasksController < ApplicationController
       end
     end
 
-    render(text: 'OK')
+    render plain: 'OK'
   end
 end

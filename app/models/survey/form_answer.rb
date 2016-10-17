@@ -1,4 +1,4 @@
-class Survey::FormAnswer < ActiveRecord::Base
+class Survey::FormAnswer < ApplicationRecord
   include Sys::Model::Base
 
   apply_simple_captcha

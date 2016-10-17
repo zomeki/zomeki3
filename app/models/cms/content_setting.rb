@@ -1,4 +1,4 @@
-class Cms::ContentSetting < ActiveRecord::Base
+class Cms::ContentSetting < ApplicationRecord
   include Sys::Model::Base
   
   attr_accessor :form_type, :options

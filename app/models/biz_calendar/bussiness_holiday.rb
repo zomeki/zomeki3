@@ -1,4 +1,4 @@
-class BizCalendar::BussinessHoliday < ActiveRecord::Base
+class BizCalendar::BussinessHoliday < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Rel::Creator
   include Cms::Model::Auth::Content

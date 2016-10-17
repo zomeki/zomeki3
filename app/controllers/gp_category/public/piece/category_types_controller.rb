@@ -1,7 +1,7 @@
 class GpCategory::Public::Piece::CategoryTypesController < Sys::Controller::Public::Base
   def pre_dispatch
     @piece = GpCategory::Piece::CategoryType.find_by(id: Page.current_piece.id)
-    render :text => '' unless @piece
+    render plain: '' unless @piece
 
     @item = Page.current_item
   end

@@ -25,25 +25,25 @@
     </tr>
   </table>
   
-  <%- if item.state_approvable? && item.approvers.include?(Core.user) && respond_to?(:passback) -%>
+  <%- if item.state_approvable? && item.approvers.include?(Core.user) && controller.respond_to?(:passback) -%>
     <%= form_tag url_for(content: content, action: 'passback') do %>
     <table class="show">
       <tr>
         <th>差し戻し</th>
         <td><%= text_area_tag :comment, nil, size: '70x5' %></td>
-        <td><%= submit_tag '差し戻し', confirm: '差し戻してよろしいですか？' %></td>
+        <td><%= submit_tag '差し戻し', data: { confirm: '差し戻してよろしいですか？' } %></td>
       </tr>
     </table>
     <%- end -%>
   <%- end -%>
   
-  <%- if item.state_approvable? && item.approval_requesters.include?(Core.user) && respond_to?(:pullback) -%>
+  <%- if item.state_approvable? && item.approval_requesters.include?(Core.user) && controller.respond_to?(:pullback) -%>
     <%= form_tag url_for(content: content, action: 'pullback') do %>
     <table class="show">
       <tr>
         <th>引き戻し</th>
         <td><%= text_area_tag :comment, nil, size: '70x5' %></td>
-        <td><%= submit_tag '引き戻し', confirm: '引き戻してよろしいですか？' %></td>
+        <td><%= submit_tag '引き戻し', data: { confirm: '引き戻してよろしいですか？' } %></td>
       </tr>
     </table>
     <%- end -%>

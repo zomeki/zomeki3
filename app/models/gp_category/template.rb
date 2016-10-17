@@ -1,4 +1,4 @@
-class GpCategory::Template < ActiveRecord::Base
+class GpCategory::Template < ApplicationRecord
   include Sys::Model::Base
   include Cms::Model::Auth::Content
 

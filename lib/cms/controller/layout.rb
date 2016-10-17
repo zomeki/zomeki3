@@ -65,7 +65,6 @@ module Cms::Controller::Layout
 
     ## content
     Page.content = response.body
-    self.response_body = nil
 
     ## concept
     concepts = Cms::Lib::Layout.inhertited_concepts
@@ -186,7 +185,10 @@ module Cms::Controller::Layout
     body = last_convert_body(body)
 
     ## render the true layout
-    render :text => (body ? body.force_encoding('UTF-8') : ''), :layout => 'layouts/public/base'
+    self.response_body = render_to_string(
+      html: body.to_s.force_encoding('UTF-8').html_safe,
+      layout: 'layouts/public/base'
+    )
   end
 
   def convert_ssl_uri(body)

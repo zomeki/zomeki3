@@ -20,7 +20,7 @@ class Cms::Script::NodesController < Cms::Controller::Script::Publication
     # file transfer
     transfer_files(:logging => true) if @transfer_to_publish
 
-    render text: 'OK'
+    render plain: 'OK'
   end
 
   def publish_node(node)
@@ -113,10 +113,10 @@ class Cms::Script::NodesController < Cms::Controller::Script::Publication
 
       Script.success
     end
-    render text: 'OK'
+    render plain: 'OK'
   rescue => e
     error_log e.message
-    render text: 'NG'
+    render plain: 'NG'
   end
 
   def close_by_task
@@ -136,9 +136,9 @@ class Cms::Script::NodesController < Cms::Controller::Script::Publication
 
       Script.success
     end
-    render text: 'OK'
+    render plain: 'OK'
   rescue => e
     error_log e.message
-    render text: 'NG'
+    render plain: 'NG'
   end
 end

@@ -1,4 +1,4 @@
-class Cms::Bracket < ActiveRecord::Base
+class Cms::Bracket < ApplicationRecord
   include Sys::Model::Base
   belongs_to :owner, polymorphic: true
 

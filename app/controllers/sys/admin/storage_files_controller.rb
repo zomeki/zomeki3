@@ -86,7 +86,7 @@ class Sys::Admin::StorageFilesController < Cms::Controller::Admin::Base
     @item = {
       :name      => ::File.basename(@path),
     }
-    render :action => :show_dir
+    render :show_dir
   end
 
   def show_file
@@ -103,7 +103,7 @@ class Sys::Admin::StorageFilesController < Cms::Controller::Admin::Base
       :mime_type => ::Storage.mime_type(@path),
       :body      => body,
     }
-    render :action => :show_file
+    render :show_file, formats: :html
   end
 
   def edit_file
@@ -120,7 +120,7 @@ class Sys::Admin::StorageFilesController < Cms::Controller::Admin::Base
       :mime_type => ::Storage.mime_type(@path),
       :body      => body,
     }
-    render :action => :edit_file
+    render :edit_file, formats: :html
   end
   
   def new

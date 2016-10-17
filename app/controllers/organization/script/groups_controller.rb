@@ -14,9 +14,9 @@ class Organization::Script::GroupsController < Cms::Controller::Script::Publicat
       publish_more(@node, uri: g_uri, path: g_path, smart_phone_path: g_smart_phone_path, dependent: g_uri)
     end
 
-    render text: 'OK'
+    render plain: 'OK'
   rescue => e
     error_log e.message
-    render text: e.message
+    render plain: e.message
   end
 end

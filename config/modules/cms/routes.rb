@@ -69,7 +69,7 @@ ZomekiCMS::Application.routes.draw do
     match "tool_import"  => "admin/tool/import#index", via: [:get, :post]
   end
 
-  scope "#{ZomekiCMS::ADMIN_URL_PREFIX}/#{mod}/c(:concept)", :module => mod, :as => mod do
+  scope "#{ZomekiCMS::ADMIN_URL_PREFIX}/#{mod}/c:concept", :module => mod, :as => mod do
     match "stylesheets/(*path)" => "admin/stylesheets#index",
       :as => :stylesheets, :format => false, via: [:get, :post, :put]
     resources :contents,

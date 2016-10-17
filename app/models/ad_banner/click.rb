@@ -1,4 +1,4 @@
-class AdBanner::Click < ActiveRecord::Base
+class AdBanner::Click < ApplicationRecord
   include Sys::Model::Base
 
   default_scope { order(created_at: :desc) }

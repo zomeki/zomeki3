@@ -1,4 +1,4 @@
-class SnsShare::Share < ActiveRecord::Base
+class SnsShare::Share < ApplicationRecord
   include Sys::Model::Base
 
   belongs_to :sharable, polymorphic: true

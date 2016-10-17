@@ -1,4 +1,4 @@
-class Survey::Question < ActiveRecord::Base
+class Survey::Question < ApplicationRecord
   include Sys::Model::Base
   include Cms::Model::Auth::Content
 

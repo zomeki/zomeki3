@@ -16,7 +16,7 @@ module RenderComponent
       if response.redirect_url
         redirect_to response.redirect_url
       else
-        render :text => response.body, :status => response.status
+        render plain: response.body, status: response.status
         response
       end
     end
@@ -31,14 +31,19 @@ module RenderComponent
     def component_response(options)
       controller = "#{options[:controller].to_s.camelize}Controller".constantize.new
       component_request = request_for_component(controller.controller_path, options)
-      status, headers, body = controller.dispatch(options[:action], component_request)
+      component_response = response_for_component(request)
+      status, headers, body = controller.dispatch(options[:action], component_request, component_response)
       return status, headers, controller.response
     end
 
     def request_for_component(controller_path, options)
       component_params = options.delete(:params)
       jpmobile_params = options.delete(:jpmobile)
-      options.merge!(component_params) if component_params
+
+      if component_params
+        component_params = component_params.to_unsafe_h if component_params.is_a?(ActionController::Parameters)
+        options.merge!(component_params.with_indifferent_access)
+      end
 
       request_params = options.symbolize_keys
       request_env = request.env.dup
@@ -50,6 +55,12 @@ module RenderComponent
         request_env['rack.jpmobile'] = jpmobile_params['rack.jpmobile']
       end
       ActionDispatch::Request.new(request_env)
+    end
+
+    def response_for_component(request)
+      ActionDispatch::Response.create.tap do |res|
+        res.request = request
+      end
     end
   end
 end

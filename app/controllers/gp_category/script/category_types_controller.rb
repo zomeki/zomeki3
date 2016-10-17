@@ -29,7 +29,7 @@ class GpCategory::Script::CategoryTypesController < Cms::Controller::Script::Pub
       end
     end
 
-    render :text => "OK"
+    render plain: "OK"
   end
 
   private

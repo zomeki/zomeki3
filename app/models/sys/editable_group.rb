@@ -1,4 +1,4 @@
-class Sys::EditableGroup < ActiveRecord::Base
+class Sys::EditableGroup < ApplicationRecord
   include Sys::Model::Base
 
   ALL_GROUP = 0

@@ -1,11 +1,21 @@
-class Cms::Publisher < ActiveRecord::Base
+class Cms::Publisher < ApplicationRecord
   include Sys::Model::Base
 
   STATE_OPTIONS = [['待機中','queued'],['実行中','performing']]
 
   belongs_to :publishable, polymorphic: true
 
-  validates :publishable_id, uniqueness: { scope: [:publishable_type, :state, :extra_flag] }
+  validate :validate_queue, on: :create
+
+  private
+
+  def validate_queue
+    if self.class.where(state: 'queued', publishable_id: publishable_id, publishable_type: publishable_type)
+           .where("extra_flag = '#{extra_flag.to_json}'")
+           .exists?
+      errors.add(:publishable_id, :taken)
+    end
+  end
 
   class << self
     def register(site_id, items, extra_flag = {})

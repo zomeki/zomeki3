@@ -1,4 +1,4 @@
-class Cms::Piece < ActiveRecord::Base
+class Cms::Piece < ApplicationRecord
   include Sys::Model::Base
   include Cms::Model::Base::Piece
   include Cms::Model::Base::Page::Publisher

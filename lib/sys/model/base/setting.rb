@@ -1,4 +1,4 @@
-class Sys::Model::Base::Setting < ActiveRecord::Base
+class Sys::Model::Base::Setting < ApplicationRecord
   self.table_name = "sys_settings"
   
   def self.set_config(id, params = {})

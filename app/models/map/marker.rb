@@ -1,4 +1,4 @@
-class Map::Marker < ActiveRecord::Base
+class Map::Marker < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Rel::File
   include Cms::Model::Auth::Content

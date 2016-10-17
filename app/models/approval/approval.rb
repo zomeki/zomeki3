@@ -1,4 +1,4 @@
-class Approval::Approval < ActiveRecord::Base
+class Approval::Approval < ApplicationRecord
   include Sys::Model::Base
 
   TYPE_OPTIONS = [['固定', 'fix'], ['選択', 'select']]

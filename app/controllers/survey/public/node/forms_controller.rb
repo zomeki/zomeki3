@@ -1,7 +1,7 @@
 class Survey::Public::Node::FormsController < Cms::Controller::Public::Base
   include SimpleCaptcha::ControllerHelpers
   before_action :set_form, only: [:show, :confirm_answers, :send_answers, :finish]
-  skip_action_callback :render_public_layout
+  skip_after_action :render_public_layout
   after_action :call_render_public_layout
 
   def pre_dispatch
@@ -63,7 +63,7 @@ class Survey::Public::Node::FormsController < Cms::Controller::Public::Base
     forms = Core.mode == 'preview' ? @content.forms : @content.public_forms
     @form = forms.find_by(name: params[:id])
     return http_error(404) unless @form
-    return render(text: '') if Core.mode != 'preview' && !@form.state_public?
+    return render plain: '' if Core.mode != 'preview' && !@form.state_public?
 
     Page.current_item = @form
     Page.title = @form.title

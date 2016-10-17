@@ -88,7 +88,7 @@ class Cms::Admin::Tool::RebuildController < Cms::Controller::Admin::Base
 
     nodes.each do |node|
       begin
-        page = Cms::Node::Page.find(node)
+        page = Cms::Node::Page.find(node.id)
         if page.rebuild(render_public_as_string(page.public_uri))
           page.publish_page(render_public_as_string("#{page.public_uri}.r"), path: "#{page.public_path}.r", dependent: :ruby)
           page.rebuild(render_public_as_string(page.public_uri, jpmobile: envs_to_request_as_smart_phone),

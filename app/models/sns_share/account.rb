@@ -1,4 +1,4 @@
-class SnsShare::Account < ActiveRecord::Base
+class SnsShare::Account < ApplicationRecord
   include Sys::Model::Base
   include Cms::Model::Auth::Content
 

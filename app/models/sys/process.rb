@@ -1,4 +1,4 @@
-class Sys::Process < ActiveRecord::Base
+class Sys::Process < ApplicationRecord
   self.table_name = "sys_processes"
   include Sys::Model::Base
 

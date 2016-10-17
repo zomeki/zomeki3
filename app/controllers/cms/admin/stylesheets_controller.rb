@@ -58,14 +58,14 @@ class Cms::Admin::StylesheetsController < Cms::Controller::Admin::Base
 
   def show
     @item.read_body
-    render action: :show
+    render :show, formats: :html
   end
 
   def edit
     return error_auth unless @item.editable?
 
     @item.read_body
-    render action: :edit
+    render :edit, formats: :html
   end
 
   def create
@@ -126,7 +126,7 @@ class Cms::Admin::StylesheetsController < Cms::Controller::Admin::Base
       end
     end
 
-    render action: :move
+    render :move, formats: :html
   end
 
   def destroy

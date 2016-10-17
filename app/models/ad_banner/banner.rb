@@ -1,4 +1,4 @@
-class AdBanner::Banner < ActiveRecord::Base
+class AdBanner::Banner < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Base::File
   include Sys::Model::Rel::Creator

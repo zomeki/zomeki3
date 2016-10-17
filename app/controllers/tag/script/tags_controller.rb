@@ -12,9 +12,9 @@ class Tag::Script::TagsController < Cms::Controller::Script::Publication
                           smart_phone_path: CGI::unescape(tag.public_smart_phone_path), dependent: tag.public_uri)
     end
 
-    render text: 'OK'
+    render plain: 'OK'
   rescue => e
     error_log e.message
-    render text: e.message
+    render plain: e.message
   end
 end

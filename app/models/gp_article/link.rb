@@ -1,4 +1,4 @@
-class GpArticle::Link < ActiveRecord::Base
+class GpArticle::Link < ApplicationRecord
   include Sys::Model::Base
 
   validates :doc_id, :presence => true

@@ -1,4 +1,4 @@
-class Approval::ApprovalRequest < ActiveRecord::Base
+class Approval::ApprovalRequest < ApplicationRecord
   include Sys::Model::Base
 
   belongs_to :requester, foreign_key: :user_id, class_name: 'Sys::User'

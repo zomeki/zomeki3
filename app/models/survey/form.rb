@@ -1,4 +1,4 @@
-class Survey::Form < ActiveRecord::Base
+class Survey::Form < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Rel::Creator
   include Sys::Model::Rel::Task

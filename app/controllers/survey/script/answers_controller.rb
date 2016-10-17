@@ -15,7 +15,7 @@ class Survey::Script::AnswersController < ApplicationController
       s_form_answers.each(&:destroy)
     end
 
-    render text: 'OK'
+    render plain: 'OK'
   end
 
   protected

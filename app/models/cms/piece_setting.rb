@@ -1,4 +1,4 @@
-class Cms::PieceSetting < ActiveRecord::Base
+class Cms::PieceSetting < ApplicationRecord
   include Sys::Model::Base
 
   belongs_to :piece, :foreign_key => :piece_id, :class_name => 'Cms::Piece'
