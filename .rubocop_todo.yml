@@ -514,7 +514,6 @@ Style/EmptyLineBetweenDefs:
     - 'app/controllers/sys/admin/operation_logs_controller.rb'
     - 'lib/cms/model/tool/export.rb'
     - 'lib/cms/model/tool/import.rb'
-    - 'lib/sys/controller/cache_sweeper/base.rb'
 
 # Offense count: 12
 # Cop supports --auto-correct.
