@@ -45,7 +45,7 @@ class Sys::OperationLog < ApplicationRecord
     log.uri       = Core.request_uri
     log.action    = params[:do]
     log.action    = params[:action] if params[:do].blank?
-    log.ipaddr    = request.remote_addr
+    log.ipaddr    = request.remote_ip
     log.site_id   = Core.site.id rescue 0
 
     if user = options[:user]

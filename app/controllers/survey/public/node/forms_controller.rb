@@ -23,9 +23,12 @@ class Survey::Public::Node::FormsController < Cms::Controller::Public::Base
   end
 
   def show
-    @form_answer = @form.form_answers.build(answered_url: "#{@content.site.full_uri.sub(/\/+$/, '')}#{@content.public_node.public_uri}#{@form.name}",
-                                            answered_url_title: @form.title,
-                                            remote_addr: request.remote_addr, user_agent: request.user_agent)
+    @form_answer = @form.form_answers.build(
+      answered_url: "#{@content.site.full_uri.sub(/\/+$/, '')}#{@content.public_node.public_uri}#{@form.name}",
+      answered_url_title: @form.title,
+      remote_addr: request.remote_ip,
+      user_agent: request.user_agent
+    )
 
     render_survey_layout
   end
@@ -74,10 +77,14 @@ class Survey::Public::Node::FormsController < Cms::Controller::Public::Base
   end
 
   def build_answer
-    @form_answer = @form.form_answers.build(answered_url: params[:current_url].try(:sub, %r!/confirm_answers$!, ''),
-                                            answered_url_title: params[:current_url_title],
-                                            remote_addr: request.remote_addr, user_agent: request.user_agent,
-                                            captcha: params[:captcha], captcha_key: params[:captcha_key])
+    @form_answer = @form.form_answers.build(
+      answered_url: params[:current_url].try(:sub, %r!/confirm_answers$!, ''),
+      answered_url_title: params[:current_url_title],
+      remote_addr: request.remote_ip,
+      user_agent: request.user_agent,
+      captcha: params[:captcha],
+      captcha_key: params[:captcha_key]
+    )
     @form_answer.question_answers = params[:question_answers]
   end
 

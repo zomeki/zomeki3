@@ -33,7 +33,7 @@ module Cms::ApiGpCalendar
       target_content_id = params[:target_content_id].to_i
       target_host = params[:target_host].to_s
       target_addr = Resolv.getaddress(target_host) rescue nil
-      return render(json: []) if target_content_id.zero? || target_addr != request.remote_addr
+      return render(json: []) if target_content_id.zero? || target_addr != request.remote_ip
 
       content = GpCalendar::Content::Event.find_by_id(params[:content_id])
       return render(json: []) unless content.try(:public_node)
@@ -81,7 +81,7 @@ module Cms::ApiGpCalendar
       content_id = params[:content_id].to_i
       source_host = params[:source_host].to_s
       source_addr = Resolv.getaddress(source_host) rescue nil
-      return render(json: {result: 'NG'}) if content_id.zero? || source_addr != request.remote_addr
+      return render(json: {result: 'NG'}) if content_id.zero? || source_addr != request.remote_ip
 
       GpCalendar::Content::Event.find_each do |content|
         next unless content.event_sync_import?
