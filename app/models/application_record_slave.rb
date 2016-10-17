@@ -1,4 +1,4 @@
-class ApplicationRecordSlave < ActiveRecord::Base
+class ApplicationRecordSlave < ApplicationRecord
   self.abstract_class = true
 
   class << self
