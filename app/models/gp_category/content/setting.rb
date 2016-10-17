@@ -2,7 +2,7 @@ class GpCategory::Content::Setting < Cms::ContentSetting
   set_config :group_category_type_name, :name => "組織用#{GpCategory::CategoryType.human_attribute_name :name}",
     :comment => '初期値 ： groups'
   set_config :list_style, :name => "#{GpArticle::Doc.model_name.human}表示形式",
-    :form_type => :text_area, :comment_upper => 'doc_style_tags'
+    :form_type => :text_area, :upper_text => '<a href="#" class="show_dialog">置き換えテキストを確認する</a>'
   set_config :date_style, :name => "#{GpArticle::Doc.model_name.human}日付形式",
     :comment => I18n.t('comments.date_style').html_safe
   set_config :time_style, :name => "#{GpArticle::Doc.model_name.human}時間形式",
@@ -28,12 +28,6 @@ class GpCategory::Content::Setting < Cms::ContentSetting
     :form_type => :radio_buttons
 
   after_initialize :set_defaults
-
-  def upper_text
-  end
-
-  def lower_text
-  end
 
   private
 

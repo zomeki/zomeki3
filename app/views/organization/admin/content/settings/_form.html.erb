@@ -1,4 +1,4 @@
-<%= render(layout: 'shared/admin/content/settings/form', locals: {f: f, item: @item}) do -%>
+<%= render 'shared/admin/content/settings/form', f: f, item: @item -%>
 
 <%- if @item.name == 'article_relation' -%>
 <table class="show">
@@ -9,6 +9,4 @@
                                                           @item.extra_values[:gp_article_content_doc_id]), include_blank: true %></td>
   </tr>
 </table>
-<%- end -%>
-
 <%- end -%>

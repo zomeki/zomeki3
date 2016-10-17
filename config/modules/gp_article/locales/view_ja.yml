@@ -1,0 +1,9 @@
+ja:
+  view:
+    gp_article/admin/content/settings:
+      menus:
+        form: 記事登録画面設定
+        index: 記事一覧表示設定
+        page: 記事ページ表示設定
+        manage: 記事管理設定
+        relation: コンテンツ設定

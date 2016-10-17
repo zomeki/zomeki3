@@ -41,6 +41,7 @@ module LinkHelper
       :duplicate => '複製',
       :delete    => '削除',
       :destroy   => '削除',
+      :set       => '設定',
       :open      => '公開',
       :close     => '非公開',
       :enabale   => '有効化',

@@ -93,4 +93,8 @@ module ApplicationHelper
       I18n.l value, format: format
     end
   end
+
+  def i18n_view(path)
+    I18n.t("view.#{controller.controller_path}.#{path}")
+  end
 end
