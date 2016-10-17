@@ -16,9 +16,9 @@ class GpArticle::Content::Setting < Cms::ContentSetting
   set_config :doc_list_style, name: "#{GpArticle::Doc.model_name.human}一覧表示形式",
     options: GpArticle::Content::Doc::DOC_LIST_STYLE_OPTIONS
   set_config :list_style, name: "#{GpArticle::Doc.model_name.human}表示形式",
-    form_type: :text_area, comment_upper: 'doc_style_tags'
+    form_type: :text_area, upper_text: '<a href="#" class="show_dialog">置き換えテキストを確認する</a>'
   set_config :rel_docs_style, name: "関連#{GpArticle::Doc.model_name.human}表示形式",
-    form_type: :text_area, comment_upper: 'doc_style_tags'
+    form_type: :text_area, upper_text: '<a href="#" class="show_dialog">置き換えテキストを確認する</a>'
   set_config :date_style, name: "#{GpArticle::Doc.model_name.human}日付形式",
     comment: I18n.t('comments.date_style').html_safe
   set_config :time_style, name: "#{GpArticle::Doc.model_name.human}時間形式",
@@ -82,14 +82,6 @@ class GpArticle::Content::Setting < Cms::ContentSetting
 
   def content
     GpArticle::Content::Doc.find(content_id)
-  end
-
-  def upper_text
-    config[:upper_text].to_s
-  end
-
-  def lower_text
-    config[:lower_text].to_s
   end
 
   def category_type_ids
