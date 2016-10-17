@@ -28,7 +28,7 @@ class Organization::Admin::Content::SettingsController < Cms::Controller::Admin:
     value = params[:item][:value]
     if @item.form_type.in?([:check_boxes, :multiple_select])
       @item.value = YAML.dump(case value
-                              when Hash; value.keys
+                              when ActionController::Parameters; value.keys
                               when Array; value
                               else []
                               end)
