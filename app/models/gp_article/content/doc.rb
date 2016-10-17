@@ -255,14 +255,6 @@ class GpArticle::Content::Doc < Cms::Content
     setting_value(:broken_link_notification) == 'enabled'
   end
 
-  def rewrite_configs
-    if node = public_node
-      []
-    else
-      []
-    end
-  end
-
   def public_path
     site.public_path
   end

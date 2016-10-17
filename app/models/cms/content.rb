@@ -94,35 +94,8 @@ class Cms::Content < ApplicationRecord
     return self
   end
 
-  def rewrite_configs
-    []
-  end
+  protected
 
-  def self.rewrite_regex(options = {})
-    conf = []
-
-    Cms::Content.where(site_id: options[:site_id]).order(:id).each do |item|
-      name = item.model.to_s.gsub(/^(.*?::)/, '\\1Content::')
-      begin
-        eval(name)
-        model = eval(name)
-      rescue
-        model = nil
-      end
-      next unless model
-      content = model.find_by(id: item.id)
-      next unless content
-      content.rewrite_configs.each do |line|
-        val = line.split(/ /)
-        next if val[0] != "RewriteRule"
-        conf << [val[1], val[2]]
-      end
-    end
-
-    conf
-  end
-
-protected
   def save_settings
     in_settings.each do |name, value|
       st = settings.where(name: name).first || new_setting(name)
