@@ -3,7 +3,7 @@ class GpCalendar::Content::Holiday < Cms::Content
 
   default_scope { where(model: 'GpCalendar::Holiday') }
 
-  has_many :holidays, :foreign_key => :content_id, :class_name => 'GpCalendar::Holiday', :dependent => :destroy
+  has_many :holidays, foreign_key: :content_id, class_name: 'GpCalendar::Holiday', dependent: :destroy
 
   def public_nodes
     nodes.public_state
@@ -12,5 +12,4 @@ class GpCalendar::Content::Holiday < Cms::Content
   def public_node
     public_nodes.order(:id).first
   end
-
 end

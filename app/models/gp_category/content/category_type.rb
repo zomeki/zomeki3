@@ -8,15 +8,16 @@ class GpCategory::Content::CategoryType < Cms::Content
 
   default_scope { where(model: 'GpCategory::CategoryType') }
 
-  has_many :category_types, -> { order(:sort_no) },
-    :foreign_key => :content_id, :class_name => 'GpCategory::CategoryType', :dependent => :destroy
-  has_many :templates, :foreign_key => :content_id, :class_name => 'GpCategory::Template', :dependent => :destroy
-  has_many :template_modules, :foreign_key => :content_id, :class_name => 'GpCategory::TemplateModule', :dependent => :destroy
-
   has_one :public_node, -> { public_state.order(:id) },
-    :foreign_key => :content_id, :class_name => 'Cms::Node'
+    foreign_key: :content_id, class_name: 'Cms::Node'
 
-  before_create :set_default_settings
+  has_many :settings, -> { order(:sort_no) },
+    foreign_key: :content_id, class_name: 'GpCategory::Content::Setting', dependent: :destroy
+
+  has_many :category_types, -> { order(:sort_no) },
+    foreign_key: :content_id, class_name: 'GpCategory::CategoryType', dependent: :destroy
+  has_many :templates, foreign_key: :content_id, class_name: 'GpCategory::Template', dependent: :destroy
+  has_many :template_modules, foreign_key: :content_id, class_name: 'GpCategory::TemplateModule', dependent: :destroy
 
   def public_nodes
     nodes.public_state
@@ -110,15 +111,5 @@ class GpCategory::Content::CategoryType < Cms::Content
 
   def index_template
     templates.find_by(id: setting_value(:index_template_id))
-  end
-
-  private
-
-  def set_default_settings
-    in_settings[:list_style] = '@title_link@(@publish_date@ @group@)' unless setting_value(:list_style)
-    in_settings[:date_style] = '%Y年%m月%d日 %H時%M分' unless setting_value(:date_style)
-    in_settings[:time_style] = '%H時%M分' unless setting_value(:time_style)
-    in_settings[:docs_order] = DOCS_ORDER_OPTIONS.first.last unless setting_value(:docs_order)
-    in_settings[:feed] = 'enabled' unless setting_value(:feed)
   end
 end

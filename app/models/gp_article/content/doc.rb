@@ -20,17 +20,17 @@ class GpArticle::Content::Doc < Cms::Content
 
   default_scope { where(model: 'GpArticle::Doc') }
 
-  has_many :docs, foreign_key: :content_id, class_name: 'GpArticle::Doc', dependent: :destroy
-  has_many :settings, -> { order(:sort_no) },
-    foreign_key: :content_id, class_name: 'GpArticle::Content::Setting', dependent: :destroy
-
   has_one :public_node, -> { public_state.where(model: 'GpArticle::Doc').order(:id) },
     foreign_key: :content_id, class_name: 'Cms::Node'
   has_one :public_archives_node, -> { public_state.where(model: 'GpArticle::Archive').order(:id) },
     foreign_key: :content_id, class_name: 'Cms::Node'
 
+  has_many :settings, -> { order(:sort_no) },
+    foreign_key: :content_id, class_name: 'GpArticle::Content::Setting', dependent: :destroy
   has_one :organization_content_group_setting, -> { where(name: 'organization_content_group_id') },
     foreign_key: :content_id, class_name: 'GpArticle::Content::Setting'
+
+  has_many :docs, foreign_key: :content_id, class_name: 'GpArticle::Doc', dependent: :destroy
 
   # draft, approvable, approved, public, closed, archived
   def all_docs

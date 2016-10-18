@@ -1,12 +1,14 @@
 class Gnav::Content::MenuItem < Cms::Content
   default_scope { where(model: 'Gnav::MenuItem') }
 
-  has_many :menu_items, -> { order(:sort_no) }, :foreign_key => :content_id, :class_name => 'Gnav::MenuItem', :dependent => :destroy
-
   has_one :public_node, -> { public_state.order(:id) },
-    :foreign_key => :content_id, :class_name => 'Cms::Node'
+    foreign_key: :content_id, class_name: 'Cms::Node'
 
-  before_create :set_default_settings
+  has_many :settings, -> { order(:sort_no) },
+    foreign_key: :content_id, class_name: 'Gnav::Content::Setting', dependent: :destroy
+
+  has_many :menu_items, -> { order(:sort_no) },
+    foreign_key: :content_id, class_name: 'Gnav::MenuItem', dependent: :destroy
 
   def public_nodes
     nodes.public_state
@@ -33,12 +35,5 @@ class Gnav::Content::MenuItem < Cms::Content
 
   def date_style
     setting_value(:date_style).to_s
-  end
-
-  private
-
-  def set_default_settings
-    in_settings[:list_style] = '@title_link@(@publish_date@ @group@)' unless setting_value(:list_style)
-    in_settings[:date_style] = '%Y年%m月%d日 %H時%M分' unless setting_value(:date_style)
   end
 end

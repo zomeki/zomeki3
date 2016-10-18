@@ -1,12 +1,14 @@
 class Tag::Content::Tag < Cms::Content
   default_scope { where(model: 'Tag::Tag') }
 
-  has_many :tags, -> { order(last_tagged_at: :desc) }, :foreign_key => :content_id, :class_name => 'Tag::Tag', :dependent => :destroy
-
   has_one :public_node, -> { public_state.order(:id) },
-    :foreign_key => :content_id, :class_name => 'Cms::Node'
+    foreign_key: :content_id, class_name: 'Cms::Node'
 
-  before_create :set_default_settings
+  has_many :settings, -> { order(:sort_no) },
+    foreign_key: :content_id, class_name: 'Tag::Content::Setting', dependent: :destroy
+
+  has_many :tags, -> { order(last_tagged_at: :desc) },
+    foreign_key: :content_id, class_name: 'Tag::Tag', dependent: :destroy
 
   def public_nodes
     nodes.public_state
@@ -28,12 +30,5 @@ class Tag::Content::Tag < Cms::Content
 
   def date_style
     setting_value(:date_style).to_s
-  end
-
-  private
-
-  def set_default_settings
-    in_settings[:list_style] = '@title_link@(@publish_date@ @group@)' unless setting_value(:list_style)
-    in_settings[:date_style] = '%Y年%m月%d日 %H時%M分' unless setting_value(:date_style)
   end
 end
