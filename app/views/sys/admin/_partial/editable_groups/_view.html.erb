@@ -1,6 +1,4 @@
 <%
-return '' if item.editable_groups.blank?
-
 all_group = item.editable_groups.any?(&:all_group?)
 groups = item.editable_groups.map(&:group).compact
 %>
@@ -11,11 +9,13 @@ groups = item.editable_groups.map(&:group).compact
   <tr>
     <th>編集可能グループ</th>
     <td>
-      <%- if all_group -%>
-        <span>すべてのグループ</span>
-      <%- else -%>
-        <% groups.each do |group| %>
-          <%= group.full_name %><br />
+      <%- if item.editable_groups.present? -%>
+        <%- if all_group -%>
+          <span>すべてのグループ</span>
+        <%- else -%>
+          <% groups.each do |group| %>
+            <%= group.full_name %><br />
+          <%- end -%>
         <%- end -%>
       <%- end -%>
     </td>
