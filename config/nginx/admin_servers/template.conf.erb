@@ -17,7 +17,7 @@ server {
   }
 
   location / {
-    try_files $uri @proxy;
+    try_files $uri $uri/index.html @proxy;
     <%- if use_basic_auth? -%>
     auth_basic_user_file <%="#{::File.dirname(public_path)}/.htpasswd"%>;
     auth_basic "Please enter your ID and password";
@@ -43,7 +43,7 @@ server {
   <%- basic_auth_users.directory_auth.each do |d|
     next unless directory_basic_auth_enabled?(d.target_location) -%>
   location /<%=d.target_location%> {
-    try_files $uri @proxy;
+    try_files $uri $uri/index.html @proxy;
     <%- if use_basic_auth? %>
     auth_basic_user_file <%="#{::File.dirname(public_path)}/.htpasswd_#{d.target_location}"%>;
     auth_basic "Please enter your ID and password";
