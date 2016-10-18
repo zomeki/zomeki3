@@ -67,7 +67,16 @@ CKEDITOR.editorConfig = function( config ) {
     config.extraPlugins = 'youtube,audio,video,zomekilink';
 
     // tagの許可
-    config.allowedContent = true;
+    config.allowedContent = {
+      $1: { // Use the ability to specify elements as an object.
+        elements: CKEDITOR.dtd,
+        attributes: true,
+        styles: true,
+        classes: true
+      }
+    };
+    // table廃止・非推奨属性入力不可
+    config.disallowedContent = 'table[summary,height,cellspacing,cellpadding,align]{height}';
 
     // Wordからの貼付で装飾を削除する
     config.pasteFromWordRemoveFontStyles = true;
