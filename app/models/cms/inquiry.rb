@@ -1,5 +1,6 @@
 class Cms::Inquiry < ApplicationRecord
   include Sys::Model::Base
+  include StateText
 
   belongs_to :group, :foreign_key => :group_id, :class_name => 'Sys::Group'
 
