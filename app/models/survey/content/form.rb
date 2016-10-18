@@ -38,11 +38,11 @@ class Survey::Content::Form < Cms::Content
   end
 
   def approval_related?
-    setting_value('approval_relation') == 'enabled'
+    setting_value(:approval_relation) == 'enabled'
   end
 
   def use_captcha?
-    setting_value('captcha') == 'enabled'
+    setting_value(:captcha) == 'enabled'
   end
 
   def auto_reply?
@@ -50,6 +50,6 @@ class Survey::Content::Form < Cms::Content
   end
 
   def use_common_ssl?
-    setting_value('common_ssl') == 'enabled'
+    setting_value(:common_ssl) == 'enabled'
   end
 end

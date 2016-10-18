@@ -166,7 +166,7 @@ class GpArticle::Content::Doc < Cms::Content
   end
 
   def inquiry_extra_values
-    setting_extra_values('inquiry_setting').presence || GpArticle::Content::Setting.new.default_inquiry_setting
+    setting_extra_values(:inquiry_setting).presence || GpArticle::Content::Setting.new.default_inquiry_setting
   end
 
   def approval_content_approval_flow
