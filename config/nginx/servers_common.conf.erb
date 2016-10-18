@@ -11,14 +11,18 @@ if ($http_user_agent ~* (Android|iPhone|iPod|MSIEMobile|Windows\sPhone)) {
 }
 
 location /_smartphone {
-  try_files $uri @proxy;
+  try_files $uri $uri/index.html @proxy;
 }
 
 location /_mobile {
-  try_files $uri @proxy;
+  try_files $uri $uri/index.html @proxy;
 }
 
 location /_common {
+  try_files $uri @proxy;
+}
+
+location /_themes {
   try_files $uri @proxy;
 }
 
