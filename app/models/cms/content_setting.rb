@@ -6,7 +6,9 @@ class Cms::ContentSetting < ApplicationRecord
   belongs_to :content, :foreign_key => :content_id, :class_name => 'Cms::Content'
 
   validates :content_id, :name, presence: true
-  
+
+  after_initialize :set_defaults_from_config
+
   def self.set_config(id, params = {})
     @@configs ||= {}
     @@configs[self] ||= []
@@ -24,6 +26,10 @@ class Cms::ContentSetting < ApplicationRecord
   def self.config(content, name)
     self.where(content_id: content.id, name: name.to_s).first_or_initialize
   end
+
+  def self.all_configs
+    @@configs[self]
+  end
   
   def editable?
     content.editable?
@@ -31,7 +37,7 @@ class Cms::ContentSetting < ApplicationRecord
   
   def config
     return @config if @config
-    @@configs[self.class].each {|c| return @config = c if c[:id].to_s == name.to_s}
+    @@configs[self.class].each {|c| return @config = c if c[:id].to_s == name.to_s} if @@configs[self.class]
     nil
   end
   
@@ -51,7 +57,19 @@ class Cms::ContentSetting < ApplicationRecord
   def lower_text
     config[:lower_text] ? config[:lower_text] : nil
   end
-  
+
+  def menu
+    config[:menu]
+  end
+
+  def default_value
+    config[:default_value]
+  end
+
+  def default_extra_values
+    config[:default_extra_values]
+  end
+
   def value_name
     opts = if config[:options].is_a?(Proc)
              config[:options].call
@@ -94,5 +112,18 @@ class Cms::ContentSetting < ApplicationRecord
       self.extra_values = ev
     end
     return ev
+  end
+
+  private
+
+  def set_defaults_from_config
+    return unless config
+
+    if value.nil?
+      self.value = config[:default_value] if config[:default_value]
+    end
+    if extra_values.nil?
+      self.extra_values = config[:default_extra_values] if config[:default_extra_values]
+    end
   end
 end

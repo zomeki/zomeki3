@@ -68,7 +68,7 @@ module Cms::FormHelper
     render 'cms/admin/_partial/maps/view', item: item
   end
 
-  def value_form(f)
+  def value_form(f, css = nil)
     object = f.object || instance_variable_get("@#{f.object_name}")
     case object.form_type
     when :select
@@ -79,7 +79,7 @@ module Cms::FormHelper
                 end
       f.select(:value, options, include_blank: true)
     when :text
-      f.text_area(:value, style: 'width: 600px; height: 120px;')
+      f.text_area(:value, style: css ? css : 'width: 600px; height: 120px;')
     when :check_boxes
       f.check_boxes(:value, object.config_options)
     when :radio_buttons
@@ -88,9 +88,9 @@ module Cms::FormHelper
       select_tag 'item[value]', options_from_collection_for_select(object.config_options.where(id: object.value), :id, :name),
                                 multiple: true, style: 'height: 150px; width: 250px;'
     when :text_area
-      f.text_area(:value, size: '100x10')
+      f.text_area(:value, size: '100x10', style: css)
     else
-      f.text_field(:value, style: 'width: 400px;')
+      f.text_field(:value, style: css ? css : 'width: 400px;')
     end
   end
 

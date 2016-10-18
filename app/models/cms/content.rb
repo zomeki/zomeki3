@@ -20,6 +20,7 @@ class Cms::Content < ApplicationRecord
   validates :concept_id, :state, :model, :name, presence: true
   validates :code, presence: true, uniqueness: { scope: [:site_id] }
 
+  before_create :set_default_settings_from_configs
   after_save :save_settings
 
   def in_settings
@@ -89,7 +90,7 @@ class Cms::Content < ApplicationRecord
     return self
   end
 
-  protected
+  private
 
   def save_settings
     in_settings.each do |name, value|
@@ -98,5 +99,16 @@ class Cms::Content < ApplicationRecord
       st.save if st.changed?
     end
     return true
+  end
+
+  def set_default_settings_from_configs
+    settings.klass.all_configs.each do |config|
+      next if config[:default_value].blank?
+      settings.build(
+        name: config[:id],
+        value: config[:default_value],
+        extra_values: config[:default_extra_values]
+      )
+    end
   end
 end
