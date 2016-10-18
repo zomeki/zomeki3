@@ -22,6 +22,10 @@ location /_common {
   try_files $uri @proxy;
 }
 
+location /_themes {
+  try_files $uri @proxy;
+}
+
 location @proxy {
   proxy_set_header X-Forwarded-Host $host;
   proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
