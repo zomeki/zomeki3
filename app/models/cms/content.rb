@@ -67,7 +67,7 @@ class Cms::Content < ApplicationRecord
     if st && st.value
       st.value
     else
-      default || settings.klass.new(name: name).config[:default_value]
+      default || config(name)[:default_value]
     end
   end
 
@@ -76,7 +76,7 @@ class Cms::Content < ApplicationRecord
     if st && st.extra_values
       st.extra_values
     else
-      default || settings.klass.new(name: name).config[:default_extra_values] || {}.with_indifferent_access
+      default || config(name)[:default_extra_values] || {}.with_indifferent_access
     end
   end
 
@@ -98,6 +98,10 @@ class Cms::Content < ApplicationRecord
   end
 
   private
+
+  def config(name)
+    settings.klass.new(name: name).config || {}
+  end
 
   def save_settings
     in_settings.each do |name, value|

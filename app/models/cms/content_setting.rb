@@ -57,6 +57,7 @@ class Cms::ContentSetting < ApplicationRecord
   end
 
   def form_type
+    return nil unless config
     config[:form_type] || (config[:options] ? :select : :string)
   end
 
