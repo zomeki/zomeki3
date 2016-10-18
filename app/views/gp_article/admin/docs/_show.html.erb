@@ -150,7 +150,6 @@ $(document).ready(function () {
         <td><%= @item.raw_tags %></td>
       </tr>
       <%- end -%>
-      <%- unless @item.related_docs.empty? -%>
       <tr>
         <th><%= @item.locale :in_rel_doc_ids %></th>
         <td>
@@ -158,11 +157,10 @@ $(document).ready(function () {
             <%- @item.related_docs.each do |doc|
               next unless rel_doc = doc.target_doc -%>
             <li><%= rel_doc.title %></li>
-            <%- end -%>
+            <%- end if @item.related_docs.present? -%>
           </ul>
         </td>
       </tr>
-      <%- end -%>
       <%- if @content.qrcode_related? -%>
       <tr>
         <th><%= @item.locale :qrcode_state %></th>

@@ -1,11 +1,7 @@
 <%-
-return '' if item.tasks.empty?
-
-publish_task = item.tasks.detect(&:publish_task?)
-close_task = item.tasks.detect(&:close_task?)
+publish_task = item.tasks.blank? ? nil : item.tasks.detect(&:publish_task?)
+close_task   = item.tasks.blank? ? nil : item.tasks.detect(&:close_task?)
 -%>
-
-<%- if publish_task || close_task -%>
 <p class="form">公開予約設定</p>
 
 <table class="show">
@@ -18,4 +14,4 @@ close_task = item.tasks.detect(&:close_task?)
     <td><%=l close_task.process_at if close_task && close_task.process_at %></td>
   </tr>
 </table>
-<%- end -%>
+
