@@ -78,7 +78,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     @item = @content.docs.build
 
     if @content.default_category
-      @item.in_category_ids = { @content.default_category.content_type_id.to_s => [@content.default_category.id.to_s] }
+      @item.in_category_ids = { @content.default_category.category_type_id.to_s => [@content.default_category.id.to_s] }
     end
   end
 
