@@ -20,17 +20,17 @@ class GpArticle::Content::Doc < Cms::Content
 
   default_scope { where(model: 'GpArticle::Doc') }
 
-  has_many :docs, :foreign_key => :content_id, :class_name => 'GpArticle::Doc', :dependent => :destroy
-
   has_one :public_node, -> { public_state.where(model: 'GpArticle::Doc').order(:id) },
-    :foreign_key => :content_id, :class_name => 'Cms::Node'
+    foreign_key: :content_id, class_name: 'Cms::Node'
   has_one :public_archives_node, -> { public_state.where(model: 'GpArticle::Archive').order(:id) },
-    :foreign_key => :content_id, :class_name => 'Cms::Node'
+    foreign_key: :content_id, class_name: 'Cms::Node'
 
+  has_many :settings, -> { order(:sort_no) },
+    foreign_key: :content_id, class_name: 'GpArticle::Content::Setting', dependent: :destroy
   has_one :organization_content_group_setting, -> { where(name: 'organization_content_group_id') },
-    :foreign_key => :content_id, :class_name => 'GpArticle::Content::Setting'
+    foreign_key: :content_id, class_name: 'GpArticle::Content::Setting'
 
-  before_create :set_default_settings
+  has_many :docs, foreign_key: :content_id, class_name: 'GpArticle::Doc', dependent: :destroy
 
   # draft, approvable, approved, public, closed, archived
   def all_docs
@@ -46,16 +46,6 @@ class GpArticle::Content::Doc < Cms::Content
   # public
   def public_docs
     docs.mobile(::Page.mobile?).public_state
-  end
-
-  def public_nodes
-    Cms::Node.public_state.where(content_id: id)
-  end
-
-#TODO: DEPRECATED
-  def doc_node
-    return @doc_node if @doc_node
-    @doc_node = Cms::Node.where(state: 'public', content_id: id, model: 'GpArticle::Doc').order(:id).first
   end
 
   def organization_content_group
@@ -126,11 +116,11 @@ class GpArticle::Content::Doc < Cms::Content
   end
 
   def save_button_states
-    YAML.load(setting_value(:save_button_states).presence || '[]')
+    setting_value(:save_button_states) || []
   end
 
   def display_dates(key)
-    YAML.load(setting_value(:display_dates).presence || '[]').include?(key.to_s)
+    (setting_value(:display_dates) || []).include?(key.to_s)
   end
 
   def gp_calendar_content_event
@@ -176,7 +166,7 @@ class GpArticle::Content::Doc < Cms::Content
   end
 
   def inquiry_extra_values
-    setting_extra_values('inquiry_setting').presence || GpArticle::Content::Setting.new.default_inquiry_setting
+    setting_extra_values(:inquiry_setting).presence || GpArticle::Content::Setting.new.default_inquiry_setting
   end
 
   def approval_content_approval_flow
@@ -255,14 +245,6 @@ class GpArticle::Content::Doc < Cms::Content
     setting_value(:broken_link_notification) == 'enabled'
   end
 
-  def rewrite_configs
-    if node = public_node
-      []
-    else
-      []
-    end
-  end
-
   def public_path
     site.public_path
   end
@@ -313,27 +295,7 @@ class GpArticle::Content::Doc < Cms::Content
   end
 
   def lang_options
-    lang = setting_value(:lang, GpArticle::Content::Setting::DEFAULT_LANG)
+    lang = setting_value(:lang)
     lang.to_s.split(',').map { |str| str.split(' ') }
-  end
-
-  private
-
-  def set_default_settings
-    in_settings[:list_style] = '@title_link@(@publish_date@ @group@)' unless setting_value(:list_style)
-    in_settings[:date_style] = '%Y年%m月%d日 %H時%M分' unless setting_value(:date_style)
-    in_settings[:time_style] = '%H時%M分' unless setting_value(:time_style)
-    in_settings[:display_dates] = ['published_at'] unless setting_value(:display_dates)
-    in_settings[:calendar_relation] = CALENDAR_RELATION_OPTIONS.first.last unless setting_value(:calendar_relation)
-    in_settings[:map_relation] = MAP_RELATION_OPTIONS.first.last unless setting_value(:map_relation)
-    in_settings[:inquiry_setting] = 'enabled' unless setting_value(:inquiry_setting)
-    in_settings[:approval_relation] = APPROVAL_RELATION_OPTIONS.first.last unless setting_value(:approval_relation)
-    in_settings[:feed] = FEED_DISPLAY_OPTIONS.first.last unless setting_value(:feed)
-    in_settings[:tag_relation] = TAG_RELATION_OPTIONS.first.last unless setting_value(:tag_relation)
-    in_settings[:sns_share_relation] = SNS_SHARE_RELATION_OPTIONS.first.last unless setting_value(:sns_share_relation)
-    in_settings[:blog_functions] = BLOG_FUNCTIONS_OPTIONS.last.last unless setting_value(:blog_functions)
-    in_settings[:broken_link_notification] = BROKEN_LINK_NOTIFICATION_OPTIONS.first.last unless setting_value(:broken_link_notification)
-    in_settings[:feature_settings] = FEATURE_SETTINGS_OPTIONS.last.last unless setting_value(:feature_settings)
-    in_settings[:doc_list_style] = DOC_LIST_STYLE_OPTIONS.first.last unless setting_value(:doc_list_style)
   end
 end

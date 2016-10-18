@@ -9,7 +9,8 @@
     <th>設定値</th>
     <td>
       <div style="margin: 5px; line-height: 1.2;"><%=raw item.upper_text %></div>
-      <%= value_form(f) %><span style="margin-left: 10px;"><%= item.config[:comment] %></span>
+      <%= value_form(f, item.config[:style]) %>
+      <span style="margin-left: 10px;"><%=raw item.config[:comment] %></span>
       <div style="margin: 5px; line-height: 1.2;"><%=raw item.lower_text %></div>
     </td>
   </tr>

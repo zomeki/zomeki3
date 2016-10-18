@@ -4,18 +4,14 @@ class GpCalendar::Content::Event < Cms::Content
 
   default_scope { where(model: 'GpCalendar::Event') }
 
-  has_many :events, :foreign_key => :content_id, :class_name => 'GpCalendar::Event', :dependent => :destroy
-  has_many :holidays, :foreign_key => :content_id, :class_name => 'GpCalendar::Holiday', :dependent => :destroy
+  has_one :public_node, -> { public_state.order(:id) },
+    foreign_key: :content_id, class_name: 'Cms::Node'
 
-  before_create :set_default_settings
+  has_many :settings, -> { order(:sort_no) },
+    foreign_key: :content_id, class_name: 'GpCalendar::Content::Setting', dependent: :destroy
 
-  def public_nodes
-    nodes.public_state
-  end
-
-  def public_node
-    public_nodes.order(:id).first
-  end
+  has_many :events, foreign_key: :content_id, class_name: 'GpCalendar::Event', dependent: :destroy
+  has_many :holidays, foreign_key: :content_id, class_name: 'GpCalendar::Holiday', dependent: :destroy
 
   def public_events
     events.public_state
@@ -94,15 +90,5 @@ class GpCalendar::Content::Event < Cms::Content
 
   def event_sync_default_will_sync
     setting_extra_value(:event_sync_export, :default_will_sync).to_s
-  end
-
-  private
-
-  def set_default_settings
-    in_settings[:list_style] = '@title_link@' unless setting_value(:list_style)
-    in_settings[:date_style] = '%Y年%m月%d日（%a）' unless setting_value(:date_style)
-    in_settings[:show_images] = 'visible' unless setting_value(:show_images)
-    in_settings[:event_sync_import] = 'disabled' unless setting_value(:event_sync_import)
-    in_settings[:event_sync_export] = 'disabled' unless setting_value(:event_sync_export)
   end
 end

@@ -343,13 +343,6 @@ $(function() {
       <%= radio_button_tag 'feature_1', 'false', @item.extra_values[:feature_1] == 'false' %><%= label_tag 'feature_1_false', '非表示' %>
     </td>
   </tr>
-  <tr>
-    <th><%= GpArticle::Doc.human_attribute_name :feature_2 %></th>
-    <td>
-      <%= radio_button_tag 'feature_2', 'true', @item.extra_values[:feature_2] != 'false' %><%= label_tag 'feature_2_true', '表示' %>
-      <%= radio_button_tag 'feature_2', 'false', @item.extra_values[:feature_2] == 'false' %><%= label_tag 'feature_2_false', '非表示' %>
-    </td>
-  </tr>
 </table>
 <%- end -%>
 

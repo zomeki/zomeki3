@@ -16,8 +16,8 @@
     <td><%= item.last_editor.try(:user).try(:name) %></td>
     <td style="text-align: center;"><%=i18n_l item.updated_at %></td>
     <td style="text-align: center;">
-      <%= link_to_if item.terminal_pc_or_smart_phone, 'PC', item.preview_uri, target: 'preview' if @content.doc_node && item.preview_uri.present? %>
-      <%= link_to_if item.terminal_mobile, '携帯', item.preview_uri(mobile: true), target: 'preview' if @content.doc_node && item.preview_uri.present? %>
+      <%= link_to_if item.terminal_pc_or_smart_phone, 'PC', item.preview_uri, target: 'preview' if @content.public_node && item.preview_uri.present? %>
+      <%= link_to_if item.terminal_mobile, '携帯', item.preview_uri(mobile: true), target: 'preview' if @content.public_node && item.preview_uri.present? %>
     </td>
   </tr>
   <%- end -%>

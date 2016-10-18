@@ -1,20 +1,9 @@
 class AdBanner::Content::Setting < Cms::ContentSetting
-  set_config :click_count_setting, name: 'クリック数カウント',
+  set_config :click_count_setting,
+    name: 'クリック数カウント',
+    form_type: :radio_buttons,
     options: [['有効', 'enabled'], ['無効', 'disabled']],
-    form_type: :radio_buttons
+    default_value: 'enabled'
 
-  after_initialize :set_defaults
-
-  def content
-    AdBanner::Content::Banner.find(content_id)
-  end
-
-  private
-
-  def set_defaults
-    case name
-    when 'click_count_setting'
-      self.value = 'enabled' if value.blank?
-    end
-  end
+  belongs_to :content, foreign_key: :content_id, class_name: 'AdBanner::Content::Banner'
 end
