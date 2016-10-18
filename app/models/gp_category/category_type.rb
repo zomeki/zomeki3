@@ -87,7 +87,7 @@ class GpCategory::CategoryType < ApplicationRecord
     crumbs = []
 
     if content
-      if (node = content.category_type_node)
+      if (node = content.public_node)
         c = node.bread_crumbs.crumbs.first
         c << [title, "#{node.public_uri}#{name}/"]
         crumbs << c

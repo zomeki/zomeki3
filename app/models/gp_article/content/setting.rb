@@ -41,9 +41,9 @@ class GpArticle::Content::Setting < Cms::ContentSetting
     default_value: 'disabled',
     default_extra_values: {
       footer_style: '投稿者：@user@ @publish_time@ コメント(@comment_count@) カテゴリ：@category_link@',
-      comment: 'enabled',
+      comment: 'disabled',
       comment_open: 'immediate',
-      comment_notification_mail: 'enabled'
+      comment_notification_mail: 'disabled'
     }
   set_config :word_dictionary, menu: :form,
     name: "本文/単語変換辞書",
@@ -146,12 +146,10 @@ class GpArticle::Content::Setting < Cms::ContentSetting
     options: GpArticle::Content::Doc::SNS_SHARE_RELATION_OPTIONS,
     default_value: 'enabled'
 
+  belongs_to :content, foreign_key: :content_id, class_name: 'GpArticle::Content::Doc'
+
   def organization_content_group
     Organization::Content::Group.find_by(id: value)
-  end
-
-  def content
-    GpArticle::Content::Doc.find(content_id)
   end
 
   def category_type_ids

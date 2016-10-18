@@ -4,19 +4,14 @@ class GpCalendar::Content::Event < Cms::Content
 
   default_scope { where(model: 'GpCalendar::Event') }
 
+  has_one :public_node, -> { public_state.order(:id) },
+    foreign_key: :content_id, class_name: 'Cms::Node'
+
   has_many :settings, -> { order(:sort_no) },
     foreign_key: :content_id, class_name: 'GpCalendar::Content::Setting', dependent: :destroy
 
   has_many :events, foreign_key: :content_id, class_name: 'GpCalendar::Event', dependent: :destroy
   has_many :holidays, foreign_key: :content_id, class_name: 'GpCalendar::Holiday', dependent: :destroy
-
-  def public_nodes
-    nodes.public_state
-  end
-
-  def public_node
-    public_nodes.order(:id).first
-  end
 
   def public_events
     events.public_state

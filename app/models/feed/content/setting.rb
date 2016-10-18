@@ -8,11 +8,9 @@ class Feed::Content::Setting < Cms::ContentSetting
     name: "新着マーク表示期間",
     comment: "時間（1日=24時間）、0:非表示"
 
-  validate :validate_value
+  belongs_to :content, foreign_key: :content_id, class_name: 'Feed::Content::Feed'
 
-  def content
-    Feed::Content::Feed.find(content_id)
-  end
+  validate :validate_value
 
   private
 

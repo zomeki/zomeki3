@@ -8,7 +8,7 @@ class GpCategory::Content::CategoryType < Cms::Content
 
   default_scope { where(model: 'GpCategory::CategoryType') }
 
-  has_one :public_node, -> { public_state.order(:id) },
+  has_one :public_node, -> { public_state.where(model: 'GpCategory::CategoryType').order(:id) },
     foreign_key: :content_id, class_name: 'Cms::Node'
 
   has_many :settings, -> { order(:sort_no) },
@@ -18,16 +18,6 @@ class GpCategory::Content::CategoryType < Cms::Content
     foreign_key: :content_id, class_name: 'GpCategory::CategoryType', dependent: :destroy
   has_many :templates, foreign_key: :content_id, class_name: 'GpCategory::Template', dependent: :destroy
   has_many :template_modules, foreign_key: :content_id, class_name: 'GpCategory::TemplateModule', dependent: :destroy
-
-  def public_nodes
-    nodes.public_state
-  end
-
-#TODO: DEPRECATED
-  def category_type_node
-    return @category_type_node if @category_type_node
-    @category_type_node = Cms::Node.where(state: 'public', content_id: id, model: 'GpCategory::CategoryType').order(:id).first
-  end
 
   def public_category_types
     category_types.public_state

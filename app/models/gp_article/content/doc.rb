@@ -48,16 +48,6 @@ class GpArticle::Content::Doc < Cms::Content
     docs.mobile(::Page.mobile?).public_state
   end
 
-  def public_nodes
-    Cms::Node.public_state.where(content_id: id)
-  end
-
-#TODO: DEPRECATED
-  def doc_node
-    return @doc_node if @doc_node
-    @doc_node = Cms::Node.where(state: 'public', content_id: id, model: 'GpArticle::Doc').order(:id).first
-  end
-
   def organization_content_group
     if organization_content_group_setting
       @organization_content_group ||= organization_content_group_setting.organization_content_group

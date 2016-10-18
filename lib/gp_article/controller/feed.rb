@@ -121,7 +121,7 @@ module GpArticle::Controller::Feed
             end
           end
 
-          if node = doc.content.try(:tag_content_tag).try(:tag_node)
+          if node = doc.content.try(:tag_content_tag).try(:public_node)
             doc.tags.each do |t|
               xml.link :rel => 'tag', :href => "#{node.public_full_uri}#{CGI::escape(t.word)}", :type => 'text/xhtml'
             end

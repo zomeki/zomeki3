@@ -1,6 +1,7 @@
 class Cms::ContentSetting < ApplicationRecord
   include Sys::Model::Base
   
+  @@configs = {}
   attr_accessor :form_type, :options
   
   belongs_to :content, :foreign_key => :content_id, :class_name => 'Cms::Content'
@@ -10,16 +11,13 @@ class Cms::ContentSetting < ApplicationRecord
   after_initialize :set_defaults_from_config
 
   def self.set_config(id, params = {})
-    @@configs ||= {}
     @@configs[self] ||= []
     @@configs[self] << params.merge(:id => id)
   end
   
   def self.configs(content)
     configs = []
-    if defined?(@@configs)
-      @@configs[self].each {|c| configs << config(content, c[:id])}
-    end
+    @@configs[self].each {|c| configs << config(content, c[:id])} if @@configs[self]
     configs
   end
   
@@ -28,7 +26,6 @@ class Cms::ContentSetting < ApplicationRecord
   end
 
   def self.all_configs
-    @@configs ||= {}
     @@configs[self] || []
   end
   

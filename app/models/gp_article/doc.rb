@@ -461,7 +461,7 @@ class GpArticle::Doc < ApplicationRecord
 
     categories.public_state.each do |category|
       category_type = category.category_type
-      if (node = category.content.category_type_node)
+      if (node = category.content.public_node)
         crumb = node.bread_crumbs.crumbs.first
         crumb << [category_type.title, "#{node.public_uri}#{category_type.name}/"]
         category.ancestors.each {|a| crumb << [a.title, "#{node.public_uri}#{category_type.name}/#{a.path_from_root_category}/"] }
@@ -811,7 +811,7 @@ class GpArticle::Doc < ApplicationRecord
   end
 
   def node_existence
-    unless content.doc_node
+    unless content.public_node
       case state
       when 'public'
         errors.add(:base, '記事コンテンツのディレクトリが作成されていないため、即時公開が行えません。')

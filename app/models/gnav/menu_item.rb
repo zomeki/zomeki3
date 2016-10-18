@@ -72,7 +72,7 @@ class Gnav::MenuItem < ApplicationRecord
     crumbs = []
 
     if content
-      if (node = content.menu_item_node)
+      if (node = content.public_node)
         crumb = node.bread_crumbs.crumbs.first
         crumb << [title, "#{node.public_uri}#{name}/"]
         crumbs << crumb

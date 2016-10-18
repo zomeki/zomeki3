@@ -4,8 +4,6 @@ class Map::Content::Marker < Cms::Content
 
   default_scope { where(model: 'Map::Marker') }
 
-  has_many :public_nodes, -> { public_state },
-    foreign_key: :content_id, class_name: 'Cms::Node'
   has_one :public_node, -> { public_state.where(model: 'Map::Marker').order(:id) },
     foreign_key: :content_id, class_name: 'Cms::Node'
 

@@ -114,7 +114,7 @@ class GpCategory::Category < ApplicationRecord
     crumbs = []
 
     if content
-      if (node = content.category_type_node)
+      if (node = content.public_node)
         c = node.bread_crumbs.crumbs.first
         c << [category_type.title, "#{node.public_uri}#{category_type.name}/"]
         ancestors.each {|a| c << [a.title, "#{node.public_uri}#{category_type.name}/#{a.path_from_root_category}/"] }
