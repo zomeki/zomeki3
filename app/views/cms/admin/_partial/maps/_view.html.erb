@@ -1,7 +1,9 @@
 <%-
-map = item.maps.first
-return '' unless map
-return '' if map.map_lat.blank? || map.map_lng.blank?
+map = item.maps.first || item.maps.build(name: '1')
+default_position = item.default_map_position.split(/[ ]*,[ ]*/)
+map_lat  = (map && map.map_lat.present?) ? map.map_lat : default_position[0]
+map_lng  = (map && map.map_lng.present?) ? map.map_lng : default_position[1]
+map_zoom = (map && map.map_zoom.present?) ? map.map_zoom : 14
 markers = map.markers
 google_api = request.ssl? ? "https://maps-api-ssl.google.com/maps/api/js?region=jp" : "http://maps.google.com/maps/api/js?region=jp"
 api_key = item.content.site.google_map_api_key
@@ -23,8 +25,8 @@ var map = null;
 
 addEvent(window, 'load', function() {
   var mapOptions = {
-    center: new google.maps.LatLng(<%= map.map_lat %>, <%= map.map_lng %>),
-    zoom: <%= map.map_zoom %>,
+    center: new google.maps.LatLng(<%= map_lat %>, <%= map_lng %>),
+    zoom: <%= map_zoom %>,
     mapTypeId: google.maps.MapTypeId.ROADMAP,
     scaleControl: true,
     scrollwheel: false
@@ -44,13 +46,32 @@ addEvent(window, 'load', function() {
     google.maps.event.addListener(marker<%= idx %>, 'click', function() {
       infowindow<%= idx %>.open(map, marker<%= idx %>);
     });
-  <% end %>
+  <% end if markers.present? %>
 });
 
 //]]>
 </script>
 
-<div style="padding: 0px 10px;">
-  <%= "#{h map.title}<br />".html_safe if map.title.present? %>
+<div style="padding: 5px 10px;">
   <div id="map1" style="width: 100%; height: 400px"></div>
 </div>
+<p class="form">マップの設定</p>
+<table class="show mapForm">
+  <tr>
+    <th style="width: 90px;">マップ名</th>
+    <td class="name"><%= map.title %></td>
+  </tr><tr>
+    <th style="width: 90px;">座標</th>
+    <td class="point">
+      <%- if map.map_lat.present? && map.map_lng.present? -%>
+        <%= map.map_lat %>, <!--
+        --><%= map.map_lng %>
+      <%- end -%>
+    </td>
+  </tr><tr>
+    <th style="width: 90px;">縮尺</th>
+    <td class="zoom">
+      <%= map.map_zoom %>
+    </td>
+  </tr>
+</table>
