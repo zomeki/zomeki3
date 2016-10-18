@@ -62,15 +62,22 @@ class Cms::Content < ApplicationRecord
     Cms::ContentSetting.new({:content_id => id, :name => name.to_s})
   end
 
-  def setting_value(name, default_value = nil)
-    st = settings.detect{|s| s.name == name.to_s}
-    return default_value unless st
-    return st.value.blank? ? default_value : st.value
+  def setting_value(name, default = nil)
+    st = settings.detect { |s| s.name == name.to_s }
+    if st && st.value
+      st.value
+    else
+      default || settings.klass.new(name: name).config[:default_value]
+    end
   end
 
-  def setting_extra_values(name)
-    st = settings.detect{|s| s.name == name.to_s}
-    st ? st.extra_values : {}.with_indifferent_access
+  def setting_extra_values(name, default = nil)
+    st = settings.detect { |s| s.name == name.to_s }
+    if st && st.extra_values
+      st.extra_values
+    else
+      default || settings.klass.new(name: name).config[:default_extra_values] || {}.with_indifferent_access
+    end
   end
 
   def setting_extra_value(name, extra_name)

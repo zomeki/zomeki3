@@ -116,11 +116,11 @@ class GpArticle::Content::Doc < Cms::Content
   end
 
   def save_button_states
-    YAML.load(setting_value(:save_button_states).presence || '[]')
+    setting_value(:save_button_states) || []
   end
 
   def display_dates(key)
-    YAML.load(setting_value(:display_dates).presence || '[]').include?(key.to_s)
+    (setting_value(:display_dates) || []).include?(key.to_s)
   end
 
   def gp_calendar_content_event

@@ -81,9 +81,9 @@ module Cms::FormHelper
     when :text
       f.text_area(:value, style: css ? css : 'width: 600px; height: 120px;')
     when :check_boxes
-      f.check_boxes(:value, object.config_options)
+      f.collection_check_boxes(:value, object.config_options, :last, :first)
     when :radio_buttons
-      f.radio_buttons(:value, object.config_options)
+      f.collection_radio_buttons(:value, object.config_options, :last, :first)
     when :multiple_select
       select_tag 'item[value]', options_from_collection_for_select(object.config_options.where(id: object.value), :id, :name),
                                 multiple: true, style: 'height: 150px; width: 250px;'

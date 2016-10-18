@@ -56,6 +56,10 @@ class Cms::ContentSetting < ApplicationRecord
     config[:lower_text] ? config[:lower_text] : nil
   end
 
+  def form_type
+    config[:form_type] || (config[:options] ? :select : :string)
+  end
+
   def menu
     config[:menu]
   end
@@ -75,24 +79,36 @@ class Cms::ContentSetting < ApplicationRecord
              config[:options]
            end
     opts = opts.call(content) if opts.is_a?(Proc)
-    if opts
-      case config[:form_type]
-      when :check_boxes
-        YAML.load(value.presence || '[]').map{|v| opts.detect{|o| o.last.to_s == v }.try(:first) }.compact.join(', ')
-      when :multiple_select
-        ids = YAML.load(value.presence || '[]')
-        config_options.where(id: ids).map(&:name).join(', ')
-      else
-        opts.detect{|o| o.last.to_s == value.to_s }.try(:first).to_s
-      end
+
+    case form_type
+    when :select, :radio_buttons
+      opts.detect { |o| o.last.to_s == value.to_s }.try(:first).to_s
+    when :check_boxes
+      (value || []).map { |v| opts.detect { |o| o.last.to_s == v.to_s }.try(:first) }.compact.join(', ')
+    when :multiple_select
+      config_options.where(id: (value || [])).map(&:name).join(', ')
     else
       value.presence
     end
   end
-  
-  def form_type
-    return config[:form_type] if config[:form_type]
-    config_options ? :select : :string
+
+  def value=(v)
+    case form_type
+    when :check_boxes, :multiple_select
+      super(YAML.dump(v ? v.reject(&:blank?) : '[]'))
+    else
+      super
+    end
+  end
+
+  def value
+    case form_type
+    when :check_boxes, :multiple_select
+      v = super
+      v.present? ? YAML.load(v) : nil
+    else
+      super
+    end
   end
 
   def extra_values=(ev)
@@ -120,7 +136,7 @@ class Cms::ContentSetting < ApplicationRecord
     if value.nil?
       self.value = config[:default_value] if config[:default_value]
     end
-    if extra_values.blank?
+    if extra_values.nil?
       self.extra_values = config[:default_extra_values] if config[:default_extra_values]
     end
   end
