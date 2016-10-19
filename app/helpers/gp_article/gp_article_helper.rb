@@ -38,17 +38,4 @@ module GpArticle::GpArticleHelper
       end
     }.join.html_safe
   end
-
-  def marker_icon_categories_for_option(map_content_marker)
-    table = Map::Content::Setting.arel_table
-    settings = Map::Content::Setting.where(content_id: map_content_marker.id)
-                                    .where(table[:name].matches('GpCategory::Category % icon_image'))
-    options = settings.map do |s|
-        next if s.value.blank?
-        category_id = /\AGpCategory::Category (\d+) icon_image\z/.match(s.name)[1]
-        category = GpCategory::Category.find(category_id)
-        ["#{category.title}（#{category.category_type.title}） - #{s.value}", category.id]
-      end
-    options.compact
-  end
 end

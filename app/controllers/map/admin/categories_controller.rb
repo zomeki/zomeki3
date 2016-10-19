@@ -1,7 +1,7 @@
 class Map::Admin::CategoriesController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 
-  before_action :get_item_and_setting, :only => [ :edit, :update ]
+  before_action :get_item_and_setting, only: [:edit, :update]
 
   def pre_dispatch
     return error_auth unless @content = Map::Content::Marker.find_by(id: params[:content])
@@ -20,18 +20,21 @@ class Map::Admin::CategoriesController < Cms::Controller::Admin::Base
   end
 
   def edit
-    @icon_image = @setting.value
   end
 
   def update
-    @setting.value = params[:icon_image]
-    _update @setting
+    @icon.attributes = icon_params
+    _update @icon
   end
 
   private
 
   def get_item_and_setting
     @item = @category_type.categories.find(params[:id])
-    @setting = Map::Content::Setting.config(@content, "#{@item.class.name} #{@item.id} icon_image")
+    @icon = @content.marker_icons.where(relatable: @item).first_or_initialize
+  end
+
+  def icon_params
+    params.require(:item).permit(:url)
   end
 end

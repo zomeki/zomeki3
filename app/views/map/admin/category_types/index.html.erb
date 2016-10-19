@@ -3,16 +3,16 @@
     <th style="text-align: center; width: 60px;">編集</th>
     <th><%= GpCategory::CategoryType.human_attribute_name :name %></th>
     <th><%= GpCategory::CategoryType.human_attribute_name :title %></th>
-    <th>アイコン画像</th>
+    <th><%= Map::MarkerIcon.human_attribute_name(:url) %></th>
   </tr>
-
   <%- @items.each do |item| -%>
-  <tr class="<%= cycle '', 'cycle' %>">
-    <td style="text-align: center;"><%= link_to :edit, edit_map_category_type_path(content: @content, id: item.id) %></td>
-    <td><%= item.name %></td>
-    <td><%= link_to item.title, map_category_type_categories_path(content: @content, category_type_id: item.id) %></td>
-    <td><%= @content.icon_image(item) %></td>
-  </tr>
+    <%- icon = @content.marker_icons.find_by(relatable: item) -%>
+    <tr class="<%= cycle '', 'cycle' %>">
+      <td style="text-align: center;"><%= link_to :edit, edit_map_category_type_path(content: @content, id: item.id) %></td>
+      <td><%= item.name %></td>
+      <td><%= link_to item.title, map_category_type_categories_path(content: @content, category_type_id: item.id) %></td>
+      <td><%= icon.url if icon %></td>
+    </tr>
   <%- end -%>
 </table>
 
