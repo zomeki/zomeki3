@@ -303,6 +303,14 @@ class Cms::Site < ApplicationRecord
     conf.delete
   end
 
+  def self.reload_nginx_servers
+    FileUtils.touch reload_servers_text_path
+  end
+
+  def self.reload_servers_text_path
+    Rails.root.join('tmp/reload_servers.txt')
+  end
+
   def self.generate_nginx_configs
     all.each(&:generate_nginx_configs)
   end
@@ -392,7 +400,7 @@ class Cms::Site < ApplicationRecord
     enable_directory_basic_auth(salt)
     generate_nginx_configs
     generate_nginx_admin_configs
-
+    reload_nginx_servers
     return true
   end
 
