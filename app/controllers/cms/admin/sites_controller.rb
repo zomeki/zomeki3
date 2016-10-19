@@ -83,6 +83,7 @@ class Cms::Admin::SitesController < Cms::Controller::Admin::Base
     Cms::Site.generate_apache_admin_configs
     Cms::Site.generate_nginx_configs
     Cms::Site.generate_nginx_admin_configs
+    Cms::Site.reload_nginx_servers
   end
 
   private
