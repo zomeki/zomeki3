@@ -43,7 +43,7 @@
 <%- end -%>
 
 <%- unless Page.mobile? -%>
-<%- if (node = @item.content.tag_content_tag.try(:tag_node)) && !@item.tags.empty? -%>
+<%- if (node = @item.content.tag_content_tag.try(:public_node)) && !@item.tags.empty? -%>
 <div class="tags">
   <h2>関連ワード</h2>
   <ul>

@@ -1,4 +1,4 @@
-class Sys::LdapSynchro < ActiveRecord::Base
+class Sys::LdapSynchro < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Base::Config
   include Sys::Model::Tree

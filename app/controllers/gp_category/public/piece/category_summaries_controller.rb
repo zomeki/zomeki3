@@ -1,7 +1,7 @@
 class GpCategory::Public::Piece::CategorySummariesController < Sys::Controller::Public::Base
   def pre_dispatch
     @piece = GpCategory::Piece::CategorySummary.find_by(id: Page.current_piece.id)
-    render :text => '' unless @piece
+    render plain: '' unless @piece
 
     @item = Page.current_item
   end
@@ -15,7 +15,7 @@ class GpCategory::Public::Piece::CategorySummariesController < Sys::Controller::
       @category = @item
       render :category
     else
-      render :text => ''
+      render plain: ''
     end
   end
 end

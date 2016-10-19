@@ -1,4 +1,4 @@
-class Sys::OperationLog < ActiveRecord::Base
+class Sys::OperationLog < ApplicationRecord
   include Sys::Model::Base
 
   default_scope { order(updated_at: :desc) }
@@ -45,7 +45,7 @@ class Sys::OperationLog < ActiveRecord::Base
     log.uri       = Core.request_uri
     log.action    = params[:do]
     log.action    = params[:action] if params[:do].blank?
-    log.ipaddr    = request.remote_addr
+    log.ipaddr    = request.remote_ip
     log.site_id   = Core.site.id rescue 0
 
     if user = options[:user]

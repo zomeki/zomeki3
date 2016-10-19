@@ -1,4 +1,4 @@
-class Sys::Sequence < ActiveRecord::Base
+class Sys::Sequence < ApplicationRecord
   self.table_name = 'sys_sequences'
 
   scope :versioned, ->(v) { where(version: v) }

@@ -2,18 +2,14 @@ class BizCalendar::Content::Place < Cms::Content
 
   default_scope { where(model: 'BizCalendar::Place') }
 
-  has_many :places, :foreign_key => :content_id, :class_name => 'BizCalendar::Place', :dependent => :destroy
-  has_many :types, :foreign_key => :content_id, :class_name => 'BizCalendar::HolidayType', :dependent => :destroy
+  has_one :public_node, -> { public_state.where(model: 'BizCalendar::Place').order(:id) },
+    foreign_key: :content_id, class_name: 'Cms::Node'
 
-  before_create :set_default_settings
+  has_many :settings, -> { order(:sort_no) },
+    foreign_key: :content_id, class_name: 'BizCalendar::Content::Setting', dependent: :destroy
 
-  def public_nodes
-    nodes.public_state
-  end
-
-  def public_node
-    public_nodes.order(:id).first
-  end
+  has_many :places, foreign_key: :content_id, class_name: 'BizCalendar::Place', dependent: :destroy
+  has_many :types, foreign_key: :content_id, class_name: 'BizCalendar::HolidayType', dependent: :destroy
 
   def public_places
     places.public_state
@@ -37,12 +33,5 @@ class BizCalendar::Content::Place < Cms::Content
 
   def time_style
     setting_value(:time_style).to_s.present? ? setting_value(:time_style).to_s : '%H時%M分'
-  end
-
-  private
-
-  def set_default_settings
-    in_settings[:date_style] = '%Y年%m月%d日 %H時%M分' unless setting_value(:date_style)
-    in_settings[:time_style] = '%H時%M分' unless setting_value(:time_style)
   end
 end

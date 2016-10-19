@@ -1,4 +1,4 @@
-class Tag::Tag < ActiveRecord::Base
+class Tag::Tag < ApplicationRecord
   include Sys::Model::Base
 
   include Tag::Tags::Preload
@@ -18,7 +18,7 @@ class Tag::Tag < ActiveRecord::Base
 
   def public_uri
     return @public_uri if @public_uri
-    return '' unless node = content.tag_node
+    return '' unless node = content.public_node
     @public_uri = "#{node.public_uri}#{ERB::Util.url_encode(word)}/"
   end
 

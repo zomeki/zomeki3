@@ -33,10 +33,6 @@ class AdBanner::Piece::Banner < Cms::Piece
     content.banners
   end
 
-  def banner_node
-    content.banner_node
-  end
-
   def sort
     SORT_OPTIONS.detect{|so| so.last == (in_settings[:sort] || setting_value(:sort)) }
   end

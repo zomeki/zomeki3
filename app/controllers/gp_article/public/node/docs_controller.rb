@@ -2,7 +2,7 @@ require 'will_paginate/array'
 
 class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
   include GpArticle::Controller::Feed
-  skip_action_callback :render_public_layout, :only => [:file_content, :qrcode]
+  skip_after_action :render_public_layout, :only => [:file_content, :qrcode]
 
   def pre_dispatch
     if (organization_content = Page.current_node.content).kind_of?(Organization::Content::Group)
@@ -56,7 +56,7 @@ class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
     if @group
       return http_error(404) unless @item.creator.group == @group.sys_group
     end
-
+    return http_error(404) if @item.external_link?
     Page.current_item = @item
     Page.title = unless Page.mobile?
                    @item.title

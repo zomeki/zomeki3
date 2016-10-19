@@ -1,4 +1,4 @@
-class Cms::Content < ActiveRecord::Base
+class Cms::Content < ApplicationRecord
   include Sys::Model::Base
   include Cms::Model::Base::Content
   include Sys::Model::Rel::Creator
@@ -20,6 +20,7 @@ class Cms::Content < ActiveRecord::Base
   validates :concept_id, :state, :model, :name, presence: true
   validates :code, presence: true, uniqueness: { scope: [:site_id] }
 
+  before_create :set_default_settings_from_configs
   after_save :save_settings
 
   def in_settings
@@ -57,24 +58,26 @@ class Cms::Content < ActiveRecord::Base
     [['公開','public']]
   end
 
-  def node_is(node)
-    node = Cms::Node.find_by(id: node) if node.class != Cms::Node
-    self.and :id, node.content_id if node
-  end
-
   def new_setting(name = nil)
     Cms::ContentSetting.new({:content_id => id, :name => name.to_s})
   end
 
-  def setting_value(name, default_value = nil)
-    st = settings.detect{|s| s.name == name.to_s}
-    return default_value unless st
-    return st.value.blank? ? default_value : st.value
+  def setting_value(name, default = nil)
+    st = settings.detect { |s| s.name == name.to_s }
+    if st && st.value
+      st.value
+    else
+      default || config(name)[:default_value]
+    end
   end
 
-  def setting_extra_values(name)
-    st = settings.detect{|s| s.name == name.to_s}
-    st ? st.extra_values : {}.with_indifferent_access
+  def setting_extra_values(name, default = nil)
+    st = settings.detect { |s| s.name == name.to_s }
+    if st && st.extra_values
+      st.extra_values
+    else
+      default || config(name)[:default_extra_values] || {}.with_indifferent_access
+    end
   end
 
   def setting_extra_value(name, extra_name)
@@ -94,35 +97,12 @@ class Cms::Content < ActiveRecord::Base
     return self
   end
 
-  def rewrite_configs
-    []
+  private
+
+  def config(name)
+    settings.klass.new(name: name).config || {}
   end
 
-  def self.rewrite_regex(options = {})
-    conf = []
-
-    Cms::Content.where(site_id: options[:site_id]).order(:id).each do |item|
-      name = item.model.to_s.gsub(/^(.*?::)/, '\\1Content::')
-      begin
-        eval(name)
-        model = eval(name)
-      rescue
-        model = nil
-      end
-      next unless model
-      content = model.find_by(id: item.id)
-      next unless content
-      content.rewrite_configs.each do |line|
-        val = line.split(/ /)
-        next if val[0] != "RewriteRule"
-        conf << [val[1], val[2]]
-      end
-    end
-
-    conf
-  end
-
-protected
   def save_settings
     in_settings.each do |name, value|
       st = settings.where(name: name).first || new_setting(name)
@@ -130,5 +110,16 @@ protected
       st.save if st.changed?
     end
     return true
+  end
+
+  def set_default_settings_from_configs
+    settings.klass.all_configs.each do |config|
+      next if config[:default_value].blank?
+      settings.build(
+        name: config[:id],
+        value: config[:default_value],
+        extra_values: config[:default_extra_values]
+      )
+    end
   end
 end

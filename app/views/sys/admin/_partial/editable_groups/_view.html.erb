@@ -1,6 +1,4 @@
 <%
-return '' if item.editable_groups.blank?
-
 all_group = item.editable_groups.any?(&:all_group?)
 groups = item.editable_groups.map(&:group).compact
 %>

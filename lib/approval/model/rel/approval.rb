@@ -67,7 +67,7 @@ module Approval::Model::Rel::Approval
         next if approval_request.requester.email.blank? || approver.email.blank?
   
         Approval::Admin::Mailer.approval_request(from: approval_request.requester.email, to: approver.email, 
-          approval_request: approval_request, approver: approver, item: self).deliver
+          approval_request: approval_request, approver: approver, item: self).deliver_now
       end
     end
   end
@@ -78,7 +78,7 @@ module Approval::Model::Rel::Approval
       next if approver.email.blank? || approval_request.requester.email.blank?
   
       Approval::Admin::Mailer.approved_notification(from: approver.email, to: approval_request.requester.email, 
-        approval_request: approval_request, approver: approver, item: self).deliver
+        approval_request: approval_request, approver: approver, item: self).deliver_now
     end
   end
 
@@ -86,14 +86,14 @@ module Approval::Model::Rel::Approval
     return if approver.email.blank? || approval_request.requester.email.blank?
 
     Approval::Admin::Mailer.passbacked_notification(from: approver.email, to: approval_request.requester.email,
-      approval_request: approval_request, approver: approver, comment: comment, item: self).deliver
+      approval_request: approval_request, approver: approver, comment: comment, item: self).deliver_now
   end
 
   def send_pullbacked_notification_mail(approval_request: nil, comment: '')
     approval_request.current_approvers.each do |approver|
       next if approver.email.blank? || approval_request.requester.email.blank?
       Approval::Admin::Mailer.pullbacked_notification(from: approval_request.requester.email, to: approver.email,
-        approval_request: approval_request, comment: comment, item: self).deliver
+        approval_request: approval_request, comment: comment, item: self).deliver_now
     end
   end
 

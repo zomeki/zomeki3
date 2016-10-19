@@ -1,4 +1,4 @@
-class Sys::Editor < ActiveRecord::Base
+class Sys::Editor < ApplicationRecord
   include Sys::Model::Base
 
   belongs_to :editable, polymorphic: true, required: true

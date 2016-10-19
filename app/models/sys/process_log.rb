@@ -1,4 +1,4 @@
-class Sys::ProcessLog < ActiveRecord::Base
+class Sys::ProcessLog < ApplicationRecord
   include Sys::Model::Base
 
   belongs_to :user, class_name: 'Sys::User'

@@ -1,10 +1,10 @@
 class Survey::Script::FormsController < Cms::Controller::Script::Publication
   def publish
     info_log 'Survey::Script::FormsController#publish'
-    render text: 'OK'
+    render plain: 'OK'
   rescue => e
     error_log e.message
-    render text: e.message
+    render plain: e.message
   end
   
   def publish_by_task
@@ -22,11 +22,11 @@ class Survey::Script::FormsController < Cms::Controller::Script::Publication
       params[:task].destroy
       Script.success
     end
-    render text: 'OK'
+    render plain: 'OK'
   rescue => e
     dump "#{__FILE__}:#{__LINE__} #{e.message}"
     error_log "#{__FILE__}:#{__LINE__} #{e.message}"
-    render text: 'NG'
+    render plain: 'NG'
   end
 
   def close_by_task
@@ -42,11 +42,11 @@ class Survey::Script::FormsController < Cms::Controller::Script::Publication
       params[:task].destroy
       Script.success
     end
-    render text: 'OK'
+    render plain: 'OK'
   rescue => e
     dump "#{__FILE__}:#{__LINE__} #{e.message}"
     error_log "#{__FILE__}:#{__LINE__} #{e.message}"
-    render text: 'NG'
+    render plain: 'NG'
   end
 
 end

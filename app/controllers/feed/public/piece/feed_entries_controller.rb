@@ -2,7 +2,7 @@ class Feed::Public::Piece::FeedEntriesController < Sys::Controller::Public::Base
 
   def pre_dispatch
     @piece = Feed::Piece::FeedEntry.find_by(id: Page.current_piece.id)
-    return render(text: '') unless @piece
+    return render plain: '' unless @piece
     
     @item = Page.current_item
   end

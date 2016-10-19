@@ -1,4 +1,4 @@
-class Cms::SiteSetting < ActiveRecord::Base
+class Cms::SiteSetting < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Auth::Manager
   include Cms::Model::Rel::Site

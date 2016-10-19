@@ -3,16 +3,13 @@ class Organization::Content::Group < Cms::Content
 
   default_scope { where(model: 'Organization::Group') }
 
-  has_many :groups, :foreign_key => :content_id, :class_name => 'Organization::Group', :dependent => :destroy
+  has_one :public_node, -> { public_state.where(model: 'Organization::Group').order(:id) },
+    foreign_key: :content_id, class_name: 'Cms::Node'
 
-  has_one :public_node, -> { public_state.order(:id) },
-    :foreign_key => :content_id, :class_name => 'Cms::Node'
+  has_many :settings, -> { order(:sort_no) },
+    foreign_key: :content_id, class_name: 'Organization::Content::Setting', dependent: :destroy
 
-  before_create :set_default_settings
-
-  def public_nodes
-    nodes.public_state
-  end
+  has_many :groups, foreign_key: :content_id, class_name: 'Organization::Group', dependent: :destroy
 
   def refresh_groups
     return unless root_sys_group
@@ -100,13 +97,5 @@ class Organization::Content::Group < Cms::Content
         copy_from_sys_group(child)
       end
     end
-  end
-
-  def set_default_settings
-    in_settings[:article_relation] = ARTICLE_RELATION_OPTIONS.last.last unless setting_value(:article_relation)
-    in_settings[:doc_style] = '@title_link@(@publish_date@ @group@)' unless setting_value(:doc_style)
-    in_settings[:date_style] = '%Y年%m月%d日' unless setting_value(:date_style)
-    in_settings[:time_style] = '%H時%M分' unless setting_value(:time_style)
-    in_settings[:num_docs] = '10' unless setting_value(:num_docs)
   end
 end

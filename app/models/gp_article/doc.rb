@@ -1,4 +1,4 @@
-class GpArticle::Doc < ActiveRecord::Base
+class GpArticle::Doc < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Rel::Creator
   include Sys::Model::Rel::Editor
@@ -21,6 +21,7 @@ class GpArticle::Doc < ActiveRecord::Base
   include GpArticle::Model::Rel::Tag
   include Approval::Model::Rel::Approval
   include GpTemplate::Model::Rel::Template
+  include GpArticle::Model::Rel::RelatedDoc
 
   include StateText
   include GpArticle::Docs::PublishQueue
@@ -177,8 +178,10 @@ class GpArticle::Doc < ActiveRecord::Base
       joins(:creator).where(creators[:user_id].eq(user.id))
     when 'group'
       editable
-    else
+    when 'all'
       all
+    else
+      none
     end
   }
   scope :with_target_state, ->(target_state) {
@@ -189,6 +192,8 @@ class GpArticle::Doc < ActiveRecord::Base
       where(state: 'public')
     when 'closed'
       where(state: 'closed')
+    when 'all'
+      all
     else
       none
     end
@@ -350,7 +355,7 @@ class GpArticle::Doc < ActiveRecord::Base
     site ||= ::Page.site
     params = params.map{|k, v| "#{k}=#{v}" }.join('&')
     filename = without_filename || filename_base == 'index' ? '' : "#{filename_base}.html"
-    page_flag = mobile ? 'm' : smart_phone ? 's' : '' 
+    page_flag = mobile ? 'm' : smart_phone ? 's' : ''
 
     path = "_preview/#{format('%04d', site.id)}#{page_flag}#{base_uri}preview/#{id}/#{filename}#{params.present? ? "?#{params}" : ''}"
     d = Cms::SiteSetting::AdminProtocol.core_domain site, :freeze_protocol => true
@@ -447,12 +452,16 @@ class GpArticle::Doc < ActiveRecord::Base
     return result
   end
 
+  def external_link?
+    target.present? && href.present?
+  end
+
   def bread_crumbs(doc_node)
     crumbs = []
 
     categories.public_state.each do |category|
       category_type = category.category_type
-      if (node = category.content.category_type_node)
+      if (node = category.content.public_node)
         crumb = node.bread_crumbs.crumbs.first
         crumb << [category_type.title, "#{node.public_uri}#{category_type.name}/"]
         category.ancestors.each {|a| crumb << [a.title, "#{node.public_uri}#{category_type.name}/#{a.path_from_root_category}/"] }
@@ -511,6 +520,11 @@ class GpArticle::Doc < ActiveRecord::Base
     editable_groups.each do |eg|
       new_doc.editable_groups.build(group_id: eg.group_id)
     end
+
+    related_docs.each do |rd|
+      new_doc.related_docs.build(name: rd.name, content_id: rd.content_id)
+    end
+
 
     inquiries.each_with_index do |inquiry, i|
       attrs = inquiry.attributes
@@ -592,7 +606,7 @@ class GpArticle::Doc < ActiveRecord::Base
   def backlinks
     return self.class.none unless state_public? || state_closed?
     return self.class.none if public_uri.blank?
-    links.engine.where(links.table[:url].matches("%#{self.public_uri(without_filename: true).sub(/\/$/, '')}%"))
+    links.klass.where(links.table[:url].matches("%#{self.public_uri(without_filename: true).sub(/\/$/, '')}%"))
   end
 
   def backlinked_docs
@@ -706,7 +720,7 @@ class GpArticle::Doc < ActiveRecord::Base
   def event_will_sync_text
     EVENT_WILL_SYNC_OPTIONS.detect{|o| o.last == event_will_sync }.try(:first).to_s
   end
-  
+
   def event_state_visible?
     event_state == 'visible'
   end
@@ -797,7 +811,7 @@ class GpArticle::Doc < ActiveRecord::Base
   end
 
   def node_existence
-    unless content.doc_node
+    unless content.public_node
       case state
       when 'public'
         errors.add(:base, '記事コンテンツのディレクトリが作成されていないため、即時公開が行えません。')

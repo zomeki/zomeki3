@@ -1,4 +1,4 @@
-class Gnav::MenuItem < ActiveRecord::Base
+class Gnav::MenuItem < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Rel::Creator
   include Cms::Model::Auth::Content
@@ -72,7 +72,7 @@ class Gnav::MenuItem < ActiveRecord::Base
     crumbs = []
 
     if content
-      if (node = content.menu_item_node)
+      if (node = content.public_node)
         crumb = node.bread_crumbs.crumbs.first
         crumb << [title, "#{node.public_uri}#{name}/"]
         crumbs << crumb

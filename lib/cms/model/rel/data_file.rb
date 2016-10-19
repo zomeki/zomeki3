@@ -72,7 +72,6 @@ module Cms::Model::Rel::DataFile
   end
   
   def destroy_cms_data_file(name)
-    dump "destroy cms data files"
     return true
   end
 end

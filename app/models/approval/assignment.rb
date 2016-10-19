@@ -1,4 +1,4 @@
-class Approval::Assignment < ActiveRecord::Base
+class Approval::Assignment < ApplicationRecord
   include Sys::Model::Base
 
   belongs_to :assignable, :polymorphic => true

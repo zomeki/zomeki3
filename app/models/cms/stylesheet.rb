@@ -1,7 +1,7 @@
 require 'mime/types'
 require 'nkf'
 
-class Cms::Stylesheet < ActiveRecord::Base
+class Cms::Stylesheet < ApplicationRecord
   include Sys::Model::Base
   include Cms::Model::Auth::Concept
 

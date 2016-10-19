@@ -1,4 +1,4 @@
-class Cms::Map < ActiveRecord::Base
+class Cms::Map < ApplicationRecord
   include Sys::Model::Base
 
   belongs_to :map_attachable, polymorphic: true

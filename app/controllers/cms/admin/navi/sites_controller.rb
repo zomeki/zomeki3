@@ -16,6 +16,6 @@ class Cms::Admin::Navi::SitesController < Cms::Controller::Admin::Base
   end
 
   def show
-    render :text => ""
+    render plain: ""
   end
 end

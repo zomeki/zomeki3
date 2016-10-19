@@ -1,4 +1,4 @@
-class Cms::SiteBelonging < ActiveRecord::Base
+class Cms::SiteBelonging < ApplicationRecord
   def self.table_name_prefix
     'cms_'
   end

@@ -1,7 +1,7 @@
 class GpArticle::Public::Piece::RecentTabsController < Sys::Controller::Public::Base
   def pre_dispatch
     @piece = GpArticle::Piece::RecentTab.find_by(id: Page.current_piece.id)
-    render :text => '' unless @piece
+    render plain: '' unless @piece
   end
 
   def index
@@ -49,6 +49,6 @@ class GpArticle::Public::Piece::RecentTabsController < Sys::Controller::Public::
                  docs: docs)
     end
 
-    render :text => '' if @tabs.empty?
+    render plain: '' if @tabs.empty?
   end
 end

@@ -27,7 +27,7 @@ module DocHelper
     if Page.mobile?
       contents[:title_link].call
     else
-      doc_style = doc_style.gsub(/@doc{{@(.+)@}}doc@/m){|m| link_to($1.html_safe, doc.public_uri, class: 'doc_link') }
+      doc_style = doc_style.gsub(/@doc{{@(.+)@}}doc@/m){|m| link_to($1.html_safe, link_to_options[0], class: 'doc_link') }
       doc_style = doc_style.gsub(/@body_(\d+)@/){|m| content_tag(:span, truncate(strip_tags(doc.body), length: $1.to_i).html_safe, class: 'body') }
       doc_style = doc_style.gsub(/@(\w+)@/) {|m| contents[$1.to_sym] ? contents[$1.to_sym].call : '' }
       doc_style.html_safe
@@ -41,7 +41,7 @@ private
   end
 
   def doc_image_tag(doc)
-    image_file = doc.image_files.detect{|f| f.name == doc.list_image } || doc.image_files.first if doc.list_image.present?
+    image_file = doc.image_files.detect{|f| f.name == doc.list_image } || doc.image_files.first
 
     if image_file
       image_tag("#{doc.public_uri(without_filename: true)}file_contents/#{url_encode image_file.name}", alt: image_file.alt)

@@ -1,7 +1,1 @@
-<div id="settingContent">
-  <%= form_for @item, as: :item, url: { action: :update }, html: { method: :put } do |f| %>
-    <%= error_messages_for :item %>
-    <%= render 'form', f: f %>
-    <%= submit :register %>
-  <% end %>
-</div>
+<%= render 'shared/admin/content/settings/edit', item: @item %>

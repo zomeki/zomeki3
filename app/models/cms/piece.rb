@@ -1,4 +1,4 @@
-class Cms::Piece < ActiveRecord::Base
+class Cms::Piece < ApplicationRecord
   include Sys::Model::Base
   include Cms::Model::Base::Piece
   include Cms::Model::Base::Page::Publisher
@@ -64,13 +64,6 @@ class Cms::Piece < ActiveRecord::Base
     end
     label = I18n.t name, :scope => [:activerecord, :attributes, 'cms/piece']
     return label =~ /^translation missing:/ ? name.to_s.humanize : label
-  end
-  
-  def node_is(node)
-    layout = nil
-    node = Cms::Node.find_by(id: node) if node.class != Cms::Node
-    layout = node.inherited_layout if node
-    self.and :id, 'IN', layout.pieces if layout
   end
   
   def css_id

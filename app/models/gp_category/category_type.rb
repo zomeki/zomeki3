@@ -1,4 +1,4 @@
-class GpCategory::CategoryType < ActiveRecord::Base
+class GpCategory::CategoryType < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Rel::Creator
   include Cms::Model::Auth::Content
@@ -87,7 +87,7 @@ class GpCategory::CategoryType < ActiveRecord::Base
     crumbs = []
 
     if content
-      if (node = content.category_type_node)
+      if (node = content.public_node)
         c = node.bread_crumbs.crumbs.first
         c << [title, "#{node.public_uri}#{name}/"]
         crumbs << c

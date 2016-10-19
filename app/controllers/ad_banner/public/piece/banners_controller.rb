@@ -1,7 +1,7 @@
 class AdBanner::Public::Piece::BannersController < Sys::Controller::Public::Base
   def pre_dispatch
     @piece = AdBanner::Piece::Banner.find_by(id: Page.current_piece.id)
-    render :text => '' if @piece.nil? || @piece.content.banner_node.nil?
+    render plain: '' if @piece.nil? || @piece.content.public_node.nil?
   end
 
   def index

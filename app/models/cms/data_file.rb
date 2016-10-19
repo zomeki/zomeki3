@@ -1,4 +1,4 @@
-class Cms::DataFile < ActiveRecord::Base
+class Cms::DataFile < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Base::File
   include Sys::Model::Rel::Creator

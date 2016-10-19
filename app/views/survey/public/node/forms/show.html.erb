@@ -63,7 +63,7 @@
       <%- if @form_answer.form.confirmation? -%>
       <%= submit_tag '確認画面へ' %>
       <%- else -%>
-      <%= submit_tag '送信', confirm: '送信してもよろしいですか？', disable_with: '送信中...' %>
+      <%= submit_tag '送信', data: { confirm: '送信してもよろしいですか？', disable_with: '送信中...' } %>
       <%- end -%>
     </div>
 

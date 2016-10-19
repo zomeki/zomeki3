@@ -1,4 +1,4 @@
-class Approval::ApprovalFlow < ActiveRecord::Base
+class Approval::ApprovalFlow < ApplicationRecord
   include Sys::Model::Base
   include Cms::Model::Auth::Content
 

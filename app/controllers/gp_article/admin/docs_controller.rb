@@ -21,10 +21,17 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   def index
     return index_options if params[:options]
     return user_options if params[:user_options]
-    @items = GpArticle::Doc.content_and_criteria(@content, doc_criteria)
+
+    criteria = doc_criteria
+    @items = GpArticle::Doc.content_and_criteria(@content, criteria)
       .order(updated_at: :desc)
-      .paginate(page: params[:page], per_page: 30)
       .preload(:prev_edition, :content, creator: [:user, :group])
+
+    if params[:csv]
+      return export_csv(@items, GpArticle::Model::Criteria.new(criteria))
+    else
+      @items = @items.paginate(page: params[:page], per_page: 30)
+    end
 
     _index @items
   end
@@ -70,6 +77,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   end
 
   def show
+
     _show @item
   end
 
@@ -77,7 +85,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     @item = @content.docs.build
 
     if @content.default_category
-      @item.in_category_ids = { @content.default_category.content_type_id.to_s => [@content.default_category.id.to_s] }
+      @item.in_category_ids = { @content.default_category.category_type_id.to_s => [@content.default_category.id.to_s] }
     end
   end
 
@@ -174,25 +182,20 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
   def publish
     @item.update_attribute(:state, 'public')
-    if @item.target.blank? && @item.target.blank?
-      _publish(@item) do
-        publish_ruby(@item)
-        @item.rebuild(render_public_as_string(@item.public_uri, jpmobile: envs_to_request_as_smart_phone),
-                      :path => @item.public_smart_phone_path, :dependent => :smart_phone)
 
-        share_to_sns(@item)
-        sync_events_export
-      end
-    else
+    _publish(@item) do
+      publish_ruby(@item)
+      @item.rebuild(render_public_as_string(@item.public_uri, jpmobile: envs_to_request_as_smart_phone),
+                    :path => @item.public_smart_phone_path, :dependent => :smart_phone)
+
       share_to_sns(@item)
       sync_events_export
-      redirect_to url_for(:action => :index), notice: '公開処理が完了しました。'
     end
+
   end
 
   def publish_by_update(item)
     return unless item.terminal_pc_or_smart_phone
-    return if item.target.present? && item.href.present?
     if item.publish(render_public_as_string(item.public_uri))
       publish_ruby(item)
       item.rebuild(render_public_as_string(item.public_uri, jpmobile: envs_to_request_as_smart_phone),
@@ -256,6 +259,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   def select
     @doc = {
       id: @item.id, title: @item.title, full_uri: @item.state_public? ? @item.public_full_uri : nil,
+      name: @item.name, content_id: @item.content_id,
       updated: @item.updated_at.strftime('%Y/%m/%d %H:%M'), status: @item.status.name,
       user: @item.creator.user.try(:name), group: @item.creator.group.try(:name)
     }
@@ -315,7 +319,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   private
 
   def doc_criteria
-    criteria = params[:criteria] || {}
+    criteria = params[:criteria] ? params[:criteria].permit! : {}
 
     if params[:target_public].blank?
       if Core.user.has_auth?(:manager)
@@ -354,6 +358,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
       :inquiries_attributes => [:id, :state, :_destroy,:group_id],
       :maps_attributes => [:id, :name, :title, :map_lat, :map_lng, :map_zoom, :markers_attributes => [:id, :name, :lat, :lng]],
       :editable_groups_attributes => [:id, :group_id],
+      :related_docs_attributes => [:id, :name, :content_id, :_destroy],
       :in_rel_doc_ids => [],
       :in_share_accounts => [],
       :in_approval_flow_ids => [],
@@ -363,5 +368,27 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
       whitelisted[:in_marker_category_ids] = params[:item][:in_marker_category_ids]
       whitelisted[:in_approval_assignment_ids] = params[:item][:in_approval_assignment_ids]
     end
+  end
+
+  def export_csv(items, criteria)
+    require 'csv'
+    data = CSV.generate do |csv|
+      csv << [criteria.to_csv_string]
+      csv << ['記事番号', 'タイトル', 'ディレクトリ名', '所属', '作成者', '更新日時', '状態']
+      items.each do |item|
+        csv << [
+          item.serial_no,
+          item.title,
+          item.name,
+          item.creator.group.try(:name),
+          item.creator.user.try(:name),
+          item.updated_at ? I18n.l(item.updated_at) : nil,
+          item.status.name
+        ]
+      end
+    end
+
+    data = NKF.nkf('-s', data)
+    send_data data, type: 'text/csv', filename: "gp_article_docs_#{Time.now.to_i}.csv"
   end
 end

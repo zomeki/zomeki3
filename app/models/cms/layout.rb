@@ -1,4 +1,4 @@
-class Cms::Layout < ActiveRecord::Base
+class Cms::Layout < ApplicationRecord
   include Sys::Model::Base
   include Cms::Model::Base::Page::Publisher
   include Sys::Model::Rel::Creator
@@ -25,11 +25,6 @@ class Cms::Layout < ActiveRecord::Base
 
   def publishable? # TODO dummy
     return true
-  end
-  
-  def node_is(node)
-    node = Cms::Node.find_by(id: node) if node.class != Cms::Node
-    self.and :id, node.inherited_layout.id if node
   end
   
   def piece_names

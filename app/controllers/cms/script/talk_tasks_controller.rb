@@ -41,7 +41,7 @@ end
         #error_log "#{e} #{task.path}"
       end
     end
-    render :text => "OK"
+    render plain: "OK"
   end
 
   def make_sound(task)

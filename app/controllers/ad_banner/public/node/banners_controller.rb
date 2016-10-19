@@ -1,5 +1,5 @@
 class AdBanner::Public::Node::BannersController < Cms::Controller::Public::Base
-  skip_action_callback :render_public_layout, :only => :index
+  skip_after_action :render_public_layout, :only => :index
 
   def pre_dispatch
     @content = AdBanner::Content::Banner.find_by(id: Page.current_node.content.id)
@@ -22,11 +22,7 @@ class AdBanner::Public::Node::BannersController < Cms::Controller::Public::Base
       @banner = @content.banners.find_by(token: banner_token) || @content.banners.find_by(token: token)
       return http_error(404) unless @banner
 
-      clicks = AdBanner::Click.arel_table
-# Accept all clicks
-#      click = @banner.clicks.where(clicks[:remote_addr].eq(request.remote_addr).and(clicks[:created_at].gteq(30.minutes.ago))).first
-#      @banner.clicks.create(referer: request.referer, remote_addr: request.remote_addr, user_agent: request.user_agent) unless click
-      @banner.clicks.create(referer: request.referer, remote_addr: request.remote_addr, user_agent: request.user_agent)
+      @banner.clicks.create(referer: request.referer, remote_addr: request.remote_ip, user_agent: request.user_agent)
 
       redirect_to @banner.url
     else

@@ -157,31 +157,39 @@ $(document).ready(function () {
     <div>
       <div class="label2"><%= GpArticle::Doc.model_name.human %></div>
       <%= select_tag 'rel_doc', '', include_blank: true %><br />
-      <%= button_tag '追加', type: 'button', id: 'add_rel_doc' %>
+      <%= button_tag '選択', type: 'button', id: 'add_rel_doc' %>
     </div>
 
     <hr />
 
     <div id="rel_docs">
-      <%- @item.rel_docs({edit: true}).each do |doc| -%>
-      <div style="margin-top: 10px; width: 700px;">
-        <span>
-        <%= hidden_field_tag 'item[in_rel_doc_ids][]', doc.id%>
-        <%- if doc.state_public? %>
-          <%= link_to doc.title, doc.public_full_uri, target: 'preview' %>
-        <%- else -%>
-          <%= doc.title %>
+
+      <%- @item.related_docs.each_with_index do |rel_doc, i|
+        next unless doc = rel_doc.target_doc -%>
+        <div style="margin-top: 10px; width: 700px;">
+        <%= f.fields_for :related_docs, rel_doc do |f2| -%>
+          <span>
+            <%= f2.hidden_field :name -%>
+            <%= f2.hidden_field :content_id -%>
+            <%- if doc.state_public? %>
+              <%= link_to doc.title, doc.public_full_uri, target: 'preview' %>
+            <%- else -%>
+              <%= doc.title %>
+            <%- end -%>
+          </span>
+          <span><%= doc.creator.user.try(:name) %></span>
+          <span><%= doc.creator.group.try(:name) %></span>
+          <span><%= i18n_l doc.updated_at %></span>
+          <span><%= doc.status.name %></span>
+          <span>
+            <%= f2.hidden_field :_destroy -%>
+            <%= f2.hidden_field :id -%>
+            <%= link_to '削除', '#', class: 'remove_related_doc' %>
+          </span>
         <%- end -%>
-        </span>
-        <span><%= doc.creator.user.try(:name) %></span>
-        <span><%= doc.creator.group.try(:name) %></span>
-        <span><%= i18n_l doc.updated_at %></span>
-        <span><%= doc.status.name %></span>
-        <span><%= link_to '削除', '#', class: 'remove_related_doc' %></span>
-      </div>
-      <%- end -%>
+        </div>
+      <%- end if @item.related_docs.present?-%>
     </div>
-    <div id="deleted_rel_docs"></div>
   </div>
   <div id="tab2">
     <%- if @content.display_dates(:published_at) || @content.display_dates(:updated_at) -%>
@@ -460,7 +468,6 @@ $(document).ready(function () {
   set_click_event_handler('<%= category_type.id %>', 'marker_');
   <%- end -%>
 
-
   searchRelatedDocs();
 
   $('#rel_group_id').on('change', function (event) {
@@ -524,28 +531,24 @@ $(document).ready(function () {
       alert('記事を選択してください。');
       return;
     }
-    var duplicate = false;
-    $('input[name="item[in_rel_doc_ids][]"]').each(function(index, element){
-      if($(this).val() == rel_doc.val()){
-        alert('すでに選択されています。');
-        duplicate = true;
-      }
-    });
-    if(duplicate){
-      rel_doc.val('');
-      return false;
-    }
 
     $.get('<%= select_gp_article_doc_path(content: @content, id: '_ID_') %>.xml'.replace(/_ID_/, rel_doc.val()), function (data) {
       var new_doc = $('<div>', {style: 'margin-top: 10px; width: 700px;'});
+      var next_index = $('#rel_docs').children().length;
       $(data).find('item').each(function() {
         var rel_doc_span = $('<span>');
         var rel_doc_field = $('<input>', {
           type: 'hidden',
-          name: 'item[in_rel_doc_ids][]',
-          value: $(this).find('id').text()
+          name: 'item[related_docs_attributes][' + next_index + '][name]',
+          value: $(this).find('name').text()
         });
         rel_doc_span.append(rel_doc_field);
+        var content_id_field = $('<input>', {
+          type: 'hidden',
+          name: 'item[related_docs_attributes][' + next_index + '][content_id]',
+          value: $(this).find('content_id').text()
+        });
+        rel_doc_span.append(content_id_field);
 
         var full_uri = $(this).find('full_uri').text();
         if(full_uri != ''){
@@ -584,17 +587,18 @@ $(document).ready(function () {
   });
 
   $('#rel_docs').on("click", "a.remove_related_doc", function (e) {
-    $(this).parent().parent().remove();
-    $('#deleted_rel_docs').append(
-      $('<input>', {
-        type: 'hidden',
-        name: 'item[in_rel_doc_ids][]',
-        value: null
-      })
-    );
+    var removeFields = $(this).parent().parent().find('input');
+    if(removeFields.length != 0){
+      removeFields.each(function(){
+        if($(this).attr('id') && $(this).attr('id').match(/destroy/)){
+          $(this).val(true);
+        }
+      });
+    }
+    $(this).parent().parent().hide();
+
     return false;
   });
-
   set_copy_date('#item_event_started_on', '#item_event_ended_on');
   set_copy_date('#item_event_ended_on', '#item_event_started_on');
 });

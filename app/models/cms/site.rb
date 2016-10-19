@@ -1,4 +1,4 @@
-class Cms::Site < ActiveRecord::Base
+class Cms::Site < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Base::Page
 
@@ -29,7 +29,6 @@ class Cms::Site < ActiveRecord::Base
   has_many :site_belongings, :dependent => :destroy, :class_name => 'Cms::SiteBelonging'
   has_many :groups, :through => :site_belongings, :class_name => 'Sys::Group'
   has_many :nodes, :dependent => :destroy
-  has_many :maintenances, class_name: 'Sys::Maintenance', dependent: :destroy
   has_many :messages, class_name: 'Sys::Message', dependent: :destroy
   has_many :operation_logs, class_name: 'Sys::OperationLog'
   has_many :transferred_files, class_name: 'Sys::TransferredFile'
@@ -304,6 +303,14 @@ class Cms::Site < ActiveRecord::Base
     conf.delete
   end
 
+  def self.reload_nginx_servers
+    FileUtils.touch reload_servers_text_path
+  end
+
+  def self.reload_servers_text_path
+    Rails.root.join('tmp/reload_servers.txt')
+  end
+
   def self.generate_nginx_configs
     all.each(&:generate_nginx_configs)
   end
@@ -393,7 +400,7 @@ class Cms::Site < ActiveRecord::Base
     enable_directory_basic_auth(salt)
     generate_nginx_configs
     generate_nginx_admin_configs
-
+    reload_nginx_servers
     return true
   end
 

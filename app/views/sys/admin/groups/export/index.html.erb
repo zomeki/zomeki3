@@ -1,14 +1,14 @@
 <p class="form">グループをエクスポート</p>
 
-<%= form_for(:item, :url => {:action => :export}, :html => {:method => :post}) do |f| %>
+<%= form_for :item, url: { action: :export }, html: { method: :post } do |f| %>
 <%= hidden_field_tag :do, 'groups' %>
-<%= f.submit 'エクスポート', :style => 'width: 120px;' %><br />
+<%= f.submit 'エクスポート', style: 'width: 120px;', data: { disable_with: false } %><br />
 <% end %>
 
 <br />
 <p class="form">ユーザーをエクスポート</p>
 
-<%= form_for(:item, :url => {:action => :export}, :html => {:method => :post}) do |f| %>
+<%= form_for :item, url: { action: :export }, html: { method: :post } do |f| %>
 <%= hidden_field_tag :do, 'users' %>
-<%= f.submit 'エクスポート', :style => 'width: 120px;' %><br />
+<%= f.submit 'エクスポート', style: 'width: 120px;', data: { disable_with: false } %><br />
 <% end %>

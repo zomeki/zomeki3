@@ -38,7 +38,7 @@ class GpArticle::Public::Node::CommentsController < Cms::Controller::Public::Bas
 
     return render(:new) if params[:edit_comment]
 
-    @comment.remote_addr = request.remote_addr
+    @comment.remote_addr = request.remote_ip
     @comment.user_agent = request.user_agent
     @comment.state = (@content.blog_functions[:comment_open] ? GpArticle::Comment::STATE_OPTIONS.first
                                                              : GpArticle::Comment::STATE_OPTIONS.last).last

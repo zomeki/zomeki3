@@ -1,4 +1,4 @@
-class Gnav::CategorySet < ActiveRecord::Base
+class Gnav::CategorySet < ApplicationRecord
   include Sys::Model::Base
 
   LAYER_OPTIONS = [['下層のカテゴリすべて', 'descendants'], ['該当カテゴリのみ', 'self']]

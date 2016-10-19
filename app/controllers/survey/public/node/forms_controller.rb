@@ -1,7 +1,7 @@
 class Survey::Public::Node::FormsController < Cms::Controller::Public::Base
   include SimpleCaptcha::ControllerHelpers
   before_action :set_form, only: [:show, :confirm_answers, :send_answers, :finish]
-  skip_action_callback :render_public_layout
+  skip_after_action :render_public_layout
   after_action :call_render_public_layout
 
   def pre_dispatch
@@ -23,9 +23,12 @@ class Survey::Public::Node::FormsController < Cms::Controller::Public::Base
   end
 
   def show
-    @form_answer = @form.form_answers.build(answered_url: "#{@content.site.full_uri.sub(/\/+$/, '')}#{@content.public_node.public_uri}#{@form.name}",
-                                            answered_url_title: @form.title,
-                                            remote_addr: request.remote_addr, user_agent: request.user_agent)
+    @form_answer = @form.form_answers.build(
+      answered_url: "#{@content.site.full_uri.sub(/\/+$/, '')}#{@content.public_node.public_uri}#{@form.name}",
+      answered_url_title: @form.title,
+      remote_addr: request.remote_ip,
+      user_agent: request.user_agent
+    )
 
     render_survey_layout
   end
@@ -63,7 +66,7 @@ class Survey::Public::Node::FormsController < Cms::Controller::Public::Base
     forms = Core.mode == 'preview' ? @content.forms : @content.public_forms
     @form = forms.find_by(name: params[:id])
     return http_error(404) unless @form
-    return render(text: '') if Core.mode != 'preview' && !@form.state_public?
+    return render plain: '' if Core.mode != 'preview' && !@form.state_public?
 
     Page.current_item = @form
     Page.title = @form.title
@@ -74,10 +77,14 @@ class Survey::Public::Node::FormsController < Cms::Controller::Public::Base
   end
 
   def build_answer
-    @form_answer = @form.form_answers.build(answered_url: params[:current_url].try(:sub, %r!/confirm_answers$!, ''),
-                                            answered_url_title: params[:current_url_title],
-                                            remote_addr: request.remote_addr, user_agent: request.user_agent,
-                                            captcha: params[:captcha], captcha_key: params[:captcha_key])
+    @form_answer = @form.form_answers.build(
+      answered_url: params[:current_url].try(:sub, %r!/confirm_answers$!, ''),
+      answered_url_title: params[:current_url_title],
+      remote_addr: request.remote_ip,
+      user_agent: request.user_agent,
+      captcha: params[:captcha],
+      captcha_key: params[:captcha_key]
+    )
     @form_answer.question_answers = params[:question_answers]
   end
 

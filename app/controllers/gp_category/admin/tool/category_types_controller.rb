@@ -25,6 +25,6 @@ class GpCategory::Admin::Tool::CategoryTypesController < Cms::Controller::Admin:
     messages = ["-- 成功 #{results[:ok]}件", "-- 失敗 #{results[:ng]}件"]
     messages.concat(errors)
 
-    render text: messages.join('<br />')
+    render plain: messages.join('<br />')
   end
 end
