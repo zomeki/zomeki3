@@ -84,19 +84,6 @@ class Cms::Content < ApplicationRecord
     setting_extra_values(name)[extra_name]
   end
 
-  def search(params)
-    params.each do |n, v|
-      next if v.to_s == ''
-
-      case n
-      when 's_name'
-        self.and_keywords v, :name
-      end
-    end if params.size != 0
-
-    return self
-  end
-
   private
 
   def config(name)
