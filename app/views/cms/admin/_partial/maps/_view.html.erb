@@ -46,7 +46,7 @@ addEvent(window, 'load', function() {
     google.maps.event.addListener(marker<%= idx %>, 'click', function() {
       infowindow<%= idx %>.open(map, marker<%= idx %>);
     });
-  <% end if markers.present? %>
+  <% end %>
 });
 
 //]]>

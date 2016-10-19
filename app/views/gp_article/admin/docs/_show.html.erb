@@ -157,7 +157,7 @@ $(document).ready(function () {
             <%- @item.related_docs.each do |doc|
               next unless rel_doc = doc.target_doc -%>
             <li><%= rel_doc.title %></li>
-            <%- end if @item.related_docs.present? -%>
+            <%- end -%>
           </ul>
         </td>
       </tr>
