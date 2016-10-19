@@ -9,7 +9,7 @@ category_ids = params.dig(:criteria, :category_ids) || []
   <a href="#" id="toggleSearch"><%= params[:detail_flag] != '1' ? '拡張検索' : '基本検索' %></a>
 </div>
 
-<%= form_tag '', method: 'get', class: 'search' do -%>
+<%= form_tag url_for(action: :index), method: 'get', class: 'search' do -%>
 <%= hidden_field_tag :target, params[:target] %>
 <%= hidden_field_tag :target_state, params[:target_state] %>
 <%= hidden_field_tag :target_public, params[:target_public] %>
@@ -22,8 +22,10 @@ category_ids = params.dig(:criteria, :category_ids) || []
     <th>カテゴリ<a href="#" id="addCategory" style="margin-left: 10px; <%= 'display: none;' if params[:detail_flag] != '1' %>">追加</a></th>
     <%- end -%>
     <td rowspan="2" class="submitters">
-      <%= submit_tag '検索' %>
-      <%= submit_tag 'リセット', name: 'reset_criteria' %>
+      <%= submit_tag '検索', data: { disable_with: false } %>
+      <%= submit_tag 'リセット', name: 'reset_criteria', data: { disable_with: false } %>
+      <span class="separator">|</span>
+      <%= submit_tag 'CSV出力', name: 'csv', data: { disable_with: false } %>
     </td>
   </tr>
   <tr>
@@ -80,12 +82,12 @@ category_ids = params.dig(:criteria, :category_ids) || []
     </tr>
     <tr>
       <td>
-        <%= select_tag 'criteria[date_column]', options_for_select([['作成','created_at'], ['承認','recognized_at'], ['公開','published_at']], params.dig(:criteria, :date_column)), include_blank: true %>
-        <%= select_tag 'criteria[date_operation]', options_for_select([['本日','today'],['今週','this_week'],['先週','last_week'],['指定日','equal'],['以前','before'],['以後','after'],['期間','between']], params.dig(:criteria, :date_operation)), include_blank: true %>
+        <%= select_tag 'criteria[date_column]', options_for_select(GpArticle::Model::Criteria::DATE_COLUMN_OPTIONS, params.dig(:criteria, :date_column)), include_blank: true %>
+        <%= select_tag 'criteria[date_operation]', options_for_select(GpArticle::Model::Criteria::DATE_OPERATION_OPTIONS, params.dig(:criteria, :date_operation)), include_blank: true %>
         <%= text_field_tag 'criteria[dates][]', params.dig(:criteria, :dates, 0), id: 'criteria_dates_0', class: 'datepicker', style: 'width: 120px;' %> ～
         <%= text_field_tag 'criteria[dates][]', params.dig(:criteria, :dates, 1), id: 'criteria_dates_1', class: 'datepicker', style: 'width: 120px;' %>
       </td>
-      <td><%= select_tag 'criteria[state]', options_for_select([['下書き','draft'],['承認待ち','approvable'],['公開待ち','approved'],['公開日時待ち','prepared'],['公開中','public'],['非公開','closed']], params.dig(:criteria, :state)), include_blank: true %></td>
+      <td><%= select_tag 'criteria[state]', options_for_select(GpArticle::Model::Criteria::STATE_OPTIONS, params.dig(:criteria, :state)), include_blank: true %></td>
     </tr>
   </table>
   <table>
@@ -94,7 +96,7 @@ category_ids = params.dig(:criteria, :category_ids) || []
     </tr>
     <tr>
       <td>
-        <%= select_tag 'criteria[user_operation]', options_for_select([['作成','create'], ['承認','approve'], ['公開','publish']], params.dig(:criteria, :user_operation)), include_blank: true %>
+        <%= select_tag 'criteria[user_operation]', options_for_select(GpArticle::Model::Criteria::USER_OPERATION_OPTIONS, params.dig(:criteria, :user_operation)), include_blank: true %>
         <%= select_tag 'criteria[user_group_id]', options_for_select(Core.site.groups_for_option, params.dig(:criteria, :user_group_id)), include_blank: true %>
         <%= text_field_tag 'criteria[user_name]', params.dig(:criteria, :user_name), style: 'width: 200px;' %>
       </td>
@@ -102,23 +104,22 @@ category_ids = params.dig(:criteria, :category_ids) || []
   </table>
   
   <table style="margin-top: 20px;">
-    <tr>
-      <td><label><%= check_box_tag 'criteria[texts][]', 'summary', params.dig(:criteria, :texts).to_a.include?('summary') %> 概要</label></td>
-      <td><label><%= check_box_tag 'criteria[assocs][]', 'files', params.dig(:criteria, :assocs).to_a.include?('files') %> 添付ファイル</label></td>
-      <td><label><%= check_box_tag 'criteria[marker_state]', 'visible', params.dig(:criteria, :marker_state) == 'visible' %> 地図</label></td>
-      <td><label><%= check_box_tag 'criteria[tasks][]', 'publish', params.dig(:criteria, :tasks).to_a.include?('publish') %> 公開開始日時</label></td>
-    </tr>
-    <tr>
-      <td><label><%= check_box_tag 'criteria[texts][]', 'subtitle', params.dig(:criteria, :texts).to_a.include?('subtitle') %> サブタイトル</label></td>
-      <td><label><%= check_box_tag 'criteria[texts][]', 'raw_tags', params.dig(:criteria, :texts).to_a.include?('raw_tags') %> 関連ワード</label></td>
-      <td><label><%= check_box_tag 'criteria[event_state]', 'visible', params.dig(:criteria, :event_state) == 'visible' %> イベント</label></td>
-      <td><label><%= check_box_tag 'criteria[tasks][]', 'close', params.dig(:criteria, :tasks).to_a.include?('close') %> 公開終了日時</label></td>
-    </tr>
-    <tr>
-      <td><label><%= check_box_tag 'criteria[texts][]', 'href', params.dig(:criteria, :texts).to_a.include?('href') %> リンクURL</label></td>
-      <td><label><%= check_box_tag 'criteria[texts][]', 'rel_doc_ids', params.dig(:criteria, :texts).to_a.include?('rel_doc_ids') %> 関連記事</label></td>
-      <td><label><%= check_box_tag 'criteria[texts][]', 'mobile_body', params.dig(:criteria, :texts).to_a.include?('mobile_body') %> 携帯記事</label></td>
-    </tr>
+    <%- GpArticle::Model::Criteria::CHECK_BOX_OPTIONS.each_slice(4) do |options| -%>
+      <tr>
+        <%- options.each do |method, label, value| -%>
+          <td>
+            <label>
+              <% case method %>
+              <% when :texts, :assocs, :tasks %>
+                <%= check_box_tag "criteria[#{method}][]", value, params.dig(:criteria, method).to_a.include?(value) %> <%= label %>
+              <% else %>
+                <%= check_box_tag "criteria[#{method}]", value, params.dig(:criteria, method) == value %> <%= label %>
+              <% end %>
+            </label>
+          </td>
+        <%- end -%>
+      </tr>
+    <%- end -%>
   </table>
 </div>
 <%- end -%>
