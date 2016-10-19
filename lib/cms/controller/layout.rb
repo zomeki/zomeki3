@@ -193,7 +193,7 @@ module Cms::Controller::Layout
 
   def convert_ssl_uri(body)
     return body if Core.request_uri =~ /^\/_preview\//
-    return body unless Core.site.use_common_ssl?
+    return body unless Page.site.use_common_ssl?
 
     # フォームへのリンクをhttpsに、その他はhttpに変換
     form_nodes = Cms::Node.where(model: 'Survey::Form', site_id: Page.site.id)
