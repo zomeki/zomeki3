@@ -21,10 +21,17 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   def index
     return index_options if params[:options]
     return user_options if params[:user_options]
-    @items = GpArticle::Doc.content_and_criteria(@content, doc_criteria)
+
+    criteria = doc_criteria
+    @items = GpArticle::Doc.content_and_criteria(@content, criteria)
       .order(updated_at: :desc)
-      .paginate(page: params[:page], per_page: 30)
       .preload(:prev_edition, :content, creator: [:user, :group])
+
+    if params[:csv]
+      return export_csv(@items, GpArticle::Model::Criteria.new(criteria))
+    else
+      @items = @items.paginate(page: params[:page], per_page: 30)
+    end
 
     _index @items
   end
@@ -312,7 +319,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   private
 
   def doc_criteria
-    criteria = params[:criteria] || {}
+    criteria = params[:criteria] ? params[:criteria].permit! : {}
 
     if params[:target_public].blank?
       if Core.user.has_auth?(:manager)
@@ -361,5 +368,27 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
       whitelisted[:in_marker_category_ids] = params[:item][:in_marker_category_ids]
       whitelisted[:in_approval_assignment_ids] = params[:item][:in_approval_assignment_ids]
     end
+  end
+
+  def export_csv(items, criteria)
+    require 'csv'
+    data = CSV.generate do |csv|
+      csv << [criteria.to_csv_string]
+      csv << ['記事番号', 'タイトル', 'ディレクトリ名', '所属', '作成者', '更新日時', '状態']
+      items.each do |item|
+        csv << [
+          item.serial_no,
+          item.title,
+          item.name,
+          item.creator.group.try(:name),
+          item.creator.user.try(:name),
+          item.updated_at ? I18n.l(item.updated_at) : nil,
+          item.status.name
+        ]
+      end
+    end
+
+    data = NKF.nkf('-s', data)
+    send_data data, type: 'text/csv', filename: "gp_article_docs_#{Time.now.to_i}.csv"
   end
 end
