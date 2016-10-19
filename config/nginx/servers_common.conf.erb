@@ -1,7 +1,3 @@
-location ^~ /_api {
-  error_page 418 = @proxy; return 418;
-}
-
 if ($http_user_agent ~* ^(DoCoMo|KDDI|Up\.Browser|J-PHONE|vodafone|SoftBank)) {
   set $is_mobile 1;
 }
@@ -10,19 +6,15 @@ if ($http_user_agent ~* (Android|iPhone|iPod|MSIEMobile|Windows\sPhone)) {
   set $is_smartphone 1;
 }
 
-location /_smartphone {
+location ^~ /_api {
+  error_page 418 = @proxy; return 418;
+}
+
+location ~ /_(smartphone|mobile) {
   try_files $uri $uri/index.html @proxy;
 }
 
-location /_mobile {
-  try_files $uri $uri/index.html @proxy;
-}
-
-location /_common {
-  try_files $uri @proxy;
-}
-
-location /_themes {
+location ~ /_(common|themes|files) {
   try_files $uri @proxy;
 }
 
