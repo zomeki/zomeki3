@@ -299,7 +299,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   end
 
   def update_file_names
-    if (file_names = params[:file_names]).kind_of?(Hash)
+    if (file_names = params[:file_names])
       new_body = @item.body
       file_names.each do |key, value|
         file = @item.files.where(id: key).first

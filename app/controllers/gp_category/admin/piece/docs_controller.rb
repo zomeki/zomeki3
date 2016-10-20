@@ -2,9 +2,9 @@ class GpCategory::Admin::Piece::DocsController < Cms::Admin::Piece::BaseControll
   def update
     item_in_settings = (params[:item][:in_settings] || {})
 
-    if (category_types = params[:category_types]).is_a?(Hash) &&
-       (categories = params[:categories]).is_a?(Hash) &&
-       (layers = params[:layers]).is_a?(Hash)
+    if (category_types = params[:category_types]) &&
+       (categories = params[:categories]) &&
+       (layers = params[:layers])
       category_sets = []
 
       category_types.each do |key, value|

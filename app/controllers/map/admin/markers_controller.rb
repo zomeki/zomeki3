@@ -55,7 +55,7 @@ class Map::Admin::MarkersController < Cms::Controller::Admin::Base
   private
 
   def set_categories
-    category_ids = if params[:categories].kind_of?(Hash)
+    category_ids = if params[:categories]
                      params[:categories].values.flatten.reject{|c| c.blank? }.uniq
                    else
                      []
