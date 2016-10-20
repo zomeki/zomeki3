@@ -372,7 +372,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
   def export_csv(items, criteria)
     require 'csv'
-    data = CSV.generate do |csv|
+    data = CSV.generate(force_quotes: true) do |csv|
       csv << [criteria.to_csv_string]
       csv << ['記事番号', 'タイトル', 'ディレクトリ名', '所属', '作成者', '更新日時', '状態']
       items.each do |item|
