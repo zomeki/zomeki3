@@ -33,7 +33,7 @@ class GpCategory::Content::Setting < Cms::ContentSetting
     name: 'index設定',
     options: lambda {->(content=nil) do
         if content
-          GpCategory::Content::CategoryType.find(content).templates.map{|t| [t.title, t.id] }
+          GpCategory::Content::CategoryType.find_by(id: content.id).templates.map{|t| [t.title, t.id] }
         else
           []
         end

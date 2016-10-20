@@ -28,6 +28,7 @@ class GpCategory::CategoryType < ApplicationRecord
   belongs_to :internal_category_type, :class_name => self.name
 
   has_many :categories, :foreign_key => :category_type_id, :class_name => 'GpCategory::Category', :dependent => :destroy
+  has_many :marker_icons, :class_name => 'Map::MarkerIcon', :as => :relatable, :dependent => :destroy
 
   # conditional associations
   has_many :root_categories, -> { with_root },

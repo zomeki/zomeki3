@@ -354,7 +354,7 @@ $(document).ready(function () {
       <%- if @content.marker_icon_category_enabled? -%>
       <tr>
         <th><%= f.label :marker_icon_category_id %></th>
-        <td><%= f.select :marker_icon_category_id, options_for_select(marker_icon_categories_for_option(@content.map_content_marker),
+        <td><%= f.select :marker_icon_category_id, options_for_select(@content.map_content_marker.icon_categories_for_option,
                                                                       @item.marker_icon_category_id),
                                                    include_blank: true %></td>
       </tr>

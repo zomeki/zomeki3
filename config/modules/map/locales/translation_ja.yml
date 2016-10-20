@@ -2,6 +2,7 @@ ja:
   activerecord:
     models:
       map/marker: マーカー
+      map/marker_icon: マーカーアイコン
     attributes:
       map/marker:
         title: タイトル
@@ -10,3 +11,5 @@ ja:
         window_text: 吹き出し
         file: 画像
         state: 状態
+      map/marker_icon:
+        url: アイコン画像

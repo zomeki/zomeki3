@@ -153,8 +153,10 @@ class Survey::Admin::FormsController < Cms::Controller::Admin::Base
       :creator_attributes => [:id, :group_id, :user_id],
       :tasks_attributes => [:id, :name, :process_at],
       :in_approval_flow_ids => []
-    ).tap do |whitelisted|
-      whitelisted[:in_approval_assignment_ids] = params[:item][:in_approval_assignment_ids]
+    ).tap do |permitted|
+      [:in_approval_assignment_ids].each do |key|
+        permitted[key] = params[:item][key].permit! if params[:item][key]
+      end
     end
   end
 end

@@ -355,24 +355,23 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
       :template_values => params[:item][:template_values].try(:keys),
       :creator_attributes => [:id, :group_id, :user_id],
       :tasks_attributes => [:id, :name, :process_at],
-      :inquiries_attributes => [:id, :state, :_destroy,:group_id],
+      :inquiries_attributes => [:id, :state, :group_id, :_destroy],
       :maps_attributes => [:id, :name, :title, :map_lat, :map_lng, :map_zoom, :markers_attributes => [:id, :name, :lat, :lng]],
       :editable_groups_attributes => [:id, :group_id],
       :related_docs_attributes => [:id, :name, :content_id, :_destroy],
       :in_rel_doc_ids => [],
       :in_share_accounts => [],
       :in_approval_flow_ids => [],
-    ).tap do |whitelisted|
-      whitelisted[:in_category_ids] = params[:item][:in_category_ids]
-      whitelisted[:in_event_category_ids] = params[:item][:in_event_category_ids]
-      whitelisted[:in_marker_category_ids] = params[:item][:in_marker_category_ids]
-      whitelisted[:in_approval_assignment_ids] = params[:item][:in_approval_assignment_ids]
+    ).tap do |permitted|
+      [:in_category_ids, :in_event_category_ids, :in_marker_category_ids, :in_approval_assignment_ids].each do |key|
+        permitted[key] = params[:item][key].permit! if params[:item][key]
+      end
     end
   end
 
   def export_csv(items, criteria)
     require 'csv'
-    data = CSV.generate do |csv|
+    data = CSV.generate(force_quotes: true) do |csv|
       csv << [criteria.to_csv_string]
       csv << ['記事番号', 'タイトル', 'ディレクトリ名', '所属', '作成者', '更新日時', '状態']
       items.each do |item|

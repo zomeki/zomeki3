@@ -96,19 +96,6 @@ class Cms::DataFile < ApplicationRecord
     file.exists?
   end
 
-  def search(params)
-    params.each do |n, v|
-      next if v.to_s == ''
-
-      case n
-      when 's_node_id'
-        self.and :node_id, v
-      end
-    end if params.size != 0
-
-    return self
-  end
-  
   def remove_old_name_public_file(old_name)
     public_dir = ::File.dirname(public_path)
     old_path = "#{public_dir}/#{old_name}"

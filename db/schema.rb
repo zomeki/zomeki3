@@ -1,4 +1,3 @@
-# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -11,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161014023422) do
+ActiveRecord::Schema.define(version: 20161019043562) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -43,9 +42,8 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.integer  "thumb_width"
     t.integer  "thumb_height"
     t.integer  "thumb_size"
+    t.index ["token"], name: "index_ad_banner_banners_on_token", unique: true, using: :btree
   end
-
-  add_index "ad_banner_banners", ["token"], name: "index_ad_banner_banners_on_token", unique: true, using: :btree
 
   create_table "ad_banner_clicks", force: :cascade do |t|
     t.integer  "banner_id"
@@ -81,10 +79,9 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.text     "comment"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["request_id"], name: "index_approval_approval_request_histories_on_request_id", using: :btree
+    t.index ["user_id"], name: "index_approval_approval_request_histories_on_user_id", using: :btree
   end
-
-  add_index "approval_approval_request_histories", ["request_id"], name: "index_approval_approval_request_histories_on_request_id", using: :btree
-  add_index "approval_approval_request_histories", ["user_id"], name: "index_approval_approval_request_histories_on_user_id", using: :btree
 
   create_table "approval_approval_requests", force: :cascade do |t|
     t.integer  "user_id"
@@ -114,11 +111,10 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.datetime "approved_at"
     t.integer  "or_group_id"
     t.integer  "selected_index"
+    t.index ["assignable_type", "assignable_id"], name: "index_approval_assignments_on_assignable_type_and_assignable_id", using: :btree
+    t.index ["selected_index"], name: "index_approval_assignments_on_selected_index", using: :btree
+    t.index ["user_id"], name: "index_approval_assignments_on_user_id", using: :btree
   end
-
-  add_index "approval_assignments", ["assignable_type", "assignable_id"], name: "index_approval_assignments_on_assignable_type_and_assignable_id", using: :btree
-  add_index "approval_assignments", ["selected_index"], name: "index_approval_assignments_on_selected_index", using: :btree
-  add_index "approval_assignments", ["user_id"], name: "index_approval_assignments_on_user_id", using: :btree
 
   create_table "biz_calendar_bussiness_holidays", force: :cascade do |t|
     t.integer  "place_id"
@@ -173,9 +169,8 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.string   "title"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["content_id"], name: "index_biz_calendar_holiday_types_on_content_id", using: :btree
   end
-
-  add_index "biz_calendar_holiday_types", ["content_id"], name: "index_biz_calendar_holiday_types_on_content_id", using: :btree
 
   create_table "biz_calendar_places", force: :cascade do |t|
     t.integer  "content_id"
@@ -191,9 +186,8 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.integer  "sort_no"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["content_id"], name: "index_biz_calendar_places_on_content_id", using: :btree
   end
-
-  add_index "biz_calendar_places", ["content_id"], name: "index_biz_calendar_places_on_content_id", using: :btree
 
   create_table "cms_brackets", force: :cascade do |t|
     t.integer  "site_id"
@@ -203,12 +197,11 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["concept_id"], name: "index_cms_brackets_on_concept_id", using: :btree
+    t.index ["name"], name: "index_cms_brackets_on_name", using: :btree
+    t.index ["owner_type", "owner_id"], name: "index_cms_brackets_on_owner_type_and_owner_id", using: :btree
+    t.index ["site_id"], name: "index_cms_brackets_on_site_id", using: :btree
   end
-
-  add_index "cms_brackets", ["concept_id"], name: "index_cms_brackets_on_concept_id", using: :btree
-  add_index "cms_brackets", ["name"], name: "index_cms_brackets_on_name", using: :btree
-  add_index "cms_brackets", ["owner_type", "owner_id"], name: "index_cms_brackets_on_owner_type_and_owner_id", using: :btree
-  add_index "cms_brackets", ["site_id"], name: "index_cms_brackets_on_site_id", using: :btree
 
   create_table "cms_concepts", force: :cascade do |t|
     t.integer  "parent_id"
@@ -219,9 +212,8 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.integer  "level_no",   null: false
     t.integer  "sort_no"
     t.string   "name"
+    t.index ["parent_id", "state", "sort_no"], name: "index_cms_concepts_on_parent_id_and_state_and_sort_no", using: :btree
   end
-
-  add_index "cms_concepts", ["parent_id", "state", "sort_no"], name: "index_cms_concepts_on_parent_id_and_state_and_sort_no", using: :btree
 
   create_table "cms_content_settings", force: :cascade do |t|
     t.integer  "content_id",  null: false
@@ -231,9 +223,8 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.text     "value"
     t.integer  "sort_no"
     t.text     "extra_value"
+    t.index ["content_id"], name: "index_cms_content_settings_on_content_id", using: :btree
   end
-
-  add_index "cms_content_settings", ["content_id"], name: "index_cms_content_settings_on_content_id", using: :btree
 
   create_table "cms_contents", force: :cascade do |t|
     t.integer  "site_id",        null: false
@@ -256,9 +247,8 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.datetime "updated_at"
     t.string   "name"
     t.text     "title"
+    t.index ["concept_id", "name"], name: "index_cms_data_file_nodes_on_concept_id_and_name", using: :btree
   end
-
-  add_index "cms_data_file_nodes", ["concept_id", "name"], name: "index_cms_data_file_nodes_on_concept_id_and_name", using: :btree
 
   create_table "cms_data_files", force: :cascade do |t|
     t.integer  "site_id"
@@ -278,9 +268,8 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.integer  "thumb_width"
     t.integer  "thumb_height"
     t.integer  "thumb_size"
+    t.index ["concept_id", "node_id", "name"], name: "index_cms_data_files_on_concept_id_and_node_id_and_name", using: :btree
   end
-
-  add_index "cms_data_files", ["concept_id", "node_id", "name"], name: "index_cms_data_files_on_concept_id_and_node_id_and_name", using: :btree
 
   create_table "cms_data_texts", force: :cascade do |t|
     t.integer  "site_id"
@@ -311,9 +300,8 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.text     "author_name"
     t.string   "author_email"
     t.text     "author_uri"
+    t.index ["feed_id", "content_id", "entry_updated"], name: "idx_cms_feed_entries_on_f_id_and_c_id_and_e_updated", using: :btree
   end
-
-  add_index "cms_feed_entries", ["feed_id", "content_id", "entry_updated"], name: "idx_cms_feed_entries_on_f_id_and_c_id_and_e_updated", using: :btree
 
   create_table "cms_feeds", force: :cascade do |t|
     t.integer  "content_id"
@@ -343,9 +331,8 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.text     "email"
     t.integer  "inquirable_id"
     t.string   "inquirable_type"
+    t.index ["inquirable_type", "inquirable_id"], name: "index_cms_inquiries_on_inquirable_type_and_inquirable_id", using: :btree
   end
-
-  add_index "cms_inquiries", ["inquirable_type", "inquirable_id"], name: "index_cms_inquiries_on_inquirable_type_and_inquirable_id", using: :btree
 
   create_table "cms_kana_dictionaries", force: :cascade do |t|
     t.datetime "created_at"
@@ -408,9 +395,8 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.string   "name"
     t.string   "lat"
     t.string   "lng"
+    t.index ["map_id"], name: "index_cms_map_markers_on_map_id", using: :btree
   end
-
-  add_index "cms_map_markers", ["map_id"], name: "index_cms_map_markers_on_map_id", using: :btree
 
   create_table "cms_maps", force: :cascade do |t|
     t.datetime "created_at"
@@ -437,9 +423,8 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.text     "point5_lng"
     t.integer  "map_attachable_id"
     t.string   "map_attachable_type"
+    t.index ["map_attachable_type", "map_attachable_id"], name: "index_cms_maps_on_map_attachable_type_and_map_attachable_id", using: :btree
   end
-
-  add_index "cms_maps", ["map_attachable_type", "map_attachable_id"], name: "index_cms_maps_on_map_attachable_type_and_map_attachable_id", using: :btree
 
   create_table "cms_nodes", force: :cascade do |t|
     t.integer  "concept_id"
@@ -462,16 +447,15 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.text     "mobile_body"
     t.string   "sitemap_state"
     t.integer  "sitemap_sort_no"
+    t.index ["concept_id"], name: "index_cms_nodes_on_concept_id", using: :btree
+    t.index ["content_id"], name: "index_cms_nodes_on_content_id", using: :btree
+    t.index ["layout_id"], name: "index_cms_nodes_on_layout_id", using: :btree
+    t.index ["parent_id", "name"], name: "index_cms_nodes_on_parent_id_and_name", using: :btree
+    t.index ["parent_id"], name: "index_cms_nodes_on_parent_id", using: :btree
+    t.index ["route_id"], name: "index_cms_nodes_on_route_id", using: :btree
+    t.index ["site_id"], name: "index_cms_nodes_on_site_id", using: :btree
+    t.index ["state"], name: "index_cms_nodes_on_state", using: :btree
   end
-
-  add_index "cms_nodes", ["concept_id"], name: "index_cms_nodes_on_concept_id", using: :btree
-  add_index "cms_nodes", ["content_id"], name: "index_cms_nodes_on_content_id", using: :btree
-  add_index "cms_nodes", ["layout_id"], name: "index_cms_nodes_on_layout_id", using: :btree
-  add_index "cms_nodes", ["parent_id", "name"], name: "index_cms_nodes_on_parent_id_and_name", using: :btree
-  add_index "cms_nodes", ["parent_id"], name: "index_cms_nodes_on_parent_id", using: :btree
-  add_index "cms_nodes", ["route_id"], name: "index_cms_nodes_on_route_id", using: :btree
-  add_index "cms_nodes", ["site_id"], name: "index_cms_nodes_on_site_id", using: :btree
-  add_index "cms_nodes", ["state"], name: "index_cms_nodes_on_state", using: :btree
 
   create_table "cms_o_auth_users", force: :cascade do |t|
     t.string   "provider"
@@ -494,9 +478,8 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.string   "uri"
     t.integer  "sort_no"
     t.string   "target"
+    t.index ["piece_id"], name: "index_cms_piece_link_items_on_piece_id", using: :btree
   end
-
-  add_index "cms_piece_link_items", ["piece_id"], name: "index_cms_piece_link_items_on_piece_id", using: :btree
 
   create_table "cms_piece_settings", force: :cascade do |t|
     t.integer  "piece_id",    null: false
@@ -506,9 +489,8 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.text     "value"
     t.integer  "sort_no"
     t.text     "extra_value"
+    t.index ["piece_id"], name: "index_cms_piece_settings_on_piece_id", using: :btree
   end
-
-  add_index "cms_piece_settings", ["piece_id"], name: "index_cms_piece_settings_on_piece_id", using: :btree
 
   create_table "cms_pieces", force: :cascade do |t|
     t.integer  "concept_id"
@@ -527,9 +509,8 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.text     "body"
     t.text     "xml_properties"
     t.text     "etcetera"
+    t.index ["concept_id", "name", "state"], name: "index_cms_pieces_on_concept_id_and_name_and_state", using: :btree
   end
-
-  add_index "cms_pieces", ["concept_id", "name", "state"], name: "index_cms_pieces_on_concept_id_and_name_and_state", using: :btree
 
   create_table "cms_publishers", force: :cascade do |t|
     t.integer  "site_id"
@@ -540,10 +521,9 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.jsonb    "extra_flag",       default: {}
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["publishable_type", "publishable_id"], name: "index_cms_publishers_on_publishable_type_and_publishable_id", using: :btree
+    t.index ["site_id"], name: "index_cms_publishers_on_site_id", using: :btree
   end
-
-  add_index "cms_publishers", ["publishable_type", "publishable_id"], name: "index_cms_publishers_on_publishable_type_and_publishable_id", using: :btree
-  add_index "cms_publishers", ["site_id"], name: "index_cms_publishers_on_site_id", using: :btree
 
   create_table "cms_site_basic_auth_users", force: :cascade do |t|
     t.string   "state"
@@ -561,10 +541,9 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "group_id"
+    t.index ["group_id"], name: "index_cms_site_belongings_on_group_id", using: :btree
+    t.index ["site_id"], name: "index_cms_site_belongings_on_site_id", using: :btree
   end
-
-  add_index "cms_site_belongings", ["group_id"], name: "index_cms_site_belongings_on_group_id", using: :btree
-  add_index "cms_site_belongings", ["site_id"], name: "index_cms_site_belongings_on_site_id", using: :btree
 
   create_table "cms_site_settings", force: :cascade do |t|
     t.integer  "site_id"
@@ -573,9 +552,8 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.string   "name"
     t.text     "value"
     t.integer  "sort_no"
+    t.index ["site_id", "name"], name: "index_cms_site_settings_on_site_id_and_name", using: :btree
   end
-
-  add_index "cms_site_settings", ["site_id", "name"], name: "index_cms_site_settings_on_site_id_and_name", using: :btree
 
   create_table "cms_sites", force: :cascade do |t|
     t.string   "state"
@@ -611,10 +589,9 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "path"
+    t.index ["concept_id"], name: "index_cms_stylesheets_on_concept_id", using: :btree
+    t.index ["site_id"], name: "index_cms_stylesheets_on_site_id", using: :btree
   end
-
-  add_index "cms_stylesheets", ["concept_id"], name: "index_cms_stylesheets_on_concept_id", using: :btree
-  add_index "cms_stylesheets", ["site_id"], name: "index_cms_stylesheets_on_site_id", using: :btree
 
   create_table "cms_talk_tasks", force: :cascade do |t|
     t.string   "dependent"
@@ -625,9 +602,8 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.string   "talk_processable_type"
     t.integer  "talk_processable_id"
     t.integer  "site_id"
+    t.index ["talk_processable_type", "talk_processable_id"], name: "index_cms_talk_tasks_on_talk_processable", using: :btree
   end
-
-  add_index "cms_talk_tasks", ["talk_processable_type", "talk_processable_id"], name: "index_cms_talk_tasks_on_talk_processable", using: :btree
 
   create_table "delayed_jobs", force: :cascade do |t|
     t.integer  "priority",   default: 0, null: false
@@ -641,9 +617,8 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.string   "queue"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
   end
-
-  add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
 
   create_table "feed_feed_entries", force: :cascade do |t|
     t.integer  "feed_id"
@@ -689,10 +664,9 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.integer "menu_item_id"
     t.integer "category_id"
     t.string  "layer"
+    t.index ["category_id"], name: "index_gnav_category_sets_on_category_id", using: :btree
+    t.index ["menu_item_id"], name: "index_gnav_category_sets_on_menu_item_id", using: :btree
   end
-
-  add_index "gnav_category_sets", ["category_id"], name: "index_gnav_category_sets_on_category_id", using: :btree
-  add_index "gnav_category_sets", ["menu_item_id"], name: "index_gnav_category_sets_on_menu_item_id", using: :btree
 
   create_table "gnav_menu_items", force: :cascade do |t|
     t.integer  "content_id"
@@ -705,11 +679,10 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.datetime "updated_at"
     t.integer  "layout_id"
     t.string   "sitemap_state"
+    t.index ["concept_id"], name: "index_gnav_menu_items_on_concept_id", using: :btree
+    t.index ["content_id"], name: "index_gnav_menu_items_on_content_id", using: :btree
+    t.index ["layout_id"], name: "index_gnav_menu_items_on_layout_id", using: :btree
   end
-
-  add_index "gnav_menu_items", ["concept_id"], name: "index_gnav_menu_items_on_concept_id", using: :btree
-  add_index "gnav_menu_items", ["content_id"], name: "index_gnav_menu_items_on_content_id", using: :btree
-  add_index "gnav_menu_items", ["layout_id"], name: "index_gnav_menu_items_on_layout_id", using: :btree
 
   create_table "gp_article_comments", force: :cascade do |t|
     t.integer  "doc_id"
@@ -723,9 +696,8 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.datetime "posted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["doc_id"], name: "index_gp_article_comments_on_doc_id", using: :btree
   end
-
-  add_index "gp_article_comments", ["doc_id"], name: "index_gp_article_comments_on_doc_id", using: :btree
 
   create_table "gp_article_docs", force: :cascade do |t|
     t.integer  "concept_id"
@@ -777,14 +749,13 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.string   "event_will_sync"
     t.integer  "serial_no"
     t.string   "lang"
+    t.index ["concept_id"], name: "index_gp_article_docs_on_concept_id", using: :btree
+    t.index ["content_id"], name: "index_gp_article_docs_on_content_id", using: :btree
+    t.index ["event_started_on", "event_ended_on"], name: "index_gp_article_docs_on_event_started_on_and_event_ended_on", using: :btree
+    t.index ["event_state"], name: "index_gp_article_docs_on_event_state", using: :btree
+    t.index ["state"], name: "index_gp_article_docs_on_state", using: :btree
+    t.index ["terminal_pc_or_smart_phone"], name: "index_gp_article_docs_on_terminal_pc_or_smart_phone", using: :btree
   end
-
-  add_index "gp_article_docs", ["concept_id"], name: "index_gp_article_docs_on_concept_id", using: :btree
-  add_index "gp_article_docs", ["content_id"], name: "index_gp_article_docs_on_content_id", using: :btree
-  add_index "gp_article_docs", ["event_started_on", "event_ended_on"], name: "index_gp_article_docs_on_event_started_on_and_event_ended_on", using: :btree
-  add_index "gp_article_docs", ["event_state"], name: "index_gp_article_docs_on_event_state", using: :btree
-  add_index "gp_article_docs", ["state"], name: "index_gp_article_docs_on_state", using: :btree
-  add_index "gp_article_docs", ["terminal_pc_or_smart_phone"], name: "index_gp_article_docs_on_terminal_pc_or_smart_phone", using: :btree
 
   create_table "gp_article_docs_tag_tags", id: false, force: :cascade do |t|
     t.integer "doc_id"
@@ -833,11 +804,10 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.string   "sync_source_id"
     t.string   "sync_source_source_class"
     t.string   "will_sync"
+    t.index ["content_id"], name: "index_gp_calendar_events_on_content_id", using: :btree
+    t.index ["started_on", "ended_on"], name: "index_gp_calendar_events_on_started_on_and_ended_on", using: :btree
+    t.index ["state"], name: "index_gp_calendar_events_on_state", using: :btree
   end
-
-  add_index "gp_calendar_events", ["content_id"], name: "index_gp_calendar_events_on_content_id", using: :btree
-  add_index "gp_calendar_events", ["started_on", "ended_on"], name: "index_gp_calendar_events_on_started_on_and_ended_on", using: :btree
-  add_index "gp_calendar_events", ["state"], name: "index_gp_calendar_events_on_state", using: :btree
 
   create_table "gp_calendar_events_gp_category_categories", id: false, force: :cascade do |t|
     t.integer "event_id"
@@ -877,13 +847,12 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.string   "docs_order"
     t.integer  "template_id"
     t.integer  "children_count",   default: 0, null: false
+    t.index ["category_type_id"], name: "index_gp_category_categories_on_category_type_id", using: :btree
+    t.index ["concept_id"], name: "index_gp_category_categories_on_concept_id", using: :btree
+    t.index ["layout_id"], name: "index_gp_category_categories_on_layout_id", using: :btree
+    t.index ["parent_id"], name: "index_gp_category_categories_on_parent_id", using: :btree
+    t.index ["state"], name: "index_gp_category_categories_on_state", using: :btree
   end
-
-  add_index "gp_category_categories", ["category_type_id"], name: "index_gp_category_categories_on_category_type_id", using: :btree
-  add_index "gp_category_categories", ["concept_id"], name: "index_gp_category_categories_on_concept_id", using: :btree
-  add_index "gp_category_categories", ["layout_id"], name: "index_gp_category_categories_on_layout_id", using: :btree
-  add_index "gp_category_categories", ["parent_id"], name: "index_gp_category_categories_on_parent_id", using: :btree
-  add_index "gp_category_categories", ["state"], name: "index_gp_category_categories_on_state", using: :btree
 
   create_table "gp_category_categorizations", force: :cascade do |t|
     t.integer  "categorizable_id"
@@ -893,11 +862,10 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.datetime "updated_at"
     t.integer  "sort_no"
     t.string   "categorized_as"
+    t.index ["categorizable_id", "categorizable_type"], name: "index_gp_category_categorizations_on_categorizable_id_and_type", using: :btree
+    t.index ["categorized_as"], name: "index_gp_category_categorizations_on_categorized_as", using: :btree
+    t.index ["category_id"], name: "index_gp_category_categorizations_on_category_id", using: :btree
   end
-
-  add_index "gp_category_categorizations", ["categorizable_id", "categorizable_type"], name: "index_gp_category_categorizations_on_categorizable_id_and_type", using: :btree
-  add_index "gp_category_categorizations", ["categorized_as"], name: "index_gp_category_categorizations_on_categorized_as", using: :btree
-  add_index "gp_category_categorizations", ["category_id"], name: "index_gp_category_categorizations_on_category_id", using: :btree
 
   create_table "gp_category_category_types", force: :cascade do |t|
     t.integer  "content_id"
@@ -914,19 +882,17 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.integer  "template_id"
     t.integer  "internal_category_type_id"
     t.string   "description"
+    t.index ["concept_id"], name: "index_gp_category_category_types_on_concept_id", using: :btree
+    t.index ["content_id"], name: "index_gp_category_category_types_on_content_id", using: :btree
+    t.index ["layout_id"], name: "index_gp_category_category_types_on_layout_id", using: :btree
   end
-
-  add_index "gp_category_category_types", ["concept_id"], name: "index_gp_category_category_types_on_concept_id", using: :btree
-  add_index "gp_category_category_types", ["content_id"], name: "index_gp_category_category_types_on_content_id", using: :btree
-  add_index "gp_category_category_types", ["layout_id"], name: "index_gp_category_category_types_on_layout_id", using: :btree
 
   create_table "gp_category_publishers", force: :cascade do |t|
     t.integer  "category_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["category_id"], name: "index_gp_category_publishers_on_category_id", using: :btree
   end
-
-  add_index "gp_category_publishers", ["category_id"], name: "index_gp_category_publishers_on_category_id", using: :btree
 
   create_table "gp_category_template_modules", force: :cascade do |t|
     t.integer  "content_id"
@@ -941,9 +907,8 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.datetime "updated_at"
     t.text     "upper_text"
     t.text     "lower_text"
+    t.index ["content_id"], name: "index_gp_category_template_modules_on_content_id", using: :btree
   end
-
-  add_index "gp_category_template_modules", ["content_id"], name: "index_gp_category_template_modules_on_content_id", using: :btree
 
   create_table "gp_category_templates", force: :cascade do |t|
     t.integer  "content_id"
@@ -952,9 +917,8 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.text     "body"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["content_id"], name: "index_gp_category_templates_on_content_id", using: :btree
   end
-
-  add_index "gp_category_templates", ["content_id"], name: "index_gp_category_templates_on_content_id", using: :btree
 
   create_table "gp_template_items", force: :cascade do |t|
     t.integer  "template_id"
@@ -967,9 +931,8 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.integer  "sort_no"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["template_id"], name: "index_gp_template_items_on_template_id", using: :btree
   end
-
-  add_index "gp_template_items", ["template_id"], name: "index_gp_template_items_on_template_id", using: :btree
 
   create_table "gp_template_templates", force: :cascade do |t|
     t.integer  "content_id"
@@ -979,9 +942,19 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.integer  "sort_no"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["content_id"], name: "index_gp_template_templates_on_content_id", using: :btree
   end
 
-  add_index "gp_template_templates", ["content_id"], name: "index_gp_template_templates_on_content_id", using: :btree
+  create_table "map_marker_icons", force: :cascade do |t|
+    t.integer  "content_id"
+    t.string   "relatable_type"
+    t.integer  "relatable_id"
+    t.string   "url"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+    t.index ["content_id"], name: "index_map_marker_icons_on_content_id", using: :btree
+    t.index ["relatable_type", "relatable_id"], name: "index_map_marker_icons_on_relatable_type_and_relatable_id", using: :btree
+  end
 
   create_table "map_markers", force: :cascade do |t|
     t.integer  "content_id"
@@ -1012,9 +985,8 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.datetime "updated_at"
     t.integer  "more_layout_id"
     t.text     "outline"
+    t.index ["sys_group_code"], name: "index_organization_groups_on_sys_group_code", using: :btree
   end
-
-  add_index "organization_groups", ["sys_group_code"], name: "index_organization_groups_on_sys_group_code", using: :btree
 
   create_table "rank_categories", force: :cascade do |t|
     t.integer  "content_id"
@@ -1053,9 +1025,8 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.string   "value"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["key"], name: "idx_key", using: :btree
   end
-
-  add_index "simple_captcha_data", ["key"], name: "idx_key", using: :btree
 
   create_table "sns_share_accounts", force: :cascade do |t|
     t.integer  "content_id"
@@ -1074,9 +1045,8 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.datetime "updated_at"
     t.text     "facebook_token_options"
     t.string   "facebook_token"
+    t.index ["content_id"], name: "index_sns_share_accounts_on_content_id", using: :btree
   end
-
-  add_index "sns_share_accounts", ["content_id"], name: "index_sns_share_accounts_on_content_id", using: :btree
 
   create_table "sns_share_shares", force: :cascade do |t|
     t.integer  "sharable_id"
@@ -1084,9 +1054,8 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.integer  "account_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["sharable_type", "sharable_id"], name: "index_sns_share_shares_on_sharable_type_and_sharable_id", using: :btree
   end
-
-  add_index "sns_share_shares", ["sharable_type", "sharable_id"], name: "index_sns_share_shares_on_sharable_type_and_sharable_id", using: :btree
 
   create_table "survey_answers", force: :cascade do |t|
     t.integer  "form_answer_id"
@@ -1094,10 +1063,9 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.text     "content"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["form_answer_id"], name: "index_survey_answers_on_form_answer_id", using: :btree
+    t.index ["question_id"], name: "index_survey_answers_on_question_id", using: :btree
   end
-
-  add_index "survey_answers", ["form_answer_id"], name: "index_survey_answers_on_form_answer_id", using: :btree
-  add_index "survey_answers", ["question_id"], name: "index_survey_answers_on_question_id", using: :btree
 
   create_table "survey_form_answers", force: :cascade do |t|
     t.integer  "form_id"
@@ -1107,9 +1075,8 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "answered_url_title"
+    t.index ["form_id"], name: "index_survey_form_answers_on_form_id", using: :btree
   end
-
-  add_index "survey_form_answers", ["form_id"], name: "index_survey_form_answers_on_form_id", using: :btree
 
   create_table "survey_forms", force: :cascade do |t|
     t.integer  "content_id"
@@ -1127,9 +1094,8 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.boolean  "confirmation"
     t.string   "sitemap_state"
     t.string   "index_link"
+    t.index ["content_id"], name: "index_survey_forms_on_content_id", using: :btree
   end
-
-  add_index "survey_forms", ["content_id"], name: "index_survey_forms_on_content_id", using: :btree
 
   create_table "survey_questions", force: :cascade do |t|
     t.integer  "form_id"
@@ -1144,9 +1110,8 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "form_text_max_length"
+    t.index ["form_id"], name: "index_survey_questions_on_form_id", using: :btree
   end
-
-  add_index "survey_questions", ["form_id"], name: "index_survey_questions_on_form_id", using: :btree
 
   create_table "sys_cache_sweepers", force: :cascade do |t|
     t.string   "state"
@@ -1155,9 +1120,8 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.string   "model"
     t.text     "uri"
     t.text     "options"
+    t.index ["model", "uri"], name: "model", using: :btree
   end
-
-  add_index "sys_cache_sweepers", ["model", "uri"], name: "model", using: :btree
 
   create_table "sys_closers", force: :cascade do |t|
     t.string   "dependent"
@@ -1176,9 +1140,8 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.integer  "group_id"
     t.integer  "creatable_id"
     t.string   "creatable_type"
+    t.index ["creatable_type", "creatable_id"], name: "index_sys_creators_on_creatable_type_and_creatable_id", using: :btree
   end
-
-  add_index "sys_creators", ["creatable_type", "creatable_id"], name: "index_sys_creators_on_creatable_type_and_creatable_id", using: :btree
 
   create_table "sys_editable_groups", force: :cascade do |t|
     t.datetime "created_at"
@@ -1188,10 +1151,9 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.integer  "editable_id"
     t.string   "editable_type"
     t.integer  "group_id"
+    t.index ["editable_type", "editable_id"], name: "index_sys_editable_groups_on_editable_type_and_editable_id", using: :btree
+    t.index ["group_id"], name: "index_sys_editable_groups_on_group_id", using: :btree
   end
-
-  add_index "sys_editable_groups", ["editable_type", "editable_id"], name: "index_sys_editable_groups_on_editable_type_and_editable_id", using: :btree
-  add_index "sys_editable_groups", ["group_id"], name: "index_sys_editable_groups_on_group_id", using: :btree
 
   create_table "sys_editors", force: :cascade do |t|
     t.datetime "created_at"
@@ -1200,9 +1162,8 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.integer  "group_id"
     t.integer  "editable_id"
     t.string   "editable_type"
+    t.index ["editable_type", "editable_id"], name: "index_sys_editors_on_editable_type_and_editable_id", using: :btree
   end
-
-  add_index "sys_editors", ["editable_type", "editable_id"], name: "index_sys_editors_on_editable_type_and_editable_id", using: :btree
 
   create_table "sys_files", force: :cascade do |t|
     t.string   "tmp_id"
@@ -1221,9 +1182,8 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.integer  "thumb_width"
     t.integer  "thumb_height"
     t.integer  "thumb_size"
+    t.index ["file_attachable_type", "file_attachable_id"], name: "index_sys_files_on_file_attachable_type_and_file_attachable_id", using: :btree
   end
-
-  add_index "sys_files", ["file_attachable_type", "file_attachable_id"], name: "index_sys_files_on_file_attachable_type_and_file_attachable_id", using: :btree
 
   create_table "sys_groups", force: :cascade do |t|
     t.string   "state"
@@ -1246,11 +1206,10 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.string   "address"
     t.string   "note"
     t.string   "tel_attend"
+    t.index ["code"], name: "index_sys_groups_on_code", using: :btree
+    t.index ["parent_id"], name: "index_sys_groups_on_parent_id", using: :btree
+    t.index ["state"], name: "index_sys_groups_on_state", using: :btree
   end
-
-  add_index "sys_groups", ["code"], name: "index_sys_groups_on_code", using: :btree
-  add_index "sys_groups", ["parent_id"], name: "index_sys_groups_on_parent_id", using: :btree
-  add_index "sys_groups", ["state"], name: "index_sys_groups_on_state", using: :btree
 
   create_table "sys_languages", force: :cascade do |t|
     t.string   "state"
@@ -1272,9 +1231,8 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.string   "name"
     t.string   "name_en"
     t.string   "email"
+    t.index ["version", "parent_id", "entry_type"], name: "index_sys_ldap_synchros_on_version_and_parent_id_and_entry_type", using: :btree
   end
-
-  add_index "sys_ldap_synchros", ["version", "parent_id", "entry_type"], name: "index_sys_ldap_synchros_on_version_and_parent_id_and_entry_type", using: :btree
 
   create_table "sys_maintenances", force: :cascade do |t|
     t.string   "state"
@@ -1304,10 +1262,9 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.integer  "privilegable_id"
     t.string   "privilegable_type"
     t.integer  "concept_id"
+    t.index ["concept_id"], name: "index_sys_object_privileges_on_concept_id", using: :btree
+    t.index ["privilegable_type", "privilegable_id"], name: "index_sys_object_privileges_on_privilegable", using: :btree
   end
-
-  add_index "sys_object_privileges", ["concept_id"], name: "index_sys_object_privileges_on_concept_id", using: :btree
-  add_index "sys_object_privileges", ["privilegable_type", "privilegable_id"], name: "index_sys_object_privileges_on_privilegable", using: :btree
 
   create_table "sys_object_relations", force: :cascade do |t|
     t.integer "source_id"
@@ -1315,10 +1272,9 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.integer "related_id"
     t.string  "related_type"
     t.string  "relation_type"
+    t.index ["related_type", "related_id"], name: "index_sys_object_relations_on_related_type_and_related_id", using: :btree
+    t.index ["source_type", "source_id"], name: "index_sys_object_relations_on_source_type_and_source_id", using: :btree
   end
-
-  add_index "sys_object_relations", ["related_type", "related_id"], name: "index_sys_object_relations_on_related_type_and_related_id", using: :btree
-  add_index "sys_object_relations", ["source_type", "source_id"], name: "index_sys_object_relations_on_source_type_and_source_id", using: :btree
 
   create_table "sys_operation_logs", force: :cascade do |t|
     t.integer  "loggable_id"
@@ -1380,9 +1336,8 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.string   "content_hash"
     t.integer  "publishable_id"
     t.string   "publishable_type"
+    t.index ["publishable_type", "publishable_id"], name: "index_sys_publishers_on_publishable_type_and_publishable_id", using: :btree
   end
-
-  add_index "sys_publishers", ["publishable_type", "publishable_id"], name: "index_sys_publishers_on_publishable_type_and_publishable_id", using: :btree
 
   create_table "sys_recognitions", force: :cascade do |t|
     t.datetime "created_at"
@@ -1392,10 +1347,9 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.text     "info_xml"
     t.integer  "recognizable_id"
     t.string   "recognizable_type"
+    t.index ["recognizable_type", "recognizable_id"], name: "index_sys_recognitions_on_recognizable", using: :btree
+    t.index ["user_id"], name: "index_sys_recognitions_on_user_id", using: :btree
   end
-
-  add_index "sys_recognitions", ["recognizable_type", "recognizable_id"], name: "index_sys_recognitions_on_recognizable", using: :btree
-  add_index "sys_recognitions", ["user_id"], name: "index_sys_recognitions_on_user_id", using: :btree
 
   create_table "sys_role_names", force: :cascade do |t|
     t.datetime "created_at"
@@ -1411,9 +1365,8 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.string   "name"
     t.integer  "version"
     t.integer  "value"
+    t.index ["name", "version"], name: "index_sys_sequences_on_name_and_version", unique: true, using: :btree
   end
-
-  add_index "sys_sequences", ["name", "version"], name: "index_sys_sequences_on_name_and_version", unique: true, using: :btree
 
   create_table "sys_settings", force: :cascade do |t|
     t.string   "name"
@@ -1432,9 +1385,8 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.integer  "processable_id"
     t.string   "processable_type"
     t.integer  "site_id"
+    t.index ["processable_type", "processable_id"], name: "index_sys_tasks_on_processable_type_and_processable_id", using: :btree
   end
-
-  add_index "sys_tasks", ["processable_type", "processable_id"], name: "index_sys_tasks_on_processable_type_and_processable_id", using: :btree
 
   create_table "sys_temp_texts", force: :cascade do |t|
     t.text     "content"
@@ -1460,9 +1412,8 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.string   "item_name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["user_id", "operator_id"], name: "index_sys_transferable_files_on_user_id_and_operator_id", using: :btree
   end
-
-  add_index "sys_transferable_files", ["user_id", "operator_id"], name: "index_sys_transferable_files_on_user_id_and_operator_id", using: :btree
 
   create_table "sys_transferred_files", force: :cascade do |t|
     t.integer  "site_id"
@@ -1482,21 +1433,19 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.integer  "item_unid"
     t.string   "item_model"
     t.string   "item_name"
+    t.index ["created_at"], name: "index_sys_transferred_files_on_created_at", using: :btree
+    t.index ["operator_id"], name: "index_sys_transferred_files_on_operator_id", using: :btree
+    t.index ["user_id"], name: "index_sys_transferred_files_on_user_id", using: :btree
+    t.index ["version"], name: "index_sys_transferred_files_on_version", using: :btree
   end
-
-  add_index "sys_transferred_files", ["created_at"], name: "index_sys_transferred_files_on_created_at", using: :btree
-  add_index "sys_transferred_files", ["operator_id"], name: "index_sys_transferred_files_on_operator_id", using: :btree
-  add_index "sys_transferred_files", ["user_id"], name: "index_sys_transferred_files_on_user_id", using: :btree
-  add_index "sys_transferred_files", ["version"], name: "index_sys_transferred_files_on_version", using: :btree
 
   create_table "sys_unid_relations", force: :cascade do |t|
     t.integer "unid",     null: false
     t.integer "rel_unid", null: false
     t.string  "rel_type", null: false
+    t.index ["rel_unid"], name: "index_sys_unid_relations_on_rel_unid", using: :btree
+    t.index ["unid"], name: "index_sys_unid_relations_on_unid", using: :btree
   end
-
-  add_index "sys_unid_relations", ["rel_unid"], name: "index_sys_unid_relations_on_rel_unid", using: :btree
-  add_index "sys_unid_relations", ["unid"], name: "index_sys_unid_relations_on_unid", using: :btree
 
   create_table "sys_unids", force: :cascade do |t|
     t.datetime "created_at"
@@ -1530,16 +1479,14 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.datetime "updated_at"
     t.integer  "user_id"
     t.integer  "group_id"
+    t.index ["user_id", "group_id"], name: "index_sys_users_groups_on_user_id_and_group_id", using: :btree
   end
-
-  add_index "sys_users_groups", ["user_id", "group_id"], name: "index_sys_users_groups_on_user_id_and_group_id", using: :btree
 
   create_table "sys_users_roles", force: :cascade do |t|
     t.integer "user_id"
     t.integer "role_id"
+    t.index ["user_id", "role_id"], name: "index_sys_users_roles_on_user_id_and_role_id", using: :btree
   end
-
-  add_index "sys_users_roles", ["user_id", "role_id"], name: "index_sys_users_roles_on_user_id_and_role_id", using: :btree
 
   create_table "tag_tags", force: :cascade do |t|
     t.integer  "content_id"
@@ -1547,9 +1494,8 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.datetime "last_tagged_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["content_id"], name: "index_tag_tags_on_content_id", using: :btree
   end
-
-  add_index "tag_tags", ["content_id"], name: "index_tag_tags_on_content_id", using: :btree
 
   create_table "tool_convert_docs", force: :cascade do |t|
     t.string   "file_path"
@@ -1567,11 +1513,10 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.text     "doc_public_uri"
     t.string   "page_updated_at"
     t.string   "page_group_code"
+    t.index ["content_id"], name: "index_tool_convert_docs_on_content_id", using: :btree
+    t.index ["docable_id", "docable_type"], name: "index_tool_convert_docs_on_docable_id_and_docable_type", using: :btree
+    t.index ["uri_path"], name: "index_tool_convert_docs_on_uri_path", using: :btree
   end
-
-  add_index "tool_convert_docs", ["content_id"], name: "index_tool_convert_docs_on_content_id", using: :btree
-  add_index "tool_convert_docs", ["docable_id", "docable_type"], name: "index_tool_convert_docs_on_docable_id_and_docable_type", using: :btree
-  add_index "tool_convert_docs", ["uri_path"], name: "index_tool_convert_docs_on_uri_path", using: :btree
 
   create_table "tool_convert_downloads", force: :cascade do |t|
     t.string   "state"
@@ -1631,9 +1576,8 @@ ActiveRecord::Schema.define(version: 20161014023422) do
     t.text     "category_regexp"
     t.integer  "creator_group_relation_type"
     t.text     "creator_group_url_relations"
+    t.index ["site_url"], name: "index_tool_convert_settings_on_site_url", using: :btree
   end
-
-  add_index "tool_convert_settings", ["site_url"], name: "index_tool_convert_settings_on_site_url", using: :btree
 
   create_table "tool_simple_captcha_data", force: :cascade do |t|
     t.string   "key"
