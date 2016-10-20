@@ -1,6 +1,8 @@
 class Cms::Admin::StylesheetsController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 
+  before_action :force_html_format
+
   def pre_dispatch
     return error_auth unless Core.user.has_auth?(:designer)
 
@@ -58,14 +60,14 @@ class Cms::Admin::StylesheetsController < Cms::Controller::Admin::Base
 
   def show
     @item.read_body
-    render :show, formats: :html
+    render :show, formats: [:html]
   end
 
   def edit
     return error_auth unless @item.editable?
 
     @item.read_body
-    render :edit, formats: :html
+    render :edit, formats: [:html]
   end
 
   def create
@@ -126,7 +128,7 @@ class Cms::Admin::StylesheetsController < Cms::Controller::Admin::Base
       end
     end
 
-    render :move, formats: :html
+    render :move, formats: [:html]
   end
 
   def destroy
@@ -139,5 +141,11 @@ class Cms::Admin::StylesheetsController < Cms::Controller::Admin::Base
     end
     location = @stylesheets_path.call(::File.dirname(@path))
     redirect_to(location)
+  end
+
+  private
+
+  def force_html_format
+    request.format = :html
   end
 end
