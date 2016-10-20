@@ -1,9 +1,9 @@
+set $terminal 0;
 if ($http_user_agent ~* ^(DoCoMo|KDDI|Up\.Browser|J-PHONE|vodafone|SoftBank)) {
-  set $is_mobile 1;
+  set $terminal 1;
 }
-
 if ($http_user_agent ~* (Android|iPhone|iPod|MSIEMobile|Windows\sPhone)) {
-  set $is_smartphone 1;
+  set $terminal 2;
 }
 
 location ^~ /_api {
