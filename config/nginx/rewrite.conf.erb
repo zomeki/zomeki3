@@ -1,0 +1,16 @@
+if ($terminal = 1) {
+  rewrite ^(?!/_mobile)(.+)$ /_mobile$1 last;
+}
+
+if ($terminal = 2) {
+  rewrite ^(?!/_smartphone)(.+)$ /_smartphone$1 last;
+}
+
+if ($cookie_pc_view = 'on') {
+  rewrite ^/_smartphone(/.*)$ $1 last;
+}
+
+if ($cookie_navigation_ruby = 'on') {
+  rewrite ^(.*)/$ $1/index.html;
+  rewrite ^(.+)\.html$ $1.html.r last;
+}
