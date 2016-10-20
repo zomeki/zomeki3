@@ -85,7 +85,7 @@ class Survey::Public::Node::FormsController < Cms::Controller::Public::Base
       captcha: params[:captcha],
       captcha_key: params[:captcha_key]
     )
-    @form_answer.question_answers = params[:question_answers]
+    @form_answer.question_answers = params[:question_answers] if params[:question_answers]
   end
 
   def send_mail_and_redirect_to_finish

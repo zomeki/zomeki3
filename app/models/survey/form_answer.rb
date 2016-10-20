@@ -13,13 +13,11 @@ class Survey::FormAnswer < ApplicationRecord
   validate :validate_base
 
   def question_answers=(qa)
-    if qa.kind_of?(Hash)
-      qa.each do |key, value|
-        next unless question = form.questions.find_by(id: key)
-        answers.build(question: question, content: value.kind_of?(Array) ? value.reject{|v| v.blank? }.join(',') : value)
-      end
+    qa.each do |key, value|
+      next unless question = form.questions.find_by(id: key)
+      answers.build(question: question, content: value.kind_of?(Array) ? value.reject{|v| v.blank? }.join(',') : value)
     end
-    return qa
+    qa
   end
 
   # Use before saving answers
