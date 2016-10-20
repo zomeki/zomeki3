@@ -57,6 +57,8 @@ class Cms::Admin::SitesController < Cms::Controller::Admin::Base
 
   def update
     @item = Cms::Site.find(params[:id])
+    @item.load_site_settings
+
     @item.attributes = site_params
 
     @sns_apps = params[:sns_apps]
