@@ -25,11 +25,6 @@ set :output, nil
 
 env :PATH, ENV['PATH']
 
-# delayed_jobプロセスを監視します。
-every 10.minutes do
-  rake 'delayed_job:monitor'
-end
-
 # 記事の公開/非公開処理を行います。
 every '0-45/15 * * * *' do
   rake 'zomeki:sys:tasks:exec'
@@ -45,19 +40,19 @@ every '6-51/15 * * * *' do
   rake 'zomeki:cms:talks:exec'
 end
 
-# アクセスランキングデータを取り込みます。
-every :day, at: '3:00 am' do
-  rake 'zomeki:rank:ranks:exec'
-end
-
 # アンケートの回答データを取り込みます。
 every '9-54/15 * * * *' do
   rake 'zomeki:survey:answers:pull'
 end
 
-# 今日のイベントページを静的ファイルとして書き出します。
-every :day, at: '0:30 am' do
-  rake 'zomeki:gp_calendar:publish_todays_events'
+# サイトの設定を定期的に更新します。
+every '25,55 * * * *' do
+  rake 'zomeki:cms:sites:update_server_configs'
+end
+
+# delayed_jobプロセスを監視します。
+every '26,56 * * * *' do
+  rake 'delayed_job:monitor'
 end
 
 # Feedコンテンツで設定したRSS・Atomフィードを取り込みます。
@@ -65,7 +60,12 @@ every :hour do
   rake 'zomeki:feed:feeds:read'
 end
 
-# サイトのVirtualHost設定を定期的に更新します。
-every '25,55 * * * *' do
-  rake 'zomeki:cms:sites:update_server_configs'
+# 今日のイベントページを静的ファイルとして書き出します。
+every :day, at: '0:30 am' do
+  rake 'zomeki:gp_calendar:publish_todays_events'
+end
+
+# アクセスランキングデータを取り込みます。
+every :day, at: '3:00 am' do
+  rake 'zomeki:rank:ranks:exec'
 end
