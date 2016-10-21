@@ -18,5 +18,5 @@
   <th><%= GpCategory::CategoryType.model_name.human %></th>
   <td class="category_type"><%= select_tag nil, options_for_select(category_types_for_option, category_type_id), common_attrs.merge(include_blank: true) %></td>
   <th><%= GpCategory::Category.model_name.human %></th>
-  <td class="category"><%= select_tag "categories[#{index || 'N'}]", options_for_select(categories_for_option, category_id), common_attrs.merge(include_blank: true) %></td>
+  <td class="category"><%= select_tag "item[extra_values][categories][#{index || 'N'}]", options_for_select(categories_for_option, category_id), common_attrs.merge(include_blank: true) %></td>
 </tr>

@@ -2,7 +2,6 @@ class Cms::ContentSetting < ApplicationRecord
   include Sys::Model::Base
   
   @@configs = {}
-  attr_accessor :form_type, :options
   
   belongs_to :content, :foreign_key => :content_id, :class_name => 'Cms::Content'
 
@@ -12,7 +11,7 @@ class Cms::ContentSetting < ApplicationRecord
 
   def self.set_config(id, params = {})
     @@configs[self] ||= []
-    @@configs[self] << params.merge(:id => id)
+    @@configs[self] << params.merge(:id => id).freeze
   end
   
   def self.configs(content)
@@ -63,6 +62,10 @@ class Cms::ContentSetting < ApplicationRecord
 
   def menu
     config[:menu]
+  end
+
+  def extra_options
+    config[:extra_options]
   end
 
   def default_value

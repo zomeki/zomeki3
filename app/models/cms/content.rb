@@ -102,11 +102,10 @@ class Cms::Content < ApplicationRecord
   def set_default_settings_from_configs
     settings.klass.all_configs.each do |config|
       next if config[:default_value].blank?
-      settings.build(
-        name: config[:id],
-        value: config[:default_value],
-        extra_values: config[:default_extra_values]
-      )
+
+      setting = settings.build(name: config[:id])
+      setting.value = config[:default_value]
+      setting.extra_values = config[:default_extra_values] if config[:default_extra_values]
     end
   end
 end

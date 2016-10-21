@@ -13,10 +13,12 @@ module Sys::Model::Base::File
     validate :validate_upload_file
     after_save :upload_internal_file
     after_destroy :remove_internal_file
+  end
 
-    scope :readable, -> { all }
-    scope :editable, -> { all }
-    scope :deletable, -> { all }
+  class_methods do
+    def readable; all; end
+    def editable; all; end
+    def deletable; all; end
   end
 
   @@_maxsize = 50 # MegaBytes
