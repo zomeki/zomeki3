@@ -10,7 +10,7 @@ server {
 
   location ^~ /<%= ZomekiCMS::ADMIN_URL_PREFIX %> {
     try_files $uri @proxy;
-    <%- if use_basic_auth? -%>
+    <%- if use_basic_auth? && system_basic_auth_user_enabled? -%>
     auth_basic_user_file <%= "#{::File.dirname(public_path)}/.htpasswd_system" %>;
     auth_basic "Please enter your ID and password";
     <%- end -%>
@@ -18,7 +18,7 @@ server {
 
   location / {
     try_files $uri $uri/index.html @proxy;
-    <%- if use_basic_auth? -%>
+    <%- if use_basic_auth? && basic_auth_user_enabled? -%>
     auth_basic_user_file <%= "#{::File.dirname(public_path)}/.htpasswd" %>;
     auth_basic "Please enter your ID and password";
     <%- end -%>
@@ -26,7 +26,7 @@ server {
   }
 
   <%- basic_auth_users.directory_auth.each do |d|
-    next unless directory_basic_auth_enabled?(d.target_location) -%>
+    next unless directory_basic_auth_user_enabled?(d.target_location) -%>
   location /<%= d.target_location %> {
     try_files $uri $uri/index.html @proxy;
     <%- if use_basic_auth? %>
