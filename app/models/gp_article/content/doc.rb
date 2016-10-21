@@ -29,6 +29,10 @@ class GpArticle::Content::Doc < Cms::Content
     docs.mobile(::Page.mobile?).public_state
   end
 
+  def public_docs_for_list
+    public_docs.visible_in_list
+  end
+
   def organization_content_group
     if organization_content_group_setting
       @organization_content_group ||= organization_content_group_setting.organization_content_group
