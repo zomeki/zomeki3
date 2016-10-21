@@ -18,13 +18,13 @@ class GpCategory::Content::Setting < Cms::ContentSetting
     default_value: '%H時%M分'
   set_config :category_type_style,
     name: "#{GpCategory::CategoryType.model_name.human}表示形式",
-    options: GpCategory::Content::CategoryType::CATEGORY_TYPE_STYLE_OPTIONS
+    options: [['全カテゴリ一覧', 'all_categories'], ['全記事一覧', 'all_docs'], ['カテゴリ＋記事', 'categories_with_docs']]
   set_config :category_style,
     name: "#{GpCategory::Category.model_name.human}表示形式",
-    options: GpCategory::Content::CategoryType::CATEGORY_STYLE_OPTIONS
+    options: [['カテゴリ一覧＋記事一覧', 'categories_and_docs'], ['カテゴリ＋記事', 'categories_with_docs']]
   set_config :doc_style,
     name: '新着記事一覧表示形式',
-    options: GpCategory::Content::CategoryType::DOC_STYLE_OPTIONS
+    options: [['全記事一覧', 'all_docs']]
   set_config :docs_order,
     name: '記事一覧表示順',
     options: GpCategory::Content::CategoryType::DOCS_ORDER_OPTIONS,
@@ -41,7 +41,7 @@ class GpCategory::Content::Setting < Cms::ContentSetting
   set_config :feed,
     name: "フィード",
     form_type: :radio_buttons,
-    options: GpCategory::Content::CategoryType::FEED_DISPLAY_OPTIONS,
+    options: [['表示する', 'enabled'], ['表示しない', 'disabled']],
     default_value: 'enabled',
     default_extra_values: { feed_docs_number: 10 }
 end

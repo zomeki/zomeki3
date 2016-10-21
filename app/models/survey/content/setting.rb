@@ -6,15 +6,15 @@ class Survey::Content::Setting < Cms::ContentSetting
   set_config :approval_relation,
     name: '承認フロー',
     form_type: :radio_buttons,
-    options: Survey::Content::Form::APPROVAL_RELATION_OPTIONS,
+    options: [['使用する', 'enabled'], ['使用しない', 'disabled']],
     default_value: 'disabled'
   set_config :captcha,
     name: '画像認証',
-    options: Survey::Content::Form::CAPTCHA_OPTIONS
+    options: [['使用する', 'enabled'], ['使用しない', 'disabled']]
   set_config :common_ssl,
     name: '共有SSL',
     form_type: :radio_buttons,
-    options: Survey::Content::Form::SSL_OPTIONS
+    options: [['使用する', 'enabled'], ['使用しない', 'disabled']]
   set_config :auto_reply,
     name: "自動返信メール",
     options: [['返信する','send'],['返信しない','none']]

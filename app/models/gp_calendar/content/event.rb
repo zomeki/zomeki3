@@ -1,7 +1,4 @@
 class GpCalendar::Content::Event < Cms::Content
-  IMAGE_STATE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
-  EVENT_SYNC_OPTIONS = [['有効', 'enabled'], ['無効', 'disabled']]
-
   default_scope { where(model: 'GpCalendar::Event') }
 
   has_one :public_node, -> { public_state.order(:id) },

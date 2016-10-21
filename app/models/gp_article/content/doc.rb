@@ -1,23 +1,4 @@
 class GpArticle::Content::Doc < Cms::Content
-  CALENDAR_RELATION_OPTIONS = [['使用する', 'enabled'], ['使用しない', 'disabled']]
-  MAP_RELATION_OPTIONS = [['使用する', 'enabled'], ['使用しない', 'disabled']]
-  APPROVAL_RELATION_OPTIONS = [['使用する', 'enabled'], ['使用しない', 'disabled']]
-  INQUIRY_STATE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
-  INQUIRY_FIELD_OPTIONS = [['住所', 'address'], ['TEL', 'tel'], ['FAX', 'fax'], ['メールアドレス', 'email'], ['備考', 'note']] # ['課', 'group_id'], ['室・担当', 'charge'],
-  FEED_DISPLAY_OPTIONS = [['表示する', 'enabled'], ['表示しない', 'disabled']]
-  TAG_RELATION_OPTIONS = [['使用する', 'enabled'], ['使用しない', 'disabled']]
-  SNS_SHARE_RELATION_OPTIONS = [['使用する', 'enabled'], ['使用しない', 'disabled']]
-  BLOG_FUNCTIONS_OPTIONS = [['使用する', 'enabled'], ['使用しない', 'disabled']]
-  BROKEN_LINK_NOTIFICATION_OPTIONS = [['通知する', 'enabled'], ['通知しない', 'disabled']]
-  FEATURE_SETTINGS_OPTIONS = [['使用する', 'enabled'], ['使用しない', 'disabled']]
-  WRAPPER_TAG_OPTIONS = [['li', 'li'], ['article', 'article']]
-  DOC_LIST_STYLE_OPTIONS = [['日付毎', 'by_date'], ['記事一覧', 'simple']]
-  QRCODE_SETTINGS_OPTIONS = [['使用する', 'enabled'], ['使用しない', 'disabled']]
-  QRCODE_STATE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
-  EVENT_SYNC_SETTINGS_OPTIONS = [['使用する', 'enabled'], ['使用しない', 'disabled']]
-  EVENT_SYNC_DEFAULT_WILL_SYNC_OPTIONS = [['同期する', 'enabled'], ['同期しない', 'disabled']]
-  SERIALNO_SETTINGS_OPTIONS = [['使用する', 'enabled'], ['使用しない', 'disabled']]
-
   default_scope { where(model: 'GpArticle::Doc') }
 
   has_one :public_node, -> { public_state.where(model: 'GpArticle::Doc').order(:id) },
@@ -166,7 +147,7 @@ class GpArticle::Content::Doc < Cms::Content
   end
 
   def inquiry_extra_values
-    setting_extra_values(:inquiry_setting).presence || GpArticle::Content::Setting.new.default_inquiry_setting
+    setting_extra_values(:inquiry_setting) || {}
   end
 
   def approval_content_approval_flow
@@ -259,7 +240,7 @@ class GpArticle::Content::Doc < Cms::Content
   end
 
   def wrapper_tag
-    setting_extra_value(:list_style, :wrapper_tag) || WRAPPER_TAG_OPTIONS.first.last
+    setting_extra_value(:list_style, :wrapper_tag) || 'li'
   end
 
   def doc_list_style
@@ -275,7 +256,7 @@ class GpArticle::Content::Doc < Cms::Content
   end
 
   def qrcode_default_state
-    setting_extra_value(:qrcode_settings, :state) || QRCODE_STATE_OPTIONS.last.last
+    setting_extra_value(:qrcode_settings, :state) || 'hidden'
   end
 
   def event_sync?

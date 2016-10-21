@@ -13,7 +13,7 @@ class GpCalendar::Content::Setting < Cms::ContentSetting
   set_config :show_images,
     name: '画像表示',
     form_type: :radio_buttons,
-    options: GpCalendar::Content::Event::IMAGE_STATE_OPTIONS,
+    options: [['表示', 'visible'], ['非表示', 'hidden']],
     default_value: 'visible'
   set_config :default_image,
     name: '初期画像',
@@ -23,11 +23,11 @@ class GpCalendar::Content::Setting < Cms::ContentSetting
     options: [["表示する", 1], ["表示しない", 0]]
   set_config :event_sync_import,
     name: 'イベント同期（インポート）',
-    options: GpCalendar::Content::Event::EVENT_SYNC_OPTIONS,
+    options: [['有効', 'enabled'], ['無効', 'disabled']],
     default_value: 'disabled'
   set_config :event_sync_export,
     name: 'イベント同期（エクスポート）',
-    options: GpCalendar::Content::Event::EVENT_SYNC_OPTIONS,
+    options: [['有効', 'enabled'], ['無効', 'disabled']],
     default_value: 'disabled'
 
   def category_ids

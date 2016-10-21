@@ -2,7 +2,7 @@ class Organization::Content::Setting < Cms::ContentSetting
   set_config :article_relation,
     name: '記事URL保持許可',
     form_type: :radio_buttons,
-    options: Organization::Content::Group::ARTICLE_RELATION_OPTIONS,
+    options: [['使用する', 'enabled'], ['使用しない', 'disabled']],
     default_value: 'disabled'
   set_config :doc_style,
     name: "#{GpArticle::Doc.model_name.human}表示形式",

@@ -18,7 +18,7 @@ class GpArticle::Content::Setting < Cms::ContentSetting
   set_config :feature_settings, menu: :form,
     name: '記事一覧表示',
     form_type: :radio_buttons,
-    options: GpArticle::Content::Doc::FEATURE_SETTINGS_OPTIONS,
+    options: [['使用する', 'enabled'], ['使用しない', 'disabled']],
     default_value: 'enabled',
     default_extra_values: { feature_1: 'true' }
   set_config :save_button_states, menu: :form,
@@ -30,6 +30,10 @@ class GpArticle::Content::Setting < Cms::ContentSetting
     name: '連絡先',
     form_type: :radio_buttons,
     options: [['使用する', 'enabled'], ['使用しない', 'disabled']],
+    extra_options: {
+      default_state_options: [['表示', 'visible'], ['非表示', 'hidden']],
+      display_field_options: [['住所', 'address'], ['TEL', 'tel'], ['FAX', 'fax'], ['メールアドレス', 'email'], ['備考', 'note']] # ['課', 'group_id'], ['室・担当', 'charge'],
+    },
     default_value: 'enabled',
     default_extra_values: {
       display_fields: ['group_id', 'address', 'tel', 'fax', 'email', 'note']
@@ -37,7 +41,7 @@ class GpArticle::Content::Setting < Cms::ContentSetting
   set_config :blog_functions, menu: :form,
     name: 'ブログ',
     form_type: :radio_buttons,
-    options: GpArticle::Content::Doc::BLOG_FUNCTIONS_OPTIONS,
+    options: [['使用する', 'enabled'], ['使用しない', 'disabled']],
     default_value: 'disabled',
     default_extra_values: {
       footer_style: '投稿者：@user@ @publish_time@ コメント(@comment_count@) カテゴリ：@category_link@',
@@ -53,12 +57,15 @@ class GpArticle::Content::Setting < Cms::ContentSetting
   # menu: :index
   set_config :doc_list_style, menu: :index,
     name: "#{GpArticle::Doc.model_name.human}一覧表示形式",
-    options: GpArticle::Content::Doc::DOC_LIST_STYLE_OPTIONS,
+    options: [['日付毎', 'by_date'], ['記事一覧', 'simple']],
     default_value: 'by_date'
   set_config :list_style, menu: :index,
     name: "#{GpArticle::Doc.model_name.human}タイトル表示形式",
     form_type: :text_area,
     upper_text: '<a href="#" class="show_dialog">置き換えテキストを確認する</a>',
+    extra_options: {
+      wrapper_tag_options: [['li', 'li'], ['article', 'article']]
+    },
     default_value: '@title_link@(@publish_date@ @group@)',
     default_extra_values: { wrapper_tag: 'li' }
   set_config :date_style, menu: :index,
@@ -72,7 +79,7 @@ class GpArticle::Content::Setting < Cms::ContentSetting
   set_config :feed, menu: :index,
     name: "フィード",
     form_type: :radio_buttons,
-    options: GpArticle::Content::Doc::FEED_DISPLAY_OPTIONS,
+    options: [['表示する', 'enabled'], ['表示しない', 'disabled']],
     default_value: 'disabled',
     default_extra_values: { feed_docs_number: '10' }
 
@@ -84,7 +91,7 @@ class GpArticle::Content::Setting < Cms::ContentSetting
   set_config :serial_no_settings, menu: :page,
     name: '記事番号表示',
     form_type: :radio_buttons,
-    options: GpArticle::Content::Doc::SERIALNO_SETTINGS_OPTIONS,
+    options: [['使用する', 'enabled'], ['使用しない', 'disabled']],
     default_value: 'disabled'
   set_config :display_dates, menu: :page,
     name: '記事日時表示',
@@ -99,7 +106,10 @@ class GpArticle::Content::Setting < Cms::ContentSetting
   set_config :qrcode_settings, menu: :page,
     name: 'QRコード',
     form_type: :radio_buttons,
-    options: GpArticle::Content::Doc::QRCODE_SETTINGS_OPTIONS,
+    options: [['使用する', 'enabled'], ['使用しない', 'disabled']],
+    extra_options: {
+      default_state_options: [['表示', 'visible'], ['非表示', 'hidden']]
+    },
     default_value: 'disabled',
     default_extra_values: { state: 'hidden' }
 
@@ -107,7 +117,7 @@ class GpArticle::Content::Setting < Cms::ContentSetting
   set_config :broken_link_notification, menu: :manage,
     name: 'リンク切れ通知',
     form_type: :radio_buttons,
-    options: GpArticle::Content::Doc::BROKEN_LINK_NOTIFICATION_OPTIONS,
+    options: [['通知する', 'enabled'], ['通知しない', 'disabled']],
     default_value: 'disabled'
 
   # menu: :relation
@@ -117,22 +127,26 @@ class GpArticle::Content::Setting < Cms::ContentSetting
   set_config :map_relation, menu: :relation,
     name: '地図',
     form_type: :radio_buttons,
-    options: GpArticle::Content::Doc::MAP_RELATION_OPTIONS,
+    options: [['使用する', 'enabled'], ['使用しない', 'disabled']],
     default_value: 'enabled'
   set_config :tag_relation, menu: :relation,
     name: '関連ワード',
     form_type: :radio_buttons,
-    options: GpArticle::Content::Doc::TAG_RELATION_OPTIONS,
+    options: [['使用する', 'enabled'], ['使用しない', 'disabled']],
     default_value: 'enabled'
   set_config :approval_relation, menu: :relation,
     name: '承認フロー',
     form_type: :radio_buttons,
-    options: GpArticle::Content::Doc::APPROVAL_RELATION_OPTIONS,
+    options: [['使用する', 'enabled'], ['使用しない', 'disabled']],
     default_value: 'enabled'
   set_config :calendar_relation, menu: :relation,
     name: 'カレンダー',
     form_type: :radio_buttons,
-    options: GpArticle::Content::Doc::CALENDAR_RELATION_OPTIONS,
+    options: [['使用する', 'enabled'], ['使用しない', 'disabled']],
+    extra_options: {
+      event_sync_settings_options: [['使用する', 'enabled'], ['使用しない', 'disabled']],
+      event_sync_default_will_sync_options: [['同期する', 'enabled'], ['同期しない', 'disabled']]
+    },
     default_value: 'enabled'
   set_config :organization_content_group_id, menu: :relation,
     name: '組織',
@@ -143,7 +157,7 @@ class GpArticle::Content::Setting < Cms::ContentSetting
   set_config :sns_share_relation, menu: :relation,
     name: 'SNSシェア',
     form_type: :radio_buttons,
-    options: GpArticle::Content::Doc::SNS_SHARE_RELATION_OPTIONS,
+    options: [['使用する', 'enabled'], ['使用しない', 'disabled']],
     default_value: 'enabled'
 
   belongs_to :content, foreign_key: :content_id, class_name: 'GpArticle::Content::Doc'
@@ -178,12 +192,6 @@ class GpArticle::Content::Setting < Cms::ContentSetting
 
   def default_template_id
     extra_values[:default_template_id] || 0
-  end
-
-  def default_inquiry_setting
-    {
-      display_fields: ['group_id', 'address', 'tel', 'fax', 'email', 'note']
-    }
   end
 
   def default_layout_id

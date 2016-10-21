@@ -1,6 +1,4 @@
 class Organization::Content::Group < Cms::Content
-  ARTICLE_RELATION_OPTIONS = [['使用する', 'enabled'], ['使用しない', 'disabled']]
-
   default_scope { where(model: 'Organization::Group') }
 
   has_one :public_node, -> { public_state.where(model: 'Organization::Group').order(:id) },

@@ -1,7 +1,4 @@
 class Map::Content::Marker < Cms::Content
-  IMAGE_STATE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
-  MARKER_ORDER_OPTIONS = [['投稿日（昇順）', 'time_asc'], ['投稿日（降順）', 'time_desc'], ['カテゴリ順', 'category']]
-
   default_scope { where(model: 'Map::Marker') }
 
   has_one :public_node, -> { public_state.where(model: 'Map::Marker').order(:id) },
