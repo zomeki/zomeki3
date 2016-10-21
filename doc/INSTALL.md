@@ -1,4 +1,4 @@
-# ZOMEKI development インストールマニュアル
+# ZOMEKI インストールマニュアル
 
 ## 1.想定環境
 
@@ -9,7 +9,7 @@
 * Appサーバ: unicorn 5.1
 * Database: PostgreSQL 9.5
 * Ruby: 2.3
-* Rails: 4.2
+* Rails: 5.0
 
 ### 設定
 
@@ -124,10 +124,15 @@ ZOMEKI用のユーザを作成します。
 
     # useradd -m zomeki
 
-ZOMEKIをインストールします。
+必要なパッケージをインストールします。
 
     # curl --silent --location https://rpm.nodesource.com/setup_4.x | bash -
-    # yum -y install ImageMagick-devel libxml2-devel libxslt-devel openldap-devel nodejs patch
+    # yum -y install libxml2-devel libxslt-devel openldap-devel nodejs patch
+
+    # rpm -ivh http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
+    # yum -y install --enablerepo=remi ImageMagick-last-devel
+
+ZOMEKIをインストールします。
 
     # git clone https://github.com/zomeki/zomeki3.git /var/www/zomeki
     # chown -R zomeki:zomeki /var/www/zomeki
