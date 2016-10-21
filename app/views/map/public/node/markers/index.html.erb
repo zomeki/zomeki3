@@ -28,7 +28,7 @@
     map = new Map('map_canvas', <%= bounds[:min][:lat] %>, <%= bounds[:min][:lon] %>,
                                 <%= bounds[:max][:lat] %>, <%= bounds[:max][:lon] %>);
     <%- else -%>
-    map = new Map('map_canvas', default_latitude, default_longitude);
+    map = new Map('map_canvas', <%= default_latitude %>, <%= default_longitude %>);
     <%- end -%>
 
     <%- @all_markers.each do |marker| -%>
@@ -80,7 +80,7 @@
       </td>
       <%- end -%>
       <td class="markerTitle"><%= marker.doc ? title_replace(marker.doc, @content.title_style) : marker.title %></td>
-      <td class="marker"><%= link_to '表示', '#map_canvas', onclick: "map.move_to('#{marker.latitude}_#{marker.longitude}')" %></td>
+      <td class="marker"><%= link_to '表示', '#map_canvas', onclick: "map.move_to('#{marker.latitude}_#{marker.longitude}'); return false;" %></td>
     </tr>
     <%- end -%>
   </table>
