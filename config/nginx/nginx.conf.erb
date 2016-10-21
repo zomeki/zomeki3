@@ -1,3 +1,11 @@
+client_max_body_size 1000M;
+
+send_timeout 130;
+client_body_timeout 130;
+client_header_timeout 130;
+proxy_send_timeout 130;
+proxy_read_timeout 130;
+
 <% zomeki_root = Rails.root -%>
 types {
   text/html r;
