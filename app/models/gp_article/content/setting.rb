@@ -162,6 +162,60 @@ class GpArticle::Content::Setting < Cms::ContentSetting
 
   belongs_to :content, foreign_key: :content_id, class_name: 'GpArticle::Content::Doc'
 
+  after_update :update_docs_event_state, if: -> { name == 'calendar_relation' }
+  after_update :update_docs_marker_state, if: -> { name == 'map_relation' }
+
+  def extra_values=(params)
+    ex = extra_values
+    case name
+    when 'gp_category_content_category_type_id'
+      ex[:category_type_ids] = (params[:category_types] || []).map {|ct| ct.to_i }
+      ex[:visible_category_type_ids] = (params[:visible_category_types] || []).map {|ct| ct.to_i }
+      ex[:default_category_type_id] = params[:default_category_type].to_i
+      ex[:default_category_id] = params[:default_category].to_i
+    when 'basic_setting'
+      ex[:default_layout_id] = params[:default_layout_id].to_i
+    when 'calendar_relation'
+      ex[:calendar_content_id] = params[:calendar_content_id].to_i
+      ex[:event_sync_settings] = params[:event_sync_settings].to_s
+      ex[:event_sync_default_will_sync] = params[:event_sync_default_will_sync].to_s
+    when 'map_relation'
+      ex[:map_content_id] = params[:map_content_id].to_i
+      ex[:lat_lng] = params[:lat_lng]
+      ex[:marker_icon_category] = params[:marker_icon_category]
+    when 'inquiry_setting'
+      ex[:state] = params[:state]
+      ex[:display_fields] = params[:display_fields] || []
+    when 'approval_relation'
+      ex[:approval_content_id] = params[:approval_content_id].to_i
+    when 'gp_template_content_template_id'
+      ex[:template_ids] = params[:template_ids].to_a.map(&:to_i)
+      ex[:default_template_id] = params[:default_template_id].to_i
+    when 'feed'
+      ex[:feed_docs_number] = params[:feed_docs_number]
+      ex[:feed_docs_period] = params[:feed_docs_period]
+    when 'tag_relation'
+      ex[:tag_content_tag_id] = params[:tag_content_tag_id].to_i
+    when 'sns_share_relation'
+      ex[:sns_share_content_id] = params[:sns_share_content_id].to_i
+    when 'blog_functions'
+      ex[:comment] = params[:comment]
+      ex[:comment_open] = params[:comment_open]
+      ex[:comment_notification_mail] = params[:comment_notification_mail]
+      ex[:footer_style] = params[:footer_style]
+    when 'feature_settings'
+      ex[:feature_1] = params[:feature_1]
+      ex[:feature_2] = params[:feature_2]
+    when 'list_style'
+      ex[:wrapper_tag] = params[:wrapper_tag]
+    when 'qrcode_settings'
+      ex[:state] = params[:state]
+    when 'serial_no_settings'
+      ex[:title] = params[:title]
+    end
+    super(ex)
+  end
+
   def organization_content_group
     Organization::Content::Group.find_by(id: value)
   end
@@ -196,5 +250,19 @@ class GpArticle::Content::Setting < Cms::ContentSetting
 
   def default_layout_id
     extra_values[:default_layout_id] || 0
+  end
+
+  private
+
+  def update_docs_event_state
+    if content.gp_calendar_content_event.nil?
+      content.docs.where(event_state: 'visible').update_all(event_state: 'hidden')
+    end
+  end
+
+  def update_docs_marker_state
+    if content.map_content_marker.nil?
+      content.docs.where(marker_state: 'visible').update_all(marker_state: 'hidden')
+    end
   end
 end

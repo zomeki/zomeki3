@@ -4,11 +4,11 @@
 <table class="show">
   <tr>
     <th>クライアントID</th>
-    <td><%= text_field_tag 'client_id', @item.extra_values[:client_id], size: 100 %></td>
+    <td><%= text_field_tag 'item[extra_values][client_id]', @item.extra_values[:client_id], size: 100 %></td>
   </tr>
   <tr>
     <th>クライアントシークレット</th>
-    <td><%= text_field_tag 'client_secret', @item.extra_values[:client_secret], size: 100 %></td>
+    <td><%= text_field_tag 'item[extra_values][client_secret]', @item.extra_values[:client_secret], size: 100 %></td>
   </tr>
   <%- if (auth_url = @item.extra_values[:auth_url]).present? -%>
   <tr>
@@ -17,7 +17,7 @@
   </tr>
   <tr>
     <th>認証コード</th>
-    <td><%= text_field_tag 'auth_code', @item.extra_values[:auth_code], size: 100 %></td>
+    <td><%= text_field_tag 'item[extra_values][auth_code]', @item.extra_values[:auth_code], size: 100 %></td>
   </tr>
   <%- end -%>
   <%- if (oauth2_token = @item.extra_values[:oauth2_token]).kind_of?(Hash) -%>

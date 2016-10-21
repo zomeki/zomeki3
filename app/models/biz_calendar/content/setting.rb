@@ -11,4 +11,6 @@ class BizCalendar::Content::Setting < Cms::ContentSetting
     name: "時間形式",
     comment: "<strong>午前/午後</strong>：%P <strong>時：</strong>%H <strong>分：</strong>%M <strong>秒：</strong>%S",
     default_value: '%H時%M分'
+
+  belongs_to :content, foreign_key: :content_id, class_name: 'BizCalendar::Content::Place'
 end

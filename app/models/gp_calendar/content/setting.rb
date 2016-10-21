@@ -30,6 +30,25 @@ class GpCalendar::Content::Setting < Cms::ContentSetting
     options: [['有効', 'enabled'], ['無効', 'disabled']],
     default_value: 'disabled'
 
+  belongs_to :content, foreign_key: :content_id, class_name: 'GpCalendar::Content::Event'
+
+  def extra_values=(params)
+    ex = extra_values
+    case name
+    when 'gp_category_content_category_type_id'
+      category_ids = (params[:categories] || {}).to_a.sort{|a, b| a.first <=> b.first }.map(&:last)
+      ex[:category_ids] = category_ids.map{|id| id.to_i if id.present? }.compact.uniq
+    when 'event_sync_import'
+      ex[:source_hosts] = params[:source_hosts].to_s
+    when 'event_sync_export'
+      ex[:destination_hosts] = params[:destination_hosts].to_s
+      ex[:default_will_sync] = params[:default_will_sync].to_s
+    when 'show_images'
+      ex[:image_cnt] = params[:image_cnt].to_i
+    end
+    super(ex)
+  end
+
   def category_ids
     extra_values[:category_ids] || []
   end

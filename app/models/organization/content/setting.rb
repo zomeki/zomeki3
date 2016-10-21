@@ -24,7 +24,18 @@ class Organization::Content::Setting < Cms::ContentSetting
     name: 'カテゴリ種別',
     options: lambda { GpCategory::Content::CategoryType.where(site_id: Core.site.id).map { |ct| [ct.name, ct.id] } }
 
+  belongs_to :content, foreign_key: :content_id, class_name: 'Organization::Content::Group'
+
   validate :validate_value
+
+  def extra_values=(params)
+    ex = extra_values
+    case name
+    when 'article_relation'
+      ex[:gp_article_content_doc_id] = params[:gp_article_content_doc_id].to_i
+    end
+    super(ex)
+  end
 
   private
 

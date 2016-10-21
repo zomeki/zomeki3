@@ -44,4 +44,25 @@ class GpCategory::Content::Setting < Cms::ContentSetting
     options: [['表示する', 'enabled'], ['表示しない', 'disabled']],
     default_value: 'enabled',
     default_extra_values: { feed_docs_number: 10 }
+
+  belongs_to :content, foreign_key: :content_id, class_name: 'GpCategory::Content::CategoryType'
+
+  def extra_values=(params)
+    ex = extra_values
+    case name
+    when 'category_type_style'
+      ex[:category_type_doc_style] = params[:category_type_doc_style]
+      ex[:category_type_docs_number] = params[:category_type_docs_number]
+    when 'category_style'
+      ex[:category_doc_style] = params[:category_doc_style]
+      ex[:category_docs_number] = params[:category_docs_number]
+    when 'doc_style'
+      ex[:doc_doc_style] = params[:doc_doc_style]
+      ex[:doc_docs_number] = params[:doc_docs_number]
+    when 'feed'
+      ex[:feed_docs_number] = params[:feed_docs_number]
+      ex[:feed_docs_period] = params[:feed_docs_period]
+    end
+    super(ex)
+  end
 end

@@ -19,7 +19,21 @@ class Survey::Content::Setting < Cms::ContentSetting
     name: "自動返信メール",
     options: [['返信する','send'],['返信しない','none']]
 
+  belongs_to :content, foreign_key: :content_id, class_name: 'Survey::Content::Form'
+
   validate :validate_value
+
+  def extra_values=(params)
+    ex = extra_values
+    case name
+    when 'approval_relation'
+      ex[:approval_content_id] = params[:approval_content_id].to_i
+    when 'auto_reply'
+      ex[:upper_reply_text] = params[:upper_reply_text]
+      ex[:lower_reply_text] = params[:lower_reply_text]
+    end
+    super(ex)
+  end
 
   private
 
