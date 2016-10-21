@@ -8,41 +8,25 @@ class GpArticle::Public::Piece::RecentTabsController < Sys::Controller::Public::
     @more_label = @piece.more_label.presence || '>>新着記事一覧'
     @tabs = []
 
-    GpArticle::Piece::RecentTabXml.find(:all, @piece, :order => :sort_no).each do |tab|
+    GpArticle::Piece::RecentTabXml.find(:all, @piece, order: :sort_no).each do |tab|
       next if tab.name.blank?
 
-      if (current = @tabs.empty?)
-        tab_class = "#{tab.name} current"
-      else
-        tab_class = tab.name
-      end
-
-      unless tab.categories_with_layer.empty?
-        doc_ids = tab.categories_with_layer.map do |category_with_layer|
-            if category_with_layer[:layer] == 'descendants'
-              category_with_layer[:category].descendants.inject([]) {|result, item| result | item.doc_ids }
-            else
-              category_with_layer[:category].doc_ids
-            end
-          end
-
-        case tab.condition
-        when 'and'
-          doc_ids = doc_ids.inject(doc_ids.shift) {|result, item| result & item }
-        when 'or'
-          doc_ids = doc_ids.inject([]) {|result, item| result | item }
+      tab_class =
+        if (current = @tabs.empty?)
+          "#{tab.name} current"
         else
-          doc_ids = []
+          tab.name
         end
-        docs = @piece.content.public_docs_for_list.where(id: doc_ids)
-                     .order(display_published_at: :desc, published_at: :desc)
-                     .limit(@piece.list_count)
-      else
-        docs = @piece.content.public_docs_for_list
-                     .order(display_published_at: :desc, published_at: :desc)
-                     .limit(@piece.list_count)
-      end
-      docs = docs.preload_assocs(:public_node_ancestors_assocs, :public_index_assocs)
+
+      docs =
+        unless tab.categories_with_layer.empty?
+          @piece.content.public_docs_for_list.where(id: tab.public_doc_ids)
+        else
+          @piece.content.public_docs_for_list
+        end
+      docs = docs.order(display_published_at: :desc, published_at: :desc)
+                 .limit(@piece.list_count)
+                 .preload_assocs(:public_node_ancestors_assocs, :public_index_assocs)
 
       @tabs.push(name: tab.name,
                  title: tab.title,
@@ -55,4 +39,8 @@ class GpArticle::Public::Piece::RecentTabsController < Sys::Controller::Public::
 
     render plain: '' if @tabs.empty?
   end
+
+  private
+
+
 end

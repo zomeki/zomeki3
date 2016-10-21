@@ -34,16 +34,7 @@ class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
                  .preload_assocs(:public_node_ancestors_assocs, :public_index_assocs)
     return http_error(404) if @docs.current_page > @docs.total_pages
 
-    @items = @docs.inject([]) do |result, doc|
-        date = doc.display_published_at.try(:strftime, '%Y年%-m月%-d日')
-
-        unless result.empty?
-          last_date = result.last[:doc].display_published_at.try(:strftime, '%Y年%-m月%-d日')
-          date = nil if date == last_date
-        end
-
-        result.push(date: date, doc: doc)
-      end
+    @items = @docs.group_by { |doc| doc.display_published_at.try(:strftime, '%Y年%-m月%-d日') }
 
     render :index_mobile if Page.mobile?
   end
@@ -112,8 +103,7 @@ class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
 
   def public_or_preview_docs(id: nil, name: nil)
     unless Core.mode == 'preview'
-      docs = @content.public_docs
-      name ? docs.find_by(name: name) : docs
+      @content.public_docs.find_by(name: name)
     else
       if Core.publish
         case
@@ -121,8 +111,6 @@ class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
           nil
         when name
           @content.preview_docs.find_by(name: name)
-        else
-          @content.public_docs
         end
       else
         case
@@ -130,8 +118,6 @@ class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
           @content.all_docs.find_by(id: id)
         when name
           @content.public_docs.find_by(name: name) || @content.preview_docs.find_by(name: name)
-        else
-          @content.public_docs
         end
       end
     end

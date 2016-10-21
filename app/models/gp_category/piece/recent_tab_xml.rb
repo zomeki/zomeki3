@@ -35,6 +35,25 @@ class GpCategory::Piece::RecentTabXml < Cms::Model::Base::PieceExtension
     end
   end
 
+  def public_doc_ids
+    doc_ids = categories_with_layer.map do |category_with_layer|
+      if category_with_layer[:layer] == 'descendants'
+        category_with_layer[:category].descendants.inject([]) {|result, item| result | item.doc_ids }
+      else
+        category_with_layer[:category].doc_ids
+      end
+    end
+
+    case condition
+    when 'and'
+      doc_ids.inject(doc_ids.shift) {|result, item| result & item }
+    when 'or'
+      doc_ids.inject([]) {|result, item| result | item }
+    else
+      []
+    end
+  end
+
   def more_dir
     return if more.blank?
     more.end_with?('/') ? more : "#{File.dirname(more)}/"

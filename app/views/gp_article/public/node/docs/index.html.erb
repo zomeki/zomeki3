@@ -12,16 +12,15 @@
       <%= content_tag @content.wrapper_tag, doc_replace(doc, @content.list_style, @content.date_style) %>
       <%- end -%>
       <%=raw '</ul>' if @content.wrapper_tag == 'li' %>
-  <%- else -%>
-      <% @items.each_with_index do |item, idx| %>
-      <%- if item[:date] -%>
-      <%=raw '</ul>' if @content.wrapper_tag == 'li' && idx.nonzero? %>
-      <h2 class="date"><%= item[:date] %></h2>
-      <%=raw '<ul>' if @content.wrapper_tag == 'li' %>
+    <%- else -%>
+      <% @items.each do |date, docs| %>
+        <h2 class="date"><%= date %></h2>
+        <%=raw '<ul>' if @content.wrapper_tag == 'li' %>
+        <%- docs.each do |doc| -%>
+          <%= content_tag @content.wrapper_tag, doc_replace(doc, @content.list_style, @content.date_style) %>
+        <%- end -%>
+        <%=raw '</ul>' if @content.wrapper_tag == 'li' %>
       <%- end -%>
-      <%= content_tag @content.wrapper_tag, doc_replace(item[:doc], @content.list_style, @content.date_style) %>
-      <%- end -%>
-      <%=raw '</ul>' if @content.wrapper_tag == 'li' && @items.present? %>
     <%- end -%>
   </div>
   <%= paginate @docs %>
