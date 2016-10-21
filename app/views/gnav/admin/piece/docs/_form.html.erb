@@ -1,10 +1,4 @@
-<p class="form">基本情報</p>
-
-<table class="show">
-  <%= piece_base_form f, :container => :tr %>
-</table>
-
-<br />
+<%= render 'shared/admin/piece/form', f: f do -%>
 <p class="form">詳細設定</p>
 
 <table class="show">
@@ -31,7 +25,7 @@
   </tr>
 </table>
 
-<%= creator_form f %>
+<%= render 'gp_article/admin/shared/doc_style_tags' %>
 
 <%= javascript_tag do -%>
 $(document).ready(function () {
@@ -53,4 +47,4 @@ $(document).ready(function () {
 });
 <%- end -%>
 
-<%= render 'gp_article/admin/shared/doc_style_tags' %>
+<%- end -%>
