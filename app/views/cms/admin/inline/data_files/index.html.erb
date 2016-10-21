@@ -11,6 +11,22 @@ end
 
 <%= render :file => "cms/admin/data/files/_search.html.erb" %>
 
+<%= javascript_tag do %>
+function ckeInsertContent(value) {
+  if (parent.CKEDITOR.currentInstance) {
+    parent.CKEDITOR.currentInstance.insertHtml(value);
+  } else {
+    for (var i in parent.CKEDITOR.instances) {
+      var instance = parent.CKEDITOR.instances[i];
+      if (instance.container.isVisible()) {
+        instance.insertHtml(value);
+        break;
+      }
+    }
+  }
+}
+
+<% end %>
 
 <table class="index">
 
@@ -29,7 +45,10 @@ end
   <tr class="<%= cycle '', 'cycle' %>">
     <td style="text-align: center;"><%= link_to :show, url_for(:action => :show, :id => item) %></td>
     <td style="text-align: center;">
-      <a onclick="parent.setText(parent.document.getElementById('item_body'), '[[file/<%= safe{item.node.name + '/'} %><%= item.name %>]]');" href="#">挿入</a></td>
+      <%=hidden_field_tag "node_name[]", item.node.try(:name), :id=> "nodeName#{item.id}"%>
+      <%=hidden_field_tag "item_name[]", item.name, :id=> "itemName#{item.id}"%>
+      <%= link_to '挿入', "#", :id => "link_attach#{item.id}", :class=>"insertAttach" %>
+    </td>
     <td style="text-align: center;">
       <% if item.image_file? %>
         <a href="<%= url_for(:id => item, :action => :download) %>" target="_blank">
@@ -40,22 +59,22 @@ end
       <% end %>
     </td>
     <td><%= safe{item.node.name} %><br /><%= "（#{item.node.title}）" if safe{item.node.title}.to_s != '' %></td>
-    <td>
-      <%= item.name %><br /><%= "（#{item.title}）" if item.name != item.title %>
-      <div class="pasteLinks">
-        <% if item.image_file? %>
-          <input type="hidden" id="srcImage<%= item.id %>" value="<%= %Q(<img src="#{item.public_uri}" alt="#{item.alt}" title="#{item.alt}" />) %>" />
-          <a href="#" onclick="parent.setText(parent.document.getElementById('item_body'), $('#srcImage<%= item.id %>').val());">画像貼付 (<%= "#{item.image_width}x#{item.image_height}" %>)</a>
+    <td><span class="item_name" item_name="<%= item.name %>"><%= item.name %></span>
+      <% if item.image_file? %>
+        <%= hidden_field_tag "imageAlt[]", item.alt, id: "imageAlt#{item.id}" %>
+        <div class="pasteLinks">
+          <%= link_to "画像貼付 (#{item.image_width}x#{item.image_height})", "#",
+            onclick: %Q(ckeInsertContent('<img src="#{item.public_uri}" alt="#{item.alt}" title="#{item.alt}" />'); return false;), id: "link_image#{item.id}" %>
           <% if item.has_thumbnail? %>
-          <input type="hidden" id="srcThumb<%= item.id %>" value="<%= %Q(<img src="#{item.public_thumbnail_uri}" alt="" title="" />) %>" />
-          | <a href="#" onclick="parent.setText(parent.document.getElementById('item_body'), $('#srcThumb<%= item.id %>').val());">画像貼付 (<%= "#{item.thumb_width}x#{item.thumb_height}" %>)</a>
+          | <%= link_to "画像貼付 (#{item.thumb_width}x#{item.thumb_height})", "#",
+            onclick: %Q(ckeInsertContent('<img src="#{item.public_thumbnail_uri}" alt="#{item.alt}" title="#{item.alt}" />'); return false;), id: "link_image#{item.id}thumb" %>
           <% end %>
-        <% end %>
-      </div>
+        </div>
+      <% end %>
     </td>
     <td style="text-align: center;"><%= item.eng_unit %><br /><%= item.image_size %></td>
     <td style="text-align: center;"><%= _input.call('file_url', i, safe{item.public_uri}, 120) %></td>
-    
+
     <% if item.public? %>
     <td style="text-align: center;"><%= link_to item.status.name, item.public_full_uri, :target => '_blank' %></td>
     <% else %>
@@ -68,3 +87,19 @@ end
 </table>
 
 <%= paginate @items %>
+
+<%= javascript_tag do %>
+$(document).ready(function () {
+  $(".insertAttach").on('click', function (event) {
+    event.preventDefault();
+    var fileId = $(this).attr("id").replace(/link_attach/, "");
+    var node_name = '';
+    if($("#nodeName" + fileId).val()){
+      node_name = $("#nodeName" + fileId).val() + '/';
+    }
+    var item_name       = $("#itemName" + fileId).val();
+    var insertItem =  '[[file/' + node_name + item_name + ']]';
+    ckeInsertContent(insertItem);
+  });
+});
+<% end %>
