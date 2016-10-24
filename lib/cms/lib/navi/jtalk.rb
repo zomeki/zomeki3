@@ -58,8 +58,8 @@ class Cms::Lib::Navi::Jtalk
       cnf.puts(text.strip)
       cnf.close
 
-      cmd = "#{talk_bin} -m #{talk_voice} -x #{talk_dic} #{talk_opts}"
-      system("#{cmd} -ow #{wav.path} #{cnf.path}")
+      args = ['-m', talk_voice, '-x', talk_dic, '-ow', wav.path, cnf.path] + talk_opts.split(' ')
+      system(talk_bin, *args)
 
       if FileTest.exists?(wav.path)
         parts[i] = wav
@@ -70,11 +70,11 @@ class Cms::Lib::Navi::Jtalk
     wav = Tempfile::new(["talk", ".wav"], '/tmp')
     mp3 = Tempfile::new(["talk", "mp3"], '/tmp')
 
-    cmd = "#{sox} #{parts.compact.map(&:path).join(' ')} #{wav.path}"
-    system(cmd)
+    args = parts.compact.map(&:path) + [wav.path]
+    system(sox, *args)
 
-    cmd = "#{lame} #{lame_opts} #{wav.path} #{mp3.path}"
-    system(cmd)
+    args = lame_opts.split(' ') + [wav.path, mp3.path]
+    system(lame, *args)
 
     parts.each do |part|
       FileUtils.rm(part.path) if FileTest.exists?(part.path)

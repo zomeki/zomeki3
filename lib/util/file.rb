@@ -21,4 +21,10 @@ class Util::File
     end
     return true
   end
+
+  def self.file_type(path)
+    return unless `file -v`
+    require 'open3'
+    Open3.capture3('file', path)[0]
+  end
 end
