@@ -1,10 +1,4 @@
-<p class="form">基本情報</p>
-
-<table class="show">
-  <%= piece_base_view @item, :container => :tr %>
-</table>
-
-<br />
+<%= render 'shared/admin/piece/show' do -%>
 <p class="form">詳細設定</p>
 
 <table class="show">
@@ -19,5 +13,4 @@
     <td colspan="3"><%= @item.class::LAYER_OPTIONS.detect{|lo| lo.last == @item.setting_value(:layer) }.try(:first) %></td>
   </tr>
 </table>
-
-<%= creator_view @item %>
+<%- end -%>

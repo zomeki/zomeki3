@@ -116,6 +116,7 @@ class GpArticle::Doc < ApplicationRecord
   after_save :set_display_attributes
   after_save :save_links
 
+  scope :visible_in_list, -> { where(feature_1: true) }
   scope :event_scheduled_between, ->(start_date, end_date) {
     where(arel_table[:event_ended_on].gteq(start_date)).where(arel_table[:event_started_on].lt(end_date + 1))
   }

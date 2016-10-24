@@ -1,10 +1,4 @@
-<p class="form">基本情報</p>
-
-<table class="show">
-  <%= piece_base_form f, :container => :tr %>
-</table>
-
-<br />
+<%= render 'shared/admin/piece/form', f: f do -%>
 <p class="form">詳細設定</p>
 
 <table class="show">
@@ -20,8 +14,6 @@
   </tr>
 </table>
 
-<%= creator_form f %>
-
 <%= javascript_tag do -%>
 $(document).ready(function () {
   $('#item_in_settings_category_type_id').on('change', function (event) {
@@ -36,4 +28,5 @@ $(document).ready(function () {
     }
   });
 });
+<%- end -%>
 <%- end -%>
