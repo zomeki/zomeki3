@@ -64,8 +64,8 @@ class Cms::Public::OAuthController < ApplicationController
 
         return redirect_to(return_to || request.base_url)
       else
-        if oa_params['class'].present? && oa_params['id'].present? && oa_params['return_to'].present?
-          item = oa_params['class'].constantize.find(oa_params['id'])
+        if oa_params['class'] == 'SnsShare::Account' && oa_params['id'].present? && oa_params['return_to'].present?
+          item = SnsShare::Account.find(oa_params['id'])
           begin
             fb = RC::Facebook.new(access_token: auth[:credential_token])
             if fb.authorized?
@@ -111,11 +111,9 @@ class Cms::Public::OAuthController < ApplicationController
       if oa_params.empty?
         return redirect_to(request.base_url)
       else
-        if oa_params['class'].present? && oa_params['id'].present? && oa_params['return_to'].present?
-          item = oa_params['class'].constantize.find(oa_params['id'])
-
+        if oa_params['class'] == 'SnsShare::Account' && oa_params['id'].present? && oa_params['return_to'].present?
+          item = SnsShare::Account.find(oa_params['id'])
           item.update_attributes(auth)
-
           return redirect_to(oa_params['return_to'])
         else
           return redirect_to(request.base_url)
