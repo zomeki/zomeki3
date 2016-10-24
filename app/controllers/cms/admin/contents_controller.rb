@@ -29,11 +29,7 @@ class Cms::Admin::ContentsController < Cms::Controller::Admin::Base
   end
 
   def create
-    begin
-      @item = params[:item][:model].split('::').join('::Content::').constantize.new(content_params)
-    rescue
-      @item = Cms::Content.new(content_params)
-    end
+    @item = content_model(params.dig(:item, :model)).new(content_params)
     @item.state   = 'public'
     @item.site_id = Core.site.id
     _create @item
@@ -52,8 +48,20 @@ class Cms::Admin::ContentsController < Cms::Controller::Admin::Base
 
   private
 
+  def content_model(item_model)
+    if item_model.present? &&
+      (model = item_model.split('::').join('::Content::').constantize) &&
+      model.ancestors.include?(Cms::Content)
+      model
+    else
+      Cms::Content
+    end
+  end
+
   def content_params
-    params.require(:item).permit(:code, :concept_id, :model, :name, :note, :sort_no,
-      :creator_attributes => [:id, :group_id, :user_id])
+    params.require(:item).permit(
+      :code, :concept_id, :model, :name, :note, :sort_no,
+      :creator_attributes => [:id, :group_id, :user_id]
+    )
   end
 end
