@@ -4,7 +4,7 @@ class GpArticle::Admin::CommentsController < Cms::Controller::Admin::Base
   def pre_dispatch
     @content = GpArticle::Content::Doc.find(params[:content])
     return error_auth unless Core.user.has_priv?(:read, :item => @content.concept)
-    return redirect_to(request.env['PATH_INFO']) if params[:reset_criteria]
+    return redirect_to(action: :index) if params[:reset_criteria]
 
     @item = GpArticle::Comment.content_and_criteria(@content, {}).find(params[:id]) if params[:id].present?
   end
