@@ -598,10 +598,10 @@ $(document).ready(function () {
       return;
     }
 
-    $.get('<%= select_gp_article_doc_path(content: @content, id: '_ID_') %>.xml'.replace(/_ID_/, rel_doc.val()), function (data) {
+    $.get('<%= gp_article_related_doc_path(content: @content, id: '_ID_') %>.xml'.replace(/_ID_/, rel_doc.val()), function (data) {
       var newDoc = $('<tr>');
       var next_index = $('#rel_docs').find('tr').length;
-      $(data).find('item').each(function() {
+      $(data).find('hash').each(function() {
         var title_column = $('<td>');
         var rel_doc_field = $('<input>', {
           type: 'hidden',
@@ -612,7 +612,7 @@ $(document).ready(function () {
         var content_id_field = $('<input>', {
           type: 'hidden',
           name: 'item[related_docs_attributes][' + next_index + '][content_id]',
-          value: $(this).find('content_id').text()
+          value: $(this).find('content').text()
         });
         title_column.append(content_id_field);
         var full_uri = $(this).find('full_uri').text();
