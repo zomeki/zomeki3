@@ -155,7 +155,7 @@ class Survey::Admin::FormsController < Cms::Controller::Admin::Base
       :in_approval_flow_ids => []
     ).tap do |permitted|
       [:in_approval_assignment_ids].each do |key|
-        permitted[key] = params[:item][key].permit! if params[:item][key]
+        permitted[key] = params[:item][key].to_unsafe_h if params[:item][key]
       end
     end
   end

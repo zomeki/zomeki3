@@ -319,7 +319,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   private
 
   def doc_criteria
-    criteria = params[:criteria] ? params[:criteria].permit! : {}
+    criteria = params[:criteria] ? params[:criteria].to_unsafe_h : {}
 
     if params[:target_public].blank?
       if Core.user.has_auth?(:manager)
@@ -364,7 +364,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
       :in_approval_flow_ids => [],
     ).tap do |permitted|
       [:in_category_ids, :in_event_category_ids, :in_marker_category_ids, :in_approval_assignment_ids].each do |key|
-        permitted[key] = params[:item][key].permit! if params[:item][key]
+        permitted[key] = params[:item][key].to_unsafe_h if params[:item][key]
       end
     end
   end
