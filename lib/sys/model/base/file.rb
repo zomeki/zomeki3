@@ -131,14 +131,7 @@ module Sys::Model::Base::File
     begin
       image = case file
               when ActionDispatch::Http::UploadedFile
-                not_image = false
-
-                `type file > /dev/null 2>&1`
-                if $?.exitstatus == 0
-                  not_image = `file #{file.path}` !~ /GIF|JPEG|PNG/
-                end
-
-                Magick::Image.read(file.path).first unless not_image
+                Magick::Image.read(file.path).first if (ftype = Util::File.file_type(file.path)).nil? || ftype =~ /GIF|JPEG|PNG/
               when Sys::Lib::File::NoUploadedFile
                 self.skip_upload(true)
                 Magick::Image.from_blob(file.read).first if file.image?

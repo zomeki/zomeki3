@@ -4,7 +4,7 @@ class BizCalendar::Admin::TypesController < Cms::Controller::Admin::Base
   def pre_dispatch
     @content = BizCalendar::Content::Place.find(params[:content])
     return error_auth unless Core.user.has_priv?(:read, :item => @content.concept)
-    return redirect_to(request.env['PATH_INFO']) if params[:reset]
+    return redirect_to action: :index if params[:reset]
   end
 
   def index

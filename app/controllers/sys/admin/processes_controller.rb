@@ -28,9 +28,11 @@ class Sys::Admin::ProcessesController < Cms::Controller::Admin::Base
     Sys::Process::PROCESSE_LIST.each {|title, name| @process.title = title if name == @process_name }
     options = {site_id: Core.site.id}
 
-    return send(params[:do], @process_name, options) if params[:do] =~ /^(start|stop)_process/
+    case params[:do]
+    when 'start_process'
+      start_process(@process_name, options)
+    when 'stop_process'
+      stop_process(@process_name, options)
+    end
   end
-
-protected
-
 end

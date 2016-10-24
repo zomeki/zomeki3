@@ -3,25 +3,21 @@ require 'shellwords'
 
 class Sys::Lib::File::NoUploadedFile
   def initialize(path, options = {})
-    not_image = false
-
     case path
     when Hash
       options = path
       @data = options[:data]
+      check_image = true
     when String
       @data = ::File.read(path)
       @mime_type = options[:mime_type] || MIME::Types.type_for(path)[0].to_s
-      `type file > /dev/null 2>&1`
-      if $?.exitstatus == 0
-        not_image = `file #{path.shellescape}` !~ /GIF|JPEG|PNG/
-      end
+      check_image = (ftype = Util::File.file_type(path)).nil? || ftype =~ /GIF|JPEG|PNG/
     end
 
     @filename = options[:filename]
     @size = @data ? @data.size : 0
 
-    @image = validate_image unless not_image
+    @image = validate_image if check_image
   end
 
   def errors

@@ -7,7 +7,11 @@ module GpArticle::Controller::Feed
       @req_uri     = @site_uri.gsub(/\/$/, '') + Page.uri
       @feed_name   = "#{Page.title} | #{Page.site.name}"
 
-      data = eval("to_#{params[:format]}(docs)")
+      data =
+        case params[:format]
+        when 'rss'; to_rss(docs)
+        when 'atom'; to_atom(docs)
+        end
       return render :xml => unescape(data), :layout => false
     end
     return false

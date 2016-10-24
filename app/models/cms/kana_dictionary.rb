@@ -117,12 +117,9 @@ class Cms::KanaDictionary < ApplicationRecord
 
     dic = user_dic(_site_id)
 
-    require "shell"
-    sh = Shell.new
-    sh.transact do
-      res = system("#{mecab_index} -d#{mecab_dic} -u #{dic} -f utf8 -t utf8 #{csv.path}").to_s.strip
-      errors << "辞書の作成に失敗しました" unless res =~ /done!$/
-    end
+    require 'open3'
+    out = Open3.capture3(mecab_index, '-d', mecab_dic, '-u', dic, '-f', 'utf8', '-t', 'utf8', csv.path)[0]
+    errors << "辞書の作成に失敗しました" unless out =~ /done!$/
 
     FileUtils.rm(csv.path) if FileTest.exists?(csv.path)
 

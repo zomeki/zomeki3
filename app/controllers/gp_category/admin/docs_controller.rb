@@ -7,7 +7,7 @@ class GpCategory::Admin::DocsController < Cms::Controller::Admin::Base
     @content = GpCategory::Content::CategoryType.find(params[:content])
     @category_type = @content.category_types.find(params[:category_type_id])
     @category = @category_type.categories.find(params[:category_id])
-    return redirect_to(request.env['PATH_INFO']) if params[:reset_criteria]
+    return redirect_to(action: :index) if params[:reset_criteria]
   end
 
   def index

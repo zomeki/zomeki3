@@ -21,12 +21,8 @@ module Cms::ApiRank
     piece = Rank::Piece::Rank.where(id: params[:piece_id]).first
     return render(json: {}) unless piece
 
-    begin
-      current_item = params[:current_item_class].constantize.find(params[:current_item_id])
-    rescue => e
-      warn_log "#{__FILE__}:#{__LINE__} #{e.message}"
-      return render(json: {})
-    end
+    current_item = rank_current_item(params[:current_item_class], params[:current_item_id])
+    return render(json: {}) unless current_item
 
     term = piece.ranking_term
     target = piece.ranking_target
@@ -43,5 +39,15 @@ module Cms::ApiRank
                     end
 
     render json: result
+  end
+
+  private
+
+  def rank_current_item(current_item_class, current_item_id)
+    if current_item_class.in?(%w(GpCategory::CategoryType GpCategory::Category))
+      current_item_class.constantize.find_by(id: current_item_id)
+    else
+      nil
+    end
   end
 end
