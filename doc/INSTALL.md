@@ -44,7 +44,7 @@ SELINUX=permissive    # 変更
 
 必要なパッケージをインストールします。
 
-    # yum -y install gcc-c++ libffi-devel libyaml-devel make openssl-devel readline-devel zlib-devel
+    # yum -y install gcc-c++ libffi-devel libyaml-devel make openssl-devel readline-devel zlib-devel bzip2
 
 rbenvをインストールします。
 
