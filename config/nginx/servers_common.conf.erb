@@ -13,7 +13,7 @@ if ($http_user_agent ~* (Android|iPhone|iPod|MSIEMobile|Windows\sPhone)) {
   set $terminal 2;
 }
 
-location ^~ /_api {
+location ^~ /_(api|auth) {
   error_page 418 = @proxy; return 418;
 }
 
