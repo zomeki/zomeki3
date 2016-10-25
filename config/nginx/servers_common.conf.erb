@@ -17,10 +17,6 @@ location ^~ /_(api|auth) {
   error_page 418 = @proxy; return 418;
 }
 
-location ~ /_(smartphone|mobile) {
-  try_files $uri $uri/index.html @proxy;
-}
-
 location ~ /_(common|themes|files) {
   try_files $uri @proxy;
 }
