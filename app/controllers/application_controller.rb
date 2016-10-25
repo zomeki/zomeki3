@@ -2,7 +2,7 @@ class ApplicationController < ActionController::Base
   include Cms::Controller::Public
   helper  FormHelper
   helper  LinkHelper
-  protect_from_forgery # :secret => '1f0d667235154ecf25eaf90055d99e99'
+  protect_from_forgery with: :exception
   before_action :initialize_application
 #  rescue_from Exception, :with => :rescue_exception
 
