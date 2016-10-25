@@ -1,5 +1,4 @@
 class Rank::Public::Node::LastMonthsController < Cms::Controller::Public::Base
-  include Sys::Controller::Scaffold::Base
   include Rank::Controller::Rank
 
   def pre_dispatch
@@ -12,9 +11,6 @@ class Rank::Public::Node::LastMonthsController < Cms::Controller::Public::Base
     @term   = 'last_months'
     @target = 'pageviews'
     @ranks  = rank_datas(@content, @term, @target, 20)
-
     return http_error(404) if @ranks.blank?
-
-    _index @ranks
   end
 end
