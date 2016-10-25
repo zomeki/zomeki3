@@ -39,7 +39,9 @@ class GpCategory::Admin::TemplateModulesController < Cms::Controller::Admin::Bas
   private
 
   def template_module_params
-    params.require(:item).permit(:doc_style, :module_type, :module_type_feature, :name, :num_docs, :title,
-      :wrapper_tag, :upper_text, :lower_text)
+    params.require(:item).permit(
+      :doc_style, :module_type, :module_type_feature, :name, :num_docs, :title,
+      :wrapper_tag, :upper_text, :lower_text
+    )
   end
 end

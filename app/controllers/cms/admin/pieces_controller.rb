@@ -103,7 +103,9 @@ class Cms::Admin::PiecesController < Cms::Controller::Admin::Base
   private
 
   def piece_params
-    params.require(:item).permit(:concept_id, :content_id, :model, :name, :state, :title, :view_title,
-      :creator_attributes => [:id, :group_id, :user_id])
+    params.require(:item).permit(
+      :concept_id, :content_id, :model, :name, :state, :title, :view_title,
+      :creator_attributes => [:id, :group_id, :user_id]
+    )
   end
 end

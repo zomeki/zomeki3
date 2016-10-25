@@ -60,7 +60,9 @@ class Sys::Admin::GroupsController < Cms::Controller::Admin::Base
   private
 
   def group_params
-    params.require(:item).permit(:address, :code, :email, :fax, :ldap, :name, :name_en, :note,
-                                 :parent_id, :sort_no, :state, :tel, :tel_attend, :site_ids => [])
+    params.require(:item).permit(
+      :address, :code, :email, :fax, :ldap, :name, :name_en, :note,
+      :parent_id, :sort_no, :state, :tel, :tel_attend, :site_ids => []
+    )
   end
 end

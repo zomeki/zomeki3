@@ -44,7 +44,9 @@ class Feed::Admin::FeedsController < Cms::Controller::Admin::Base
   private
 
   def feed_params
-    params.require(:item).permit(:state, :name, :title, :uri, :entry_count,
-      :creator_attributes => [:id, :group_id, :user_id])
+    params.require(:item).permit(
+      :state, :name, :title, :uri, :entry_count,
+      :creator_attributes => [:id, :group_id, :user_id]
+    )
   end
 end
