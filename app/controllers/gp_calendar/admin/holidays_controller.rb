@@ -50,7 +50,9 @@ class GpCalendar::Admin::HolidaysController < Cms::Controller::Admin::Base
   private
 
   def holiday_params
-    params.require(:item).permit(:date, :description, :kind, :repeat, :state, :title,
-      :creator_attributes => [:id, :group_id, :user_id])
+    params.require(:item).permit(
+      :date, :description, :kind, :repeat, :state, :title,
+      :creator_attributes => [:id, :group_id, :user_id]
+    )
   end
 end

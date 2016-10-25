@@ -40,6 +40,9 @@ class Survey::Admin::QuestionsController < Cms::Controller::Admin::Base
   private
 
   def question_params
-    params.require(:item).permit(:description, :form_options, :form_text_max_length, :form_type, :required, :sort_no, :state, :style_attribute, :title)
+    params.require(:item).permit(
+      :description, :form_options, :form_text_max_length, :form_type, :required, :sort_no,
+      :state, :style_attribute, :title
+    )
   end
 end

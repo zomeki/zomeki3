@@ -34,8 +34,10 @@ class Organization::Admin::GroupsController < Cms::Controller::Admin::Base
   private
 
   def group_params
-    params.require(:item).permit(:outline, :business_outline, :concept_id, :contact_information,
+    params.require(:item).permit(
+      :outline, :business_outline, :concept_id, :contact_information,
       :docs_order, :layout_id, :more_layout_id, :sitemap_state, :sort_no, :state,
-      :creator_attributes => [:id, :group_id, :user_id])
+      :creator_attributes => [:id, :group_id, :user_id]
+    )
   end
 end
