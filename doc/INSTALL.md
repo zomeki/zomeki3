@@ -38,7 +38,7 @@ SELINUX=permissive    # 変更
 
 作業に必要なパッケージをインストールします。
 
-    # yum -y install git
+    # yum -y install git epel-release
 
 ## 5.Rubyのインストール
 
@@ -243,13 +243,13 @@ postgresqlを起動します。
 
     # systemctl start postgresql-9.5 && systemctl enable postgresql-9.5
 
-unicornを起動します。
-
-    # su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle exec unicorn_rails -c config/unicorn/production.rb -E production -D'
-
 nginxを起動します。
 
     # systemctl start nginx && systemctl enable nginx
+
+unicornを起動します。
+
+    # su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle exec unicorn_rails -c config/unicorn/production.rb -E production -D'
 
 delayed_jobを起動します。
 

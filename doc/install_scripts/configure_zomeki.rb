@@ -27,6 +27,21 @@ def centos
 
   system "su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle exec rake zomeki:configure RAILS_ENV=production'"
   system 'ln -s /var/www/zomeki/config/nginx/nginx.conf /etc/nginx/conf.d/zomeki.conf'
+
+  secret = `su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle exec rake secret RAILS_ENV=production'`
+  File.open '/var/www/zomeki/config/secrets.yml', File::RDWR do |f|
+    f.flock File::LOCK_EX
+
+    conf = f.read
+    conf.sub!('<%= ENV["SECRET_KEY_BASE"] %>', secret)
+
+    f.rewind
+    f.write conf
+    f.flush
+    f.truncate f.pos
+
+    f.flock File::LOCK_UN
+  end
 end
 
 def others
