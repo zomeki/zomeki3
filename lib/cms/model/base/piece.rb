@@ -22,6 +22,10 @@ module Cms::Model::Base::Piece
     name
   end
 
+  def admin_controller
+    model.to_s.underscore.pluralize.sub('/', '/admin/piece/')
+  end
+
   def admin_uri
     controller = model.to_s.underscore.pluralize.gsub(/^(.*?)\//, "\\1/c#{concept_id}/piece_") + "/#{id}"
     "#{Core.uri}#{ZomekiCMS::ADMIN_URL_PREFIX}/#{controller}"

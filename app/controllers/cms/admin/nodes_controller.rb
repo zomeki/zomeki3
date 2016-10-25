@@ -67,7 +67,7 @@ class Cms::Admin::NodesController < Cms::Controller::Admin::Base
       @item.name = nil # for validation
       @item.save(:validate => false)
       respond_to do |format|
-        format.html { return redirect_to(@item.admin_uri) }
+        format.html { return redirect_to(controller: @item.admin_controller, action: :show, id: @item.id) }
       end
     end
   end
