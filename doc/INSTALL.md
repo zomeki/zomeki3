@@ -1,4 +1,4 @@
-# ZOMEKI development インストールマニュアル
+# ZOMEKI インストールマニュアル
 
 ## 1.想定環境
 
@@ -9,7 +9,7 @@
 * Appサーバ: unicorn 5.1
 * Database: PostgreSQL 9.5
 * Ruby: 2.3
-* Rails: 4.2
+* Rails: 5.0
 
 ### 設定
 
@@ -38,13 +38,13 @@ SELINUX=permissive    # 変更
 
 作業に必要なパッケージをインストールします。
 
-    # yum -y install git
+    # yum -y install git epel-release
 
 ## 5.Rubyのインストール
 
 必要なパッケージをインストールします。
 
-    # yum -y install gcc-c++ libffi-devel libyaml-devel make openssl-devel readline-devel zlib-devel
+    # yum -y install gcc-c++ libffi-devel libyaml-devel make openssl-devel readline-devel zlib-devel bzip2
 
 rbenvをインストールします。
 
@@ -124,10 +124,15 @@ ZOMEKI用のユーザを作成します。
 
     # useradd -m zomeki
 
-ZOMEKIをインストールします。
+必要なパッケージをインストールします。
 
     # curl --silent --location https://rpm.nodesource.com/setup_4.x | bash -
-    # yum -y install ImageMagick-devel libxml2-devel libxslt-devel openldap-devel nodejs patch
+    # yum -y install libxml2-devel libxslt-devel openldap-devel nodejs patch
+
+    # rpm -ivh http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
+    # yum -y install --enablerepo=remi ImageMagick-last-devel
+
+ZOMEKIをインストールします。
 
     # git clone https://github.com/zomeki/zomeki3.git /var/www/zomeki
     # chown -R zomeki:zomeki /var/www/zomeki
@@ -238,13 +243,13 @@ postgresqlを起動します。
 
     # systemctl start postgresql-9.5 && systemctl enable postgresql-9.5
 
-unicornを起動します。
-
-    # su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle exec unicorn_rails -c config/unicorn/production.rb -E production -D'
-
 nginxを起動します。
 
     # systemctl start nginx && systemctl enable nginx
+
+unicornを起動します。
+
+    # su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle exec unicorn_rails -c config/unicorn/production.rb -E production -D'
 
 delayed_jobを起動します。
 

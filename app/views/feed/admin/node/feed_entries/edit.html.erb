@@ -1,5 +1,1 @@
-<%= form_for @item, as: :item, url: { action: :update }, html: { method: :put } do |f| %>
-  <%= error_messages_for :item %>
-  <%= render 'form', f: f %>
-  <%= submit @item.states %>
-<% end %>
+<%= render 'shared/admin/node/edit' %>

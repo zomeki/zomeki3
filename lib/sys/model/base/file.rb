@@ -13,10 +13,12 @@ module Sys::Model::Base::File
     validate :validate_upload_file
     after_save :upload_internal_file
     after_destroy :remove_internal_file
+  end
 
-    scope :readable, -> { all }
-    scope :editable, -> { all }
-    scope :deletable, -> { all }
+  class_methods do
+    def readable; all; end
+    def editable; all; end
+    def deletable; all; end
   end
 
   @@_maxsize = 50 # MegaBytes
@@ -129,14 +131,7 @@ module Sys::Model::Base::File
     begin
       image = case file
               when ActionDispatch::Http::UploadedFile
-                not_image = false
-
-                `type file > /dev/null 2>&1`
-                if $?.exitstatus == 0
-                  not_image = `file #{file.path}` !~ /GIF|JPEG|PNG/
-                end
-
-                Magick::Image.read(file.path).first unless not_image
+                Magick::Image.read(file.path).first if (ftype = Util::File.file_type(file.path)).nil? || ftype =~ /GIF|JPEG|PNG/
               when Sys::Lib::File::NoUploadedFile
                 self.skip_upload(true)
                 Magick::Image.from_blob(file.read).first if file.image?

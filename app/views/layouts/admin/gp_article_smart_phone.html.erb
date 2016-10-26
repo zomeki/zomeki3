@@ -45,7 +45,12 @@
     <div id="main" style="clear: both;">
       <div id="content">
         <div id="contentContainer">
-          <div id="contentHeader"><%= yield :content_header %></div>
+          <div id="contentHeader">
+            <% dir = "#{Rails.root}/app/views/#{controller.controller_path}" %>
+            <% if FileTest.exist?("#{dir}/_menu_smart_phone.html.erb") %>
+            <%= render controller.controller_path + '/menu' %>
+            <% end %>
+          </div>
           <div id="contentBody">
             <%= render 'layouts/admin/notice' %>
             <%= yield %>

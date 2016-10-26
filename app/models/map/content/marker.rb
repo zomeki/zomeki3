@@ -1,7 +1,4 @@
 class Map::Content::Marker < Cms::Content
-  IMAGE_STATE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
-  MARKER_ORDER_OPTIONS = [['投稿日（昇順）', 'time_asc'], ['投稿日（降順）', 'time_desc'], ['カテゴリ順', 'category']]
-
   default_scope { where(model: 'Map::Marker') }
 
   has_one :public_node, -> { public_state.where(model: 'Map::Marker').order(:id) },
@@ -11,6 +8,7 @@ class Map::Content::Marker < Cms::Content
     foreign_key: :content_id, class_name: 'Map::Content::Setting', dependent: :destroy
 
   has_many :markers, foreign_key: :content_id, class_name: 'Map::Marker', dependent: :destroy
+  has_many :marker_icons, foreign_key: :content_id, class_name: 'Map::MarkerIcon', dependent: :destroy
 
   def public_markers
     markers.public_state
@@ -59,19 +57,21 @@ class Map::Content::Marker < Cms::Content
     end
   end
 
-  def icon_image(item, goup=false)
-    case item
-    when GpCategory::CategoryType
-      setting_value("#{item.class.name} #{item.id} icon_image").to_s
-    when GpCategory::Category
-      image = setting_value("#{item.class.name} #{item.id} icon_image").to_s
-      if image.blank? && goup
+  def icon_categories_for_option
+    marker_icons.where(relatable_type: 'GpCategory::Category').preload(:relatable)
+      .select { |icon| icon.relatable.present? }
+      .map { |icon| ["#{icon.relatable.title}（#{icon.relatable.category_type.title}） - #{icon.url}", icon.relatable.id] }
+  end
+
+  def icon_image(item, goup = false)
+    if (icon = marker_icons.where(relatable: item).first)
+      icon.url
+    else
+      if item == GpCategory::Category && goup
         icon_image(item.parent || item.category_type, goup)
       else
-        image
+        ''
       end
-    else
-      ''
     end
   end
 

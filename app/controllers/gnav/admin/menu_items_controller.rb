@@ -53,7 +53,7 @@ class Gnav::Admin::MenuItemsController < Cms::Controller::Admin::Base
     categories = params[:categories]
     layers = params[:layers]
 
-    if categories.is_a?(Hash) && layers.is_a?(Hash)
+    if categories && layers
       category_set_ids = @item.category_set_ids
       categories.each do |key, value|
         next unless (category = GpCategory::Category.where(id: value).first)
@@ -66,7 +66,9 @@ class Gnav::Admin::MenuItemsController < Cms::Controller::Admin::Base
   end
 
   def menu_item_params
-    params.require(:item).permit(:concept_id, :layout_id, :name, :sitemap_state, :sort_no, :state, :title,
-      :creator_attributes => [:id, :group_id, :user_id])
+    params.require(:item).permit(
+      :concept_id, :layout_id, :name, :sitemap_state, :sort_no, :state, :title,
+      :creator_attributes => [:id, :group_id, :user_id]
+    )
   end
 end

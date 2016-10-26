@@ -7,11 +7,11 @@ echo '#### Prepare to install ####'
 centos() {
   echo "It's CentOS!"
 
-  yum -y install git
+  yum -y install git epel-release
 
   cd /usr/local/src
 
-  files=('install_ruby.sh' 'install_nginx.rb' 'install_postgresql.rb' 'install_zomeki.sh'
+  files=('install_ruby.sh' 'install_nginx.sh' 'install_postgresql.rb' 'install_zomeki.sh'
          'configure_zomeki.rb' 'install_zomeki_kana_read.sh' 'start_servers.sh' 'install_cron.sh')
 
   rm -f install_scripts.txt install_all.sh
@@ -27,9 +27,9 @@ cat <<'EOF' >> install_all.sh
 echo "
 -- インストールを完了しました。 --
 
-  公開画面: `ruby -ryaml -e "puts YAML.load_file('/var/share/zomeki/config/core.yml')['production']['uri']"`
+  公開画面: `ruby -ryaml -e "puts YAML.load_file('/var/www/zomeki/config/core.yml')['production']['uri']"`
 
-  管理画面: `ruby -ryaml -e "puts YAML.load_file('/var/share/zomeki/config/core.yml')['production']['uri']"`_system
+  管理画面: `ruby -ryaml -e "puts YAML.load_file('/var/www/zomeki/config/core.yml')['production']['uri']"`_system
 
     管理者（システム管理者）
     ユーザID   : zomeki

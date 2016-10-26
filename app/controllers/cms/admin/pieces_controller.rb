@@ -36,7 +36,7 @@ class Cms::Admin::PiecesController < Cms::Controller::Admin::Base
     _create @item do
       Core.set_concept(session, @item.concept_id)
       respond_to do |format|
-        format.html { return redirect_to(@item.admin_uri) }
+        format.html { return redirect_to(controller: @item.admin_controller, action: :show, id: @item.id) }
       end
     end
   end
@@ -103,7 +103,9 @@ class Cms::Admin::PiecesController < Cms::Controller::Admin::Base
   private
 
   def piece_params
-    params.require(:item).permit(:concept_id, :content_id, :model, :name, :state, :title, :view_title,
-      :creator_attributes => [:id, :group_id, :user_id])
+    params.require(:item).permit(
+      :concept_id, :content_id, :model, :name, :state, :title, :view_title,
+      :creator_attributes => [:id, :group_id, :user_id]
+    )
   end
 end

@@ -264,7 +264,7 @@ class Cms::Stylesheet < ApplicationRecord
   def remove_file
     is_dir = directory?
     ::Storage.rm_rf(upload_path)
-    self.class.destroy_all(['site_id = ? AND path LIKE ?', site_id, path.to_s.gsub(/\/$/, '') + '/%']) if is_dir
+    self.class.where(['site_id = ? AND path LIKE ?', site_id, path.to_s.gsub(/\/$/, '') + '/%']).destroy_all if is_dir
     return true
   rescue => e
     errors.add :base, e.to_s

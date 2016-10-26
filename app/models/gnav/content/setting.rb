@@ -10,4 +10,6 @@ class Gnav::Content::Setting < Cms::ContentSetting
     name: "#{GpArticle::Doc.model_name.human}表示形式",
     comment: I18n.t('comments.list_style'),
     default_value: '@title_link@(@publish_date@ @group@)'
+
+  belongs_to :content, foreign_key: :content_id, class_name: 'Gnav::Content::MenuItem'
 end

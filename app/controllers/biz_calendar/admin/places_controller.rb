@@ -2,9 +2,9 @@ class BizCalendar::Admin::PlacesController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 
   def pre_dispatch
-   @content = BizCalendar::Content::Place.find(params[:content])
+    @content = BizCalendar::Content::Place.find(params[:content])
     return error_auth unless Core.user.has_priv?(:read, :item => @content.concept)
-    return redirect_to(request.env['PATH_INFO']) if params[:reset]
+    return redirect_to action: :index if params[:reset]
   end
 
   def index
@@ -45,8 +45,10 @@ class BizCalendar::Admin::PlacesController < Cms::Controller::Admin::Base
   private
 
   def place_params
-    params.require(:item).permit(:state, :url, :title, :summary, :description,
+    params.require(:item).permit(
+      :state, :url, :title, :summary, :description,
       :business_hours_state, :business_hours_title, :business_holiday_state, :business_holiday_title, :sort_no,
-      :creator_attributes => [:id, :group_id, :user_id])
+      :creator_attributes => [:id, :group_id, :user_id]
+    )
   end
 end

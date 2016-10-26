@@ -1,6 +1,7 @@
 class Sys::Admin::StorageFilesController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
   
+  before_action :force_html_format
   before_action :validate_path
   
   @root  = nil
@@ -103,7 +104,7 @@ class Sys::Admin::StorageFilesController < Cms::Controller::Admin::Base
       :mime_type => ::Storage.mime_type(@path),
       :body      => body,
     }
-    render :show_file, formats: :html
+    render :show_file, formats: [:html]
   end
 
   def edit_file
@@ -120,7 +121,7 @@ class Sys::Admin::StorageFilesController < Cms::Controller::Admin::Base
       :mime_type => ::Storage.mime_type(@path),
       :body      => body,
     }
-    render :edit_file, formats: :html
+    render :edit_file, formats: [:html]
   end
   
   def new
@@ -197,5 +198,9 @@ protected
       return nil
     end
     return name
+  end
+
+  def force_html_format
+    request.format = :html
   end
 end

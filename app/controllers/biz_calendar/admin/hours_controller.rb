@@ -40,10 +40,12 @@ class BizCalendar::Admin::HoursController < Cms::Controller::Admin::Base
   private
 
   def hours_params
-    params.require(:item).permit(:state, :fixed_start_date, :fixed_end_date, :repeat_type, :repeat_interval,
+    params.require(:item).permit(
+      :state, :fixed_start_date, :fixed_end_date, :repeat_type, :repeat_interval,
       :repeat_criterion, :start_date, :end_type, :end_times, :end_date,
       :business_hours_start_time, :business_hours_end_time,
       :repeat_week => [:_, :mon, :tue, :wed, :thurs, :fri, :sat, :sun],
-      :creator_attributes => [:id, :group_id, :user_id])
+      :creator_attributes => [:id, :group_id, :user_id]
+    )
   end
 end

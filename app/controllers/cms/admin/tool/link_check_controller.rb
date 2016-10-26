@@ -3,7 +3,7 @@ class Cms::Admin::Tool::LinkCheckController < Cms::Controller::Admin::Base
 
   def pre_dispatch
     return error_auth unless Core.user.has_auth?(:designer)
-    return redirect_to(request.env['PATH_INFO']) if params[:reset]
+    return redirect_to(action: :index) if params[:reset]
 
     params[:limit] ||= '30'
   end

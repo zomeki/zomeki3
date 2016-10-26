@@ -7,7 +7,7 @@ class GpArticle::Public::Piece::DocsController < Sys::Controller::Public::Base
   end
 
   def index
-    @docs = @piece.content.public_docs.limit(@piece.docs_number)
+    @docs = @piece.content.public_docs_for_list.limit(@piece.docs_number)
     @docs = case @piece.docs_order
             when 'published_at_desc'
               @docs.order(display_published_at: :desc, published_at: :desc)

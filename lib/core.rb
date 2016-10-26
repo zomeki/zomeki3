@@ -204,7 +204,7 @@ private
     when 'public'
       @@site          = find_site_by_script_uri(@@script_uri)
       if @@site.blank? && Sys::Setting.use_common_ssl? && @@request_uri =~ /^\/simple_captcha/
-        if @@script_uri =~ /^#{Sys::Setting.setting_extra_value(:common_ssl, :common_ssl_uri)}/
+        if @@script_uri =~ Regexp.new(Sys::Setting.setting_extra_value(:common_ssl, :common_ssl_uri))
           @@site          = nil
           Page.site       = @@site
           @@internal_uri  = @@request_uri
@@ -213,30 +213,6 @@ private
       end
       Page.site       = @@site
       @@internal_uri  = search_node @@request_uri
-    when 'smartphone'
-      @@site          = find_site_by_script_uri(@@script_uri)
-      if @@site.blank? && Sys::Setting.use_common_ssl? && @@request_uri =~ /^\/simple_captcha/
-        if @@script_uri =~ /^#{Sys::Setting.setting_extra_value(:common_ssl, :common_ssl_uri)}/
-          @@site          = nil
-          Page.site       = @@site
-          @@internal_uri  = @@request_uri
-          return
-        end
-      end
-      Page.site       = @@site
-      @@internal_uri  = search_node @@request_uri.gsub(/_smartphone\//, '')
-    when 'mobile'
-      @@site          = find_site_by_script_uri(@@script_uri)
-      if @@site.blank? && Sys::Setting.use_common_ssl? && @@request_uri =~ /^\/simple_captcha/
-        if @@script_uri =~ /^#{Sys::Setting.setting_extra_value(:common_ssl, :common_ssl_uri)}/
-          @@site          = nil
-          Page.site       = @@site
-          @@internal_uri  = @@request_uri
-          return
-        end
-      end
-      Page.site       = @@site
-      @@internal_uri  = search_node @@request_uri.gsub(/_mobile\//, '')
     when 'layouts'
       @@site          = find_site_by_script_uri(@@script_uri)
       Page.site       = @@site

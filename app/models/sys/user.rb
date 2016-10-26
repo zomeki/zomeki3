@@ -23,7 +23,6 @@ class Sys::User < ApplicationRecord
 
   before_destroy :block_root_deletion
 
-  scope :readable, -> { all }
   scope :in_site, ->(site) { joins(:users_groups => :site_belongings).where(cms_site_belongings: {site_id: site.id}) }
   scope :in_group, ->(group) { joins(:users_groups).where(sys_users_groups: {group_id: group.id}) }
 
@@ -256,6 +255,12 @@ protected
     unless self.auth_no == 5
       errors.add(:base, 'システム管理者の権限は変更出来ません。')
       self.auth_no = 5
+    end
+  end
+
+  class << self
+    def readable
+      all
     end
   end
 end

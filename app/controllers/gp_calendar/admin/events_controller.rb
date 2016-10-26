@@ -76,8 +76,8 @@ class GpCalendar::Admin::EventsController < Cms::Controller::Admin::Base
   private
 
   def set_categories
-    category_ids = if params[:categories].kind_of?(Hash)
-                     params[:categories].values.flatten.reject{|c| c.blank? }.uniq
+    category_ids = if params[:categories]
+                     params[:categories].values.flatten.reject(&:blank?).uniq
                    else
                      []
                    end
@@ -85,7 +85,9 @@ class GpCalendar::Admin::EventsController < Cms::Controller::Admin::Base
   end
 
   def event_params
-    params.require(:item).permit(:description, :ended_on, :href, :started_on, :state, :target, :title,
-      :creator_attributes => [:id, :group_id, :user_id])
+    params.require(:item).permit(
+      :description, :ended_on, :href, :started_on, :state, :target, :title,
+      :creator_attributes => [:id, :group_id, :user_id]
+    )
   end
 end

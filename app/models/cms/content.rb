@@ -84,19 +84,6 @@ class Cms::Content < ApplicationRecord
     setting_extra_values(name)[extra_name]
   end
 
-  def search(params)
-    params.each do |n, v|
-      next if v.to_s == ''
-
-      case n
-      when 's_name'
-        self.and_keywords v, :name
-      end
-    end if params.size != 0
-
-    return self
-  end
-
   private
 
   def config(name)
@@ -115,11 +102,10 @@ class Cms::Content < ApplicationRecord
   def set_default_settings_from_configs
     settings.klass.all_configs.each do |config|
       next if config[:default_value].blank?
-      settings.build(
-        name: config[:id],
-        value: config[:default_value],
-        extra_values: config[:default_extra_values]
-      )
+
+      setting = settings.build(name: config[:id])
+      setting.value = config[:default_value]
+      setting.extra_values = config[:default_extra_values] if config[:default_extra_values]
     end
   end
 end

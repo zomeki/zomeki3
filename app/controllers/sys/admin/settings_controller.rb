@@ -3,7 +3,7 @@ class Sys::Admin::SettingsController < Cms::Controller::Admin::Base
 
   def pre_dispatch
     return error_auth unless Core.user.root?
-    return redirect_to(request.env['PATH_INFO']) if params[:reset]
+    return redirect_to(action: :index) if params[:reset]
   end
 
   def index

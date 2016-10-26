@@ -1,10 +1,6 @@
 class Script
   cattr_reader :options
 
-  def run_from_delayed_job(path, options = {})
-    self.class.run(path, options)
-  end
-
   def self.run_from_web(path, options = {})
     ## reset
     if proc = Sys::Process.find_by(name: path)

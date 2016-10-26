@@ -30,7 +30,6 @@ class Sys::Group < ApplicationRecord
   before_destroy :before_destroy
   after_save :copy_name_en_as_url_name
 
-  scope :readable, -> { all }
   scope :in_site, ->(site) { joins(:site_belongings).where(cms_site_belongings: {site_id: site.id}) }
   scope :in_group, ->(group) { where(parent_id: group.id) }
 
@@ -100,5 +99,11 @@ private
 
   def copy_name_en_as_url_name
     Organization::Group.where(sys_group_code: code).update_all(name: name_en)
+  end
+
+  class << self
+    def readable
+      all
+    end
   end
 end

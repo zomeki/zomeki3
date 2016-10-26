@@ -283,7 +283,7 @@ class BizCalendar::BussinessHoliday < ApplicationRecord
   end
 
   def repeat_week=(value)
-    value = value.to_h.with_indifferent_access.to_yaml if value.is_a?(ActionController::Parameters)
+    value = YAML.dump(value.to_h.with_indifferent_access) if value.respond_to?(:to_h)
     self[:repeat_week] = value
   end
 

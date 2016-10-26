@@ -116,6 +116,7 @@ class GpArticle::Doc < ApplicationRecord
   after_save :set_display_attributes
   after_save :save_links
 
+  scope :visible_in_list, -> { where(feature_1: true) }
   scope :event_scheduled_between, ->(start_date, end_date) {
     where(arel_table[:event_ended_on].gteq(start_date)).where(arel_table[:event_started_on].lt(end_date + 1))
   }
@@ -471,7 +472,7 @@ class GpArticle::Doc < ApplicationRecord
 
     if organization = content.organization_content_group
       if (node = organization.public_node) &&
-         (og = organization.groups.where(state: 'public', sys_group_id: creator.group_id).first)
+         (og = organization.groups.where(state: 'public', sys_group_code: creator.group.try(:code)).first)
         crumb = node.bread_crumbs.crumbs.first
         og.ancestors.each {|a| crumb << [a.sys_group.name, "#{node.public_uri}#{a.name}/"] }
         crumbs << crumb

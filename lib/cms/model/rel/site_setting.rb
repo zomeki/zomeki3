@@ -50,7 +50,7 @@ module Cms::Model::Rel::SiteSetting
 
   def setting_site_file_upload_max_size
     setting = Cms::SiteSetting.where(:site_id => id, :name => 'file_upload_max_size').first
-    setting ? setting.value : 5;
+    setting ? setting.value.presence || 5 : 5;
   end
 
   def setting_site_extension_upload_max_size

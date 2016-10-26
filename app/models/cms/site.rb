@@ -330,6 +330,7 @@ class Cms::Site < ApplicationRecord
   end
 
   def generate_nginx_admin_configs
+    return if admin_domain.blank?
     servers = Rails.root.join('config/nginx/admin_servers')
     unless (template = servers.join('template.conf.erb')).file?
       logger.warn 'Server template not found.'
@@ -349,6 +350,18 @@ class Cms::Site < ApplicationRecord
     conf = Rails.root.join("config/nginx/admin_servers/site_#{'%04d' % id}.conf")
     return false unless conf.exist?
     conf.delete
+  end
+
+  def basic_auth_user_enabled?
+    basic_auth_users.root_location.enabled.exists?
+  end
+
+  def system_basic_auth_user_enabled?
+    basic_auth_users.system_location.enabled.exists?
+  end
+
+  def directory_basic_auth_user_enabled?(directory)
+    basic_auth_users.directory_location.enabled.where(target_location: directory).exists?
   end
 
   def basic_auth_enabled?
@@ -400,7 +413,7 @@ class Cms::Site < ApplicationRecord
     enable_directory_basic_auth(salt)
     generate_nginx_configs
     generate_nginx_admin_configs
-    reload_nginx_servers
+    Cms::Site.reload_nginx_servers
     return true
   end
 
@@ -548,6 +561,15 @@ protected
     dst_path = Rails.root.join("#{public_path}/_common")
     if ::File.exists?(src_path) && !::File.exists?(dst_path)
       ::FileUtils.cp_r(src_path, dst_path)
+    end
+  end
+
+  def force_copy_common_directory
+    src_path = Rails.public_path.join("_common")
+    dst_path = Rails.root.join("#{public_path}/_common")
+    if ::File.exists?(src_path)
+      FileUtils.mkdir_p(dst_path) unless FileTest.exist?(dst_path)
+      ::FileUtils.cp_r(Dir.glob(%Q(#{src_path}/*)), dst_path)
     end
   end
 

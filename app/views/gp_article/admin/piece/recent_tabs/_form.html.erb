@@ -1,10 +1,4 @@
-<p class="form">基本情報</p>
-
-<table class="show">
-  <%= piece_base_form f, :container => :tr %>
-</table>
-
-<br />
+<%= render 'shared/admin/piece/form', f: f do -%>
 <p class="form">詳細設定</p>
 
 <table class="show">
@@ -28,6 +22,9 @@
     <td><%= f.array_text_field 'in_settings[more_label]', class: 'name' %></td>
   </tr>
 </table>
+
+<%= render 'gp_article/admin/shared/doc_style_tags' %>
+
 <%= javascript_tag do %>
 $(function() {
   $('#show_dialog').on('click', function() {
@@ -35,7 +32,5 @@ $(function() {
     return false;
   });
 });
-<% end %>
-<%= creator_form f %>
-
-<%= render 'gp_article/admin/shared/doc_style_tags' %>
+<%- end -%>
+<%- end -%>

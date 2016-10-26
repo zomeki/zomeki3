@@ -8,7 +8,7 @@
     <td><%= @item.title %></td>
   </tr>
   <tr>
-    <th>アイコン画像</th>
-    <td><%= text_field_tag :icon_image, @icon_image, style: 'width: 400px;' %></td>
+    <th><%= f.label :url %></th>
+    <td><%= f.text_field :url, style: 'width: 400px;' %></td>
   </tr>
 </table>

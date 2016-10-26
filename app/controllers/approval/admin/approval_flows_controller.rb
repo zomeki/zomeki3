@@ -43,7 +43,7 @@ class Approval::Admin::ApprovalFlowsController < Cms::Controller::Admin::Base
   private
 
   def set_approvals
-    return unless params[:approvals].is_a?(Hash)
+    return unless params[:approvals]
 
     indexes = params[:approvals].keys
     @item.approvals.each{|a| a.destroy unless indexes.include?(a.index.to_s) }

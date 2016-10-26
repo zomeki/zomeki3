@@ -55,10 +55,10 @@ function ckeInsertContent(value) {
         <%= hidden_field_tag "imageAlt[]", item.alt, id: "imageAlt#{item.id}" %>
         <div class="pasteLinks">
           <%= link_to "画像貼付 (#{item.image_width}x#{item.image_height})", "#",
-            onclick: %Q(ckeInsertContent('<img src="#{file_content_path}" alt="#{item.alt}" title="#{item.alt}" />')), id: "link_image#{item.id}" %>
+            onclick: %Q(ckeInsertContent('<img src="#{file_content_path}" alt="#{item.alt}" title="#{item.alt}" />'); return false;), id: "link_image#{item.id}" %>
           <% if item.has_thumbnail? %>
           | <%= link_to "画像貼付 (#{item.thumb_width}x#{item.thumb_height})", "#",
-            onclick: %Q(ckeInsertContent('<img src="#{file_thumb_content_path}" alt="#{item.alt}" title="#{item.alt}" />')), id: "link_image#{item.id}thumb" %>
+            onclick: %Q(ckeInsertContent('<img src="#{file_thumb_content_path}" alt="#{item.alt}" title="#{item.alt}" />'); return false;), id: "link_image#{item.id}thumb" %>
           <% end %>
         </div>
       <% end %>

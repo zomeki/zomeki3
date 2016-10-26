@@ -11,7 +11,7 @@ class Cms::Publisher < ApplicationRecord
 
   def validate_queue
     if self.class.where(state: 'queued', publishable_id: publishable_id, publishable_type: publishable_type)
-           .where("extra_flag = '#{extra_flag.to_json}'")
+           .where("extra_flag = ?", extra_flag.to_json)
            .exists?
       errors.add(:publishable_id, :taken)
     end

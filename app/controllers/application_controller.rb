@@ -2,7 +2,7 @@ class ApplicationController < ActionController::Base
   include Cms::Controller::Public
   helper  FormHelper
   helper  LinkHelper
-  protect_from_forgery # :secret => '1f0d667235154ecf25eaf90055d99e99'
+  protect_from_forgery with: :exception
   before_action :initialize_application
 #  rescue_from Exception, :with => :rescue_exception
 
@@ -71,8 +71,7 @@ private
     mode_regexp = Regexp.new("^(#{ZomekiCMS::ADMIN_URL_PREFIX.sub(/^_/, '')}|script)$")
     if Core.mode =~ mode_regexp && status != 404
       error_log("#{status} #{request.env['REQUEST_URI']}") if status != 404
-      render :status => status, :text => "<p>#{message}</p>", :layout => "admin/cms/error"
-      return
+      return render status: status, html: "<p>#{message}</p>".html_safe, layout: "admin/cms/error"
 #      return respond_to do |format|
 #        format.html { render :status => status, :text => "<p>#{message}</p>", :layout => "admin/cms/error" }
 #        format.xml  { render :status => status, :xml => "<errors><error>#{message}</error></errors>" }

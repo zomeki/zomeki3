@@ -7,6 +7,7 @@
   <%= javascript_include_tag '/_common/js/jquery-migrate.min.js' %>
   <%= javascript_include_tag '/_common/js/jquery_ujs.js' %>
 
+  <%= javascript_include_tag '/_common/js/jquery.browser.js' %>
   <%= javascript_include_tag '/_common/js/jquery.iframe-auto-height.js' %>
 
   <%= stylesheet_link_tag '/_common/css/simple_tabs.css' %>
@@ -16,7 +17,7 @@
   <%= csrf_meta_tags %>
   <%- end -%>
 
-  <%- if Core.request_uri =~ /^\/_ssl/ && Core.site.use_common_ssl? && Page.current_node.model == 'Survey::Form'
+  <%- if Core.request_uri =~ /^\/_ssl/ && Page.site.use_common_ssl? && Page.current_node.model == 'Survey::Form'
     if Survey::Content::Form.find_by_id(Page.current_node.content.id).use_common_ssl?
       ssl_uri = Page.site.full_ssl_uri.sub(/\/\z/, '')
       tag = "#{Page.layout.head_tag(request)}".gsub(/href=("|')\/_(layouts|themes)/) {
