@@ -2,6 +2,10 @@
 
 <table class="show">
   <tr>
+    <th><%= @item.locale(:state) %></th>
+    <td><%= @item.status.name %></td>
+  </tr>
+  <tr>
     <th><%= @item.locale(:name) %></th>
     <td><%= @item.name %></td>
   </tr><tr>
