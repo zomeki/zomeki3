@@ -1,3 +1,4 @@
+# mobile
 set $terminal 0;
 if ($http_user_agent ~* ^(DoCoMo|KDDI|Up\.Browser|J-PHONE|vodafone|SoftBank)) {
   set $terminal 1;
@@ -20,7 +21,13 @@ if ($terminal = 2) {
   rewrite ^(?!/_smartphone)(.+)$ /_smartphone$1 last;
 }
 
+# navigation_ruby
 if ($cookie_navigation_ruby = 'on') {
   rewrite ^(.*)/$ $1/index.html;
   rewrite ^(.+)\.html$ $1.html.r last;
+}
+
+# ssl
+if ($uri ~ ^/_ssl/\d+/(_common|_themes|_files)) {
+  rewrite ^/_ssl/\d+/(_common|_themes|_files)(.+)$ /$1$2 last;
 }
