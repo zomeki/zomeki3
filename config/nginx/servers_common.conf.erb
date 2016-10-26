@@ -1,23 +1,14 @@
-
 client_max_body_size 1000M;
 
 proxy_connect_timeout 120;
 proxy_read_timeout    120;
 proxy_send_timeout    120;
 
-set $terminal 0;
-if ($http_user_agent ~* ^(DoCoMo|KDDI|Up\.Browser|J-PHONE|vodafone|SoftBank)) {
-  set $terminal 1;
-}
-if ($http_user_agent ~* (Android|iPhone|iPod|MSIEMobile|Windows\sPhone)) {
-  set $terminal 2;
-}
-
-location ^~ /_(api|auth) {
+location ~ ^/_(api|auth) {
   error_page 418 = @proxy; return 418;
 }
 
-location ~ /_(common|themes|files) {
+location ~ ^/_(common|themes|files) {
   try_files $uri @proxy;
 }
 
