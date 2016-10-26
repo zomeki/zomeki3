@@ -6,10 +6,11 @@ server {
   access_log <%= zomeki_root %>/log/access_site_<%= '%04d' % id %>.log main;
   error_log <%= zomeki_root %>/log/error_site_<%= '%04d' % id %>.log warn;
 
+  include <%= zomeki_root %>/config/nginx/rewrite.conf;
   include <%= zomeki_root %>/config/nginx/servers_common.conf;
-  include <%= zomeki_root %>/config/nginx/rewrite/site_<%= '%04d' % id %>/*.conf;
+  include <%= zomeki_root %>/config/nginx/servers/site_<%= '%04d' % id %>.d/*.conf;
 
-  location ^~ /<%= ZomekiCMS::ADMIN_URL_PREFIX %> {
+  location ~ ^/(<%= ZomekiCMS::ADMIN_URL_PREFIX %>|_preview) {
     try_files $uri @proxy;
     <%- if use_basic_auth? && system_basic_auth_user_enabled?  -%>
     auth_basic_user_file <%= "#{::File.dirname(public_path)}/.htpasswd_system" %>;
@@ -17,42 +18,21 @@ server {
     <%- end -%>
   }
 
-  location / {
-    try_files $uri $uri/index.html @proxy;
-    include <%= zomeki_root %>/config/nginx/rewrite.conf;
-    <%- if use_basic_auth? && basic_auth_user_enabled? -%>
-    auth_basic_user_file <%= "#{::File.dirname(public_path)}/.htpasswd" %>;
-    auth_basic "Please enter your ID and password";
-    <%- end -%>
-  }
-
-  location ~ /_(smartphone|mobile) {
-    try_files $uri $uri/index.html @proxy;
-    <%- if use_basic_auth? && basic_auth_user_enabled? -%>
-    auth_basic_user_file <%= "#{::File.dirname(public_path)}/.htpasswd" %>;
-    auth_basic "Please enter your ID and password";
-    <%- end -%>
-  }
-
   <%- basic_auth_users.directory_auth.each do |d|
     next unless directory_basic_auth_user_enabled?(d.target_location)
     next unless use_basic_auth? -%>
-  location /<%= d.target_location %>/ {
-    try_files $uri $uri/index.html @proxy;
-    include <%= zomeki_root %>/config/nginx/rewrite.conf;
-    auth_basic_user_file <%= "#{::File.dirname(public_path)}/.htpasswd_#{d.target_location}" %>;
-    auth_basic "Please enter your ID and password";
-  }
-
-  location ^~ /_smartphone/<%= d.target_location %>/ {
-    try_files $uri $uri/index.html @proxy;
-    auth_basic_user_file <%= "#{::File.dirname(public_path)}/.htpasswd_#{d.target_location}" %>;
-    auth_basic "Please enter your ID and password";
-  }
-  location ^~ /_mobile/<%= d.target_location %>/ {
+  location ~ ^(/|/_mobile/|/_smartphone/)<%= d.target_location %>/ {
     try_files $uri $uri/index.html @proxy;
     auth_basic_user_file <%= "#{::File.dirname(public_path)}/.htpasswd_#{d.target_location}" %>;
     auth_basic "Please enter your ID and password";
   }
   <%- end -%>
+
+  location ~ ^(/|/_mobile|/_smartphone) {
+    try_files $uri $uri/index.html @proxy;
+    <%- if use_basic_auth? && basic_auth_user_enabled? -%>
+    auth_basic_user_file <%= "#{::File.dirname(public_path)}/.htpasswd" %>;
+    auth_basic "Please enter your ID and password";
+    <%- end -%>
+  }
 }
