@@ -140,7 +140,7 @@ class Cms::ContentSetting < ApplicationRecord
     if value.nil?
       self.value = config[:default_value] if config[:default_value]
     end
-    if extra_values.nil?
+    if extra_value.nil?
       self.extra_values = config[:default_extra_values] if config[:default_extra_values]
     end
   end
