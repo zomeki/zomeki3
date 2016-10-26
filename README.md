@@ -1,14 +1,8 @@
 ZOMEKI
 ==========
+ZOMEKI（ぞめき)は、自治体サイト向けに開発された国産オープンソースCMSです。  
 
-Copyright (C) 2010-2016
-  Tokushima Prefectural Government <jouhousenryakuka@pref.tokushima.lg.jp>  
-  IDS Inc. <info@joruri.org>  
-  SiteBridge Inc.  <info@sitebridge.co.jp>  
-
-## インストール
-
-### 想定環境
+## 環境
 
 | Software  | Version        |
 |:----------|:---------------|
@@ -19,8 +13,18 @@ Copyright (C) 2010-2016
 | Ruby      | 2.3            |
 | Rails     | 5.0            |
 
+## インストール
+
+### 前提条件
+* root権限による操作を想定しています。  
+
+### 手動インストールマニュアル
+  - [doc/INSTALL.md](doc/INSTALL.md)
+
 ### 自動スクリプト
     export LANG=ja_JP.UTF-8; curl -fsSL https://raw.githubusercontent.com/zomeki/zomeki3/master/doc/install_scripts/prepare.sh | bash
 
-### 手動マニュアル
-  - [doc/INSTALL.md](doc/INSTALL.md)
+## ライセンス
+MIT License  
+
+Copyright (C) Tokushima Prefectural Government, IDS Inc., SiteBridge Inc.
