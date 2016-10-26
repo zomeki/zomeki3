@@ -7,7 +7,7 @@ server {
   error_log <%= zomeki_root %>/log/error_site_<%= '%04d' % id %>.log warn;
 
   include <%= zomeki_root %>/config/nginx/servers_common.conf;
-  include <%= zomeki_root %>/config/system/site_<%= '%04d' % id %>/*.conf;
+  include <%= zomeki_root %>/config/nginx/rewrite/site_<%= '%04d' % id %>/*.conf;
 
   location ^~ /<%= ZomekiCMS::ADMIN_URL_PREFIX %> {
     try_files $uri @proxy;
