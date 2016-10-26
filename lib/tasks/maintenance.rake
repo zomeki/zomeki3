@@ -88,9 +88,9 @@ namespace :zomeki do
       desc 'Copy _common directory for all sites'
       task copy: :environment do
         Cms::Site.all.each do |site|
-          site.send(:copy_common_directory)
+          site.send(:force_copy_common_directory)
         end
-      end      
+      end
     end
   end
 end
