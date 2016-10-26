@@ -22,4 +22,5 @@
 /config/apache/*.conf
 /config/apache/**/*.conf
 /config/nginx/*.conf
+/config/nginx/**/*.d
 /config/nginx/**/*.conf
