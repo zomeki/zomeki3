@@ -1,9 +1,10 @@
 ZOMEKI
 ==========
 
-## Copyright
-
-See COPYING
+Copyright (C) 2010-2016
+  Tokushima Prefectural Government <jouhousenryakuka@pref.tokushima.lg.jp>  
+  IDS Inc. <info@joruri.org>  
+  SiteBridge Inc.  <info@sitebridge.co.jp>  
 
 ## インストール
 
@@ -22,4 +23,4 @@ See COPYING
     export LANG=ja_JP.UTF-8; curl -fsSL https://raw.githubusercontent.com/zomeki/zomeki3/master/doc/install_scripts/prepare.sh | bash
 
 ### 手動マニュアル
-  - [doc/INSTALL.txt](doc/INSTALL.txt)
+  - [doc/INSTALL.md](doc/INSTALL.md)
