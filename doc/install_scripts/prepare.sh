@@ -7,6 +7,8 @@ echo '#### Prepare to install ####'
 centos() {
   echo "It's CentOS!"
 
+  setenforce 0
+
   yum -y install git epel-release
 
   cd /usr/local/src
