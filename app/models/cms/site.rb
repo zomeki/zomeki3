@@ -204,17 +204,6 @@ class Cms::Site < ApplicationRecord
     end
   end
 
-  def self.find_by_script_uri(script_uri)
-    base = script_uri.gsub(/^([a-z]+:\/\/[^\/]+\/).*/, '\1')
-    item = Cms::Site.new.public
-    cond = Condition.new do |c|
-      c.or :full_uri, 'LIKE', "#{base}%"
-      c.or :mobile_full_uri, 'LIKE', "#{base}%"
-    end
-    item.and cond
-    return item.order(:id).first
-  end
-
   def self.make_virtual_hosts_config
     conf = '';
     order(:id).each do |site|

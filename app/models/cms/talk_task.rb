@@ -2,11 +2,4 @@ class Cms::TalkTask < ApplicationRecord
   include Sys::Model::Base
   
   validates :path, presence: true
-
-  def site_id
-    if s = self.path.match(/\/sites\/[\d]{2}\/[\d]{2}\/[\d]{2}\/[\d]{2}\/([\d]{8})\//)
-      return s[1].to_i
-    end
-    return nil
-  end
 end

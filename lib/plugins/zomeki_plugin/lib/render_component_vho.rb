@@ -47,6 +47,7 @@ module RenderComponent
 
       request_params = options.symbolize_keys
       request_env = request.env.dup
+      request_env["REQUEST_METHOD"] = 'GET'
       request_env["action_dispatch.request.symbolized_path_parameters"] = request_params
       request_env["action_dispatch.request.parameters"] = request_params.with_indifferent_access
       request_env["action_dispatch.request.path_parameters"] = request_params.slice(:controller, :action)
@@ -54,6 +55,7 @@ module RenderComponent
         request_env['HTTP_USER_AGENT'] = jpmobile_params['HTTP_USER_AGENT']
         request_env['rack.jpmobile'] = jpmobile_params['rack.jpmobile']
       end
+
       ActionDispatch::Request.new(request_env)
     end
 

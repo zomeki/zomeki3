@@ -4,42 +4,14 @@ class Cms::Inquiry < ApplicationRecord
 
   belongs_to :group, :foreign_key => :group_id, :class_name => 'Sys::Group'
 
-  #before_save :set_group
+  delegate :address, to: :group, allow_nil: true
+  delegate :tel, to: :group, allow_nil: true
+  delegate :tel_attend, to: :group, allow_nil: true
+  delegate :fax, to: :group, allow_nil: true
+  delegate :email, to: :group, allow_nil: true
+  delegate :note, to: :group, allow_nil: true
 
   def visible?
-    return state == 'visible'
+    state == 'visible'
   end
-
-  def set_group
-    self.group_id = Core.user_group.id unless group_id
-  end
-
-  def address
-    group.address if group
-  end
-
-  def group_id
-    group.id if group
-  end
-
-  def tel
-    group.tel if group
-  end
-
-  def tel_attend
-    group.tel_attend if group
-  end
-
-  def fax
-    group.fax if group
-  end
-
-  def email
-    group.email if group
-  end
-
-  def note
-    group.note if group
-  end
-
 end
