@@ -173,7 +173,7 @@ class GpCategory::Public::Node::CategoriesController < GpCategory::Public::Node:
             end
           end
 
-        render plain: vc.content_tag(:div, rendered.html_safe, class: 'contentGpCategory contentGpCategoryCategory')
+        render html: vc.content_tag(:div, rendered.html_safe, class: 'contentGpCategory contentGpCategoryCategory').html_safe
       end
     else
       @docs = @category.public_docs.order(display_published_at: :desc, published_at: :desc)
