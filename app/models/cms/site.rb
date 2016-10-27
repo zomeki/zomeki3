@@ -119,9 +119,8 @@ class Cms::Site < ApplicationRecord
   end
 
   def admin_domain
-    admin_uri = admin_full_uri || full_uri
-    return '' if admin_uri.blank?
-    URI.parse(admin_uri).host
+    return '' if admin_full_uri.blank?
+    URI.parse(admin_full_uri).host
   end
 
   def publish_uri
@@ -277,6 +276,7 @@ class Cms::Site < ApplicationRecord
   end
 
   def generate_apache_admin_configs
+    return if admin_domain.blank?
     virtual_hosts = Rails.root.join('config/apache/admin_virtual_hosts')
     unless (template = virtual_hosts.join('template.conf.erb')).file?
       logger.warn 'VirtualHost template not found.'
