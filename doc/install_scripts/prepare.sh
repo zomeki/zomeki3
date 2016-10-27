@@ -8,6 +8,7 @@ centos() {
   echo "It's CentOS!"
 
   setenforce 0
+  sed -i -e 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/sysconfig/selinux
 
   yum -y install git epel-release
 
