@@ -69,7 +69,8 @@ bundlerをインストールします。
 
 ## 6.nginxのインストール
 
-外部からhttpでアクセス可能にします。
+外部からhttpでアクセス可能にします。  
+※ファイアーウォール設定は環境に応じて適切に設定してください。
 
     # firewall-cmd --add-service=http --zone=public
 
