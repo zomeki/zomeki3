@@ -18,6 +18,9 @@ centos() {
   for file in ${files[@]}; do
     echo "$INSTALL_SCRIPTS_URL/$file" >> install_scripts.txt
     echo "./$file" >> install_all.sh
+    if [ $file = 'install_ruby.sh' ]; then
+      echo ". /etc/profile" >> install_all.sh
+    fi
     curl -fsSLO "$INSTALL_SCRIPTS_URL/$file"
     chmod 755 $file
   done
