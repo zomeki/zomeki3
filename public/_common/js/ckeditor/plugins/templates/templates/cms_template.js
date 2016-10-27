@@ -42,12 +42,6 @@ CKEDITOR.addTemplates('cms', {
       image: 'cms_temp7.gif',
       description: 'ダウンロードリンクの挿入',
       html: '<div class="temp7"><p>PDFの閲覧にはAdobe System社の無償のソフトウェア「Adobe Reader」が必要です。下記のAdobe Readerダウンロードページから入手してください。</p><a target="_blank" title="Adobe Readerダウンロード" href="http://get.adobe.com/jp/reader/">Adobe Readerダウンロード</a></div>'
-    },
-    {
-      title: '観光ガイド記事作成',
-      image: 'cms_temp1.gif',
-      description: '観光ガイドの記事作成テンプレートです。',
-      html: '<div class="temp8 clearfix"><div class="thumb"><img alt="サンプル画像" src="/_common/js/ckeditor/plugins/templates/templates/images/sample.gif" title="画像の説明" /></div><div class="text"><p>観光施設の説明文を入力します。画像の右側に文章を表示します。</p><dl><dt>交通</dt><dd>観光施設へのアクセス方法を入力します。</dd></dl></div></div>'
     }
   ]}
 );
