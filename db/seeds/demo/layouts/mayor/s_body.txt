@@ -1,0 +1,60 @@
+<div id="container" class="emergency">
+
+<header id="pageHeader">
+<div id="pageHeaderContainer">
+<div id="pageHeaderBody">
+
+[[piece/smart-common-header]]
+
+</div>
+<!-- end #pageHeaderContainer --></div>
+<!-- end #pageHeader --></header>
+
+<nav id="pageNav">
+<div id="pageNavContainer">
+<div id="pageNavBody">
+
+[[piece/global-navi]]
+
+</div>
+<!-- end #pageNavContainer --></div>
+<!-- end #pageNav --></nav>
+
+<div id="main">
+<div id="mainContainer">
+
+[[piece/emergency-mode]]
+
+<div id="wrapper">
+
+<div id="content">
+<div id="contentContainer">
+<div id="contentBody">
+
+[[piece/attention-information]]
+[[piece/smart-recent-docs-tab]]
+[[piece/emergency-info]]
+
+</div>
+<!-- end #contentContainer --></div>
+<!-- end #content --></div>
+
+<!-- end #wrapper --></div>
+
+<!-- end #mainContainer --></div>
+<!-- end #main --></div>
+
+<footer id="pageFooter">
+<div id="pageFooterContainer">
+<div id="pageFooterBody">
+
+[[piece/smart-switch]]
+[[piece/smart-footer-navi]]
+[[piece/smart-common-footer]]
+[[piece/copyright]]
+
+</div>
+<!-- end #pageFooterContainer --></div>
+<!-- end #pageFooter --></footer>
+
+</div>

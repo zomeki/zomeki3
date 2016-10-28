@@ -1,0 +1,39 @@
+<div id="container">
+
+<div id="header">
+<div id="headerContainer">
+<div id="headerBody">
+
+[[piece/mobile-common-header]]
+
+<!-- end #headerBody --></div>
+<!-- end #Container --></div>
+<!-- end #header --></div>
+
+<div id="content">
+<div id="contentContainer">
+<div id="contentBody">
+
+[[piece/attention-information]]
+[[piece/mobile-recent-docs]]
+[[piece/mobile-recent-docs-more]]
+[[piece/mobile-lifeevent]]
+[[piece/mobile-guide]]
+[[piece/mobile-navi]]
+
+<!-- end #contentBody --></div>
+<!-- end #contentContainer --></div>
+<!-- end #content --></div>
+
+<div id="footer">
+<div id="footerContainer">
+<div id="footerBody">
+
+[[piece/mobile-common-footer]]
+[[piece/mobile-copyright]]
+
+<!-- end #footerBody --></div>
+<!-- end #footerContainer --></div>
+<!-- end #footer --></div>
+
+</div>
