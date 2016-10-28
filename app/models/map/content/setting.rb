@@ -27,8 +27,7 @@ class Map::Content::Setting < Cms::ContentSetting
     ex = extra_values
     case name
     when 'gp_category_content_category_type_id'
-      category_ids = (params[:categories] || {}).values.map(&:last)
-      ex[:category_ids] = category_ids.map{|id| id.to_i if id.present? }.compact.uniq
+      ex[:category_ids] = (params[:categories] || {}).values.select(&:present?).map(&:to_i).uniq
     end
     super(ex)
   end
