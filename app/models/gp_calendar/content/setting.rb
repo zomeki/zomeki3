@@ -36,8 +36,7 @@ class GpCalendar::Content::Setting < Cms::ContentSetting
     ex = extra_values
     case name
     when 'gp_category_content_category_type_id'
-      category_ids = (params[:categories] || {}).values.map(&:last)
-      ex[:category_ids] = category_ids.map{|id| id.to_i if id.present? }.compact.uniq
+      ex[:category_ids] = (params[:categories] || {}).values.select(&:present?).map(&:to_i).uniq
     when 'event_sync_import'
       ex[:source_hosts] = params[:source_hosts].to_s
     when 'event_sync_export'
