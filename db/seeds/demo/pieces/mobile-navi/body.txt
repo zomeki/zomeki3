@@ -1,0 +1,8 @@
+<div id="navi" class="piece">
+<div class="pieceContainer">
+<div class="pieceBody"><hr />
+・<a href="/categories/bunya/city_shokai/">[[text/site-name]]の紹介</a><br />
+・<a href="/calendar/">イベントカレンダー</a>
+</div>
+</div>
+</div>

@@ -1,0 +1,20 @@
+<div id="commonHeader" class="piece">
+<div class="pieceContainer">
+<div class="pieceBody clearfix">
+<hr /><h1>[[text/site-name]]</h1>
+<span class="subtitle">[[text/site-name-en]] official site</span><hr />
+<div class="search">
+<!-- Google CSE Search Box Begins -->
+<form action="/search/" id="cse-search-box" name="cse-search-box">
+<input type="hidden" name="cx" value="010388784271551500717:8-4njemul34'" />
+<input type="hidden" name="ie" value="UTF-8" />
+<input type="hidden" name="cof" value="FORID:11" />
+<input type="hidden" name="oe" value="UTF-8" />
+<input type="text" name="q" size="40" value="" id="search-box" class="text" />
+<input value="検索" alt="検索" title="検索" type="image" class="submit" align="top" name="sa" src="/_files/00000154/serch_bt.gif" />
+</form>
+<!-- Google CSE Search Box Ends -->
+</div>
+</div>
+</div>
+</div>

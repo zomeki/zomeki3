@@ -1,0 +1,31 @@
+<div id="population" class="piece">
+<div class="pieceContainer">
+<div class="pieceHeader"><h2>ぞめき市の人口</h2></div>
+<div class="pieceBody">
+
+<p>(平成○○年○○月末現在)</p>
+<table>
+<tbody>
+<tr>
+<th>人口</th>
+<td>100,000</td>
+</tr>
+<tr>
+<th>男</th>
+<td>50,000</td>
+</tr>
+<tr>
+<th>女</th>
+<td>50,000</td>
+</tr>
+<tr>
+<th>世帯</th>
+<td>46,000</td>
+</tr>
+</tbody>
+</table>
+<p class="more"><a href="#">人口統計</a></p>
+
+</div>
+</div>
+</div>

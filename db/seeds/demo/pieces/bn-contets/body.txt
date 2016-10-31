@@ -1,0 +1,12 @@
+<div class="piece" id="bnContets">
+<div class="pieceContainer">
+<div class="pieceBody">
+<ul>
+<li><a href="#">[[file/banner/bt-goiken.png]]</a></li>
+<li><a href="#">[[file/banner/bt-shinseisho.png]]</a></li>
+<li><a href="#">[[file/banner/bt-furusatonozei.png]]</a></li>
+<li><a href="#">[[file/banner/bt-opendata.png]]</a></li>
+</ul>
+</div>
+</div>
+</div>

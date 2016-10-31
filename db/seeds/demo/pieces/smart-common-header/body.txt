@@ -1,0 +1,11 @@
+<div id="commonHeader" class="piece">
+<div class="pieceContainer">
+<div class="pieceBody">
+<h1><a href="/">[[text/site-name]]</a></h1>
+<ul class="clearfix">
+<li>[[text/search-box]]</li>
+<li><a href="/sitemap.html">サイトマップ</a></li>
+</ul>
+</div>
+</div>
+</div>

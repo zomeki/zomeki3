@@ -1,0 +1,4 @@
+<xml><tabs><tab condition='and' more='/docs/' name='news' sort_no='0' title='新着情報'><elem_layers>0_descendants</elem_layers></tab><tab condition='or' more='
+/categories/bunya/nyusatsu/' name='nyusatsu' sort_no='10' title='入札・契約'><elem_category_ids>3</elem_category_ids><elem_layers>0_descendants</elem_layers><el
+em_layers>1_descendants</elem_layers></tab><tab condition='and' more='/categories/kubun/boshu/' name='boshu' sort_no='20' title='募集'><elem_category_ids>2</ele
+m_category_ids><elem_layers>0_descendants</elem_layers><elem_layers>1_descendants</elem_layers></tab></tabs></xml>

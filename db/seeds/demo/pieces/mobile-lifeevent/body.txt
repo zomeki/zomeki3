@@ -1,0 +1,17 @@
+<div id="lifeEvent" class="piece">
+<div class="pieceContainer">
+<div class="pieceHeader"><h2>ライフイベント</h2></div>
+<div class="pieceBody">
+・<a href="/categories/lifeevent/ninshin/">妊娠・出産</a><br />
+・<a href="/categories/lifeevent/kosodate/">子育て・教育</a><br />
+・<a href="/categories/lifeevent/seijin/">成人・就職</a><br />
+・<a href="/categories/lifeevent/kekkon/">結婚・離婚</a><br />
+・<a href="/categories/lifeevent/hikkoshi/">引越し・住まい</a><br />
+・<a href="/categories/lifeevent/byoki/">病気・けが</a><br />
+・<a href="/categories/lifeevent/shogaisha/">障がい者</a><br />
+・<a href="/categories/lifeevent/shitsugyo/">失業・退職</a><br />
+・<a href="/categories/lifeevent/korei/">高齢者・介護</a><br />
+・<a href="/categories/lifeevent/shibo/">死亡･相続</a>
+</div>
+</div>
+</div>

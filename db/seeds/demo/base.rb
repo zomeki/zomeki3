@@ -2,16 +2,18 @@
 
 site_name = "ZOMEKI"
 
+zomeki_site = Cms::Site.find(1)
+
 ## ---------------------------------------------------------
 ## methods
 
 def load_demo(name)
   puts "import #{name}..."
-  load "#{Rails.root}/db/seed/demo/#{name}.rb"
+  load "#{Rails.root}/db/seeds/demo/#{name}.rb"
 end
 
 def read_data(path)
-  path = "#{Rails.root}/db/seed/demo/#{path}.txt"
+  path = "#{Rails.root}/db/seeds/demo/#{path}.txt"
   return nil unless FileTest.exists?(path)
   ::File.new(path).read.force_encoding('utf-8')
 end
@@ -19,10 +21,10 @@ end
 ## ---------------------------------------------------------
 ## sys/groups
 
-puts "import sys_users..."
+puts "import sys_groups..."
 
-def create(parent, level_no, sort_no, code, name, name_en)
-  Sys::Group.create parent_id: (parent == 0 ? 0 : parent.id),
+def create(site, parent, level_no, sort_no, code, name, name_en)
+  group = Sys::Group.create! parent_id: (parent == 0 ? 0 : parent.id),
     level_no:  level_no,
     sort_no:   sort_no,
     state:     'enabled',
@@ -34,61 +36,65 @@ def create(parent, level_no, sort_no, code, name, name_en)
     tel:       '0000-01-0000',
     fax:       '0000-01-0000',
     email:     'info@sitebridge.co.jp'
+  site.groups << group
+  return group
 end
 
-p = create r, 2, 10, "1", "総務部", "somu"
-    create p, 3, 10, "1001", "職員課", "shokuin"
-    create p, 3, 20, "1002", "契約管理課", "keiyakukanri"
-    create p, 3, 30, "1003", "防災課", "bosai"
-    create p, 3, 40, "1004", "法務課", "homu"
+r = Sys::Group.find(1)
 
-p = create r, 2, 20, "2", "企画部", "kikaku"
-    create p, 3, 10, "2001", "IT推進課", "itsuishinka"
-    create p, 3, 20, "2002", "企画経営課", "kikakukeiei"
-    create p, 3, 30, "2003", "財政課", "zaisei"
-    create p, 3, 40, "2004", "秘書広報課", "hishokoho"
-    create p, 3, 50, "2005", "情報推進課", "johosuishin"
+p = create zomeki_site, r, 2, 10, "1", "総務部", "somu"
+    create zomeki_site, p, 3, 10, "1001", "職員課", "shokuin"
+    create zomeki_site, p, 3, 20, "1002", "契約管理課", "keiyakukanri"
+    create zomeki_site, p, 3, 30, "1003", "防災課", "bosai"
+    create zomeki_site, p, 3, 40, "1004", "法務課", "homu"
 
-p = create r, 2, 30, "3", "生活部", "seikatsu"
-    create p, 3, 10, "3001", "市民課", "shimin"
-    create p, 3, 20, "3002", "税務課", "zeimu"
-    create p, 3, 30, "3003", "保健課", "hoken"
+p = create zomeki_site, r, 2, 20, "2", "企画部", "kikaku"
+    create zomeki_site, p, 3, 10, "2001", "IT推進課", "itsuishinka"
+    create zomeki_site, p, 3, 20, "2002", "企画経営課", "kikakukeiei"
+    create zomeki_site, p, 3, 30, "2003", "財政課", "zaisei"
+    create zomeki_site, p, 3, 40, "2004", "秘書広報課", "hishokoho"
+    create zomeki_site, p, 3, 50, "2005", "情報推進課", "johosuishin"
 
-p = create r, 2, 40, "4", "環境部", "kankyo"
-    create p, 3, 10, "4001", "環境政策課", "kankyoseisaku"
-    create p, 3, 20, "4002", "生活経済課", "seikatsukeizai"
-    create p, 3, 30, "4003", "安全安心課", "anzenanshin"
+p = create zomeki_site, r, 2, 30, "3", "生活部", "seikatsu"
+    create zomeki_site, p, 3, 10, "3001", "市民課", "shimin"
+    create zomeki_site, p, 3, 20, "3002", "税務課", "zeimu"
+    create zomeki_site, p, 3, 30, "3003", "保健課", "hoken"
 
-p = create r, 2, 50, "5", "保健福祉部", "hokenfukushi"
-    create p, 3, 10, "5001", "子育て支援課", "kosodateshien"
-    create p, 3, 20, "5002", "地域福祉課", "chiikifukushi"
-    create p, 3, 30, "5003", "高齢者支援課", "koreishashien"
-    create p, 3, 40, "5004", "生活福祉課", "seikatsufukushika"
-    create p, 3, 50, "5005", "健康推進課", "kenkosuishin"
-    create p, 3, 60, "5006", "障害福祉課", "shogaifukushi"
+p = create zomeki_site, r, 2, 40, "4", "環境部", "kankyo"
+    create zomeki_site, p, 3, 10, "4001", "環境政策課", "kankyoseisaku"
+    create zomeki_site, p, 3, 20, "4002", "生活経済課", "seikatsukeizai"
+    create zomeki_site, p, 3, 30, "4003", "安全安心課", "anzenanshin"
 
-p = create r, 2, 60, "6", "都市整備部", "toshiseibi"
-    create p, 3, 10, "6001", "下水道課", "gesuido"
-    create p, 3, 20, "6002", "土木課", "doboku"
-    create p, 3, 30, "6003", "建築住宅課", "kenchikujyutaku"
-    create p, 3, 40, "6004", "道路交通課", "dorokotsu"
-    create p, 3, 50, "6005", "都市計画課", "toshikeikaku"
+p = create zomeki_site, r, 2, 50, "5", "保健福祉部", "hokenfukushi"
+    create zomeki_site, p, 3, 10, "5001", "子育て支援課", "kosodateshien"
+    create zomeki_site, p, 3, 20, "5002", "地域福祉課", "chiikifukushi"
+    create zomeki_site, p, 3, 30, "5003", "高齢者支援課", "koreishashien"
+    create zomeki_site, p, 3, 40, "5004", "生活福祉課", "seikatsufukushika"
+    create zomeki_site, p, 3, 50, "5005", "健康推進課", "kenkosuishin"
+    create zomeki_site, p, 3, 60, "5006", "障害福祉課", "shogaifukushi"
 
-p = create r, 2, 70, "7", "観光経済部", "kankokeizai"
-    create p, 3, 10, "7001", "商工課", "shoko"
-    create p, 3, 20, "7002", "農林水産課", "norinsuisan"
-    create p, 3, 30, "7003", "観光振興課", "kankoshinko"
+p = create zomeki_site, r, 2, 60, "6", "都市整備部", "toshiseibi"
+    create zomeki_site, p, 3, 10, "6001", "下水道課", "gesuido"
+    create zomeki_site, p, 3, 20, "6002", "土木課", "doboku"
+    create zomeki_site, p, 3, 30, "6003", "建築住宅課", "kenchikujyutaku"
+    create zomeki_site, p, 3, 40, "6004", "道路交通課", "dorokotsu"
+    create zomeki_site, p, 3, 50, "6005", "都市計画課", "toshikeikaku"
 
-p = create r, 2, 80, "8", "消防本部", "shobohonbu"
-    create p, 3, 10, "8001", "消防本部総務課", "shobo-somu"
-    create p, 3, 20, "8002", "予防課", "yobo"
-    create p, 3, 30, "8003", "消防署", "shobosho"
+p = create zomeki_site, r, 2, 70, "7", "観光経済部", "kankokeizai"
+    create zomeki_site, p, 3, 10, "7001", "商工課", "shoko"
+    create zomeki_site, p, 3, 20, "7002", "農林水産課", "norinsuisan"
+    create zomeki_site, p, 3, 30, "7003", "観光振興課", "kankoshinko"
 
-p = create r, 2, 90, "9", "議会事務局", "gikaijimukyoku"
+p = create zomeki_site, r, 2, 80, "8", "消防本部", "shobohonbu"
+    create zomeki_site, p, 3, 10, "8001", "消防本部総務課", "shobo-somu"
+    create zomeki_site, p, 3, 20, "8002", "予防課", "yobo"
+    create zomeki_site, p, 3, 30, "8003", "消防署", "shobosho"
 
-p = create r, 2, 100, "10", "選挙管理委員会事務局", "senkyokanriiinkaijimukyoku"
+p = create zomeki_site, r, 2, 90, "9", "議会事務局", "gikaijimukyoku"
 
-p = create r, 2, 110, "11", "監査委員事務局", "kansaiinjimukyoku"
+p = create zomeki_site, r, 2, 100, "10", "選挙管理委員会事務局", "senkyokanriiinkaijimukyoku"
+
+p = create zomeki_site, r, 2, 110, "11", "監査委員事務局", "kansaiinjimukyoku"
 
 
 ## ---------------------------------------------------------
@@ -108,11 +114,11 @@ Cms::Site.update_all({:name => site_name})
 
 puts "import cms_concepts..."
 
-def create_cms_concept(parent_id, sort_no, name)
-  Cms::Concept.create parent_id: parent_id,
+def create_cms_concept(parent, sort_no, name)
+  Cms::Concept.create parent_id: parent.id,
     site_id: 1,
     state: 'public',
-    level_no: level_no,
+    level_no: parent.level_no + 1,
     name: name
 end
 
@@ -120,8 +126,8 @@ c_site  = Cms::Concept.find(1)
 c_site.name = 'ルート'
 c_site.save
 
-c_top      = create_cms_concept c_site, 10, 'トップページ'
-c_contents = create_cms_concept c_top,   20, 'コンテンツ'
+c_top      = create_cms_concept c_site,  10, 'トップページ'
+c_contents = create_cms_concept c_site,   20, 'コンテンツ'
 
 c_event    = create_cms_concept c_contents, 10, 'イベント'
 
@@ -137,37 +143,6 @@ c_gnavi3   = create_cms_concept c_gnavi, 30, '観光・文化'
 c_gnavi4   = create_cms_concept c_gnavi, 40, '事業者の方へ'
 c_gnavi5   = create_cms_concept c_gnavi, 50, '市政情報'
 
-c_category = create_cms_concept c_contents, 40, 'カテゴリ'
-
-             create_cms_concept c_category, 10, '区分'
-
-c_bunya    = create_cms_concept c_category, 20, '分野'
-             create_cms_concept c_bunya,    10,'届出・登録・証明'
-             create_cms_concept c_bunya,    20,'保険・年金・介護'
-             create_cms_concept c_bunya,    30,'福祉'
-             create_cms_concept c_bunya,    40,'健康・予防'
-             create_cms_concept c_bunya,    50,'税金'
-             create_cms_concept c_bunya,    60,'育児・教育'
-             create_cms_concept c_bunya,    70,'生活・インフラ'
-             create_cms_concept c_bunya,    80,'安心・安全'
-             create_cms_concept c_bunya,    90,'環境・ごみ'
-             create_cms_concept c_bunya,    100,'入札・契約'
-             create_cms_concept c_bunya,    110,'都市整備'
-             create_cms_concept c_bunya,    120,'地域産業'
-             create_cms_concept c_bunya,    130,'市政情報'
-             create_cms_concept c_bunya,    140,'歴史・文化財'
-             create_cms_concept c_bunya,    150,'施設案内'
-             create_cms_concept c_bunya,    160,'市紹介'
-             create_cms_concept c_bunya,    170,'議会・選挙'
-             create_cms_concept c_bunya,    180,'広報・広聴'
-             create_cms_concept c_bunya,    190,'情報公開'
-             create_cms_concept c_bunya,    200,'交流事業'
-
-             create_cms_concept c_category, 30, 'ライフイベント'
-             create_cms_concept c_category, 40, 'イベント情報'
-
-             create_cms_concept c_category, 50, '組織'
-
 c_mayor    = create_cms_concept c_top,   30,'市長の部屋'
 c_gikai    = create_cms_concept c_top,   40,'市議会'
 
@@ -177,12 +152,13 @@ c_gikai    = create_cms_concept c_top,   40,'市議会'
 
 puts "import cms_conctents..."
 
-def create_cms_content(concpet, model, name)
+def create_cms_content(concept, model, name, code)
   Cms::Content.create site_id: 1,
     concept_id: concept.id,
     state: 'public',
     model: model,
-    name: name
+    name: name,
+    code: code
 end
 
 ## ---------------------------------------------------------
@@ -192,7 +168,7 @@ puts "import cms_layouts..."
 
 def create_cms_layout(concept, name, title)
   Cms::Layout.create site_id: 1,
-    concept_id: concept_id,
+    concept_id: concept.id,
     state: 'public',
     head: read_data("layouts/#{name}/head"),
     body: read_data("layouts/#{name}/body"),
@@ -205,16 +181,8 @@ def create_cms_layout(concept, name, title)
 end
 
 l_top       = create_cms_layout c_top,  'top',     'トップ'
-l_category  = create_cms_layout c_site, 'category','カテゴリ'
-l_bunya     = create_cms_layout c_site, 'category-bunya', 'カテゴリ（分野）'
-l_gnavi     = create_cms_layout c_site, 'global-navi',    'グローバルナビ'
-l_event     = create_cms_layout c_site, 'event-calendar', 'イベント'
 l_doc       = create_cms_layout c_site, 'doc',          '記事'
 l_col1      = create_cms_layout c_site, 'col-1',        '固定ページ（1カラム）'
-l_map       = create_cms_layout c_site, 'map',          'マップ一覧'
-l_tag       = create_cms_layout c_site, 'tag',          '関連ワード'
-l_top_grp   = create_cms_layout c_site, 'soshiki-top',  '組織TOP'
-l_grouop    = create_cms_layout c_site, 'soshiki',      '組織'
 l_mayor     = create_cms_layout c_mayor, 'mayor',        '市長の部屋'
 l_gikai     = create_cms_layout c_gikai, 'gikai',        '市議会'
 l_emergency = create_cms_layout c_top,  'emergency-top','大規模災害時表示（TOPページ）'
@@ -224,10 +192,14 @@ l_emergency = create_cms_layout c_top,  'emergency-top','大規模災害時表�
 
 puts "import cms_pieces..."
 
-def create_cms_piece(concept, model, name, title)
+def create_cms_piece(concept, model, name, title, content_id = nil)
   Cms::Piece.create site_id: 1,
     concept_id: concept.id,
+    content_id: content_id,
     state: 'public',
+    model: model,
+    name: name,
+    title: title,
     body: read_data("pieces/#{name}/body"),
     xml_properties: read_data("pieces/#{name}/xml_properties")
 end
@@ -277,11 +249,11 @@ end
   [ c_top,    'Cms::Free', 'mobile-recent-docs-more', '【携帯】新着記事一覧へのリンク' ],
   [ c_site,   'Cms::Free', 'smart-global-navi', '【スマートフォン】グローバルナビ' ],
   [ c_top,    'Cms::Free', 'bn-faq', 'よくある質問FAQバナー' ],
-  [ c_gnavi1, 'Cms::Free', 'global-navi1', 'グローバルナビ' ],
-  [ c_gnavi2, 'Cms::Free', 'global-navi2', 'グローバルナビ' ],
-  [ c_gnavi3, 'Cms::Free', 'global-navi3', 'グローバルナビ' ],
-  [ c_gnavi4, 'Cms::Free', 'global-navi4', 'グローバルナビ' ],
-  [ c_gnavi5, 'Cms::Free', 'global-navi5', 'グローバルナビ' ],
+  [ c_gnavi1, 'Cms::Free', 'global-navi', 'グローバルナビ' ],
+  [ c_gnavi2, 'Cms::Free', 'global-navi', 'グローバルナビ' ],
+  [ c_gnavi3, 'Cms::Free', 'global-navi', 'グローバルナビ' ],
+  [ c_gnavi4, 'Cms::Free', 'global-navi', 'グローバルナビ' ],
+  [ c_gnavi5, 'Cms::Free', 'global-navi', 'グローバルナビ' ],
   [ c_site,   'Cms::Free', 'search-navi', '検索ナビ' ],
   [ c_gikai,  'Cms::Free', 'side-navi', '議会サイドメニュー' ],
   [ c_top,    'Cms::Free', 'emergency-mode', '大規模災害時モード表示' ],
@@ -297,69 +269,157 @@ end
 
 puts "import cms_nodes..."
 
-
-def create_cms_node(parent, layout, model, name, title)
+def create_cms_content_node(content, layout, model, name, title)
+  parent = Cms::Node.find_by(:id => 1, :parent_id => 0)
   Cms::Node.create   site_id: 1,
-   concept_id:   c_site.id,
-   parent_id:    parent.id ,
+   concept_id:   content.concept_id,
+   content_id:   content.id,
+   parent_id:    parent.id,
    state:        'public',
    route_id:     parent.id,
-   directory:    (params[:name] =~ /\./ ? 0 : 1),
+   directory:    (name =~ /\./ ? 0 : 1),
    published_at: Time.now,
-   layout_id:    layout.id,
+   layout_id:    layout.blank? ? nil : layout.id,
    model:        model,
    name:         name,
    title:        title
 end
 
+def create_cms_node(concept, parent, layout, model, name, title, body = nil)
+  body_text = body.present? ? read_data("nodes/#{body}.txt"): nil
+  Cms::Node.create   site_id: 1,
+   concept_id:   concept.id,
+   parent_id:    parent.id ,
+   state:        'public',
+   route_id:     parent.id,
+   directory:    (name =~ /\./ ? 0 : 1),
+   published_at: Time.now,
+   layout_id:    layout.blank? ? nil : layout.id,
+   model:        model,
+   name:         name,
+   title:        title,
+   body:         body_text
+end
+
 n_top   = Cms::Node.find_by(:id => 1, :parent_id => 0)
 p_index = Cms::Node.find_by(:id => 2, :name => "index.html")
-         create_cms_node n_top, l_top, 'Cms::Page', 'privacy.html', '個人情報の取り扱い'
-         create_cms_node n_top, l_top, 'Cms::Page', '404.html', 'ページが見つかりませんでした'
-         create_cms_node n_top, l_top, 'Cms::Page', 'search.html', '検索結果'
-         create_cms_node n_top, l_top, 'Cms::Page', 'riyo.html', 'ホームページ利用について'
-         create_cms_node n_top, l_top, 'Cms::Page', 'web_accessibility.html', 'ウェブアクセシビリティについて'
-         create_cms_node n_top, l_top, 'Cms::Page', 'link.html', 'リンク集'
-         create_cms_node n_top, l_top, 'Cms::Page', 'copyright.html', 'リンク・著作権・免責事項'
-         create_cms_node n_top, l_top, 'Cms::Page', 'banner.html', 'バナー広告について'
-         create_cms_node n_top, l_top, 'Cms::Sitemap', 'sitemap.html', 'サイトマップ'
+         p_index.update_columns(concept_id: c_top.id, layout_id: l_top.id)
+         create_cms_node c_site, n_top, l_top, 'Cms::Page', 'privacy.html', '個人情報の取り扱い',  'pages/privacy/body'
+         create_cms_node c_site, n_top, l_top, 'Cms::Page', '404.html', 'ページが見つかりませんでした',  'pages/404/body'
+         create_cms_node c_site, n_top, l_top, 'Cms::Page', 'search.html', '検索結果',  'pages/search/body'
+         create_cms_node c_site, n_top, l_top, 'Cms::Page', 'riyo.html', 'ホームページ利用について',  'pages/riyo/body'
+         create_cms_node c_site, n_top, l_top, 'Cms::Page', 'web_accessibility.html', 'ウェブアクセシビリティについて',  'pages/web_accessibility/body'
+         create_cms_node c_site, n_top, l_top, 'Cms::Page', 'link.html', 'リンク集',  'pages/link/body'
+         create_cms_node c_site, n_top, l_top, 'Cms::Page', 'copyright.html', 'リンク・著作権・免責事項',  'pages/copyright/body'
+         create_cms_node c_site, n_top, l_top, 'Cms::Page', 'banner.html', 'バナー広告について',  'pages/banner/body'
+         create_cms_node c_site, n_top, l_top, 'Cms::Sitemap', 'sitemap.html', 'サイトマップ',  'pages/sitemap/body'
 
-n_mayor  = create_cms_node n_top, l_mayor, 'Cms::Directory', 'mayor', 'ぞめき市長の部屋'
-         create_cms_node n_mayor, l_mayor, 'Cms::Page', 'profile.html', 'プロフィール'
-         create_cms_node n_mayor, l_mayor, 'Cms::Page', 'gallery.html', '市長フォトギャラリー'
-         create_cms_node n_mayor, l_mayor, 'Cms::Page', 'kosaihi.html', '市長交際費執行状況'
-         create_cms_node n_mayor, l_mayor, 'Cms::Page', 'hyomei.html', '所信表明'
-         create_cms_node n_mayor, l_mayor, 'Cms::Page', 'shuninaisatsu.html', '就任のごあいさつ'
-         create_cms_node n_mayor, l_mayor, 'Cms::Page', 'index.html', '市長の部屋'
+n_mayor  = create_cms_node c_site, n_top, l_mayor, 'Cms::Directory', 'mayor', 'ぞめき市長の部屋'
+         create_cms_node c_site, n_mayor, l_mayor, 'Cms::Page', 'index.html', '市長の部屋',  'mayor/index/body'
+         create_cms_node c_site, n_mayor, l_mayor, 'Cms::Page', 'profile.html', 'プロフィール',  'mayor/profile/body'
+         create_cms_node c_site, n_mayor, l_mayor, 'Cms::Page', 'gallery.html', '市長フォトギャラリー',  'mayor/gallery/body'
+         create_cms_node c_site, n_mayor, l_mayor, 'Cms::Page', 'kosaihi.html', '市長交際費執行状況',  'mayor/kosaihi/body'
+         create_cms_node c_site, n_mayor, l_mayor, 'Cms::Page', 'hyomei.html', '所信表明',  'mayor/hyomei/body'
+         create_cms_node c_site, n_mayor, l_mayor, 'Cms::Page', 'shuninaisatsu.html', '就任のごあいさつ',  'mayor/shuninaisatsu/body'
 
 
 
-n_gikai  = create_cms_node n_top, l_gikai, 'Cms::Directory', 'gikai', 'ぞめき市議会'
-         create_cms_node n_gikai, l_gikai, 'Cms::Page', 'kekka.html', '定例会・臨時会の結果'
-         create_cms_node n_gikai, l_gikai, 'Cms::Page', 'seigan.html', '請願・陳情のご案内'
-         create_cms_node n_gikai, l_gikai, 'Cms::Page', 'kensaku.html', '会議録検索'
-         create_cms_node n_gikai, l_gikai, 'Cms::Page', 'dayori.html', 'ぞめき市議会だより'
-         create_cms_node n_gikai, l_gikai, 'Cms::Page', 'index.html', 'ぞめき市議会'
-         create_cms_node n_gikai, l_gikai, 'Cms::Page', 'meibo.html', '議員名簿'
-         create_cms_node n_gikai, l_gikai, 'Cms::Page', 'kosei.html', '市議会の構成'
-         create_cms_node n_gikai, l_gikai, 'Cms::Page', 'botyo.html', '傍聴のご案内'
+n_gikai  = create_cms_node c_site, n_top, l_gikai, 'Cms::Directory', 'gikai', 'ぞめき市議会'
+         create_cms_node c_site, n_gikai, l_gikai, 'Cms::Page', 'index.html', 'ぞめき市議会',  'gikai/index/body'
+         create_cms_node c_site, n_gikai, l_gikai, 'Cms::Page', 'kekka.html', '定例会・臨時会の結果',  'gikai/kekka/body'
+         create_cms_node c_site, n_gikai, l_gikai, 'Cms::Page', 'seigan.html', '請願・陳情のご案内',  'gikai/seigan/body'
+         create_cms_node c_site, n_gikai, l_gikai, 'Cms::Page', 'kensaku.html', '会議録検索',  'gikai/kensaku/body'
+         create_cms_node c_site, n_gikai, l_gikai, 'Cms::Page', 'dayori.html', 'ぞめき市議会だより',  'gikai/dayori/body'
+         create_cms_node c_site, n_gikai, l_gikai, 'Cms::Page', 'meibo.html', '議員名簿',  'gikai/meibo/body'
+         create_cms_node c_site, n_gikai, l_gikai, 'Cms::Page', 'kosei.html', '市議会の構成',  'gikai/kosei/body'
+         create_cms_node c_site, n_gikai, l_gikai, 'Cms::Page', 'botyo.html', '傍聴のご案内',  'gikai/botyo/body'
 
+## ---------------------------------------------------------
+## cms/data_text
+puts 'import cms data...'
+
+def create_data_text(concept, name, title)
+  Cms::DataText.create site_id: concept.site_id,
+    state: 'public',
+    concept_id: concept.id,
+    name: name,
+    title: title,
+    body: read_data("data/texts/#{name}/body")
+end
+
+create_data_text c_site, 'site-name', 'サイト名'
+create_data_text c_site, 'site-name-en', 'サイト名（英語表記）'
+create_data_text c_site, 'address', '住所'
+create_data_text c_site, 'post-number', '郵便番号'
+create_data_text c_site, 'tel', '電話番号'
+create_data_text c_site, 'fax ', 'ファックス'
+create_data_text c_site, 'search-result', '検索結果'
+create_data_text c_site, 'head-col1', 'HEAD：1カラム'
+create_data_text c_site, 'head-emergency', 'HEAD：大規模災害時表示'
+create_data_text c_site, 'head-smart-top', 'HEAD：スマートフォントップページ'
+create_data_text c_site, 'head-col2', 'HEAD：2カラム'
+create_data_text c_site, 'analytics', 'Googleアナリティクス'
+create_data_text c_site, 'search-box', '検索ボックス'
+create_data_text c_site, 'head-smart', 'HEAD：スマートフォン'
+create_data_text c_site, 'head-top', 'HEAD：トップページ'
+
+## ---------------------------------------------------------
+## cms/data_files
+
+banner_node    = Cms::DataFileNode.create site_id: c_top.site_id,
+    concept_id: c_top.id, name: 'banner', title: 'バナー画像'
+lifeevent_node = Cms::DataFileNode.create site_id: c_top.site_id,
+    concept_id: c_top.id, name: 'lifeevent', title: 'ライフイベント'
+
+
+def create_data_file(concept, node_id, name, title, mime_type)
+  file = Cms::DataFile.create site_id: concept.site_id, state: 'public',
+    concept_id: concept.id, node_id: node_id,
+    name: name, title: title,
+    file: Sys::Lib::File::NoUploadedFile.new("#{Rails.root}/db/seeds/demo/data/files/#{name}", :mime_type => mime_type)
+  file.publish
+end
+create_data_file c_site ,   nil, 'qr.gif', 'QRコード', 'image/gif'
+create_data_file c_mayor, nil, 'mayor1.gif', '市長', 'image/gif'
+create_data_file c_top, banner_node.id, 'bt-shicho.png', '市長の部屋', 'image/png'
+create_data_file c_top, banner_node.id, 'bt-shigikai.png', '市議会', 'image/png'
+create_data_file c_top, banner_node.id, 'bt-furusatonozei.png', 'ふるさと納税', 'image/png'
+create_data_file c_top, banner_node.id, 'bt-goiken.png', '市へのご意見', 'image/png'
+create_data_file c_top, banner_node.id, 'bt-opendata.png', 'オープンデータ', 'image/png'
+create_data_file c_top, banner_node.id, 'bt-shinseisho.png', '申請書ダウンロード', 'image/png'
+create_data_file c_top, banner_node.id, 'bn-contact.gif', '市へのお問い合わせ', 'image/gif'
+create_data_file c_top, banner_node.id, 'bn-shisetsumap.gif', '施設マップ', 'image/gif'
+create_data_file c_top, banner_node.id, 'bn-faq.gif', 'よくある質問FAQ', 'image/gif'
+create_data_file c_top, lifeevent_node.id, 'bt-byokikega.gif', '病気・けが', 'image/gif'
+create_data_file c_top, lifeevent_node.id, 'bt-hikkoshisumai.gif', '引っ越し・住まい', 'image/gif'
+create_data_file c_top, lifeevent_node.id, 'bt-kekkonrikon.gif', '結婚・離婚', 'image/gif'
+create_data_file c_top, lifeevent_node.id, 'bt-koreikaigo.gif', '高齢者・介護', 'image/gif'
+create_data_file c_top, lifeevent_node.id, 'bt-kosodatekyoiku.gif', '子育て・就学', 'image/gif'
+create_data_file c_top, lifeevent_node.id, 'bt-ninshinshussan.gif', '妊娠・出産', 'image/gif'
+create_data_file c_top, lifeevent_node.id, 'bt-seijinshushoku.gif', '成人・就職', 'image/gif'
+create_data_file c_top, lifeevent_node.id, 'bt-shibosozoku.gif', '死亡・相続', 'image/gif'
+create_data_file c_top, lifeevent_node.id, 'bt-shitsugyotaishoku.gif', '失業・退職', 'image/gif'
+create_data_file c_top, lifeevent_node.id, 'bt-shogaisha.gif', '障がい者', 'image/gif'
 
 
 ## ---------------------------------------------------------
 ## each modules
 
+GpCategory::Category.skip_callback(:save, :after, :enqueue_publisher_callback)
+load_demo "gp_category"
 load_demo "navi"
 load_demo "flow"
-load_demo "gp_category"
+load_demo "gp_calendar"
 load_demo "gp_template"
 load_demo "tag"
 load_demo "sns"
 load_demo "map"
+load_demo "organization"
 load_demo "gp_article"
 load_demo "ad_banner"
 load_demo "survey"
 load_demo "rank"
 load_demo "feed"
 load_demo "biz_calendar"
+GpCategory::Category.set_callback(:save, :after, :enqueue_publisher_callback)
 

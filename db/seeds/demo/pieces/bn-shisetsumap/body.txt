@@ -1,0 +1,7 @@
+<div class="piece" id="bnShisetsumap">
+<div class="pieceContainer">
+<div class="pieceBody">
+<p><a href="/map/">[[file/banner/bn-shisetsumap.gif]]</a></p>
+</div>
+</div>
+</div>

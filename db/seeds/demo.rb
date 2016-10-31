@@ -3,8 +3,9 @@
 # encoding: utf-8
 
 begin
-  load "#{Rails.root}/db/seed/base.rb"
-  load "#{Rails.root}/db/seed/demo/base.rb"
+  load "#{Rails.root}/db/seeds/reset/zomeki.rb"
+  load "#{Rails.root}/db/seeds/base.rb"
+  load "#{Rails.root}/db/seeds/demo/base.rb"
   puts "-- seed/demo success."
 rescue => e
   puts "----------"

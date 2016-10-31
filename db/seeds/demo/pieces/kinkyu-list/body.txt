@@ -1,0 +1,13 @@
+<div id="kinkyuList" class="piece">
+<div class="pieceContainer">
+<div class="pieceHeader"><h2>もしものとき</h2></div>
+<div class="pieceBody">
+<ul>
+<li><a href="#">防災情報</a></li>
+<li><a href="#">避難場所</a></li>
+<li><a href="#">夜間緊急医療</a></li>
+<li><a href="#">緊急時の連絡</a></li>
+</ul>
+</div>
+</div>
+</div>

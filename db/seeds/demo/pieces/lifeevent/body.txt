@@ -1,0 +1,19 @@
+<div id="lifeEvent" class="piece clearfix">
+<div class="pieceContainer">
+<div class="pieceHeader"><h2>ライフイベント</h2></div>
+<div class="pieceBody">
+<ul>
+<li><a href="/categories/lifeevent/ninshin/">[[file/lifeevent/bt-ninshinshussan.gif]]</a></li>
+<li><a href="/categories/lifeevent/kosodate/">[[file/lifeevent/bt-kosodatekyoiku.gif]]</a></li>
+<li><a href="/categories/lifeevent/seijin/">[[file/lifeevent/bt-seijinshushoku.gif]]</a></li>
+<li><a href="/categories/lifeevent/kekkon/">[[file/lifeevent/bt-kekkonrikon.gif]]</a></li>
+<li><a href="/categories/lifeevent/hikkoshi/">[[file/lifeevent/bt-hikkoshisumai.gif]]</a></li>
+<li><a href="/categories/lifeevent/byoki/">[[file/lifeevent/bt-byokikega.gif]]</a></li>
+<li><a href="/categories/lifeevent/shogaisha/">[[file/lifeevent/bt-shogaisha.gif]]</a></li>
+<li><a href="/categories/lifeevent/shitsugyo/">[[file/lifeevent/bt-shitsugyotaishoku.gif]]</a></li>
+<li><a href="/categories/lifeevent/korei/">[[file/lifeevent/bt-koreikaigo.gif]]</a></li>
+<li><a href="/categories/lifeevent/shibo/">[[file/lifeevent/bt-shibosozoku.gif]]</a></li>
+</ul>
+</div>
+</div>
+</div>

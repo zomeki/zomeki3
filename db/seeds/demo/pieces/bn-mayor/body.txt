@@ -1,0 +1,7 @@
+<div class="piece" id="bnMayor">
+<div class="pieceContainer">
+<div class="pieceBody">
+<p><a href="/mayor/">[[file/banner/bt-shicho.png]]</a></p>
+</div>
+</div>
+</div>

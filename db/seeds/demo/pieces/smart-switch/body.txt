@@ -1,0 +1,4 @@
+<script src="/_common/js/jquery.cookie.js"></script>
+<script type="text/javascript" src="/_themes/js/smart-switch.js"></script>
+<script type="text/javascript">$(function() { new SmartSwitch('#smartSwitch', ''); });</script>
+<div id="smartSwitch"></div>

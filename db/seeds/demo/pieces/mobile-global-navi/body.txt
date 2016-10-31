@@ -1,0 +1,12 @@
+<div id="globalNavi" class="piece">
+<div class="pieceContainer">
+<div class="pieceHeader"><h2>&#xE683;ナビ</h2></div>
+<div class="pieceBody">
+<span class="list">・</span><a href="/navi/kurashi/" title="暮らしのガイド" id="guide">暮らしのガイド</a><br />
+<span class="list">・</span><a href="/navi/kosodate/" title="子育て・教育" id="kodomo">子育て・教育</a><br />
+<span class="list">・</span><a href="/navi/kanko/" title="観光・文化" id="bosai">観光・文化</a><br />
+<span class="list">・</span><a href="/navi/jigyosha/" title="事業者の方へ" id="jigyosha">事業者の方へ</a><br />
+<span class="list">・</span><a href="/navi/shisei/" title="市政情報" id="shisei">市政情報</a><hr />
+</div>
+</div>
+</div>

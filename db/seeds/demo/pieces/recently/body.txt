@@ -1,0 +1,13 @@
+<div id="recently" class="piece">
+<div class="pieceContainer">
+<div class="pieceHeader"><h2>ぞめき市の今</h2></div>
+<div class="pieceBody">
+<ul>
+<li class="fb"><a href="https://www.facebook.com/zomekicms">ZOMEKI&nbsp;Facebook</a></li>
+<li class="fb"><a href="https://www.facebook.com/groups/zomeki/">ZOMEKI Forum&nbsp;Facebookグループ</a></li>
+<li class="tw"><a href="https://twitter.com/zomekicms">ZOMKEI&nbsp;Twitter</a></li>
+</ul>
+
+</div>
+</div>
+</div>

@@ -1,0 +1,13 @@
+<div id="footerNavi" class="piece">
+<div class="pieceContainer">
+<div class="pieceBody">
+<ul>
+<li><a href="/riyo.html">ホームページ利用について</a></li>
+<li><a href="/copyright.html">リンク・著作権・免責事項</a></li>
+<li><a href="/privacy.html">個人情報の取り扱い</a></li>
+<li><a href="/web_accessibility.html">ウェブアクセシビリティについて</a></li>
+<li><a href="/link.html">リンク集</a></li>
+</ul>
+</div>
+</div>
+</div>

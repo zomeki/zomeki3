@@ -1,0 +1,6 @@
+<div class="bn-mayor">
+<ul>
+<li class="mayor"><a href="/mayor/">市長の部屋</a></li>
+<li class="gikai"><a href="/gikai/">ぞめき市議会</a></li>
+</ul>
+</div>
