@@ -45,47 +45,30 @@ l_bunya     = create_cms_layout c_site, 'category-bunya', 'カテゴリ（分野
 ## ---------------------------------------------------------
 ## cms/contents
 category = create_cms_content c_content, 'GpCategory::CategoryType', 'カテゴリ', 'category'
-create_cms_content_node category, l_category, 'GpCategory::CategoryType', 'categories', 'カテゴリ'
+create_cms_node c_content, category, 20, nil, l_category, 'GpCategory::CategoryType', 'categories', 'カテゴリ', nil
 
-## ---------------------------------------------------------
-## cms/pieces
 
-create_cms_piece c_site, 'GpCategory::CategoryList', 'lifeevent-list', 'ライフイベント一覧', category.id
-create_cms_piece c_site, 'GpCategory::CategoryList', 'category-list', '区分から探す', category.id
-create_cms_piece c_top,  'GpCategory::Doc','attention-information', '注目情報', category.id
-create_cms_piece c_category,'GpCategory::CategoryList', 'category-list', 'カテゴリから探す', category.id
-
-create_cms_piece c_bunya  ,'GpCategory::CategoryList',   'category-list', '分野から探す', category.id
-create_cms_piece c_bunya1  ,'GpCategory::CategoryList',  'category-list', '分野から探す', category.id
-create_cms_piece c_bunya2  ,'GpCategory::CategoryList',  'category-list', '分野から探す', category.id
-create_cms_piece c_bunya3  ,'GpCategory::CategoryList',  'category-list', '分野から探す', category.id
-create_cms_piece c_bunya4  ,'GpCategory::CategoryList',  'category-list', '分野から探す', category.id
-create_cms_piece c_bunya5  ,'GpCategory::CategoryList',  'category-list', '分野から探す', category.id
-create_cms_piece c_bunya6  ,'GpCategory::CategoryList',  'category-list', '分野から探す', category.id
-create_cms_piece c_bunya7  ,'GpCategory::CategoryList',  'category-list', '分野から探す', category.id
-create_cms_piece c_bunya8  ,'GpCategory::CategoryList',  'category-list', '分野から探す', category.id
-create_cms_piece c_bunya9  ,'GpCategory::CategoryList',  'category-list', '分野から探す', category.id
-create_cms_piece c_bunya10  ,'GpCategory::CategoryList', 'category-list', '分野から探す', category.id
-create_cms_piece c_bunya11  ,'GpCategory::CategoryList', 'category-list', '分野から探す', category.id
-create_cms_piece c_bunya12  ,'GpCategory::CategoryList', 'category-list', '分野から探す', category.id
-create_cms_piece c_bunya13  ,'GpCategory::CategoryList', 'category-list', '分野から探す', category.id
-create_cms_piece c_bunya14  ,'GpCategory::CategoryList', 'category-list', '分野から探す', category.id
-create_cms_piece c_bunya15  ,'GpCategory::CategoryList', 'category-list', '分野から探す', category.id
-create_cms_piece c_bunya16  ,'GpCategory::CategoryList', 'category-list', '分野から探す', category.id
-create_cms_piece c_bunya17  ,'GpCategory::CategoryList', 'category-list', '分野から探す', category.id
-create_cms_piece c_bunya18  ,'GpCategory::CategoryList', 'category-list', '分野から探す', category.id
-create_cms_piece c_bunya19  ,'GpCategory::CategoryList', 'category-list', '分野から探す', category.id
-create_cms_piece c_bunya20  ,'GpCategory::CategoryList', 'category-list', '分野から探す', category.id
-create_cms_piece c_lifeevent,'GpCategory::CategoryList', 'category-list','ライフイベントから探す', category.id
-create_cms_piece c_kubun, 'GpCategory::CategoryList', 'category-list', '区分から探す', category.id
-create_cms_piece c_event, 'GpCategory::CategoryList', 'category-list', 'イベント情報から探す', category.id
+[
+  {id: "date_style", value: '%Y年%m月%d日'},
+  {id: "category_type_style", value: 'all_categories',
+    extra_values: {category_type_doc_style: '@title_link@@publish_date@@group@', doc_number: 10}},
+  {id: "category_style", value: 'categories_with_docs',
+    extra_values: {category_doc_style: '@title_link@@publish_date@@group@', category_docs_number: 10}},
+  {id: "doc_style", value: 'all_docs',
+    extra_values: {doc_doc_style: '@title_link@@publish_date@@group@', doc_docs_number: 10}}
+].each do |conf|
+  item = GpCategory::Content::Setting.config(category, conf[:id])
+  item.value = conf[:value]
+  item.extra_values = conf[:extra_values] if conf[:extra_values]
+  item.save
+end
 
 
 ## ---------------------------------------------------------
 ## gp_category/category_type
 
 def create_type(concept, content, layout, name, title, sort_no)
-  GpCategory::CategoryType.create concept_id: concept.id,
+  item = GpCategory::CategoryType.create concept_id: concept.id,
     content_id: content.id,
     layout_id: layout.id,
     name: name,
@@ -93,15 +76,22 @@ def create_type(concept, content, layout, name, title, sort_no)
     sort_no: sort_no,
     state: 'public',
     docs_order: 'display_published_at DESC, published_at DESC'
+  if category_concept = Cms::Concept.where(name: title).first
+    p = create_cms_piece category_concept, content, 'GpCategory::CategoryList', 'category-list', "#{title}から探す", "#{title}から探す"
+    p.in_settings = {setting_state: 'enabled', category_type_id: item.id, layer: 'self'}
+    p.save
+  end
+
+  return item
 end
 
-kubun     = create_type c_content, category, l_category, 'kubun',      '区分', 10
-bunya     = create_type c_content, category, l_bunya,    'bunya',      '分野', 20
-lifeevent = create_type c_content, category, l_category, 'lifeevent',  'ライフイベント', 30
-event     = create_type c_content, category, l_category, 'event',      'イベント情報', 40
+kubun     = create_type c_category, category, l_category, 'kubun',      '区分', 10
+bunya     = create_type c_category, category, l_bunya,    'bunya',      '分野', 20
+lifeevent = create_type c_category, category, l_category, 'lifeevent',  'ライフイベント', 30
+event     = create_type c_category, category, l_category, 'event',      'イベント情報', 40
 
 def create(concept, category_type, parent, layout, name, title, sort_no)
-  GpCategory::Category.create concept_id: concept.id,
+  item = GpCategory::Category.create concept_id: concept.id,
     category_type_id: category_type.id,
     parent_id: parent.blank? ? nil : parent.id,
     layout_id: layout.id,
@@ -110,31 +100,41 @@ def create(concept, category_type, parent, layout, name, title, sort_no)
     sort_no: sort_no,
     state: 'public',
     docs_order: 'display_published_at DESC, published_at DESC'
+
+  if category_concept = Cms::Concept.where(name: title).first
+    p = create_cms_piece category_concept, category_type.content, 'GpCategory::CategoryList', 'category-list', '分野から探す', '分野から探す'
+    p.in_settings = {setting_state: 'enabled', layer: 'self',
+      category_type_id: category_type.id, category_id: item.id
+      }
+    p.save
+  end
+  return item
 end
 
 
 todokede      = create c_bunya , bunya, nil, l_category, 'todokede', '届出・登録・証明', 10
-hoken         = create c_bunya , bunya, nil, l_bunya, 'hoken', '保険・年金・介護', 20
-hukushi       = create c_bunya , bunya, nil, l_bunya, 'hukushi', '福祉', 30
+hoken         = create c_bunya , bunya, nil, l_category, 'hoken', '保険・年金・介護', 20
+hukushi       = create c_bunya , bunya, nil, l_category, 'hukushi', '福祉', 30
 kenko         = create c_bunya , bunya, nil, l_category, 'kenko', '健康・予防', 40
-zei           = create c_bunya , bunya, nil, l_bunya, 'zei', '税金', 50
-ikuji         = create c_bunya , bunya, nil, l_bunya, 'ikuji', '育児・教育', 60
-seikatsu      = create c_bunya , bunya, nil, l_bunya, 'seikatsu', '生活・インフラ', 70
-anshin        = create c_bunya , bunya, nil, l_bunya, 'anshin', '安心・安全', 80
-kankyo        = create c_bunya , bunya, nil, l_bunya, 'kankyo', '環境・ごみ', 90
-nyusatsu      = create c_bunya , bunya, nil, l_bunya, 'nyusatsu', '入札・契約', 100
-toshiseibi    = create c_bunya , bunya, nil, l_bunya, 'toshiseibi', '都市整備', 110
-chiikisangyo  = create c_bunya , bunya, nil, l_bunya, 'chiikisangyo', '地域産業', 120
-shisei        = create c_bunya , bunya, nil, l_bunya, 'shisei', '市政情報', 130
-rekishi       = create c_bunya , bunya, nil, l_bunya, 'rekishi', '歴史・文化財', 140
-shisetsu      = create c_bunya , bunya, nil, l_bunya, 'shisetsu', '施設案内', 150
-city_shokai   = create c_bunya , bunya, nil, l_bunya, 'city_shokai', '市紹介', 160
-gikai_senkyo  = create c_bunya , bunya, nil, l_bunya, 'gikai_senkyo', '議会・選挙', 170
-kohokocho     = create c_bunya , bunya, nil, l_bunya, 'kohokocho', '広報・広聴', 180
-johokokai     = create c_bunya , bunya, nil, l_bunya, 'johokokai', '情報公開', 190
-koryu         = create c_bunya , bunya, nil, l_bunya, 'koryu', '交流事業', 200
+zei           = create c_bunya , bunya, nil, l_category, 'zei', '税金', 50
+ikuji         = create c_bunya , bunya, nil, l_category, 'ikuji', '育児・教育', 60
+seikatsu      = create c_bunya , bunya, nil, l_category, 'seikatsu', '生活・インフラ', 70
+anshin        = create c_bunya , bunya, nil, l_category, 'anshin', '安心・安全', 80
+kankyo        = create c_bunya , bunya, nil, l_category, 'kankyo', '環境・ごみ', 90
+nyusatsu      = create c_bunya , bunya, nil, l_category, 'nyusatsu', '入札・契約', 100
+toshiseibi    = create c_bunya , bunya, nil, l_category, 'toshiseibi', '都市整備', 110
+chiikisangyo  = create c_bunya , bunya, nil, l_category, 'chiikisangyo', '地域産業', 120
+shisei        = create c_bunya , bunya, nil, l_category, 'shisei', '市政情報', 130
+rekishi       = create c_bunya , bunya, nil, l_category, 'rekishi', '歴史・文化財', 140
+shisetsu      = create c_bunya , bunya, nil, l_category, 'shisetsu', '施設案内', 150
+city_shokai   = create c_bunya , bunya, nil, l_category, 'city_shokai', '市紹介', 160
+gikai_senkyo  = create c_bunya , bunya, nil, l_category, 'gikai_senkyo', '議会・選挙', 170
+kohokocho     = create c_bunya , bunya, nil, l_category, 'kohokocho', '広報・広聴', 180
+johokokai     = create c_bunya , bunya, nil, l_category, 'johokokai', '情報公開', 190
+koryu         = create c_bunya , bunya, nil, l_category, 'koryu', '交流事業', 200
 
-create c_kubun, kubun, nil, l_category, 'chumoku', '注目情報', 10
+
+chumoku = create c_kubun, kubun, nil, l_category, 'chumoku', '注目情報', 10
 create c_kubun, kubun, nil, l_category, 'faq', 'FAQ', 20
 create c_kubun, kubun, nil, l_category, 'tetsuzuki', '手続き', 30
 create c_kubun, kubun, nil, l_category, 'boshu', '募集', 40
@@ -259,3 +259,18 @@ create c_event, event, nil, l_category, 'event', 'イベント', 10
 create c_event, event, nil, l_category, 'sports', 'スポーツ', 20
 create c_event, event, nil, l_category, 'koza', '講座', 30
 create c_event, event, nil, l_category, 'matsuri', 'お祭り', 40
+
+## ---------------------------------------------------------
+## cms/pieces
+p_kubun = create_cms_piece c_site, category, 'GpCategory::CategoryList', 'category-list', '区分から探す', '区分から探す'
+p_kubun.in_settings = {setting_state: 'enabled', category_type_id: kubun.id, layer: 'self'}
+p_kubun.save
+
+p_lifeevent = create_cms_piece c_site, category, 'GpCategory::CategoryList', 'lifeevent-list', 'ライフイベント一覧', '人生のできごとから探す'
+p_lifeevent.in_settings = {setting_state: 'enabled', category_type_id: lifeevent.id, layer: 'descendants'}
+p_lifeevent.save
+
+p_category = create_cms_piece c_category, category, 'GpCategory::CategoryList', 'category-list', 'カテゴリから探す', 'カテゴリから探す'
+p_category.in_settings = {setting_state: 'enabled', layer: 'descendants'}
+p_category.save
+

@@ -47,7 +47,6 @@
 <div id="linksBody">
 
 [[piece/category-list]]
-[[piece/ranking-list]]
 
 </div>
 <!-- end #linksContainer --></div>

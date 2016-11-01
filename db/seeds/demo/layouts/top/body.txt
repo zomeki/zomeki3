@@ -69,7 +69,6 @@
 [[piece/todays-event]]
 [[piece/bn-faq]]
 [[piece/bn-contact]]
-[[piece/ranking-list]]
 [[piece/bn-advertisement-side]]
 
 </div>

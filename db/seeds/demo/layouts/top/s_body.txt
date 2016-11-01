@@ -44,7 +44,6 @@
 [[piece/about]]
 [[piece/recently]]
 [[piece/calendar]]
-[[piece/ranking]]
 [[piece/population]]
 </div>
 

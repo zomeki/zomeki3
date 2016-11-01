@@ -10,7 +10,11 @@ c_content = Cms::Concept.where(name: 'コンテンツ').first
 survey_form  = create_cms_content c_content, 'Survey::Form', 'お問い合わせフォーム', 'toiawase'
 
 l_col1 = Cms::Layout.where(name: 'col-1').first
-create_cms_content_node survey_form, l_col1, 'Survey::Form', 'contact', 'お問い合わせフォーム'
+create_cms_node c_content, survey_form, 170, nil, l_col1, 'Survey::Form', 'contact', 'お問い合わせフォーム', nil
+
+settings = Survey::Content::Setting.config(survey_form, 'captcha')
+settings.value = 'enabled'
+settings.save
 
 ## ---------------------------------------------------------
 ## survey/survey_forms
@@ -49,4 +53,9 @@ create goiken, 'お名前', nil, 'text_field', nil, true, 'width: 300px;', 10
 create goiken, '住所', nil, 'text_field', nil, true, 'width: 300px;', 20
 create goiken, 'メールアドレス', '<p>半角英数字で入力ださい</p>', 'text_field_email', nil, false, 'width: 300px;', 30
 create goiken, 'ご意見内容', nil,  'text_area', nil, true, 'width: 600px; height: 150px;', 40
+
+form_piece = create_cms_piece c_site, survey_form, 'Survey::Form', 'feed-back', '記事へのアンケート', '記事へのアンケート'
+form_piece.in_settings = {target_form_id: feedback.id, head_css: '<link rel="stylesheet" href="/_themes/top/style.css" />',
+  upper_text: '<script src="/_common/js/jquery.iframe-auto-height.js">\n</script><script src="/_common/js/jquery.browser.js"></script>'}
+form_piece.save
 

@@ -192,76 +192,77 @@ l_emergency = create_cms_layout c_top,  'emergency-top','大規模災害時表�
 
 puts "import cms_pieces..."
 
-def create_cms_piece(concept, model, name, title, content_id = nil)
+def create_cms_piece(concept, content, model, name, title, view_title = nil)
   Cms::Piece.create site_id: 1,
     concept_id: concept.id,
-    content_id: content_id,
+    content_id: content.blank? ? nil : content.id,
     state: 'public',
     model: model,
     name: name,
     title: title,
+    view_title: view_title,
     body: read_data("pieces/#{name}/body"),
     xml_properties: read_data("pieces/#{name}/xml_properties")
 end
 
 [
-  [ c_site,   'Cms::Free', 'pc-switch', 'スマートフォン版切り替えボタン' ],
-  [ c_site,   'Cms::Free', 'accessibility-tool', 'ふりがな・よみあげヘッダー' ],
-  [ c_site,   'Cms::Free', 'common-header', '共通ヘッダー' ],
-  [ c_site,   'Cms::Free', 'global-navi', 'グローバルナビ' ],
-  [ c_top,    'Cms::Free', 'lifeevent', 'ライフイベント' ],
-  [ c_top,    'Cms::Free', 'guide', '暮らしのガイド' ],
-  [ c_top,    'Cms::Free', 'bn-mayor', '市長の部屋バナー' ],
-  [ c_top,    'Cms::Free', 'bn-contets', '左サイドバナー（下部）' ],
-  [ c_top,    'Cms::Free', 'bn-gikai', '議会バナー' ],
-  [ c_top,    'Cms::Free', 'bn-contact', '市へのお問い合わせバナー' ],
-  [ c_top,    'Cms::Free', 'bn-shisetsumap', '施設マップバナー' ],
-  [ c_top,    'Cms::Free', 'kinkyu-list', 'もしものとき' ],
-  [ c_site,   'Cms::Free', 'smart-switch', '【スマートフォン】PC切り替えボタン' ],
-  [ c_site,   'Cms::BreadCrumb', 'bread-crumbs', 'パンくず' ],
-  [ c_site,   'Cms::PageTitle', 'page-title', 'ページタイトル' ],
-  [ c_top,    'Cms::Free', 'recently', 'ぞめき市の今' ],
-  [ c_site,   'Cms::Free', 'smart-common-header', '【スマートフォン】共通ヘッダー' ],
-  [ c_site,   'Cms::Free', 'copyright', 'コピーライト' ],
-  [ c_site,   'Cms::Free', 'common-footer', '共通フッター' ],
-  [ c_top,    'Cms::Free', 'smart-mayor', '【スマートフォン】市長の部屋' ],
-  [ c_site,   'Cms::Free', 'smart-faq', '【スマートフォン】よくある質問' ],
-  [ c_top,    'Cms::Free', 'smart-lifeevent', '【スマートフォン】ライフイベント' ],
-  [ c_site,   'Cms::Free', 'smart-footer-navi', '【スマートフォン】フッターナビ' ],
-  [ c_site,   'Cms::Free', 'footer-navi', 'フッターナビ' ],
-  [ c_top,    'Cms::Free', 'smart-bn-lower', '【スマートフォン】左サイドバナー（下部）' ],
-  [ c_site,   'Cms::Free', 'smart-common-footer', '【スマートフォン】共通フッター' ],
-  [ c_top,    'Cms::Free', 'event-type', 'イベント表示切り替え' ],
-  [ c_site,   'Cms::Free', 'back-btn', '戻るボタン' ],
-  [ c_site,   'Cms::Free', 'mobile-global-navi', '【携帯】グローバルナビ' ],
-  [ c_site,   'Cms::Free', 'sns', 'SNSボタン' ],
-  [ c_mayor,  'Cms::Free', 'side-navi', '市長の部屋メニュー' ],
-  [ c_site,   'Cms::Free', 'mobile-common-header', '【携帯】共通ヘッダー' ],
-  [ c_top,    'Cms::Free', 'about', 'ぞめき市の紹介' ],
-  [ c_top,    'Cms::Free', 'population', 'ぞめき市の人口' ],
-  [ c_site,   'Cms::Free', 'mobile-back-navi', '【携帯】バックナビ' ],
-  [ c_site,   'Cms::Free', 'mobile-common-footer', '【携帯】共通フッター' ],
-  [ c_site,   'Cms::Free', 'mobile-copyright', '【携帯】コピーライト' ],
-  [ c_site,   'Cms::Free', 'mobile-footer-navi', '【携帯】フッタナビ' ],
-  [ c_top,    'Cms::Free', 'mobile-guide', '【携帯】暮らしのガイド' ],
-  [ c_top,    'Cms::Free', 'mobile-lifeevent', '【携帯】ライフイベント' ],
-  [ c_top,    'Cms::Free', 'mobile-navi', '【携帯】ぞめき市の紹介' ],
-  [ c_top,    'Cms::Free', 'mobile-recent-docs-more', '【携帯】新着記事一覧へのリンク' ],
-  [ c_site,   'Cms::Free', 'smart-global-navi', '【スマートフォン】グローバルナビ' ],
-  [ c_top,    'Cms::Free', 'bn-faq', 'よくある質問FAQバナー' ],
-  [ c_gnavi1, 'Cms::Free', 'global-navi', 'グローバルナビ' ],
-  [ c_gnavi2, 'Cms::Free', 'global-navi', 'グローバルナビ' ],
-  [ c_gnavi3, 'Cms::Free', 'global-navi', 'グローバルナビ' ],
-  [ c_gnavi4, 'Cms::Free', 'global-navi', 'グローバルナビ' ],
-  [ c_gnavi5, 'Cms::Free', 'global-navi', 'グローバルナビ' ],
-  [ c_site,   'Cms::Free', 'search-navi', '検索ナビ' ],
-  [ c_gikai,  'Cms::Free', 'side-navi', '議会サイドメニュー' ],
-  [ c_top,    'Cms::Free', 'emergency-mode', '大規模災害時モード表示' ],
-  [ c_top,    'Cms::Free', 'emergency-info', '大規模災害時メニュー' ],
-  [ c_top,    'Cms::Free', 'mobile-emergency-header', '【携帯】災害ヘッダー' ],
-  [ c_top,    'Cms::Free', 'mobile-emergency-information', '【携帯】緊急情報' ]
+  [ c_site, nil,  'Cms::Free', 'pc-switch', 'スマートフォン版切り替えボタン' ],
+  [ c_site, nil,  'Cms::Free', 'accessibility-tool', 'ふりがな・よみあげヘッダー' ],
+  [ c_site, nil,  'Cms::Free', 'common-header', '共通ヘッダー' ],
+  [ c_site, nil,  'Cms::Free', 'global-navi', 'グローバルナビ' ],
+  [ c_top,  nil,  'Cms::Free', 'lifeevent', 'ライフイベント' ],
+  [ c_top,  nil,  'Cms::Free', 'guide', '暮らしのガイド' ],
+  [ c_top,  nil,  'Cms::Free', 'bn-mayor', '市長の部屋バナー' ],
+  [ c_top,  nil,  'Cms::Free', 'bn-contets', '左サイドバナー（下部）' ],
+  [ c_top,  nil,  'Cms::Free', 'bn-gikai', '議会バナー' ],
+  [ c_top,  nil,  'Cms::Free', 'bn-contact', '市へのお問い合わせバナー' ],
+  [ c_top,  nil,  'Cms::Free', 'bn-shisetsumap', '施設マップバナー' ],
+  [ c_top,  nil,  'Cms::Free', 'kinkyu-list', 'もしものとき' ],
+  [ c_site, nil,  'Cms::Free', 'smart-switch', '【スマートフォン】PC切り替えボタン' ],
+  [ c_site, nil,  'Cms::BreadCrumb', 'bread-crumbs', 'パンくず' ],
+  [ c_site, nil,  'Cms::PageTitle', 'page-title', 'ページタイトル' ],
+  [ c_top,  nil,  'Cms::Free', 'recently', 'ぞめき市の今' ],
+  [ c_site, nil,  'Cms::Free', 'smart-common-header', '【スマートフォン】共通ヘッダー' ],
+  [ c_site, nil,  'Cms::Free', 'copyright', 'コピーライト' ],
+  [ c_site, nil,  'Cms::Free', 'common-footer', '共通フッター' ],
+  [ c_top,  nil,  'Cms::Free', 'smart-mayor', '【スマートフォン】市長の部屋' ],
+  [ c_site, nil,  'Cms::Free', 'smart-faq', '【スマートフォン】よくある質問' ],
+  [ c_top,  nil,  'Cms::Free', 'smart-lifeevent', '【スマートフォン】ライフイベント' ],
+  [ c_site, nil,  'Cms::Free', 'smart-footer-navi', '【スマートフォン】フッターナビ' ],
+  [ c_site, nil,  'Cms::Free', 'footer-navi', 'フッターナビ' ],
+  [ c_top,  nil,  'Cms::Free', 'smart-bn-lower', '【スマートフォン】左サイドバナー（下部）' ],
+  [ c_site, nil,  'Cms::Free', 'smart-common-footer', '【スマートフォン】共通フッター' ],
+  [ c_top,  nil,  'Cms::Free', 'event-type', 'イベント表示切り替え' ],
+  [ c_site, nil,  'Cms::Free', 'back-btn', '戻るボタン' ],
+  [ c_site, nil,  'Cms::Free', 'mobile-global-navi', '【携帯】グローバルナビ' ],
+  [ c_site, nil,  'Cms::Free', 'sns', 'SNSボタン' ],
+  [ c_mayor,nil,  'Cms::Free', 'side-navi', '市長の部屋メニュー' ],
+  [ c_site, nil,  'Cms::Free', 'mobile-common-header', '【携帯】共通ヘッダー' ],
+  [ c_top,  nil,  'Cms::Free', 'about', 'ぞめき市の紹介' ],
+  [ c_top,  nil,  'Cms::Free', 'population', 'ぞめき市の人口' ],
+  [ c_site, nil,  'Cms::Free', 'mobile-back-navi', '【携帯】バックナビ' ],
+  [ c_site, nil,  'Cms::Free', 'mobile-common-footer', '【携帯】共通フッター' ],
+  [ c_site, nil,  'Cms::Free', 'mobile-copyright', '【携帯】コピーライト' ],
+  [ c_site, nil,  'Cms::Free', 'mobile-footer-navi', '【携帯】フッタナビ' ],
+  [ c_top,  nil,  'Cms::Free', 'mobile-guide', '【携帯】暮らしのガイド' ],
+  [ c_top,  nil,  'Cms::Free', 'mobile-lifeevent', '【携帯】ライフイベント' ],
+  [ c_top,  nil,  'Cms::Free', 'mobile-navi', '【携帯】ぞめき市の紹介' ],
+  [ c_top,  nil,  'Cms::Free', 'mobile-recent-docs-more', '【携帯】新着記事一覧へのリンク' ],
+  [ c_site, nil,  'Cms::Free', 'smart-global-navi', '【スマートフォン】グローバルナビ' ],
+  [ c_top,  nil,  'Cms::Free', 'bn-faq', 'よくある質問FAQバナー' ],
+  [ c_gnavi1, nil, 'Cms::Free', 'global-navi', 'グローバルナビ' ],
+  [ c_gnavi2, nil, 'Cms::Free', 'global-navi', 'グローバルナビ' ],
+  [ c_gnavi3, nil, 'Cms::Free', 'global-navi', 'グローバルナビ' ],
+  [ c_gnavi4, nil, 'Cms::Free', 'global-navi', 'グローバルナビ' ],
+  [ c_gnavi5, nil, 'Cms::Free', 'global-navi', 'グローバルナビ' ],
+  [ c_site, nil,  'Cms::Free', 'search-navi', '検索ナビ' ],
+  [ c_gikai,nil,  'Cms::Free', 'side-navi', '議会サイドメニュー' ],
+  [ c_top,  nil,  'Cms::Free', 'emergency-mode', '大規模災害時モード表示' ],
+  [ c_top,  nil,  'Cms::Free', 'emergency-info', '大規模災害時メニュー' ],
+  [ c_top,  nil,  'Cms::Free', 'mobile-emergency-header', '【携帯】災害ヘッダー' ],
+  [ c_top,  nil,  'Cms::Free', 'mobile-emergency-information', '【携帯】緊急情報' ]
 ].each do |c|
-  create_cms_piece c[0], c[1], c[2], c[3]
+  create_cms_piece c[0], c[1], c[2], c[3], c[4]
 end
 
 ## ---------------------------------------------------------
@@ -269,70 +270,58 @@ end
 
 puts "import cms_nodes..."
 
-def create_cms_content_node(content, layout, model, name, title)
-  parent = Cms::Node.find_by(:id => 1, :parent_id => 0)
-  Cms::Node.create   site_id: 1,
-   concept_id:   content.concept_id,
-   content_id:   content.id,
-   parent_id:    parent.id,
-   state:        'public',
-   route_id:     parent.id,
-   directory:    (name =~ /\./ ? 0 : 1),
-   published_at: Time.now,
-   layout_id:    layout.blank? ? nil : layout.id,
-   model:        model,
-   name:         name,
-   title:        title
-end
-
-def create_cms_node(concept, parent, layout, model, name, title, body = nil)
-  body_text = body.present? ? read_data("nodes/#{body}.txt"): nil
-  Cms::Node.create   site_id: 1,
-   concept_id:   concept.id,
-   parent_id:    parent.id ,
-   state:        'public',
-   route_id:     parent.id,
-   directory:    (name =~ /\./ ? 0 : 1),
-   published_at: Time.now,
-   layout_id:    layout.blank? ? nil : layout.id,
-   model:        model,
-   name:         name,
-   title:        title,
-   body:         body_text
+def create_cms_node(concept, content, sort_no, parent, layout, model, name, title, body)
+  hidden_nodes = ['banner', '404,html', 'tags', 'search.html', 'keyvisual', 'sitemap.html']
+  Cms::Node.create  site_id: 1,
+   concept_id:      concept.id,
+   content_id:      content.blank? ? nil : content.id,
+   parent_id:       parent.blank? ? 1 :parent.id ,
+   state:           'public',
+   route_id:        parent.blank? ? 1 :parent.id ,
+   directory:       (name =~ /\./ ? 0 : 1),
+   published_at:    Time.now,
+   layout_id:       layout.blank? ? nil : layout.id,
+   model:           model,
+   name:            name,
+   title:           title,
+   sitemap_sort_no: sort_no,
+   sitemap_state:   hidden_nodes.include?(name) ? 'hidden' : 'visible',
+   body:            body.blank? ? nil : read_data("nodes/#{body}.txt")
 end
 
 n_top   = Cms::Node.find_by(:id => 1, :parent_id => 0)
 p_index = Cms::Node.find_by(:id => 2, :name => "index.html")
-         p_index.update_columns(concept_id: c_top.id, layout_id: l_top.id)
-         create_cms_node c_site, n_top, l_top, 'Cms::Page', 'privacy.html', '個人情報の取り扱い',  'pages/privacy/body'
-         create_cms_node c_site, n_top, l_top, 'Cms::Page', '404.html', 'ページが見つかりませんでした',  'pages/404/body'
-         create_cms_node c_site, n_top, l_top, 'Cms::Page', 'search.html', '検索結果',  'pages/search/body'
-         create_cms_node c_site, n_top, l_top, 'Cms::Page', 'riyo.html', 'ホームページ利用について',  'pages/riyo/body'
-         create_cms_node c_site, n_top, l_top, 'Cms::Page', 'web_accessibility.html', 'ウェブアクセシビリティについて',  'pages/web_accessibility/body'
-         create_cms_node c_site, n_top, l_top, 'Cms::Page', 'link.html', 'リンク集',  'pages/link/body'
-         create_cms_node c_site, n_top, l_top, 'Cms::Page', 'copyright.html', 'リンク・著作権・免責事項',  'pages/copyright/body'
-         create_cms_node c_site, n_top, l_top, 'Cms::Page', 'banner.html', 'バナー広告について',  'pages/banner/body'
-         create_cms_node c_site, n_top, l_top, 'Cms::Sitemap', 'sitemap.html', 'サイトマップ',  'pages/sitemap/body'
+         p_index.update_columns(concept_id: c_top.id, layout_id: l_top.id, sitemap_sort_no: 10, title: 'ぞめき市')
+         create_cms_node c_site, nil, 20, n_top, l_top, 'Cms::Page', 'riyo.html', 'ホームページ利用について', 'pages/riyo/body'
+         create_cms_node c_site, nil, 30, n_top, l_top, 'Cms::Page', 'copyright.html', 'リンク・著作権・免責事項',  'pages/copyright/body'
+         create_cms_node c_site, nil, 40, n_top, l_top, 'Cms::Page', 'privacy.html', '個人情報の取り扱い',  'pages/privacy/body'
+         create_cms_node c_site, nil, 50, n_top, l_top, 'Cms::Page', 'web_accessibility.html', 'ウェブアクセシビリティについて',  'pages/web_accessibility/body'
+         create_cms_node c_site, nil, 60, n_top, l_top, 'Cms::Page', 'link.html', 'リンク集',  'pages/link/body'
+         create_cms_node c_site, nil, 70, n_top, l_top, 'Cms::Page', 'banner.html', 'バナー広告について',  'pages/banner/body'
+         create_cms_node c_site, nil, nil, n_top, l_top, 'Cms::Page', '404.html', 'ページが見つかりませんでした',  'pages/404/body'
+         create_cms_node c_site, nil, nil, n_top, l_top, 'Cms::Page', 'search.html', '検索結果',  'pages/search/body'
+         create_cms_node c_site, nil, nil, n_top, l_top, 'Cms::Sitemap', 'sitemap.html', 'サイトマップ',  'pages/sitemap/body'
 
-n_mayor  = create_cms_node c_site, n_top, l_mayor, 'Cms::Directory', 'mayor', 'ぞめき市長の部屋'
-         create_cms_node c_site, n_mayor, l_mayor, 'Cms::Page', 'index.html', '市長の部屋',  'mayor/index/body'
-         create_cms_node c_site, n_mayor, l_mayor, 'Cms::Page', 'profile.html', 'プロフィール',  'mayor/profile/body'
-         create_cms_node c_site, n_mayor, l_mayor, 'Cms::Page', 'gallery.html', '市長フォトギャラリー',  'mayor/gallery/body'
-         create_cms_node c_site, n_mayor, l_mayor, 'Cms::Page', 'kosaihi.html', '市長交際費執行状況',  'mayor/kosaihi/body'
-         create_cms_node c_site, n_mayor, l_mayor, 'Cms::Page', 'hyomei.html', '所信表明',  'mayor/hyomei/body'
-         create_cms_node c_site, n_mayor, l_mayor, 'Cms::Page', 'shuninaisatsu.html', '就任のごあいさつ',  'mayor/shuninaisatsu/body'
+n_mayor  = create_cms_node c_site, nil, 230, n_top, l_mayor, 'Cms::Directory', 'mayor', 'ぞめき市長の部屋', nil
+         create_cms_node c_site, nil, 10, n_mayor, l_mayor, 'Cms::Page', 'index.html', '市長の部屋',  'mayor/index/body'
+         create_cms_node c_site, nil, 20, n_mayor, l_mayor, 'Cms::Page', 'hyomei.html', '所信表明',  'mayor/hyomei/body'
+         create_cms_node c_site, nil, 30, n_mayor, l_mayor, 'Cms::Page', 'shuninaisatsu.html', '就任のごあいさつ',  'mayor/shuninaisatsu/body'
+         create_cms_node c_site, nil, 50, n_mayor, l_mayor, 'Cms::Page', 'profile.html', 'プロフィール',  'mayor/profile/body'
+         create_cms_node c_site, nil, 60, n_mayor, l_mayor, 'Cms::Page', 'gallery.html', '市長フォトギャラリー',  'mayor/gallery/body'
+         create_cms_node c_site, nil, 70, n_mayor, l_mayor, 'Cms::Page', 'kosaihi.html', '市長交際費執行状況',  'mayor/kosaihi/body'
+
+n_gikai  = create_cms_node c_site, nil, 240, n_top, l_gikai, 'Cms::Directory', 'gikai', 'ぞめき市議会', nil
+         create_cms_node c_site, nil, 10, n_gikai, l_gikai, 'Cms::Page', 'index.html', 'ぞめき市議会',  'gikai/index/body'
+         create_cms_node c_site, nil, 20, n_gikai, l_gikai, 'Cms::Page', 'meibo.html', '議員名簿',  'gikai/meibo/body'
+         create_cms_node c_site, nil, 30, n_gikai, l_gikai, 'Cms::Page', 'kosei.html', '市議会の構成',  'gikai/kosei/body'
+         create_cms_node c_site, nil, 40, n_gikai, l_gikai, 'Cms::Page', 'kekka.html', '定例会・臨時会の結果',  'gikai/kekka/body'
+         create_cms_node c_site, nil, 50, n_gikai, l_gikai, 'Cms::Page', 'dayori.html', 'ぞめき市議会だより',  'gikai/dayori/body'
+         create_cms_node c_site, nil, 60, n_gikai, l_gikai, 'Cms::Page', 'kensaku.html', '会議録検索',  'gikai/kensaku/body'
+         create_cms_node c_site, nil, 70, n_gikai, l_gikai, 'Cms::Page', 'seigan.html', '請願・陳情のご案内',  'gikai/seigan/body'
+         create_cms_node c_site, nil, 80, n_gikai, l_gikai, 'Cms::Page', 'botyo.html', '傍聴のご案内',  'gikai/botyo/body'
 
 
 
-n_gikai  = create_cms_node c_site, n_top, l_gikai, 'Cms::Directory', 'gikai', 'ぞめき市議会'
-         create_cms_node c_site, n_gikai, l_gikai, 'Cms::Page', 'index.html', 'ぞめき市議会',  'gikai/index/body'
-         create_cms_node c_site, n_gikai, l_gikai, 'Cms::Page', 'kekka.html', '定例会・臨時会の結果',  'gikai/kekka/body'
-         create_cms_node c_site, n_gikai, l_gikai, 'Cms::Page', 'seigan.html', '請願・陳情のご案内',  'gikai/seigan/body'
-         create_cms_node c_site, n_gikai, l_gikai, 'Cms::Page', 'kensaku.html', '会議録検索',  'gikai/kensaku/body'
-         create_cms_node c_site, n_gikai, l_gikai, 'Cms::Page', 'dayori.html', 'ぞめき市議会だより',  'gikai/dayori/body'
-         create_cms_node c_site, n_gikai, l_gikai, 'Cms::Page', 'meibo.html', '議員名簿',  'gikai/meibo/body'
-         create_cms_node c_site, n_gikai, l_gikai, 'Cms::Page', 'kosei.html', '市議会の構成',  'gikai/kosei/body'
-         create_cms_node c_site, n_gikai, l_gikai, 'Cms::Page', 'botyo.html', '傍聴のご案内',  'gikai/botyo/body'
 
 ## ---------------------------------------------------------
 ## cms/data_text
@@ -352,7 +341,7 @@ create_data_text c_site, 'site-name-en', 'サイト名（英語表記）'
 create_data_text c_site, 'address', '住所'
 create_data_text c_site, 'post-number', '郵便番号'
 create_data_text c_site, 'tel', '電話番号'
-create_data_text c_site, 'fax ', 'ファックス'
+create_data_text c_site, 'fax', 'ファックス'
 create_data_text c_site, 'search-result', '検索結果'
 create_data_text c_site, 'head-col1', 'HEAD：1カラム'
 create_data_text c_site, 'head-emergency', 'HEAD：大規模災害時表示'
@@ -418,7 +407,6 @@ load_demo "organization"
 load_demo "gp_article"
 load_demo "ad_banner"
 load_demo "survey"
-load_demo "rank"
 load_demo "feed"
 load_demo "biz_calendar"
 GpCategory::Category.set_callback(:save, :after, :enqueue_publisher_callback)

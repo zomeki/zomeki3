@@ -11,7 +11,7 @@ c_content = Cms::Concept.where(name: 'コンテンツ').first
 l_map     = create_cms_layout c_content, 'map', '施設案内'
 
 map  = create_cms_content c_content, 'Map::Marker', '施設案内', 'map'
-create_cms_content_node map, l_map, 'Map::Marker', 'map', '施設案内'
+create_cms_node c_content, map, 160, nil, l_map, 'Map::Marker', 'map', '施設案内', nil
 category = Cms::Content.where(model: 'GpCategory::CategoryType').first
 shisetsu = GpCategory::Category.where(name: 'shisetsu').first
 map_category = {'0' => shisetsu.id}

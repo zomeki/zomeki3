@@ -36,7 +36,6 @@
 [[piece/sns]]
 [[piece/back-btn]]
 [[piece/lifeevent-list]]
-[[piece/ranking-list]]
 
 </div>
 <!-- end #contentContainer --></div>

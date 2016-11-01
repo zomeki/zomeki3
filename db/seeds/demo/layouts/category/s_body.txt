@@ -34,7 +34,6 @@
 [[content]]
 [[piece/category-list]]
 [[piece/lifeevent-list]]
-[[piece/ranking-list]]
 
 </div>
 <!-- end #contentContainer --></div>
