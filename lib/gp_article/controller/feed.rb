@@ -131,8 +131,8 @@ module GpArticle::Controller::Feed
             end
           end
 
-          doc.rel_docs.each do |d|
-            xml.link :rel => 'related', :href => "#{d.public_full_uri}", :type => 'text/xhtml'
+          doc.public_related_docs.each do |doc|
+            xml.link :rel => 'related', :href => "#{doc.public_full_uri}", :type => 'text/xhtml'
           end
 
           #image
