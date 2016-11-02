@@ -46,16 +46,16 @@ def create(form, title, description, form_type, form_options, required, style_at
     state: 'public'
 end
 
-create feedback, '役に立ちましたか？', nil, 'radio_button', '役に立った\r役に立たなかった', true, nil, 10
+create feedback, '役に立ちましたか？', nil, 'radio_button', read_data('surveys/feedback/options'), true, nil, 10
 create feedback, '役に立った(役に立たなかった)具体的な理由をご記入ください', nil, 'text_area', nil, true, 'width: 70%;', 20
 
 create goiken, 'お名前', nil, 'text_field', nil, true, 'width: 300px;', 10
 create goiken, '住所', nil, 'text_field', nil, true, 'width: 300px;', 20
-create goiken, 'メールアドレス', '<p>半角英数字で入力ださい</p>', 'text_field_email', nil, false, 'width: 300px;', 30
+create goiken, 'メールアドレス', read_data('surveys/feedback/attention'), 'text_field_email', nil, false, 'width: 300px;', 30
 create goiken, 'ご意見内容', nil,  'text_area', nil, true, 'width: 600px; height: 150px;', 40
 
 form_piece = create_cms_piece c_site, survey_form, 'Survey::Form', 'feed-back', '記事へのアンケート', '記事へのアンケート'
-form_piece.in_settings = {target_form_id: feedback.id, head_css: '<link rel="stylesheet" href="/_themes/top/style.css" />',
-  upper_text: '<script src="/_common/js/jquery.iframe-auto-height.js">\n</script><script src="/_common/js/jquery.browser.js"></script>'}
+form_piece.in_settings = {target_form_id: feedback.id, head_css: read_data('surveys/feedback/css'),
+  upper_text: read_data('surveys/feedback/upper_text')}
 form_piece.save
 

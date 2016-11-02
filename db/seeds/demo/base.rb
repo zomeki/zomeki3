@@ -265,13 +265,17 @@ end
   create_cms_piece c[0], c[1], c[2], c[3], c[4]
 end
 
+p_bread_crumbs = Cms::Piece::BreadCrumb.first
+p_bread_crumbs.in_settings = {top_label: 'HOME'}
+p_bread_crumbs.save
+
 ## ---------------------------------------------------------
 ## cms/nodes
 
 puts "import cms_nodes..."
 
 def create_cms_node(concept, content, sort_no, parent, layout, model, name, title, body)
-  hidden_nodes = ['banner', '404,html', 'tags', 'search.html', 'keyvisual', 'sitemap.html']
+  hidden_nodes = ['banner', '404.html', 'tags', 'search.html', 'keyvisual', 'sitemap.html']
   Cms::Node.create  site_id: 1,
    concept_id:      concept.id,
    content_id:      content.blank? ? nil : content.id,
@@ -286,21 +290,21 @@ def create_cms_node(concept, content, sort_no, parent, layout, model, name, titl
    title:           title,
    sitemap_sort_no: sort_no,
    sitemap_state:   hidden_nodes.include?(name) ? 'hidden' : 'visible',
-   body:            body.blank? ? nil : read_data("nodes/#{body}.txt")
+   body:            body.blank? ? nil : read_data("nodes/#{body}")
 end
 
 n_top   = Cms::Node.find_by(:id => 1, :parent_id => 0)
-p_index = Cms::Node.find_by(:id => 2, :name => "index.html")
+p_index = Cms::Node.find_by(:id => 2, :name => 'index.html')
          p_index.update_columns(concept_id: c_top.id, layout_id: l_top.id, sitemap_sort_no: 10, title: 'ぞめき市')
-         create_cms_node c_site, nil, 20, n_top, l_top, 'Cms::Page', 'riyo.html', 'ホームページ利用について', 'pages/riyo/body'
-         create_cms_node c_site, nil, 30, n_top, l_top, 'Cms::Page', 'copyright.html', 'リンク・著作権・免責事項',  'pages/copyright/body'
-         create_cms_node c_site, nil, 40, n_top, l_top, 'Cms::Page', 'privacy.html', '個人情報の取り扱い',  'pages/privacy/body'
-         create_cms_node c_site, nil, 50, n_top, l_top, 'Cms::Page', 'web_accessibility.html', 'ウェブアクセシビリティについて',  'pages/web_accessibility/body'
-         create_cms_node c_site, nil, 60, n_top, l_top, 'Cms::Page', 'link.html', 'リンク集',  'pages/link/body'
-         create_cms_node c_site, nil, 70, n_top, l_top, 'Cms::Page', 'banner.html', 'バナー広告について',  'pages/banner/body'
-         create_cms_node c_site, nil, nil, n_top, l_top, 'Cms::Page', '404.html', 'ページが見つかりませんでした',  'pages/404/body'
-         create_cms_node c_site, nil, nil, n_top, l_top, 'Cms::Page', 'search.html', '検索結果',  'pages/search/body'
-         create_cms_node c_site, nil, nil, n_top, l_top, 'Cms::Sitemap', 'sitemap.html', 'サイトマップ',  'pages/sitemap/body'
+         create_cms_node c_site, nil, 20, n_top, l_col1, 'Cms::Page', 'riyo.html', 'ホームページ利用について', 'pages/riyo/body'
+         create_cms_node c_site, nil, 30, n_top, l_col1, 'Cms::Page', 'copyright.html', 'リンク・著作権・免責事項',  'pages/copyright/body'
+         create_cms_node c_site, nil, 40, n_top, l_col1, 'Cms::Page', 'privacy.html', '個人情報の取り扱い',  'pages/privacy/body'
+         create_cms_node c_site, nil, 50, n_top, l_col1, 'Cms::Page', 'web_accessibility.html', 'ウェブアクセシビリティについて',  'pages/web_accessibility/body'
+         create_cms_node c_site, nil, 60, n_top, l_col1, 'Cms::Page', 'link.html', 'リンク集',  'pages/link/body'
+         create_cms_node c_site, nil, 70, n_top, l_col1, 'Cms::Page', 'banner.html', 'バナー広告について',  'pages/banner/body'
+         create_cms_node c_site, nil, nil, n_top, l_col1, 'Cms::Page', '404.html', 'ページが見つかりませんでした',  'pages/404/body'
+         create_cms_node c_site, nil, nil, n_top, l_col1, 'Cms::Page', 'search.html', '検索結果',  'pages/search/body'
+         create_cms_node c_site, nil, nil, n_top, l_col1, 'Cms::Sitemap', 'sitemap.html', 'サイトマップ',  'pages/sitemap/body'
 
 n_mayor  = create_cms_node c_site, nil, 230, n_top, l_mayor, 'Cms::Directory', 'mayor', 'ぞめき市長の部屋', nil
          create_cms_node c_site, nil, 10, n_mayor, l_mayor, 'Cms::Page', 'index.html', '市長の部屋',  'mayor/index/body'

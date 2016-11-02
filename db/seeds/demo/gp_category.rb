@@ -251,7 +251,7 @@ p_lifeevent = create_cms_piece c_site, category, 'GpCategory::CategoryList', 'li
 p_lifeevent.in_settings = {setting_state: 'enabled', category_type_id: lifeevent.id, layer: 'descendants'}
 p_lifeevent.save
 
-p_category = create_cms_piece c_category, category, 'GpCategory::CategoryList', 'category-list', 'カテゴリから探す', 'カテゴリから探す'
+p_category = create_cms_piece c_site, category, 'GpCategory::CategoryList', 'category-list', 'カテゴリから探す', 'カテゴリから探す'
 p_category.in_settings = {setting_state: 'enabled', layer: 'self'}
 p_category.save
 
