@@ -18,6 +18,11 @@ $(document).ready(function () {
     show: function (event, ui) {
       if ((typeof map) !== 'undefined' && map) {
         google.maps.event.trigger(map, 'resize');
+        var lat = $('#centerDispLat').val();
+        var lng = $('#centerDispLat').val();
+        if (lat && lng) {
+          map.setCenter(new google.maps.LatLng($('#centerDispLat').val(), $('#centerDispLng').val()));
+        }
       }
     }
   });
