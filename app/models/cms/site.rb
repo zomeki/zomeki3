@@ -119,9 +119,8 @@ class Cms::Site < ApplicationRecord
   end
 
   def admin_domain
-    admin_uri = admin_full_uri || full_uri
-    return '' if admin_uri.blank?
-    URI.parse(admin_uri).host
+    return '' if admin_full_uri.blank?
+    URI.parse(admin_full_uri).host
   end
 
   def publish_uri
@@ -204,17 +203,6 @@ class Cms::Site < ApplicationRecord
     end
   end
 
-  def self.find_by_script_uri(script_uri)
-    base = script_uri.gsub(/^([a-z]+:\/\/[^\/]+\/).*/, '\1')
-    item = Cms::Site.new.public
-    cond = Condition.new do |c|
-      c.or :full_uri, 'LIKE', "#{base}%"
-      c.or :mobile_full_uri, 'LIKE', "#{base}%"
-    end
-    item.and cond
-    return item.order(:id).first
-  end
-
   def self.make_virtual_hosts_config
     conf = '';
     order(:id).each do |site|
@@ -288,6 +276,7 @@ class Cms::Site < ApplicationRecord
   end
 
   def generate_apache_admin_configs
+    return if admin_domain.blank?
     virtual_hosts = Rails.root.join('config/apache/admin_virtual_hosts')
     unless (template = virtual_hosts.join('template.conf.erb')).file?
       logger.warn 'VirtualHost template not found.'

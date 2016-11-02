@@ -52,11 +52,6 @@ class Cms::DataFile < ApplicationRecord
     "#{site.full_uri}#{public_thumbnail_uri.sub(/^\//, '')}"
   end
 
-  def public
-    self.and :state, 'public'
-    self
-  end
-
   def publishable?
     return false unless editable?
     return !public?

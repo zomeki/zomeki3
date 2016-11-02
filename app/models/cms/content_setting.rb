@@ -99,7 +99,7 @@ class Cms::ContentSetting < ApplicationRecord
   def value=(v)
     case form_type
     when :check_boxes, :multiple_select
-      super(YAML.dump(v ? v.reject(&:blank?) : '[]'))
+      super(YAML.dump(v ? v.reject(&:blank?) : []))
     else
       super
     end
