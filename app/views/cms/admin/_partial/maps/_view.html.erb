@@ -1,9 +1,9 @@
 <%-
 map = item.maps.first || item.maps.build(name: '1')
 default_position = item.default_map_position.split(/[ ]*,[ ]*/)
-map_lat  = (map && map.map_lat.present?) ? map.map_lat : default_position[0]
-map_lng  = (map && map.map_lng.present?) ? map.map_lng : default_position[1]
-map_zoom = (map && map.map_zoom.present?) ? map.map_zoom : 14
+map_lat  = map.map_lat.presence || default_position[0]
+map_lng  = map.map_lng.presence || default_position[1]
+map_zoom = map.map_zoom.presence || 14
 markers = map.markers
 google_api = request.ssl? ? "https://maps-api-ssl.google.com/maps/api/js?region=jp" : "http://maps.google.com/maps/api/js?region=jp"
 api_key = item.content.site.google_map_api_key
@@ -67,6 +67,8 @@ addEvent(window, 'load', function() {
         <%= map.map_lat %>, <!--
         --><%= map.map_lng %>
       <%- end -%>
+      <input id="centerDispLat" name="centerDispLat" type="hidden" value="<%= map.map_lat %>" />
+      <input id="centerDispLng" name="centerDispLng" type="hidden" value="<%= map.map_lng %>"/>
     </td>
   </tr><tr>
     <th style="width: 90px;">縮尺</th>
