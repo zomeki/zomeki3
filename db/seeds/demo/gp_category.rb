@@ -68,7 +68,7 @@ end
 ## gp_category/category_type
 
 def create_type(concept, content, layout, name, title, sort_no)
-  item = GpCategory::CategoryType.create concept_id: concept.id,
+  GpCategory::CategoryType.create concept_id: concept.id,
     content_id: content.id,
     layout_id: layout.id,
     name: name,
@@ -76,13 +76,7 @@ def create_type(concept, content, layout, name, title, sort_no)
     sort_no: sort_no,
     state: 'public',
     docs_order: 'display_published_at DESC, published_at DESC'
-  if category_concept = Cms::Concept.where(name: title).first
-    p = create_cms_piece category_concept, content, 'GpCategory::CategoryList', 'category-list', "#{title}から探す", "#{title}から探す"
-    p.in_settings = {setting_state: 'enabled', category_type_id: item.id, layer: 'self'}
-    p.save
-  end
 
-  return item
 end
 
 kubun     = create_type c_category, category, l_category, 'kubun',      '区分', 10
@@ -91,7 +85,7 @@ lifeevent = create_type c_category, category, l_category, 'lifeevent',  'ライ�
 event     = create_type c_category, category, l_category, 'event',      'イベント情報', 40
 
 def create(concept, category_type, parent, layout, name, title, sort_no)
-  item = GpCategory::Category.create concept_id: concept.id,
+  GpCategory::Category.create concept_id: concept.id,
     category_type_id: category_type.id,
     parent_id: parent.blank? ? nil : parent.id,
     layout_id: layout.id,
@@ -100,15 +94,6 @@ def create(concept, category_type, parent, layout, name, title, sort_no)
     sort_no: sort_no,
     state: 'public',
     docs_order: 'display_published_at DESC, published_at DESC'
-
-  if category_concept = Cms::Concept.where(name: title).first
-    p = create_cms_piece category_concept, category_type.content, 'GpCategory::CategoryList', 'category-list', '分野から探す', '分野から探す'
-    p.in_settings = {setting_state: 'enabled', layer: 'self',
-      category_type_id: category_type.id, category_id: item.id
-      }
-    p.save
-  end
-  return item
 end
 
 
@@ -262,15 +247,11 @@ create c_event, event, nil, l_category, 'matsuri', 'お祭り', 40
 
 ## ---------------------------------------------------------
 ## cms/pieces
-p_kubun = create_cms_piece c_site, category, 'GpCategory::CategoryList', 'category-list', '区分から探す', '区分から探す'
-p_kubun.in_settings = {setting_state: 'enabled', category_type_id: kubun.id, layer: 'self'}
-p_kubun.save
-
 p_lifeevent = create_cms_piece c_site, category, 'GpCategory::CategoryList', 'lifeevent-list', 'ライフイベント一覧', '人生のできごとから探す'
 p_lifeevent.in_settings = {setting_state: 'enabled', category_type_id: lifeevent.id, layer: 'descendants'}
 p_lifeevent.save
 
 p_category = create_cms_piece c_category, category, 'GpCategory::CategoryList', 'category-list', 'カテゴリから探す', 'カテゴリから探す'
-p_category.in_settings = {setting_state: 'enabled', layer: 'descendants'}
+p_category.in_settings = {setting_state: 'enabled', layer: 'self'}
 p_category.save
 
