@@ -1,11 +1,9 @@
-<%- unless @item.related_docs.empty? -%>
+<%- unless @item.public_related_docs.empty? -%>
 <div class="rels">
   <h2>関連記事</h2>
   <ul>
-    <%- @item.related_docs.each do |doc|
-    next unless rel_doc = doc.target_doc
-    next unless rel_doc.public? -%>
-    <li><%= doc_replace rel_doc, @content.rel_docs_style, @content.date_style %></li>
+    <%- @item.public_related_docs.each do |doc| -%>
+    <li><%= doc_replace doc, @content.rel_docs_style, @content.date_style %></li>
     <%- end -%>
   </ul>
 </div>
