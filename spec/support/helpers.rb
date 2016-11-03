@@ -20,13 +20,16 @@ module Helpers
     klass.find_by_id(FactoryGirl.attributes_for(fg_id)[:id]) || FactoryGirl.create(fg_id)
   end
 
-  def initialize_core(script_uri)
-    uri = URI.parse(script_uri)
+  def initialize_core(uri)
+    parsed_uri = URI.parse(uri)
 
-    env = {'SCRIPT_URI' => script_uri,
-           'PATH_INFO' => uri.path,
+    # All of keys are used in lib/core.rb
+    env = {'rack.url_scheme' => parsed_uri.scheme,
+           'HTTP_X_FORWARDED_HOST' => parsed_uri.host,
+           'HTTP_HOST' => parsed_uri.host,
+           'REQUEST_URI' => parsed_uri.path,
+           'PATH_INFO' => parsed_uri.path,
            'QUERY_STRING' => '',
-           'REQUEST_URI' => uri.path,
            'SERVER_PROTOCOL' => 'HTTP/1.1',
            'HTTP_COOKIE' => ''}
 
