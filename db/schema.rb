@@ -268,6 +268,7 @@ ActiveRecord::Schema.define(version: 20161109010041) do
     t.integer  "thumb_width"
     t.integer  "thumb_height"
     t.integer  "thumb_size"
+    t.text     "extracted_text"
     t.index ["concept_id", "node_id", "name"], name: "index_cms_data_files_on_concept_id_and_node_id_and_name", using: :btree
   end
 

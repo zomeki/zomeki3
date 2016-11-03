@@ -13,6 +13,7 @@ module Sys::Model::Base::File
     validate :validate_upload_file
     after_save :upload_internal_file
     after_destroy :remove_internal_file
+    after_save :extract_text
   end
 
   class_methods do
@@ -357,6 +358,16 @@ module Sys::Model::Base::File
     end
 
     return true
+  end
+
+  def extract_text
+    return unless has_attribute?(:extracted_text)
+    file = Pathname.new(upload_path)
+    jar = Rails.root.join('vendor/tika/tika-app.jar')
+    result = `java -jar #{jar} --text #{file}`
+    update_column :extracted_text, result
+  rescue => e
+    warn_log e.message
   end
 
   ## filter/aftar_destroy
