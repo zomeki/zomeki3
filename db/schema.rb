@@ -1193,6 +1193,7 @@ ActiveRecord::Schema.define(version: 20161109010041) do
     t.integer  "thumb_width"
     t.integer  "thumb_height"
     t.integer  "thumb_size"
+    t.text     "extracted_text"
     t.index ["file_attachable_type", "file_attachable_id"], name: "index_sys_files_on_file_attachable_type_and_file_attachable_id", using: :btree
   end
 
