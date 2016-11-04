@@ -1,0 +1,37 @@
+@charset "UTF-8";
+
+/* =========================================================
+   Fix Layout 3 Columns
+========================================================= */
+
+/* wrapper
+----------------------------------------------- */
+#wrapper {
+  float: left;
+  clear: both;
+  width: 790px;
+  margin: 0;
+}
+
+/* content(center column)
+----------------------------------------------- */
+#content {
+  float: right;
+  width: 580px;
+}
+
+/* menu(left column)
+----------------------------------------------- */
+#menu {
+  float: left;
+  width: 190px;
+  margin: 0px;
+}
+
+/* links(right column)
+----------------------------------------------- */
+#links {
+  float: right;
+  width: 190px;
+  margin: 0px;
+}

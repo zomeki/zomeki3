@@ -1,0 +1,67 @@
+@charset "UTF-8";
+
+/* =========================================================
+   Base
+========================================================= */
+/* elements
+----------------------------------------------- */
+h1, h2, h3, h4, h5 {
+  margin: 0;
+  padding: 0;
+  font-family: verdana;
+  font-size: medium;
+}
+ul {
+  list-style-type: disc;
+  list-style-position: outside;
+  margin: 0 0 0.5em 0;
+  padding: 0;
+}
+rp, rt {
+  font-size: 80%;
+  text-decoration: none;
+}
+hr {
+  display: none;
+  border-style: solid;
+  border-color: #018232;
+  background-color: #018232;
+  height: 1px;
+}
+.h1 {
+  margin-bottom: 5px;
+  padding: 0.3em;
+  background-color: #018232;
+  color: #ffffff;
+  font-weight: bold;
+}
+.h2 {
+  background-color: #daece0;
+  margin-bottom: 5px;
+  padding: 0.3em;
+}
+.pagination {
+  margin-top: 5px;
+  text-align: center;
+}
+.body {
+  padding: 0 5px;
+}
+p {
+  margin-bottom: 1em;
+}
+.inquiry {
+  margin: 10px 5px 0 5px;
+  padding: 3px 0;
+  border-top: 1px solid #999;
+}
+.inquiry h2 {
+  padding: 0px;
+  background-color: #ffffff;
+}
+.inquiry h3 {
+  font-size: small;
+}
+.body th {
+  background-color: #f3f3f3;
+}

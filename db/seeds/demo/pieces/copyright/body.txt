@@ -2,7 +2,7 @@
 <div class="pieceContainer">
 <div class="pieceBody clearfix">
 
-<p><small>&copy; 2015 [[text/site-name-en]]</small></p>
+<p><small>&copy; 2016 [[text/site-name-en]]</small></p>
 
 </div>
 </div>
