@@ -1,0 +1,9 @@
+<div id="copyright" class="piece clearfix">
+<div class="pieceContainer">
+<div class="pieceBody clearfix">
+
+<p><small>&copy; 2015 [[text/site-name-en]]</small></p>
+
+</div>
+</div>
+</div>

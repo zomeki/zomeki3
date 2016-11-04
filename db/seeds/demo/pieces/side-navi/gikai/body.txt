@@ -1,0 +1,18 @@
+<div id="sideNavi" class="piece">
+<div class="pieceContainer">
+<div class="pieceHeader"><h2>議会メニュー</h2></div>
+<div class="pieceBody">
+
+<ul>
+<li><a href="/gikai/meibo.html">議員名簿</a></li>
+<li><a href="/gikai/kosei.html">市議会の構成</a></li>
+<li><a href="/gikai/kekka.html">定例会・臨時会の結果</a></li>
+<li><a href="/gikai/dayori.html">ぞめき市議会だより</a></li>
+<li><a href="/gikai/kensaku.html">会議録検索</a></li>
+<li><a href="/gikai/seigan.html">請願・陳情のご案内</a></li>
+<li><a href="/gikai/botyo.html">傍聴のご案内</a></li>
+</ul>
+
+</div>
+</div>
+</div>

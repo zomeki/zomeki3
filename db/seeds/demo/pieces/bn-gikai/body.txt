@@ -1,0 +1,7 @@
+<div class="piece" id="bnGikai">
+<div class="pieceContainer">
+<div class="pieceBody">
+<p><a href="/gikai/">[[file/banner/bt-shigikai.png]]</a></p>
+</div>
+</div>
+</div>

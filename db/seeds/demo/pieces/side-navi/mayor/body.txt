@@ -1,0 +1,17 @@
+<div id="sideNavi" class="piece">
+<div class="pieceContainer">
+<div class="pieceHeader"><h2>市長の部屋</h2></div>
+<div class="pieceBody">
+
+<ul>
+  <li><a href="/mayor/hyomei.html">所信表明</a></li>
+  <li><a href="/mayor/shuninaisatsu.html">就任のごあいさつ</a></li>
+  <li><a href="/mayor/profile.html">プロフィール</a></li>
+  <li><a href="/mayor/gallery.html">市長フォトギャラリー</a></li>
+  <li><a href="/mayor/kosaihi.html">市長交際費執行状況</a></li>
+</ul>
+
+</div>
+</div>
+</div>
+<!-- end .piece --></div>

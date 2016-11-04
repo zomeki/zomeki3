@@ -1,0 +1,13 @@
+<div id="searchNavi" class="piece">
+<div class="pieceContainer">
+<div class="pieceBody clearfix">
+<div class="search">[[text/search-box]]</div>
+<ul class="clearfix">
+<li><a href="/faq/">よくある質問</a></li>
+<li><a href="/map/">施設案内</a></li>
+<li><a href="/soshiki/">組織から探す</a></li>
+<li><a href="/categories/bunya/">分野から探す</a></li>
+</ul>
+</div>
+</div>
+</div>

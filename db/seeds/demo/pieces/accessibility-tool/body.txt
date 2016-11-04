@@ -1,0 +1,51 @@
+<!-- skip reading -->
+<div id="accessibilityTool" class="piece">
+<div class="pieceContainer">
+<div class="pieceBody">
+<p id="nocssread"><a href="#main">本文へ移動</a></p>
+<script src="/_common/js/jquery.cookie.js"></script>
+<script src="/_common/js/navigation.js"></script>
+<script>
+$(function(){
+  Navigation.initialize({
+    theme : { '#themeBlack' : 'black', '#themeBlue': 'blue', '#themeWhite' : 'white' },
+    fontSize: { '#fontSmall' : '80%', '#fontMiddle': '87.5%', '#fontLarge' : '100%' },
+    notice : '#headerBody',
+    ruby : '#navigationRuby',
+    talk : '#navigationTalk',
+    player : '#navigationTalkPlayer'
+  });
+  $('a.rubyOn').text('ふりがなをはずす');
+  $('#navigationTalk').click(function(){
+    if($(this).hasClass("active")){
+      $(this).text('よみあげる');
+    } else {
+      $(this).text('よみあげ中');
+    }
+    $(this).toggleClass('active');
+    return false;
+  });
+});
+</script>
+<ul>
+  <li>文字の大きさ
+  <ul class="fontSize">
+    <li><a href="#fontSmall" id="fontSmall" title="文字のサイズを小さくする">小</a></li>
+    <li><a href="#fontMiddle" id="fontMiddle" title="標準の文字サイズに戻す">中</a></li>
+    <li><a href="#fontLarge" id="fontLarge" title="文字のサイズを大きくする">大</a></li>
+  </ul>
+  </li>
+  <li>背景色
+  <ul class="themeColor">
+    <li><a href="#themeBlack" id="themeBlack" title="背景色を黒にする" class="black">黒</a></li>
+    <li><a href="#themeBlue" id="themeBlue" title="背景色を青にする" class="blue">青</a></li>
+    <li><a href="#themeWhite" id="themeWhite" title="背景色を白にする" class="white">白</a></li>
+  </ul>
+  </li>
+  <li><a href="#navigationRuby" id="navigationRuby">ふりがなをつける</a></li>
+  <li><a href="#navigationTalk" id="navigationTalk">よみあげる</a><span id="navigationTalkPlayer"></span></li>
+</ul>
+</div>
+</div>
+</div>
+<!-- /skip reading -->

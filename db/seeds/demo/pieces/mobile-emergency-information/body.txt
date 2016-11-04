@@ -1,0 +1,10 @@
+<div id="emergencyInformation" class="piece">
+<div class="pieceContainer">
+<div class="pieceHeader"><h2>&#xE737;緊急情報</h2></div>
+<div class="pieceBody">
+
+現在、緊急火災情報はございません。
+
+</div>
+</div>
+</div>

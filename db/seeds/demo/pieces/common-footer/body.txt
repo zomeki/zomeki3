@@ -1,0 +1,21 @@
+<div id="commonFooter" class="piece">
+<div class="pieceContainer">
+<div class="pieceBody clearfix">
+
+<address class="address">
+[[text/site-name]]役所<br />
+[[text/post-number]]<br />
+[[text/address]]<br />
+TEL：[[text/tel]]　FAX：[[text/fax]]
+</address>
+
+<div class="qr-code">
+<p class="img">[[file/qr.gif]]</p>
+<p class="text">
+<span class="midashi">携帯サイト</span>
+「QRコード」及び「URL」からもご覧になれます。</p>
+</div>
+
+</div>
+</div>
+</div>

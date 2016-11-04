@@ -1,0 +1,26 @@
+<div id="gsearchbox" style="display:none;"></div>
+<script>
+var myCallback = function(){
+  google.search.cse.element.render({
+    div: "gsearchbox",
+    tag: 'searchbox-only'
+  });
+  google.search.cse.element.render({
+    div: "gsearchresult",
+    tag: 'searchresults-only'
+  });
+};
+window.__gcse = {
+  parsetags: 'onload',
+  callback: myCallback
+};
+  (function() {
+    var cx = '010388784271551500717:gebtsacuucw';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>

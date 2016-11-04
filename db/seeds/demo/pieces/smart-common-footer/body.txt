@@ -1,0 +1,12 @@
+<div id="commonFooter" class="piece">
+<div class="pieceContainer">
+<div class="pieceBody">
+<address class="address">
+[[text/site-name]]役所<br />
+[[text/post-number]]　[[text/address]]<br />
+TEL：[[text/tel]]<br />
+FAX：[[text/fax]]</p>
+</address>
+</div>
+</div>
+</div>

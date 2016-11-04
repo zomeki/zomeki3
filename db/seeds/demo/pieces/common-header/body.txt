@@ -1,0 +1,16 @@
+<div id="commonHeader" class="piece">
+<div class="pieceContainer">
+<div class="pieceBody clearfix">
+<p style="padding-top:5px; font-size: 80%;"><a target="_blank" href="http://zomeki.jp/">※このサイトはオープンソースCMS「ZOMEKI」のサンプルサイトです。</a></p>
+<h1><a href="/">[[text/site-name]]<span class="subtitle">[[text/site-name-en]] official site</span></a></h1>
+
+<div class="menu clearfix">
+<ul>
+<li class="riyo"><a href="/riyo.html">ご利用案内</a></li>
+<li class="sitemap"><a href="/sitemap.html">サイトマップ</a></li>
+</ul>
+</div>
+
+</div>
+</div>
+</div>

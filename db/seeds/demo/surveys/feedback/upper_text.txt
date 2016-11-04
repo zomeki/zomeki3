@@ -1,0 +1,2 @@
+<script src="/_common/js/jquery.iframe-auto-height.js"></script>
+<script src="/_common/js/jquery.browser.js"></script>

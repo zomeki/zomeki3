@@ -1,0 +1,7 @@
+<div id="commonHeader" class="piece">
+<div class="pieceContainer">
+<div class="pieceBody clearfix">
+<h1><a href="/">[[text/site-name]]</a></h1>
+</div>
+</div>
+</div>

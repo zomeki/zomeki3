@@ -1,0 +1,74 @@
+<div id="container">
+
+<header id="pageHeader">
+<div id="pageHeaderContainer">
+<div id="pageHeaderBody">
+
+[[piece/pc-switch]]
+[[piece/accessibility-tool]]
+[[piece/common-header]]
+
+</div>
+<!-- end #pageHeaderContainer --></div>
+<!-- end #pageHeader --></header>
+
+<nav id="pageNav">
+<div id="pageNavContainer">
+<div id="pageNavBody">
+
+[[piece/global-navi]]
+[[piece/search-navi]]
+
+</div>
+<!-- end #pageNavContainer --></div>
+<!-- end #pageNav --></nav>
+
+<div id="main">
+<div id="mainContainer">
+<div id="mainBody">
+
+[[piece/bread-crumbs]]
+
+<div id="wrapper">
+
+<div id="content">
+<div id="contentContainer">
+<div id="contentBody">
+
+[[piece/page-title]]
+[[content]]
+
+</div>
+<!-- end #contentContainer --></div>
+<!-- end #content --></div>
+
+<div id="links">
+<div id="linksContainer">
+<div id="linksBody">
+
+[[piece/category-list]]
+[[piece/lifeevent-list]]
+
+</div>
+<!-- end #linksContainer --></div>
+<!-- end #links --></div>
+
+<!-- end #wrapper --></div>
+
+<!-- end #mainBody --></div>
+<!-- end #mainContainer --></div>
+<!-- end #main --></div>
+
+<footer id="pageFooter">
+<div id="pageFooterContainer">
+<div id="pageFooterBody">
+
+[[piece/footer-navi]]
+[[piece/common-footer]]
+[[piece/copyright]]
+
+</div>
+<!-- end #pageFooterContainer --></div>
+<!-- end #pageFooter --></footer>
+
+</div>

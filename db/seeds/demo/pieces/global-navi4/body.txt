@@ -1,0 +1,13 @@
+<div id="globalNavi" class="piece">
+<div class="pieceContainer">
+<div class="pieceBody">
+<ul class="clearfix">
+<li><a href="/navi/kurashi/">暮らしのガイド</a></li>
+<li><a href="/navi/kosodate/">子育て・教育</a></li>
+<li><a href="/navi/kanko/">観光・文化</a></li>
+<li class="current"><a href="/navi/jigyosha/">事業者の方へ</a></li>
+<li><a href="/navi/shisei/">市政情報</a></li>
+</ul>
+</div>
+</div>
+</div>
