@@ -154,6 +154,9 @@ def create(content, title, body, options = {})
     in_category_ids: category_ids, state: 'public', raw_tags: options[:tags]
 end
 
+Core.user       = Sys::User.find_by(account: 'somu1')
+Core.user_group = Core.user.groups[0]
+
 GpArticle::Doc.skip_callback(:save, :after, :enqueue_publisher_callback)
 
 create oshirase, '転入届', read_data('gp_article/oshirase/tennyu/body'), {categories: ['juminhyo', 'hikkoshi']}

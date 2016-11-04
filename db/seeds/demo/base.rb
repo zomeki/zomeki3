@@ -42,11 +42,16 @@ end
 
 r = Sys::Group.find(1)
 
+
 p = create zomeki_site, r, 2, 10, "1", "総務部", "somu"
-    create zomeki_site, p, 3, 10, "1001", "職員課", "shokuin"
-    create zomeki_site, p, 3, 20, "1002", "契約管理課", "keiyakukanri"
-    create zomeki_site, p, 3, 30, "1003", "防災課", "bosai"
-    create zomeki_site, p, 3, 40, "1004", "法務課", "homu"
+    create zomeki_site, p, 3, 20, "1001", "職員課", "shokuin"
+    create zomeki_site, p, 3, 30, "1002", "契約管理課", "keiyakukanri"
+    create zomeki_site, p, 3, 40, "1003", "防災課", "bosai"
+    create zomeki_site, p, 3, 50, "1004", "法務課", "homu"
+
+zomeki_group = Sys::Group.find_by(code: '001')
+  .update_columns(code: '01001', name: '総務課', name_en: 'soumu',
+    parent_id: p.id, level_no: 3, sort_no: 10)
 
 p = create zomeki_site, r, 2, 20, "2", "企画部", "kikaku"
     create zomeki_site, p, 3, 10, "2001", "IT推進課", "itsuishinka"
@@ -160,6 +165,70 @@ def create_cms_content(concept, model, name, code)
     name: name,
     code: code
 end
+
+## ---------------------------------------------------------
+## sys/users
+
+puts "import sys_users..."
+
+
+admin = Sys::User.find_by(account: 'awa')
+admin.update_columns(account: 'admin', name: 'サイト管理者',
+    name_en: 'admin', password: 'admin', auth_no: 5)
+
+soumu1 = Sys::User.find_by(account: 'ebisu')
+soumu1.update_columns(account: 'somu1', name: '総務課記事作成者',
+    name_en: 'somu1', password: 'somu1')
+
+soumu2 = Sys::User.find_by(account: 'hachisuka')
+soumu2.update_columns(account: 'somu2', name: '総務課サイト更新者',
+    name_en: 'somu2', password: 'somu2', auth_no: 4)
+
+soumu3 = Sys::User.find_by(account: 'sasa')
+soumu3.update_columns(account: 'somu3', name: '総務課承認者',
+    name_en: 'somu3', password: 'somu3', auth_no: 4)
+
+bosaika = Sys::Group.find_by(code: '1003')
+
+bosai1 = Sys::User.find_by(account: 'ukiyo')
+bosai1.update_columns(account: 'bosai1', name: '防災課記事作成者',
+    name_en: 'bosai1', password: 'bosai1', auth_no: 1)
+Sys::UsersGroup.find_by(user_id: bosai1.id).update_columns(group_id: bosaika.id)
+
+bosai2 = Sys::User.create!(state: 'enabled', ldap: 0, auth_no: 4,
+  name: '防災課サイト更新者', name_en: 'bosai2', account: 'bosai2', password: 'bosai2')
+Sys::UsersGroup.create!(group: bosaika, user: bosai2)
+
+bosai3 = Sys::User.create!(state: 'enabled', ldap: 0, auth_no: 4,
+  name: '防災課承認者', name_en: 'bosai3', account: 'bosai3', password: 'bosai3')
+Sys::UsersGroup.create!(group: bosaika, user: bosai3)
+
+
+## ---------------------------------------------------------
+## sys/roles
+
+puts "import sys_roles..."
+
+def create_sys_roles(name, title, concepts, users, all = false)
+  r = Sys::RoleName.create name: name, title: title, site_id: 1
+  concepts.each do |concept|
+    p = Sys::ObjectPrivilege.new concept_id: concept.id, role_id: r.id
+    p.privilegable ||= p.concept
+    if all
+      p.in_actions = {read: 1, create: 1, update: 1, delete: 1}
+    else
+      p.in_actions = {read: 1}
+    end
+    p.save
+  end
+  users.each do |user|
+    Sys::UsersRole.create role_id: r.id, user_id: user.id
+  end
+end
+
+create_sys_roles 'soumu',  '総務課', [c_top, c_site, c_mayor], [soumu2, soumu3], true
+create_sys_roles 'common', '記事作成', [c_site], [soumu1, bosai1]
+create_sys_roles 'bosai', '防災課', [c_site], [bosai2, bosai3]
 
 ## ---------------------------------------------------------
 ## cms/layouts
@@ -408,10 +477,10 @@ load_demo "tag"
 load_demo "sns"
 load_demo "map"
 load_demo "organization"
-load_demo "gp_article"
 load_demo "ad_banner"
 load_demo "survey"
 load_demo "feed"
 load_demo "biz_calendar"
+load_demo "gp_article"
 GpCategory::Category.set_callback(:save, :after, :enqueue_publisher_callback)
 
