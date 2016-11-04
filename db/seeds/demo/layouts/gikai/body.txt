@@ -1,47 +1,33 @@
 <div id="container">
 
-<div id="header">
-<div id="headerContainer">
-<div id="headerBody">
+<header id="pageHeader">
+<div id="pageHeaderContainer">
+<div id="pageHeaderBody">
 
+[[piece/pc-switch]]
+[[piece/accessibility-tool]]
 [[piece/common-header]]
 
 </div>
+<!-- end #pageHeaderContainer --></div>
+<!-- end #pageHeader --></header>
 
-<!-- end #headerContainer --></div>
-<!-- end #header --></div>
-
-<div id="banner">
-<div id="bannerContainer">
-<div id="bannerBody">
-
-
-[[piece/common-banner]]
+<nav id="pageNav">
+<div id="pageNavContainer">
+<div id="pageNavBody">
 
 [[piece/global-navi]]
+[[piece/search-navi]]
 
 </div>
-<!-- end #bannerContainer --></div>
-<!-- end #banner --></div>
-
-
-
-<div id="navi">
-<div id="naviContainer">
-<div id="naviBody">
-
-[[piece/page-title]]
-
-[[piece/bread-crumbs]]
-
-
-</div>
-<!-- end #naviContainer --></div>
-<!-- end #navi --></div>
-
-
+<!-- end #pageNavContainer --></div>
+<!-- end #pageNav --></nav>
 
 <div id="main">
+<div id="mainContainer">
+<div id="mainBody">
+
+[[piece/bread-crumbs]]
 
 <div id="wrapper">
 
@@ -49,48 +35,39 @@
 <div id="contentContainer">
 <div id="contentBody">
 
+[[piece/page-title]]
 [[content]]
 
 </div>
 <!-- end #contentContainer --></div>
 <!-- end #content --></div>
 
-<div id="menu">
-<div id="menuContainer">
-<div id="menuBody">
-
-[[piece/area-list]]
-
-[[piece/attract-information]]
-
-</div>
-<!-- end #menuContainer --></div>
-<!-- end #menu --></div>
-
-<!-- end #wrapper --></div>
-
 <div id="links">
 <div id="linksContainer">
 <div id="linksBody">
 
-[[piece/ad-upper]]
+[[piece/side-navi]]
 
 </div>
 <!-- end #linksContainer --></div>
 <!-- end #links --></div>
 
+<!-- end #wrapper --></div>
+
+<!-- end #mainBody --></div>
+<!-- end #mainContainer --></div>
 <!-- end #main --></div>
 
-<div id="footer">
-<div id="footerContainer">
+<footer id="pageFooter">
+<div id="pageFooterContainer">
+<div id="pageFooterBody">
 
-
-<div id="footerBody">
-[[piece/address]]
 [[piece/footer-navi]]
-</div>
+[[piece/common-footer]]
+[[piece/copyright]]
 
-<!-- end #footerContainer --></div>
-<!-- end #footer --></div>
+</div>
+<!-- end #pageFooterContainer --></div>
+<!-- end #pageFooter --></footer>
 
 </div>

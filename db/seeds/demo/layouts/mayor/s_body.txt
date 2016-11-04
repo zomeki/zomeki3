@@ -1,4 +1,4 @@
-<div id="container" class="emergency">
+<div id="container">
 
 <header id="pageHeader">
 <div id="pageHeaderContainer">
@@ -14,7 +14,8 @@
 <div id="pageNavContainer">
 <div id="pageNavBody">
 
-[[piece/global-navi]]
+[[piece/smart-search]]
+[[piece/smart-global-navi]]
 
 </div>
 <!-- end #pageNavContainer --></div>
@@ -22,8 +23,7 @@
 
 <div id="main">
 <div id="mainContainer">
-
-[[piece/emergency-mode]]
+<div id="mainBody">
 
 <div id="wrapper">
 
@@ -31,9 +31,9 @@
 <div id="contentContainer">
 <div id="contentBody">
 
-[[piece/attention-information]]
-[[piece/smart-recent-docs-tab]]
-[[piece/emergency-info]]
+[[piece/page-title]]
+[[content]]
+[[piece/side-navi]]
 
 </div>
 <!-- end #contentContainer --></div>
@@ -41,6 +41,7 @@
 
 <!-- end #wrapper --></div>
 
+<!-- end #mainBody --></div>
 <!-- end #mainContainer --></div>
 <!-- end #main --></div>
 

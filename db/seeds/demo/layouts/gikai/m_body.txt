@@ -1,33 +1,48 @@
 <div id="container">
 
-<div id="header">
-<div id="headerContainer">
-<div id="headerBody">
+<header id="pageHeader">
+<div id="pageHeaderContainer">
+<div id="pageHeaderBody">
+
 [[piece/mobile-common-header]]
-<!-- end #headerBody --></div>
-<!-- end #headerContainer --></div>
-<!-- end #header --></div>
+
+</div>
+<!-- end #pageHeaderContainer --></div>
+<!-- end #pageHeader --></header>
+
+<div id="main">
+<div id="mainContainer">
+<div id="mainBody">
+
+<div id="wrapper">
 
 <div id="content">
 <div id="contentContainer">
 <div id="contentBody">
 
 [[piece/page-title]]
-
 [[content]]
 
-<!-- end #contentBody --></div>
+</div>
 <!-- end #contentContainer --></div>
 <!-- end #content --></div>
 
-<div id="footer">
-<div id="footerContainer">
-<div id="footerBody">
+<!-- end #wrapper --></div>
+
+<!-- end #mainBody --></div>
+<!-- end #mainContainer --></div>
+<!-- end #main --></div>
+
+<footer id="pageFooter">
+<div id="pageFooterContainer">
+<div id="pageFooterBody">
 
 [[piece/mobile-back-navi]]
+[[piece/mobile-common-footer]]
+[[piece/mobile-copyright]]
 
-<!-- end #footerBody --></div>
-<!-- end #footerContainer --></div>
-<!-- end #footer --></div>
+</div>
+<!-- end #pageFooterContainer --></div>
+<!-- end #pageFooter --></footer>
 
 </div>

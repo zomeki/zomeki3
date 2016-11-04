@@ -148,8 +148,8 @@ c_gnavi3   = create_cms_concept c_gnavi, 30, '観光・文化'
 c_gnavi4   = create_cms_concept c_gnavi, 40, '事業者の方へ'
 c_gnavi5   = create_cms_concept c_gnavi, 50, '市政情報'
 
-c_mayor    = create_cms_concept c_top,   30,'市長の部屋'
-c_gikai    = create_cms_concept c_top,   40,'市議会'
+c_mayor    = create_cms_concept c_site,   30,'市長の部屋'
+c_gikai    = create_cms_concept c_site,   40,'市議会'
 
 
 ## ---------------------------------------------------------
@@ -262,6 +262,20 @@ l_emergency = create_cms_layout c_top,  'emergency-top','大規模災害時表�
 puts "import cms_pieces..."
 
 def create_cms_piece(concept, content, model, name, title, view_title = nil)
+  body = read_data("pieces/#{name}/body")
+  xml_properties = read_data("pieces/#{name}/xml_properties")
+  if name == 'side-navi'
+    body_name = case title
+    when '市長の部屋メニュー'
+      'mayor'
+    when '議会サイドメニュー'
+      'gikai'
+    else
+      return
+    end
+    body = read_data("pieces/#{name}/#{body_name}/body")
+    xml_properties = read_data("pieces/#{name}/#{body_name}/xml_properties")
+  end
   Cms::Piece.create site_id: 1,
     concept_id: concept.id,
     content_id: content.blank? ? nil : content.id,
@@ -270,8 +284,8 @@ def create_cms_piece(concept, content, model, name, title, view_title = nil)
     name: name,
     title: title,
     view_title: view_title,
-    body: read_data("pieces/#{name}/body"),
-    xml_properties: read_data("pieces/#{name}/xml_properties")
+    body: body,
+    xml_properties: xml_properties
 end
 
 [
@@ -325,7 +339,7 @@ end
   [ c_gnavi4, nil, 'Cms::Free', 'global-navi', 'グローバルナビ' ],
   [ c_gnavi5, nil, 'Cms::Free', 'global-navi', 'グローバルナビ' ],
   [ c_site, nil,  'Cms::Free', 'search-navi', '検索ナビ' ],
-  [ c_gikai,nil,  'Cms::Free', 'side-navi', '議会サイドメニュー' ],
+  [ c_gikai, nil,  'Cms::Free', 'side-navi', '議会サイドメニュー' ],
   [ c_top,  nil,  'Cms::Free', 'emergency-mode', '大規模災害時モード表示' ],
   [ c_top,  nil,  'Cms::Free', 'emergency-info', '大規模災害時メニュー' ],
   [ c_top,  nil,  'Cms::Free', 'mobile-emergency-header', '【携帯】災害ヘッダー' ],
@@ -375,23 +389,23 @@ p_index = Cms::Node.find_by(:id => 2, :name => 'index.html')
          create_cms_node c_site, nil, nil, n_top, l_col1, 'Cms::Page', 'search.html', '検索結果',  'pages/search/body'
          create_cms_node c_site, nil, nil, n_top, l_col1, 'Cms::Sitemap', 'sitemap.html', 'サイトマップ',  'pages/sitemap/body'
 
-n_mayor  = create_cms_node c_site, nil, 230, n_top, l_mayor, 'Cms::Directory', 'mayor', 'ぞめき市長の部屋', nil
-         create_cms_node c_site, nil, 10, n_mayor, l_mayor, 'Cms::Page', 'index.html', '市長の部屋',  'mayor/index/body'
-         create_cms_node c_site, nil, 20, n_mayor, l_mayor, 'Cms::Page', 'hyomei.html', '所信表明',  'mayor/hyomei/body'
-         create_cms_node c_site, nil, 30, n_mayor, l_mayor, 'Cms::Page', 'shuninaisatsu.html', '就任のごあいさつ',  'mayor/shuninaisatsu/body'
-         create_cms_node c_site, nil, 50, n_mayor, l_mayor, 'Cms::Page', 'profile.html', 'プロフィール',  'mayor/profile/body'
-         create_cms_node c_site, nil, 60, n_mayor, l_mayor, 'Cms::Page', 'gallery.html', '市長フォトギャラリー',  'mayor/gallery/body'
-         create_cms_node c_site, nil, 70, n_mayor, l_mayor, 'Cms::Page', 'kosaihi.html', '市長交際費執行状況',  'mayor/kosaihi/body'
+n_mayor  = create_cms_node c_mayor, nil, 230, n_top, l_mayor, 'Cms::Directory', 'mayor', 'ぞめき市長の部屋', nil
+         create_cms_node c_mayor, nil, 10, n_mayor, l_mayor, 'Cms::Page', 'index.html', '市長の部屋',  'mayor/index/body'
+         create_cms_node c_mayor, nil, 20, n_mayor, l_mayor, 'Cms::Page', 'hyomei.html', '所信表明',  'mayor/hyomei/body'
+         create_cms_node c_mayor, nil, 30, n_mayor, l_mayor, 'Cms::Page', 'shuninaisatsu.html', '就任のごあいさつ',  'mayor/shuninaisatsu/body'
+         create_cms_node c_mayor, nil, 50, n_mayor, l_mayor, 'Cms::Page', 'profile.html', 'プロフィール',  'mayor/profile/body'
+         create_cms_node c_mayor, nil, 60, n_mayor, l_mayor, 'Cms::Page', 'gallery.html', '市長フォトギャラリー',  'mayor/gallery/body'
+         create_cms_node c_mayor, nil, 70, n_mayor, l_mayor, 'Cms::Page', 'kosaihi.html', '市長交際費執行状況',  'mayor/kosaihi/body'
 
-n_gikai  = create_cms_node c_site, nil, 240, n_top, l_gikai, 'Cms::Directory', 'gikai', 'ぞめき市議会', nil
-         create_cms_node c_site, nil, 10, n_gikai, l_gikai, 'Cms::Page', 'index.html', 'ぞめき市議会',  'gikai/index/body'
-         create_cms_node c_site, nil, 20, n_gikai, l_gikai, 'Cms::Page', 'meibo.html', '議員名簿',  'gikai/meibo/body'
-         create_cms_node c_site, nil, 30, n_gikai, l_gikai, 'Cms::Page', 'kosei.html', '市議会の構成',  'gikai/kosei/body'
-         create_cms_node c_site, nil, 40, n_gikai, l_gikai, 'Cms::Page', 'kekka.html', '定例会・臨時会の結果',  'gikai/kekka/body'
-         create_cms_node c_site, nil, 50, n_gikai, l_gikai, 'Cms::Page', 'dayori.html', 'ぞめき市議会だより',  'gikai/dayori/body'
-         create_cms_node c_site, nil, 60, n_gikai, l_gikai, 'Cms::Page', 'kensaku.html', '会議録検索',  'gikai/kensaku/body'
-         create_cms_node c_site, nil, 70, n_gikai, l_gikai, 'Cms::Page', 'seigan.html', '請願・陳情のご案内',  'gikai/seigan/body'
-         create_cms_node c_site, nil, 80, n_gikai, l_gikai, 'Cms::Page', 'botyo.html', '傍聴のご案内',  'gikai/botyo/body'
+n_gikai  = create_cms_node c_gikai, nil, 240, n_top, l_gikai, 'Cms::Directory', 'gikai', 'ぞめき市議会', nil
+         create_cms_node c_gikai, nil, 10, n_gikai, l_gikai, 'Cms::Page', 'index.html', 'ぞめき市議会',  'gikai/index/body'
+         create_cms_node c_gikai, nil, 20, n_gikai, l_gikai, 'Cms::Page', 'meibo.html', '議員名簿',  'gikai/meibo/body'
+         create_cms_node c_gikai, nil, 30, n_gikai, l_gikai, 'Cms::Page', 'kosei.html', '市議会の構成',  'gikai/kosei/body'
+         create_cms_node c_gikai, nil, 40, n_gikai, l_gikai, 'Cms::Page', 'kekka.html', '定例会・臨時会の結果',  'gikai/kekka/body'
+         create_cms_node c_gikai, nil, 50, n_gikai, l_gikai, 'Cms::Page', 'dayori.html', 'ぞめき市議会だより',  'gikai/dayori/body'
+         create_cms_node c_gikai, nil, 60, n_gikai, l_gikai, 'Cms::Page', 'kensaku.html', '会議録検索',  'gikai/kensaku/body'
+         create_cms_node c_gikai, nil, 70, n_gikai, l_gikai, 'Cms::Page', 'seigan.html', '請願・陳情のご案内',  'gikai/seigan/body'
+         create_cms_node c_gikai, nil, 80, n_gikai, l_gikai, 'Cms::Page', 'botyo.html', '傍聴のご案内',  'gikai/botyo/body'
 
 
 
@@ -441,7 +455,7 @@ def create_data_file(concept, node_id, name, title, mime_type)
     file: Sys::Lib::File::NoUploadedFile.new("#{Rails.root}/db/seeds/demo/data/files/#{name}", :mime_type => mime_type)
   file.publish
 end
-create_data_file c_site ,   nil, 'qr.gif', 'QRコード', 'image/gif'
+create_data_file c_site , nil, 'qr.gif', 'QRコード', 'image/gif'
 create_data_file c_mayor, nil, 'mayor1.gif', '市長', 'image/gif'
 create_data_file c_top, banner_node.id, 'bt-shicho.png', '市長の部屋', 'image/png'
 create_data_file c_top, banner_node.id, 'bt-shigikai.png', '市議会', 'image/png'

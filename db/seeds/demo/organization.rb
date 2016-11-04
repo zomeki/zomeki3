@@ -20,7 +20,7 @@ settings.value = category.id
 settings.save
 
 
-Sys::Group.all.each do |g|
+Sys::Group.where(Sys::Group.arel_table[:level_no].not_eq(1)).each do |g|
   Organization::Group.create content_id: organization.id, sort_no: g.sort_no,
     state: 'public', name: g.name_en, sys_group_code: g.code,
     sitemap_state: 'visible', docs_order: 'display_published_at DESC, published_at DESC'
