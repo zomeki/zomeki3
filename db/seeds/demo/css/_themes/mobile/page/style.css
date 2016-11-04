@@ -1,0 +1,24 @@
+@charset "UTF-8";
+@import "../base/style.css";
+@import "../base/layouts/col-1.css";
+@import "../piece/style.css";
+
+/* =========================================================
+   page
+========================================================= */
+/* category
+----------------------------------------------- */
+.contentGpCategoryCategoryTypes h2,
+.contentGnavMenuItems h2,
+.contentGnavMenuItem h2 {
+  font-size: medium;
+}
+
+/* doc
+----------------------------------------------- */
+.date {
+  font-size: small;
+}
+.back {
+  text-align: center;
+}

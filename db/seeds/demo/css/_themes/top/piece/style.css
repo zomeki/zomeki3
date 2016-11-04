@@ -1,0 +1,1053 @@
+@charset "UTF-8";
+
+/* =========================================================
+   Pieces for city
+========================================================= */
+
+/* common menu style
+----------------------------------------------- */
+#content .piece {
+  margin-bottom: 20px;
+}
+#menu .piece, #links .piece {
+  margin-bottom: 15px;
+}
+#menu .pieceHeader, #links .pieceHeader {
+  border-radius: 5px 5px 0 0;
+  background: -webkit-linear-gradient(top,  #008746 0%,#00733e 100%);
+  background: linear-gradient(to bottom,  #008746 0%,#00733e 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#008746', endColorstr='#00733e',GradientType=0 );
+  color: #fff;
+}
+#menu .pieceHeader h2, #links .pieceHeader h2 {
+  padding: 6px 2px 5px 18px;
+  background: url("../images/ic-tl.gif") no-repeat left center;
+  font-size: 110%;
+  color: #fff;
+}
+#menu .pieceBody ul, #links .pieceBody ul {
+  padding: 10px;
+  border: 1px solid #aaa;
+}
+#menu .pieceBody ul ul, #links .pieceBody ul ul {
+  padding: 0;
+  border: none;
+}
+#menu .pieceBody ul li, #links .pieceBody ul li {
+  margin-bottom: 3px;
+  padding-left: 12px;
+  background: url("../../base/images/ic-list01.gif") no-repeat left 5px;
+}
+#menu .pieceBody li:last-child, #links .pieceBody li:last-child {
+  margin-bottom: 0;
+}
+
+/* common header
+----------------------------------------------- */
+#commonHeader {
+  width: 100%;
+  border-top: 3px solid #008746;
+  background: -webkit-linear-gradient(top,  #d6f4db 0%,#ffffff 100%);
+  background: linear-gradient(to bottom,  #d6f4db 0%,#ffffff 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d6f4db', endColorstr='#ffffff',GradientType=0 );
+}
+#commonHeader .pieceContainer {
+  border-top: 2px solid #fff;
+}
+#commonHeader .pieceBody {
+  width: 1000px;
+  min-height: 81px;
+  margin: 0 auto;
+  padding: 0;
+}
+#commonHeader h1 {
+  float: left;
+  width: 500px;
+  margin: 15px 0;
+}
+#commonHeader h1 a {
+  font-size: 200%;
+  color: #000;
+  text-decoration: none;
+}
+#commonHeader h1 a:hover {
+  text-decoration: none;
+}
+#commonHeader h1 span {
+  color: #333333;
+  font-size: 45%;
+  font-weight: normal;
+  padding-left: 10px;
+}
+#commonHeader .sample {
+  padding-top:5px;
+  font-size: 80%;
+}
+#commonHeader .menu {
+  float: right;
+  margin: 0;
+  padding-top: 40px;
+  padding-bottom: 4px;
+  font-size: 90%;
+  text-align: right;
+}
+#commonHeader .menu ul {
+  float: left;
+  margin: 5px 10px 0 0;
+}
+#commonHeader .menu li {
+  float: left;
+  margin-left: 10px;
+}
+#commonHeader .menu li.riyo a, #commonHeader .menu li.sitemap a {
+  padding: 1px 0 1px 8px;
+  background: url("../../base/images/ic-list01.gif") no-repeat left 0.5em;
+}
+#commonHeader .menu .language {
+  float: right;
+}
+#commonHeader .menu .language a {
+  display: block;
+  float: left;
+  margin-left: 5px;
+  padding: 4px 8px 3px;
+  border-radius: 3px;
+  background-color: #c1d6d9;
+  color: #000;
+}
+
+/* global navi
+----------------------------------------------- */
+#globalNavi {
+  clear: both;
+  margin-bottom: 10px;
+}
+#globalNavi .pieceBody {
+  padding: 2px 0;
+  background-color: #008746;
+}
+#globalNavi .pieceBody ul {
+  width: 1000px;
+  margin: 0 auto;
+  border-left: 1px solid #00552a;
+}
+#globalNavi .pieceBody li {
+  float: left;
+  width: 20%;
+}
+#globalNavi .pieceBody li a {
+  display: block;
+  padding: 10px 0;
+  border-left: 1px solid #008d4b;
+  border-right: 1px solid #00552a;
+  color: #fff;
+  font-size: 115%;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+}
+#globalNavi .pieceBody li a:hover,
+#globalNavi .pieceBody li a.cur {
+  background-color: #fff;
+  color: #008746;
+}
+
+/* search-navi box
+----------------------------------------------- */
+#searchNavi {
+  width: 1000px;
+  margin: 15px auto;
+  background-color: #b4d459;
+}
+#page-index #searchNavi {
+  margin: 20px auto;
+}
+#searchNavi .pieceContainer {
+  width: 980px;
+  margin: 0 auto;
+}
+#___gcse_0 {
+  float: left;
+  padding-top: 10px;
+}
+table.gsc-search-box {
+  width: 197px !important;
+  max-width: 197px !important;
+}
+.gsc-search-box-tools .gsc-search-box .gsc-input {
+  width: 122px !important;
+}
+.gsc-search-button .gsc-search-button {
+  width: 12px !important;
+  padding: 6px 10px !important;
+}
+
+/* search navi menu
+----------------------------------------------- */
+#searchNavi ul {
+  float: right;
+  margin-left: 18px;
+  padding: 10px 0;
+  border-left: 1px solid #fff;
+}
+#searchNavi ul li:first-child {
+  margin-left: 10px;
+}
+#searchNavi ul li {
+  float: left;
+  width: 182px;
+  margin: 0 0 0 7px;
+  border-radius: 3px;
+}
+#searchNavi ul li a {
+  display: block;
+  padding: 4px 0;
+  background-color: #fff;
+  color: #000;
+  text-align: center;
+}
+
+/* footer-navi
+----------------------------------------------- */
+#footerNavi {
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+}
+#footerNavi .pieceContainer {
+  width: 1000px;
+  margin: 0 auto;
+}
+#footerNavi .pieceBody {
+  padding: 5px 10px;
+}
+#footerNavi .pieceBody li {
+  display: inline;
+  padding: 0 10px 0 12px;
+  background: url("../../base/images/ic-list03.gif") no-repeat left center;
+}
+
+/* common-footer
+----------------------------------------------- */
+#commonFooter,
+#copyright {
+  background-color: #f5f5f5;
+}
+#commonFooter .pieceContainer,
+#copyright .pieceContainer {
+  width: 1000px;
+  margin: 0 auto;
+}
+#commonFooter .pieceBody {
+  padding: 20px 0 10px;
+}
+#commonFooter .pieceBody address {
+  float: left;
+  width: 400px;
+}
+#commonFooter .pieceBody .qr-code {
+  float: right;
+  width: 280px;
+  padding: 5px 15px;
+  background-color: #fff;
+}
+#commonFooter .pieceBody .qr-code .img {
+  float: right;
+}
+#commonFooter .pieceBody .qr-code .text {
+  padding: 5px 0;
+  font-size: 90%;
+  overflow: hidden;
+}
+#commonFooter .pieceBody .qr-code .text span {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 120%;
+  font-weight: bold;
+}
+#copyright .pieceBody {
+  padding: 0 0 5px 0;
+  text-align: center;
+}
+
+/* page-title
+----------------------------------------------- */
+#pageTitle,
+#contentsTitle {
+  width: 100%;
+}
+*html #pageTitle,
+*html #contentsTitle {
+  height: 0;
+}
+#pageTitle .pieceContainer,
+#contentsTitle .pieceContainer {
+  margin: 0;
+  padding: 0;
+  border: 1px solid #aaa;
+}
+#pageTitle .pieceBody,
+#contentsTitle .pieceBody {
+  padding-bottom: 1px;
+  background: -webkit-linear-gradient(top,  #ffffff 0%,#ebebeb 100%);
+  background: linear-gradient(to bottom,  #ffffff 0%,#ebebeb 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ebebeb',GradientType=0 );
+}
+#pageTitle .pieceBody h1,
+#contentsTitle .pieceBody p {
+  padding: 12px 10px 8px 30px;
+  background: url("../images/ic-pagetitle.gif") no-repeat left center;
+  color: #333;
+  font-size: 180%;
+  font-weight: bold;
+}
+
+/* top key-visual
+----------------------------------------------- */
+#keyvisual, #special {
+  width: 1000px;
+  margin: 0 auto;
+  overflow-y: hidden;
+}
+#keyvisual li a {
+  cursor: default;
+}
+#keyvisual li a img:hover {
+  opacity: 1;
+}
+#special a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* recently
+----------------------------------------------- */
+#recently .pieceBody li.fb {
+  padding: 1px 0 1px 26px;
+  background: url("../images/ic-facebook.gif") left 0.1em no-repeat;
+}
+#recently .pieceBody li.tw {
+  padding: 1px 0 1px 26px;
+  background: url("../images/ic-twitter.gif") left 0.1em no-repeat;
+}
+
+/* bnContets
+----------------------------------------------- */
+#bnContets .pieceBody ul {
+  padding: 0;
+  border: none;
+}
+#bnContets .pieceBody ul li {
+  margin-bottom: 5px;
+  padding: 0;
+  background-image: none;
+}
+
+/* population
+----------------------------------------------- */
+#population .pieceBody {
+  padding: 10px;
+  border: 1px solid #aaa;
+}
+#population p.more {
+  margin-top:5px;
+  padding: 4px 0;
+  background-color:  #e6e6e6;
+  color: #000;
+  text-align: center;
+}
+#population table {
+  width: 100%;
+  margin: 0 auto;
+}
+#population table th, #population table td {
+  padding: 3px 0 0 5px;
+  border-bottom: 1px solid #aaa;
+}
+#population table tr:last-child th, #population table tr:last-child td {
+  border-bottom: none;
+}
+#population table th {
+  font-weight: bold;
+  text-align: left;
+}
+#population table td {
+  text-align: right;
+}
+
+/* ranking-list
+----------------------------------------------- */
+#rankingList .pieceBody ul li {
+  padding: 0;
+  background-image: none;
+}
+#rankingList .pieceBody ul li .rank {
+  padding-right: 5px;
+}
+
+/* kinkyu-list
+----------------------------------------------- */
+#kinkyuList .pieceHeader {
+  border-bottom: none;
+  background-color: #fcb3a2 !important;
+  background-image: none !important;
+  filer: none;
+}
+#kinkyuList .pieceHeader h2 {
+  padding: 7px 10px 5px 18px;
+  background-image: none !important;
+  color: #000;
+}
+#kinkyuList .pieceBody {
+  background-color: #fff5f3;
+}
+#kinkyuList .pieceBody ul li {
+  margin-bottom: 3px;
+  padding-left: 12px;
+  background-image: url("../../base/images/ic-list07.gif") !important;
+}
+
+/* top main
+----------------------------------------------- */
+/* lifeevent,guide */
+#lifeEvent .pieceHeader, #guide .pieceHeader {
+  margin-top: 2px;
+  margin-bottom: 15px;
+  border: 1px solid #aaa;
+  border-radius: 5px 5px 0 0;
+  background: #fff url("../images/bg-topcontents-repeat.gif") repeat-x left top;
+}
+#lifeEvent .pieceHeader h2, #guide .pieceHeader h2 {
+  padding: 8px 5px 8px 15px;
+}
+#lifeEvent .pieceBody ul, #guide .pieceBody ul {
+  width: 100%;
+  text-align: center;
+}
+#lifeEvent .pieceBody li {
+  float: left;
+  width: 108px;
+  margin: 0 10px 10px 0;
+}
+#guide .pieceBody li {
+  float: left;
+  width: 137px;
+  margin: 0 10px 10px 0;
+}
+#guide .pieceBody ul li a {
+  display: block;
+  padding: 10px 0 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #e4f8e8;
+  color: #000;
+  font-weight: bold;
+  text-decoration: none;
+}
+#lifeEvent .pieceBody li:nth-child(5n), #guide .pieceBody li:nth-child(4n) {
+  margin-right: 0;
+}
+
+/* top recent-docs-tab
+----------------------------------------------- */
+#recentDocsTab .pieceBody .tabs:after {
+  content: "";
+  clear: both;
+  display: block;
+}
+#recentDocsTab .pieceBody .tabs li {
+  float: left;
+  width: 20%;
+  margin: 0 5px 0 0;
+}
+#recentDocsTab .pieceBody .tabs a {
+  display: block;
+  padding: 8px 0;
+  border: 1px solid #aaa;
+  border-radius: 5px 5px 0 0;
+  border-bottom: 0;
+  background: url("../images/bg-tab-off.gif") repeat-x left top;
+  color: #000;
+  font-size: 110%;
+  text-align: center;
+  text-decoration: none;
+  vertical-align: bottom;
+}
+#recentDocsTab .pieceBody .tabs li.kanko_bunka {
+  width: 95px;
+}
+#recentDocsTab .pieceBody .tabs li:last-child {
+  width: 116px;
+  margin: 0;
+}
+#recentDocsTab .pieceBody .tabs li.current a,
+#recentDocsTab .pieceBody .tabs li a:hover {
+  background-image: url("../images/bg-tab-on.gif");
+}
+#recentDocsTab .pieceBody .wrapper {
+  padding: 15px;
+  border: 1px solid #aaa;
+  border-top: 1px solid #ccc;
+}
+#recentDocsTab .pieceBody .wrapper .content ul {
+  margin-bottom: 15px;
+}
+#recentDocsTab .pieceBody .wrapper .content li {
+  margin-bottom: 5px;
+  /*padding-left: 12px;*/
+  padding-left: 0;
+  background-image: url("../../base/images/ic-list02.gif") no-repeat left 5px;
+}
+#recentDocsTab .pieceBody .wrapper .content li .category {
+  display: inline-block;
+  min-width: 6em;
+  margin-right: 0.5em;
+}
+#recentDocsTab .pieceBody .wrapper .content li .category a {
+  display: block;
+  padding: 0 6px;
+  background-color: #e8e8e8;
+  color: #000;
+  text-align: center;
+  vertical-align: top;
+  text-decoration: none;
+}
+#recentDocsTab .pieceBody .wrapper .content li .category .kubun-tetsuzuki a {
+  background-color: #b4d459;
+}
+#recentDocsTab .pieceBody .wrapper .content li .category .kubun-chumoku a {
+  background-color: #fcdbbb;
+}
+#recentDocsTab .pieceBody .wrapper .content li .category a:hover,
+#recentDocsTab .pieceBody .wrapper .content li .category a:focus {
+  text-decoration: underline;
+}
+#recentDocsTab .pieceBody .wrapper .links {
+  position: relative;
+  width: 100%;
+}
+#recentDocsTab .pieceBody .wrapper .links .feed {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* bnAdvertisementSide
+----------------------------------------------- */
+#bnAdvertisementSide .pieceBody {
+  padding: 10px;
+  background-color: #f5f5f5;
+  text-align: center;
+}
+#bnAdvertisementSide .pieceBody ul {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background-image: none;
+}
+#bnAdvertisementSide .pieceBody ul li {
+  margin-bottom: 5px;
+  padding: 0;
+  background: none;
+}
+#bnAdvertisementSide .pieceBody .lower_text {
+  margin-top: 10px;
+}
+
+/* bnAdvertisement
+----------------------------------------------- */
+#bnAdvertisement {
+  width: 1000px;
+  margin: 0 auto 20px;
+}
+#bnAdvertisement .pieceHeader h2 {
+  padding: 7px 0 4px 15px;
+  border-radius: 4px 4px 0 0;
+  background-color: #ccc;
+}
+#bnAdvertisement .pieceBody {
+  padding: 10px 30px;
+  border: 2px solid #ccc;
+  border-top: 0;
+  border-radius: 0 0 4px 4px;
+}
+#bnAdvertisement .pieceBody ul {
+  letter-spacing: -.40em;
+}
+#bnAdvertisement .pieceBody ul li {
+  display: inline-block;
+  /display: inline;
+  zoom: 1;
+  margin: 0 19.2px 10px 0;
+  letter-spacing: normal;
+}
+#bnAdvertisement .pieceBody ul li:nth-child(6n) {
+  margin-right: 0;
+}
+#bnAdvertisement .pieceBody .lower_text {
+  text-align: right;
+}
+
+/* feed-back
+----------------------------------------------- */
+#page-docs-index #feedBack,
+#page-faq-index #feedBack {
+  display: none;
+}
+#feedBack {
+  margin-bottom: 20px;
+}
+#feedBack .pieceHeader h2 {
+  padding: 7px 10px 4px 15px;
+  border-radius: 4px 4px 0 0;
+  background-color: #aaa;
+}
+#feedBack .pieceBody {
+  padding: 15px;
+  border: 1px solid #aaa;
+  border-top: none;
+  /border-radius: 0 0 4px 4px;
+}
+/*#feedBack iframe {
+  height: 640px !important;
+  overflow: visible;
+}*/
+
+/* menu piece list
+----------------------------------------------- */
+#categoryList .pieceBody,
+#lifeeventList .pieceBody {
+  border: 1px solid #aaa;
+}
+#categoryList section h3,
+#lifeeventList section h3,
+#categoryList ul li {
+  margin-bottom: 3px;
+  padding: 4px 2px 4px 20px!important;
+  border-bottom: 1px solid #ccc;
+  background-image: url("../../base/images/ic-list01.gif");
+  background-position: 10px 10px !important;
+  background-repeat: no-repeat;
+  font-size: 100%;
+  font-weight: normal;
+}
+#categoryList section:last-child h3,
+#lifeeventList section:last-child h3,
+#categoryList ul li:last-child {
+  border-bottom: none;
+}
+#categoryList section h3 a,
+#lifeeventList section h3 a,
+#categoryList ul li a {
+  display: block;
+}
+#categoryList .pieceBody ul {
+  padding: 0;
+  border: none;
+}
+
+/* tag list
+----------------------------------------------- */
+#tagList h2 {
+  padding: 5px 0;
+  border-bottom: 2px solid #008746;
+}
+#tagList .pieceBody {
+  padding: 10px;
+}
+#tagList .pieceBody ul li {
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+  margin: 0;
+  padding: 0;
+  background: none;
+}
+#tagList .pieceBody ul li:after {
+  content: "/";
+  margin: 0 5px 0 10px;
+}
+#tagList .pieceBody ul li:last-child:after {
+  display: none;
+}
+#tagList .pieceBody ul li a {
+  display: inline;
+}
+
+/* map category
+----------------------------------------------- */
+#mapCategory .level1 li.shisetsu {
+  padding: 0;
+  background-image: none;
+}
+#mapCategory .level1 li.shisetsu > a {
+  display: none;
+}
+#mapCategory .pieceBody ul {
+  padding: 0;
+}
+#mapCategory .pieceBody ul li {
+  margin-bottom: 3px;
+  border-bottom: 1px solid #ccc;
+  background-image: url("../../base/images/ic-list01.gif");
+  background-position: 10px 10px !important;
+  background-repeat: no-repeat;
+}
+#mapCategory .pieceBody ul li:last-child {
+  border-bottom: none;
+}
+#mapCategory .pieceBody ul li a {
+  display: block;
+  padding: 4px 2px 4px 12px !important;
+}
+
+/* soshiki menu
+----------------------------------------------- */
+#soshikiIntroduce, #soshikiInfo1, #soshikiInfo2 {
+  margin-bottom: 20px;
+}
+#soshikiIntroduce .pieceHeader h2,
+#soshikiInfo1 .pieceHeader h2, #soshikiInfo2 .pieceHeader h2,
+#soshikiAddress .pieceHeader h2 {
+  padding: 7px 0 4px 15px;
+  border-radius: 4px 4px 0 0;
+  background-color: #ffd23c;
+}
+#soshikiIntroduce .pieceBody,
+#soshikiInfo1 .pieceBody, #soshikiInfo2 .pieceBody,
+#soshikiAddress .pieceBody {
+  padding: 15px;
+  border: 2px solid #ffd23c;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+}
+#soshikiIntroduce .pieceBody ul,
+#soshikiInfo1 .pieceBody ul, #soshikiInfo2 .pieceBody ul,
+#soshikiAddress .pieceBody ul {
+  margin-left: 15px;
+  list-style-type: disc;
+}
+
+/* 隍・尅縺ェ讌ュ蜍吝・螳ケ */
+#soshikiInfo1 .gyoumunaiyou .col {
+  margin-bottom: 15px;
+}
+#soshikiInfo1 .gyoumunaiyou h3 {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding: 7px 0 4px 15px;
+  border-radius: 4px;
+  background-color: #ffd23c;
+}
+
+/* 豸磯亟譛ャ驛ィ */
+#soshikiInfo1 .syobohonbu .col {
+  margin-bottom: 15px;
+}
+#soshikiInfo1 .syobohonbu h3 {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding: 7px 0 4px 15px;
+  border-radius: 4px;
+  background-color: #ffd23c;
+}
+
+/* 謨呵ご蟋泌藤莨壹∫、セ莨壻ス楢ご隱イ */
+#soshikiInfo2 .kyoikuiinkai,
+#soshikiInfo1 .shakaitaiikuka {
+  letter-spacing: -.40em;
+}
+#soshikiInfo2 .kyoikuiinkai .col,
+#soshikiInfo1 .shakaitaiikuka .col {
+  display: inline-block;
+  width: 50%;
+  margin-bottom: 15px;
+  letter-spacing: normal;
+  vertical-align: top;
+}
+#soshikiInfo2 .kyoikuiinkai h3,
+#soshikiInfo1 .shakaitaiikuka h3 {
+  margin: 0 5px 5px;
+  padding: 7px 0 4px 15px;
+  border-radius: 4px;
+  background-color: #ffd23c;
+}
+#soshikiInfo2 .kyoikuiinkai ul,
+#soshikiInfo1 .shakaitaiikuka ul {
+  margin: 0 5px 0 30px;
+}
+
+/* calendar
+----------------------------------------------- */
+#calendar {
+  padding: 25px 0 0 0;
+  background: url("../images/bg-calendar.gif") no-repeat center top;
+}
+#calendar .pieceContainer {
+  padding-bottom: 0;
+  box-shadow: 0 3px 3px -2px rgba(0,0,0,0.3);
+}
+#calendar .pieceHeader {
+  background: #fff !important;
+}
+#calendar .pieceHeader h2 {
+  padding: 12px 5px 0 5px;
+  border-top: 4px solid #008746;
+  border-left: 1px solid #aaa;
+  border-right: 1px solid #aaa;
+  background-image: none;
+  color: #000;
+  text-align: center;
+}
+#calendar .pieceBody {
+  padding: 0 10px 10px 10px;
+  border-left: 1px solid #aaa;
+  border-right: 1px solid #aaa;
+  border-bottom: 1px solid #aaa;
+}
+#calendar .pieceBody h3 {
+  margin-bottom: 6px;
+  background-position: 75% 50%;
+  background-repeat: no-repeat;
+  font-weight: bold;
+  _font-size: 100%;
+  text-align: center;
+}
+#calendar .pieceBody h3.april {
+  background-image: url("../images/bg-april.gif");
+}
+#calendar .pieceBody h3.may {
+  background-image: url("../images/bg-may.gif");
+}
+#calendar .pieceBody h3.june {
+  background-image: url("../images/bg-june.gif");
+}
+#calendar .pieceBody h3.july {
+  background-image: url("../images/bg-july.gif");
+}
+#calendar .pieceBody h3.august {
+  background-image: url("../images/bg-august.gif");
+}
+#calendar .pieceBody h3.september {
+  background-image: url("../images/bg-september.gif");
+}
+#calendar .pieceBody h3.october {
+  background-image: url("../images/bg-october.gif");
+}
+#calendar .pieceBody h3.november {
+  background-image: url("../images/bg-november.gif");
+}
+#calendar .pieceBody h3.december {
+  background-image: url("../images/bg-december.gif");
+}
+#calendar .pieceBody h3.january {
+  background-image: url("../images/bg-january.gif");
+}
+#calendar .pieceBody h3.february {
+  background-image: url("../images/bg-february.gif");
+}
+#calendar .pieceBody h3.march {
+  background-image: url("../images/bg-march.gif");
+}
+#calendar .pieceBody table {
+  width: 100%;
+  border: 1px solid #bbb;
+  font-size: 90%;
+}
+#calendar .pieceBody th, #calendar .pieceBody td {
+  padding: 2px 0;
+  border: 1px solid #bbb;
+  text-align: center;
+}
+#calendar .pieceBody table a {
+  margin: 0;
+  padding: 0;
+  background-image: none;
+}
+#calendar .pieceBody .sat {
+  background-color: #dff6fe;
+  color: #3366ff;
+}
+#calendar .pieceBody .sun {
+  background-color: #ffe6f1;
+  color: #ee0000;
+}
+#calendar .pieceBody table .prevMonth,
+#calendar .pieceBody table .nextMonth {
+  color: #ccc;
+}
+#calendar .pieceBody .pagination {
+  margin-top: 10px;
+}
+#calendar .pieceBody .pagination a {
+  padding: 0;
+}
+
+/* event list
+----------------------------------------------- */
+#eventType {
+  margin-bottom: 10px;
+}
+#eventType .pieceBody {
+  border-bottom: 2px solid #ccc;
+}
+#eventType .pieceBody li {
+  float: left;
+  width: 25%;
+  margin-right: 10px;
+  text-align: center;
+}
+#eventType .pieceBody li a {
+  display: block;
+  padding: 10px 0;
+  border-radius: 6px 6px 0 0;
+  background-color: #ebebeb;
+  color: #000;
+  font-size: 110%;
+  font-weight: bold;
+  text-decoration: none;
+}
+#eventType .pieceBody li a.cur,
+#eventType .pieceBody li a:hover,
+#eventType .pieceBody li a:focus {
+  background-color: #008746;
+  color: #fff;
+  text-decoration: none;
+}
+
+/* today event
+----------------------------------------------- */
+#menu #todaysEvent .pieceBody ul,
+#links #todaysEvent .pieceBody ul {
+  border: none;
+}
+#menu #todaysEvent .pieceBody ul li,
+#links #todaysEvent .pieceBody ul li {
+  margin: 0;
+  padding: 3px 6px;
+  background-image: none;
+}
+#todaysEvent .pieceBody ul#simple_tabs {
+  letter-spacing: -.40em;
+}
+#todaysEvent .pieceBody ul#simple_tabs li {
+  display: inline-block;
+  margin-bottom: 0;
+  letter-spacing: normal;
+}
+#todaysEvent .pieceBody ul#simple_tabs li:first-child {
+  border-right: 0;
+}
+#todaysEvent .pieceBody ul li.current {
+  background: #aaa;
+  font-weight: bold;
+}
+#todaysEvent #simple_tab_panels > div {
+  min-height: 1em;
+  padding: 0;
+}
+#todaysEvent .pieceBody ul#simple_tabs {
+  padding: 10px 0 0;
+}
+#todaysEvent .pieceBody #simple_tab_panels ul {
+  padding: 5px 10px;
+}
+#todaysEvent .pieceBody #simple_tab_panels ul li {
+  padding-left: 12px;
+  background: url("../../base/images/ic-list01.gif") no-repeat left 8px;
+}
+
+/* smart-switch
+----------------------------------------------- */
+#smartSwitch .switch {
+  display: block;
+  padding: 10px;
+  background-color: #008746;
+}
+#smartSwitch .switch a {
+  display: block;
+  padding: 10px;
+  background-color: #fff;
+  color: #000;
+  font-size: 200%;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+}
+
+/* attentionInformation recentDocs
+----------------------------------------------- */
+#attentionInformation .pieceHeader,
+#attentionInformationGnav .pieceHeader,
+#recentDocs .pieceHeader,
+#recentDocsGnav .pieceHeader {
+  border: 1px solid #aaa;
+  border-bottom: none;
+  border-radius: 5px 5px 0 0;
+  background: url("../images/bg-tab-on.gif") repeat-x left top;
+}
+#attentionInformation .pieceHeader h2,
+#attentionInformationGnav .pieceHeader h2,
+#recentDocs .pieceHeader h2,
+#recentDocsGnav .pieceHeader h2 {
+  padding: 8px 5px 8px 15px;
+}
+#attentionInformation .pieceBody,
+#attentionInformationGnav .pieceBody,
+#recentDocs .pieceBody,
+#recentDocsGnav .pieceBody {
+  padding: 0 15px 15px 15px;
+  border: 1px solid #aaa;
+  border-top: none;
+}
+#attentionInformation .pieceBody li,
+#attentionInformationGnav .pieceBody li,
+#recentDocs .pieceBody li,
+#recentDocsGnav .pieceBody li {
+  margin-bottom: 3px;
+  padding-left: 12px;
+  background: url("../../base/images/ic-list02.gif") no-repeat left 5px;
+}
+#attentionInformation .pieceBody li:empty,
+#attentionInformationGnav .pieceBody li:empty,
+#recentDocs .pieceBody li:empty,
+#recentDocsGnav .pieceBody li:empty {
+  display: none;
+}
+
+/* =========================================================
+   gikai
+========================================================= */
+/* gikai header
+----------------------------------------------- */
+#commonHeaderGikai {
+  width: 1000px;
+  margin: 0 auto 20px;
+  background-color: #ffcccc;
+}
+
+#simple_tabs {
+  margin: 0;
+  padding: 5px 0;
+}
+
+#simple_tabs > li {
+  background-color: #ccc;
+  border: 1px solid #ccc;
+  border-bottom: none;
+  cursor: pointer;
+  display: inline;
+  margin: 0;
+  padding: 5px 10px;
+}
+#simple_tabs > li.current {
+  background-color: #fff;
+  padding-bottom: 6px;
+}
+
+#simple_tab_panels > div {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  display: none;
+  margin: 0;
+  padding: 10px;
+}

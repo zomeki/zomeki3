@@ -70,8 +70,8 @@ create key_visual, 'keyvisual/keyvisual1.jpg', 'image/jpeg', 'keyvisual1.jpg', '
 create key_visual, 'keyvisual/keyvisual2.jpg', 'image/jpeg', 'keyvisual2.jpg', '花の写真', 20, key_group, 'ぞめき市'
 create key_visual, 'keyvisual/keyvisual3.jpg', 'image/jpeg', 'keyvisual3.jpg', '緑の写真', 30, key_group, 'ぞめき市'
 
-create ad_banner, 'ad_banner/footer/bn-zomeki_onlin.gif', 'image/gif', 'bn-zomeki_onlin.gif', 'ZOMEKIオンライン', 10, footer, 'サイトブリッジ株式会社'
-create ad_banner, 'ad_banner/footer/bn-Joruri_onlin.gif', 'image/gif', 'bn-Joruri_onlin.gif', 'Joruriオンライン', 20, footer, 'サイトブリッジ株式会社'
+create ad_banner, 'ad_banner/footer/bn-zomeki_Online.gif', 'image/gif', 'bn-zomeki_Online.gif', 'ZOMEKIオンライン', 10, footer, 'サイトブリッジ株式会社'
+create ad_banner, 'ad_banner/footer/bn-Joruri_Online.gif', 'image/gif', 'bn-Joruri_Online.gif', 'Joruriオンライン', 20, footer, 'サイトブリッジ株式会社'
 create ad_banner, 'ad_banner/footer/bn-kokoku-footer.gif', 'image/gif','bn-kokoku-footer.gif', '広告バナー', 30, footer, 'ぞめき市'
 
 create ad_banner, 'ad_banner/side/bn-zomeki.gif', 'image/gif', 'bn-zomeki.gif', 'ZOMEKI', 10, side, 'サイトブリッジ株式会社'

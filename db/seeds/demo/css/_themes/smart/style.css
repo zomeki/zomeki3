@@ -1,0 +1,615 @@
+@charset "UTF-8";
+
+/* =========================================================
+   SmartPhone Contents
+========================================================= */
+
+/* base
+----------------------------------------------- */
+body {
+  -webkit-text-size-adjust: 100%;
+}
+a, a:hover, a:focus {
+  text-decoration: none;
+}
+
+/* =========================================================
+   google custom search
+========================================================= */
+#___gcse_0:before, #___gcse_0:after {
+  content: "";
+  display: table;
+}
+#___gcse_0:after {
+  clear: both;
+}
+#___gcse_0 {
+  float: none;
+  width: 100%;
+  margin: 0 0 10px;
+  zoom: 1;
+}
+#___gcse_0 .gsc-input-box {
+  width: auto !important;
+}
+
+/* contentGpArticleDocs
+----------------------------------------------- */
+.contentGpArticleDocs .docs h2.date {
+  margin-bottom: 10px;
+  padding: 7px 5px 5px 30px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background: #e4f8e8 url("./images/ic-list03.gif") no-repeat 15px center;
+}
+.contentGpArticleDocs .docs ul {
+  padding: 0 15px 15px;
+}
+.contentGpArticleDocs .docs ul li a {
+  display: inline-block;
+  padding: 5px 0 5px 12px;
+  background: url("./images/ic-list03.gif") no-repeat left 0.9em;
+}
+
+/* contentGpArticleDoc
+----------------------------------------------- */
+.contentGpArticleDoc .date {
+  margin-bottom: 1em;
+  text-align: right;
+}
+.contentGpArticleDoc .date p {
+  display: inline-block;
+  margin-left: 0.5em;
+}
+.contentGpArticleDoc .temp1 .thumb,
+.contentGpArticleDoc .temp2 .thumb,
+.contentGpArticleDoc .temp3 dl,
+.contentGpArticleDoc .temp4 dl {
+  float: none;
+  margin: 0 0 10px;
+}
+
+/* category
+----------------------------------------------- */
+.contentGpCategoryCategory {
+  margin-bottom: 10px;
+}
+.contentGpCategoryCategory section ul li a {
+  display: inline-block;
+  padding: 5px 0 5px 12px;
+  background: url("./images/ic-list03.gif") no-repeat left 0.9em;
+}
+
+/* 新着情報 */
+#attentionInformationGnav, #recentDocsGnav, #recentDocs {
+  margin: 0 0 20px;
+}
+#attentionInformationGnav .pieceHeader h2, #recentDocsGnav .pieceHeader h2, #recentDocs .pieceHeader h2,
+.contentGpCategory .docs-shinchaku .header h2 {
+  padding: 7px 0 4px 15px;
+  border-radius: 4px 4px 0 0;
+  background-color: #ffd23c;
+}
+#attentionInformationGnav .pieceBody, #recentDocsGnav .pieceBody, #recentDocs .pieceBody,
+.contentGpCategory .docs-shinchaku .shinchaku {
+  padding: 15px;
+  border: 2px solid #ffd23c;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+}
+.contentGpCategoryCategoryType > section {
+  margin-bottom: 10px;
+}
+
+/* カテゴリ一覧 */
+#articleCategoryGnav .level1,
+.contentGpCategory .docs-category section,
+.contentGpCategoryCategory > section,
+#articleCategory .pieceBody .level2 section,
+#articleCategory .pieceBody .level3 section {
+  margin: 0 0 10px;
+}
+#articleCategoryGnav .level1 h3,
+.contentGpCategoryCategoryType section h2,
+.contentGpCategory .docs-category section h2,
+#articleCategory .pieceBody .level2 section h3,
+#articleCategory .pieceBody .level3 section h3 {
+  padding: 7px 0 4px 15px;
+  border-radius: 4px 4px 0 0;
+  background-color: #ffd23c;
+}
+.contentGpCategoryCategory > section > h2 {
+  margin-bottom: 10px;
+  padding: 7px 5px 5px 30px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background: #e4f8e8 url("./images/ic-list03.gif") no-repeat 15px center;
+}
+.contentGpCategoryCategory > section > ul {
+  padding: 0 15px;
+}
+#articleCategoryGnav .level1 ul,
+.contentGpCategoryCategoryType section ul,
+.contentGpCategory .docs-category section ul,
+#articleCategory .pieceBody .level2 section ul,
+#articleCategory .pieceBody .level3 section ul {
+  padding: 15px;
+  border: 2px solid #ffd23c;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+}
+#articleCategory .pieceBody section ul {
+  padding: 0 15px;
+}
+.contentGpCategoryCategoryType section ul ul {
+  padding-top: 0;
+  border: none;
+}
+#articleCategory .pieceBody .docs > section ul {
+  margin-bottom: 20px;
+  padding: 15px;
+  border: 2px solid #ffd23c;
+  border-radius: 4px;
+}
+.contentGpCategoryCategory .classification li .publish_date,
+.contentGpCategoryCategory .classification li .group {
+  display: none;
+}
+.content li span:nth-child(2):before,
+.contentGpArticleDocs li span:nth-child(2):before,
+.contentGpCategory li span:nth-child(2):before {
+  content: "（";
+}
+.content li span:nth-child(2),
+.contentGpArticleDocs li span:nth-child(2),
+.contentGpCategory li span:nth-child(2) {
+  margin-right: 0.5em;
+}
+.content li span:nth-child(3):after,
+.contentGpArticleDocs li span:nth-child(3):after,
+.contentGpCategory li span:nth-child(3):after {
+  content: "）";
+}
+
+/* gnav
+----------------------------------------------- */
+.contentGnavMenuItems section:after,
+.contentGnavMenuItem section:after,
+.contentGpCategoryCategoryTypes section:after,
+.contentGpCategoryCategoryType section:after,
+.contentGnavMenuItem section ul:after,
+.contentGpCategoryCategoryTypes section > ul:after,
+.contentGpCategoryCategoryType section ul:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+.contentGnavMenuItems section,
+.contentGnavMenuItem section,
+.contentGpCategoryCategoryTypes section,
+.contentGpCategoryCategoryType section {
+  margin-bottom: 20px;
+}
+.contentGpCategoryCategoryType section {
+  margin-bottom: 0;
+}
+.contentGpCategoryCategoryType section > ul {
+  margin-bottom: 20px;
+}
+/* ナビindex, カテゴリindex */
+.contentGnavMenuItems section h2,
+.contentGpCategoryCategoryTypes section h2 {
+  margin-bottom: 3px;
+  padding-left: 12px;
+  background: url("./images/ic-list01.gif") no-repeat left 0.5em;
+}
+.publicCategory .docs-category section {
+  display: block;
+  width: auto;
+  padding: 0;
+}
+#articleCategoryGnav .level1 h3,
+.contentGnavMenuItem section h2,
+.contentGpCategoryCategoryTypes section h2,
+.contentGpCategoryCategoryTypes section > ul > li > a,
+.contentGpCategoryCategoryType section h2,
+.contentGpCategory .category-docs-nest section h2,
+.contentGpCategory .docs-oshirase h2,
+.contentGpArticleDocs .docs h2,
+.calendarHolidays h2.name {
+  margin-bottom: 0.5em;
+  padding: 7px 5px 5px 30px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background: #e4f8e8 url("./images/ic-list03.gif") no-repeat 15px center;
+}
+.contentGnavMenuItem h2 a,
+.contentGpCategoryCategoryTypes section h2 a,
+.contentGpCategoryCategoryTypes section > ul > li > a,
+.contentGpCategoryCategoryType section h2 a,
+.calendarHolidays h2.name a {
+  display: block;
+  color: #000;
+  font-weight: bold;
+  text-decoration: none;
+}
+#articleCategoryGnav .level1 ul,
+.contentGnavMenuItem section ul,
+.contentGpCategoryCategoryTypes section ul ul,
+.contentGpCategoryCategoryType section ul {
+  margin: 0 -0.25em;
+}
+.contentGnavMenuItem section ul li,
+.contentGpCategoryCategoryTypes section ul li li,
+.contentGpCategoryCategoryType section ul li {
+  display: inline-block;
+  width: auto;
+  max-width: 100%;
+  min-width: 283px;
+  margin: 0 0.25em 0.5em;
+  vertical-align: top;
+}
+.contentGnavMenuItem section ul li a,
+.contentGpCategoryCategoryTypes section ul li li a,
+.contentGpCategoryCategoryType section ul li a {
+  display: block;
+  padding: 5px 12px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #e4f8e8;
+  font-weight: bold;
+  text-align: center;
+}
+.contentGpCategoryCategoryTypes section ul li li:last-child {
+  margin-bottom: 15px;
+}
+.contentGpCategory .category-docs-nest section ul {
+  padding: 15px;
+  border-left: 2px solid #ffd23c;
+  border-right: 2px solid #ffd23c;
+}
+.contentGpCategoryCategoryType section ul ul {
+  padding-top: 0;
+  border: 0;
+}
+.contentGpCategory .category-docs-nest section .more {
+  padding: 0 15px 15px;
+  border: 2px solid #ffd23c;
+  border-top: 0;
+  border-radius: 0 0 4px 4px;
+}
+
+/* event list
+----------------------------------------------- */
+.calendarEvents {
+  margin-bottom: 20px;
+}/*
+#eventType {
+  margin-bottom: 10px;
+}
+#eventType .pieceBody {
+  border-bottom: 2px solid #ffd23c;
+}
+#eventType .pieceBody li {
+  float: left;
+  width: 25%;
+  margin-right: 10px;
+  text-align: center;
+}
+#eventType .pieceBody li a {
+  display: block;
+  padding: 10px 0;
+  background-color: #ffe99e;
+  border-radius: 3px 3px 0 0;
+  color: #000;
+  font-size: 110%;
+  font-weight: bold;
+}
+body[class^="dir-eventList"] #eventType .pieceBody li.type01 a,
+body[class^="dir-calendar"] #eventType .pieceBody li.type02 a,
+.dir-todaysEvent #eventType .pieceBody li.type03 a,
+#eventType .pieceBody li a:hover {
+  background-color: #ffd23c;
+}
+.calendarEvents + #calendar .pieceHeader h2 {
+  text-align: center;
+}*/
+/* カレンダー形式 */
+.calendarEvents h2 {
+  margin-bottom: 10px;
+  padding: 7px 0 4px 15px;
+  border-radius: 4px;
+  background-color: #ffd23c;
+}
+.upperPagination, .lowerPagination {
+  margin: 10px 0;
+}
+.calendarEvents table {
+  width: 100%;
+  margin: 0 0 20px;
+  border: 1px solid #b3b3b3;
+}
+.calendarEvents table th,
+.calendarEvents table td {
+  padding: 5px 15px;
+  border: 1px solid #b3b3b3;
+}
+.calendarCalendarEvents table th,
+.calendarCalendarEvents table td {
+  width: 14%;
+}
+.calendarEvents table th {
+  background: #ffd23c;
+  vertical-align: middle;
+}
+.calendarEvents table td {
+  vertical-align: top;
+}
+.calendarMonthlyEvents table td,
+.calendarTodayEvents table td {
+  vertical-align: middle;
+}
+.calendarEvents table .event p {
+  display: inline;
+}
+.calendarEvents table .event p.category {
+  margin-left: 5px;
+}
+.calendarEvents table .date .closeDate {
+  display: block;
+}
+.calendarEvents table .sun,
+.calendarEvents table .holiday {
+  color: #ee0000;
+}
+.calendarEvents table .sat {
+  color: #3366ff;
+}
+.calendarCalendarEvents table p.category span {
+  display: block;
+}
+
+/* 本日のイベント */
+.calendarTodayEvents h3 {
+  padding: 6px 12px 4px;
+  border: 1px solid #b3b3b3;
+  border-bottom: 0;
+  background: #ffe99e;
+}
+.calendarTodayEvents table td {
+  width: 30%;
+}
+
+/* content organization
+----------------------------------------------- */
+/*
+#page-soshiki-index #soshikiList {
+  display: block;
+}
+#page-soshiki-index .contentOrganizationGroups {
+  display: none;
+}
+#soshikiList {
+  display: none;
+}*/
+.contentOrganization section,
+#soshikiList section {
+  margin: 0 0 10px;
+}
+.contentOrganization section h2,
+#soshikiList section h2 {
+  margin-bottom: 10px;
+  padding: 7px 5px 5px 30px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background: #e4f8e8 url("./images/ic-list03.gif") no-repeat 15px center;
+}
+.contentOrganization section ul li a,
+#soshikiList section ul li a {
+  display: inline-block;
+  padding: 5px 0 5px 12px;
+  background: url("./images/ic-list03.gif") no-repeat left 0.9em;
+}
+.contentOrganizationGroupDepartment,
+.contentOrganizationGroupUnit {
+  margin: 0 0 10px;
+}
+.contentOrganizationGroupDepartment .articleHeader h2,
+.contentOrganizationGroupUnit .articleHeader h2 {
+  display: none;
+}
+.contentOrganizationGroupDepartment ul li a,
+.contentOrganizationGroupUnit ul li a {
+  display: inline-block;
+  padding: 5px 0 5px 12px;
+  background: url("./images/ic-list03.gif") no-repeat left 0.9em;
+}
+.contentOrganization section a {
+  display: block;
+}
+
+/* map contents
+----------------------------------------------- */
+/* マップ一覧 */
+.contentMapMarkers #map_canvas {
+  width: 100% !important;
+}
+.contentMapMarkers table {
+  width: 100%;
+  margin: 10px 0 20px;
+}
+.contentMapMarkers table th,
+.contentMapMarkers table td {
+  padding: 5px 15px;
+  border: 1px solid #b3b3b3;
+  vertical-align: middle;
+}
+.contentMapMarkers table th {
+  background: #f3f3f3;
+}
+.contentMapMarkers table .markerImage,
+.contentMapMarkers table .marker {
+  text-align: center;
+}
+.contentMapMarkers table .markerImage img {
+  max-width: 120px;
+  height: auto;
+}
+
+/* content tag
+----------------------------------------------- */
+.contentTagTag {
+  margin-bottom: 20px;
+}
+.contentTagTag h2 {
+  margin-bottom: 10px;
+  padding: 7px 5px 5px 30px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background: #e4f8e8 url("./images/ic-list03.gif") no-repeat 15px center;
+}
+.contentTagTag ul li a {
+  display: inline-block;
+  padding: 5px 0 5px 12px;
+  background: url("./images/ic-list03.gif") no-repeat left 0.9em;
+}
+
+/* calendarLocationHolidays
+----------------------------------------------- */
+.calendarHolidays:after, .calendarHolidays:before {
+  content: "";
+  display: table;
+}
+.calendarHolidays:after {
+  clear: both;
+}
+.calendarHolidays {
+  zoom: 1;
+}
+.calendarHolidays section {
+  margin: 0 0 20px;
+}
+.calendarHolidays table td {
+    vertical-align: top;
+    width: 14%;
+}
+.calendarHolidays table th {
+  background-color: #f3f3f3;
+}
+.calendarHolidays table th.sun, .calendarHolidays table td.sun, .calendarHolidays table td.holiday {
+  color: #ee0000;
+}
+.calendarHolidays table th.sat, .calendarHolidays table td.sat {
+  color: #3366ff;
+}
+.calendarHolidays table td.kyujitsu {
+    background-color: #ffc4d1;
+}
+.calendarHolidays table td.prevMonth, .calendarHolidays table td.nextMonth {
+  background-color: #ffffff;
+  color: #ffffff;
+}
+.calendarHolidays h3 {
+  margin-bottom: 15px;
+  padding: 0 0 0 5px;
+  border: 1px solid #999;
+  border-left: 3px solid #4d4d4d;
+  font-size: 130%;
+  font-weight: bold;
+}
+.calendarHolidays table {
+    border: 1px solid #b3b3b3;
+    margin: 10px 0 20px;
+    width: 100%;
+}
+.calendarHolidays th, .calendarHolidays td {
+    border: 1px solid #b3b3b3;
+    padding: 10px 5px;
+    vertical-align: middle;
+}
+.calendarHolidays th {
+    background-color: #f3f3f3;
+}
+.calendarHolidays table caption {
+    font-weight: bold;
+    text-align: left;
+}
+/* attributeList */
+.calendarHolidays .attributeList {
+  clear: both;
+}
+.calendarHolidays ul.attributeList li {
+  position: relative;
+  padding-left: 23px;
+  line-height: 2;
+}
+.calendarHolidays ul.attributeList li.kyujitsu:before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  display: block;
+  width: 18px;
+  height: 18px;
+  margin-top: -8px;
+  background-color: #ffc4d1;
+}
+/* businessHours */
+.calendarHolidays .businessHours {
+  margin-bottom: 30px;
+}
+.calendarHolidays .businessHours li {
+  margin-bottom: 10px;
+}
+.calendarHolidays .businessHours li .date {
+  padding: 0 15px;
+  background-color: #cccccc;
+}
+
+/* sitemap
+----------------------------------------------- */
+ul.sitemap:before, ul.sitemap:after {
+  content: "";
+  display: table;
+}
+ul.sitemap:after {
+  clear: both;
+}
+ul.sitemap {
+  *zoom: 1;
+  margin-bottom: 20px;
+}
+ul.level1 {
+  border-bottom: 1px dotted #888;
+}
+ul.sitemap li.level1 {
+  padding: 8px 0;
+  border-top: 1px dotted #aaa;
+}
+ul.sitemap li.level1 a {
+  padding-left: 10px;
+}
+ul.sitemap ul.level2 {
+  margin-top: 5px;
+  padding: 10px 0px 10px 50px;
+  border-top: 1px dotted #888;
+}
+ul.sitemap ul.level2 ul {
+  padding: 10px 0 10px 50px;
+}
+ul.sitemap li.level2 {
+  padding: 8px 0;
+  border-bottom: 1px dotted #888;
+}
+ul.sitemap li.level2 a {
+  margin-bottom: 3px;
+  padding: 5px 0 5px 12px;
+  background: url("./images/ic-list03.gif") no-repeat left 0.9em;
+}
+ul.sitemap li.inquiry {
+  margin: 0;
+  border-bottom: 0;
+}
+ul.sitemap ul.level2 ul {
+  padding: 10px 0 10px 50px;
+}

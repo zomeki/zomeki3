@@ -1,0 +1,90 @@
+
+/* =========================================================
+   piece
+========================================================= */
+/* space
+----------------------------------------------- */
+.piece {
+  margin-bottom: 0.5em;
+}
+.pieceBody {
+  padding: 0.3em;
+}
+
+/* header
+----------------------------------------------- */
+#commonHeader .pieceContainer {
+  margin-bottom: 0;
+  border-top: 5px solid #018232;
+  border-bottom: 2px solid #018232;
+  background-color: #edfccd;
+}
+#commonHeader .pieceBody {
+  padding: 0px;
+}
+#commonHeader .pieceBody h1 {
+  margin-bottom: 0.3em;
+  font-size: large;
+}
+#commonHeader .pieceBody .subtitle {
+  font-size: xx-small;
+}
+
+/* footer
+----------------------------------------------- */
+#address {
+  border-top: 2px solid #018232;
+  font-size: small;
+}
+#copyright {
+  padding: 0.3em;
+  background-color: #eeeeee;
+  text-align: center;
+  font-size: small;
+}
+#copyright.piece {
+  margin-bottom: 0;
+}
+#backNavi {
+  padding: 3px 3px 5px 3px;
+}
+
+/* common
+----------------------------------------------- */
+.pieceHeader {
+  margin-bottom: 5px;
+  background-color: #018232;
+  color: #fff;
+}
+.pieceHeader h2 {
+  padding: 0.3em;
+  font-size: medium;
+  font-weight: normal;
+}
+
+/* title
+----------------------------------------------- */
+#pageTitle .pieceContainer,
+#pageTitle .pieceBody {
+  margin-bottom: 0px;
+  padding: 0;
+}
+.latest {
+  padding: 0.2em 0;
+}
+
+/* recent-docs-more
+----------------------------------------------- */
+#recentDocsMore .pieceBody {
+  text-align: right;
+}
+.pickupTitle {
+  margin: 0.3em 0;
+}
+
+/* navi
+----------------------------------------------- */
+#navi {
+  border-top: 2px solid #018232;
+  border-bottom: 2px solid #018232;
+}

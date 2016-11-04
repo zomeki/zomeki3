@@ -1,0 +1,639 @@
+@charset "UTF-8";
+
+/* =========================================================
+   content
+========================================================= */
+
+/* content globalNavi, content category, content docs
+----------------------------------------------- */
+.contentGnavMenuItems section:after,
+.contentGnavMenuItem section:after,
+.contentGpCategoryCategoryTypes section:after,
+.contentGpCategoryCategoryType section:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+/*.contentGnavMenuItems section,*/
+.contentGnavMenuItem section,
+.contentGpCategoryCategoryTypes section {
+  margin-bottom: 20px;
+}
+.contentGpCategoryCategoryType section {
+  margin-bottom: 0;
+}
+.contentGpCategoryCategoryType section > ul {
+  margin-bottom: 20px;
+}
+/* ナビindex, カテゴリindex */
+/*.contentGnavMenuItems section h2,*/
+.contentGpCategoryCategoryTypes section h2 {
+  margin-bottom: 3px;
+  padding-left: 12px;
+  background: url("../base/images/ic-list01.gif") no-repeat left 0.5em;
+}
+#articleCategoryGnav,
+.contentGpCategory .docs-category,
+.contentGpCategory .category-docs-nest {
+  letter-spacing: -0.4em;
+}
+#articleCategoryGnav .level1,
+.contentGpCategory .docs-category section,
+.contentGpCategory .category-docs-nest section,
+.contentGpCategoryCategory .classification {
+  display: inline-block;
+  width: 385px;
+  padding: 0 15px 15px 0;
+  vertical-align: top;
+  letter-spacing: normal;
+}
+.contentGpCategory .docs-oshirase {
+  margin-bottom: 30px;
+}
+#articleCategoryGnav .level1:nth-child(even),
+.contentGpCategory .docs-category section:nth-child(even),
+.contentGpCategory .category-docs-nest > section:nth-child(even),
+.contentGpCategoryCategory .classification:nth-child(even) {
+  padding-right: 0;
+}
+.publicCategory .docs-category section {
+  display: block;
+  width: auto;
+  padding: 0;
+}
+#articleCategoryGnav .level1 h3,
+.contentGnavMenuItems section h2,
+.contentGnavMenuItem section h2,
+.contentGpCategoryCategoryTypes section h2,
+.contentGpCategoryCategoryTypes section > ul > li > a,
+.contentGpCategoryCategoryType section h2,
+.contentGpCategory .docs-category section h2,
+.contentGpCategory .category-docs-nest section h2,
+.contentGpCategory .docs-oshirase h2,
+.contentGpCategoryCategory .classification h2,
+.contentGpArticleDocs .docs h2,
+.contentOrganization section h2,
+.calendarHolidays h2.name {
+  position: relative;
+  margin-bottom: 15px;
+  padding: 7px 5px 5px 30px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background: #e4f8e8 url("../base/images/ic-list03.gif") no-repeat 15px center;
+}
+.contentGnavMenuItems section h2 a,
+.contentGnavMenuItem h2 a,
+.contentGpCategoryCategoryTypes section h2 a,
+.contentGpCategoryCategoryTypes section > ul > li > a,
+.contentGpCategoryCategoryType section h2 a,
+.contentGpCategoryCategory .classification h2 a,
+.contentOrganization section h2 a,
+.calendarHolidays h2.name a {
+  display: block;
+  color: #000;
+  font-weight: bold;
+  text-decoration: none;
+}
+.contentOrganization .articleHeader {
+  display: none;
+}
+#articleCategoryGnav .level1 ul,
+.contentGnavMenuItem section ul,
+.contentGpCategoryCategoryTypes section ul ul,
+.contentGpCategoryCategoryType section ul,
+.contentGpCategory .docs-category section ul,
+.contentGpCategory .docs-oshirase ul,
+.contentGpCategoryCategory section ul,
+.contentGpArticleDocs .docs ul,
+.contentOrganization section ul {
+  padding-left: 15px;
+}
+.contentGnavMenuItem section ul:after,
+.contentGpCategoryCategoryTypes section > ul:after,
+.contentGpCategoryCategoryType section ul:after,
+.contentOrganization section ul:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+.contentGnavMenuItem section ul li,
+.contentGpCategoryCategoryTypes section > ul > li,
+.contentGpCategoryCategoryType section ul li,
+.contentOrganization section ul li {
+  float: left;
+  width: 230px;
+}
+.contentGpCategoryCategoryTypes section > ul > li {
+  width: 32%;
+  margin-left: 2%;
+}
+.contentGpCategoryCategoryTypes section > ul > li:nth-child(3n+1) {
+  margin-left: 0;
+}
+.contentGnavMenuItem section ul li,
+.contentGpCategoryCategoryTypes section ul li li,
+.contentGpCategoryCategoryType section ul li,
+.contentGpCategory .docs-category section ul li,
+.contentGpCategory .docs-kiji ul li,
+.contentGpCategory .docs-oshirase ul li,
+.contentGpCategoryCategory section ul:not(.feed) li,
+.contentGpArticleDocs .docs ul li,
+.contentOrganization section ul li,
+.contentOrganization ul li {
+  margin-bottom: 10px;
+  padding: 0 12px;
+  background: url("../base/images/ic-list03.gif") no-repeat left 0.5em;
+}
+.contentGpCategoryCategoryTypes section ul li li:last-child {
+  margin-bottom: 15px;
+}
+.contentOrganization section ul li:last-child {
+  margin-bottom: 20px;
+}
+.contentGpCategory .category-docs-nest section ul {
+  padding: 15px;
+  border-left: 2px solid #ffd23c;
+  border-right: 2px solid #ffd23c;
+}
+.contentGpCategoryCategoryType section ul ul {
+  padding-top: 0;
+  border: 0;
+}
+.contentGpCategory .category-docs-nest section .more {
+  padding: 0 15px 15px;
+  border: 2px solid #ffd23c;
+  border-top: 0;
+  border-radius: 0 0 4px 4px;
+}
+.contentGpCategoryCategory .classification li .publish_date,
+.contentGpCategoryCategory .classification li .group {
+  display: none;
+}
+.content li span:nth-child(2):before,
+.contentGpArticleDocs li span:nth-child(2):before,
+.contentGpCategory li span:nth-child(2):before {
+  content: "（";
+}
+.content li span:nth-child(2),
+.contentGpArticleDocs li span:nth-child(2),
+.contentGpCategory li span:nth-child(2) {
+  margin-right: 0.5em;
+}
+.content li span:nth-child(3):after,
+.contentGpArticleDocs li span:nth-child(3):after,
+.contentGpCategory li span:nth-child(3):after {
+  content: "）";
+}
+
+/* contentGpArticleDoc
+----------------------------------------------- */
+.contentGpArticleDoc .date {
+  margin-bottom: 1em;
+  text-align: right;
+}
+.contentGpArticleDoc .date p {
+  display: inline-block;
+}
+.contentGpArticleDoc .date p.publishedAt {
+  padding-right: 10px;
+}
+
+/* content tag
+----------------------------------------------- */
+.contentTagTag {
+  margin-bottom: 20px;
+}
+.contentTagTag h2 {
+  margin-bottom: 10px;
+  padding: 5px 0;
+  border-bottom: 2px solid #008746;
+}
+.contentTagTag ul {
+  padding-left: 15px;
+}
+.contentTagTag ul li {
+  margin-bottom: 10px;
+  padding: 0 12px;
+  background: url("../base/images/ic-list03.gif") no-repeat left 0.5em;
+}
+
+/* surveyForms
+----------------------------------------------- */
+.surveyForms .form h2, .surveyForm .form h2 {
+  margin-bottom: 10px;
+  padding: 8px 5px 5px 15px;
+  background-color: #008746;
+}
+.surveyForms .form h2 a {
+  text-decoration: underline;
+  color: #fff;
+}
+#new_survey_form_answer {
+  font-size: 90%;
+}
+#new_survey_form_answer .questions .question {
+  margin-bottom: 15px;
+}
+#new_survey_form_answer .questions .question .note {
+  color: #ff0000;
+}
+#new_survey_form_answer .question .question_content {
+  margin-bottom: 10px;
+  padding: 3px 10px;
+  border-left: 5px solid #aaa;
+  border-bottom: 1px solid #aaa;
+}
+#new_survey_form_answer .questions .question .question_content {
+  margin-bottom: 10px;
+  padding: 5px 5px 5px 15px;
+  background-color: #f1f1f1;
+  border: none;
+  font-weight: bold;
+}
+#new_survey_form_answer .reload, #new_survey_form_answer .talk {
+  display: inline-block;
+  padding: 5px 10px;
+  border: 1px solid #aaa;
+}
+#new_survey_form_answer .field {
+  margin-top: 15px;
+}
+#new_survey_form_answer .submit {
+  margin-top: 20px;
+  text-align: center;
+}
+/* error */
+#new_survey_form_answer #errorExplanation {
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #ee0000;
+}
+#new_survey_form_answer #errorExplanation h2 {
+  padding: 7px 0 4px 15px;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #ee0000;
+}
+#new_survey_form_answer #errorExplanation p {
+  margin-left: 15px;
+}
+#new_survey_form_answer #errorExplanation ul {
+  list-style-type: disc;
+  margin-left: 30px;
+}
+#new_survey_form_answer #errorExplanation li {
+  color: #ee0000;
+}
+#back-btn {
+  margin: 13px 0 20px;
+  text-align: center;
+}
+#back-btn a {
+  display: block;
+  position: relative;
+  width: 100px;
+  margin: 0 auto;
+  padding: 8px 0;
+  border: 1px solid #ccc;
+  background: -webkit-linear-gradient(top,  #ffffff 0%,#f2f2f2 100%);
+  background: linear-gradient(to bottom,  #ffffff 0%,#f2f2f2 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f2f2f2',GradientType=0 );
+  color: #000;
+  text-decoration: none;
+}
+
+/* content newsletter
+----------------------------------------------- */
+/* index */
+.contentNewsletterForms .summary {
+  padding: 0 15px;
+}
+.contentNewsletterForms h2 {
+  margin-bottom: 10px;
+  padding: 7px 0 4px 15px;
+  border-radius: 4px;
+  background-color: #ffd23c;
+}
+.contentNewsletterForms .form {
+  margin-bottom: 20px;
+}
+.contentNewsletterForms .column {
+  margin: 10px 0 30px 0;
+}
+.contentNewsletterForms .column .name {
+  margin-bottom: 10px;
+  padding: 5px 5px 5px 15px;
+  background-color: #ffe99e;
+  font-weight: bold;
+}
+.contentNewsletterForms .change {
+  margin-top: 30px;
+  padding: 0 0 5px 10px;
+  background: url("./images/ic-list01.png") no-repeat left 0.4em;
+}
+.contentNewsletterForms .radioButton input {
+  margin-top: 0;
+  vertical-align: baseline;
+}
+/* error */
+.contentNewsletterForms .errorExplanation {
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #ee0000;
+}
+.contentNewsletterForms .errorExplanation h2 {
+  padding: 7px 0 4px 15px;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #ee0000;
+}
+.contentNewsletterForms .errorExplanation p {
+  margin-left: 15px;
+}
+.contentNewsletterForms .errorExplanation ul {
+  list-style-type: disc;
+  margin-left: 30px;
+}
+.contentNewsletterForms .errorExplanation li {
+  color: #ee0000;
+}
+
+/* map contents, calendar contents
+----------------------------------------------- */
+/* マップ一覧 */
+.contentMapMarkers #map_canvas {
+  width: 100% !important;
+}
+.contentMapMarkers table,
+.calendarEvents table {
+  width: 100%;
+  margin: 10px 0 20px;
+}
+.contentMapMarkers table th,
+.contentMapMarkers table td,
+.calendarEvents table th,
+.calendarEvents table td {
+  padding: 5px 15px;
+  border: 1px solid #b3b3b3;
+  vertical-align: middle;
+}
+.contentMapMarkers table th,
+.calendarEvents table th {
+  background-color: #f3f3f3;
+}
+.contentMapMarkers table .markerCategories {
+  width: 20%;
+}
+.contentMapMarkers table .markerImage {
+  width: 17%;
+  padding: 5px;
+  text-align: center;
+}
+.contentMapMarkers table .markerImage img {
+  max-width: 100%;
+  height: auto;
+}
+.contentMapMarkers table .marker {
+  width: 13%;
+  text-align: center;
+}
+/* 周辺検索 */
+.contentMapNavigations {
+  margin: 0 0 20px;
+}
+
+/* calendar contents
+----------------------------------------------- */
+.calendarEvents h2 {
+  margin-bottom: 10px;
+  padding: 5px 0;
+  border-bottom: 2px solid #008746;
+}
+.upperPagination, .lowerPagination {
+  margin: 10px 0;
+}
+.calendarCalendarEvents table th,
+.calendarCalendarEvents table td {
+  width: 14%;
+}
+.calendarEvents table td {
+  vertical-align: top;
+}
+.calendarMonthlyEvents table td,
+.calendarTodayEvents table td {
+  vertical-align: middle;
+}
+.calendarMonthlyEvents table td.image,
+.calendarTodayEvents table td.image {
+  width: 20%;
+  padding: 5px;
+  text-align: center;
+}
+.calendarMonthlyEvents table td.image img,
+.calendarTodayEvents table td.image img {
+  max-width: 100%;
+}
+.calendarEvents table .event p {
+  display: inline;
+}
+.calendarEvents table .event p.category {
+  margin-left: 5px;
+}
+.calendarEvents table .date .closeDate {
+  display: block;
+}
+.calendarEvents table .sun,
+.calendarEvents table .holiday {
+  color: #ee0000;
+}
+.calendarEvents table .sat {
+  color: #3366ff;
+}
+.calendarCalendarEvents table p.category span {
+  display: block;
+}
+/* 本日のイベント */
+.calendarTodayEvents h3 {
+  padding: 6px 12px 4px;
+  background-color: #ffe99e;
+}
+.calendarTodayEvents table td {
+  width: 30%;
+}
+
+/* calendarLocationHolidays
+----------------------------------------------- */
+.calendarHolidays:after, .calendarHolidays:before {
+  content: "";
+  display: table;
+}
+.calendarHolidays:after {
+  clear: both;
+}
+.calendarHolidays {
+  zoom: 1;
+}
+.calendarHolidays section {
+  float: left;
+  width: 480px;
+  margin: 0 10px;
+}
+.calendarHolidays table td {
+    vertical-align: top;
+    width: 14%;
+}
+.calendarHolidays table th {
+  background-color: #f3f3f3;
+}
+.calendarHolidays table th.sun, .calendarHolidays table td.sun, .calendarHolidays table td.holiday {
+  color: #ee0000;
+}
+.calendarHolidays table th.sat, .calendarHolidays table td.sat {
+  color: #3366ff;
+}
+.calendarHolidays table td.kyujitsu {
+    background-color: #ffc4d1;
+}
+.calendarHolidays table td.prevMonth, .calendarHolidays table td.nextMonth {
+  background-color: #ffffff;
+  color: #ffffff;
+}
+.calendarHolidays h3 {
+  margin-bottom: 15px;
+  padding: 0 0 0 5px;
+  border: 1px solid #999;
+  border-left: 3px solid #4d4d4d;
+  font-size: 130%;
+  font-weight: bold;
+}
+.calendarHolidays table {
+    border: 1px solid #b3b3b3;
+    margin: 10px 0 20px;
+    width: 100%;
+}
+.calendarHolidays th, .calendarHolidays td {
+    border: 1px solid #b3b3b3;
+    padding: 10px 5px;
+    vertical-align: middle;
+}
+.calendarHolidays th {
+    background-color: #f3f3f3;
+}
+.calendarHolidays table caption {
+    font-weight: bold;
+    text-align: left;
+}
+/* attributeList */
+.calendarHolidays .attributeList {
+  clear: both;
+  margin-left: 10px;
+}
+.calendarHolidays ul.attributeList li {
+  position: relative;
+  padding-left: 23px;
+  line-height: 2;
+}
+.calendarHolidays ul.attributeList li.kyujitsu:before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  display: block;
+  width: 18px;
+  height: 18px;
+  margin-top: -8px;
+  background-color: #ffc4d1;
+}
+/* businessHours */
+.calendarHolidays .businessHours {
+  margin-left: 10px;
+  margin-bottom: 30px;
+}
+.calendarHolidays .businessHours li {
+  margin-bottom: 10px;
+}
+.calendarHolidays .businessHours li .date {
+  padding: 0 15px;
+  background-color: #cccccc;
+}
+
+/* sitemap
+----------------------------------------------- */
+ul.sitemap:before, ul.sitemap:after {
+  content: "";
+  display: table;
+}
+ul.sitemap:after {
+  clear: both;
+}
+ul.sitemap {
+  *zoom: 1;
+  margin-bottom: 20px;
+}
+ul.level1 {
+  border-bottom: 1px dotted #888;
+}
+ul.sitemap li.level1 {
+  padding: 8px 0;
+  border-top: 1px dotted #aaa;
+}
+ul.sitemap li.level1 a {
+  padding-left: 10px;
+}
+ul.sitemap ul.level2 {
+  margin-top: 5px;
+  padding: 10px 0px 10px 50px;
+  border-top: 1px dotted #888;
+}
+ul.sitemap ul.level2 ul {
+  padding: 10px 0 10px 50px;
+}
+ul.sitemap li.level2 {
+  padding: 8px 0;
+  border-bottom: 1px dotted #888;
+}
+ul.sitemap li.level2 a {
+  margin-bottom: 3px;
+  padding-left: 12px;
+  background: url("../base/images/ic-list01.gif") no-repeat left 0.4em;
+}
+ul.sitemap li.inquiry {
+  margin: 0;
+  border-bottom: 0;
+}
+ul.sitemap ul.level2 ul {
+  padding: 10px 0 10px 50px;
+}
+
+/* custom class define.
+----------------------------------------------- */
+h2.centerstyle01 {
+  font-size: 180%;
+  font-weight: bold;
+  text-align: center;
+}
+div.centerstyle01 {
+  padding: 10px;
+  color: #ff6600;
+  font-size: 150%;
+  text-align: center;
+}
+div.centerstyle02 {
+  padding: 6px 0 20px;
+  color: #009900;
+  font-size: 130%;
+  text-align: center;
+}
+div.divstyle01 {
+  margin: 20px 0 10px 10px;
+}
+h3.noborderstyle01 {
+  padding: 10px;
+  border: 0;
+  background-color: #6eb92b;
+  color: #fff;
+  font-size: 130%;
+}
+div.divstyle02 {
+  margin: 20px 0 20px 10px;
+}
