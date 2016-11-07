@@ -30,11 +30,6 @@ every '0-45/15 * * * *' do
   rake 'zomeki:sys:tasks:exec'
 end
 
-# トップページや中間ページを静的ファイルとして書き出します。
-every '3-48/15 * * * *' do
-  rake 'zomeki:cms:nodes:publish'
-end
-
 # 音声ファイルを静的ファイルとして書き出します。
 every '6-51/15 * * * *' do
   rake 'zomeki:cms:talks:exec'
