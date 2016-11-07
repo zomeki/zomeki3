@@ -4,6 +4,7 @@ class Feed::Feed < ApplicationRecord
   include Cms::Model::Auth::Content
 
   include StateText
+  include Cms::Base::PublishQueue::Content
 
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
   TARGET_OPTIONS = [['同一ウィンドウ', '_self'], ['別ウィンドウ', '_blank']]
@@ -51,7 +52,7 @@ class Feed::Feed < ApplicationRecord
     if options[:destroy] == true
       entries.destroy_all
     end
-    
+
     require "rexml/document"
     doc  = REXML::Document.new(xml)
     root = doc.root
@@ -60,16 +61,16 @@ class Feed::Feed < ApplicationRecord
     else
       return update_feed_atom(root)
     end
-    
+
   rescue => e
     dump "Error: #{e.class}"
     errors.add :base, "Error: #{e.class}"
     return false
   end
-  
+
   def update_feed_rss(root)
     latest = []
-    
+
     channel = root.elements['channel']
     self.feed_id        = nil
     self.feed_type      = root.name.downcase
@@ -78,14 +79,14 @@ class Feed::Feed < ApplicationRecord
     self.link_alternate = channel.elements['link'].text
     self.entry_count ||= 20
     self.save
-    
+
     ## entries
     begin
       path = root.elements["item"]  ? "item" : "channel/item"
       root.elements.each(path) do |e|
         entry_id      = e.elements['link'].text
         entry_updated = (e.elements['pubDate'] || e.elements['dc:date']).text
-        
+
         if entry = Feed::FeedEntry.where(feed_id: id, entry_id: entry_id).first
           arr = Date._parse(entry_updated, false).values_at(:year, :mon, :mday, :hour, :min, :sec, :zone, :wday)
 
@@ -98,7 +99,7 @@ class Feed::Feed < ApplicationRecord
         else
           entry = Feed::FeedEntry.new
         end
-        
+
         ## base
         entry.content_id       = self.content_id
         entry.feed_id          = self.id
@@ -112,7 +113,7 @@ class Feed::Feed < ApplicationRecord
           enclosure = e.elements['enclosure']
           entry.image_uri = enclosure.attribute('url').to_s if enclosure.attribute('type').to_s =~ /^image*/
         end
-        
+
         ## category xml
         if fixed_categories_xml.blank?
           cates = []
@@ -121,10 +122,10 @@ class Feed::Feed < ApplicationRecord
         else
           entry.categories_xml = fixed_categories_xml
         end
-        
+
         ## category
         set_entry_category(entry)
-        
+
         ## save
         latest << entry.id if entry.save
         break if latest.size >= self.entry_count
@@ -139,10 +140,10 @@ class Feed::Feed < ApplicationRecord
     end
     return errors.size == 0
   end
-  
+
   def update_feed_atom(root)
     latest = []
-    
+
     ## feed
     self.feed_id      = root.elements['id'].text
     self.feed_type    = "atom"
@@ -194,7 +195,7 @@ class Feed::Feed < ApplicationRecord
               entry.image_length = l.attribute('length').to_s
             end
           end
-          
+
         end
 
         ## category xml
@@ -205,17 +206,17 @@ class Feed::Feed < ApplicationRecord
         else
           entry.categories_xml = fixed_categories_xml
         end
-        
+
         ## category
         set_entry_category(entry)
-        
+
         ## author
         if author = e.elements['author']
           entry.author_name    = safe{author.elements['name'].text}
           entry.author_email   = safe{author.elements['email'].text}
           entry.author_uri     = safe{author.elements['uri'].text}
         end
-        
+
         ## save
         latest << entry.id if entry.save
       end
@@ -238,7 +239,7 @@ class Feed::Feed < ApplicationRecord
       labels << m[0].to_s.gsub(/ /, '_')
     end
     entry.categories = labels.join("\n")
-    
+
     entry.event_date = nil
     entry.categories_xml.to_s.scan(/<category [^>]*term=['"]event['"].*>/) do |m|
       next if m !~ /イベント\/\d{4}-\d{2}-\d{2}T/
@@ -255,5 +256,5 @@ class Feed::Feed < ApplicationRecord
     self.state       ||= STATE_OPTIONS.first.last if self.has_attribute?(:state)
     self.entry_count ||= 20 if self.has_attribute?(:entry_count)
   end
-  
+
 end
