@@ -35,6 +35,10 @@ centos() {
   crontab -l > $ROOT_CRON_TXT
   grep -s reload_servers.sh $ROOT_CRON_TXT || echo '0,30 * * * * /root/reload_servers.sh' >> $ROOT_CRON_TXT
   crontab $ROOT_CRON_TXT
+
+  cp /var/www/zomeki/config/samples/unicorn /etc/init.d/.
+  chmod a+x /etc/init.d/unicorn
+  chkconfig unicorn on
 }
 
 others() {
