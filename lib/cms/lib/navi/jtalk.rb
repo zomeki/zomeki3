@@ -13,6 +13,7 @@ class Cms::Lib::Navi::Jtalk
     talk_opts   = Zomeki.config.application['cms.talk_opts']
     talk_strlen = Zomeki.config.application['cms.talk_strlen'].to_i
     talk_thread_num = Zomeki.config.application['cms.talk_thread_num'].to_i
+    talk_bytelimit = 8 * 1024
 
     text    = nil
     options = {}
@@ -36,6 +37,8 @@ class Cms::Lib::Navi::Jtalk
 
     site_id = options[:site_id] rescue nil
 
+    #
+    text = text.byteslice(0,talk_bytelimit) if talk_bytelimit < text.bytesize
     text = self.class.make_text(text, site_id)
     return false if text.blank?
 
