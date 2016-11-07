@@ -4,6 +4,7 @@ class BizCalendar::Place < ApplicationRecord
   include Cms::Model::Auth::Content
 
   include StateText
+  include Cms::Base::PublishQueue::Content
 
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
   BUSINESS_HOURS_STATE_OPTIONS = [['表示する','visible'],['表示しない','hidden']]
@@ -19,12 +20,12 @@ class BizCalendar::Place < ApplicationRecord
 
   validates :state, :url, :title, presence: true
   validate :url_validity
-  
+
   after_initialize :set_defaults
 
   scope :public_state, -> { where(state: 'public') }
   scope :search_with_params, ->(params = {}) {
-    rel = all 
+    rel = all
     params.each do |n, v|
       next if v.to_s == ''
       case n
@@ -44,7 +45,7 @@ class BizCalendar::Place < ApplicationRecord
 
     where2 = hour[:repeat_type].not_eq('').and(hour[:repeat_type].not_eq(nil))
               .and(hour[:start_date].lteq(date))
-              
+
     end_type_rel = hour.grouping(hour[:end_type].eq(2).and(hour[:end_date].gteq(date)))
     end_type_rel = end_type_rel.or(hour[:end_type].eq(0))
     end_type_rel = end_type_rel.or(hour[:end_type].eq(1))
@@ -52,7 +53,7 @@ class BizCalendar::Place < ApplicationRecord
     where2 = where2.and(end_type_rel)
 
     _hours =  hours.public_state.where(hour.grouping(where1).or(hour.grouping(where2))).all
-    
+
     date_hours = []
     _hours.each do |h|
       date_hours << h if h.repeat_type.blank? || (!h.repeat_type.blank? && h.check(date))
