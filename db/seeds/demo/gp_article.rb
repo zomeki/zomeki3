@@ -23,10 +23,13 @@ categories = GpCategory::CategoryType.where(content_id: category.id).pluck(:id)
 kubun     = GpCategory::CategoryType.where(name: 'kubun').first
 chumoku   = GpCategory::Category.where(name: 'chumoku').first
 
-tag       = Cms::Content.where(model: 'Tag::Tag').first
-sns_share = Cms::Content.where(model: 'SnsShare::Account').first
-calendar  = Cms::Content.where(model: 'GpCalendar::Event').first
-approval  = Cms::Content.where(model: 'Approval::ApprovalFlow').first
+tag       = Tag::Content::Tag.first
+sns_share = SnsShare::Content::Account.first
+calendar  = GpCalendar::Content::Event.first
+approval  = Approval::Content::ApprovalFlow.first
+soshiki   = Organization::Content::Group.first
+map       = Map::Content::Marker.first
+template  = GpTemplate::Content::Template.first
 ## ---------------------------------------------------------
 ## cms/pieces
 recent     = create_cms_piece c_top, oshirase, 'GpArticle::RecentTab', 'recent-docs-tab', '新着タブ'
@@ -79,15 +82,16 @@ p_info.save
   {id: "list_style", value: "@title_link@@publish_date@@group@",
     extra_values: {wrapper_tag: "li"}},
   {id: "time_style", value: "%H時%M分"},
-  {id: "map_relation", value: "enabled"},
+  {id: "map_relation", value: "enabled",
+    extra_values: {map_content_id: map.id}},
   {id: "feed", value: "enabled"},
   {id: "blog_functions", value: "disabled"},
   {id: "broken_link_notification", value: "enabled"},
   {id: "tag_relation", value: "enabled",
     extra_values: {tag_content_tag_id: tag.id}},
-  {id: "organization_content_group_id", value: "15"},
-  {id: "gp_template_content_template_id", value: "",
-    extra_values: {template_ids: nil, default_template_id: 0}},
+  {id: "organization_content_group_id", value: soshiki.id},
+  {id: "gp_template_content_template_id", value: template.id,
+    extra_values: {template_ids: template.templates.pluck(:id), default_template_id: 0}},
   {id: "sns_share_relation", value: "enabled",
     extra_values: {sns_share_content_id: sns_share.id}},
   {id: "calendar_relation", value: "enabled",
@@ -127,12 +131,14 @@ end
   {id: "rel_docs_style", value: "@title_link@(@publish_date@ @group@)"},
   {id: "qrcode_settings", value: "disabled", extra_values: {state: 'hidden'}},
   {id: "broken_link_notification", value: "disabled"},
-  {id: "map_relation", value: "enabled"},
-  {id: "tag_relation", value: "enabled"},
+  {id: "map_relation", value: "disabled"},
+  {id: "tag_relation", value: "enabled",
+    extra_values: {tag_content_tag_id: tag.id}},
   {id: "approval_relation", value: "enabled",
     extra_values: {approval_content_id: approval.id}},
-  {id: "calendar_relation", value: "enabled"},
-  {id: "sns_share_relation", value: "enabled"},
+  {id: "calendar_relation", value: "disabled"},
+  {id: "sns_share_relation", value: "enabled",
+    extra_values: {sns_share_content_id: sns_share.id}},
   {id: "list_style", value: "@title_link@@publish_date@@group@",
     extra_values: {wrapper_tag: 'li'}},
 ].each do |conf|
