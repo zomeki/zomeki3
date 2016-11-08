@@ -38,7 +38,7 @@ class Cms::Lib::Navi::Jtalk
     site_id = options[:site_id] rescue nil
 
     #
-    text = text.byteslice(0,talk_bytelimit) if talk_bytelimit < text.bytesize
+    text = text.mb_chars.limit(talk_bytelimit).to_s if talk_bytelimit < text.bytesize
     text = self.class.make_text(text, site_id)
     return false if text.blank?
 
