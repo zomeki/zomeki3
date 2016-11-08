@@ -94,7 +94,7 @@ p_info.save
     extra_values: {calendar_content_id: calendar.id, event_sync_settings: 'disabled',
     event_sync_default_will_sync: 'disabled'}},
   {id: "approval_relation", value: "enabled",
-    extra_values: {approval_content_id: 19}},
+    extra_values: {approval_content_id: approval.id}},
   {id: "date_style", value: "%Y年%m月%d日"},
   {id: "display_dates", value: ['published_at', 'updated_at']},
   {id: "doc_list_style", value: "by_date"}
@@ -129,7 +129,8 @@ end
   {id: "broken_link_notification", value: "disabled"},
   {id: "map_relation", value: "enabled"},
   {id: "tag_relation", value: "enabled"},
-  {id: "approval_relation", value: "enabled"},
+  {id: "approval_relation", value: "enabled",
+    extra_values: {approval_content_id: approval.id}},
   {id: "calendar_relation", value: "enabled"},
   {id: "sns_share_relation", value: "enabled"},
   {id: "list_style", value: "@title_link@@publish_date@@group@",
