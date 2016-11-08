@@ -29,6 +29,6 @@ class Cms::Admin::Content::SettingsController < Cms::Controller::Admin::Base
     @item = model.config(@content, params[:id])
     @item.value = params[:item][:value]
     @item.extra_values = params[:item][:extra_values] if params[:item][:extra_values]
-    _update @item
+    _update @item, {notice: '更新処理に成功しました。<br />表示形式の変更を行った場合は、コンテンツの再構築を実行してください。'}
   end
 end

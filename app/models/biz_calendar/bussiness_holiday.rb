@@ -5,6 +5,7 @@ class BizCalendar::BussinessHoliday < ApplicationRecord
   include BizCalendar::Model::Base::Date
 
   include StateText
+  include BizCalendar::Place::PublishQueue
 
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
   REPEAT_OPTIONS = [['毎日', 'daily'], ['平日（月～金）', 'weekday'], ['土日祝日', 'saturdays'], ['祝日', 'holiday'],
@@ -20,7 +21,7 @@ class BizCalendar::BussinessHoliday < ApplicationRecord
   validate :dates_range
   validate :repeat_setting
   validate :ended_setting
-  
+
   after_initialize :set_defaults
 
   attr_accessor :repeat_num
@@ -274,7 +275,7 @@ class BizCalendar::BussinessHoliday < ApplicationRecord
 
     @all_repeat_dates = _dates
     @repeat_dates = _dates.select {|d| d >= sdate } if sdate
-    
+
     return sdate.blank? ? @all_repeat_dates : @repeat_dates
   end
 
@@ -314,7 +315,7 @@ class BizCalendar::BussinessHoliday < ApplicationRecord
 
   def enable_holiday?(sd, ed)
     return false unless self.state_public?
-    
+
     if repeat_type.blank?
       return false if holiday_start_date > ed
       return false if holiday_end_date < sd

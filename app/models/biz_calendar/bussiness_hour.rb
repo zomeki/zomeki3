@@ -5,6 +5,7 @@ class BizCalendar::BussinessHour < ApplicationRecord
   include BizCalendar::Model::Base::Date
 
   include StateText
+  include BizCalendar::Place::PublishQueue
 
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
   REPEAT_OPTIONS = [['毎日', 'daily'], ['平日（月～金）', 'weekday'], ['土日祝日', 'saturdays'], ['祝日', 'holiday'],
@@ -19,7 +20,7 @@ class BizCalendar::BussinessHour < ApplicationRecord
   validate :dates_range
   validate :repeat_setting
   validate :ended_setting
-  
+
   after_initialize :set_defaults
 
   scope :public_state, -> { where(state: 'public') }
@@ -202,7 +203,7 @@ class BizCalendar::BussinessHour < ApplicationRecord
   def repeat_type_text
     REPEAT_OPTIONS.detect{|o| o.last == self.repeat_type }.try(:first).to_s
   end
-  
+
   def repeat_criterion_text
     REPEAT_CRITERION_OPTIONS.detect{|o| o.last == self.repeat_criterion }.try(:first).to_s
   end
@@ -260,7 +261,7 @@ class BizCalendar::BussinessHour < ApplicationRecord
         end_text = " #{end_times}回" if end_type == 1
         end_text = " #{end_date.strftime('%Y年%m月%d日')}まで" if end_type == 2
       end
-      
+
       case repeat_type
       when 'weekday','saturdays','holiday'
         return "#{repeat_type_text}#{end_text}"
