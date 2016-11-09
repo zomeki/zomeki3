@@ -1,0 +1,71 @@
+<div id="container" class="emergency">
+
+<header id="pageHeader">
+<div id="pageHeaderContainer">
+<div id="pageHeaderBody">
+
+[[piece/pc-switch]]
+[[piece/accessibility-tool]]
+[[piece/common-header]]
+
+</div>
+<!-- end #pageHeaderContainer --></div>
+<!-- end #pageHeader --></header>
+
+<nav id="pageNav">
+<div id="pageNavContainer">
+<div id="pageNavBody">
+
+[[piece/global-navi]]
+[[piece/search-navi]]
+
+</div>
+<!-- end #pageNavContainer --></div>
+<!-- end #pageNav --></nav>
+
+<div id="main">
+<div id="mainContainer">
+
+[[piece/emergency-mode]]
+
+<div id="wrapper">
+
+<div id="content">
+<div id="contentContainer">
+<div id="contentBody">
+
+[[piece/attention-information]]
+[[piece/recent-docs-tab]]
+
+</div>
+<!-- end #contentContainer --></div>
+<!-- end #content --></div>
+
+<!-- end #wrapper --></div>
+
+<div id="links">
+<div id="linksContainer">
+<div id="linksBody">
+
+[[piece/emergency-info]]
+
+</div>
+<!-- end #linksContainer --></div>
+<!-- end #links --></div>
+
+<!-- end #mainContainer --></div>
+<!-- end #main --></div>
+
+<footer id="pageFooter">
+<div id="pageFooterContainer">
+<div id="pageFooterBody">
+
+[[piece/footer-navi]]
+[[piece/common-footer]]
+[[piece/copyright]]
+
+</div>
+<!-- end #pageFooterContainer --></div>
+<!-- end #pageFooter --></footer>
+
+</div>

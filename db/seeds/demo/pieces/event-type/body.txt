@@ -1,0 +1,11 @@
+<div id="eventType" class="piece">
+<div class="pieceContainer">
+<div class="pieceBody clearfix">
+<ul>
+<li class="type01"><a href="/event_list/">イベントリスト形式</a></li>
+<li class="type02"><a href="/calendar/">カレンダー形式</a></li>
+<li class="type03"><a href="/todays_event/">本日のイベント</a></li>
+</ul>
+</div>
+</div>
+</div>

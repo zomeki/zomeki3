@@ -1,0 +1,17 @@
+<div id="guide" class="piece clearfix">
+<div class="pieceContainer">
+<div class="pieceHeader"><h2>暮らしのガイド</h2></div>
+<div class="pieceBody">
+<ul>
+<li><a href="/categories/bunya/todokede/">届出・登録・証明</a></li>
+<li><a href="/categories/bunya/hoken/">保険・年金・介護</a></li>
+<li><a href="/categories/bunya/hukushi/">福祉</a></li>
+<li><a href="/categories/bunya/kenko/">健康・予防</a></li>
+<li><a href="/categories/bunya/zei/">税金</a></li>
+<li><a href="/categories/bunya/ikuji/">育児・教育</a></li>
+<li><a href="/categories/bunya/seikatsu/">住宅・インフラ</a></li>
+<li><a href="/categories/bunya/kankyo/">環境・衛生</a></li>
+</ul>
+</div>
+</div>
+</div>

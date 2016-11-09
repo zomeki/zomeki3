@@ -1,0 +1,12 @@
+<div id="footerNavi" class="piece">
+<div class="pieceContainer">
+<div class="pieceBody">
+<span class="list">・</span><a href="/mayor-docs/">市長の部屋</a><br />
+<span class="list">・</span><a href="/categories/bunya/shisei/aramashi/">[[text/site-name]]の概要</a><br />
+<span class="list">・</span><a href="/categories/bunya/city_shokai/madoguchi/">窓口案内</a><br />
+<span class="list">・</span><a href="/soshiki/">組織一覧</a><br />
+<span class="list">・</span><a href="/event_list/">イベントカレンダー</a><br />
+<span class="list">・</span><a href="/mailmagazine/">メールマガジン</a><hr />
+</div>
+</div>
+</div>

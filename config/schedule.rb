@@ -30,11 +30,6 @@ every '0-45/15 * * * *' do
   rake 'zomeki:sys:tasks:exec'
 end
 
-# トップページや中間ページを静的ファイルとして書き出します。
-every '3-48/15 * * * *' do
-  rake 'zomeki:cms:nodes:publish'
-end
-
 # 音声ファイルを静的ファイルとして書き出します。
 every '6-51/15 * * * *' do
   rake 'zomeki:cms:talks:exec'
@@ -63,6 +58,11 @@ end
 # 今日のイベントページを静的ファイルとして書き出します。
 every :day, at: '0:30 am' do
   rake 'zomeki:gp_calendar:publish_todays_events'
+end
+
+# 今月の業務カレンダーを静的ファイルとして書き出します。
+every :month, at: 'start of the month at 3:00 am' do
+  rake 'zomeki:biz_calendar:publish_this_month'
 end
 
 # アクセスランキングデータを取り込みます。

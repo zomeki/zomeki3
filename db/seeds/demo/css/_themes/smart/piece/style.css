@@ -1,0 +1,1271 @@
+@charset "UTF-8";
+
+/* =========================================================
+   Smartphone Pieces
+========================================================= */
+
+/* common-header
+----------------------------------------------- */
+#commonHeader {
+  margin: 0 auto;
+  padding: 0;
+  border-top: 3px solid #008746;
+  background: -webkit-linear-gradient(top, #d6f4db 0%, #ffffff 100%);
+  background: linear-gradient(to bottom, #d6f4db 0%, #ffffff 100%);
+}
+#commonHeader .pieceBody {
+  padding: 0 10px;
+}
+#commonHeader h1 {
+  margin: 15px 0;
+  font-size: 200%;
+}
+#commonHeader h1 a {
+  display: inline-block;
+  color: #000;
+}
+#commonHeader h1 span {
+  padding-left: 10px;
+  color: #333;
+  font-size: 45%;
+  font-weight: normal;
+}
+#commonHeader ul {
+  margin-bottom: 0.8em;
+}
+#commonHeader ul li {
+  display: inline-block;
+  margin-bottom: 0.2em;
+  vertical-align: middle;
+}
+#commonHeader ul li:first-child {
+  max-width: 16em;
+  margin-right: 0.5em;
+}
+
+/* search
+----------------------------------------------- */
+form.gsc-search-box {
+  margin: 0 !important;
+}
+#___gcse_0 {
+  margin: 0;
+}
+#___gcse_0 .gsc-input-box {
+  width: 100% !important;
+}
+input.gsc-search-button, input.gsc-search-button:hover, input.gsc-search-button:focus {
+  background-color: #777777 !important;
+}
+.cse .gsc-search-button input.gsc-search-button-v2, input.gsc-search-button-v2 {
+  padding: 6px 13px !important;
+}
+.feed {
+  display: none;
+}
+
+/* global-navi
+----------------------------------------------- */
+#globalNavi .pieceBody {
+  margin: 0 auto;
+}
+#globalNavi .pieceBody ul {
+  padding: 1px;
+  background: -webkit-linear-gradient(top,  #008746 1%,#00733c 100%);
+  background: linear-gradient(to bottom,  #008746 1%,#00733c 100%);
+  box-shadow: 0 6px 6px -3px rgba(204,204,204,0.6);
+}
+#globalNavi .pieceBody li {
+  float: left;
+  width: 50%;
+  padding: 0;
+}
+#globalNavi .pieceBody li.home {
+  background-image: none;
+}
+#globalNavi .pieceBody li:last-child {
+  width: 100%;
+  border-bottom: 0;
+}
+#globalNavi .pieceBody li a {
+  display: block;
+  margin: 0;
+  padding: 5px 0;
+  border-top: 1px solid #00a841;
+  border-right: 1px solid #005c23;
+  border-bottom: 1px solid #005c23;
+  border-left: 1px solid #00a841;
+  color: #fff;
+  font-size: 115%;
+  font-weight: bold;
+  text-align: center;
+
+}
+#globalNavi .pieceBody li:nth-child(-n+2) a {
+  border-top: 0;
+}
+#globalNavi .pieceBody li:nth-child(odd) a {
+  border-left: 0;
+}
+#globalNavi .pieceBody li:nth-child(2n) a,
+#globalNavi .pieceBody li:last-child a {
+  border-right: 0;
+}
+#globalNavi .pieceBody li a.cur {
+  background: #fff;
+  color: #008746;
+}
+
+/* page-title
+----------------------------------------------- */
+#pageTitle .pieceContainer,
+#contentsTitle .pieceContainer {
+  border: 1px solid #aaa;
+}
+#pageTitle .pieceBody,
+#contentsTitle .pieceBody {
+  padding-bottom: 1px;
+  background: -webkit-linear-gradient(top,  #ffffff 0%,#ebebeb 100%);
+  background: linear-gradient(to bottom,  #ffffff 0%,#ebebeb 100%);
+}
+#pageTitle .pieceBody h1,
+#contentsTitle .pieceBody p {
+  padding: 12px 10px 8px 30px;
+  background: url("../images/ic-pagetitle.gif") no-repeat left center;
+  color: #333;
+  font-size: 180%;
+  font-weight: bold;
+}
+
+/* surveyForms
+----------------------------------------------- */
+.surveyForms .form h2, .surveyForm .form h2 {
+  margin-bottom: 10px;
+  padding: 8px 5px 5px 15px;
+  background-color: #008746;
+}
+.surveyForms .form h2 a {
+  text-decoration: underline;
+  color: #fff;
+}
+
+/* feed-back
+----------------------------------------------- */
+#page-docs-index #feedBack,
+#page-faq-index #feedBack {
+  display: none;
+}
+#feedBack {
+  margin-bottom: 20px;
+}
+#feedBack .pieceHeader h2 {
+  padding: 7px 10px 4px 15px;
+  border-radius: 4px 4px 0 0;
+  background-color: #aaa;
+}
+#feedBack .pieceBody {
+  padding: 15px;
+  border: 1px solid #aaa;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+}
+#feedBack .pieceBody iframe {
+  height: auto !important;
+  max-height: 320px;
+}
+#new_survey_form_answer {
+  font-size: 90%;
+}
+#new_survey_form_answer .questions .question {
+  margin-bottom: 15px;
+}
+#new_survey_form_answer .questions .question .note {
+  color: #ff0000;
+}
+#new_survey_form_answer .question .question_content {
+  margin-bottom: 10px;
+  padding: 3px 10px;
+  border-left: 5px solid #aaa;
+  border-bottom: 1px solid #aaa;
+}
+#new_survey_form_answer .questions .question .question_content {
+  margin-bottom: 10px;
+  padding: 3px 10px;
+  border: none;
+  background-color: #f1f1f1;
+}
+#new_survey_form_answer .reload, #new_survey_form_answer .talk {
+  display: inline-block;
+  padding: 5px 10px;
+  border: 1px solid #aaa;
+}
+#new_survey_form_answer .field {
+  margin-top: 15px;
+}
+#new_survey_form_answer .submit {
+  margin-top: 20px;
+  text-align: center;
+}
+#question_answers_2 {
+  width: 99% !important;
+}
+
+/* sns
+----------------------------------------------- */
+#sns {
+  overflow: hidden;
+}
+.twitter-wrapper, .g-wrapper, .fb-wrapper, .mixi-wrapper, .line-wrapper {
+  margin-bottom: 10px;
+}
+
+/* menu piece list
+----------------------------------------------- */
+#main .piece {
+  margin-bottom: 10px;
+}
+#categoryList .pieceHeader h2, #lifeeventList .pieceHeader h2,
+#sideNavi .pieceHeader h2, #eventCategory .pieceHeader h2, #mapCategory .pieceHeader h2 {
+  padding: 5px 10px;
+  border-radius: 4px 4px 0 0;
+  background-color: #b4d459;
+}
+#categoryList .pieceBody, #lifeeventList .pieceBody,
+#sideNavi .pieceBody, #eventCategory .pieceBody, #mapCategory .pieceBody {
+  padding: 0 4px 4px;
+  border-radius: 0 0 4px 4px;
+  background-color: #b4d459;
+}
+#categoryList section h3, #lifeeventList section h3, #categoryList ul li,
+#sideNavi ul li, #eventCategory ul li, #mapCategory ul li {
+  font-size: 100%;
+  font-weight: normal;
+}
+#categoryList section h3 a, #lifeeventList section h3 a, #categoryList ul li a,
+#sideNavi ul li a, #eventCategory ul li a, #mapCategory ul li a {
+  display: block;
+  margin-bottom: 5px;
+  padding: 4px 10px 2px;
+  border-radius: 3px;
+  background-color: #fff;
+  color: #000;
+}
+#categoryList section:last-child h3 a, #lifeeventList section:last-child h3 a, #categoryList ul li:last-child a,
+#sideNavi ul li:last-child a, #eventCategory ul li:last-child a, #mapCategory ul > li:last-child > a {
+  margin-bottom: 0;
+}
+#mapCategory .level1 li.shisetsu {
+  padding: 0;
+  background-image: none;
+}
+#mapCategory .level1 li.shisetsu > a {
+  display: none;
+}
+
+/* tag-list */
+#tagList .pieceHeader h2 {
+  padding: 7px 10px 4px 15px;
+  border-radius: 4px 4px 0 0;
+  background-color: #b4d459;
+}
+#tagList .pieceBody {
+  padding: 10px;
+  border: 2px solid #b4d459;
+  border-top: 0;
+  border-radius: 0 0 4px 4px;
+}
+#tagList .pieceBody ul li {
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+  margin: 0;
+  padding: 0;
+  background: none;
+}
+#tagList .pieceBody ul li:after {
+  content: "/";
+  margin: 0 5px 0 10px;
+}
+#tagList .pieceBody ul li:last-child:after {
+  display: none;
+}
+#tagList .pieceBody ul li a {
+  display: inline;
+}
+
+/* map category
+----------------------------------------------- */
+/*
+#eventCategory .pieceHeader h2,
+#mapCategory .pieceHeader h2 {
+  padding: 5px 10px;
+  border-radius: 4px 4px 0 0;
+  background-color: #b4d459;
+}
+#eventCategory .pieceBody,
+#mapCategory .pieceBody {
+  padding: 0 4px 4px;
+  border-radius: 0 0 4px 4px;
+  background-color: #b4d459;
+}
+#eventCategory .pieceBody ul,
+#mapCategory .pieceBody ul {
+  border-bottom: 0;
+}
+#eventCategory .pieceBody ul li,
+#mapCategory .pieceBody ul li {
+  font-size: 100%;
+  font-weight: normal;
+}
+
+#eventCategory .pieceBody ul li:last-child,
+#mapCategory .pieceBody ul li:last-child {
+  border-bottom: 0;
+}
+#mapCategory .pieceBody ul.level1 > li > a {
+  display: none;
+}
+#eventCategory .pieceBody ul li a,
+#mapCategory .pieceBody ul li a {
+  display: block;
+  padding: 5px 10px 5px 22px;
+  background: url("../images/ic-list01.png") no-repeat 10px center;
+}
+*/
+
+/* keyvisual
+----------------------------------------------- */
+#contentBody {
+  padding: 0 10px;
+}
+.bx-wrapper .bx-viewport {
+  height: 110px;
+}
+.bx-wrapper img {
+  width: 100%;
+}
+.bx-wrapper .bx-controls-direction a {
+  width: 18px;
+  height: 19px;
+  margin-top: -9px;
+}
+.bx-wrapper .bx-prev {
+  background-image: url("../images/bt-keyvisual01.png");
+}
+.bx-wrapper .bx-next {
+  background-image: url("../images/bt-keyvisual02.png");
+}
+
+/* emergency-information
+----------------------------------------------- */
+#emergencyInformation .pieceContainer {
+  border: 2px solid #d73d01;
+  border-radius: 6px;
+}
+#emergencyInformation .pieceHeader {
+  padding: 5px 10px;
+  background-color: #d73d01;
+  color: #fff;
+}
+#emergencyInformation .pieceBody {
+  padding: 5px 10px;
+}
+
+/* bn-faq
+----------------------------------------------- */
+#bnFaq .pieceContainer {
+  padding: 10px 8px 12px;
+  background-color: #b4d459;
+}
+#bnFaq .pieceBody ul li {
+  float: left;
+  width: 33.3%;
+}
+#bnFaq .pieceBody ul li a {
+  display: block;
+  height: 38px;
+  margin-right: 8px;
+  line-height: 38px;
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: 0 3px 3px 0 rgba(0,0,0,0.4);
+  color: #000;
+  font-size: 90%;
+  text-align: center;
+  overflow: hidden;
+}
+#bnFaq .pieceBody ul li:last-child a {
+  margin-right: 0;
+}
+
+/* smart category
+----------------------------------------------- */
+.smart-category .pieceHeader {
+  margin-bottom: 15px;
+  padding-top: 2px;
+  border: 1px solid #aaa;
+  border-radius: 5px 5px 0 0;
+  background-color: #fff;
+}
+.smart-category .pieceHeader h2 {
+  padding: 6px 5px 8px 15px;
+  background: -webkit-linear-gradient(top,  #e8e8e8 0%,#ffffff 100%);
+  background: linear-gradient(to bottom,  #e8e8e8 0%,#ffffff 100%);
+}
+#back-btn.piece {
+  margin: 13px 0 20px;
+  text-align: center;
+}
+#back-btn a {
+  display: inline-block;
+  width: 280px;
+  margin: 0 auto;
+  padding: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: -webkit-linear-gradient(top,  #ffffff 0%,#f2f2f2 100%);
+  background: linear-gradient(to bottom,  #ffffff 0%,#f2f2f2 100%);
+  color: #000;
+}
+
+/* lifeevent
+----------------------------------------------- */
+#lifeEvent .pieceBody ul,
+#guide .pieceBody ul {
+  margin: 0 -5px;
+  text-align: center;
+  letter-spacing: -0.4em;
+}
+#lifeEvent .pieceBody ul li,
+#guide .pieceBody ul li {
+  display: inline-block;
+  min-width: 280px;
+  margin: 0 5px 10px;
+  text-align: left;
+  vertical-align: top;
+  letter-spacing: normal;
+}
+#lifeEvent .pieceBody ul li a,
+#guide .pieceBody ul li a {
+  display: block;
+  height: 39px;
+  line-height: 39px;
+  padding: 0 10px 0 45px;
+  border-radius: 6px;
+  background-color: #b4e13c;
+  background-position: 8px center;
+  background-repeat: no-repeat;
+  color: #000;
+  font-weight: bold;
+  text-shadow: -3px -3px 3px #fff, 3px -3px 3px #fff, -3px 3px 3px #fff, 3px 3px 3px #fff;
+}
+#lifeEvent .pieceBody ul li.ninshin a {
+  background-image: url("../images/bt-ninshinshussan.png");
+}
+#lifeEvent .pieceBody ul li.kosodate a {
+  background-image: url("../images/bt-kosodatekyoiku.png");
+}
+#lifeEvent .pieceBody ul li.seijin a {
+  background-image: url("../images/bt-seijinshushoku.png");
+}
+#lifeEvent .pieceBody ul li.kekkon a {
+  background-image: url("../images/bt-kekkonrikon.png");
+}
+#lifeEvent .pieceBody ul li.hikkoshi a {
+  background-image: url("../images/bt-hikkoshisumai.png");
+}
+#lifeEvent .pieceBody ul li.byoki a {
+  background-image: url("../images/bt-byokikega.png");
+}
+#lifeEvent .pieceBody ul li.shogaisha a {
+  background-image: url("../images/bt-shogaisha.png");
+}
+#lifeEvent .pieceBody ul li.shitsugyo a {
+  background-image: url("../images/bt-shitsugyotaishoku.png");
+}
+#lifeEvent .pieceBody ul li.korei a {
+  background-image: url("../images/bt-koreikaigo.png");
+}
+#lifeEvent .pieceBody ul li.shibo a {
+  background-image: url("../images/bt-shibosozoku.png");
+}
+#lifeEvent .pieceBody ul li a span {
+  display: block;
+  background: url("../images/bt-arrow03.png") no-repeat right center;
+}
+
+/* guide
+----------------------------------------------- */
+#guide .pieceBody ul li a {
+  padding: 0 10px;
+  border: 1px solid #ccc;
+  background-color: #e4f8e8;
+  text-align: center;
+  text-shadow: none;
+}
+
+/* attention information
+----------------------------------------------- */
+#attentionInformation .pieceHeader {
+  padding: 5px 10px;
+  border-radius: 6px 6px 0 0;
+  background-color: #ccc;
+}
+#attentionInformation .pieceBody {
+  border: 2px solid #ccc;
+  border-radius: 0 0 6px 6px;
+}
+#attentionInformation .pieceBody ul li {
+  border-bottom: 1px solid #ccc;
+}
+#attentionInformation .pieceBody ul li a,
+#attentionInformation .pieceBody .more a,
+.contentGpCategoryCategory section .more a {
+  display: block;
+  padding: 5px 10px;
+}
+.contentGpCategoryCategory section .more,
+#attentionInformation .pieceBody .more {
+  text-align: center;
+}
+.contentGpCategoryCategory section .more a,
+#attentionInformation .pieceBody .more a {
+  background-color: #ccc;
+}
+.contentGpCategoryCategory section .more {
+  margin-top: -2px;
+}
+.contentGpCategoryCategory section .more a {
+  border-radius: 0 0 6px 6px;
+}
+
+/* recent-docs-tab
+----------------------------------------------- */
+#smartRecentDocsTab .tabs ul:after {
+  content: "";
+  clear: both;
+  display: block;
+}
+#smartRecentDocsTab .tabs ul li {
+  float: left;
+  width: 33%;
+  margin-right: 0.5%;
+  border-radius: 6px 6px 0 0;
+  background-color: #ccc;
+}
+#smartRecentDocsTab .tabs ul li.current {
+  background-color: #fcdbbb;
+}
+#smartRecentDocsTab .tabs ul li:last-child {
+  margin: 0;
+}
+#smartRecentDocsTab .tabs ul li a {
+  display: block;
+  padding: 5px 0;
+  color: #000;
+  font-size: 95%;
+  text-align: center;
+}
+#smartRecentDocsTab .wrapper {
+  border: 2px solid #ccc;
+  border-radius: 0 0 6px 6px;
+}
+#smartRecentDocsTab .wrapper .content li {
+  border-bottom: 1px solid #ccc;
+}
+#smartRecentDocsTab .wrapper .content li a {
+  display: block;
+  padding: 5px 10px;
+}
+#smartRecentDocsTab .wrapper .content li a .title {
+  display: block;
+}
+#smartRecentDocsTab .links .more {
+  text-align: center;
+}
+#smartRecentDocsTab .links .more a {
+  display: block;
+  padding: 5px 10px;
+  background-color: #ccc;
+  color: #000;
+}
+
+/* slide-menu
+----------------------------------------------- */
+.slideMenu .piece {
+  margin-bottom: 10px;
+}
+.slideMenu .piece:last-child {
+  margin: 0;
+}
+.slideMenu .pieceHeader {
+  display: block;
+  padding: 5px 10px 5px 15px;
+  border-radius: 6px;
+  background: #b4d459;
+  color: #000;
+  font-size: 100%;
+  font-weight: bold;
+  cursor: pointer;
+}
+.slideMenu .pieceHeader.open {
+  border-radius: 6px 6px 0 0;
+}
+.slideMenu .pieceHeader h2 a {
+  display: block;
+  background: url("../images/bt-arrow01.png") no-repeat right center;
+  color: #000;
+  font-size: 115%;
+  font-weight: bold;
+}
+.slideMenu .pieceHeader.open h2 a {
+  background-image: url("../images/bt-arrow01_on.png");
+}
+.slideMenu .pieceBody {
+  border: 2px solid #b4d459;
+  border-top: 0;
+  border-radius: 0 0 6px 6px;
+}
+.slideMenu .pieceBody ul li {
+  border-bottom: 1px solid #b4d459;
+}
+.slideMenu .pieceBody ul li:last-child {
+  border: 0;
+}
+.slideMenu .pieceBody ul li a {
+  display: block;
+  padding: 5px 10px 5px 18px;
+  background: url("../images/ic-list01.gif") no-repeat 10px 0.9em;
+}
+
+/* recently
+----------------------------------------------- */
+#recently .pieceBody li a {
+  padding: 5px 10px 5px 38px;
+  background-position: 10px center;
+  background-repeat: no-repeat;
+}
+#recently .pieceBody li.fb a {
+  background-image: url("../images/ic-facebook.gif");
+}
+#recently .pieceBody li.tw a {
+  background-image: url("../images/ic-twitter.gif");
+}
+
+/* recently(back)
+----------------------------------------------- */
+#recently {
+  margin-bottom: 10px;
+}
+#recentlyHeader {
+  display: block;
+  padding: 5px 10px 5px 15px;
+  border-radius: 6px;
+  background: #ffd23b;
+  color: #000;
+  font-size: 100%;
+  font-weight: bold;
+  cursor: pointer;
+}
+#recentlyHeader.open {
+  border-radius: 6px 6px 0 0;
+}
+#recentlyHeader h2 {
+  display: block;
+  background: url("../images/bt-arrow01.png") no-repeat right center;
+  color: #000;
+  font-size: 115%;
+  font-weight: bold;
+}
+#recentlyHeader.open h2 {
+  background-image: url("../images/bt-arrow01_on.png");
+}
+#recentlyBody {
+  display: none;
+  padding: 10px 0;
+  border: 2px solid #ffd23c;
+  border-radius: 0 0 6px 6px;
+}
+#recently .snsLink {
+  padding: 10px 10px 0;
+}
+#recently .snsLink h3 {
+  margin-bottom: 5px;
+  font-size: 90%;
+}
+#recently .snsLink li.fb {
+  padding: 1px 0 1px 26px;
+  background: url("../images/ic-facebook.gif") left 0.1em no-repeat;
+}
+#recently .snsLink li.tw {
+  padding: 1px 0 1px 26px;
+  background: url("../images/ic-twitter.gif") left 0.1em no-repeat;
+}
+
+/* soshiki menu
+----------------------------------------------- */
+#soshikiIntroduce, #soshikiInfo1, #soshikiInfo2 {
+  margin-bottom: 20px;
+}
+#soshikiIntroduce .pieceHeader h2,
+#soshikiInfo1 .pieceHeader h2, #soshikiInfo2 .pieceHeader h2,
+#soshikiAddress .pieceHeader h2 {
+  padding: 7px 0 4px 15px;
+  border-radius: 4px 4px 0 0;
+  background-color: #ffd23c;
+}
+#soshikiIntroduce .pieceBody,
+#soshikiInfo1 .pieceBody, #soshikiInfo2 .pieceBody,
+#soshikiAddress .pieceBody {
+  padding: 15px;
+  border: 2px solid #ffd23c;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+}
+#soshikiIntroduce .pieceBody ul,
+#soshikiInfo1 .pieceBody ul, #soshikiInfo2 .pieceBody ul,
+#soshikiAddress .pieceBody ul {
+  margin-left: 15px;
+  list-style-type: disc;
+}
+
+/* 複雑な業務内容 */
+#soshikiInfo1 .gyoumunaiyou .col {
+  margin-bottom: 15px;
+}
+#soshikiInfo1 .gyoumunaiyou h3 {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding: 7px 0 4px 15px;
+  border-radius: 4px;
+  background-color: #ffd23c;
+}
+
+/* 消防本部 */
+#soshikiInfo1 .syobohonbu .col {
+  margin-bottom: 15px;
+}
+#soshikiInfo1 .syobohonbu h3 {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding: 7px 0 4px 15px;
+  border-radius: 4px;
+  background-color: #ffd23c;
+}
+/*
+#soshikiInfo1 .syobohonbu ul {
+  margin-left: 30px;
+}
+#soshikiInfo1 .syobohonbu li {
+  float: left;
+  margin: 0 60px 5px 0;
+}
+*/
+
+/* 教育委員会、社会体育課 */
+#soshikiInfo2 .kyoikuiinkai .col,
+#soshikiInfo1 .shakaitaiikuka .col {
+  margin-bottom: 15px;
+}
+#soshikiInfo2 .kyoikuiinkai h3,
+#soshikiInfo1 .shakaitaiikuka h3 {
+  margin: 0 5px 5px;
+  padding: 7px 0 4px 15px;
+  border-radius: 4px;
+  background-color: #ffd23c;
+}
+#soshikiInfo2 .kyoikuiinkai ul,
+#soshikiInfo1 .shakaitaiikuka ul {
+  margin: 0 5px 0 30px;
+}
+
+/* calendar
+----------------------------------------------- */
+#calendar .pieceHeader h2 {
+  margin-bottom: 10px;
+  padding: 5px 10px;
+  border-radius: 4px;
+  background-color: #b4d459;
+}
+#calendar .pieceBody {
+  padding: 5px 20px;
+}
+#calendar .pieceBody h3 {
+  font-weight: bold;
+  text-align: center;
+}
+#calendar .pieceBody table {
+  width: 100%;
+  font-size: 90%;
+}
+#calendar .pieceBody th, #calendar .pieceBody td {
+  height: 24px;
+  line-height: 24px;
+  padding: 0;
+  text-align: center;
+}
+#calendar .pieceBody table a {
+  display: block;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 1px solid #008746;
+}
+#calendar .pieceBody .sat {
+  background-color: #dff6fe;
+  color: #3366ff;
+}
+#calendar .pieceBody .sat a {
+  color: #3366ff;
+}
+#calendar .pieceBody .sun {
+  background-color: #ffe6f1;
+  color: #ee0000;
+}
+#calendar .pieceBody table .sun a {
+  color: #ee0000;
+}
+#calendar .pieceBody table .prevMonth,
+#calendar .pieceBody table .nextMonth {
+  color: transparent;
+}
+#calendar .pieceBody .pagination {
+  margin-top: 10px;
+  color: #a8aca9;
+}
+#calendar .pieceBody .pagination a {
+  padding: 0;
+}
+#calendar .pieceBody .pagination .separator {
+  padding: 0;
+}
+
+/* event list
+----------------------------------------------- */
+#eventType {
+  margin-bottom: 10px;
+}
+#eventType .pieceBody ul {
+  letter-spacing: -0.4em;
+}
+#eventType .pieceBody li {
+  display: inline-block;
+  width: 33.3%;
+  vertical-align: top;
+  letter-spacing: normal;
+}
+#eventType .pieceBody li a {
+  display: block;
+  padding: 10px 0;
+  border-left: 2px solid #ccc;
+  background-color: #ebebeb;
+  color: #000;
+  font-size: 110%;
+  font-weight: bold;
+  text-align: center;
+}
+#eventType .pieceBody li:first-child {
+  width: 33.4%;
+}
+#eventType .pieceBody li:first-child a {
+  border-left: 0;
+}
+#eventType .pieceBody li a.cur {
+  background-color: #008746;
+  color: #fff;
+}
+
+/* カレンダー形式 */
+.calendarEvents h2 {
+  margin-bottom: 10px;
+  padding: 5px 10px;
+  border-radius: 4px;
+  background-color: #b4d459;
+}
+.upperPagination, .lowerPagination {
+  margin: 10px 0;
+}
+.calendarEvents table {
+  table-layout: fixed;
+  width: 100%;
+  border: 1px solid #b3b3b3;
+}
+.calendarEvents table th,
+.calendarEvents table td {
+  padding: 5px 15px;
+  border: 1px solid #b3b3b3;
+}
+.calendarCalendarEvents table th,
+.calendarCalendarEvents table td {
+  width: 14%;
+}
+.calendarEvents table th {
+  background: #f3f3f3;
+  vertical-align: middle;
+}
+.calendarEvents table td {
+  vertical-align: top;
+}
+.calendarMonthlyEvents table td,
+.calendarTodayEvents table td {
+  vertical-align: middle;
+}
+.calendarEvents table .event p {
+  display: inline;
+}
+.calendarEvents table .event p.category {
+  margin-left: 5px;
+}
+.calendarEvents table .date .closeDate {
+  display: block;
+}
+.calendarEvents table .sun,
+.calendarEvents table .holiday {
+  color: #ee0000;
+}
+.calendarEvents table .sat {
+  color: #3366ff;
+}
+.calendarCalendarEvents table p.category span {
+  display: block;
+}
+
+/* 本日のイベント */
+.calendarTodayEvents h3 {
+  padding: 6px 12px 4px;
+  border: 1px solid #b3b3b3;
+  border-bottom: 0;
+  background: #f3f3f3;
+}
+.calendarTodayEvents table td {
+  width: 30%;
+}
+
+/* today event
+----------------------------------------------- */
+#todaysEvent {
+  margin-top: 10px;
+}
+#todaysEvent .pieceHeader h2 {
+  margin-bottom: 10px;
+  padding: 5px 10px;
+  border-radius: 4px;
+  background-color: #b4d459;
+}
+#todaysEvent .pieceBody ul li {
+  margin: 0;
+  padding: 3px 6px;
+  background: #fff;
+}
+#todaysEvent .pieceBody ul#simple_tabs {
+  letter-spacing: -.40em;
+}
+#todaysEvent .pieceBody ul#simple_tabs li {
+  display: inline-block;
+  /display: inline;
+  zoom: 1;
+  /margin-right: 5px;
+  margin-bottom: 0;
+  letter-spacing: normal;
+}
+#todaysEvent .pieceBody ul#simple_tabs li:first-child {
+  border-right: 0;
+}
+#todaysEvent .pieceBody ul li.current {
+  background: #aaa;
+  font-weight: bold;
+}
+#todaysEvent #simple_tab_panels > div {
+  min-height: 1em;
+  padding: 0;
+}
+#todaysEvent .pieceBody ul#simple_tabs {
+  padding: 10px 0 0;
+}
+#todaysEvent .pieceBody #simple_tab_panels ul {
+  padding: 5px 10px;
+}
+#todaysEvent .pieceBody #simple_tab_panels ul li {
+  padding-left: 12px;
+  background: url("../images/ic-list03.gif") no-repeat left 0.6em;
+}
+
+/* population
+----------------------------------------------- */
+#population .pieceBody {
+  padding: 10px;
+}
+#population table {
+  width: 175px;
+  margin: 0 auto 5px;
+}
+#population table th, #population table td {
+  padding: 3px 0 0 5px;
+  border-bottom: 1px solid #b4d459;
+}
+#population table tr:last-child th, #population table tr:last-child td {
+  border-bottom: 0;
+}
+#population table th {
+  font-weight: bold;
+  text-align: left;
+}
+#population table td {
+  text-align: right;
+}
+#bnAdvertisement .lower_text,
+#population p {
+  text-align: center;
+}
+#bnAdvertisement .lower_text a,
+#population p a {
+  display: inline-block;
+  margin-top: 5px;
+  padding: 4px 60px;
+  border-radius: 6px;
+  background-color: #e6e6e6;
+  text-align: center;
+}
+
+/* bn-mayor
+----------------------------------------------- */
+.bn-mayor ul {
+  letter-spacing: -0.4em;
+  text-align: center;
+}
+.bn-mayor ul li {
+  display: inline-block;
+  width: 49%;
+  margin: 0 0 10px 1%;
+  letter-spacing: normal;
+}
+.bn-mayor ul li:first-child {
+  margin: 0 1% 10px 0;
+}
+.bn-mayor ul li a {
+  display: block;
+  padding: 10px;
+  border-radius: 6px;
+  background-color: #e5decb;
+  color: #008746;
+  font-weight: bold;
+  text-shadow: -3px -3px 3px #fff, 3px -3px 3px #fff, -3px 3px 3px #fff, 3px 3px 3px #fff;
+}
+
+/* smartBnLower
+----------------------------------------------- */
+#smartBnLower ul li {
+  margin-bottom: 10px;
+}
+#smartBnLower ul li:last-child {
+  margin-bottom: 0;
+}
+#smartBnLower ul li a {
+  display: block;
+  height: 39px;
+  line-height: 39px;
+  padding: 0 10px;
+  border-radius: 6px;
+  background-color: #d6c79e;
+  color: #000;
+  font-weight: bold;
+  text-shadow: -3px -3px 3px #fff, 3px -3px 3px #fff, -3px 3px 3px #fff, 3px 3px 3px #fff;
+}
+#smartBnLower ul li a span {
+  display: block;
+  background: url("../images/bt-arrow03.png") no-repeat right center;
+}
+
+/* mail-magazine
+----------------------------------------------- */
+.mail-magazine {
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+/* bn-advertisement-side
+----------------------------------------------- */
+#bnAdvertisementSide ul {
+  text-align: center;
+}
+#bnAdvertisementSide ul li {
+  display: inline-block;
+  margin: 0 0 10px;
+}
+#bnAdvertisementSide ul li:first-child {
+  margin-right: 5px;
+}
+#bnAdvertisementSide ul li:last-child {
+  margin-bottom: 0;
+}
+#bnAdvertisementSide ul li img {
+  width: 134px;
+  height: auto;
+}
+
+/* bn-advertisement
+----------------------------------------------- */
+#bnAdvertisement .pieceContainer {
+  border: 2px solid #ccc;
+  border-radius: 6px;
+}
+#bnAdvertisement .pieceHeader {
+  padding: 5px 10px;
+  background-color: #ccc;
+}
+#bnAdvertisement ul {
+  padding: 10px 5px 0 10px;
+  text-align: center;
+}
+#bnAdvertisement ul li {
+  display: inline-block;
+  margin: 0 5px 10px 0;
+}
+#bnAdvertisement ul li img {
+  width: 124px;
+  height: auto;
+}
+#bnAdvertisement .lower_text {
+  padding: 0 10px 10px;
+}
+#bnAdvertisement .lower_text a {
+  margin: 0;
+}
+
+/* smart-switch
+----------------------------------------------- */
+#smartSwitch {
+  margin-bottom: 10px;
+}
+#smartSwitch a {
+  display: block;
+  margin: 0 10px;
+  padding: 10px;
+  border-radius: 6px;
+  color: #000;
+  background-color: #b4e13c;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* footer-navi
+----------------------------------------------- */
+#footerNavi {
+  margin-bottom: 10px;
+}
+#footerNavi ul {
+  border-top: 2px solid #ccc;
+}
+#footerNavi ul li {
+  border-bottom: 2px solid #ccc;
+}
+#footerNavi ul li a {
+  display: block;
+  height: 44px;
+  line-height: 44px;
+  padding: 0 15px 0 20px;
+  color: #000;
+}
+#footerNavi ul li a span {
+  display: block;
+  background: url("../images/bt-arrow02.png") no-repeat right center;
+}
+
+/* common-footer
+----------------------------------------------- */
+#commonFooter .pieceBody {
+  padding: 10px;
+  background-color: #b4e13c;
+}
+
+/* copyright
+----------------------------------------------- */
+#copyright {
+  padding: 5px 0;
+  font-size: 90%;
+  text-align: center;
+}
+
+/* 大規模災害モード
+----------------------------------------------- */
+#emergency-mode {
+  margin: 0 10px 10px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  background-color: #d73d01;
+  font-weight: bold;
+  color: #fff;
+  text-align: center;
+}
+#bnSaigai {
+  text-align: center;
+}
+#disasterInformation .pieceContainer, #emergencyInfo .pieceContainer {
+  border: 2px solid #d73d01;
+  border-radius: 6px;
+}
+#emergencyInfo .pieceContainer {
+  margin-bottom: 10px;
+}
+#disasterInformation .pieceHeader, #emergencyInfo .pieceHeader {
+  padding: 5px 10px;
+  background-color: #d73d01;
+  color: #fff;
+}
+#disasterInformation .pieceBody, #emergencyInfo .pieceBody {
+  padding: 5px 10px;
+}
+
+/* mayor menu style
+----------------------------------------------- */
+#mayorMenu .pieceHeader h2 {
+  padding: 7px 10px 4px 30px;
+  border-radius: 4px 4px 0 0;
+  background: url("../../top/images/ic-sagasu-kaso.png") no-repeat 7px 10px #ffd23c;
+}
+#mayorMenu .pieceBody {
+  padding: 0 4px 4px;
+  border-radius: 0 0 4px 4px;
+  background-color: #ffd23c;
+}
+#mayorMenu .pieceBody ul li a {
+  display: block;
+  margin-bottom: 5px;
+  padding: 4px 10px 2px;
+  border-radius: 3px;
+  background-color: #fff;
+  color: #000;
+}
+#mayorMenu .pieceBody ul li:last-child a {
+  margin-bottom: 0;
+}
+
+/* mayor top menu style
+----------------------------------------------- */
+#mayorTopMenu .photo {
+  padding: 0 0 15px;
+  text-align: center;
+}
+#mayorTopMenu .photo img {
+  width: auto;
+  max-width: 100%;
+  height: auto;
+}
+#mayorTopMenu .photo .caption {
+  display: block;
+  padding-top: 5px;
+  font-weight: bold;
+  text-align: center;
+}
+#mayorTopMenu ul {
+  overflow: hidden;
+}
+#mayorTopMenu ul li {
+  margin-bottom: 15px;
+  padding-left: 12px;
+  background: url("../images/ic-list01.png") no-repeat left 0.4em;
+}
+#mayorAddress {
+  padding: 10px;
+  border: 1px solid #ffd23c
+}

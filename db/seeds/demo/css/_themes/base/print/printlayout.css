@@ -1,0 +1,37 @@
+@charset "UTF-8";
+
+/* =========================================================
+   Print Style
+========================================================= */
+
+/* layout
+----------------------------------------------- */
+#accessibilityTool,
+#commonHeader,
+#links,#feedBack,
+nav, footer,
+#breadCrumbs,
+.back {
+  display: none;
+}
+#content {
+  float: none;
+  width: 100%;
+}
+#page-index #content {
+  float: right;
+  width: 540px;
+}
+#page-index #links {
+  display: block;
+}
+
+/* content globalNavi, content category, content docs
+----------------------------------------------- */
+#articleCategoryGnav .level1,
+.contentGpCategory .docs-category section,
+.contentGpCategory .category-docs-nest section,
+#articleCategory .pieceBody .level2 section,
+#articleCategory .pieceBody .level3 section {
+  width: 490px;
+}

@@ -1,0 +1,94 @@
+<div id="container">
+
+<header id="pageHeader">
+<div id="pageHeaderContainer">
+<div id="pageHeaderBody">
+
+[[piece/pc-switch]]
+[[piece/accessibility-tool]]
+[[piece/common-header]]
+
+</div>
+<!-- end #pageHeaderContainer --></div>
+<!-- end #pageHeader --></header>
+
+<nav id="pageNav">
+<div id="pageNavContainer">
+<div id="pageNavBody">
+
+[[piece/global-navi]]
+[[piece/keyvisual]]
+[[piece/search-navi]]
+
+</div>
+<!-- end #pageNavContainer --></div>
+<!-- end #pageNav --></nav>
+
+<div id="main">
+<div id="mainContainer">
+
+<div id="wrapper">
+
+<div id="content">
+<div id="contentContainer">
+<div id="contentBody">
+
+[[piece/attention-information]]
+[[piece/recent-docs-tab]]
+[[piece/lifeevent]]
+[[piece/guide]]
+
+</div>
+<!-- end #contentContainer --></div>
+<!-- end #content --></div>
+
+<div id="menu">
+<div id="menuContainer">
+<div id="menuBody">
+
+[[piece/bn-mayor]]
+[[piece/bn-gikai]]
+[[piece/about]]
+[[piece/bn-contets]]
+[[piece/bn-shisetsumap]]
+[[piece/recently]]
+[[piece/population]]
+
+</div>
+<!-- end #menuContainer --></div>
+<!-- end #menu --></div>
+
+<!-- end #wrapper --></div>
+
+<div id="links">
+<div id="linksContainer">
+<div id="linksBody">
+
+[[piece/kinkyu-list]]
+[[piece/calendar]]
+[[piece/todays-event]]
+[[piece/bn-faq]]
+[[piece/bn-contact]]
+[[piece/bn-advertisement-side]]
+
+</div>
+<!-- end #linksContainer --></div>
+<!-- end #links --></div>
+
+<!-- end #mainContainer --></div>
+<!-- end #main --></div>
+
+<footer id="pageFooter">
+<div id="pageFooterContainer">
+<div id="pageFooterBody">
+
+[[piece/bn-advertisement]]
+[[piece/footer-navi]]
+[[piece/common-footer]]
+[[piece/copyright]]
+
+</div>
+<!-- end #pageFooterContainer --></div>
+<!-- end #pageFooter --></footer>
+
+</div>

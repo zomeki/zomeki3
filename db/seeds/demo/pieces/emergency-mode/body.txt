@@ -1,0 +1,3 @@
+<div id="emergency-mode">
+<p>現在、[[text/site-name]]のホームページは大規模災害時モードで表示されています。</p>
+</div>

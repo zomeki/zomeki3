@@ -1,0 +1,71 @@
+<p>平成24年7月9日より外国人登録法は廃止になり、住民基本台帳法・入管法が変わりました。<br>
+外国人住民も、日本人と同様に住民基本台帳法が適用されます。<br>
+対象となるのは観光目的などの短期滞在者等を除く、適法に3ヶ月を超えて在留する外国人で、住所を有する方です。</p>
+
+<h2>住民票の対象となる外国人の方</h2>
+
+<p>適法に3ヶ月を超えて在留する外国人の方で、住所がある方（観光目的など短期滞在者等を除く）</p>
+
+<table class="normal" style="width: " summary="">
+  <caption>&nbsp;</caption>
+  <tbody>
+    <tr>
+      <th style="width: 30%;">対象者</th>
+      <th>対象者についての説明</th>
+    </tr>
+    <tr>
+      <td style="width: 30%;">中長期在留者</td>
+      <td>日本に在留資格をもって在留する外国人の方（3ヶ月以下の在留期間が決定された方や、短期滞在・外交・公用の在留資格が決定された方等は除く）<br>
+      ※在留カードの交付対象者です。</td>
+    </tr>
+    <tr>
+      <td style="width: 30%;">特別永住者</td>
+      <td>入管特例法により定められている特別永住者。<br>
+      ※特別永住者証明書の交付対象者です。</td>
+    </tr>
+    <tr>
+      <td style="width: 30%;">出生による経過滞在者<br>
+      または<br>
+      国籍喪失による経過滞在者</td>
+      <td>出生または日本国籍の喪失により、日本に在留することとなった外国人の方。<br>
+      　入管法の規定により、当該事由が生じた日から60日を限り、在留資格を有することなく在留することができます。</td>
+    </tr>
+    <tr>
+      <td style="width: 30%;">一時庇護許可者<br>
+      または<br>
+      仮滞在許可者</td>
+      <td>入管法の規定により、船舶等に乗っている外国人の方が難民の可能性がある場合などの要件を満たすときに、一時庇護のための上陸の許可を受けた方(一時庇護許可者)や、不法滞在の方が難民認定申請を行い、一定の要件を満たすときに仮に日本に滞在することを許可された方(仮滞在許可者)。</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>&nbsp;</p>
+
+<p>詳しくは総務省・法務省ホームページをご覧ください。</p>
+
+<p>＜総務省ホームページ＞</p>
+
+<p>外国人住民に係る住民基本台帳制度について</p>
+
+<ul>
+  <li><a href="http://www.soumu.go.jp/main_sosiki/jichi_gyousei/c-gyousei/zairyu.html" target="_blank">日本語Japanese</a></li>
+  <li><a href="http://www.soumu.go.jp/main_sosiki/jichi_gyousei/c-gyousei/zairyu_english.html" target="_blank">英語English</a></li>
+  <li><a href="http://www.soumu.go.jp/main_sosiki/jichi_gyousei/c-gyousei/zairyu_korean.html" target="_blank">韓国・朝鮮語한국・조선어</a></li>
+</ul>
+
+<p>＜法務省入国管理局ホームページ＞</p>
+
+<p>日本に在留する外国人の皆さんへ　2012年7月　入管法が変わります　新たな在留制度がスタート！</p>
+
+<ul>
+  <li><a href="http://www.immi-moj.go.jp/newimmiact_1/index.html" target="_blank">日本語Japanese</a></li>
+  <li><a href="http://www.immi-moj.go.jp/newimmiact_1/en/index.html" target="_blank">英語English</a></li>
+  <li>中国語<a href="http://www.immi-moj.go.jp/newimmiact_1/zh-CN/index.html" target="_blank"> 中文(简体字)</a>、<a href="http://www.immi-moj.go.jp/newimmiact_1/zh-TW/index.html" target="_blank">中文(繁体字)</a></li>
+  <li><a href="http://www.immi-moj.go.jp/newimmiact_1/ko/index.html" target="_blank">韓国・朝鮮語한국・조선어</a></li>
+  <li><a href="http://www.immi-moj.go.jp/newimmiact_1/es/index.html" target="_blank">スペイン語Español</a></li>
+  <li><a href="http://www.immi-moj.go.jp/newimmiact_1/pt/index.html" target="_blank">ポルトガル語Português</a></li>
+</ul>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>

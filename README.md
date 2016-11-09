@@ -1,6 +1,6 @@
 ZOMEKI
 ==========
-ZOMEKI（ぞめき)は、自治体サイト向けに開発された国産オープンソースCMSです。  
+ZOMEKI（ぞめき)は、自治体サイト向けに開発された国産オープンソースCMSです。
 
 ## 環境
 
@@ -13,10 +13,13 @@ ZOMEKI（ぞめき)は、自治体サイト向けに開発された国産オー�
 | Ruby      | 2.3            |
 | Rails     | 5.0            |
 
+## デモ
+http://zomeki.jp/demo/
+
 ## インストール
 
 ### 前提条件
-* root権限による操作を想定しています。  
+* root権限による操作を想定しています。
 
 ### 手動インストールマニュアル
   - [doc/INSTALL.md](doc/INSTALL.md)
@@ -25,6 +28,6 @@ ZOMEKI（ぞめき)は、自治体サイト向けに開発された国産オー�
     export LANG=ja_JP.UTF-8; curl -fsSL https://raw.githubusercontent.com/zomeki/zomeki3/master/doc/install_scripts/prepare.sh | bash
 
 ## ライセンス
-MIT License  
+MIT License
 
 Copyright (C) Tokushima Prefectural Government, IDS Inc., SiteBridge Inc.

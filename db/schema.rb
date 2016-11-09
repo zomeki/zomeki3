@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161019043562) do
+ActiveRecord::Schema.define(version: 20161109010041) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -510,6 +510,16 @@ ActiveRecord::Schema.define(version: 20161019043562) do
     t.text     "xml_properties"
     t.text     "etcetera"
     t.index ["concept_id", "name", "state"], name: "index_cms_pieces_on_concept_id_and_name_and_state", using: :btree
+  end
+
+  create_table "cms_publish_urls", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "publishable_id"
+    t.string   "publishable_type"
+    t.integer  "content_id"
+    t.integer  "node_id"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
   end
 
   create_table "cms_publishers", force: :cascade do |t|

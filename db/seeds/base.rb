@@ -70,11 +70,11 @@ Sys::Language.create!(
 )
 
 site = Cms::Site.create!(
-  :state    => 'public',
-  :name     => core_title,
-  :full_uri => core_uri,
-  :node_id  => 1,
-  :map_key  => map_key,
+  :state              => 'public',
+  :name               => core_title,
+  :full_uri           => core_uri,
+  :node_id            => 1,
+  :google_map_api_key => map_key,
   :portal_group_state => 'visible'
 )
 site.groups << first_group

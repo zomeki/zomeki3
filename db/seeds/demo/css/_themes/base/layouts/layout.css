@@ -1,0 +1,44 @@
+@charset "UTF-8";
+
+/* =========================================================
+　　Fix Layout Columns
+========================================================= */
+
+/* container
+----------------------------------------------- */
+#container {
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* header
+----------------------------------------------- */
+#pageHeader {
+  clear: both;
+  margin: 0 auto;
+}
+
+/* main
+----------------------------------------------- */
+#main {
+  clear: both;
+  width: 1000px;
+  margin: 0 auto 45px;
+}
+#main:after {
+  content: "";
+  clear: both;
+  display: block;
+}
+
+/* footer
+----------------------------------------------- */
+#pageFooter {
+  clear: both;
+}
+
+/* pieces
+----------------------------------------------- */
+#main .pieceSeparator {
+  margin: 10px 0;
+}

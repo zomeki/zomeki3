@@ -1,0 +1,29 @@
+@charset "UTF-8";
+
+/* =========================================================
+   Fix Layout 2 Columns
+========================================================= */
+
+/* wrapper
+----------------------------------------------- */
+#wrapper {
+  float: left;
+  width: 1000px;
+  clear: both;
+  margin: 0 -210px 0 0;
+}
+
+/* content(center column)
+----------------------------------------------- */
+#content {
+  float: left;
+  width: 790px;
+}
+
+/* links(right column)
+----------------------------------------------- */
+#links {
+  float: right;
+  width: 190px;
+  margin: 0;
+}

@@ -1,0 +1,57 @@
+<div id="container" class="emergency">
+
+<header id="pageHeader">
+<div id="pageHeaderContainer">
+<div id="pageHeaderBody">
+
+[[piece/mobile-emergency-header]]
+
+</div>
+<!-- end #pageHeaderContainer --></div>
+<!-- end #pageHeader --></header>
+
+<nav id="pageNav">
+<div id="pageNavContainer">
+<div id="pageNavBody">
+
+</div>
+<!-- end #pageNavContainer --></div>
+<!-- end #pageNav --></nav>
+
+<div id="main">
+<div id="mainContainer">
+
+<div id="wrapper">
+[[piece/mobile-emergency-information]]
+<div id="content">
+<div id="contentContainer">
+<div id="contentBody">
+[[piece/attention-information]]
+<p class="more"><a href="/attention-information/">一覧へ</a></p>
+[[piece/mobile-recent-docs]]
+<p class="more"><a href="/docs/">一覧へ</a></p>
+[[piece/mobile-lifeevent]]
+[[piece/mobile-global-navi]]
+
+</div>
+<!-- end #contentContainer --></div>
+<!-- end #content --></div>
+
+<!-- end #wrapper --></div>
+
+<!-- end #mainContainer --></div>
+<!-- end #main --></div>
+
+<footer id="pageFooter">
+<div id="pageFooterContainer">
+<div id="pageFooterBody">
+
+[[piece/mobile-footer-navi]]
+[[piece/mobile-common-footer]]
+[[piece/mobile-copyright]]
+
+</div>
+<!-- end #pageFooterContainer --></div>
+<!-- end #pageFooter --></footer>
+
+</div>

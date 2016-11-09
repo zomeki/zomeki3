@@ -1,0 +1,9 @@
+<div id="smartBnLower" class="piece">
+<ul>
+<li><a href="#"><span>市へのご意見</span></a></li>
+<li><a href="#"><span>申請書ダウンロード</span></a></li>
+<li><a href="#"><span>ふるさと納税</span></a></li>
+<li><a href="#"><span>認知症地域資源マップ</span></a></li>
+<li><a href="#"><span>オープンデータ</span></a></li>
+</ul>
+</div>
