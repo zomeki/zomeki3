@@ -22,6 +22,7 @@ class GpArticle::Doc < ApplicationRecord
   include Approval::Model::Rel::Approval
   include GpTemplate::Model::Rel::Template
   include GpArticle::Model::Rel::RelatedDoc
+  include GpArticle::Model::Rel::Directory
 
   include StateText
   include GpArticle::Docs::PublishQueue
