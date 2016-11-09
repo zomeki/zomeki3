@@ -69,7 +69,7 @@ bundlerをインストールします。
 
 ## 6.nginxのインストール
 
-外部からhttpでアクセス可能にします。  
+外部からhttpでアクセス可能にします。
 ※ファイアーウォール設定は環境に応じて適切に設定してください。
 
     # firewall-cmd --add-service=http --zone=public
@@ -175,6 +175,11 @@ uri: http://zomeki.example.com/    # すべて変更
 必要なデータベースを作ります。
 
     # su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle exec rake db:setup RAILS_ENV=production'
+
+サンプルデータを登録します。
+
+    # su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle exec rake db:seed:demo RAILS_ENV=production'
+
 
 設定ファイルを作成してリンクを作成します。
 
