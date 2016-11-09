@@ -2,7 +2,8 @@ require 'rails_helper'
 
 RSpec.describe Cms::DataFile, type: :model do
   before :all do
-    first_site = create(:cms_site, :first)
+    Zomeki.config.application['sys.file_text_extraction'] = true
+    first_site = build(:cms_site, :first)
     initialize_core first_site.full_uri
   end
 
