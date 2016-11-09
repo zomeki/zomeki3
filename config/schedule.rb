@@ -60,6 +60,11 @@ every :day, at: '0:30 am' do
   rake 'zomeki:gp_calendar:publish_todays_events'
 end
 
+# 今月の業務カレンダーを静的ファイルとして書き出します。
+every :month, at: 'start of the month at 3:00 am' do
+  rake 'zomeki:biz_calendar:publish_this_month'
+end
+
 # アクセスランキングデータを取り込みます。
 every :day, at: '3:00 am' do
   rake 'zomeki:rank:ranks:exec'
