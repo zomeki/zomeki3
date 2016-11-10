@@ -186,6 +186,9 @@ uri: http://zomeki.example.com/    # すべて変更
     # su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle exec rake zomeki:configure RAILS_ENV=production'
     # ln -s /var/www/zomeki/config/nginx/nginx.conf /etc/nginx/conf.d/zomeki.conf
 
+デフォルトのnginx設定ファイルをリネームします。
+    # mv /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf.org
+
 ## 10.ふりがな・読み上げ機能のインストール
 
 必要なパッケージをインストールします。

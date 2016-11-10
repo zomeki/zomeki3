@@ -24,7 +24,7 @@ start()
     exit 1
   fi
   echo "start ${SERVICE}"
-  su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle exec rake delayed_job:start RAILS_ENV=${RAILS_ENV}'
+  su - zomeki -c "export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle exec unicorn_rails -c ${UNICORN_CONF} -E ${RAILS_ENV} -D"
 }
 
 stop()
