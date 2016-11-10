@@ -72,7 +72,8 @@ bundlerをインストールします。
 外部からhttpでアクセス可能にします。
 ※ファイアーウォール設定は環境に応じて適切に設定してください。
 
-    # firewall-cmd --add-service=http --zone=public
+    # firewall-cmd --add-service=http --zone=public --permanent
+    # firewall-cmd --reload
 
 yumリポジトリに追加します。
 
@@ -147,11 +148,6 @@ ZOMEKIをインストールします。
     # crontab -l > $ROOT_CRON_TXT
     # grep -s reload_servers.sh $ROOT_CRON_TXT || echo '0,30 * * * * /root/reload_servers.sh' >> $ROOT_CRON_TXT
     # crontab $ROOT_CRON_TXT
-
-    # cp /var/www/zomeki/config/samples/unicorn /etc/init.d/.
-    # chmod a+x /etc/init.d/unicorn
-    # chkconfig unicorn on
-
 
 ## 9.ZOMEKIの設定
 
@@ -260,9 +256,20 @@ unicornを起動します。
 
     # su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle exec unicorn_rails -c config/unicorn/production.rb -E production -D'
 
+unicornを自動起動に設定します。
+    # cp /var/www/zomeki/config/samples/unicorn /etc/init.d/.
+    # chmod a+x /etc/init.d/unicorn
+    # chkconfig unicorn on
+
 delayed_jobを起動します。
 
     # su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle exec rake delayed_job:start RAILS_ENV=production'
+
+delayed_jobを自動起動に設定します。
+    # cp /var/www/zomeki/config/samples/delayed_job /etc/init.d/.
+    # chmod a+x /etc/init.d/delayed_job
+    # chkconfig delayed_job on
+
 
 ## 12.定期実行処理 の設定
 

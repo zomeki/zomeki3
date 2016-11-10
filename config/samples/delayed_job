@@ -1,0 +1,33 @@
+#!/bin/sh
+# chkconfig: 345 91 20
+# description: Delayed Job Service
+# processname: delayed_job
+
+RAILS_ENV=production
+SERVICE=delayed_job
+USER=zomeki
+
+RAILS_ROOT_DIR="/var/www/zomeki"
+
+start()
+{
+  echo "start ${SERVICE}"
+  su - zomeki -c "export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle exec rake delayed_job:start RAILS_ENV=${RAILS_ENV}"
+}
+
+stop()
+{
+  echo "stop ${SERVICE}"
+  su - zomeki -c "export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle exec rake delayed_job:stop RAILS_ENV=${RAILS_ENV}"
+}
+case "$1" in
+  start)
+    start
+    ;;
+  stop)
+    stop
+    ;;
+  *)
+    echo "Syntax Error: release [start|stop]"
+    ;;
+esac
