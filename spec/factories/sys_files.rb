@@ -1,12 +1,8 @@
 include ActionDispatch::TestProcess
 
 FactoryGirl.define do
-  factory :cms_data_file, class: 'Cms::DataFile' do
-    site_id 1
-    concept_id 1
-    node_id 1
-    state { %w!public closed!.sample }
-    published_at { Faker::Time.between(1.month.ago, 1.month.since) }
+  factory :sys_file, class: 'Sys::File' do
+    tmp_id nil
     sequence(:name) {|n| "file_#{n}.txt" }
     sequence(:title) {|n| "ファイル#{n}" }
     mime_type 'text/plain'
@@ -14,6 +10,9 @@ FactoryGirl.define do
     image_is 2
     image_width nil
     image_height nil
+    file_attachable_id 1
+    file_attachable_type 'GpArticle::Doc'
+    site_id 1
     thumb_width nil
     thumb_height nil
     thumb_size nil
