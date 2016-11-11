@@ -20,6 +20,9 @@ sys:
   # 'site'(default) or 'core'
   core_domain: "site"
 
+  # ファイルからのテキスト抽出
+  file_text_extraction: false
+
 cms:
   #ページ数付きページ書き出し数
   publish_more_pages: 10
