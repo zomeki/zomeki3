@@ -94,7 +94,7 @@ function move_users(from, to) {
 function make_or(index) {
   var list = $('#approvals_' + index);
   var options = list.find('> option:selected');
-  
+
   if (options.length <= 1) { return; }
 
   var users = [];
@@ -111,7 +111,7 @@ function make_or(index) {
 function clear_or(index) {
   var list = $('#approvals_' + index);
   var options = list.find('option:selected');
-  
+
   var users = [];
   var values = [];
   options.each(function() {
@@ -140,7 +140,7 @@ $(document).ready(function () {
 
   $('#candidates').closest('form').submit(function (event) {
     $('#candidates > option').attr('selected', false);
-    $('#approvals select.approvals > option').attr('selected', true);
+    $('#approvals select.approvals > option').prop('selected', true);
   });
 
   <%- if @item.approvals.empty? -%>
