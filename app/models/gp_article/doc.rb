@@ -177,7 +177,14 @@ class GpArticle::Doc < ApplicationRecord
     case target
     when 'user'
       creators = Sys::Creator.arel_table
-      joins(:creator).where(creators[:user_id].eq(user.id))
+      approval_requests = Approval::ApprovalRequest.arel_table
+      assignments = Approval::Assignment.arel_table
+      joins(:creator).joins(:approval_requests => [:approval_flow => [:approvals => :assignments]])
+      .where(
+        creators[:user_id].eq(user.id)
+        .or(approval_requests[:user_id].eq(Core.user.id)
+                        .or(assignments[:user_id].eq(Core.user.id)))
+      )
     when 'group'
       editable
     when 'all'
