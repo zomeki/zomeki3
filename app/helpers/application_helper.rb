@@ -45,6 +45,10 @@ module ApplicationHelper
       defaults[:previous_label] = '&lt;&lt;*前へ'
       defaults[:next_label]     = '次へ#&gt;&gt;'
     end
+    if options[:lang]
+      defaults[:previous_label] = I18n.t("will_paginate.previous_label", {locale: options[:lang]})
+      defaults[:next_label]     = I18n.t("will_paginate.next_label", {locale: options[:lang]})
+    end
     links = will_paginate(items, defaults.merge!(options))
     return links if links.blank?
 

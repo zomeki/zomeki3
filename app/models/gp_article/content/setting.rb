@@ -55,6 +55,10 @@ class GpArticle::Content::Setting < Cms::ContentSetting
     lower_text: "CSV形式（例　対象文字,変換後文字 ）"
 
   # menu: :index
+  set_config :doc_list_lang, menu: :index,
+    name: "言語設定",
+    options: [['日本語', 'ja'], ['英語', 'en']],
+    default_value: 'ja'
   set_config :doc_list_style, menu: :index,
     name: "#{GpArticle::Doc.model_name.human}一覧表示形式",
     options: [['日付毎', 'by_date'], ['記事一覧', 'simple']],

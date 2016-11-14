@@ -80,6 +80,10 @@ class GpArticle::Content::Doc < Cms::Content
     gp_category_content_category_type.group_category_type
   end
 
+  def doc_list_lang
+    setting_value(:doc_list_lang).to_sym
+  end
+
   def list_style
     setting_value(:list_style).to_s
   end

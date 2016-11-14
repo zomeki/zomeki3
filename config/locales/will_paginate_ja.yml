@@ -14,3 +14,8 @@ ja:
         other: '<span class="count">%{count}</span>件表示'
       multi_page: "全%{count}件中、%{from}～%{to}件を表示"
       multi_page_html: '<div class="pageEntryInfo">全<span class="count">%{count}</span>件中、<span class="from">%{from}</span>～<span class="to">%{to}</span>件を表示</div>'
+en:
+  will_paginate:
+    page_gap: " || "
+    previous_label: "PREVIOUS"
+    next_label: "NEXT"
