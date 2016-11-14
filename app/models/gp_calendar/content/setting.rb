@@ -7,8 +7,20 @@ class GpCalendar::Content::Setting < Cms::ContentSetting
     comment: '<strong>年：</strong>%Y <strong>月：</strong>%m <strong>日：</strong>%d <strong>曜日：</strong>%A <strong>曜日（省略）：</strong>%a',
     default_value: '%Y年%m月%d日（%a）'
   set_config :list_style,
-    name: '表示形式',
-    comment: '<strong>タイトル：</strong>@title_link@',
+    name: '表示形式/イベント一覧',
+    upper_text: '<a href="#" class="show_dialog">置き換えテキストを確認する</a>',
+    default_value: '@title_link@'
+  set_config :today_list_style,
+    name: '表示形式/今日のイベント',
+    upper_text: '<a href="#" class="show_dialog">置き換えテキストを確認する</a>',
+    default_value: '@title_link@'
+  set_config :calendar_list_style,
+    name: '表示形式/イベントカレンダー',
+    upper_text: '<a href="#" class="show_dialog">置き換えテキストを確認する</a>',
+    default_value: '@title_link@'
+  set_config :search_list_style,
+    name: '表示形式/イベント検索',
+    upper_text: '<a href="#" class="show_dialog">置き換えテキストを確認する</a>',
     default_value: '@title_link@'
   set_config :show_images,
     name: '画像表示',
@@ -36,7 +48,7 @@ class GpCalendar::Content::Setting < Cms::ContentSetting
     ex = extra_values
     case name
     when 'gp_category_content_category_type_id'
-      ex[:category_ids] = (params[:categories] || {}).values.select(&:present?).map(&:to_i).uniq
+      ex[:category_type_ids] = params[:category_types].map(&:to_i).uniq
     when 'event_sync_import'
       ex[:source_hosts] = params[:source_hosts].to_s
     when 'event_sync_export'
@@ -52,7 +64,16 @@ class GpCalendar::Content::Setting < Cms::ContentSetting
     extra_values[:category_ids] || []
   end
 
+  def category_type_ids
+    extra_values[:category_type_ids] || []
+  end
+
   def categories
     GpCategory::Category.where(id: category_ids)
   end
+
+  def category_types
+    GpCategory::CategoryType.where(id: category_type_ids)
+  end
+
 end

@@ -33,7 +33,9 @@ class GpCalendar::Content::Event < Cms::Content
   end
 
   def category_types
-    GpCategory::CategoryType.where(id: categories.map(&:category_type_id))
+    setting = GpCalendar::Content::Setting.find_by(id: settings.find_by(name: 'gp_category_content_category_type_id').try(:id))
+    return GpCategory::CategoryType.none unless setting
+    setting.category_types
   end
 
   def category_type_categories(category_type)
