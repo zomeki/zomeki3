@@ -11,13 +11,11 @@ c_event = Cms::Concept.where(name: 'イベント').first
 calendar = create_cms_content c_content, 'GpCalendar::Event', 'イベント', 'event'
 
 category   = GpCategory::Content::CategoryType.first
-event_type = GpCategory::CategoryType.where(name: 'event').first
-categories = {}
-GpCategory::Category.where(category_type_id: event_type.id).each_with_index{|c, i| categories[i.to_s] = c.id}
+categories = GpCategory::CategoryType.where(name: 'event').pluck(:id)
 
 setting = GpCalendar::Content::Setting.config(calendar, 'gp_category_content_category_type_id')
 setting.value = category.id
-setting.extra_values = {categories: categories}
+setting.extra_values = {category_types: categories}
 setting.save
 
 l_event     = create_cms_layout c_site, 'event-calendar', 'イベント'

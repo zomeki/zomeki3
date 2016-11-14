@@ -38,6 +38,9 @@ ZomekiCMS::Application.routes.draw do
     resources :node_calendar_styled_events,
       :controller => 'admin/node/calendar_styled_events',
       :path       => ':parent/node_calendar_styled_events'
+    resources :node_search_events,
+      :controller => 'admin/node/search_events',
+      :path       => ':parent/node_search_events'
 
     ## pieces
     resources :piece_daily_links,
@@ -66,5 +69,6 @@ ZomekiCMS::Application.routes.draw do
     get 'node_events(/index)' => 'public/node/events#index'
     get 'node_events/:name/file_contents/:basename.:extname' => 'public/node/events#file_content', :format => false
     get 'node_todays_events(/index)' => 'public/node/todays_events#index'
+    get 'node_search_events(/index)' => 'public/node/search_events#index'
   end
 end

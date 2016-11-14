@@ -48,7 +48,10 @@ class BizCalendar::Public::Node::BaseController < Cms::Controller::Public::Base
       when 'GpArticle::Doc'
         dc = GpArticle::Content::Doc.find(dc.id)
         docs = dc.public_docs.table
-        dc.public_docs.where(event_state: 'visible').where(docs[:event_ended_on].gteq(start_date).and(docs[:event_started_on].lteq(end_date)))
+        doc = dc.public_docs.where(event_state: 'visible')
+        doc = doc.where(docs[:event_ended_on].gteq(start_date)) if start_date.present?
+        doc = doc.where(docs[:event_started_on].lteq(end_date)) if end_date.present?
+        doc
       else
         []
       end
