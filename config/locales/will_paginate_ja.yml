@@ -3,6 +3,8 @@ ja:
     page_gap: " || "
     previous_label: 前へ
     next_label: 次へ
+    mobile_previous_label: "&lt;&lt;*前へ"
+    mobile_next_label: "次へ#&gt;&gt;"
     page_entries_info:
       single_page:
         zero:  "0件"
@@ -19,3 +21,5 @@ en:
     page_gap: " || "
     previous_label: "PREVIOUS"
     next_label: "NEXT"
+    mobile_previous_label: "&lt;&lt;*prev"
+    mobile_next_label: "next#&gt;&gt;"
