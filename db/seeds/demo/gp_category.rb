@@ -1,9 +1,9 @@
 ## ---------------------------------------------------------
 ## cms/concepts
 
-c_site    = Cms::Concept.find(1)
-c_top     = Cms::Concept.where(name: 'トップページ').first
-c_content = Cms::Concept.where(name: 'コンテンツ').first
+c_site  = @site.concepts.where(parent_id: 0).first
+c_top   = @site.concepts.where(name: 'トップページ').first
+c_content = @site.concepts.where(name: 'コンテンツ').first
 
 c_category = create_cms_concept c_content, 40, 'カテゴリ'
 
@@ -76,7 +76,7 @@ def create_type(concept, content, layout, name, title, sort_no)
     sort_no: sort_no,
     state: 'public',
     docs_order: 'display_published_at DESC, published_at DESC'
-  if category_concept = Cms::Concept.where(name: title).first
+  if category_concept = @site.concepts.where(name: title).first
     p = create_cms_piece category_concept, content, 'GpCategory::CategoryList',
        'category-list', "#{title}から探す", "#{title}から探す"
     p.in_settings = {setting_state: 'enabled', layer: 'self',
@@ -101,7 +101,7 @@ def create(concept, category_type, parent, layout, name, title, sort_no)
     sort_no: sort_no,
     state: 'public',
     docs_order: 'display_published_at DESC, published_at DESC'
-  if category_concept = Cms::Concept.where(name: title).first
+  if category_concept = @site.concepts.where(name: title).first
     p = create_cms_piece category_concept, category_type.content, 'GpCategory::CategoryList',
       'category-list', "#{category_type.title}から探す", "#{category_type.title}から探す"
     p.in_settings = {setting_state: 'enabled', layer: 'self',

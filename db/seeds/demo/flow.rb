@@ -2,10 +2,9 @@ puts 'import approval flow...'
 
 ## ---------------------------------------------------------
 ## cms/concepts
-
-c_site    = Cms::Concept.find(1)
-c_top     = Cms::Concept.where(name: 'トップページ').first
-c_content = Cms::Concept.where(name: 'コンテンツ').first
+c_site  = @site.concepts.where(parent_id: 0).first
+c_top   = @site.concepts.where(name: 'トップページ').first
+c_content = @site.concepts.where(name: 'コンテンツ').first
 
 ## ---------------------------------------------------------
 ## cms/contents
