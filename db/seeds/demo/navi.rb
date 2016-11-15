@@ -1,6 +1,8 @@
 ## ---------------------------------------------------------
 ## cms/concepts
-c_content = Cms::Concept.where(name: 'コンテンツ').first
+c_site  = @site.concepts.where(parent_id: 0).first
+c_top   = @site.concepts.where(name: 'トップページ').first
+c_content = @site.concepts.where(name: 'コンテンツ').first
 
 ## ---------------------------------------------------------
 ## cms/layouts
@@ -12,7 +14,8 @@ l_gnavi     = create_cms_layout c_content, 'global-navi',    'グローバルナ
 gnavi = create_cms_content c_content, 'Gnav::MenuItem', 'グローバルナビ', 'navi'
 create_cms_node c_content, gnavi, 10, nil, l_gnavi, 'Gnav::MenuItem', 'navi', 'ナビ', nil
 
-category   = GpCategory::Content::CategoryType.first
+category   = GpCategory::Content::CategoryType.where(concept_id: c_content.id).first
+cate_types = GpCategory::CategoryType.where(content_id: category.id).pluck(:id)
 settings = Gnav::Content::Setting.config(gnavi, 'gp_category_content_category_type_id')
 settings.value = category.id
 settings.save
@@ -43,30 +46,30 @@ def create_category_sets(menu_item, category)
 end
 
 ['kankyo', 'seikatsu', 'zei', 'kenko', 'hukushi', 'hoken', 'todokede',].each do |c|
-  if category = GpCategory::Category.where(name: c).first
+  if category = GpCategory::Category.where(category_type_id: cate_types, name: c).first
     create_category_sets kurashi, category
   end
 end
 ['fuyo', 'ikuji'].each do |c|
-  if category = GpCategory::Category.where(name: c).first
+  if category = GpCategory::Category.where(category_type_id: cate_types, name: c).first
     create_category_sets kosodate, category
   end
 end
 
 ['access', 'bunka_sports', 'rekishi'].each do |c|
-  if category = GpCategory::Category.where(name: c).first
+  if category = GpCategory::Category.where(category_type_id: cate_types, name: c).first
     create_category_sets kanko, category
   end
 end
 
 ['suido', 'doro', 'toshiseibi', 'nyusatsu'].each do |c|
-  if category = GpCategory::Category.where(name: c).first
+  if category = GpCategory::Category.where(category_type_id: cate_types, name: c).first
     create_category_sets jigyosha, category
   end
 end
 
 ['johokokai', 'kohokocho', 'gikai_senkyo', 'shisei'].each do |c|
-  if category = GpCategory::Category.where(name: c).first
+  if category = GpCategory::Category.where(category_type_id: cate_types, name: c).first
     create_category_sets shisei, category
   end
 end

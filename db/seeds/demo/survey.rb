@@ -1,15 +1,15 @@
 ## ---------------------------------------------------------
 ## cms/concepts
-
-c_site  = Cms::Concept.find(1)
-c_top   = Cms::Concept.where(name: 'トップページ').first
-c_content = Cms::Concept.where(name: 'コンテンツ').first
+c_site  = @site.concepts.where(parent_id: 0).first
+c_top   = @site.concepts.where(name: 'トップページ').first
+c_content = @site.concepts.where(name: 'コンテンツ').first
+c_group   = @site.concepts.where(name: '組織').first
 
 ## ---------------------------------------------------------
 ## cms/contents
 survey_form  = create_cms_content c_content, 'Survey::Form', 'お問い合わせフォーム', 'toiawase'
 
-l_col1 = Cms::Layout.where(name: 'col-1').first
+l_col1 = Cms::Layout.where(site_id: @site.id, name: 'col-1').first
 create_cms_node c_content, survey_form, 170, nil, l_col1, 'Survey::Form', 'contact', 'お問い合わせフォーム', nil
 
 settings = Survey::Content::Setting.config(survey_form, 'captcha')
