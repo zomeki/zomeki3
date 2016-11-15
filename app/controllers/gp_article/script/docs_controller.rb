@@ -1,5 +1,4 @@
 class GpArticle::Script::DocsController < Cms::Controller::Script::Publication
-  include GpArticle::DocsCommon
 
   def publish
     uri = @node.public_uri.to_s
@@ -48,8 +47,6 @@ class GpArticle::Script::DocsController < Cms::Controller::Script::Publication
         path_ruby = "#{path}.r"
         item.publish_page(render_public_as_string(uri_ruby, :site => item.content.site),
                           :path => path_ruby, :dependent => :ruby)
-
-        share_to_sns(item)
       end
 
 
