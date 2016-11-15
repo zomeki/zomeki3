@@ -24,7 +24,6 @@ kubun     = GpCategory::CategoryType.where(name: 'kubun').first
 chumoku   = GpCategory::Category.where(name: 'chumoku').first
 
 tag       = Tag::Content::Tag.first
-sns_share = SnsShare::Content::Account.first
 calendar  = GpCalendar::Content::Event.first
 approval  = Approval::Content::ApprovalFlow.first
 soshiki   = Organization::Content::Group.first
@@ -92,8 +91,6 @@ p_info.save
   {id: "organization_content_group_id", value: soshiki.id},
   {id: "gp_template_content_template_id", value: template.id,
     extra_values: {template_ids: template.templates.pluck(:id), default_template_id: 0}},
-  {id: "sns_share_relation", value: "enabled",
-    extra_values: {sns_share_content_id: sns_share.id}},
   {id: "calendar_relation", value: "enabled",
     extra_values: {calendar_content_id: calendar.id, event_sync_settings: 'disabled',
     event_sync_default_will_sync: 'disabled'}},
@@ -137,8 +134,6 @@ end
   {id: "approval_relation", value: "enabled",
     extra_values: {approval_content_id: approval.id}},
   {id: "calendar_relation", value: "disabled"},
-  {id: "sns_share_relation", value: "enabled",
-    extra_values: {sns_share_content_id: sns_share.id}},
   {id: "list_style", value: "@title_link@@publish_date@@group@",
     extra_values: {wrapper_tag: 'li'}},
 ].each do |conf|
