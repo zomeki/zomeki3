@@ -166,14 +166,6 @@ class GpArticle::Content::Doc < Cms::Content
     setting_value(:approval_relation) == 'enabled'
   end
 
-  def sns_share_content_account
-    SnsShare::Content::Account.find_by(id: setting_extra_value(:sns_share_relation, :sns_share_content_id))
-  end
-
-  def sns_share_related?
-    setting_value(:sns_share_relation) == 'enabled'
-  end
-
   def template_available?
     gp_temlate_content_template.present? && templates.present?
   end

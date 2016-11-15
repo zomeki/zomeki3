@@ -158,11 +158,6 @@ class GpArticle::Content::Setting < Cms::ContentSetting
   set_config :gp_template_content_template_id, menu: :relation,
     name: 'テンプレート',
     options: lambda { GpTemplate::Content::Template.where(site_id: Core.site.id).map { |t| [t.name, t.id] } }
-  set_config :sns_share_relation, menu: :relation,
-    name: 'SNSシェア',
-    form_type: :radio_buttons,
-    options: [['使用する', 'enabled'], ['使用しない', 'disabled']],
-    default_value: 'enabled'
 
   belongs_to :content, foreign_key: :content_id, class_name: 'GpArticle::Content::Doc'
 
@@ -200,8 +195,6 @@ class GpArticle::Content::Setting < Cms::ContentSetting
       ex[:feed_docs_period] = params[:feed_docs_period]
     when 'tag_relation'
       ex[:tag_content_tag_id] = params[:tag_content_tag_id].to_i
-    when 'sns_share_relation'
-      ex[:sns_share_content_id] = params[:sns_share_content_id].to_i
     when 'blog_functions'
       ex[:comment] = params[:comment]
       ex[:comment_open] = params[:comment_open]
