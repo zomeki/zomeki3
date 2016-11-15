@@ -23,5 +23,5 @@
       <%- end -%>
     <%- end -%>
   </div>
-  <%= paginate @docs %>
+  <%= paginate @docs, {lang: @content.doc_list_lang} %>
 </div>

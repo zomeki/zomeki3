@@ -34,16 +34,17 @@ module ApplicationHelper
   ## paginates
   def paginate(items, options = {})
     return '' unless items
+    lang = options[:lang].presence || :ja
     defaults = {
       :params         => params.merge(jpmobile: nil),
-      :previous_label => '前のページ',
-      :next_label     => '次のページ',
+      :previous_label => I18n.t("will_paginate.previous_label", {locale: lang}),
+      :next_label     => I18n.t("will_paginate.next_label", {locale: lang}),
       :link_separator => '<span class="separator"> | </span' + "\n" + '>'
     }
     if request.mobile?
       defaults[:page_links]     = false
-      defaults[:previous_label] = '&lt;&lt;*前へ'
-      defaults[:next_label]     = '次へ#&gt;&gt;'
+      defaults[:previous_label] = I18n.t("will_paginate.mobile_previous_label", {locale: lang})
+      defaults[:next_label]     = I18n.t("will_paginate.mobile_next_label", {locale: lang})
     end
     links = will_paginate(items, defaults.merge!(options))
     return links if links.blank?
