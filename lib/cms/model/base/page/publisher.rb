@@ -82,7 +82,7 @@ module Cms::Model::Base::Page::Publisher
     end
     return true if hash && pub && hash == pub.content_hash && ::File.exist?(path)
 
-clean_statics = false
+clean_statics = Zomeki.config.application['sys.clean_statics']
 if clean_statics
     if File.exist?(path)
       File.delete(path)

@@ -892,6 +892,7 @@ class GpArticle::Doc < ApplicationRecord
   def publish_qrcode
     return true unless self.state_public?
     return true unless self.qrcode_visible?
+    return true if Zomeki.config.application['sys.clean_statics']
     Util::Qrcode.create(self.public_full_uri, self.qrcode_path)
     return true
   end

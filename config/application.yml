@@ -8,6 +8,9 @@ sys:
   #自動リンクチェック
   auto_link_check: true
 
+  # 静的ファイルの書き出しを無効化
+  clean_statics: false
+
   # 書き出しファイル転送設定
   log_closed_page: false
   transfer_to_publish: false
