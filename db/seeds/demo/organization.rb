@@ -1,10 +1,9 @@
 ## ---------------------------------------------------------
 ## cms/concepts
-
-c_site  = Cms::Concept.find(1)
-c_top   = Cms::Concept.where(name: 'トップページ').first
-c_content = Cms::Concept.where(name: 'コンテンツ').first
-c_group   = Cms::Concept.where(name: '組織').first
+c_site  = @site.concepts.where(parent_id: 0).first
+c_top   = @site.concepts.where(name: 'トップページ').first
+c_content = @site.concepts.where(name: 'コンテンツ').first
+c_group   = @site.concepts.where(name: '組織').first
 
 ## ---------------------------------------------------------
 ## cms/contents
@@ -14,7 +13,7 @@ l_top_grp   = create_cms_layout c_site, 'soshiki-top',  '組織TOP'
 organization  = create_cms_content c_content, 'Organization::Group', '組織一覧', 'soshiki'
 create_cms_node c_content, organization, 120, nil, l_top_grp, 'Organization::Group', 'soshiki', '組織', nil
 
-category   = GpCategory::Content::CategoryType.first
+category   = GpCategory::Content::CategoryType.where(concept_id: c_content.id).first
 settings = Organization::Content::Setting.config(organization, 'gp_category_content_category_type_id')
 settings.value = category.id
 settings.save

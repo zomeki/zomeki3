@@ -381,41 +381,7 @@ $(document).ready(function () {
       <%= f.text_field :meta_keywords, :style => 'width: 700px;' %>
     </div>
 
-    <p class="form">SNS(OGP)</p>
-
-    <%- if @content.sns_share_related? -%>
-      <%- if @content.sns_share_content_account -%>
-      <div>
-        <div class="label1">SNS投稿</div>
-        <%- unless @content.sns_share_content_account.accounts.empty? -%>
-        <table class="noDesign">
-        <%- @content.sns_share_content_account.accounts.each do |account| -%>
-        <tr>
-          <td><%= check_box_tag 'item[in_share_accounts][]', account.id, @item.in_share_accounts.include?(account.id.to_s), id: "item_in_share_accounts_#{account.id}" %>
-              <%= label_tag "item_in_share_accounts_#{account.id}", '投稿する' %></td>
-          <td><%= account.provider.humanize %></td>
-          <td><%= image_tag account.info_image, style: 'height: 50px; width: 50px;' if account.info_image.present? %></td>
-          <td>
-            <%= link_to_if account.info_url.present?, "#{account.info_name}#{account.info_nickname.presence ? " (#{account.info_nickname})" : ''}", account.info_url, target: 'preview' %>
-            <%- if account.provider == 'facebook' -%>
-              <span style="margin-left: 20px;"><%= account.facebook_page_text %></span>
-            <%- end -%>
-          </td>
-        </tr>
-        <%- end -%>
-        </table>
-        <%- end -%>
-      </div>
-      <div>
-        <%= f.radio_buttons :share_to_sns_with, GpArticle::Doc::SHARE_TO_SNS_WITH_OPTIONS %>
-      </div>
-      <%- else -%>
-      <div>
-        <%= link_to '使用するSNSシェアを選択してください。', gp_article_content_settings_path %>
-      </div>
-      <%- end -%>
-    <%- end -%>
-
+    <p class="form">OGP</p>
     <div>
       <div class="label1"><%= f.label :og_type %></div>
       <%= f.select :og_type, @item.class::OGP_TYPE_OPTIONS, include_blank: true %>

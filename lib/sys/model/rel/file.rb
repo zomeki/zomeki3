@@ -22,6 +22,7 @@ module Sys::Model::Rel::File
 
   def publish_files
     return true unless @save_mode == :publish
+    return true if Zomeki.config.application['sys.clean_statics']
     return true if files.empty?
 
     public_dir = public_files_path

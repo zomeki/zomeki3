@@ -35,6 +35,7 @@ centos() {
   crontab -l > $ROOT_CRON_TXT
   grep -s reload_servers.sh $ROOT_CRON_TXT || echo '0,30 * * * * /root/reload_servers.sh' >> $ROOT_CRON_TXT
   crontab $ROOT_CRON_TXT
+
 }
 
 others() {

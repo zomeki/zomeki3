@@ -1,0 +1,89 @@
+#!/bin/sh
+# chkconfig: 345 90 20
+# description: Unicorn Service
+# processname: unicorn
+
+RAILS_ENV=production
+SERVICE=unicorn
+USER=zomeki
+
+RAILS_ROOT_DIR="/var/www/zomeki"
+
+PID="${RAILS_ROOT_DIR}/tmp/pids/unicorn.pid"
+UNICORN_CONF="config/unicorn/${RAILS_ENV}.rb"
+
+UNICORN_ALIVE=`ps aux|grep "${UNICORN_CONF}"|grep -v grep|wc -l`
+
+start()
+{
+  if [ $UNICORN_ALIVE = 0 ]; then
+    rm -f $PID
+  fi
+  if [ -e ${PID} ]; then
+    echo "${SERVICE} already started"
+    exit 1
+  fi
+  echo "start ${SERVICE}"
+  su - zomeki -c "export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle exec unicorn_rails -c ${UNICORN_CONF} -E ${RAILS_ENV} -D"
+}
+
+stop()
+{
+  if [ ! -e ${PID} ]; then
+    echo "${SERVICE} not started"
+    exit 1
+  fi
+  echo "stop ${SERVICE}"
+  kill -QUIT `cat ${PID}`
+}
+
+force_stop()
+{
+  if [ ! -e ${PID} ]; then
+    echo "${SERVICE} not started"
+    exit 1
+  fi
+  echo "stop ${SERVICE}"
+  kill -INT `cat ${PID}`
+}
+
+reload()
+{
+  if [ ! -e ${PID} ]; then
+    echo "${SERVICE} not started"
+    start
+    exit 0
+  fi
+  echo "reload ${SERVICE}"
+  kill -USR2 `cat ${PID}`
+}
+
+restart()
+{
+  if [ -e ${PID} ]; then
+    stop
+    sleep 3
+  fi
+  start
+}
+
+case "$1" in
+  start)
+    start
+    ;;
+  stop)
+    stop
+    ;;
+  force-stop)
+    force_stop
+    ;;
+  reload)
+    reload
+    ;;
+  restart)
+    restart
+    ;;
+  *)
+    echo "Syntax Error: release [start|stop|force-stop|reload|restart]"
+    ;;
+esac

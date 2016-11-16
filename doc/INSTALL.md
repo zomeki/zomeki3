@@ -72,7 +72,8 @@ bundlerをインストールします。
 外部からhttpでアクセス可能にします。
 ※ファイアーウォール設定は環境に応じて適切に設定してください。
 
-    # firewall-cmd --add-service=http --zone=public
+    # firewall-cmd --add-service=http --zone=public --permanent
+    # firewall-cmd --reload
 
 yumリポジトリに追加します。
 
@@ -186,6 +187,9 @@ uri: http://zomeki.example.com/    # すべて変更
     # su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle exec rake zomeki:configure RAILS_ENV=production'
     # ln -s /var/www/zomeki/config/nginx/nginx.conf /etc/nginx/conf.d/zomeki.conf
 
+デフォルトのnginx設定ファイルをリネームします。
+    # mv /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf.org
+
 ## 10.ふりがな・読み上げ機能のインストール
 
 必要なパッケージをインストールします。
@@ -257,9 +261,20 @@ unicornを起動します。
 
     # su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle exec unicorn_rails -c config/unicorn/production.rb -E production -D'
 
+unicornを自動起動に設定します。
+    # cp /var/www/zomeki/config/samples/unicorn /etc/init.d/.
+    # chmod a+x /etc/init.d/unicorn
+    # chkconfig unicorn on
+
 delayed_jobを起動します。
 
     # su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle exec rake delayed_job:start RAILS_ENV=production'
+
+delayed_jobを自動起動に設定します。
+    # cp /var/www/zomeki/config/samples/delayed_job /etc/init.d/.
+    # chmod a+x /etc/init.d/delayed_job
+    # chkconfig delayed_job on
+
 
 ## 12.定期実行処理 の設定
 

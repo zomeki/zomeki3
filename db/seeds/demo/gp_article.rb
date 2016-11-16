@@ -1,35 +1,37 @@
 ## ---------------------------------------------------------
 ## cms/concepts
 
-c_site  = Cms::Concept.find(1)
-c_top   = Cms::Concept.where(name: 'トップページ').first
+c_site  = @site.concepts.where(parent_id: 0).first
+c_top   = @site.concepts.where(name: 'トップページ').first
+c_content = @site.concepts.where(name: 'コンテンツ').first
 
 ## ---------------------------------------------------------
 ## cms/contents
 create_cms_content c_site, 'GpArticle::Doc', 'ぞめき市からのお知らせ', 'docs'
 create_cms_content c_site, 'GpArticle::Doc', 'よくある質問', 'faq'
 
-oshirase  = GpArticle::Content::Doc.where(code: 'docs').first
-shitsumon = GpArticle::Content::Doc.where(code: 'faq').first
+oshirase  = GpArticle::Content::Doc.where(concept_id: c_site.id, code: 'docs').first
+shitsumon = GpArticle::Content::Doc.where(concept_id: c_site.id, code: 'faq').first
 
-l_doc = Cms::Layout.where(name: 'doc').first
+l_doc = Cms::Layout.where(site_id: @site.id, name: 'doc').first
 
 create_cms_node c_site, oshirase, 30, nil, l_doc, 'GpArticle::Doc', oshirase.code, oshirase.name, nil
 create_cms_node c_site, shitsumon, 40, nil, l_doc, 'GpArticle::Doc', shitsumon.code, shitsumon.name, nil
 
-category = GpCategory::Content::CategoryType.first
+category = GpCategory::Content::CategoryType.where(concept_id: c_content.id).first
 categories = GpCategory::CategoryType.where(content_id: category.id).pluck(:id)
 
-kubun     = GpCategory::CategoryType.where(name: 'kubun').first
-chumoku   = GpCategory::Category.where(name: 'chumoku').first
+kubun     = GpCategory::CategoryType.where(content_id: category.id, name: 'kubun').first
+chumoku   = GpCategory::Category.where(category_type_id: categories, name: 'chumoku').first
+
 
 tag       = Tag::Content::Tag.first
-sns_share = SnsShare::Content::Account.first
 calendar  = GpCalendar::Content::Event.first
 approval  = Approval::Content::ApprovalFlow.first
 soshiki   = Organization::Content::Group.first
 map       = Map::Content::Marker.first
 template  = GpTemplate::Content::Template.first
+
 ## ---------------------------------------------------------
 ## cms/pieces
 recent     = create_cms_piece c_top, oshirase, 'GpArticle::RecentTab', 'recent-docs-tab', '新着タブ'
@@ -48,7 +50,7 @@ mobile.save
 
 create_cms_piece c_top,  category, 'GpCategory::Doc', 'attention-information', '注目情報', '注目情報'
 
-p_info = GpCategory::Piece::Doc.where(name: 'attention-information').first
+p_info = GpCategory::Piece::Doc.where(site_id: @site.id, name: 'attention-information').first
 category_sets = []
 category_set = p_info.new_category_set
 category_set[:category_type_id] = kubun.id
@@ -92,8 +94,6 @@ p_info.save
   {id: "organization_content_group_id", value: soshiki.id},
   {id: "gp_template_content_template_id", value: template.id,
     extra_values: {template_ids: template.templates.pluck(:id), default_template_id: 0}},
-  {id: "sns_share_relation", value: "enabled",
-    extra_values: {sns_share_content_id: sns_share.id}},
   {id: "calendar_relation", value: "enabled",
     extra_values: {calendar_content_id: calendar.id, event_sync_settings: 'disabled',
     event_sync_default_will_sync: 'disabled'}},
@@ -137,8 +137,6 @@ end
   {id: "approval_relation", value: "enabled",
     extra_values: {approval_content_id: approval.id}},
   {id: "calendar_relation", value: "disabled"},
-  {id: "sns_share_relation", value: "enabled",
-    extra_values: {sns_share_content_id: sns_share.id}},
   {id: "list_style", value: "@title_link@@publish_date@@group@",
     extra_values: {wrapper_tag: 'li'}},
 ].each do |conf|
@@ -148,10 +146,10 @@ end
   item.save
 end
 
-def create(content, title, body, options = {})
+def create(content, c_types, title, body, options = {})
   category_ids = {}
-  if options[:categories]
-    GpCategory::Category.where(name:  options[:categories]).each do |c|
+  if options[:categories] && c_types
+    GpCategory::Category.where(category_type_id: c_types, name:  options[:categories]).each do |c|
       category_ids[c.category_type_id.to_s] = [] unless category_ids[c.category_type_id.to_s]
       category_ids[c.category_type_id.to_s] << c.id
     end
@@ -161,31 +159,31 @@ def create(content, title, body, options = {})
     in_category_ids: category_ids, state: 'public', raw_tags: options[:tags]
 end
 
-Core.user       = Sys::User.find_by(account: 'somu1')
+Core.user       = Sys::User.find_by(account: "#{@code_prefix}somu1")
 Core.user_group = Core.user.groups[0]
 
 GpArticle::Doc.skip_callback(:save, :after, :enqueue_publisher_callback)
 
-create oshirase, '転入届', read_data('gp_article/oshirase/tennyu/body'), {categories: ['juminhyo', 'hikkoshi']}
-create oshirase, '出生届', read_data('gp_article/oshirase/shussei/body'), {categories: ['ninshin', 'koseki']}
-create oshirase, '印鑑登録と印鑑登録証明書', read_data('gp_article/oshirase/inkan/body'), {categories: ['inkan']}
-create oshirase, '離婚届', read_data('gp_article/oshirase/rikon/body'), {categories: ['kekkon', 'koseki']}
-create oshirase, '死亡届', read_data('gp_article/oshirase/shibou/body'), {categories: ['koseki', 'shibo']}
-create oshirase, '転籍届', read_data('gp_article/oshirase/tenseki/body'), {categories: ['juminhyo', 'koseki']}
-create oshirase, '婚姻届', read_data('gp_article/oshirase/konin/body'), {categories: ['koseki', 'kekkon']}
-create oshirase, '外国人住民に関する登録の制度', read_data('gp_article/oshirase/touroku/body'), {categories: ['gaikokujin']}
-create oshirase, '手数料一覧', read_data('gp_article/oshirase/tesuryo/body'), {categories: ['shomei', 'hikkoshi']}
-create oshirase, '証明書一覧', read_data('gp_article/oshirase/syomeisyo/body'), {categories: ['shomei']}
-create oshirase, '申請書ダウンロード', read_data('gp_article/oshirase/shinseisyo/body'), {categories: ['shomei']}
-create oshirase, '住民票コード', read_data('gp_article/oshirase/juminhyo_code/body'), {categories: ['jukinet']}
-create oshirase, '住民基本台帳カード', read_data('gp_article/oshirase/daicho/body'), {categories: ['jukinet']}
-create oshirase, 'パスポートの申請・交付', read_data('gp_article/oshirase/passport/body'), {categories: ['passport']}
-create oshirase, '転出届', read_data('gp_article/oshirase/tensyutsu/body'), {categories: ['juminhyo']}
-create oshirase, '住民票のお知らせ', read_data('gp_article/oshirase/juminhyo/body'), {categories: ['juminhyo', 'chumoku']}
-create oshirase, '世帯主変更届', read_data('gp_article/oshirase/setainushi/body'), {categories: ['juminhyo']}
-create oshirase, '入札のお知らせ', read_data('gp_article/oshirase/nyusatsu/body'), {categories: ['joho', 'chumoku'], tags: '入札'}
+create oshirase, categories, '転入届', read_data('gp_article/oshirase/tennyu/body'), {categories: ['juminhyo', 'hikkoshi']}
+create oshirase, categories, '出生届', read_data('gp_article/oshirase/shussei/body'), {categories: ['ninshin', 'koseki']}
+create oshirase, categories, '印鑑登録と印鑑登録証明書', read_data('gp_article/oshirase/inkan/body'), {categories: ['inkan']}
+create oshirase, categories, '離婚届', read_data('gp_article/oshirase/rikon/body'), {categories: ['kekkon', 'koseki']}
+create oshirase, categories, '死亡届', read_data('gp_article/oshirase/shibou/body'), {categories: ['koseki', 'shibo']}
+create oshirase, categories, '転籍届', read_data('gp_article/oshirase/tenseki/body'), {categories: ['juminhyo', 'koseki']}
+create oshirase, categories, '婚姻届', read_data('gp_article/oshirase/konin/body'), {categories: ['koseki', 'kekkon']}
+create oshirase, categories, '外国人住民に関する登録の制度', read_data('gp_article/oshirase/touroku/body'), {categories: ['gaikokujin']}
+create oshirase, categories, '手数料一覧', read_data('gp_article/oshirase/tesuryo/body'), {categories: ['shomei', 'hikkoshi']}
+create oshirase, categories, '証明書一覧', read_data('gp_article/oshirase/syomeisyo/body'), {categories: ['shomei']}
+create oshirase, categories, '申請書ダウンロード', read_data('gp_article/oshirase/shinseisyo/body'), {categories: ['shomei']}
+create oshirase, categories, '住民票コード', read_data('gp_article/oshirase/juminhyo_code/body'), {categories: ['jukinet']}
+create oshirase, categories, '住民基本台帳カード', read_data('gp_article/oshirase/daicho/body'), {categories: ['jukinet']}
+create oshirase, categories, 'パスポートの申請・交付', read_data('gp_article/oshirase/passport/body'), {categories: ['passport']}
+create oshirase, categories, '転出届', read_data('gp_article/oshirase/tensyutsu/body'), {categories: ['juminhyo']}
+create oshirase, categories, '住民票のお知らせ', read_data('gp_article/oshirase/juminhyo/body'), {categories: ['juminhyo', 'chumoku']}
+create oshirase, categories, '世帯主変更届', read_data('gp_article/oshirase/setainushi/body'), {categories: ['juminhyo']}
+create oshirase, categories, '入札のお知らせ', read_data('gp_article/oshirase/nyusatsu/body'), {categories: ['joho', 'chumoku'], tags: '入札'}
 
-create shitsumon, 'ぞめき市外から転入したとき、住所変更の手続きはどうしたらよいですか', read_data('gp_article/shitsumon/body')
+create shitsumon, nil, 'ぞめき市外から転入したとき、住所変更の手続きはどうしたらよいですか', read_data('gp_article/shitsumon/body')
 
 GpArticle::Doc.set_callback(:save, :after, :enqueue_publisher_callback)
 

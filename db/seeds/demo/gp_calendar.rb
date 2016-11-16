@@ -1,17 +1,16 @@
 ## ---------------------------------------------------------
 ## cms/concepts
-
-c_site  = Cms::Concept.find(1)
-c_top   = Cms::Concept.where(name: 'トップページ').first
-c_content = Cms::Concept.where(name: 'コンテンツ').first
-c_event = Cms::Concept.where(name: 'イベント').first
+c_site  = @site.concepts.where(parent_id: 0).first
+c_top   = @site.concepts.where(name: 'トップページ').first
+c_content = @site.concepts.where(name: 'コンテンツ').first
+c_event = @site.concepts.where(name: 'イベント').first
 
 ## ---------------------------------------------------------
 ## cms/contents
 calendar = create_cms_content c_content, 'GpCalendar::Event', 'イベント', 'event'
 
-category   = GpCategory::Content::CategoryType.first
-event_type = GpCategory::CategoryType.where(name: 'event').first
+category   = GpCategory::Content::CategoryType.where(concept_id: c_content.id).first
+event_type = GpCategory::CategoryType.where(content_id: category.id, name: 'event').first
 categories = {}
 GpCategory::Category.where(category_type_id: event_type.id).each_with_index{|c, i| categories[i.to_s] = c.id}
 

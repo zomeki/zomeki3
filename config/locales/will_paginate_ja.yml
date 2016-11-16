@@ -3,6 +3,8 @@ ja:
     page_gap: " || "
     previous_label: 前へ
     next_label: 次へ
+    mobile_previous_label: "&lt;&lt;*前へ"
+    mobile_next_label: "次へ#&gt;&gt;"
     page_entries_info:
       single_page:
         zero:  "0件"
@@ -14,3 +16,10 @@ ja:
         other: '<span class="count">%{count}</span>件表示'
       multi_page: "全%{count}件中、%{from}～%{to}件を表示"
       multi_page_html: '<div class="pageEntryInfo">全<span class="count">%{count}</span>件中、<span class="from">%{from}</span>～<span class="to">%{to}</span>件を表示</div>'
+en:
+  will_paginate:
+    page_gap: " || "
+    previous_label: "PREVIOUS"
+    next_label: "NEXT"
+    mobile_previous_label: "&lt;&lt;*prev"
+    mobile_next_label: "next#&gt;&gt;"

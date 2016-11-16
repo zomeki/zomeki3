@@ -80,6 +80,10 @@ class GpArticle::Content::Doc < Cms::Content
     gp_category_content_category_type.group_category_type
   end
 
+  def doc_list_lang
+    setting_value(:doc_list_lang).to_sym
+  end
+
   def list_style
     setting_value(:list_style).to_s
   end
@@ -160,14 +164,6 @@ class GpArticle::Content::Doc < Cms::Content
 
   def approval_related?
     setting_value(:approval_relation) == 'enabled'
-  end
-
-  def sns_share_content_account
-    SnsShare::Content::Account.find_by(id: setting_extra_value(:sns_share_relation, :sns_share_content_id))
-  end
-
-  def sns_share_related?
-    setting_value(:sns_share_relation) == 'enabled'
   end
 
   def template_available?
