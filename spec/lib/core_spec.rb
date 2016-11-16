@@ -1,11 +1,9 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe Core do
-  before do
-    Core.initialize({})
-    Core.user = fg_find_or_create(:sys_user_system_admin)
-    Core.user_group = Core.user.groups.first
-    @site = fg_find_or_create(:cms_site_first_example_com)
+RSpec.describe Core do
+  before :all do
+    @site = create(:cms_site, :first)
+    initialize_core @site.full_uri
   end
 
   context 'when site_id exist in cookie' do
@@ -21,6 +19,10 @@ describe Core do
   end
 
   context 'when no site_id exist in cookie' do
+    before do
+      Core.env['HTTP_COOKIE'] = nil
+    end
+
     describe '.get_site_by_cookie' do
       it 'returns no site' do
         expect(Core.send(:get_site_by_cookie)).to be_nil
