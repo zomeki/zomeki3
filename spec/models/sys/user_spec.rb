@@ -1,26 +1,24 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe Sys::User do
-  before(:all) do
-    @system_admin = fg_find_or_create(:sys_user_system_admin)
-    @site_admin = fg_find_or_create(:sys_user_site_admin)
-  end
+RSpec.describe Sys::User, type: :model do
+  let(:system_admin) { create(:sys_user, :system_admin) }
+  let(:site_admin) { create(:sys_user, :site_admin) }
 
   context 'when id is 1' do
-    subject { @system_admin }
+    subject { system_admin }
     it { should be_root }
 
     it 'can not be deleted' do
-      expect { @system_admin.destroy }.to raise_error
+      expect { system_admin.destroy }.to raise_error
     end
   end
 
   context 'when id is not 1' do
-    subject { @site_admin }
+    subject { site_admin }
     it { should_not be_root }
 
     it 'can not be deleted' do
-      expect { @site_admin.destroy }.to_not raise_error
+      expect { site_admin.destroy }.to_not raise_error
     end
   end
 end
