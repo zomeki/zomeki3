@@ -1,0 +1,18 @@
+[Unit]
+Description=unicorn for ZOMEKI
+After=postgresql-9.5.service
+
+[Service]
+Type=simple
+User=zomeki
+WorkingDirectory=/var/www/zomeki/
+Environment=RAILS_ENV=delayed_job
+SyslogIdentifier=zomeki_unicorn
+PIDFile=/var/www/zomeki/tmp/pids/unicorn.pid
+ExecStart=/usr/local/rbenv/shims/bundle exec unicorn_rails -c config/unicorn/pro
+duction.rb -E production
+ExecStop=/usr/bin/kill -QUIT $MAINPID
+ExecReload=/bin/kill -USR2 $MAINPID
+
+[Install]
+WantedBy=multi-user.target

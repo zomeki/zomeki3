@@ -11,17 +11,12 @@ centos() {
 
   systemctl start postgresql-9.5 && systemctl enable postgresql-9.5
   systemctl start nginx && systemctl enable nginx
-  su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle exec unicorn_rails -c config/unicorn/production.rb -E production -D'
 
-  cp /var/www/zomeki/config/samples/unicorn /etc/init.d/.
-  chmod a+x /etc/init.d/unicorn
-  chkconfig unicorn on
+  cp /var/www/zomeki/config/samples/zomeki_unicorn.service /usr/lib/systemd/system/.
+  systemctl start zomeki_unicorn && systemctl enable zomeki_unicorn
 
-  su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle exec rake delayed_job:start RAILS_ENV=production'
-
-  cp /var/www/zomeki/config/samples/delayed_job /etc/init.d/.
-  chmod a+x /etc/init.d/delayed_job
-  chkconfig delayed_job on
+  cp /var/www/zomeki/config/samples/zomeki_delayed_job.service /usr/lib/systemd/system/.
+  systemctl start zomeki_delayed_job && systemctl enable zomeki_delayed_job
 
 }
 
