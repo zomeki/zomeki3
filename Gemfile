@@ -43,8 +43,8 @@ end
 
 group :test do
   gem 'database_rewinder'
-  gem 'email_spec', '~> 2.0'
-  gem 'rspec-rails', '~> 3.4', '>= 3.4.2'
+  gem 'email_spec', '~> 2.1'
+  gem 'rspec-rails', '~> 3.5', '>= 3.5.2'
 end
 
 group :development do
