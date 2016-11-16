@@ -174,11 +174,11 @@ class GpArticle::Doc < ApplicationRecord
       creators = Sys::Creator.arel_table
       approval_requests = Approval::ApprovalRequest.arel_table
       assignments = Approval::Assignment.arel_table
-      joins(:creator).joins(:approval_requests => [:approval_flow => [:approvals => :assignments]])
+      joins(:creator).eager_load(:approval_requests => [:approval_flow => [:approvals => :assignments]])
       .where(
         creators[:user_id].eq(user.id)
-        .or(approval_requests[:user_id].eq(Core.user.id)
-                        .or(assignments[:user_id].eq(Core.user.id)))
+        .or(approval_requests[:user_id].eq(user.id)
+                        .or(assignments[:user_id].eq(user.id)))
       )
     when 'group'
       editable
