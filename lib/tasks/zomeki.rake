@@ -24,9 +24,12 @@ namespace :zomeki do
     end
 
     task :tika do
-      url = 'http://ftp.meisei-u.ac.jp/mirror/apache/dist/tika/tika-app-1.13.jar'
+      download_index_url = 'https://tika.apache.org/download.html'
+      jar_index_url = Nokogiri::HTML(Net::HTTP.get(URI.parse download_index_url)).css('a.externalLink[href$=".jar"]').attr('href').text
+      puts jar_url = Nokogiri::HTML(Net::HTTP.get(URI.parse jar_index_url)).css('a[href$=".jar"]').attr('href').text
+
       print 'Downloading Apache Tika...'
-      `cd #{Rails.root.join('vendor/tika')} && curl -fsSLo tika-app.jar #{url}`
+      `cd #{Rails.root.join('vendor/tika')} && curl -fsSLo tika-app.jar #{jar_url}`
       puts 'done!'
     end
   end
