@@ -16,6 +16,8 @@ ja:
       sys/creator:
         group_id: "所属"
         user_id: "作成者"
+        group: "所属"
+        user: "作成者"
 
       sys/language:
         state: "状態"
