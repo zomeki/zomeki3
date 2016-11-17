@@ -9,8 +9,7 @@ WorkingDirectory=/var/www/zomeki/
 Environment=RAILS_ENV=delayed_job
 SyslogIdentifier=zomeki_unicorn
 PIDFile=/var/www/zomeki/tmp/pids/unicorn.pid
-ExecStart=/usr/local/rbenv/shims/bundle exec unicorn_rails -c config/unicorn/pro
-duction.rb -E production
+ExecStart=/usr/local/rbenv/shims/bundle exec unicorn_rails -c config/unicorn/production.rb -E production
 ExecStop=/usr/bin/kill -QUIT $MAINPID
 ExecReload=/bin/kill -USR2 $MAINPID
 
