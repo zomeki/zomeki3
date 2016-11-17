@@ -6,6 +6,7 @@ FactoryGirl.define do
     auth_no 2
     name { Faker::Name.name }
     name_en { l = Faker::Config.locale
+              Faker::Config.locale = :en
               n = Faker::Name.name
               Faker::Config.locale = l
               n }
