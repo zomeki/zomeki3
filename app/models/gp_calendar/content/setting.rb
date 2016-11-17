@@ -9,11 +9,11 @@ class GpCalendar::Content::Setting < Cms::ContentSetting
   set_config :list_style,
     name: '表示形式/イベント一覧',
     upper_text: '<a href="#" class="show_dialog">置き換えテキストを確認する</a>',
-    default_value: '@title_link@'
+    form_type: :table_field
   set_config :today_list_style,
     name: '表示形式/今日のイベント',
     upper_text: '<a href="#" class="show_dialog">置き換えテキストを確認する</a>',
-    default_value: '@title_link@'
+    form_type: :table_field
   set_config :calendar_list_style,
     name: '表示形式/イベントカレンダー',
     upper_text: '<a href="#" class="show_dialog">置き換えテキストを確認する</a>',
@@ -21,7 +21,7 @@ class GpCalendar::Content::Setting < Cms::ContentSetting
   set_config :search_list_style,
     name: '表示形式/イベント検索',
     upper_text: '<a href="#" class="show_dialog">置き換えテキストを確認する</a>',
-    default_value: '@title_link@'
+    form_type: :table_field
   set_config :show_images,
     name: '画像表示',
     form_type: :radio_buttons,
@@ -56,8 +56,19 @@ class GpCalendar::Content::Setting < Cms::ContentSetting
       ex[:default_will_sync] = params[:default_will_sync].to_s
     when 'show_images'
       ex[:image_cnt] = params[:image_cnt].to_i
+    when 'list_style', 'today_list_style', 'search_list_style'
+      ex[:headers] = params[:headers]
+      ex[:values]  = params[:values]
     end
     super(ex)
+  end
+
+  def table_headers
+    extra_values[:headers] || []
+  end
+
+  def table_values
+    extra_values[:values] || [ '@title_link@' ]
   end
 
   def category_ids

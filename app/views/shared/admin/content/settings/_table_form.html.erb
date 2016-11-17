@@ -1,0 +1,12 @@
+<table>
+  <tr>
+    <td>見出し（任意）</td>
+    <td>データ（置き換えテキスト入力）</td>
+  </tr>
+  <%-@item.table_values.each_with_index do |l, i| -%>
+  <tr>
+    <td><%= text_field_tag 'headers[]', @item.table_headers[i] %></td>
+    <td><%= text_field_tag 'values[]',    @item.table_values[i] %></td>
+  </tr>
+  <%- end -%>
+</table>

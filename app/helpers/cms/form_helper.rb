@@ -89,6 +89,8 @@ module Cms::FormHelper
                                 multiple: true, style: 'height: 150px; width: 250px;'
     when :text_area
       f.text_area(:value, size: '100x10', style: css)
+    when :table_field
+      render 'shared/admin/content/settings/table_form', f: f
     else
       f.text_field(:value, style: css ? css : 'width: 400px;')
     end
@@ -127,5 +129,5 @@ $('a[data-toggle-form]').on('click', function (e) {
       %Q(<div class="noticeBox">公開時に更新されるピース : #{link_to h(org.title), org.admin_uri}</div>).html_safe
     end
   end
-  
+
 end
