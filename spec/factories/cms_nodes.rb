@@ -1,28 +1,29 @@
-# Read about factories at https://github.com/thoughtbot/factory_girl
-
 FactoryGirl.define do
-  factory :cms_node_1, :class => 'Cms::Node' do
-    id 1
-    unid 10
-    concept_id 1
-    site_id 4
+  factory :cms_node, class: 'Cms::Node' do
+    concept nil
+    association :site, factory: :cms_site
     state 'public'
-    created_at '2014-03-01 18:16:02'
-    updated_at '2014-03-01 18:16:02'
     recognized_at nil
-    published_at '2014-03-02 11:12:03'
-    parent_id 1
-    route_id 1
+    published_at { Faker::Time.backward(1.year) }
+    parent_id 0
+    route_id 0
     content_id nil
-    model 'Cms::Page'
-    directory 0
+    model 'Cms::Directory'
+    directory 1
     layout_id nil
-    name 'index.html'
-    title 'ぞめきトップ'
-    body 'ぞめきのトップです。'
+    name '/'
+    sequence(:title) {|n| "ノードタイトル#{n}" }
+    body nil
     mobile_title nil
     mobile_body nil
     sitemap_state 'visible'
     sitemap_sort_no nil
+
+    trait :page do
+      model 'Cms::Page'
+      directory 0
+      name 'index.html'
+      sequence(:body) {|n| "ノード#{n}" }
+    end
   end
 end
