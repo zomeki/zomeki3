@@ -1,31 +1,25 @@
 FactoryGirl.define do
-  factory :cms_content_map_marker_1, class: 'Cms::Content' do
-    site_id 1
-    concept_id 1
+  factory :cms_content, class: 'Cms::Content' do
+    site_id { concept.site_id }
+    association :concept, factory: :cms_concept
     state 'public'
-    code 'C1'
-    model 'Map::Marker'
-    name '地図マーカー１'
-    note '地図マーカー１のメモ'
-  end
+    model 'GpArticle::Doc'
+    sequence(:name) {|n| "記事#{n}" }
+    xml_properties nil
+    sequence(:note) {|n| "#{name}のメモ" }
+    sequence(:code) {|n| "ARTICLE#{n}" }
+    sequence(:sort_no) {|n| n * 10 }
 
-  factory :cms_content_ad_banner_banner_1, class: 'Cms::Content' do
-    site_id 1
-    concept_id 1
-    state 'public'
-    model 'AdBanner::Banner'
-    code 'C2'
-    name '広告バナー１'
-    note '広告バナー１のメモ'
-  end
+    trait :map_marker do
+      model 'Map::Marker'
+      sequence(:name) {|n| "地図#{n}" }
+      sequence(:code) {|n| "MAP#{n}" }
+    end
 
-  factory :cms_content_ad_banner_banner_2, class: 'Cms::Content' do
-    site_id 1
-    concept_id 1
-    state 'public'
-    model 'AdBanner::Banner'
-    code 'C3'
-    name '広告バナー２'
-    note '広告バナー２のメモ'
+    trait :ad_banner_banner do
+      model 'AdBanner::Banner'
+      sequence(:name) {|n| "広告バナー#{n}" }
+      sequence(:code) {|n| "AD#{n}" }
+    end
   end
 end
