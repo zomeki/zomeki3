@@ -2,8 +2,8 @@ FactoryGirl.define do
   factory :cms_site, class: 'Cms::Site' do
     state 'public'
     sequence(:name) {|n| "サイト#{n}" }
-    full_uri 'http://www.example.com/'
-    mobile_full_uri 'http://m.example.com/'
+    sequence(:full_uri) {|n| "http://www#{n}.example.com/" }
+    sequence(:mobile_full_uri) {|n| "http://m#{n}.example.com/" }
     node_id nil
     related_site ''
     map_key nil
