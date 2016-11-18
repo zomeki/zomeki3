@@ -13,6 +13,10 @@ class GpArticle::Public::Piece::DocsController < Sys::Controller::Public::Base
               @docs.order(display_published_at: :desc, published_at: :desc)
             when 'published_at_asc'
               @docs.order(display_published_at: :asc, published_at: :asc)
+            when 'updated_at_desc'
+              @docs.order(display_updated_at: :desc, updated_at: :desc)
+            when 'updated_at_asc'
+              @docs.order(display_updated_at: :asc, updated_at: :asc)
             when 'random'
               @docs.order('RANDOM()')
             else
