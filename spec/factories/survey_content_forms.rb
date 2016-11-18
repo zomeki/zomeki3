@@ -1,27 +1,13 @@
 FactoryGirl.define do
-  time_now = Time.now
-
-  factory :survey_content_form_1, class: 'Survey::Content::Form' do
-    site_id 1
-    concept_id 1
+  factory :survey_content_form, class: 'Survey::Content::Form' do
+    site_id { concept.site_id }
+    association :concept, factory: :cms_concept
     state 'public'
     model 'Survey::Form'
-    code 'SF1'
-    name 'アンケート１'
-    note 'アンケート１のメモ'
-    created_at time_now
-    updated_at time_now
-  end
-
-  factory :survey_content_form_2, class: 'Survey::Content::Form' do
-    site_id 1
-    concept_id 1
-    state 'public'
-    model 'Survey::Form'
-    code 'SF2'
-    name 'アンケート２'
-    note 'アンケート２のメモ'
-    created_at time_now
-    updated_at time_now
+    sequence(:name) {|n| "アンケート#{n}" }
+    xml_properties nil
+    sequence(:note) {|n| "#{name}のメモ" }
+    sequence(:code) {|n| "SF#{n}" }
+    sequence(:sort_no) {|n| n * 10 }
   end
 end
