@@ -1,19 +1,14 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe Approval::ApprovalFlow do
-  before do
-    Core.user = FactoryGirl.build(:sys_user_system_admin)
-    Core.user_group = Core.user.group
-  end
-
+RSpec.describe Approval::ApprovalFlow, type: :model do
   it 'has a valid factory' do
-    approval_flow = FactoryGirl.build(:approval_approval_flow_1)
+    approval_flow = build(:approval_approval_flow)
     expect(approval_flow).to be_valid
   end
 
   it 'is invalid without a title' do
-    approval_flow = FactoryGirl.build(:approval_approval_flow_1, title: nil)
-    expect(approval_flow).not_to be_valid
-    expect(approval_flow.errors[:title].size).to eq(1)
+    approval_flow = build(:approval_approval_flow, title: nil)
+    approval_flow.validate
+    expect(approval_flow.errors[:title].size).to eq 1
   end
 end
