@@ -1,30 +1,43 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe Cms::Admin::SitesController do
-  before do
-    Core.initialize({})
-    Core.user = fg_find_or_create(:sys_user_site_admin)
-    Core.user_group = Core.user.groups.first
-    site = fg_find_or_create(:cms_site_first_example_com)
-    Core.env['HTTP_COOKIE'] = "cms_site=#{site.id}"
-# TODO: logged_in? にtrueを返させる処理が必要
+RSpec.describe Cms::Admin::SitesController, type: :controller do
+  shared_examples_for 'routes correct' do
+    subject { {get: "/#{ZomekiCMS::ADMIN_URL_PREFIX}/cms/sites/new"} }
+    it { should route_to(controller: 'cms/admin/sites', action: 'new') }
   end
 
+  prepare_first_site
+
   context "when user doesn't have site_creatable" do
+    login_as_site_admin
+
     describe 'GET #new' do
-      describe 'routes' do
-        subject { {get: "/#{ZomekiCMS::ADMIN_URL_PREFIX}/cms/sites/new"} }
-        it { should route_to(controller: 'cms/admin/sites', action: 'new') }
+      before do
+        get 'new'
       end
 
-      describe 'response' do
-        before do
-          Core.recognize_path("/#{ZomekiCMS::ADMIN_URL_PREFIX}/cms/sites/new")
-          get 'new'
-        end
+      it_behaves_like 'routes correct'
 
+      describe 'response' do
         subject { response }
         it { should_not be_success }
+      end
+    end
+  end
+
+  context 'when user haves site_creatable' do
+    login_as_system_admin
+
+    describe 'GET #new' do
+      before do
+        get 'new'
+      end
+
+      it_behaves_like 'routes correct'
+
+      describe 'response' do
+        subject { response }
+        it { should be_success }
       end
     end
   end
