@@ -1,9 +1,10 @@
 module CommonHelpers
   module ClassMethods
-    def prepare_first_site
+    def prepare_first_site(path: '/')
       let(:first_site) { create(:cms_site, :first) }
       before do
-        initialize_core(first_site.full_uri)
+        uri = "#{first_site.full_uri.to_s.sub(/\/\z/, '')}/#{path.to_s.sub(/\A\//, '')}"
+        initialize_core(uri)
       end
     end
   end
