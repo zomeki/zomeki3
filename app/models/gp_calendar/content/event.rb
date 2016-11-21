@@ -18,6 +18,10 @@ class GpCalendar::Content::Event < Cms::Content
     holidays.public_state
   end
 
+  def category_content_id
+    setting_value(:gp_category_content_category_type_id).to_i
+  end
+
   def categories
     setting = GpCalendar::Content::Setting.find_by(id: settings.find_by(name: 'gp_category_content_category_type_id').try(:id))
     return GpCategory::Category.none unless setting

@@ -29,3 +29,14 @@ ja:
         description: 概要
         kind: 種別
         created_at: 作成日時
+      gp_calendar/piece/event_list:
+        docs_number: 表示件数
+        category_ids: 表示カテゴリ
+        table_style: 表示形式
+        date_style: 日時形式
+        more_link_label: 一覧リンク文字
+        more_link_url: 一覧リンクURL
+        target_date: 表示対象
+      gp_calendar/piece/category_daily_link:
+        category_ids: 表示カテゴリ
+

@@ -45,12 +45,16 @@ ZomekiCMS::Application.routes.draw do
     ## pieces
     resources :piece_daily_links,
       :controller => 'admin/piece/daily_links'
+    resources :piece_category_daily_links,
+      :controller => 'admin/piece/category_daily_links'
     resources :piece_monthly_links,
       :controller => 'admin/piece/monthly_links'
     resources :piece_category_types,
       :controller => 'admin/piece/category_types'
     resources :piece_near_future_events,
       :controller => 'admin/piece/near_future_events'
+    resources :piece_event_lists,
+      :controller => 'admin/piece/event_lists'
   end
 
   ## public

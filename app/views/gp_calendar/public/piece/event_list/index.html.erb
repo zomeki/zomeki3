@@ -1,0 +1,11 @@
+<div id="simple_tab_panels">
+  <div>
+    <%- unless @todays_events.empty? -%>
+    <ul>
+      <%- @todays_events.each do |event| -%>
+      <li><%= link_to_if event.href.present?, event.title, event.href, target: event.target %></li>
+      <%- end -%>
+    </ul>
+    <%- end -%>
+  </div>
+</div>
