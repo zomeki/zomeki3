@@ -69,5 +69,6 @@ RSpec.configure do |config|
 
   config.include FactoryGirl::Syntax::Methods
 
+  config.include CommonHelpers
   config.include ControllerHelpers, type: :controller
 end
