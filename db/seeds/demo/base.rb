@@ -189,7 +189,7 @@ if @create_base
 
   bosai1 = Sys::User.find_by(account: "ukiyo")
   bosai1.update_columns(account: "bosai1", name: "防災課記事作成者",
-      name_en: "bosai1", password: "bosai1", auth_no: 1)
+      name_en: "bosai1", password: "bosai1")
   Sys::UsersGroup.find_by(user_id: bosai1.id).update_columns(group_id: bosaika.id)
 else
 
@@ -198,7 +198,7 @@ else
   Sys::UsersGroup.create!(group: zomeki_group, user: admin)
 
   soumu1 = Sys::User.create!(account: "#{@code_prefix}somu1", name: "総務課記事作成者", state: 'enabled',
-      name_en: "somu1", password: "#{@code_prefix}somu1", ldap: 0, auth_no: 1)
+      name_en: "somu1", password: "#{@code_prefix}somu1", ldap: 0)
   Sys::UsersGroup.create!(group: zomeki_group, user: soumu1)
 
   soumu2 = Sys::User.create!(account: "#{@code_prefix}somu2", name: "総務課サイト更新者", state: 'enabled',
@@ -210,7 +210,7 @@ else
   Sys::UsersGroup.create!(group: zomeki_group, user: soumu3)
 
   bosai1 = Sys::User.create!(account: "#{@code_prefix}bosai1", name: "防災課記事作成者", state: 'enabled',
-      name_en: "bosai1", password: "#{@code_prefix}bosai1", auth_no: 1, ldap: 0)
+      name_en: "bosai1", password: "#{@code_prefix}bosai1", auth_no: 2, ldap: 0)
   Sys::UsersGroup.create!(group: bosaika, user: bosai1)
 end
   bosai2 = Sys::User.create!(state: "enabled", ldap: 0, auth_no: 4,

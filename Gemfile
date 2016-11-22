@@ -39,11 +39,13 @@ group :development, :test do
 
   gem 'factory_girl_rails', '~> 4.7'
   gem 'faker', '~> 1.6', '>= 1.6.3'
+  gem 'pry-byebug'
 end
 
 group :test do
   gem 'database_rewinder'
   gem 'email_spec', '~> 2.1'
+  gem 'rails-controller-testing'
   gem 'rspec-rails', '~> 3.5', '>= 3.5.2'
 end
 
@@ -60,7 +62,6 @@ group :development do
   gem 'rails_best_practices'
   gem 'rubocop', require: false
   gem 'brakeman', require: false
-  gem 'pry-byebug'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
