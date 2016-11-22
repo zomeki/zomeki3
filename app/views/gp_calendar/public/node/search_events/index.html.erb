@@ -1,48 +1,44 @@
 <div class="calendarEvents calendarMonthlyEvents">
 
+<%= form_for :item, url: "#{@node.public_uri}",  html: { method: :get, class: 'search' } do |f| %>
+<table>
+  <tr>
+    <td colspan="2">
+    <%- @content.category_types.each do |category_type|
+    category_id = params[:categories].present? ? params[:categories]["#{category_type.id}"] : nil
+    -%>
+    <%= select_tag "categories[#{category_type.id}]",
+      options_for_select(category_type.categories_for_option, category_id),
+      include_blank: true %>
+    <%- end -%>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2">期間</td>
+  </tr>
+  <tr>
+    <td>
+
+    </td>
+    <td class="submitters">
+      <%= submit_tag '検索', name: :search, data: { disable_with: false } %>
+    </td>
+  </tr>
+</table>
+<!-- end .search --><% end %>
+
   <%- unless @events.empty? -%>
   <table border="1">
+    <thead>
+      <tr>
+      <%- @content.search_list_style.each do |header| -%>
+        <th><%= header[:header].html_safe %></th>
+      <%- end -%>
+      </tr>
+    </thead>
     <tbody>
       <%- @events.each do |event| -%>
-      <tr>
-        <%- if @content.show_images? -%>
-        <td class="image">
-          <%- if event.image_files.empty? -%>
-            <%- if @content.default_image.blank? -%>
-              画像がありません。
-            <%- else -%>
-              <%= image_tag @content.default_image %>
-            <%- end -%>
-          <%- else -%>
-          <p class="thumb">
-            <%- unless (ei = event_images(event, count: @content.image_cnt)).blank? -%>
-              <%= ei %>
-            <%- else -%>
-              <%- if @content.default_image.blank? -%>
-                画像がありません。
-              <%- else -%>
-                <%= image_tag @content.default_image %>
-              <%- end -%>
-            <%- end -%>
-          </p>
-          <%- end -%>
-        </td>
-        <%- end -%>
-        <td id="<%= 'day%02d' % event.started_on.day if event.started_on.month == @date.month %>" class="date<%= ' holiday' if event.holiday.present? %>">
-          <%= render 'gp_calendar/public/shared/event_date', event: event, date_style: @content.date_style, holiday_disp: true %>
-        </td>
-        <td class="<%= event.kind %>">
-          <%= event_replace(event, @content.list_style) %>
-          <%- if event.categories.present? -%>
-          <p class="category">
-            <%- event.categories.each do |category| -%>
-            <span class="category<%= category.name.capitalize %>"><%= category.title %></span>
-            <%- end -%>
-          </p>
-          <%- end -%>
-          <%=simple_format event.description, class: 'summary' if event.description.present? %>
-        </td>
-      </tr>
+        <%= event_table_replace(event, @content.search_list_style) %>
       <%- end -%>
     </tbody>
   </table>

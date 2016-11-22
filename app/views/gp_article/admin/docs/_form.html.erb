@@ -334,6 +334,10 @@ $(document).ready(function () {
           </div>
         </td>
       </tr>
+      <tr>
+        <th><%= f.label :event_note %></th>
+        <td><%= f.text_area :event_note, :size => '100x3' %></td>
+      </tr>
       <%- end -%>
     </table>
 

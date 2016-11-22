@@ -56,8 +56,21 @@ class GpCalendar::Content::Event < Cms::Content
   end
 
   def list_style
-    setting_value(:list_style).to_s
+    setting_value(:list_style)
   end
+
+  def today_list_style
+    setting_value(:today_list_style)
+  end
+
+  def calendar_list_style
+    setting_value(:calendar_list_style).to_s
+  end
+
+  def search_list_style
+    setting_value(:search_list_style)
+  end
+
 
   def date_style
     setting_value(:date_style).to_s

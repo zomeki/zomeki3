@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161109010041) do
+ActiveRecord::Schema.define(version: 20161122052840) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -268,6 +268,7 @@ ActiveRecord::Schema.define(version: 20161109010041) do
     t.integer  "thumb_width"
     t.integer  "thumb_height"
     t.integer  "thumb_size"
+    t.text     "extracted_text"
     t.index ["concept_id", "node_id", "name"], name: "index_cms_data_files_on_concept_id_and_node_id_and_name", using: :btree
   end
 
@@ -759,6 +760,7 @@ ActiveRecord::Schema.define(version: 20161109010041) do
     t.string   "event_will_sync"
     t.integer  "serial_no"
     t.string   "lang"
+    t.text     "event_note"
     t.index ["concept_id"], name: "index_gp_article_docs_on_concept_id", using: :btree
     t.index ["content_id"], name: "index_gp_article_docs_on_content_id", using: :btree
     t.index ["event_started_on", "event_ended_on"], name: "index_gp_article_docs_on_event_started_on_and_event_ended_on", using: :btree
@@ -1192,6 +1194,7 @@ ActiveRecord::Schema.define(version: 20161109010041) do
     t.integer  "thumb_width"
     t.integer  "thumb_height"
     t.integer  "thumb_size"
+    t.text     "extracted_text"
     t.index ["file_attachable_type", "file_attachable_id"], name: "index_sys_files_on_file_attachable_type_and_file_attachable_id", using: :btree
   end
 

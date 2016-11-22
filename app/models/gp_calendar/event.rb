@@ -76,6 +76,11 @@ class GpCalendar::Event < ApplicationRecord
       end
     end
 
+    if criteria[:categories].present?
+      rel = rel.distinct.includes(:categories)
+          .where(gp_calendar_events_gp_category_categories: {category_id: criteria[:categories]})
+    end
+
     rel = rel.where(events[:state].eq(criteria[:state])) if criteria[:state].present?
 
     return rel

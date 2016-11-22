@@ -59,13 +59,6 @@ class GpCalendar::Content::Setting < Cms::ContentSetting
     super(ex)
   end
 
-  def table_headers
-    extra_values[:headers] || []
-  end
-
-  def table_values
-    extra_values[:values] || [ '@title_link@' ]
-  end
 
   def category_ids
     extra_values[:category_ids] || []

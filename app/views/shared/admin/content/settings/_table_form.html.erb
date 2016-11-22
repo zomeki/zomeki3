@@ -8,7 +8,7 @@
   <tr>
     <td><%= text_field_tag "item[value][][header]", l[:header], style: 'width: 300px;' %></td>
     <td><%= text_field_tag "item[value][][data]",   l[:data]  , style: 'width: 300px;'%></td>
-    <td class="del"></td>
+    <td class="del"><%= link_to '削除', '#', class: 'remove_row' if i != 0%></td>
   </tr>
   <%- end -%>
 </table>
