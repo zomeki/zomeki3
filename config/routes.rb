@@ -74,12 +74,6 @@ Rails.application.routes.draw do
   # Api
   match '_api/*api_path' => 'cms/public/api#receive', as: :api_receive, via: [:get, :post]
 
-  # OmniAuth
-  get "/_auth/facebook"           => "cms/public/o_auth#dummy",   :as => :o_auth_facebook
-  get "/_auth/twitter"            => "cms/public/o_auth#dummy",   :as => :o_auth_twitter
-  get "/_auth/:provider/callback" => "cms/public/o_auth#callback" # Used only by OmniAuth
-  get "/_auth/failure"            => "cms/public/o_auth#failure"  # Used only by OmniAuth
-
   # Tool
   get "/_tools/captcha/index"  => "simple_captcha#index"
   get "/_tools/captcha/talk"   => "simple_captcha#talk"

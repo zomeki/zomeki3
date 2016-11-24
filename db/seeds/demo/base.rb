@@ -1,9 +1,7 @@
 # encoding: utf-8
 
-site_name = "ZOMEKI"
-site_id   = 1
-
-zomeki_site = Cms::Site.find(1)
+site_name = @site.name
+site_id   = @site.id
 
 ## ---------------------------------------------------------
 ## methods
@@ -25,82 +23,82 @@ end
 puts "import sys_groups..."
 
 def create(site, parent, level_no, sort_no, code, name, name_en)
-  group = Sys::Group.create! parent_id: (parent == 0 ? 0 : parent.id),
+  group = Sys::Group.create parent_id: (parent == 0 ? 0 : parent.id),
     level_no:  level_no,
     sort_no:   sort_no,
     state:     'enabled',
     web_state: 'closed',
     ldap:      0,
-    code:      code,
+    code:      "#{@code_prefix}#{code}",
     name:      name,
-    name_en:   name_en,
+    name_en:   "#{@code_prefix}#{name_en}",
     tel:       '0000-01-0000',
     fax:       '0000-01-0000',
     email:     'info@sitebridge.co.jp'
+
   site.groups << group
   return group
 end
 
 r = Sys::Group.find(1)
 
+p       = create @site, r, 2, 10, "1", "総務部", "somu"
+          create @site, p, 3, 20, "1001", "職員課", "shokuin"
+          create @site, p, 3, 30, "1002", "契約管理課", "keiyakukanri"
+bosaika = create @site, p, 3, 40, "1003", "防災課", "bosai"
+          create @site, p, 3, 50, "1004", "法務課", "homu"
 
-p = create zomeki_site, r, 2, 10, "1", "総務部", "somu"
-    create zomeki_site, p, 3, 20, "1001", "職員課", "shokuin"
-    create zomeki_site, p, 3, 30, "1002", "契約管理課", "keiyakukanri"
-    create zomeki_site, p, 3, 40, "1003", "防災課", "bosai"
-    create zomeki_site, p, 3, 50, "1004", "法務課", "homu"
-
-zomeki_group = Sys::Group.find_by(code: '001')
-  .update_columns(code: '01001', name: '総務課', name_en: 'soumu',
+zomeki_group = @site.groups.where(code: "#{@code_prefix}001").first
+zomeki_group.update_columns(code: "#{@code_prefix}01001", name: '総務課', name_en: 'soumu',
     parent_id: p.id, level_no: 3, sort_no: 10)
 
-p = create zomeki_site, r, 2, 20, "2", "企画部", "kikaku"
-    create zomeki_site, p, 3, 10, "2001", "IT推進課", "itsuishinka"
-    create zomeki_site, p, 3, 20, "2002", "企画経営課", "kikakukeiei"
-    create zomeki_site, p, 3, 30, "2003", "財政課", "zaisei"
-    create zomeki_site, p, 3, 40, "2004", "秘書広報課", "hishokoho"
-    create zomeki_site, p, 3, 50, "2005", "情報推進課", "johosuishin"
+p = create @site, r, 2, 20, "2", "企画部", "kikaku"
+    create @site, p, 3, 10, "2001", "IT推進課", "itsuishinka"
+    create @site, p, 3, 20, "2002", "企画経営課", "kikakukeiei"
+    create @site, p, 3, 30, "2003", "財政課", "zaisei"
+    create @site, p, 3, 40, "2004", "秘書広報課", "hishokoho"
+    create @site, p, 3, 50, "2005", "情報推進課", "johosuishin"
 
-p = create zomeki_site, r, 2, 30, "3", "生活部", "seikatsu"
-    create zomeki_site, p, 3, 10, "3001", "市民課", "shimin"
-    create zomeki_site, p, 3, 20, "3002", "税務課", "zeimu"
-    create zomeki_site, p, 3, 30, "3003", "保健課", "hoken"
+p = create @site, r, 2, 30, "3", "生活部", "seikatsu"
+    create @site, p, 3, 10, "3001", "市民課", "shimin"
+    create @site, p, 3, 20, "3002", "税務課", "zeimu"
+    create @site, p, 3, 30, "3003", "保健課", "hoken"
 
-p = create zomeki_site, r, 2, 40, "4", "環境部", "kankyo"
-    create zomeki_site, p, 3, 10, "4001", "環境政策課", "kankyoseisaku"
-    create zomeki_site, p, 3, 20, "4002", "生活経済課", "seikatsukeizai"
-    create zomeki_site, p, 3, 30, "4003", "安全安心課", "anzenanshin"
+p = create @site, r, 2, 40, "4", "環境部", "kankyo"
+    create @site, p, 3, 10, "4001", "環境政策課", "kankyoseisaku"
+    create @site, p, 3, 20, "4002", "生活経済課", "seikatsukeizai"
+    create @site, p, 3, 30, "4003", "安全安心課", "anzenanshin"
 
-p = create zomeki_site, r, 2, 50, "5", "保健福祉部", "hokenfukushi"
-    create zomeki_site, p, 3, 10, "5001", "子育て支援課", "kosodateshien"
-    create zomeki_site, p, 3, 20, "5002", "地域福祉課", "chiikifukushi"
-    create zomeki_site, p, 3, 30, "5003", "高齢者支援課", "koreishashien"
-    create zomeki_site, p, 3, 40, "5004", "生活福祉課", "seikatsufukushika"
-    create zomeki_site, p, 3, 50, "5005", "健康推進課", "kenkosuishin"
-    create zomeki_site, p, 3, 60, "5006", "障害福祉課", "shogaifukushi"
+p = create @site, r, 2, 50, "5", "保健福祉部", "hokenfukushi"
+    create @site, p, 3, 10, "5001", "子育て支援課", "kosodateshien"
+    create @site, p, 3, 20, "5002", "地域福祉課", "chiikifukushi"
+    create @site, p, 3, 30, "5003", "高齢者支援課", "koreishashien"
+    create @site, p, 3, 40, "5004", "生活福祉課", "seikatsufukushika"
+    create @site, p, 3, 50, "5005", "健康推進課", "kenkosuishin"
+    create @site, p, 3, 60, "5006", "障害福祉課", "shogaifukushi"
 
-p = create zomeki_site, r, 2, 60, "6", "都市整備部", "toshiseibi"
-    create zomeki_site, p, 3, 10, "6001", "下水道課", "gesuido"
-    create zomeki_site, p, 3, 20, "6002", "土木課", "doboku"
-    create zomeki_site, p, 3, 30, "6003", "建築住宅課", "kenchikujyutaku"
-    create zomeki_site, p, 3, 40, "6004", "道路交通課", "dorokotsu"
-    create zomeki_site, p, 3, 50, "6005", "都市計画課", "toshikeikaku"
+p = create @site, r, 2, 60, "6", "都市整備部", "toshiseibi"
+    create @site, p, 3, 10, "6001", "下水道課", "gesuido"
+    create @site, p, 3, 20, "6002", "土木課", "doboku"
+    create @site, p, 3, 30, "6003", "建築住宅課", "kenchikujyutaku"
+    create @site, p, 3, 40, "6004", "道路交通課", "dorokotsu"
+    create @site, p, 3, 50, "6005", "都市計画課", "toshikeikaku"
 
-p = create zomeki_site, r, 2, 70, "7", "観光経済部", "kankokeizai"
-    create zomeki_site, p, 3, 10, "7001", "商工課", "shoko"
-    create zomeki_site, p, 3, 20, "7002", "農林水産課", "norinsuisan"
-    create zomeki_site, p, 3, 30, "7003", "観光振興課", "kankoshinko"
+p = create @site, r, 2, 70, "7", "観光経済部", "kankokeizai"
+    create @site, p, 3, 10, "7001", "商工課", "shoko"
+    create @site, p, 3, 20, "7002", "農林水産課", "norinsuisan"
+    create @site, p, 3, 30, "7003", "観光振興課", "kankoshinko"
 
-p = create zomeki_site, r, 2, 80, "8", "消防本部", "shobohonbu"
-    create zomeki_site, p, 3, 10, "8001", "消防本部総務課", "shobo-somu"
-    create zomeki_site, p, 3, 20, "8002", "予防課", "yobo"
-    create zomeki_site, p, 3, 30, "8003", "消防署", "shobosho"
+p = create @site, r, 2, 80, "8", "消防本部", "shobohonbu"
+    create @site, p, 3, 10, "8001", "消防本部総務課", "shobo-somu"
+    create @site, p, 3, 20, "8002", "予防課", "yobo"
+    create @site, p, 3, 30, "8003", "消防署", "shobosho"
 
-p = create zomeki_site, r, 2, 90, "9", "議会事務局", "gikaijimukyoku"
+p = create @site, r, 2, 90, "9", "議会事務局", "gikaijimukyoku"
 
-p = create zomeki_site, r, 2, 100, "10", "選挙管理委員会事務局", "senkyokanriiinkaijimukyoku"
+p = create @site, r, 2, 100, "10", "選挙管理委員会事務局", "senkyokanriiinkaijimukyoku"
 
-p = create zomeki_site, r, 2, 110, "11", "監査委員事務局", "kansaiinjimukyoku"
+p = create @site, r, 2, 110, "11", "監査委員事務局", "kansaiinjimukyoku"
 
 
 ## ---------------------------------------------------------
@@ -112,8 +110,7 @@ Core.user_group = Core.user.groups[0]
 ## ---------------------------------------------------------
 ## cms/sites
 
-Cms::Site.update_all({:name => site_name})
-
+@site.update_columns(name: site_name)
 
 ## ---------------------------------------------------------
 ## cms/concepts
@@ -122,13 +119,13 @@ puts "import cms_concepts..."
 
 def create_cms_concept(parent, sort_no, name)
   Cms::Concept.create parent_id: parent.id,
-    site_id: 1,
+    site_id: @site.id,
     state: 'public',
     level_no: parent.level_no + 1,
     name: name
 end
 
-c_site  = Cms::Concept.find(1)
+c_site  = @site.concepts.where(parent_id: 0).first
 c_site.name = 'ルート'
 c_site.save
 
@@ -159,7 +156,7 @@ c_gikai    = create_cms_concept c_site,   40,'市議会'
 puts "import cms_conctents..."
 
 def create_cms_content(concept, model, name, code)
-  Cms::Content.create site_id: 1,
+  Cms::Content.create site_id: @site.id,
     concept_id: concept.id,
     state: 'public',
     model: model,
@@ -170,39 +167,61 @@ end
 ## ---------------------------------------------------------
 ## sys/users
 
+
 puts "import sys_users..."
 
+if @create_base
+  admin = Sys::User.find_by(account: "awa")
+  admin.update_columns(account: "admin", name: "サイト管理者",
+      name_en: "admin", password: "admin", auth_no: 5)
 
-admin = Sys::User.find_by(account: 'awa')
-admin.update_columns(account: 'admin', name: 'サイト管理者',
-    name_en: 'admin', password: 'admin', auth_no: 5)
+  soumu1 = Sys::User.find_by(account: "ebisu")
+  soumu1.update_columns(account: "somu1", name: "総務課記事作成者",
+      name_en: "somu1", password: "somu1")
 
-soumu1 = Sys::User.find_by(account: 'ebisu')
-soumu1.update_columns(account: 'somu1', name: '総務課記事作成者',
-    name_en: 'somu1', password: 'somu1')
+  soumu2 = Sys::User.find_by(account: "hachisuka")
+  soumu2.update_columns(account: "somu2", name: "総務課サイト更新者",
+      name_en: "somu2", password: "somu2", auth_no: 4)
 
-soumu2 = Sys::User.find_by(account: 'hachisuka')
-soumu2.update_columns(account: 'somu2', name: '総務課サイト更新者',
-    name_en: 'somu2', password: 'somu2', auth_no: 4)
+  soumu3 = Sys::User.find_by(account: "sasa")
+  soumu3.update_columns(account: "somu3", name: "総務課承認者",
+      name_en: "somu3", password: "somu3", auth_no: 4)
 
-soumu3 = Sys::User.find_by(account: 'sasa')
-soumu3.update_columns(account: 'somu3', name: '総務課承認者',
-    name_en: 'somu3', password: 'somu3', auth_no: 4)
+  bosai1 = Sys::User.find_by(account: "ukiyo")
+  bosai1.update_columns(account: "bosai1", name: "防災課記事作成者",
+      name_en: "bosai1", password: "bosai1")
+  Sys::UsersGroup.find_by(user_id: bosai1.id).update_columns(group_id: bosaika.id)
+else
 
-bosaika = Sys::Group.find_by(code: '1003')
+  admin = Sys::User.create!(account: "#{@code_prefix}admin", name: "サイト管理者", state: 'enabled',
+      name_en: "admin", password: "#{@code_prefix}admin", auth_no: 5, ldap: 0)
+  Sys::UsersGroup.create!(group: zomeki_group, user: admin)
 
-bosai1 = Sys::User.find_by(account: 'ukiyo')
-bosai1.update_columns(account: 'bosai1', name: '防災課記事作成者',
-    name_en: 'bosai1', password: 'bosai1', auth_no: 1)
-Sys::UsersGroup.find_by(user_id: bosai1.id).update_columns(group_id: bosaika.id)
+  soumu1 = Sys::User.create!(account: "#{@code_prefix}somu1", name: "総務課記事作成者", state: 'enabled',
+      name_en: "somu1", password: "#{@code_prefix}somu1", ldap: 0)
+  Sys::UsersGroup.create!(group: zomeki_group, user: soumu1)
 
-bosai2 = Sys::User.create!(state: 'enabled', ldap: 0, auth_no: 4,
-  name: '防災課サイト更新者', name_en: 'bosai2', account: 'bosai2', password: 'bosai2')
-Sys::UsersGroup.create!(group: bosaika, user: bosai2)
+  soumu2 = Sys::User.create!(account: "#{@code_prefix}somu2", name: "総務課サイト更新者", state: 'enabled',
+      name_en: "somu2", password: "#{@code_prefix}somu2", auth_no: 4, ldap: 0)
+  Sys::UsersGroup.create!(group: zomeki_group, user: soumu2)
 
-bosai3 = Sys::User.create!(state: 'enabled', ldap: 0, auth_no: 4,
-  name: '防災課承認者', name_en: 'bosai3', account: 'bosai3', password: 'bosai3')
-Sys::UsersGroup.create!(group: bosaika, user: bosai3)
+  soumu3 = Sys::User.create!(account: "#{@code_prefix}somu3", name: "総務課承認者", state: 'enabled',
+      name_en: "somu3", password: "#{@code_prefix}somu3", auth_no: 4, ldap: 0)
+  Sys::UsersGroup.create!(group: zomeki_group, user: soumu3)
+
+  bosai1 = Sys::User.create!(account: "#{@code_prefix}bosai1", name: "防災課記事作成者", state: 'enabled',
+      name_en: "bosai1", password: "#{@code_prefix}bosai1", auth_no: 2, ldap: 0)
+  Sys::UsersGroup.create!(group: bosaika, user: bosai1)
+end
+  bosai2 = Sys::User.create!(state: "enabled", ldap: 0, auth_no: 4,
+    name: "防災課サイト更新者", name_en: "bosai2", account: "#{@code_prefix}bosai2",
+      password: "#{@code_prefix}bosai2")
+  Sys::UsersGroup.create!(group: bosaika, user: bosai2)
+
+  bosai3 = Sys::User.create!(state: "enabled", ldap: 0, auth_no: 4,
+    name: "防災課承認者", name_en: "bosai3", account: "#{@code_prefix}bosai3",
+      password: "#{@code_prefix}bosai3")
+  Sys::UsersGroup.create!(group: bosaika, user: bosai3)
 
 
 ## ---------------------------------------------------------
@@ -211,7 +230,7 @@ Sys::UsersGroup.create!(group: bosaika, user: bosai3)
 puts "import sys_roles..."
 
 def create_sys_roles(name, title, concepts, users, all = false)
-  r = Sys::RoleName.create name: name, title: title, site_id: 1
+  r = Sys::RoleName.create name: name, title: title, site_id: @site.id
   concepts.each do |concept|
     p = Sys::ObjectPrivilege.new concept_id: concept.id, role_id: r.id
     p.privilegable ||= p.concept
@@ -227,9 +246,9 @@ def create_sys_roles(name, title, concepts, users, all = false)
   end
 end
 
-create_sys_roles 'soumu',  '総務課', [c_top, c_site, c_mayor], [soumu2, soumu3], true
-create_sys_roles 'common', '記事作成', [c_site], [soumu1, bosai1]
-create_sys_roles 'bosai', '防災課', [c_site], [bosai2, bosai3]
+create_sys_roles "#{@code_prefix}soumu",  '総務課', [c_top, c_site, c_mayor], [soumu2, soumu3], true
+create_sys_roles "#{@code_prefix}common", '記事作成', [c_site], [soumu1, bosai1]
+create_sys_roles "#{@code_prefix}bosai", '防災課', [c_site], [bosai2, bosai3]
 
 ## ---------------------------------------------------------
 ## cms/layouts
@@ -237,7 +256,7 @@ create_sys_roles 'bosai', '防災課', [c_site], [bosai2, bosai3]
 puts "import cms_layouts..."
 
 def create_cms_layout(concept, name, title)
-  Cms::Layout.create site_id: 1,
+  Cms::Layout.create site_id: @site.id,
     concept_id: concept.id,
     state: 'public',
     head: read_data("layouts/#{name}/head"),
@@ -277,7 +296,7 @@ def create_cms_piece(concept, content, model, name, title, view_title = nil)
     body = read_data("pieces/#{name}/#{body_name}/body")
     xml_properties = read_data("pieces/#{name}/#{body_name}/xml_properties")
   end
-  Cms::Piece.create site_id: 1,
+  Cms::Piece.create site_id: @site.id,
     concept_id: concept.id,
     content_id: content.blank? ? nil : content.id,
     state: 'public',
@@ -349,7 +368,7 @@ end
   create_cms_piece c[0], c[1], c[2], c[3], c[4]
 end
 
-p_bread_crumbs = Cms::Piece::BreadCrumb.first
+p_bread_crumbs = Cms::Piece::BreadCrumb.where(site_id: @site.id).first
 p_bread_crumbs.in_settings = {top_label: 'HOME'}
 p_bread_crumbs.save
 
@@ -360,12 +379,13 @@ puts "import cms_nodes..."
 
 def create_cms_node(concept, content, sort_no, parent, layout, model, name, title, body)
   hidden_nodes = ['banner', '404.html', 'tags', 'search.html', 'keyvisual', 'sitemap.html']
-  Cms::Node.create  site_id: 1,
+  top   = Cms::Node.find_by(site_id: @site.id, parent_id: 0)
+  Cms::Node.create  site_id: @site.id,
    concept_id:      concept.id,
    content_id:      content.blank? ? nil : content.id,
-   parent_id:       parent.blank? ? 1 :parent.id ,
+   parent_id:       parent.blank? ? top.id : parent.id ,
    state:           'public',
-   route_id:        parent.blank? ? 1 :parent.id ,
+   route_id:        parent.blank? ? top.id : parent.id ,
    directory:       (name =~ /\./ ? 0 : 1),
    published_at:    Time.now,
    layout_id:       layout.blank? ? nil : layout.id,
@@ -377,8 +397,8 @@ def create_cms_node(concept, content, sort_no, parent, layout, model, name, titl
    body:            body.blank? ? nil : read_data("nodes/#{body}")
 end
 
-n_top   = Cms::Node.find_by(:id => 1, :parent_id => 0)
-p_index = Cms::Node.find_by(:id => 2, :name => 'index.html')
+n_top   = Cms::Node.find_by(site_id: @site.id, parent_id: 0)
+p_index = Cms::Node.find_by(site_id: @site.id, parent_id: n_top.id, name: 'index.html')
          p_index.update_columns(concept_id: c_top.id, layout_id: l_top.id, sitemap_sort_no: 10, title: 'ぞめき市')
          create_cms_node c_site, nil, 20, n_top, l_col1, 'Cms::Page', 'riyo.html', 'ホームページ利用について', 'pages/riyo/body'
          create_cms_node c_site, nil, 30, n_top, l_col1, 'Cms::Page', 'copyright.html', 'リンク・著作権・免責事項',  'pages/copyright/body'
@@ -489,7 +509,6 @@ load_demo "flow"
 load_demo "gp_calendar"
 load_demo "gp_template"
 load_demo "tag"
-load_demo "sns"
 load_demo "map"
 load_demo "organization"
 load_demo "ad_banner"

@@ -13,6 +13,7 @@ module Sys::Model::Base::File
     validate :validate_upload_file
     after_save :upload_internal_file
     after_destroy :remove_internal_file
+    after_save :extract_text
   end
 
   class_methods do
@@ -167,7 +168,7 @@ module Sys::Model::Base::File
 
         if size = thumbnail_size
           size = @@_thumbnail_size if size[:width] > 640 || size[:height] > 480
-          @thumbnail_image  = image.resize_to_fill(size[:width], size[:height], Magick::CenterGravity)
+          @thumbnail_image  = image.resize_to_fit(size[:width], size[:height], Magick::CenterGravity)
           self.thumb_width  = size[:width]
           self.thumb_height = size[:height]
           self.thumb_size   = @thumbnail_image.to_blob.size
@@ -328,7 +329,7 @@ module Sys::Model::Base::File
 
       if size = thumbnail_size
         thumb = Magick::Image.from_blob(File.read(upload_path)).first
-        thumb = thumb.resize_to_fill(size[:width], size[:height], Magick::CenterGravity)
+        thumb = thumb.resize_to_fit(size[:width], size[:height], Magick::CenterGravity)
         thumb.write(upload_path(type: :thumb))
         update_attributes(
           thumb_width: size[:width],
@@ -357,6 +358,19 @@ module Sys::Model::Base::File
     end
 
     return true
+  end
+
+  def extract_text
+    return unless Zomeki.config.application['sys.file_text_extraction']
+    return unless has_attribute?(:extracted_text)
+    return unless mime_type.in?(['text/plain', 'application/pdf', 'application/msword',
+                                 'application/vnd.ms-excel', 'application/vnd.ms-powerpoint'])
+    file = Pathname.new(upload_path)
+    jar = Rails.root.join('vendor/tika/tika-app.jar')
+    result = `java -jar #{jar} --text #{file}`
+    update_column :extracted_text, result
+  rescue => e
+    warn_log e.message
   end
 
   ## filter/aftar_destroy

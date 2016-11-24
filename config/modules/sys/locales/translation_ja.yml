@@ -6,6 +6,7 @@ ja:
       sys/role_name: "ロール"
       sys/object_privilege: "権限"
     attributes:
+
       sys/sequence:
         created_at: "作成日時"
         updated_at: "更新日時"
@@ -16,6 +17,9 @@ ja:
       sys/creator:
         group_id: "所属"
         user_id: "作成者"
+      creator:
+        group: "作成者"
+        user: "作成者"
 
       sys/language:
         state: "状態"

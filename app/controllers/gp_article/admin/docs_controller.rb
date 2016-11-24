@@ -3,7 +3,6 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Publication
 
   include Cms::ApiGpCalendar
-  include GpArticle::DocsCommon
 
   layout :select_layout
 
@@ -115,8 +114,6 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
       @item.send_approval_request_mail if @item.state_approvable?
 
       publish_by_update(@item) if @item.state_public?
-
-      share_to_sns(@item) if @item.state_public?
       sync_events_export
     end
   end
@@ -158,8 +155,6 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
       publish_by_update(@item) if @item.state_public?
 
       @item.close if !@item.public? && !@item.will_replace? # Never use "state_public?" here
-
-      share_to_sns(@item) if @item.state_public?
       sync_events_export
 
       release_document
@@ -187,8 +182,6 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
       publish_ruby(@item)
       @item.rebuild(render_public_as_string(@item.public_uri, jpmobile: envs_to_request_as_smart_phone),
                     :path => @item.public_smart_phone_path, :dependent => :smart_phone)
-
-      share_to_sns(@item)
       sync_events_export
     end
 
@@ -340,7 +333,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
       :event_state, :event_started_on, :event_ended_on, :event_will_sync, :event_note,
       :marker_state, :marker_icon_category_id, :mobile_title, :mobile_body,
       :concept_id, :layout_id, :name, :filename_base, :terminal_pc_or_smart_phone, :terminal_mobile,
-      :meta_description, :meta_keywords, :share_to_sns_with, :og_type, :og_title, :og_description, :og_image,
+      :meta_description, :meta_keywords, :og_type, :og_title, :og_description, :og_image,
       :in_tmp_id, :in_ignore_link_check, :in_ignore_accessibility_check, :in_modify_accessibility_check,
       :template_values => params[:item][:template_values].try(:keys),
       :creator_attributes => [:id, :group_id, :user_id],

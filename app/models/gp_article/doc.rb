@@ -17,7 +17,6 @@ class GpArticle::Doc < ApplicationRecord
 
   include GpArticle::Model::Rel::Doc
   include GpArticle::Model::Rel::Category
-  include GpArticle::Model::Rel::Sns
   include GpArticle::Model::Rel::Tag
   include Approval::Model::Rel::Approval
   include GpTemplate::Model::Rel::Template
@@ -33,7 +32,6 @@ class GpArticle::Doc < ApplicationRecord
   EVENT_STATE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
   MARKER_STATE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
   OGP_TYPE_OPTIONS = [['article', 'article']]
-  SHARE_TO_SNS_WITH_OPTIONS = [['OGP', 'og_description'], ['記事の内容', 'body']]
   FEATURE_1_OPTIONS = [['表示', true], ['非表示', false]]
   FEATURE_2_OPTIONS = [['表示', true], ['非表示', false]]
   QRCODE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
@@ -84,9 +82,6 @@ class GpArticle::Doc < ApplicationRecord
   has_many :holds, :as => :holdable, :dependent => :destroy
   has_many :links, :dependent => :destroy
   has_many :comments, :dependent => :destroy
-
-  has_many :sns_shares, :class_name => 'SnsShare::Share', :as => :sharable, :dependent => :destroy
-  has_many :sns_accounts, :class_name => 'SnsShare::Account', :through => :sns_shares, :source => :account
 
   before_save :make_file_contents_path_relative
   before_save :set_name
@@ -181,7 +176,14 @@ class GpArticle::Doc < ApplicationRecord
     case target
     when 'user'
       creators = Sys::Creator.arel_table
-      joins(:creator).where(creators[:user_id].eq(user.id))
+      approval_requests = Approval::ApprovalRequest.arel_table
+      assignments = Approval::Assignment.arel_table
+      joins(:creator).eager_load(:approval_requests => [:approval_flow => [:approvals => :assignments]])
+      .where(
+        creators[:user_id].eq(user.id)
+        .or(approval_requests[:user_id].eq(user.id)
+                        .or(assignments[:user_id].eq(user.id)))
+      )
     when 'group'
       editable
     when 'all'
@@ -573,9 +575,6 @@ class GpArticle::Doc < ApplicationRecord
       self_c = self.categorizations.where(category_id: new_c.category_id, categorized_as: new_c.categorized_as).first
       new_c.update_column(:sort_no, self_c.sort_no)
     end
-
-    new_doc.sns_accounts = self.sns_accounts
-
     return new_doc
   end
 
@@ -787,7 +786,6 @@ class GpArticle::Doc < ApplicationRecord
     self.marker_state ||= 'hidden'                  if self.has_attribute?(:marker_state)
     self.terminal_pc_or_smart_phone = true if self.has_attribute?(:terminal_pc_or_smart_phone) && self.terminal_pc_or_smart_phone.nil?
     self.terminal_mobile            = true if self.has_attribute?(:terminal_mobile) && self.terminal_mobile.nil?
-    self.share_to_sns_with ||= SHARE_TO_SNS_WITH_OPTIONS.first.last if self.has_attribute?(:share_to_sns_with)
     self.body_more_link_text ||= '続きを読む' if self.has_attribute?(:body_more_link_text)
     self.filename_base ||= 'index' if self.has_attribute?(:filename_base)
 
@@ -906,6 +904,7 @@ class GpArticle::Doc < ApplicationRecord
   def publish_qrcode
     return true unless self.state_public?
     return true unless self.qrcode_visible?
+    return true if Zomeki.config.application['sys.clean_statics']
     Util::Qrcode.create(self.public_full_uri, self.qrcode_path)
     return true
   end

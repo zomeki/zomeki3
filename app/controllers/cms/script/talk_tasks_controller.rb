@@ -16,7 +16,7 @@ class Cms::Script::TalkTasksController < Cms::Controller::Script::Publication
 
       begin
         Script.current
-clean_statics = false
+clean_statics = Zomeki.config.application['sys.clean_statics']
 if clean_statics
         if File.exist?("#{task.path}.mp3")
           File.delete("#{task.path}.mp3")

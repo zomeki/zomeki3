@@ -26,7 +26,7 @@ class Cms::Admin::LayoutsController < Cms::Controller::Admin::Base
       :body        => '[[content]]'
     )
   end
-  
+
   def create
     @item = Cms::Layout.new(layout_params)
     @item.site_id = Core.site.id
@@ -37,9 +37,7 @@ class Cms::Admin::LayoutsController < Cms::Controller::Admin::Base
   def update
     @item = Cms::Layout.find(params[:id])
     @item.attributes = layout_params
-    _update(@item, :location => url_for(:action => :edit)) do
-      Core.set_concept(session, @item.concept_id)
-    end
+    _update(@item, :location => url_for(:action => :edit, :concept => @item.concept_id))
   end
 
   def destroy
