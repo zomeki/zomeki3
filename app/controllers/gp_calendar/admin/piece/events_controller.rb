@@ -1,4 +1,4 @@
-class GpCalendar::Admin::Piece::EventListsController < Cms::Admin::Piece::BaseController
+class GpCalendar::Admin::Piece::EventsController < Cms::Admin::Piece::BaseController
   def update
     item_in_settings = (params[:item][:in_settings] || {})
 

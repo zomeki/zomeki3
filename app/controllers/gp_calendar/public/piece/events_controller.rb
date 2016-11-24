@@ -1,6 +1,6 @@
-class GpCalendar::Public::Piece::EventListsController < GpCalendar::Public::Piece::BaseController
+class GpCalendar::Public::Piece::EventsController < GpCalendar::Public::Piece::BaseController
   def pre_dispatch
-    @piece = GpCalendar::Piece::EventList.find_by(id: Page.current_piece.id)
+    @piece = GpCalendar::Piece::Event.find_by(id: Page.current_piece.id)
     return render(:text => '') unless @piece
     @item = Page.current_item
   end

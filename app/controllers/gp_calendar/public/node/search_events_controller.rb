@@ -6,7 +6,7 @@ class GpCalendar::Public::Node::SearchEventsController < GpCalendar::Public::Nod
 
     year_month = @year_only ? @date.strftime('%Y') : @date.strftime('%Y%m')
 
-    @start_date = Date.parse(params[:start_date]) rescue nil || @date.beginning_of_month
+    @start_date = Date.parse(params[:start_date]) rescue nil || Date.today
     @end_date   = Date.parse(params[:end_date]) rescue nil || nil
 
     categories = params[:categories].present? ? params[:categories].values.reject(&:blank?) : []

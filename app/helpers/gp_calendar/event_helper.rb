@@ -12,7 +12,10 @@ module GpCalendar::EventHelper
     }).html_safe
   end
 
-  def event_table_replace(event, table_style)
+  def event_table_replace(event, table_style, options={})
+    @content = event.content
+    date_style = options && options[:date_style] ? options[:date_style] : @content.date_style
+
     link_to_options = if event.href.present?
                         [event.href, target: event.target]
                       else
@@ -23,7 +26,7 @@ module GpCalendar::EventHelper
       title_link: -> { event_replace_title_link(event, link_to_options) },
       title: -> { event_replace_title(event) },
       subtitle: -> { event_replace_subtitle(event) },
-      hold_date: -> { event_replace_hold_date(event) },
+      hold_date: -> { event_replace_hold_date(event, date_style) },
       summary: -> { event_replace_summary(event) },
       unit: -> { event_replace_unit(event) },
       category_link: -> { event_replace_category_link(event) },
@@ -75,8 +78,8 @@ private
     end
   end
 
-  def event_replace_hold_date(event)
-    render 'gp_calendar/public/shared/event_date', event: event, date_style: event.content.date_style, holiday_disp: true
+  def event_replace_hold_date(event, date_style)
+    render 'gp_calendar/public/shared/event_date', event: event, date_style: date_style, holiday_disp: true
   end
 
   def event_replace_summary(event)

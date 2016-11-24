@@ -1,5 +1,5 @@
-class GpCalendar::Piece::EventList < Cms::Piece
-  default_scope { where(model: 'GpCalendar::EventList') }
+class GpCalendar::Piece::Event < Cms::Piece
+  default_scope { where(model: 'GpCalendar::Event') }
 
   TARGET_DATE_OPTIONS = [['本日以降のイベント', 'near_future'], ['今月開催のイベント', 'this_month']]
 

@@ -53,8 +53,8 @@ ZomekiCMS::Application.routes.draw do
       :controller => 'admin/piece/category_types'
     resources :piece_near_future_events,
       :controller => 'admin/piece/near_future_events'
-    resources :piece_event_lists,
-      :controller => 'admin/piece/event_lists'
+    resources :piece_events,
+      :controller => 'admin/piece/events'
   end
 
   ## public

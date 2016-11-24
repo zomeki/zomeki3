@@ -29,7 +29,7 @@ ja:
         description: 概要
         kind: 種別
         created_at: 作成日時
-      gp_calendar/piece/event_list:
+      gp_calendar/piece/event:
         docs_number: 表示件数
         category_ids: 表示カテゴリ
         table_style: 表示形式
