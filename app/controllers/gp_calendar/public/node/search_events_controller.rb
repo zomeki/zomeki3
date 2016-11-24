@@ -6,14 +6,15 @@ class GpCalendar::Public::Node::SearchEventsController < GpCalendar::Public::Nod
 
     year_month = @year_only ? @date.strftime('%Y') : @date.strftime('%Y%m')
 
+    @start_date = Date.parse(params[:start_date]) rescue nil || @date.beginning_of_month
+    @end_date   = Date.parse(params[:end_date]) rescue nil || nil
+
     categories = params[:categories].present? ? params[:categories].values.reject(&:blank?) : []
     criteria = {year_month: year_month, categories: categories}
     @events = GpCalendar::Event.public_state.content_and_criteria(@content, criteria).order(:started_on)
+      .scheduled_between(@start_date, @end_date)
       .preload(:categories).to_a
-
-    start_date = Date.parse(params[:start_date]) rescue nil || @date.beginning_of_month
-    end_date   = Date.parse(params[:end_date]) rescue nil || nil
-    merge_docs_into_events(event_docs(start_date, end_date, categories), @events)
+    merge_docs_into_events(event_docs(@start_date, @end_date, categories), @events)
 
     @holidays = GpCalendar::Holiday.public_state.content_and_criteria(@content, criteria).where(kind: :event)
     @holidays.each do |holiday|

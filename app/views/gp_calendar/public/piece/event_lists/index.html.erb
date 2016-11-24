@@ -1,0 +1,23 @@
+
+<%- unless @events.empty? -%>
+<table border="1">
+  <thead>
+    <tr>
+    <%- @piece.table_style.each do |header| -%>
+      <th><%= header[:header].html_safe %></th>
+    <%- end -%>
+    </tr>
+  </thead>
+  <tbody>
+    <%- @events.each do |event| -%>
+      <%= event_table_replace(event, @piece.table_style) %>
+    <%- end -%>
+  </tbody>
+</table>
+<div class="links">
+  <%- if @piece.more_link_label && @piece.more_link_url -%>
+  <%= link_to @piece.more_link_label, @piece.more_link_url %>
+  <%- end -%>
+</div>
+
+<%- end -%>

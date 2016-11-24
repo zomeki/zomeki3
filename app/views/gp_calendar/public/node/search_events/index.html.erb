@@ -1,4 +1,12 @@
-<div class="calendarEvents calendarMonthlyEvents">
+<link rel="stylesheet" media="screen" href="/_common/css/jquery-ui-themes/smoothness/jquery-ui.min.css" />
+<script src="/_common/js/jquery-ui.min.js"></script>
+<link rel="stylesheet" media="screen" href="/_common/css/jquery-ui-timepicker-addon.css" />
+<script src="/_common/js/jquery-ui-timepicker-addon.js"></script>
+<%= javascript_tag do -%>
+$(document).ready(function () {
+  <%= enable_datepicker_script -%>
+});
+<%- end -%>
 
 <%= form_for :item, url: "#{@node.public_uri}",  html: { method: :get, class: 'search' } do |f| %>
 <table>
@@ -18,7 +26,8 @@
   </tr>
   <tr>
     <td>
-
+    <%= text_field_tag :start_date, @start_date, class: "datepicker" %>～
+    <%= text_field_tag :end_date, @end_date, class: "datepicker" %>
     </td>
     <td class="submitters">
       <%= submit_tag '検索', name: :search, data: { disable_with: false } %>

@@ -33,7 +33,10 @@ class GpCalendar::Event < ApplicationRecord
 
   scope :public_state, -> { where(state: 'public') }
   scope :scheduled_between, ->(start_date, end_date) {
-    where(arel_table[:ended_on].gteq(start_date)).where(arel_table[:started_on].lt(end_date + 1))
+    rel = all
+    rel = rel.where(arel_table[:ended_on].gteq(start_date))   if start_date
+    rel = rel.where(arel_table[:started_on].lt(end_date + 1)) if end_date
+    rel
   }
 
   scope :content_and_criteria, ->(content, criteria){

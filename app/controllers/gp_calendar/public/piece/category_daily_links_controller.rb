@@ -33,7 +33,10 @@ class GpCalendar::Public::Piece::CategoryDailyLinksController < GpCalendar::Publ
              dates | (doc.event_started_on..doc.event_ended_on).to_a
            end
 
-    events = @piece.content.events.public_state.scheduled_between(start_date, end_date)
+    events = @piece.content.events.public_state
+      .scheduled_between(start_date, end_date)
+      .content_and_criteria(@piece.content, {categories: @piece.category_ids}).to_a
+    events =  merge_docs_into_events(event_docs(start_date, end_date, nil), events)
 
     (start_date..end_date).each do |date|
       if events.detect {|e| e.started_on <= date && date <= e.ended_on }
@@ -42,14 +45,5 @@ class GpCalendar::Public::Piece::CategoryDailyLinksController < GpCalendar::Publ
     end
 
     @calendar.day_link = days.sort!
-
-    if min_date && max_date
-      @pagination = Util::Html::SimplePagination.new
-      @pagination.prev_label = '前の月'
-      @pagination.separator  = %Q(<span class="separator">|</span> <a href="#{@calendar.current_month_uri}">一覧</a> <span class="separator">|</span>)
-      @pagination.next_label = '次の月'
-      @pagination.prev_uri   = @calendar.prev_month_uri if @calendar.prev_month_date >= min_date
-      @pagination.next_uri   = @calendar.next_month_uri if @calendar.next_month_date <= max_date
-    end
   end
 end

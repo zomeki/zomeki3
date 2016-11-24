@@ -3,7 +3,7 @@
 <%= @calendar.to_html %>
 
 <div class="links">
-  <%- if @node && @pagination -%>
-  <%= @pagination.to_links(:class => 'pagination lowerPagination') %>
+  <%- if @node-%>
+  <%= link_to '一覧へ', @node.public_uri %>
   <%- end -%>
 </div>

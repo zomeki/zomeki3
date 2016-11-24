@@ -6,18 +6,23 @@ class GpCalendar::Public::Piece::EventListsController < GpCalendar::Public::Piec
   end
 
   def index
-    today = Date.today
-    tomorrow = today.tomorrow
 
-    events = @piece.content.events.public_state.scheduled_between(today, tomorrow)
-    @todays_events = events.select {|ev| ev.started_on <= today && today <= ev.ended_on }
-    @tomorrows_events = events.select {|ev| ev.started_on <= tomorrow && tomorrow <= ev.ended_on }
+    start_date, end_date = case @piece.target_date
+    when 'near_future'
+      [Date.today, nil]
+    when 'this_month'
+      [Date.today.beginning_of_month, Date.today.end_of_month]
+    else
+      [Date.today, nil]
+    end
 
-    docs = event_docs(today, tomorrow)
-    today_docs = docs.select {|doc| doc.event_started_on <= today && today <= doc.event_ended_on }
-    tomorrow_docs = docs.select {|doc| doc.event_started_on <= tomorrow && tomorrow <= doc.event_ended_on }
+    criteria = {categories: @piece.category_ids}
+    events = GpCalendar::Event.public_state.content_and_criteria(@piece.content, criteria).order(:started_on)
+      .scheduled_between(start_date, end_date)
+    events = events.limit(@piece.docs_number) if @piece.docs_number
+    @events =  events.preload(:categories).to_a
+    merge_docs_into_events(event_docs(start_date, end_date, nil), @events)
 
-    merge_docs_into_events(today_docs, @todays_events)
-    merge_docs_into_events(tomorrow_docs, @tomorrows_events)
+    @events.sort! {|a, b| a.started_on <=> b.started_on}
   end
 end
