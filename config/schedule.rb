@@ -25,11 +25,6 @@ set :output, nil
 
 env :PATH, ENV['PATH']
 
-# 記事の公開/非公開処理を行います。
-every '0-45/15 * * * *' do
-  rake 'zomeki:sys:tasks:exec'
-end
-
 # 音声ファイルを静的ファイルとして書き出します。
 every '6-51/15 * * * *' do
   rake 'zomeki:cms:talks:exec'

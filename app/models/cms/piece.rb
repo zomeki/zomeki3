@@ -29,7 +29,7 @@ class Cms::Piece < ApplicationRecord
   scope :public_state, -> { where(state: 'public') }
 
   def replace_new_piece
-    if state == "public" && rep = replaced_page
+    if state == "public" && rep = replace_page
       rep.destroy
     end
     return true
@@ -65,22 +65,22 @@ class Cms::Piece < ApplicationRecord
     label = I18n.t name, :scope => [:activerecord, :attributes, 'cms/piece']
     return label =~ /^translation missing:/ ? name.to_s.humanize : label
   end
-  
+
   def css_id
     name.gsub(/-/, '_').camelize(:lower)
   end
-  
+
   def css_attributes
     attr = ''
-    
+
     attr += ' id="' + css_id + '"' if css_id != ''
-    
+
     _cls = 'piece'
     attr += ' class="' + _cls + '"' if _cls != ''
-    
+
     attr
   end
-  
+
   def new_setting(name = nil)
     Cms::PieceSetting.new({:piece_id => id, :name => name.to_s})
   end
@@ -107,7 +107,7 @@ class Cms::Piece < ApplicationRecord
     new_attributes[:updated_at] = nil
     new_attributes[:recognized_at] = nil
     new_attributes[:published_at] = nil
-    
+
     item = self.class.new(new_attributes)
 
     if rel_type == nil
@@ -135,14 +135,14 @@ class Cms::Piece < ApplicationRecord
 
     return item
   end
-  
+
 protected
   def save_settings
     return true if setting_save_skip
-    
+
     in_settings.each do |name, value|
       name = name.to_s
-      
+
       if !value.is_a?(Hash)
         st = settings.find_by(name: name) || new_setting(name)
         st.value   = value
@@ -150,7 +150,7 @@ protected
         st.save if st.changed?
         next
       end
-      
+
       _settings = settings.where(name: name).to_a
       value.each_with_index do |data, idx|
         st = _settings[idx] || new_setting(name)

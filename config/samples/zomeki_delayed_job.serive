@@ -1,0 +1,15 @@
+[Unit]
+Description=delayed_job for ZOMEKI
+After=postgresql-9.5.service
+
+[Service]
+Type=forking
+User=zomeki
+WorkingDirectory=/var/www/zomeki/
+Environment=RAILS_ENV=production
+SyslogIdentifier=zomeki_delayed_job
+ExecStart=/usr/local/rbenv/shims/bundle exec rake delayed_job:start
+ExecStop=/usr/local/rbenv/shims/bundle exec rake delayed_job:stop
+
+[Install]
+WantedBy = multi-user.target

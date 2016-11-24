@@ -13,16 +13,20 @@ end
 
 <%= javascript_tag do %>
 function ckeInsertContent(value) {
-  if (parent.CKEDITOR.currentInstance) {
-    parent.CKEDITOR.currentInstance.insertHtml(value);
-  } else {
-    for (var i in parent.CKEDITOR.instances) {
-      var instance = parent.CKEDITOR.instances[i];
-      if (instance.container.isVisible()) {
-        instance.insertHtml(value);
-        break;
+  if (parent.CKEDITOR){
+    if (parent.CKEDITOR.currentInstance) {
+      parent.CKEDITOR.currentInstance.insertHtml(value);
+    } else {
+      for (var i in parent.CKEDITOR.instances) {
+        var instance = parent.CKEDITOR.instances[i];
+        if (instance.container.isVisible()) {
+          instance.insertHtml(value);
+          break;
+        }
       }
     }
+  }else{
+    parent.setText(parent.document.getElementById('item_body'), value);
   }
 }
 
