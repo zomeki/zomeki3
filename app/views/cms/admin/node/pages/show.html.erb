@@ -1,8 +1,8 @@
 <%= init_ckeditor :readOnly => true %>
 
-<% if rep = @item.replace_page %>
+<% if rep = @item.replaced_page %>
 <div class="noticeBox">更新用のページが作成されています ： <%= link_to h(rep.title), rep.admin_uri %></div>
-<% elsif org = @item.replaced_page %>
+<% elsif org = @item.replace_page %>
 <div class="noticeBox">更新されるページ ： <%= link_to h(org.title), org.admin_uri %></div>
 <% end %>
 
