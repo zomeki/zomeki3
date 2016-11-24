@@ -5,7 +5,7 @@ module Approval::Model::Rel::Approval
 
   included do
     has_many :approval_requests, class_name: 'Approval::ApprovalRequest', as: :approvable, dependent: :destroy
-    with_options if: -> { !in_approval_flow_ids.nil? && state_approvable? } do
+    with_options if: -> { state_approvable? } do
       validate :validate_approval_requests
       validate :validate_approval_assignments
       after_save :save_approval_requests
@@ -65,8 +65,8 @@ module Approval::Model::Rel::Approval
     approval_requests.each do |approval_request|
       approval_request.current_approvable_approvers.each do |approver|
         next if approval_request.requester.email.blank? || approver.email.blank?
-  
-        Approval::Admin::Mailer.approval_request(from: approval_request.requester.email, to: approver.email, 
+
+        Approval::Admin::Mailer.approval_request(from: approval_request.requester.email, to: approver.email,
           approval_request: approval_request, approver: approver, item: self).deliver_now
       end
     end
@@ -76,8 +76,8 @@ module Approval::Model::Rel::Approval
     approval_requests.each do |approval_request|
       approver = approval_request.current_assignments.reorder(approved_at: :desc).first.user
       next if approver.email.blank? || approval_request.requester.email.blank?
-  
-      Approval::Admin::Mailer.approved_notification(from: approver.email, to: approval_request.requester.email, 
+
+      Approval::Admin::Mailer.approved_notification(from: approver.email, to: approval_request.requester.email,
         approval_request: approval_request, approver: approver, item: self).deliver_now
     end
   end
@@ -100,8 +100,7 @@ module Approval::Model::Rel::Approval
   private
 
   def validate_approval_requests
-    in_approval_flow_ids.reject!(&:blank?)
-    if in_approval_flow_ids.blank?
+    if in_approval_flow_ids.blank? || in_approval_flow_ids.reject!(&:blank?)
       errors.add(:base, '承認フローを選択してください。')
     end
   end
