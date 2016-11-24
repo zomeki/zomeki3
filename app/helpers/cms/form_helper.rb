@@ -121,11 +121,11 @@ $('a[data-toggle-form]').on('click', function (e) {
   end
 
   def piece_replace_menu(item)
-    if rep = item.replace_page
+    if rep = item.replaced_page
       %Q(<div class="noticeBox">更新用のピースが作成されています : #{link_to h(rep.title), rep.admin_uri}</div>).html_safe
-    elsif org = item.replaced_page
+    elsif org = item.replace_page
       %Q(<div class="noticeBox">公開時に更新されるピース : #{link_to h(org.title), org.admin_uri}</div>).html_safe
     end
   end
-  
+
 end
