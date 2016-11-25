@@ -113,8 +113,12 @@ class GpArticle::Doc < ApplicationRecord
   after_save :save_links
 
   scope :visible_in_list, -> { where(feature_1: true) }
-  scope :event_scheduled_between, ->(start_date, end_date) {
-    where(arel_table[:event_ended_on].gteq(start_date)).where(arel_table[:event_started_on].lt(end_date + 1))
+  scope :event_scheduled_between, ->(start_date, end_date, category_ids) {
+    rel = all
+    rel = rel.where(arel_table[:event_ended_on].gteq(start_date)) if start_date.present?
+    rel = rel.where(arel_table[:event_started_on].lt(end_date + 1)) if end_date.present?
+    rel = rel.categorized_into_event(category_ids) if category_ids.present?
+    rel
   }
   scope :content_and_criteria, ->(content, criteria) {
     rel = all
@@ -271,6 +275,14 @@ class GpArticle::Doc < ApplicationRecord
     category_ids.inject(all) do |rel, category_id|
       rel = rel.where(id: GpCategory::Categorization.select(:categorizable_id)
         .where(cats[:categorized_as].eq('GpArticle::Doc'))
+        .where(cats[:category_id].eq(category_id)))
+    end
+  }
+  scope :categorized_into_event, ->(category_ids) {
+    cats = GpCategory::Categorization.arel_table
+    category_ids.inject(all) do |rel, category_id|
+      rel = rel.where(id: GpCategory::Categorization.select(:categorizable_id)
+        .where(cats[:categorized_as].eq('GpCalendar::Event'))
         .where(cats[:category_id].eq(category_id)))
     end
   }

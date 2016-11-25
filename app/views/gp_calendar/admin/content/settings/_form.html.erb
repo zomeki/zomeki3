@@ -1,82 +1,59 @@
 <%= render 'shared/admin/content/settings/form', f: f, item: @item -%>
 
-<%- if @item.name == 'gp_category_content_category_type_id' -%>
-<table class="show" id="categories">
-  <tbody>
-    <%= render 'category', category: nil, index: nil -%>
-    <%- @item.categories.each_with_index do |category, index| -%>
-    <%= render 'category', category: category, index: index -%>
-    <%- end -%>
-    <tr>
-      <td colspan="3">&nbsp;</td>
-      <td style="text-align: right;"><%= button_tag '追加', type: 'button', id: 'add_categories_line' %></td>
-    </tr>
-  </tbody>
+<%= render 'gp_calendar/admin/shared/doc_style_tags' %>
+<%= javascript_tag do %>
+$(function() {
+  $('a.show_dialog').on('click', function() {
+    $('#doc_style_tags').dialog({width: 450});
+    return false;
+  });
+});
+<% end %>
+
+
+<%- if @item.name == 'gp_category_content_category_type_id'
+      content = GpCategory::Content::CategoryType.find_by_id(@item.value)
+      category_types = content.try(:category_types) || []
+      category_types_for_option = content.try(:category_types_for_option) || []
+
+      ct_ids = @item.category_type_ids
+    -%>
+<table class="show">
+  <tr>
+    <th>利用<%= GpCategory::CategoryType.model_name.human %></th>
+    <td id="category_types">
+      <%- category_types.each do |ct| -%>
+      <span class="category_type">
+        <%= check_box_tag "ct_#{ct.id}", ct.id, ct_ids.include?(ct.id), name: 'item[extra_values][category_types][]' -%> <%= label_tag "ct_#{ct.id}", "#{ct.title}(#{ct.name})" -%>
+      </span>
+      <%- end -%>
+    </td>
+  </tr>
 </table>
 
 <%= javascript_tag do -%>
 $(document).ready(function () {
   $('#item_value').on('change', function (event) {
-    $('#categories > tbody > tr.category').remove();
-    $('#add_categories_line').trigger('click');
-  });
-
-  $('#categories > tbody > tr > td.category_type > select').on('change', function (event) {
-    var content_id = parseInt($('#item_value').val());
-    var category_type_select = $(event.target);
-    var category_type_id = parseInt(category_type_select.val());
-    var category_select = category_type_select.closest('tr').find('td.category > select');
-
+    var content_id = parseInt(event.target.value);
     if (isNaN(content_id)) {
-      category_type_select.html('<option value=""></option>');
-      category_select.html('<option value=""></option>');
+      $('#category_types').html('');
     } else {
-      if (isNaN(category_type_id)) {
-        category_select.html('<option value=""></option>');
-      } else {
-        category_select.html('<option value="">更新中...</option>');
-        $.get('<%= gp_category_category_type_categories_path(content: 'CONTENT_ID', category_type_id: 'CATEGORY_TYPE_ID') %>?options=true&root_only=true'
-              .replace('CONTENT_ID', content_id).replace('CATEGORY_TYPE_ID', category_type_id),
-              function (data) { category_select.html(data); });
-      }
+      $('#category_types').html('更新中...');
+      $.get('<%= gp_category_category_types_path(content: 'CONTENT_ID') %>?check_boxes=true'.replace('CONTENT_ID', content_id), function (data) {
+        $('#category_types').html(
+          data.replace(/category_types\[\]/g, 'item[extra_values][category_types][]')
+        );
+      });
     }
   });
 
-  $('#add_categories_line').on('click', function () {
-    var categories_tbody = $('#categories > tbody');
-    var next_index = categories_tbody.find('tr').length - 2; <%# コピー元(1tr) + 追加ボタン(1tr) = 2tr %>
-
-    var category_tr = categories_tbody.find('tr:first-child').clone(true).addClass('category');
-    var category_select = category_tr.find('td.category > select');
-    category_select.attr('name', category_select.attr('name').replace('N', next_index));
-    category_tr.find(':disabled').removeAttr('disabled');
-    category_tr.insertBefore(categories_tbody.find('tr:last-child')).show();
-
-    var content_id = parseInt($('#item_value').val());
-    var category_type_select = category_tr.find('td.category_type > select');
-    if (isNaN(content_id)) {
-      category_type_select.html('<option value=""></option>');
-      category_select.html('<option value=""></option>');
-    } else {
-      category_type_select.html('<option value="">更新中...</option>');
-      category_select.html('<option value=""></option>');
-      $.get('<%= gp_category_category_types_path(content: 'CONTENT_ID') %>?options=true'
-            .replace('CONTENT_ID', content_id),
-            function (data) { category_type_select.html(data); });
-    }
-  }).trigger('click');
+  $('#category_types input[type="checkbox"]').on('click', function (event) {
+    if (!event.target.checked) { $('#' + event.target.id.replace('ct_', 'vct_')).removeAttr('checked'); }
+  });
 });
 <%- end -%>
 <%- end -%>
 
-<%- if @item.name == 'show_images' -%>
-<table class="show">
-  <tr>
-    <th>画像表示数</th>
-    <td><%= text_field_tag 'item[extra_values][image_cnt]', @item.extra_values[:image_cnt], style: 'width: 200px;' %></td>
-  </tr>
-</table>
-<%- end -%>
 
 <%- if @item.name == 'event_sync_import' -%>
 <table class="show">

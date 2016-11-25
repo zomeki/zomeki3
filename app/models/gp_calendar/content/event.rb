@@ -18,6 +18,10 @@ class GpCalendar::Content::Event < Cms::Content
     holidays.public_state
   end
 
+  def category_content_id
+    setting_value(:gp_category_content_category_type_id).to_i
+  end
+
   def categories
     setting = GpCalendar::Content::Setting.find_by(id: settings.find_by(name: 'gp_category_content_category_type_id').try(:id))
     return GpCategory::Category.none unless setting
@@ -33,7 +37,9 @@ class GpCalendar::Content::Event < Cms::Content
   end
 
   def category_types
-    GpCategory::CategoryType.where(id: categories.map(&:category_type_id))
+    setting = GpCalendar::Content::Setting.find_by(id: settings.find_by(name: 'gp_category_content_category_type_id').try(:id))
+    return GpCategory::CategoryType.none unless setting
+    setting.category_types
   end
 
   def category_type_categories(category_type)
@@ -50,8 +56,21 @@ class GpCalendar::Content::Event < Cms::Content
   end
 
   def list_style
-    setting_value(:list_style).to_s
+    setting_value(:list_style)
   end
+
+  def today_list_style
+    setting_value(:today_list_style)
+  end
+
+  def calendar_list_style
+    setting_value(:calendar_list_style).to_s
+  end
+
+  def search_list_style
+    setting_value(:search_list_style)
+  end
+
 
   def date_style
     setting_value(:date_style).to_s

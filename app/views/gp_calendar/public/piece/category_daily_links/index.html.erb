@@ -1,0 +1,11 @@
+<h3 class="month <%= @calendar.month_name.downcase %>"><%= @calendar.month %>月</h3>
+
+<%= @calendar.to_html %>
+
+<div class="links">
+  <div class="pagination lowerPagination">
+    <%- if @node-%>
+    <%= link_to '一覧へ', @node.public_uri %>
+    <%- end -%>
+  </div>
+</div>

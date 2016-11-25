@@ -40,10 +40,10 @@
     <td>
       <div id="category_type_<%= category_type.id %>_categories">
         <%= render 'category', category_type: category_type, category: nil,
-                               categories_for_option: @content.category_type_categories_for_option(category_type) %>
+                               categories_for_option: category_type.categories_for_option %>
         <%- @item.categories.where(category_type_id: category_type.id).each do |category| -%>
         <%= render 'category', category_type: category_type, category: category,
-                               categories_for_option: @content.category_type_categories_for_option(category_type) %>
+                               categories_for_option: category_type.categories_for_option %>
         <%- end -%>
         <span><%= button_tag '追加', type: 'button', id: "add_category_type_#{category_type.id}_category" %></span>
       </div>

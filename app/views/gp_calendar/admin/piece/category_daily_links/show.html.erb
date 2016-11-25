@@ -1,0 +1,14 @@
+<%= render 'shared/admin/piece/show' do -%>
+<p class="form">詳細設定</p>
+
+<table class="show">
+  <tr>
+    <th>カテゴリ</th>
+    <td><%= @item.categories_label %></td>
+  </tr>
+  <tr>
+    <th>リンク先</th>
+    <td><%= "#{@item.target_node.title}（#{@item.target_node.name}）" if @item.target_node %></td>
+  </tr>
+</table>
+<%- end -%>
