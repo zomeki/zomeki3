@@ -1,0 +1,105 @@
+<%= render 'gp_calendar/admin/shared/doc_style_tags' %>
+<%= javascript_tag do %>
+$(function() {
+  $('a.show_dialog').on('click', function() {
+    $('#doc_style_tags').dialog({width: 450});
+    return false;
+  });
+});
+<% end %>
+
+<%= render 'shared/admin/piece/form', f: f do -%>
+<%= render 'gp_calendar/admin/shared/category_tags', f: f -%>
+<p class="form">詳細設定</p>
+<table class="show">
+  <tr>
+    <th><%= @item.locale :docs_number %></th>
+    <td><%= f.array_text_field 'in_settings[docs_number]', :class => 'name' %></td>
+  </tr>
+  <tr>
+    <th><%= @item.locale :target_date %></th>
+    <td><%= f.array_select 'in_settings[target_date]', @item.class::TARGET_DATE_OPTIONS, include_blank: true %></td>
+  </tr>
+  <tr>
+    <th><%= @item.locale :category_ids %></th>
+    <td>
+      <table class="show" id="categories">
+        <tbody>
+          <%= render 'gp_calendar/admin/shared/category', category: nil, index: nil, f: f -%>
+          <%- @item.categories.each_with_index do |category, index| -%>
+            <%= render 'gp_calendar/admin/shared/category', category: category, index: index, f: f -%>
+          <%- end -%>
+          <tr>
+            <td colspan="3">&nbsp;</td>
+            <td style="text-align: right;"><%= button_tag '追加', type: 'button', id: 'add_categories_line' %></td>
+          </tr>
+        </tbody>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <th><%= @item.locale :table_style %></th>
+    <td>
+      <a href="#" class="show_dialog">置き換えテキストを確認する</a>
+      <table id="table_field">
+        <tr>
+          <td>見出し（任意）</td>
+          <td>データ（置き換えテキスト入力）</td>
+          <td></td>
+        </tr>
+        <%-@item.table_style.each_with_index do |l, i| -%>
+        <tr>
+          <td><%= text_field_tag "table_style[][header]", l[:header], style: 'width: 300px;' %></td>
+          <td><%= text_field_tag "table_style[][data]",   l[:data]  , style: 'width: 300px;'%></td>
+          <td class="del"></td>
+        </tr>
+        <%- end -%>
+      </table>
+      <span><%= button_tag '追加', type: 'button', id: 'add_row' %></span>
+
+      <%= javascript_tag do -%>
+      $(document).ready(function () {
+        $('#add_row').on('click', function () {
+          var clone = $('#table_field').find('tr:last').clone();
+          clone.find('input, label, select, textarea').each(function() {
+            $(this).val('');
+          });
+          clone.find('td.del').each(function() {
+            $(this).html('');
+            var remove_btn = $("<a>", {
+              href: '#',
+              text: '削除',
+              class: 'remove_row'
+            });
+            $(this).append(remove_btn);
+          });
+          $('#table_field').append(clone);
+        });
+
+        $('#table_field').on("click", "a.remove_row", function (e) {
+          $(this).parent().parent().remove();
+          return false;
+        });
+
+      });
+      <%- end -%>
+
+    </td>
+  </tr>
+  <tr>
+    <th><%= @item.locale :date_style %></th>
+    <td>
+      <%= f.array_text_field 'in_settings[date_style]', :class => 'name' %>
+      <strong>年：</strong>%Y <strong>月：</strong>%m <strong>日：</strong>%d <strong>曜日：</strong>%A <strong>曜日（省略）：</strong>%a
+    </td>
+  </tr>
+  <tr>
+    <th><%= @item.locale :more_link_label %></th>
+    <td><%= f.array_text_field 'in_settings[more_link_label]', :class => 'title' %></td>
+  </tr>
+  <tr>
+    <th><%= @item.locale :more_link_url %></th>
+    <td><%= f.array_text_field 'in_settings[more_link_url]', :class => 'title' %></td>
+  </tr>
+</table>
+<%- end -%>

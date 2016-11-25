@@ -1,0 +1,42 @@
+<table id="table_field">
+  <tr>
+    <td>見出し（任意）</td>
+    <td>データ（置き換えテキスト入力）</td>
+    <td></td>
+  </tr>
+  <%-@item.value.each_with_index do |l, i| -%>
+  <tr>
+    <td><%= text_field_tag "item[value][][header]", l[:header], style: 'width: 300px;' %></td>
+    <td><%= text_field_tag "item[value][][data]",   l[:data]  , style: 'width: 300px;'%></td>
+    <td class="del"><%= link_to '削除', '#', class: 'remove_row' if i != 0%></td>
+  </tr>
+  <%- end -%>
+</table>
+<span><%= button_tag '追加', type: 'button', id: 'add_row' %></span>
+
+<%= javascript_tag do -%>
+$(document).ready(function () {
+  $('#add_row').on('click', function () {
+    var clone = $('#table_field').find('tr:last').clone();
+    clone.find('input, label, select, textarea').each(function() {
+      $(this).val('');
+    });
+    clone.find('td.del').each(function() {
+      $(this).html('');
+      var remove_btn = $("<a>", {
+        href: '#',
+        text: '削除',
+        class: 'remove_row'
+      });
+      $(this).append(remove_btn);
+    });
+    $('#table_field').append(clone);
+  });
+
+  $('#table_field').on("click", "a.remove_row", function (e) {
+    $(this).parent().parent().remove();
+    return false;
+  });
+
+});
+<%- end -%>
