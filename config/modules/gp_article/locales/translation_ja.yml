@@ -27,6 +27,7 @@ ja:
         event_will_sync: イベント同期
         event_started_on: イベント開始日
         event_ended_on: イベント終了日
+        event_note: 備考
         raw_tags: 関連ワード
         mobile_title: 携帯用タイトル
         mobile_body: 携帯用内容

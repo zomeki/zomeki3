@@ -39,7 +39,7 @@
           <ul>
             <%- events.each do |event| -%>
             <li>
-              <%= event_replace(event, @content.list_style) %>
+              <%= event_replace(event, @content.calendar_list_style) %>
               <%- unless event.categories.empty? -%>
               <p class="category">
                 <%- event.categories.each do |category| -%>

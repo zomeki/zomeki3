@@ -7,14 +7,24 @@ class GpCalendar::Content::Setting < Cms::ContentSetting
     comment: '<strong>年：</strong>%Y <strong>月：</strong>%m <strong>日：</strong>%d <strong>曜日：</strong>%A <strong>曜日（省略）：</strong>%a',
     default_value: '%Y年%m月%d日（%a）'
   set_config :list_style,
-    name: '表示形式',
-    comment: '<strong>タイトル：</strong>@title_link@',
+    name: '表示形式/イベント一覧',
+    upper_text: '<a href="#" class="show_dialog">置き換えテキストを確認する</a>',
+    form_type: :table_field,
+    default_value: [{header: 'タイトル', data: '@title_link@'}]
+  set_config :today_list_style,
+    name: '表示形式/今日のイベント',
+    upper_text: '<a href="#" class="show_dialog">置き換えテキストを確認する</a>',
+    form_type: :table_field,
+    default_value: [{header: 'タイトル', data: '@title_link@'}]
+  set_config :calendar_list_style,
+    name: '表示形式/イベントカレンダー',
+    upper_text: '<a href="#" class="show_dialog">置き換えテキストを確認する</a>',
     default_value: '@title_link@'
-  set_config :show_images,
-    name: '画像表示',
-    form_type: :radio_buttons,
-    options: [['表示', 'visible'], ['非表示', 'hidden']],
-    default_value: 'visible'
+  set_config :search_list_style,
+    name: '表示形式/イベント検索',
+    upper_text: '<a href="#" class="show_dialog">置き換えテキストを確認する</a>',
+    form_type: :table_field,
+    default_value: [{header: 'タイトル', data: '@title_link@'}]
   set_config :default_image,
     name: '初期画像',
     comment: '（例 /images/sample.jpg ）'
@@ -36,23 +46,34 @@ class GpCalendar::Content::Setting < Cms::ContentSetting
     ex = extra_values
     case name
     when 'gp_category_content_category_type_id'
-      ex[:category_ids] = (params[:categories] || {}).values.select(&:present?).map(&:to_i).uniq
+      ex[:category_type_ids] = params[:category_types].map(&:to_i).uniq
     when 'event_sync_import'
       ex[:source_hosts] = params[:source_hosts].to_s
     when 'event_sync_export'
       ex[:destination_hosts] = params[:destination_hosts].to_s
       ex[:default_will_sync] = params[:default_will_sync].to_s
-    when 'show_images'
-      ex[:image_cnt] = params[:image_cnt].to_i
+    when 'list_style', 'today_list_style', 'search_list_style'
+      ex[:headers] = params[:headers]
+      ex[:values]  = params[:values]
     end
     super(ex)
   end
+
 
   def category_ids
     extra_values[:category_ids] || []
   end
 
+  def category_type_ids
+    extra_values[:category_type_ids] || []
+  end
+
   def categories
     GpCategory::Category.where(id: category_ids)
   end
+
+  def category_types
+    GpCategory::CategoryType.where(id: category_type_ids)
+  end
+
 end
