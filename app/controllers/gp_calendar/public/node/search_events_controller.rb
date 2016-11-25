@@ -23,7 +23,6 @@ class GpCalendar::Public::Node::SearchEventsController < GpCalendar::Public::Nod
     end
     @events.sort! {|a, b| a.started_on <=> b.started_on}
 
-    filter_events_by_specified_category(@events)
   end
 
   def file_content

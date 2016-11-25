@@ -224,6 +224,10 @@ $(document).ready(function () {
         <td><%= @item.event_categories.where(category_type_id: category_type.id).map(&:title).join(', ') %></td>
       </tr>
       <%- end -%>
+      <tr>
+        <th><%= @item.locale :event_note %></th>
+        <td><%= hbr @item.event_note %></td>
+      </tr>
     </table>
 
     <%- if @content.gp_calendar_content_event -%>

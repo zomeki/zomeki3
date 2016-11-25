@@ -83,7 +83,7 @@ private
   end
 
   def event_replace_summary(event)
-    content_tag(:p, event.description, class: 'summary')
+    content_tag(:p, hbr(event.description), class: 'summary')
   end
 
   def event_replace_unit(event)
@@ -169,7 +169,7 @@ private
 
   def event_replace_note(event)
     if doc = event.doc
-      content_tag(:p, doc.event_note, class: 'subtitle')
+      content_tag(:p, hbr(doc.event_note), class: 'subtitle')
     else
       ''
     end
