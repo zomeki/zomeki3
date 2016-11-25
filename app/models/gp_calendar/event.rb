@@ -33,7 +33,10 @@ class GpCalendar::Event < ApplicationRecord
 
   scope :public_state, -> { where(state: 'public') }
   scope :scheduled_between, ->(start_date, end_date) {
-    where(arel_table[:ended_on].gteq(start_date)).where(arel_table[:started_on].lt(end_date + 1))
+    rel = all
+    rel = rel.where(arel_table[:ended_on].gteq(start_date))   if start_date
+    rel = rel.where(arel_table[:started_on].lt(end_date + 1)) if end_date
+    rel
   }
 
   scope :content_and_criteria, ->(content, criteria){
@@ -74,6 +77,11 @@ class GpCalendar::Event < ApplicationRecord
         rel = rel.where(events[:started_on].lteq(end_date)
                         .and(events[:ended_on].gteq(start_date)))
       end
+    end
+
+    if criteria[:categories].present?
+      rel = rel.distinct.includes(:categories)
+          .where(gp_calendar_events_gp_category_categories: {category_id: criteria[:categories]})
     end
 
     rel = rel.where(events[:state].eq(criteria[:state])) if criteria[:state].present?
