@@ -1,26 +1,25 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe Core do
-  before do
-    Core.initialize({})
-    Core.user = fg_find_or_create(:sys_user_system_admin)
-    Core.user_group = Core.user.groups.first
-    @site = fg_find_or_create(:cms_site_first_example_com)
-  end
+RSpec.describe Core do
+  prepare_first_site
 
   context 'when site_id exist in cookie' do
     before do
-      Core.env['HTTP_COOKIE'] = "cms_site=#{@site.id}"
+      Core.env['HTTP_COOKIE'] = "cms_site=#{first_site.id}"
     end
 
     describe '.get_site_by_cookie' do
       it 'returns site by the id' do
-        expect(Core.send(:get_site_by_cookie)).to eq(@site)
+        expect(Core.send(:get_site_by_cookie)).to eq first_site
       end
     end
   end
 
   context 'when no site_id exist in cookie' do
+    before do
+      Core.env['HTTP_COOKIE'] = nil
+    end
+
     describe '.get_site_by_cookie' do
       it 'returns no site' do
         expect(Core.send(:get_site_by_cookie)).to be_nil

@@ -1,19 +1,14 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe Survey::Form do
-  before do
-    Core.user = FactoryGirl.build(:sys_user_system_admin)
-    Core.user_group = Core.user.group
-  end
-
+RSpec.describe Survey::Form, type: :model do
   it 'has a valid factory' do
-    form = FactoryGirl.build(:survey_form_1)
+    form = build(:survey_form)
     expect(form).to be_valid
   end
 
   it 'is invalid without a title' do
-    form = FactoryGirl.build(:survey_form_1, title: nil)
-    expect(form).not_to be_valid
-    expect(form.errors[:title].size).to eq(1)
+    form = build(:survey_form, title: nil)
+    form.validate
+    expect(form.errors[:title].size).to eq 1
   end
 end

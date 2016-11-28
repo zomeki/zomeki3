@@ -1,47 +1,32 @@
-# Read about factories at https://github.com/thoughtbot/factory_girl
-
 FactoryGirl.define do
-  factory :sys_user_system_admin, :class => 'Sys::User' do
-    id 1
+  factory :sys_user, class: 'Sys::User' do
     state 'enabled'
-    created_at '2012-03-02 15:11:27'
-    updated_at '2012-03-02 15:11:27'
     ldap 0
     ldap_version nil
-    auth_no 5
-    name 'システム管理者'
-    name_en nil
-    account 'cms'
-    password 'cms'
-    email nil
+    auth_no 2
+    name { Faker::Name.name }
+    name_en { l = Faker::Config.locale
+              Faker::Config.locale = :en
+              n = Faker::Name.name
+              Faker::Config.locale = l
+              n }
+    sequence(:account) {|n| "user#{'%03d' % n}" }
+    password { "#{account}pass" }
+    email { Faker::Internet.safe_email account }
     remember_token nil
     remember_token_expires_at nil
     admin_creatable false
     site_creatable false
-    groups {
-      [fg_find_or_create(:sys_group_001), fg_find_or_create(:sys_group_002)]
-    }
-  end
+    reset_password_token nil
+    reset_password_token_expires_at nil
 
-  factory :sys_user_site_admin, :class => 'Sys::User' do
-    id 2
-    state 'enabled'
-    created_at '2012-07-05 16:12:28'
-    updated_at '2012-07-05 16:12:28'
-    ldap 0
-    ldap_version nil
-    auth_no 5
-    name 'サイト管理者'
-    name_en nil
-    account 'siteadmin'
-    password 'siteadmin'
-    email nil
-    remember_token nil
-    remember_token_expires_at nil
-    admin_creatable false
-    site_creatable false
-    groups {
-      [fg_find_or_create(:sys_group_001), fg_find_or_create(:sys_group_002)]
-    }
+    trait :system_admin do
+      id 1
+      auth_no 5
+    end
+
+    trait :site_admin do
+      auth_no 5
+    end
   end
 end
