@@ -6,7 +6,7 @@ ENV['BUNDLE_GEMFILE'] = rails_root + "/Gemfile"
 
 working_directory rails_root
 
-timeout 30
+timeout 300
 
 preload_app false
 

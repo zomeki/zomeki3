@@ -1,8 +1,8 @@
 client_max_body_size 1000M;
 
-proxy_connect_timeout 120;
-proxy_read_timeout    120;
-proxy_send_timeout    120;
+proxy_connect_timeout 1200;
+proxy_read_timeout    1200;
+proxy_send_timeout    1200;
 
 location ~ ^/_(api|auth) {
   error_page 418 = @proxy; return 418;
