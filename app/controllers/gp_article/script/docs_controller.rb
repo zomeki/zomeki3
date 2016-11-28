@@ -70,7 +70,7 @@ class GpArticle::Script::DocsController < Cms::Controller::Script::Publication
 
       Sys::OperationLog.script_log(:item => item, :site => item.content.site, :action => 'close')
 
-      info_log 'OK: Closed'
+      info_log 'OK: Finished'
       params[:task].destroy
       Script.success
     end
