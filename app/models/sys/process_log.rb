@@ -5,8 +5,18 @@ class Sys::ProcessLog < ApplicationRecord
   belongs_to :parent, foreign_key: :parent_id, class_name: 'Sys::Process'
   attr_accessor :title
 
+  PROCESSE_LIST = [
+    ["音声書き出し"  , "cms/script/talk_tasks/exec"],
+    ["アクセスランキング取り込み" , "rank/script/ranks/exec"],
+    ["フィード取り込み" , "feed/script/feeds/read"],
+    ["問合せ取り込み", "survey/script/answers/pull"],
+    ["関連ページ書き出し", "cms/script/nodes/publish"],
+    ["記事ページ書き出し", "gp_article/script/docs/publish_doc"]
+  ]
+
+
   def summary_lael
-    Sys::Process::PROCESSE_LIST.each{|a| return a[0] if a[1] == name}
+    PROCESSE_LIST.each{|a| return a[0] if name =~ %r|#{a[1]}| }
     return nil
   end
 
@@ -25,7 +35,7 @@ class Sys::ProcessLog < ApplicationRecord
       when 's_user_id'
         rel.where!(user_id: v)
       when 's_name'
-        rel.where!(name: v)
+        rel.where!(Sys::ProcessLog.arel_table[:name].matches("%#{v}%"))
       when 'start_date'
         rel.where!(arel_table[:started_at].gteq(v))
       when 'close_date'
