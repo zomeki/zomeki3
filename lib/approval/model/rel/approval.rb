@@ -118,6 +118,7 @@ module Approval::Model::Rel::Approval
   end
 
   def save_approval_requests
+    return if in_approval_flow_ids.blank?
     in_approval_flow_ids.reject!(&:blank?)
     in_approval_flow_ids.each do |approval_flow_id|
       request = approval_requests.find_by(approval_flow_id: approval_flow_id) ||
