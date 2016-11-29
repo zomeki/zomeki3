@@ -40,6 +40,7 @@ private
     uri += "?#{request.env['QUERY_STRING']}" if !request.env['QUERY_STRING'].blank?
     cookies[:sys_login_referrer] = uri
     respond_to do |format|
+      format.any  { redirect_to("/#{ZomekiCMS::ADMIN_URL_PREFIX}/login") }
       format.html { redirect_to("/#{ZomekiCMS::ADMIN_URL_PREFIX}/login") }
       format.xml  { http_error 500, 'This is a secure page.' }
     end
