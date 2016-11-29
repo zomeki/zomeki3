@@ -1,68 +1,38 @@
-# Read about factories at https://github.com/thoughtbot/factory_girl
-
 FactoryGirl.define do
-  factory :sys_group_root, :class => 'Sys::Group' do
-    id 1
-    unid 1
+  factory :sys_group, class: 'Sys::Group' do
     state 'enabled'
     web_state 'closed'
-    created_at '2012-03-02 15:11:27'
-    updated_at '2012-03-02 15:11:27'
-    parent_id 0
-    level_no 1
-    code 'root'
-    sort_no 1
-    layout_id nil
-    ldap 0
-    ldap_version nil
-    name '組織'
-    name_en 'soshiki'
-    tel nil
-    outline_uri nil
-    email nil
-  end
-
-  factory :sys_group_001, :class => 'Sys::Group' do
-    id 2
-# TODO: unidを自動採番にする（システム全体でユニークにするため）
-    unid 20
-    state 'enabled'
-    web_state 'public'
-    created_at '2012-03-02 15:11:28'
-    updated_at '2012-03-02 15:11:28'
     parent_id 1
     level_no 2
-    code '001'
+    sequence(:code) {|n| '%03d' % n }
     sort_no 2
     layout_id nil
     ldap 0
     ldap_version nil
-    name '企画部'
-    name_en 'kikakubu'
+    sequence(:name) {|n| "組織#{n}" }
+    sequence(:name_en) {|n| "org#{n}" }
     tel nil
     outline_uri nil
     email nil
-  end
+    fax nil
+    address nil
+    note nil
+    tel_attend nil
 
-  factory :sys_group_002, :class => 'Sys::Group' do
-    id 3
-# TODO: unidを自動採番にする（システム全体でユニークにするため）
-    unid 30
-    state 'enabled'
-    web_state 'public'
-    created_at '2012-03-02 15:11:29'
-    updated_at '2012-03-02 15:11:29'
-    parent_id 1
-    level_no 2
-    code '002'
-    sort_no 3
-    layout_id nil
-    ldap 0
-    ldap_version nil
-    name '総務部'
-    name_en 'somubu'
-    tel nil
-    outline_uri nil
-    email nil
+    trait :root do
+      id 1
+      parent_id 0
+      level_no 1
+      code 'root'
+      sort_no 1
+      name 'ルート'
+      name_en 'root'
+    end
+
+    before(:create) do |group|
+      attributes = attributes_for(:sys_group, :root)
+      next if group.id == attributes[:id] || Sys::Group.find_by(id: attributes[:id])
+      create(:sys_group, :root)
+    end
   end
 end
