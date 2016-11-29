@@ -198,8 +198,8 @@ class GpArticle::Doc < ApplicationRecord
       where(state: %w(draft approvable approved prepared))
     when 'public'
       where(state: 'public')
-    when 'closed'
-      where(state: 'closed')
+    when 'finish'
+      where(state: 'finish')
     when 'all'
       all
     else
@@ -420,7 +420,7 @@ class GpArticle::Doc < ApplicationRecord
   end
 
   def state_closed?
-    state == 'closed'
+    state == 'finish'
   end
 
   def state_archived?
@@ -429,7 +429,7 @@ class GpArticle::Doc < ApplicationRecord
 
   def close
     @save_mode = :close
-    self.state = 'closed' if self.state_public?
+    self.state = 'finish' if self.state_public?
     return false unless save(:validate => false)
     close_page
     return true
