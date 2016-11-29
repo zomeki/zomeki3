@@ -104,15 +104,19 @@ $(document).ready(function () {
     <%- else -%>
     <table class="show">
       <tr>
-        <td colspan="2"><%=raw @item.body.gsub(/("|')file_contents\//, '\1' + %Q(#{gp_article_doc_path(@content, id: @item.id)}/file_contents/)) %></td>
+        <td colspan="2">
+          <%=raw @item.body.gsub(/("|')file_contents\//, '\1' + %Q(#{@item.file_content_uri})) %>
+        </td>
       </tr>
       <%- unless @item.links_in_body.empty? -%>
       <tr>
         <th><%= @item.locale :body %>に含まれるリンク</th>
         <td>
           <ul>
-            <%- @item.links_in_body.each do |link| -%>
-            <li><%= link[:body] %> (<%= link_to link[:url], link[:url], target: 'preview' %>)</li>
+            <%- @item.links_in_body.each do |link|
+              link_url = link[:url].gsub(/\Afile_contents\//, '\1' + %Q(#{@item.file_content_uri}))
+            -%>
+            <li><%= link[:body] %> (<%= link_to link[:url], link_url, target: 'preview' %>)</li>
             <%- end -%>
           </ul>
         </td>

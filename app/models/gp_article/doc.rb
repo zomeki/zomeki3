@@ -378,6 +378,14 @@ class GpArticle::Doc < ApplicationRecord
     "#{d}#{path}"
   end
 
+  def file_content_uri
+    if state_public?
+      %Q(#{public_uri}file_contents/)
+    else
+      %Q(#{content.admin_uri}/#{id}/file_contents/)
+    end
+  end
+
   def state_options
     options = if Core.user.has_auth?(:manager) || content.save_button_states.include?('public')
                 STATE_OPTIONS
