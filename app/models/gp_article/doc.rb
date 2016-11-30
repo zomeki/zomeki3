@@ -113,8 +113,12 @@ class GpArticle::Doc < ApplicationRecord
   after_save :save_links
 
   scope :visible_in_list, -> { where(feature_1: true) }
-  scope :event_scheduled_between, ->(start_date, end_date) {
-    where(arel_table[:event_ended_on].gteq(start_date)).where(arel_table[:event_started_on].lt(end_date + 1))
+  scope :event_scheduled_between, ->(start_date, end_date, category_ids) {
+    rel = all
+    rel = rel.where(arel_table[:event_ended_on].gteq(start_date)) if start_date.present?
+    rel = rel.where(arel_table[:event_started_on].lt(end_date + 1)) if end_date.present?
+    rel = rel.categorized_into_event(category_ids) if category_ids.present?
+    rel
   }
   scope :content_and_criteria, ->(content, criteria) {
     rel = all
@@ -194,8 +198,8 @@ class GpArticle::Doc < ApplicationRecord
       where(state: %w(draft approvable approved prepared))
     when 'public'
       where(state: 'public')
-    when 'closed'
-      where(state: 'closed')
+    when 'finish'
+      where(state: 'finish')
     when 'all'
       all
     else
@@ -271,6 +275,14 @@ class GpArticle::Doc < ApplicationRecord
     category_ids.inject(all) do |rel, category_id|
       rel = rel.where(id: GpCategory::Categorization.select(:categorizable_id)
         .where(cats[:categorized_as].eq('GpArticle::Doc'))
+        .where(cats[:category_id].eq(category_id)))
+    end
+  }
+  scope :categorized_into_event, ->(category_ids) {
+    cats = GpCategory::Categorization.arel_table
+    category_ids.inject(all) do |rel, category_id|
+      rel = rel.where(id: GpCategory::Categorization.select(:categorizable_id)
+        .where(cats[:categorized_as].eq('GpCalendar::Event'))
         .where(cats[:category_id].eq(category_id)))
     end
   }
@@ -366,6 +378,14 @@ class GpArticle::Doc < ApplicationRecord
     "#{d}#{path}"
   end
 
+  def file_content_uri
+    if state_public?
+      %Q(#{public_uri}file_contents/)
+    else
+      %Q(#{content.admin_uri}/#{id}/file_contents/)
+    end
+  end
+
   def state_options
     options = if Core.user.has_auth?(:manager) || content.save_button_states.include?('public')
                 STATE_OPTIONS
@@ -400,7 +420,7 @@ class GpArticle::Doc < ApplicationRecord
   end
 
   def state_closed?
-    state == 'closed'
+    state == 'finish'
   end
 
   def state_archived?
@@ -409,7 +429,7 @@ class GpArticle::Doc < ApplicationRecord
 
   def close
     @save_mode = :close
-    self.state = 'closed' if self.state_public?
+    self.state = 'finish' if self.state_public?
     return false unless save(:validate => false)
     close_page
     return true

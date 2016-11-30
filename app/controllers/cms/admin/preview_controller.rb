@@ -77,7 +77,7 @@ private
       doc.css(%Q![#{attr}]!).each do |node|
         next if node[attr].blank?
         uri = Addressable::URI.parse(node[attr])
-        if uri.relative? && uri.path !~ %r|/_common/|
+        if uri.relative? && uri.path !~ %r|/_common/| && node[attr] !~ %r|\A#|
           node[attr] = "#{preview_uri}#{node[attr]}"
         end
       end

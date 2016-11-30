@@ -16,6 +16,7 @@ module StateText
       when 'prepared'; '公開日時待ち'
       when 'public'; '公開中'
       when 'closed'; '非公開'
+      when 'finish'; '公開終了'
       when 'completed'; '完了'
       when 'archived'; '履歴'
       when 'synced'; '同期済'

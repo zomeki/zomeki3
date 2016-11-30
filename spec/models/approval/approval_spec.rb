@@ -1,15 +1,17 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe Approval::Approval do
+RSpec.describe Approval::Approval, type: :model do
+  let(:approval_flow) { create(:approval_approval_flow) }
+
   it 'has a valid factory' do
-    pending
-    approval = FactoryGirl.build(:approval_approval_1)
+    approval = approval_flow.approvals.build(attributes_for :approval_approval)
     expect(approval).to be_valid
   end
 
   it 'is invalid without a index' do
-    pending
-    approval = FactoryGirl.build(:approval_approval_1, index: nil)
-    expect(approval).to have(1).error_on(:index)
+    approval = approval_flow.approvals.build(attributes_for :approval_approval)
+    approval.index = nil
+    approval.validate
+    expect(approval.errors[:index].size).to eq 1
   end
 end

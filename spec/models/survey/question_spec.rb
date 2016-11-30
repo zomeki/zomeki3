@@ -1,25 +1,20 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe Survey::Question do
-  before do
-    Core.user = FactoryGirl.build(:sys_user_system_admin)
-    Core.user_group = Core.user.group
-  end
-
+RSpec.describe Survey::Question, type: :model do
   it 'has a valid factory' do
-    question = FactoryGirl.build(:survey_question_1)
+    question = build(:survey_question)
     expect(question).to be_valid
   end
 
   it 'is invalid without a title' do
-    question = FactoryGirl.build(:survey_question_1, title: nil)
-    expect(question).not_to be_valid
-    expect(question.errors[:title].size).to eq(1)
+    question = build(:survey_question, title: nil)
+    question.validate
+    expect(question.errors[:title].size).to eq 1
   end
 
   it 'is invalid without a sort_no' do
-    question = FactoryGirl.build(:survey_question_1, sort_no: nil)
-    expect(question).not_to be_valid
-    expect(question.errors[:sort_no].size).to eq(1)
+    question = build(:survey_question, sort_no: nil)
+    question.validate
+    expect(question.errors[:sort_no].size).to eq 1
   end
 end

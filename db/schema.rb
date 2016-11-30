@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161109010041) do
+ActiveRecord::Schema.define(version: 20161128051318) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -760,6 +760,7 @@ ActiveRecord::Schema.define(version: 20161109010041) do
     t.string   "event_will_sync"
     t.integer  "serial_no"
     t.string   "lang"
+    t.text     "event_note"
     t.index ["concept_id"], name: "index_gp_article_docs_on_concept_id", using: :btree
     t.index ["content_id"], name: "index_gp_article_docs_on_content_id", using: :btree
     t.index ["event_started_on", "event_ended_on"], name: "index_gp_article_docs_on_event_started_on_and_event_ended_on", using: :btree

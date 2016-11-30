@@ -363,8 +363,11 @@ module Sys::Model::Base::File
   def extract_text
     return unless Zomeki.config.application['sys.file_text_extraction']
     return unless has_attribute?(:extracted_text)
-    return unless mime_type.in?(['text/plain', 'application/pdf', 'application/msword',
-                                 'application/vnd.ms-excel', 'application/vnd.ms-powerpoint'])
+    return unless mime_type.in?(['text/plain', 'application/pdf',
+                                 'application/msword', 'application/vnd.ms-excel', 'application/vnd.ms-powerpoint',
+                                 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                                 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                                 'application/vnd.openxmlformats-officedocument.presentationml.presentation'])
     file = Pathname.new(upload_path)
     jar = Rails.root.join('vendor/tika/tika-app.jar')
     result = `java -jar #{jar} --text #{file}`

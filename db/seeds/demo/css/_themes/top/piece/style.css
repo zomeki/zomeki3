@@ -882,6 +882,110 @@ table.gsc-search-box {
   padding: 0;
 }
 
+#categoryCalendar {
+  padding: 25px 0 0 0;
+  background: url("../images/bg-calendar.gif") no-repeat center top;
+}
+#categoryCalendar .pieceContainer {
+  padding-bottom: 0;
+  box-shadow: 0 3px 3px -2px rgba(0,0,0,0.3);
+}
+#categoryCalendar .pieceHeader {
+  background: #fff !important;
+}
+#categoryCalendar .pieceHeader h2 {
+  padding: 12px 5px 0 5px;
+  border-top: 4px solid #008746;
+  border-left: 1px solid #aaa;
+  border-right: 1px solid #aaa;
+  background-image: none;
+  color: #000;
+  text-align: center;
+}
+#categoryCalendar .pieceBody {
+  padding: 0 10px 10px 10px;
+  border-left: 1px solid #aaa;
+  border-right: 1px solid #aaa;
+  border-bottom: 1px solid #aaa;
+}
+#categoryCalendar .pieceBody h3 {
+  margin-bottom: 6px;
+  background-position: 75% 50%;
+  background-repeat: no-repeat;
+  font-weight: bold;
+  _font-size: 100%;
+  text-align: center;
+}
+#categoryCalendar .pieceBody h3.april {
+  background-image: url("../images/bg-april.gif");
+}
+#categoryCalendar .pieceBody h3.may {
+  background-image: url("../images/bg-may.gif");
+}
+#categoryCalendar .pieceBody h3.june {
+  background-image: url("../images/bg-june.gif");
+}
+#categoryCalendar .pieceBody h3.july {
+  background-image: url("../images/bg-july.gif");
+}
+#categoryCalendar .pieceBody h3.august {
+  background-image: url("../images/bg-august.gif");
+}
+#categoryCalendar .pieceBody h3.september {
+  background-image: url("../images/bg-september.gif");
+}
+#categoryCalendar .pieceBody h3.october {
+  background-image: url("../images/bg-october.gif");
+}
+#categoryCalendar .pieceBody h3.november {
+  background-image: url("../images/bg-november.gif");
+}
+#categoryCalendar .pieceBody h3.december {
+  background-image: url("../images/bg-december.gif");
+}
+#categoryCalendar .pieceBody h3.january {
+  background-image: url("../images/bg-january.gif");
+}
+#categoryCalendar .pieceBody h3.february {
+  background-image: url("../images/bg-february.gif");
+}
+#categoryCalendar .pieceBody h3.march {
+  background-image: url("../images/bg-march.gif");
+}
+#categoryCalendar .pieceBody table {
+  width: 100%;
+  border: 1px solid #bbb;
+  font-size: 90%;
+}
+#categoryCalendar .pieceBody th, #categoryCalendar .pieceBody td {
+  padding: 2px 0;
+  border: 1px solid #bbb;
+  text-align: center;
+}
+#categoryCalendar .pieceBody table a {
+  margin: 0;
+  padding: 0;
+  background-image: none;
+}
+#categoryCalendar .pieceBody .sat {
+  background-color: #dff6fe;
+  color: #3366ff;
+}
+#categoryCalendar .pieceBody .sun {
+  background-color: #ffe6f1;
+  color: #ee0000;
+}
+#categoryCalendar .pieceBody table .prevMonth,
+#categoryCalendar .pieceBody table .nextMonth {
+  color: #ccc;
+}
+#categoryCalendar .pieceBody .pagination {
+  margin-top: 10px;
+}
+#categoryCalendar .pieceBody .pagination a {
+  padding: 0;
+}
+
 /* event list
 ----------------------------------------------- */
 #eventType {

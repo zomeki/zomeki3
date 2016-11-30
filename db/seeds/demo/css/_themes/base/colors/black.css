@@ -93,6 +93,16 @@ a:focus, a:hover {
   border-color: #fff;
 }
 
+#categoryCalendar .pieceBody .sun,
+#categoryCalendar .pieceBody .sat {
+  background-color: transparent;
+  color: inherit;
+}
+#categoryCalendar .pieceBody,
+#categoryCalendar .pieceBody th,
+#categoryCalendar .pieceBody td {
+  border-color: #fff;
+}
 /* content style
 ----------------------------------------------- */
 #attentionInformation .pieceHeader, #attentionInformationGnav .pieceHeader, #recentDocs .pieceHeader, #recentDocsGnav .pieceHeader {

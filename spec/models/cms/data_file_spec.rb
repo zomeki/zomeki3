@@ -3,8 +3,6 @@ require 'rails_helper'
 RSpec.describe Cms::DataFile, type: :model do
   before :all do
     Zomeki.config.application['sys.file_text_extraction'] = true
-    first_site = build(:cms_site, :first)
-    initialize_core first_site.full_uri
   end
 
   it 'has a valid factory' do

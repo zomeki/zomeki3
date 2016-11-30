@@ -1,16 +1,38 @@
 FactoryGirl.define do
-  factory :ad_banner_banner_1, class: 'AdBanner::Banner' do
-    name 'sample_picture.jpg'
-    title 'sample_picture'
-    association :content, :factory => :ad_banner_content_banner_1
+  factory :ad_banner_banner, class: 'AdBanner::Banner' do
+    sequence(:name) {|n| "sample_picture_#{n}.jpg" }
+    sequence(:title) {|n| "サンプル画像#{n}" }
+    mime_type { Rack::Mime.mime_type '.jpg' }
+    size { SecureRandom.random_number 5.megabytes }
+    image_is 1
+    image_width { SecureRandom.random_number 500 }
+    image_height { SecureRandom.random_number 500 }
+    content { group.content }
+    association :group, factory: :ad_banner_group
     state 'public'
-    advertiser_name '広告主株式会社'
-    advertiser_phone '03-1234-5678'
-    advertiser_email 'ad@example.com'
-    advertiser_contact '山田'
-    published_at 3.days.ago
-    closed_at 4.days.since
-    url 'http://example.com/'
-    sort_no 10
+    sequence(:advertiser_name) {|n| "広告主株式会社#{n}" }
+    advertiser_phone { Faker::PhoneNumber.phone_number }
+    sequence(:advertiser_email) {|n| Faker::Internet.safe_email "ad#{n}" }
+    advertiser_contact { Faker::Name.last_name }
+    published_at { Faker::Time.backward(1.week) }
+    closed_at { Faker::Time.forward(1.week) }
+    url { Faker::Internet.url }
+    sequence(:sort_no) {|n| n * 10 }
+    token { Util::String::Token.generate_unique_token(AdBanner::Banner, :token) }
+    target '_blank'
+    site_id { content.try(:site_id) }
+    thumb_width { SecureRandom.random_number 200 }
+    thumb_height { SecureRandom.random_number 200 }
+    thumb_size { SecureRandom.random_number 1.megabyte }
+
+    trait :png do
+      sequence(:name) {|n| "sample_picture_#{n}.png" }
+      mime_type { Rack::Mime.mime_type '.png' }
+    end
+
+    trait :gif do
+      sequence(:name) {|n| "sample_picture_#{n}.gif" }
+      mime_type { Rack::Mime.mime_type '.gif' }
+    end
   end
 end

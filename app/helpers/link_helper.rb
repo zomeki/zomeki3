@@ -29,7 +29,7 @@ module LinkHelper
       return link_to(type, url_for(:action => type), args)
     end
   end
-  
+
   def link_to(*args)
     labels = {
       :up        => '上へ',
@@ -44,6 +44,7 @@ module LinkHelper
       :set       => '設定',
       :open      => '公開',
       :close     => '非公開',
+      :finish    => '公開終了',
       :enabale   => '有効化',
       :disable   => '無効化',
       :recognize => '承認',
@@ -64,7 +65,7 @@ module LinkHelper
 
     super(*args)
   end
-  
+
   ## E-mail to entity
   def email_to(addr, text = nil)
     return '' if addr.blank?
@@ -75,7 +76,7 @@ module LinkHelper
     text.gsub!(/a/, '&#97;')
     mail_to(text.html_safe, addr.html_safe).html_safe
   end
-  
+
   ## Tel
   def tel_to(tel, text = nil)
     text ||= tel

@@ -1,20 +1,15 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe AdBanner::Content::Banner do
-  before do
-    Core.user = FactoryGirl.build(:sys_user_system_admin)
-    Core.user_group = Core.user.group
-  end
-
+RSpec.describe AdBanner::Content::Banner, type: :model do
   subject { AdBanner::Content::Banner }
   it { should < Cms::Content }
 
   describe :all do
     it 'identifies own class' do
       expect {
-        FactoryGirl.create(:cms_content_map_marker_1)
-        FactoryGirl.create(:cms_content_ad_banner_banner_1)
-        FactoryGirl.create(:cms_content_ad_banner_banner_2)
+        create(:cms_content, :map_marker)
+        create(:cms_content, :ad_banner_banner)
+        create(:cms_content, :ad_banner_banner)
       }.to change(AdBanner::Content::Banner, :count).by(2)
     end
   end

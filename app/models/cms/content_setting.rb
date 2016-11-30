@@ -1,8 +1,8 @@
 class Cms::ContentSetting < ApplicationRecord
   include Sys::Model::Base
-  
+
   @@configs = {}
-  
+
   belongs_to :content, :foreign_key => :content_id, :class_name => 'Cms::Content'
 
   validates :content_id, :name, presence: true
@@ -13,13 +13,13 @@ class Cms::ContentSetting < ApplicationRecord
     @@configs[self] ||= []
     @@configs[self] << params.merge(:id => id).freeze
   end
-  
+
   def self.configs(content)
     configs = []
     @@configs[self].each {|c| configs << config(content, c[:id])} if @@configs[self]
     configs
   end
-  
+
   def self.config(content, name)
     self.where(content_id: content.id, name: name.to_s).first_or_initialize
   end
@@ -27,30 +27,30 @@ class Cms::ContentSetting < ApplicationRecord
   def self.all_configs
     @@configs[self] || []
   end
-  
+
   def editable?
     content.editable?
   end
-  
+
   def config
     return @config if @config
     @@configs[self.class].each {|c| return @config = c if c[:id].to_s == name.to_s} if @@configs[self.class]
     nil
   end
-  
+
   def config_name
     config ? config[:name] : nil
   end
-  
+
   def config_options
     return config[:options].call if config[:options].is_a?(Proc)
     config[:options] ? config[:options].collect {|e| [e[0], e[1].to_s] } : nil
   end
-  
+
   def upper_text
     config[:upper_text] ? config[:upper_text] : nil
   end
-  
+
   def lower_text
     config[:lower_text] ? config[:lower_text] : nil
   end
@@ -91,6 +91,8 @@ class Cms::ContentSetting < ApplicationRecord
       (value || []).map { |v| opts.detect { |o| o.last.to_s == v.to_s }.try(:first) }.compact.join(', ')
     when :multiple_select
       config_options.where(id: (value || [])).map(&:name).join(', ')
+    when :table_field
+      (value || []).map { |v| "#{v[:header]}, #{v[:data]}" }.join(' / ')
     else
       value.presence
     end
@@ -98,7 +100,7 @@ class Cms::ContentSetting < ApplicationRecord
 
   def value=(v)
     case form_type
-    when :check_boxes, :multiple_select
+    when :check_boxes, :multiple_select, :table_field
       super(YAML.dump(v ? v.reject(&:blank?) : []))
     else
       super
@@ -107,7 +109,7 @@ class Cms::ContentSetting < ApplicationRecord
 
   def value
     case form_type
-    when :check_boxes, :multiple_select
+    when :check_boxes, :multiple_select, :table_field
       v = super
       v.present? ? YAML.load(v) : nil
     else
