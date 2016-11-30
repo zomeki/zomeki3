@@ -3,14 +3,14 @@
 <table class="index">
   <tr>
     <th style="width: 60px; padding: 0px; text-align: center;">詳細</th>
-    <th style="width: 200px;"><%= @item.locale(:name) %></th>
-    <th style="width: 200px;"><%= @item.locale(:summary) %></th>
-    <th style="width: 120px; text-align: center;"><%= @item.locale(:started_at) %></th>
-    <th style="width: 120px; text-align: center;"><%= @item.locale(:updated_at) %></th>
-    <th style="width: 120px; text-align: center;"><%= @item.locale(:closed_at) %></th>
-    <th style="width: 80px;"><%= @item.locale(:total) %></th>
-    <th style="width: 60px;"><%= @item.locale(:success) %></th>
-    <th style="width: 60px;"><%= @item.locale(:error) %></th>
+    <th style="width: 200px;"><%= Sys::ProcessLog.human_attribute_name :name %></th>
+    <th style="width: 200px;"><%= Sys::ProcessLog.human_attribute_name :summary %></th>
+    <th style="width: 120px; text-align: center;"><%= Sys::ProcessLog.human_attribute_name :started_at %></th>
+    <th style="width: 120px; text-align: center;"><%= Sys::ProcessLog.human_attribute_name :updated_at %></th>
+    <th style="width: 120px; text-align: center;"><%= Sys::ProcessLog.human_attribute_name :closed_at %></th>
+    <th style="width: 80px;"><%= Sys::ProcessLog.human_attribute_name :total %></th>
+    <th style="width: 60px;"><%= Sys::ProcessLog.human_attribute_name :success %></th>
+    <th style="width: 60px;"><%= Sys::ProcessLog.human_attribute_name :error %></th>
 
   </tr>
   <% @items.each do |item| %>
