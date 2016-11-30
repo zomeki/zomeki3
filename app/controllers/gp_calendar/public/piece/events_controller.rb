@@ -6,7 +6,6 @@ class GpCalendar::Public::Piece::EventsController < GpCalendar::Public::Piece::B
   end
 
   def index
-
     start_date, end_date = case @piece.target_date
     when 'near_future'
       [Date.today, nil]
