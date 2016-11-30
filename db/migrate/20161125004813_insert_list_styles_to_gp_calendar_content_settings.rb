@@ -6,7 +6,7 @@ class InsertListStylesToGpCalendarContentSettings < ActiveRecord::Migration[5.0]
         .update_all(value: nil)
       defalut_table_style = []
       defalut_table_style << {header: 'サムネイル', data: '@image@'}
-      defalut_table_style << {header: '開催日', data: '@hold_date'}
+      defalut_table_style << {header: '開催日', data: '@hold_date@'}
       defalut_table_style << {header: 'タイトル', data: '@title_link@'}
 
       list = GpCalendar::Content::Setting.config(calendar, 'list_style')

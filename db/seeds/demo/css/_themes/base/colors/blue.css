@@ -92,6 +92,17 @@ a:focus, a:hover {
 #calendar .pieceBody td {
   border-color: #fff;
 }
+#categoryCalendar .pieceBody .sun,
+#categoryCalendar .pieceBody .sat {
+  background-color: transparent;
+  color: inherit;
+}
+#categoryCalendar .pieceBody,
+#categoryCalendar .pieceBody th,
+#categoryCalendar .pieceBody td {
+  border-color: #fff;
+}
+
 
 /* content style
 ----------------------------------------------- */

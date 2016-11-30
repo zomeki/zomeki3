@@ -30,7 +30,6 @@ calendar  = GpCalendar::Content::Event.first
 approval  = Approval::Content::ApprovalFlow.first
 soshiki   = Organization::Content::Group.first
 map       = Map::Content::Marker.first
-template  = GpTemplate::Content::Template.first
 
 ## ---------------------------------------------------------
 ## cms/pieces
@@ -92,8 +91,6 @@ p_info.save
   {id: "tag_relation", value: "enabled",
     extra_values: {tag_content_tag_id: tag.id}},
   {id: "organization_content_group_id", value: soshiki.id},
-  {id: "gp_template_content_template_id", value: template.id,
-    extra_values: {template_ids: template.templates.pluck(:id), default_template_id: 0}},
   {id: "calendar_relation", value: "enabled",
     extra_values: {calendar_content_id: calendar.id, event_sync_settings: 'disabled',
     event_sync_default_will_sync: 'disabled'}},
