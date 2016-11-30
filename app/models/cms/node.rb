@@ -253,6 +253,7 @@ protected
     include Sys::Model::Rel::Recognition
     include Cms::Model::Rel::Inquiry
     include Sys::Model::Rel::Task
+    include Cms::Model::Rel::PublishUrl
 
 #    validate :validate_inquiry,
 #      :if => %Q(state == 'public')
