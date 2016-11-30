@@ -3,9 +3,9 @@
 <table>
 
   <tr>
-    <th><%= @item.locale(:summary) %></th>
+    <th><%= Sys::ProcessLog.human_attribute_name :summary %></th>
     <td>
-      <%= select_tag "s_name", options_for_select(Sys::Process::PROCESSE_LIST, params[:s_name]), {id: nil, include_blank: true} %>
+      <%= select_tag "s_name", options_for_select(Sys::ProcessLog::PROCESSE_LIST, params[:s_name]), {id: nil, include_blank: true} %>
     </td>
     <th>期間</th>
     <td>

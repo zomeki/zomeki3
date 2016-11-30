@@ -9,9 +9,9 @@ class Sys::Admin::ProcessLogsController < Cms::Controller::Admin::Base
   end
 
   def index
-    @item = Sys::Process.new
-    items = Sys::ProcessLog.search_with_params(params).order(id: :desc)
-    @items = items.paginate(page: params[:page], per_page: params[:limit])
+    item = Sys::ProcessLog.search_with_params(params).order(id: :desc)
+    item = item.where(Sys::ProcessLog.arel_table[:name].does_not_match("sys/script/tasks/exec"))
+    @items = item.paginate(page: params[:page], per_page: params[:limit])
 
     _index @items
   end
