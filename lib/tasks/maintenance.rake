@@ -84,12 +84,27 @@ namespace :zomeki do
         end
       end
     end
+
     namespace :common_dir do
       desc 'Copy _common directory for all sites'
       task copy: :environment do
         Cms::Site.all.each do |site|
           site.send(:force_copy_common_directory)
         end
+      end
+    end
+
+    namespace :files do
+      desc 'Extract text content from files'
+      task extract_text: :environment do
+        c = Zomeki.config.application['sys.file_text_extraction']
+
+        Zomeki.config.application['sys.file_text_extraction'] = true
+        [Sys::File, Cms::DataFile].each do |klass|
+          klass.find_each {|f| f.extract_text }
+        end
+
+        Zomeki.config.application['sys.file_text_extraction'] = c
       end
     end
   end
