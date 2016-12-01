@@ -58,9 +58,16 @@ RSpec.configure do |config|
   config.before(:suite) do
     DatabaseRewinder.clean_all
     FactoryGirl.reload
+    Cms::Site.skip_callback(:save, :after, :generate_files)
+    Cms::Site.skip_callback(:save, :after, :copy_common_directory)
   end
 
-  config.after(:each) do
+  config.after(:suite) do
+    Cms::Site.set_callback(:save, :after, :copy_common_directory)
+    Cms::Site.set_callback(:save, :after, :generate_files)
+  end
+
+  config.after(:example) do
     DatabaseRewinder.clean
   end
 
