@@ -112,7 +112,7 @@ private
       category_tag = content_tag(:p, class: 'category') do
         event.categories.each do |category|
           category_ln = link_to(category.title, category.public_uri)
-          concat content_tag(:span, category_ln, class: 'category.name.capitalize')
+          concat content_tag(:span, category_ln, class: category.name.capitalize)
         end
       end
       category_tag
@@ -125,7 +125,7 @@ private
     if event.categories.present?
       category_tag = content_tag(:p, class: 'category') do
         event.categories.each do |category|
-          concat content_tag(:span, category.title, class: 'category.name.capitalize')
+          concat content_tag(:span, category.title, class: category.name.capitalize)
         end
       end
       category_tag
@@ -136,7 +136,7 @@ private
 
   def event_replace_category_type(event, category_type_name)
     if category_type = GpCategory::CategoryType.where(name: category_type_name).first
-      content_tag(:span, category_type.title, class: 'category.name.capitalize')
+      content_tag(:span, category_type.title, class: category_type.name.capitalize)
     else
       ''
     end
@@ -145,7 +145,7 @@ private
   def event_replace_category_type_link(event, category_type_name)
     if category_type = GpCategory::CategoryType.where(name: category_type_name).first
       category_ln = link_to(category_type.title, category_type.public_uri)
-      content_tag(:span, category_ln, class: 'category.name.capitalize')
+      content_tag(:span, category_ln, class: category_type.name.capitalize)
     else
       ''
     end

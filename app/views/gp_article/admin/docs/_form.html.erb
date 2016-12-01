@@ -1,5 +1,6 @@
 <%- inline_id = @item.id || (@item.in_tmp_id ||= Util::Sequencer.next_id(:tmp, md5: true)) -%>
-
+<script src="/_common/js/jquery.iframe-auto-height.js"></script>
+<script src="/_common/js/jquery.browser.js"></script>
 <script type="text/javascript">
 $(document).ready(function () {
   $('#tabs').tabs({
@@ -17,6 +18,22 @@ $(document).ready(function () {
   });
   $('#tabs .ui-tabs-nav > li').css('float', 'right');
   $('#tabs').show();
+
+  var fileFormLoaded = false;
+
+  $('#fileUploadForm').iframeAutoHeight({ heightOffset: 50, callback: firstCloseOnLoad});
+
+  /*$('#fileUploadForm').load(function(){
+    $('#fileUploadForm').iframeAutoHeight({ heightOffset: 50});
+  })*/
+
+  function firstCloseOnLoad(){
+    //alert("closeFileFornm");
+    if(fileFormLoaded!=true){
+      fileFormLoaded = true;
+      $('#inline_files').hide();
+    }
+  }
 });
 </script>
 
@@ -135,9 +152,9 @@ $(document).ready(function () {
       </tr>
     </table>
 
-    <div id="inline_files" style="display: none;">
+    <div id="inline_files">
       <%= f.hidden_field :in_tmp_id %>
-      <iframe src="<%= gp_article_doc_files_path(@content, inline_id) %>" style="width: 100%; height: 400px;"></iframe>
+      <iframe id="fileUploadForm" scrolling="auto" src="<%= gp_article_doc_files_path(@content, inline_id) %>" style="width: 100%; height: 400px;"></iframe>
     </div>
 
     <p class="form">記事設定</p>
