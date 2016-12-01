@@ -39,21 +39,15 @@ module GpCalendar::EventHelper
 
     list_style = content_tag(:tr) do
       table_style.each do |t|
-        id = ''
-        class_str = ''
         if t[:data] =~ %r|hold_date|
+          id = ''
           id = 'day%02d' % event.started_on.day if @date && event.started_on.month == @date.month
           class_str = 'date'
           class_str += ' holiday' if event.holiday.present?
+          concat content_tag(:td, t[:data], class: class_str, id: id)
         elsif t[:data] =~ %r|title|
           class_str = event.kind
-        end
-        if id.present? && class_str.present?
-          concat content_tag(:td, t[:data], class: class_str, id: id)
-        elsif id.present?
           concat content_tag(:td, t[:data], id: id)
-        elsif class_str.present?
-          concat content_tag(:td, t[:data], class: class_str)
         else
           concat content_tag(:td, t[:data])
         end
@@ -61,8 +55,8 @@ module GpCalendar::EventHelper
     end
 
     list_style = list_style.gsub(/@event{{@(.+)@}}event@/m){|m| link_to($1.html_safe, link_to_options[0], class: 'event_link') }
-    list_style = list_style.gsub(/@category_type_link_(.+)@/){|m| event_replace_category_type_link(event, $1) }
-    list_style = list_style.gsub(/@category_type_(.+)@/){|m| event_replace_category_type(event, $1) }
+    list_style = list_style.gsub(/@category_type_link_(.+?)@/){|m| event_replace_category_type_link(event, $1) }
+    list_style = list_style.gsub(/@category_type_(.+?)@/){|m| event_replace_category_type(event, $1) }
     list_style = list_style.gsub(/@(\w+)@/) {|m| contents[$1.to_sym] ? contents[$1.to_sym].call : '' }
     list_style.html_safe
   end
