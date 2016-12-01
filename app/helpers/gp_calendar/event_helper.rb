@@ -102,23 +102,36 @@ private
   end
 
   def event_replace_category_link(event)
-    if event.categories.present?
-      category_tag = content_tag(:p, class: 'category') do
-        event.categories.each do |category|
-          category_ln = link_to(category.title, category.public_uri)
-          concat content_tag(:span, category_ln, class: category.name.capitalize)
-        end
-      end
-      category_tag
-    else
-      ''
-    end
+    replace_cateogry_link(event, event.categories)
   end
 
   def event_replace_category(event)
-    if event.categories.present?
+    replace_cateogry(event, event.categories)
+  end
+
+  def category_from_category_type(event, category_type_name)
+    category_type = GpCategory::CategoryType.where(name: category_type_name).first
+    if category_type
+      event.categories.where(category_type_id: category_type)
+    else
+      nil
+    end
+  end
+
+  def event_replace_category_type_link(event, category_type_name)
+    categories = category_from_category_type(event, category_type_name)
+    replace_cateogry_link(event, categories)
+  end
+
+  def event_replace_category_type(event, category_type_name)
+    categories = category_from_category_type(event, category_type_name)
+    replace_cateogry(event, categories)
+  end
+
+  def replace_cateogry(event, categories)
+    if categories.present?
       category_tag = content_tag(:p, class: 'category') do
-        event.categories.each do |category|
+      categories.each do |category|
           concat content_tag(:span, category.title, class: category.name.capitalize)
         end
       end
@@ -128,23 +141,21 @@ private
     end
   end
 
-  def event_replace_category_type(event, category_type_name)
-    if category_type = GpCategory::CategoryType.where(name: category_type_name).first
-      content_tag(:span, category_type.title, class: category_type.name.capitalize)
+  def replace_cateogry_link(event, categories)
+    if categories.present? && node = event.content.event_search_node
+      category_tag = content_tag(:p, class: 'category') do
+      categories.each do |category|
+          link_url = "#{node.public_uri}?categories[#{category.category_type_id}]=#{category.id}"
+          link_url += "&start_date=#{event.started_on}"
+          category_ln = link_to(category.title, link_url)
+          concat content_tag(:span, category_ln, class: category.name.capitalize)
+        end
+      end
+      category_tag
     else
       ''
     end
   end
-
-  def event_replace_category_type_link(event, category_type_name)
-    if category_type = GpCategory::CategoryType.where(name: category_type_name).first
-      category_ln = link_to(category_type.title, category_type.public_uri)
-      content_tag(:span, category_ln, class: category_type.name.capitalize)
-    else
-      ''
-    end
-  end
-
 
   def event_replace_image_link(event, link_to_options)
     image_tag = event_image_tag(event)

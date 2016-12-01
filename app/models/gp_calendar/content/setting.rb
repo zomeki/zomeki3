@@ -25,6 +25,9 @@ class GpCalendar::Content::Setting < Cms::ContentSetting
     upper_text: '<a href="#" class="show_dialog">置き換えテキストを確認する</a>',
     form_type: :table_field,
     default_value: [{header: 'タイトル', data: '@title_link@'}]
+  set_config :event_search_node,
+    name: 'イベント検索ディレクトリ',
+    options: lambda { Cms::Node.public_state.where(site_id: Core.site.id, model: 'GpCalendar::SearchEvent').map { |n| [%Q(#{n.title}（#{n.name}）), n.id] } }
   set_config :default_image,
     name: '初期画像',
     comment: '（例 /images/sample.jpg ）'
@@ -52,9 +55,6 @@ class GpCalendar::Content::Setting < Cms::ContentSetting
     when 'event_sync_export'
       ex[:destination_hosts] = params[:destination_hosts].to_s
       ex[:default_will_sync] = params[:default_will_sync].to_s
-    when 'list_style', 'today_list_style', 'search_list_style'
-      ex[:headers] = params[:headers]
-      ex[:values]  = params[:values]
     end
     super(ex)
   end
