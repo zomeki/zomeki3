@@ -71,6 +71,11 @@ class GpCalendar::Content::Event < Cms::Content
     setting_value(:search_list_style)
   end
 
+  def event_search_node
+    return unless node_id = setting_value(:event_search_node)
+    public_nodes.where(id: node_id).first
+  end
+
 
   def date_style
     setting_value(:date_style).to_s
