@@ -25,9 +25,7 @@ class GpCalendar::Public::Piece::CategoryDailyLinksController < GpCalendar::Publ
 
     return unless (@node = @piece.target_node)
 
-    @calendar.year_uri  = "#{@node.public_uri}:year/"
-    @calendar.month_uri = "#{@node.public_uri}:year/:month/"
-    @calendar.day_uri   = "#{@node.public_uri}:year/:month/#day:day"
+    @calendar.day_uri   = "#{@node.public_uri}?start_date=:year-:month-:day&end_date=:year-:month-:day"
 
     days = event_docs(start_date, end_date).inject([]) do |dates, doc|
              dates | (doc.event_started_on..doc.event_ended_on).to_a
