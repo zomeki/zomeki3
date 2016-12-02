@@ -147,7 +147,6 @@ private
       category_tag = content_tag(:p, class: 'category') do
       categories.each do |category|
           link_url = "#{node.public_uri}?all=1&categories[#{category.category_type_id}]=#{category.id}"
-          link_url += "&start_date=#{event.started_on}"
           category_ln = link_to(category.title, link_url)
           concat content_tag(:span, category_ln, class: category.name.capitalize)
         end
