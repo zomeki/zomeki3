@@ -4,13 +4,16 @@ class GpCalendar::Public::Node::SearchEventsController < GpCalendar::Public::Nod
   def index
     http_error(404) if params[:page]
 
-    year_month = @year_only ? @date.strftime('%Y') : @date.strftime('%Y%m')
-
     @start_date = Date.parse(params[:start_date]) rescue nil || Date.today
     @end_date   = Date.parse(params[:end_date]) rescue nil || nil
+    if params[:all] && params[:start_date].blank? && params[:end_date].blank?
+      @start_date = nil
+      @end_date   = nil
+    end
+    @date =  @start_date.present? ? @start_date : Date.today
 
     categories = params[:categories].present? ? params[:categories].values.reject(&:blank?) : []
-    criteria = {year_month: year_month, categories: categories}
+    criteria = {categories: categories}
     @events = GpCalendar::Event.public_state.content_and_criteria(@content, criteria).order(:started_on)
       .scheduled_between(@start_date, @end_date)
       .preload(:categories).to_a
@@ -22,7 +25,6 @@ class GpCalendar::Public::Node::SearchEventsController < GpCalendar::Public::Nod
       @events << holiday if holiday.started_on
     end
     @events.sort! {|a, b| a.started_on <=> b.started_on}
-
   end
 
   def file_content

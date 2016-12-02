@@ -1,41 +1,41 @@
-<link rel="stylesheet" media="screen" href="/_common/css/jquery-ui-themes/smoothness/jquery-ui.min.css" />
-<script src="/_common/js/jquery-ui.min.js"></script>
-<link rel="stylesheet" media="screen" href="/_common/css/jquery-ui-timepicker-addon.css" />
-<script src="/_common/js/jquery-ui-timepicker-addon.js"></script>
-<%= javascript_tag do -%>
-$(document).ready(function () {
-  <%= enable_datepicker_script -%>
-});
-<%- end -%>
 <div class="calendarEvents">
-<%= form_for :item, url: "#{@node.public_uri}",  html: { method: :get, class: 'search' } do |f| %>
-<table class="searchEvents">
-  <tr>
-    <td colspan="2">
-    <%- @content.category_types.each do |category_type|
-    category_id = params[:categories].present? ? params[:categories]["#{category_type.id}"] : nil
-    -%>
-    <%= select_tag "categories[#{category_type.id}]",
-      options_for_select(category_type.categories_for_option, category_id),
-      include_blank: true %>
+  <div class="searchEvents">
+    <link rel="stylesheet" media="screen" href="/_common/css/jquery-ui-themes/smoothness/jquery-ui.min.css" />
+    <script src="/_common/js/jquery-ui.min.js"></script>
+    <link rel="stylesheet" media="screen" href="/_common/css/jquery-ui-timepicker-addon.css" />
+    <script src="/_common/js/jquery-ui-timepicker-addon.js"></script>
+    <%= javascript_tag do -%>
+    $(document).ready(function () {
+      <%= enable_datepicker_script -%>
+    });
     <%- end -%>
-    </td>
-  </tr>
-  <tr>
-    <td colspan="2">期間</td>
-  </tr>
-  <tr>
-    <td>
-    <%= text_field_tag :start_date, @start_date, class: "datepicker" %>～
-    <%= text_field_tag :end_date, @end_date, class: "datepicker" %>
-    </td>
-    <td class="submitters">
-      <%= submit_tag '検索', name: :search, data: { disable_with: false } %>
-    </td>
-  </tr>
-</table>
-<!-- end .search --><% end %>
 
+    <%= form_for :item, url: "#{@node.public_uri}",  html: { method: :get, class: 'search' } do |f| %>
+    <%= hidden_field_tag :all, 1 %>
+    <fieldset class="category">
+      <legend>カテゴリ</legend>
+      <%- @content.category_types.each do |category_type|
+        category_id = params[:categories].present? ? params[:categories]["#{category_type.id}"] : nil
+        -%>
+      <label for="categories_<%=category_type.id%>"><%= category_type.title %></label>
+      <%= select_tag "categories[#{category_type.id}]",
+        options_for_select(category_type.categories_for_option, category_id),
+        include_blank: true %>
+      <%- end -%>
+    </fieldset>
+    <fieldset class="date">
+      <legend>期間</legend>
+      <label for="start_date">開始日</label>
+      <%= text_field_tag :start_date, @start_date, class: "datepicker" %>
+      <span>～</span>
+      <label for="end_date">終了日</label>
+      <%= text_field_tag :end_date, @end_date, class: "datepicker" %>
+    </fieldset>
+    <div class="submitters">
+    <%= submit_tag '検索', name: :search, data: { disable_with: false } %>
+    </div>
+    <!-- end .search --><% end %>
+  </div>
   <%- unless @events.empty? -%>
   <table border="1">
     <thead>
