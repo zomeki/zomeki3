@@ -346,20 +346,6 @@ module Sys::Model::Base::File
     mime_type.in?(%w!text/csv application/vnd.ms-excel!)
   end
 
-  private
-
-  ## filter/aftar_save
-  def upload_internal_file
-    Util::File.put(upload_path, :data => @file_content, :mkdir => true) unless @file_content.nil?
-
-    if @thumbnail_image
-      thumb_path = ::File.dirname(upload_path) + "/thumb.dat"
-      Util::File.put(thumb_path, :data => @thumbnail_image.to_blob, :mkdir => true)
-    end
-
-    return true
-  end
-
   def extract_text
     return unless Zomeki.config.application['sys.file_text_extraction']
     return unless has_attribute?(:extracted_text)
@@ -374,6 +360,20 @@ module Sys::Model::Base::File
     update_column :extracted_text, result
   rescue => e
     warn_log e.message
+  end
+
+  private
+
+  ## filter/aftar_save
+  def upload_internal_file
+    Util::File.put(upload_path, :data => @file_content, :mkdir => true) unless @file_content.nil?
+
+    if @thumbnail_image
+      thumb_path = ::File.dirname(upload_path) + "/thumb.dat"
+      Util::File.put(thumb_path, :data => @thumbnail_image.to_blob, :mkdir => true)
+    end
+
+    return true
   end
 
   ## filter/aftar_destroy
