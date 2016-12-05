@@ -102,11 +102,6 @@ class GpArticle::Content::Setting < Cms::ContentSetting
     options: [['公開日', 'published_at'], ['最終更新日', 'updated_at']],
     form_type: :check_boxes,
     default_value: ['published_at', 'updated_at']
-  set_config :rel_docs_style, menu: :page,
-    name: "関連#{GpArticle::Doc.model_name.human}タイトル表示形式",
-    form_type: :text_area,
-    upper_text: '<a href="#" class="show_dialog">置き換えテキストを確認する</a>',
-    default_value: '@title_link@(@publish_date@ @group@)'
   set_config :qrcode_settings, menu: :page,
     name: 'QRコード',
     form_type: :radio_buttons,
@@ -135,6 +130,11 @@ class GpArticle::Content::Setting < Cms::ContentSetting
     default_value: 'enabled'
   set_config :tag_relation, menu: :relation,
     name: '関連ワード',
+    form_type: :radio_buttons,
+    options: [['使用する', 'enabled'], ['使用しない', 'disabled']],
+    default_value: 'enabled'
+  set_config :doc_relation, menu: :relation,
+    name: '関連記事',
     form_type: :radio_buttons,
     options: [['使用する', 'enabled'], ['使用しない', 'disabled']],
     default_value: 'enabled'
@@ -195,6 +195,9 @@ class GpArticle::Content::Setting < Cms::ContentSetting
       ex[:feed_docs_period] = params[:feed_docs_period]
     when 'tag_relation'
       ex[:tag_content_tag_id] = params[:tag_content_tag_id].to_i
+    when 'doc_relation'
+      ex[:doc_relation_content_doc_id] = params[:doc_relation_content_doc_id].to_i
+      ex[:rel_docs_style] = params[:rel_docs_style]
     when 'blog_functions'
       ex[:comment] = params[:comment]
       ex[:comment_open] = params[:comment_open]

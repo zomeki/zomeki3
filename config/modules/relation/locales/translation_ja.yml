@@ -1,0 +1,9 @@
+ja:
+  activerecord:
+    models:
+      relation/doc: 関連記事
+    attributes:
+      relation/doc:
+        relatable_id: 記事
+        name: 関連記事
+        created_at: 登録日

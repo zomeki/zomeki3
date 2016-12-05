@@ -1,4 +1,4 @@
-<%- unless @item.public_related_docs.empty? -%>
+<% if @content.doc_related? && @content.doc_relation_doc.present? && @item.public_related_docs.present? %>
 <div class="rels">
   <h2>関連記事</h2>
   <ul>

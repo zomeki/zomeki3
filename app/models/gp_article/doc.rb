@@ -20,7 +20,7 @@ class GpArticle::Doc < ApplicationRecord
   include GpArticle::Model::Rel::Tag
   include Approval::Model::Rel::Approval
   include GpTemplate::Model::Rel::Template
-  include GpArticle::Model::Rel::RelatedDoc
+  include Relation::Model::Rel::Doc
   include Cms::Model::Rel::PublishUrl
 
   include StateText
