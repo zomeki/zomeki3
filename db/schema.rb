@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161128051318) do
+ActiveRecord::Schema.define(version: 20161202090438) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1030,6 +1030,17 @@ ActiveRecord::Schema.define(version: 20161128051318) do
     t.integer  "visitors"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "relation_docs", force: :cascade do |t|
+    t.integer  "content_id"
+    t.integer  "relatable_id"
+    t.string   "relatable_type"
+    t.integer  "relatble_content_id"
+    t.string   "target_content_id"
+    t.string   "name"
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
   end
 
   create_table "simple_captcha_data", force: :cascade do |t|
