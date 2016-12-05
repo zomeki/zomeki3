@@ -110,7 +110,8 @@ private
   end
 
   def category_from_category_type(event, category_type_name)
-    category_type = GpCategory::CategoryType.where(name: category_type_name).first
+    category_type = GpCategory::CategoryType
+      .where(content_id: event.content.category_content_id, name: category_type_name).first
     if category_type
       category_ids = event.categories.map{|c| c.id }
       GpCategory::Category.where(category_type_id: category_type, id: category_ids)
