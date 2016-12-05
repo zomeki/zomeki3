@@ -372,4 +372,19 @@ $(function() {
   </tr>
 </table>
 <%- end -%>
-
+<%- if @item.name == 'doc_list_pagination' -%>
+<table class="show">
+  <tr>
+    <th>一覧表示件数</th>
+    <td><%= text_field_tag 'item[extra_values][doc_list_limit]', @item.extra_values[:doc_list_limit], class: 'number' %></td>
+  </tr>
+  <tr>
+    <th>日付毎</th>
+    <td><%= select_tag 'item[extra_values][doc_list_style]', options_for_select(@item.extra_options[:default_doc_list_style_options], @item.extra_values[:doc_list_style]), include_blank: true %></td>
+  </tr>
+  <tr>
+    <th>静的ページ数</th>
+    <td><%= text_field_tag 'item[extra_values][doc_publish_more_pages]', @item.extra_values[:doc_publish_more_pages], class: 'number' %></td>
+  </tr>
+</table>
+<%- end -%>

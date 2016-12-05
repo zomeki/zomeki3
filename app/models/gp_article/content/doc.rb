@@ -243,8 +243,20 @@ class GpArticle::Content::Doc < Cms::Content
     setting_extra_value(:list_style, :wrapper_tag) || 'li'
   end
 
+  def doc_list_pagination
+    setting_value(:doc_list_pagination)
+  end
+
   def doc_list_style
-    setting_value(:doc_list_style).to_s
+    setting_extra_value(:doc_list_pagination, :doc_list_style).to_s
+  end
+
+  def doc_list_limit
+    setting_extra_value(:doc_list_pagination, :doc_list_limit).to_i
+  end
+
+  def doc_publish_more_pages
+    setting_extra_value(:doc_list_pagination, :doc_publish_more_pages).to_i
   end
 
   def rel_docs_style
