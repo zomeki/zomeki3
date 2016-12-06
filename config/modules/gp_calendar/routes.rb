@@ -74,5 +74,6 @@ ZomekiCMS::Application.routes.draw do
     get 'node_events/:name/file_contents/:basename.:extname' => 'public/node/events#file_content', :format => false
     get 'node_todays_events(/index)' => 'public/node/todays_events#index'
     get 'node_search_events(/index)' => 'public/node/search_events#index'
+    get 'node_search_events/:name/file_contents/:basename.:extname' => 'public/node/search_events#file_content', :format => false
   end
 end

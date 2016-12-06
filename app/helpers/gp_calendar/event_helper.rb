@@ -99,55 +99,29 @@ private
     end
   end
 
-  def event_replace_category_link(event)
-    replace_cateogry_link(event, event.categories)
-  end
-
   def event_replace_category(event)
     replace_cateogry(event, event.categories)
   end
 
-  def category_from_category_type(event, category_type_name)
+  def event_replace_category_type(event, category_type_name)
     category_type = GpCategory::CategoryType
       .where(content_id: event.content.category_content_id, name: category_type_name).first
     if category_type
       category_ids = event.categories.map{|c| c.id }
-      GpCategory::Category.where(category_type_id: category_type, id: category_ids)
+      categories = GpCategory::Category.where(category_type_id: category_type, id: category_ids)
+      replace_cateogry(event, categories, category_type)
     else
       nil
     end
   end
 
-  def event_replace_category_type_link(event, category_type_name)
-    categories = category_from_category_type(event, category_type_name)
-    replace_cateogry_link(event, categories)
-  end
-
-  def event_replace_category_type(event, category_type_name)
-    categories = category_from_category_type(event, category_type_name)
-    replace_cateogry(event, categories)
-  end
-
-  def replace_cateogry(event, categories)
+  def replace_cateogry(event, categories, category_type = nil)
     if categories.present?
-      category_tag = content_tag(:p, class: 'category') do
+      p_class = "category"
+      p_class += " #{category_type.name}" if category_type
+      category_tag = content_tag(:p, class: p_class) do
         categories.each do |category|
-          concat content_tag(:span, category.title, class: category.name.capitalize)
-        end
-      end
-      category_tag
-    else
-      ''
-    end
-  end
-
-  def replace_cateogry_link(event, categories)
-    if categories.present? && node = event.content.event_search_node
-      category_tag = content_tag(:p, class: 'category') do
-      categories.each do |category|
-          link_url = "#{node.public_uri}?all=1&categories[#{category.category_type_id}]=#{category.id}"
-          category_ln = link_to(category.title, link_url)
-          concat content_tag(:span, category_ln, class: category.name.capitalize)
+          concat content_tag(:span, category.title, class: category.name)
         end
       end
       category_tag
@@ -190,18 +164,11 @@ private
 
   def event_image(event)
     if doc = event.doc
-      if doc.list_image.present?
-        file = doc.image_files.detect{|f| f.name == doc.list_image } || doc.image_files.first
-        image_tag("#{doc.content.public_node.public_uri}#{doc.name}/file_contents/#{url_encode file.name}")
-      else
-        images = Nokogiri::HTML.parse(doc.body).css('img[src^="file_contents/"]')
-        return nil unless img = images[0]
-        filename = File.basename(img.attributes['src'].value)
-        image_tag("#{doc.content.public_node.public_uri}#{doc.name}/file_contents/#{url_encode filename}")
-      end
+      return nil unless image_file = doc.image_files.detect{|f| f.name == doc.list_image } || doc.image_files.first
+      image_tag("#{doc.content.public_node.public_uri}#{doc.name}/file_contents/#{url_encode image_file.name}", alt: image_file.title, title: image_file.title)
     else
       return nil unless f = event.image_files.first
-      image_tag("#{f.parent.content.public_node.public_uri}#{f.parent.name}/file_contents/#{url_encode f.name}")
+      image_tag("#{f.parent.content.public_node.public_uri}#{f.parent.name}/file_contents/#{url_encode f.name}", alt: f.title, title: f.title)
     end
   end
 
