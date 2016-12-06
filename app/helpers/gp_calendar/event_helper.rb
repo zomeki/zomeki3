@@ -29,7 +29,6 @@ module GpCalendar::EventHelper
       hold_date: -> { event_replace_hold_date(event, date_style) },
       summary: -> { event_replace_summary(event) },
       unit: -> { event_replace_unit(event) },
-      category_link: -> { event_replace_category_link(event) },
       category: -> { event_replace_category(event) },
       image_link: -> { event_replace_image_link(event, link_to_options) },
       image: -> { event_replace_image(event) },
@@ -55,7 +54,6 @@ module GpCalendar::EventHelper
     end
 
     list_style = list_style.gsub(/@event{{@(.+)@}}event@/m){|m| link_to($1.html_safe, link_to_options[0], class: 'event_link') }
-    list_style = list_style.gsub(/@category_type_link_(.+?)@/){|m| event_replace_category_type_link(event, $1) }
     list_style = list_style.gsub(/@category_type_(.+?)@/){|m| event_replace_category_type(event, $1) }
     list_style = list_style.gsub(/@(\w+)@/) {|m| contents[$1.to_sym] ? contents[$1.to_sym].call : '' }
     list_style.html_safe
@@ -70,7 +68,7 @@ private
   def event_replace_title_link(event, link_to_options)
 
     event_title = if link_to_options
-                    link_to *(link_to_options.unshift event.title)
+                    link_to *([event.title] + link_to_options)
                   else
                     h event.title
                   end
@@ -95,9 +93,9 @@ private
 
   def event_replace_unit(event)
     if doc = event.doc
-      content_tag(:p, doc.creator.group.try(:name), class: 'subtitle')
+      content_tag(:p, doc.creator.group.try(:name), class: 'unit')
     else
-      content_tag(:p, event.creator.group.try(:name), class: 'subtitle')
+      content_tag(:p, event.creator.group.try(:name), class: 'unit')
     end
   end
 
@@ -133,7 +131,7 @@ private
   def replace_cateogry(event, categories)
     if categories.present?
       category_tag = content_tag(:p, class: 'category') do
-      categories.each do |category|
+        categories.each do |category|
           concat content_tag(:span, category.title, class: category.name.capitalize)
         end
       end
@@ -160,8 +158,12 @@ private
 
   def event_replace_image_link(event, link_to_options)
     image_tag = event_image_tag(event)
-    image_link = if image_tag.present? && link_to_options
-        link_to *([image_tag] + link_to_options)
+    image_link = if image_tag.present?
+         if link_to_options
+          link_to *([image_tag] + link_to_options)
+        else
+          image_tag
+        end
       else
         image_tag
       end
@@ -182,15 +184,32 @@ private
   end
 
   def event_image_tag(event)
-    ei = event_images(event, count: 1)
+    ei = event_image(event)
     ei.blank? ? '' : ei
+  end
+
+  def event_image(event)
+    if doc = event.doc
+      if doc.list_image.present?
+        file = doc.image_files.detect{|f| f.name == doc.list_image } || doc.image_files.first
+        image_tag("#{doc.content.public_node.public_uri}#{doc.name}/file_contents/#{url_encode file.name}")
+      else
+        images = Nokogiri::HTML.parse(doc.body).css('img[src^="file_contents/"]')
+        return nil unless img = images[0]
+        filename = File.basename(img.attributes['src'].value)
+        image_tag("#{doc.content.public_node.public_uri}#{doc.name}/file_contents/#{url_encode filename}")
+      end
+    else
+      return nil unless f = event.image_files.first
+      image_tag("#{f.parent.content.public_node.public_uri}#{f.parent.name}/file_contents/#{url_encode f.name}")
+    end
   end
 
   def event_replace_note(event)
     if doc = event.doc
-      content_tag(:p, hbr(doc.event_note), class: 'subtitle')
+      content_tag(:p, hbr(doc.event_note), class: 'note')
     else
-      ''
+      content_tag(:p, hbr(event.note), class: 'note')
     end
   end
 
