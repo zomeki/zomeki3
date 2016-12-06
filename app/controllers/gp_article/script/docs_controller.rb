@@ -6,7 +6,7 @@ class GpArticle::Script::DocsController < Cms::Controller::Script::Publication
     smart_phone_path = @node.public_smart_phone_path.to_s
     publish_page(@node, :uri => "#{uri}index.rss", :path => "#{path}index.rss", :dependent => :rss)
     publish_page(@node, :uri => "#{uri}index.atom", :path => "#{path}index.atom", :dependent => :atom)
-    publish_more(@node, :uri => uri, :path => path, :smart_phone_path => smart_phone_path)
+    publish_more(@node, :uri => uri, :path => path, :smart_phone_path => smart_phone_path, :limit => @node.content.try(:doc_publish_more_pages))
     render plain: 'OK'
   end
 

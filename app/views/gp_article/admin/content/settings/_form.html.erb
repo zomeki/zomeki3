@@ -380,7 +380,10 @@ $(function() {
   </tr>
   <tr>
     <th>日付毎</th>
-    <td><%= select_tag 'item[extra_values][doc_list_style]', options_for_select(@item.extra_options[:default_doc_list_style_options], @item.extra_values[:doc_list_style]), include_blank: true %></td>
+    <td>
+      <%- @item.extra_options[:doc_list_style_options].each do |option| name = :doc_list_style -%>
+      <%= radio_button_tag "item[extra_values][#{name}]", option[1], (@item.extra_values[name] || 'disabled') == option[1] %><%= label_tag "item_extra_values_#{name}_#{option[1]}", option[0] %>
+      <%- end -%>
   </tr>
   <tr>
     <th>静的ページ数</th>

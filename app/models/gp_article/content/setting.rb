@@ -61,9 +61,10 @@ class GpArticle::Content::Setting < Cms::ContentSetting
     default_value: 'ja'
   set_config :doc_list_pagination, menu: :index,
     name: "#{GpArticle::Doc.model_name.human}一覧表示形式",
+    form_type: :radio_buttons,
     options: [['週', 'weekly'], ['月', 'monthly'], ['一覧', 'simple']],
     extra_options: {
-      default_doc_list_style_options: [['日付毎', 'by_date'], ['記事一覧', 'simple']]
+      doc_list_style_options: [['日付毎', 'by_date'], ['記事一覧', 'simple']]
     },
     default_value: 'simple',
     default_extra_values: {
@@ -71,10 +72,6 @@ class GpArticle::Content::Setting < Cms::ContentSetting
       doc_list_limit: 10,
       doc_publish_more_pages: 10
     }
-  #set_config :doc_list_style, menu: :index,
-  #  name: "#{GpArticle::Doc.model_name.human}一覧表示形式",
-  #  options: [['日付毎', 'by_date'], ['記事一覧', 'simple']],
-  #  default_value: 'by_date'
   set_config :list_style, menu: :index,
     name: "#{GpArticle::Doc.model_name.human}タイトル表示形式",
     form_type: :text_area,
