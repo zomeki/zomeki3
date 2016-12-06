@@ -28,6 +28,10 @@
     <th><%= @item.class.human_attribute_name :description %></th>
     <td><%=simple_format @item.description %></td>
   </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :note %></th>
+    <td><%=simple_format @item.note %></td>
+  </tr>
 </table>
 
 <%- unless @item.categories.empty? -%>

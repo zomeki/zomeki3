@@ -37,21 +37,22 @@
     </div>
     <!-- end .search --><% end %>
   </div>
+  <div class="resultEvents">
   <%- unless @events.empty? -%>
-  <table border="1">
-    <thead>
-      <tr>
-      <%- @content.search_list_style.each do |header| -%>
-        <th><%= header[:header].html_safe %></th>
-      <%- end -%>
-      </tr>
-    </thead>
-    <tbody>
-      <%- @events.each do |event| -%>
-        <%= event_table_replace(event, @content.search_list_style) %>
-      <%- end -%>
-    </tbody>
-  </table>
+    <table border="1">
+      <thead>
+        <tr>
+        <%- @content.search_list_style.each do |header| -%>
+          <th><%= header[:header].html_safe %></th>
+        <%- end -%>
+        </tr>
+      </thead>
+      <tbody>
+        <%- @events.each do |event| -%>
+          <%= event_table_replace(event, @content.search_list_style) %>
+        <%- end -%>
+      </tbody>
+    </table>
   <%- end -%>
-
+  </div>
 <!-- end .calendarEvents --></div>
