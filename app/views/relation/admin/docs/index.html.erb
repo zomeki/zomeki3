@@ -1,0 +1,17 @@
+<table class="index">
+  <tr>
+    <th><%= Relation::Doc.human_attribute_name :relatable_id %></th>
+    <th><%= Relation::Doc.human_attribute_name :name %></th>
+    <th style="text-align: center; width: 120px;"><%= Relation::Doc.human_attribute_name :created_at %></th>
+  </tr>
+
+  <% @items.each do |item| %>
+  <tr class="<%= cycle '', 'cycle' %>">
+    <td><%= item.relatable.try(:title) %></td>
+    <td><%= item.target_doc.try(:title) %></td>
+    <td style="text-align: center;"><%= item.created_at.strftime('%Y-%m-%d %H:%M') %></td>
+  </tr>
+  <% end %>
+</table>
+
+<%= paginate @items %>

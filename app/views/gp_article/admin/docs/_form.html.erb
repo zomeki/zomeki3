@@ -191,6 +191,7 @@ $(document).ready(function () {
         <td><%= f.text_field :raw_tags, :style => 'width: 700px;' %></td>
       </tr>
       <%- end -%>
+      <% if @content.doc_related? && @content.doc_relation_doc.present? %>
       <tr>
         <th><%= f.label :in_rel_doc_ids %></th>
         <td>
@@ -222,7 +223,9 @@ $(document).ready(function () {
                 <tr>
                   <td>
                     <%= f2.hidden_field :name -%>
-                    <%= f2.hidden_field :content_id -%>
+                    <%= f2.hidden_field :content_id, value: @content.doc_related_id -%>
+                    <%= f2.hidden_field :target_content_id -%>
+                    <%= f2.hidden_field :relatble_content_id -%>
                     <%- if doc.state_public? %>
                       <%= link_to doc.title, doc.public_full_uri, target: 'preview' %>
                     <%- else -%>
@@ -244,6 +247,7 @@ $(document).ready(function () {
            </table>
         </td>
       </tr>
+      <%- end -%>
       <%- if @content.qrcode_related? -%>
       <tr>
         <th><%= f.label :qrcode_state %></th>
@@ -597,12 +601,24 @@ $(document).ready(function () {
           value: $(this).find('name').text()
         });
         title_column.append(rel_doc_field);
+        var relatble_content_id_field = $('<input>', {
+          type: 'hidden',
+          name: 'item[related_docs_attributes][' + next_index + '][relatble_content_id]',
+          value: '<%=@content.id%>'
+        });
+        title_column.append(relatble_content_id_field);
         var content_id_field = $('<input>', {
           type: 'hidden',
           name: 'item[related_docs_attributes][' + next_index + '][content_id]',
-          value: $(this).find('content').text()
+          value: '<%=@content.doc_related_id%>'
         });
         title_column.append(content_id_field);
+        var source_content_id_field = $('<input>', {
+          type: 'hidden',
+          name: 'item[related_docs_attributes][' + next_index + '][target_content_id]',
+          value: $(this).find('content').text()
+        });
+        title_column.append(source_content_id_field);
         var full_uri = $(this).find('full_uri').text();
         if(full_uri != ''){
           var title_link = $('<a>', {

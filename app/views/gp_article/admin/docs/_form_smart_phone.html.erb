@@ -166,7 +166,7 @@ $(document).ready(function () {
     </div>
 
     <hr />
-
+    <% if @content.doc_related? && @content.doc_relation_doc.present? %>
     <div id="rel_docs">
 
       <%- @item.related_docs.each_with_index do |rel_doc, i|
@@ -175,7 +175,9 @@ $(document).ready(function () {
         <%= f.fields_for :related_docs, rel_doc do |f2| -%>
           <span>
             <%= f2.hidden_field :name -%>
-            <%= f2.hidden_field :content_id -%>
+            <%= f2.hidden_field :content_id, value: @content.doc_related_id -%>
+            <%= f2.hidden_field :target_content_id -%>
+            <%= f2.hidden_field :relatble_content_id -%>
             <%- if doc.state_public? %>
               <%= link_to doc.title, doc.public_full_uri, target: 'preview' %>
             <%- else -%>
@@ -195,6 +197,7 @@ $(document).ready(function () {
         </div>
       <%- end if @item.related_docs.present?-%>
     </div>
+    <%- end -%>
   </div>
   <div id="tab2">
     <%- if @content.display_dates(:published_at) || @content.display_dates(:updated_at) -%>
@@ -518,12 +521,25 @@ $(document).ready(function () {
           value: $(this).find('name').text()
         });
         rel_doc_span.append(rel_doc_field);
+
+        var relatble_content_id_field = $('<input>', {
+          type: 'hidden',
+          name: 'item[related_docs_attributes][' + next_index + '][relatble_content_id]',
+          value: '<%=@content.id%>'
+        });
+        rel_doc_span.append(relatble_content_id_field);
         var content_id_field = $('<input>', {
           type: 'hidden',
           name: 'item[related_docs_attributes][' + next_index + '][content_id]',
-          value: $(this).find('content').text()
+          value: '<%=@content.doc_related_id%>'
         });
         rel_doc_span.append(content_id_field);
+        var source_content_id_field = $('<input>', {
+          type: 'hidden',
+          name: 'item[related_docs_attributes][' + next_index + '][target_content_id]',
+          value: $(this).find('content').text()
+        });
+        rel_doc_span.append(source_content_id_field);
 
         var full_uri = $(this).find('full_uri').text();
         if(full_uri != ''){

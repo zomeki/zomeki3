@@ -159,6 +159,7 @@ $(document).ready(function () {
         <td><%= @item.raw_tags %></td>
       </tr>
       <%- end -%>
+      <% if @content.doc_related? && @content.doc_relation_doc.present? %>
       <tr>
         <th><%= @item.locale :in_rel_doc_ids %></th>
         <td>
@@ -170,6 +171,7 @@ $(document).ready(function () {
           </ul>
         </td>
       </tr>
+      <%- end -%>
       <%- if @content.qrcode_related? -%>
       <tr>
         <th><%= @item.locale :qrcode_state %></th>

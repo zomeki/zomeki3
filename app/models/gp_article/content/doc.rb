@@ -104,6 +104,18 @@ class GpArticle::Content::Doc < Cms::Content
     Tag::Content::Tag.find_by(id: setting_extra_value(:tag_relation, :tag_content_tag_id))
   end
 
+  def doc_related?
+    setting_value(:doc_relation) == 'enabled'
+  end
+
+  def doc_related_id
+    setting_extra_value(:doc_relation, :doc_relation_content_doc_id)
+  end
+
+  def doc_relation_doc
+    Relation::Content::Doc.find_by(id: doc_related_id)
+  end
+
   def save_button_states
     setting_value(:save_button_states) || []
   end
@@ -248,7 +260,7 @@ class GpArticle::Content::Doc < Cms::Content
   end
 
   def rel_docs_style
-    setting_value(:rel_docs_style).to_s
+    setting_extra_value(:doc_relation, :rel_docs_style).to_s || '@title_link@(@publish_date@ @group@)'
   end
 
   def qrcode_related?

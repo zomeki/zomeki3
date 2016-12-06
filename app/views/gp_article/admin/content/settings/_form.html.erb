@@ -292,6 +292,24 @@ $(document).ready(function () {
 </table>
 <%- end -%>
 
+<%- if @item.name == 'doc_relation' -%>
+<table class="show">
+  <tr>
+    <th>コンテンツ</th>
+    <td><%= select_tag 'item[extra_values][doc_relation_content_doc_id]',
+                       options_from_collection_for_select(Relation::Content::Doc.where(site_id: Page.site.id), :id, :name, @item.extra_values[:doc_relation_content_doc_id]), include_blank: true %></td>
+  </tr>
+  <tr>
+    <th>関連<%= GpArticle::Doc.model_name.human %>タイトル表示形式</th>
+    <td>
+      <a href="#" class="show_dialog">置き換えテキストを確認する</a>
+      <%= text_area_tag 'item[extra_values][rel_docs_style]', @item.extra_values[:rel_docs_style], size: '100x10' %>
+    </td>
+  </tr>
+
+</table>
+<%- end -%>
+
 <%- if @item.name == 'blog_functions' -%>
 <table class="show">
   <tr>
