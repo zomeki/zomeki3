@@ -1,20 +1,20 @@
 class Sys::Admin::StorageFilesController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
-  
+
   before_action :force_html_format
   before_action :validate_path
-  
+
   @root  = nil
   @roots = []
   @navi  = []
-  
+
   def pre_dispatch
     return error_auth unless Core.user.has_auth?(:designer)
-    
+
     sites   = Cms::Site.order(:id).all
     @roots  = [["sites", "sites"]]
   end
-  
+
   def validate_path
     return error_auth if !Core.user.root? && params[:path] =~ /^(public|upload)/
 
@@ -37,7 +37,7 @@ class Sys::Admin::StorageFilesController < Cms::Controller::Admin::Base
       @path = ::File.join(@path, @root)
       @dir  = @root
     end
-    
+
     @navi = []
     dirs = @dir.split(/\//)
     dirs.each_with_index do |n, idx|
@@ -51,7 +51,7 @@ class Sys::Admin::StorageFilesController < Cms::Controller::Admin::Base
     @current_uri = sys_storage_files_path(@dir).gsub(/\?.*/, '')
     @parent_uri  = sys_storage_files_path(:path => ::File.dirname(@dir)).gsub(/\?.*/, '')
   end
-  
+
   def index
     if @do == "show"
       return http_error(404) if !::Storage.exists?(@path)
@@ -68,7 +68,7 @@ class Sys::Admin::StorageFilesController < Cms::Controller::Admin::Base
     elsif @is_file
       return show_file
     end
-    
+
     @dirs  = []
     @files = []
     files  = ::Storage.entries(@path)
@@ -77,12 +77,12 @@ class Sys::Admin::StorageFilesController < Cms::Controller::Admin::Base
       @dirs << name if ::Storage.directory?("#{@path}/#{name}")
     }
     files.each {|name| @files << name if ::Storage.file?("#{@path}/#{name}")}
-    
+
     @items = @dirs.sort + @files.sort
-    
+
     _index @items
   end
-  
+
   def show_dir
     @item = {
       :name      => ::File.basename(@path),
@@ -96,7 +96,7 @@ class Sys::Admin::StorageFilesController < Cms::Controller::Admin::Base
       body = NKF.nkf('-w', body) if body.is_a?(String)
       body = body.force_encoding("utf-8") if body.respond_to?(:force_encoding)
     end
-    
+
     @item = {
       :name      => ::File.basename(@path),
       :mtime     => ::Storage.mtime(@path),
@@ -113,7 +113,7 @@ class Sys::Admin::StorageFilesController < Cms::Controller::Admin::Base
       body = NKF.nkf('-w', body) if body.is_a?(String)
       body = body.force_encoding("utf-8") if body.respond_to?(:force_encoding)
     end
-    
+
     @item = {
       :name      => ::File.basename(@path),
       :mtime     => ::Storage.mtime(@path),
@@ -123,14 +123,14 @@ class Sys::Admin::StorageFilesController < Cms::Controller::Admin::Base
     }
     render :edit_file, formats: [:html]
   end
-  
+
   def new
     exit
   end
-  
+
   def create
     return update if params[:do] == "update"
-    
+
     if params[:create_directory]
       if name = validate_name(params[:item][:new_directory])
         if ::Storage.exists?("#{@path}/#{name}")
@@ -145,7 +145,7 @@ class Sys::Admin::StorageFilesController < Cms::Controller::Admin::Base
       else
         flash[:notice] = "ディレクトリ名は半角英数字で入力してください。"
       end
-      
+
     elsif params[:create_file]
       if name = validate_name(params[:item][:new_file])
         if ::Storage.exists?("#{@path}/#{name}")
@@ -156,46 +156,71 @@ class Sys::Admin::StorageFilesController < Cms::Controller::Admin::Base
         end
         return redirect_to("#{@current_uri}/#{name}?do=show")
       else
-        flash[:notice] = "ファイル名は半角英数字で入力してください。"
+        if @invalid_filename
+          flash[:notice] = "ファイル名は半角英数字で入力してください。"
+        else
+          flash[:notice] = "許可されていないファイルです。（#{Core.site.setting_site_allowed_attachment_type}）"
+        end
       end
-      
     elsif params[:upload_file] && file = params[:item][:new_upload]
-      
+
       if name = validate_name(file.original_filename)
         ::Storage.binwrite("#{@path}/#{name}", file.read)
         flash[:notice] = "アップロードが完了しました。"
         return redirect_to(@current_uri)
+      else
+        if @invalid_filename
+          flash[:notice] = "ファイル名は半角英数字で入力してください。"
+        else
+          flash[:notice] = "許可されていないファイルです。（#{Core.site.setting_site_allowed_attachment_type}）"
+        end
       end
     end
-    
+
     redirect_to @current_uri
   end
-  
+
   def update
     if ::Storage.write(@path, params[:body])
       flash[:notice] = "更新処理が完了しました。"
     else
       flash[:notice] = "更新処理に失敗しました。"
     end
-    
+
     return redirect_to(@parent_uri)
   end
-  
+
   def destroy
     if ::Storage.rm_rf(@path)
       flash[:notice] = "削除処理が完了しました。"
     else
       flash[:notice] = "削除処理に失敗しました。"
     end
-    
+
     redirect_to @parent_uri
   end
-  
+
 protected
-  
+
   def validate_name(name)
     if name.to_s !~ /^[0-9A-Za-z@\.\-\_]+$/
+      @invalid_filename = true
       return nil
+    end
+
+    if Core.site.setting_site_allowed_attachment_type.present?
+      types = {}
+      Core.site.setting_site_allowed_attachment_type.to_s.split(/ *, */).each do |m|
+        m = ".#{m.gsub(/ /, '').downcase}"
+        types[m] = true if !m.blank?
+      end
+
+      if name.present?
+        ext = ::File.extname(name.to_s).downcase
+        if types[ext] != true
+          return nil
+        end
+      end
     end
     return name
   end

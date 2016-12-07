@@ -39,7 +39,8 @@ class Cms::Admin::Site::SettingsController < Cms::Controller::Admin::Base
     params.require(:item).permit(
       :in_setting_site_pass_reminder_mail_sender,
       :in_setting_site_file_upload_max_size, :in_setting_site_extension_upload_max_size,
-      :in_setting_site_common_ssl
+      :in_setting_site_common_ssl,
+      :in_setting_site_allowed_attachment_type
     )
   end
 end
