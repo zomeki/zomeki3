@@ -71,7 +71,6 @@ class GpCalendar::Content::Event < Cms::Content
     setting_value(:search_list_style)
   end
 
-
   def date_style
     setting_value(:date_style).to_s
   end

@@ -7,7 +7,7 @@ class Approval::Admin::ApprovalFlowsController < Cms::Controller::Admin::Base
   end
 
   def index
-    @items = @content.approval_flows.paginate(page: params[:page], per_page: 30)
+    @items = @content.approval_flows.paginate(page: params[:page], per_page: 30).order(:sort_no)
     _index @items
   end
 

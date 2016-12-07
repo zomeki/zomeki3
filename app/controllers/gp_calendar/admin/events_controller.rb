@@ -86,7 +86,7 @@ class GpCalendar::Admin::EventsController < Cms::Controller::Admin::Base
 
   def event_params
     params.require(:item).permit(
-      :description, :ended_on, :href, :started_on, :state, :target, :title,
+      :description, :ended_on, :href, :started_on, :state, :target, :title, :note,
       :creator_attributes => [:id, :group_id, :user_id]
     )
   end

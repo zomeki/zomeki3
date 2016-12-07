@@ -29,7 +29,6 @@ module GpCalendar::EventHelper
       hold_date: -> { event_replace_hold_date(event, date_style) },
       summary: -> { event_replace_summary(event) },
       unit: -> { event_replace_unit(event) },
-      category_link: -> { event_replace_category_link(event) },
       category: -> { event_replace_category(event) },
       image_link: -> { event_replace_image_link(event, link_to_options) },
       image: -> { event_replace_image(event) },
@@ -39,30 +38,23 @@ module GpCalendar::EventHelper
 
     list_style = content_tag(:tr) do
       table_style.each do |t|
-        id = ''
-        class_str = ''
         if t[:data] =~ %r|hold_date|
+          id = ''
           id = 'day%02d' % event.started_on.day if @date && event.started_on.month == @date.month
           class_str = 'date'
           class_str += ' holiday' if event.holiday.present?
+          concat content_tag(:td, t[:data].html_safe, class: class_str, id: id)
         elsif t[:data] =~ %r|title|
           class_str = event.kind
-        end
-        if id.present? && class_str.present?
-          concat content_tag(:td, t[:data], class: class_str, id: id)
-        elsif id.present?
-          concat content_tag(:td, t[:data], id: id)
-        elsif class_str.present?
-          concat content_tag(:td, t[:data], class: class_str)
+          concat content_tag(:td, t[:data].html_safe, id: id)
         else
-          concat content_tag(:td, t[:data])
+          concat content_tag(:td, t[:data].html_safe)
         end
       end
     end
 
     list_style = list_style.gsub(/@event{{@(.+)@}}event@/m){|m| link_to($1.html_safe, link_to_options[0], class: 'event_link') }
-    list_style = list_style.gsub(/@category_type_link_(.+)@/){|m| event_replace_category_type_link(event, $1) }
-    list_style = list_style.gsub(/@category_type_(.+)@/){|m| event_replace_category_type(event, $1) }
+    list_style = list_style.gsub(/@category_type_(.+?)@/){|m| event_replace_category_type(event, $1) }
     list_style = list_style.gsub(/@(\w+)@/) {|m| contents[$1.to_sym] ? contents[$1.to_sym].call : '' }
     list_style.html_safe
   end
@@ -76,7 +68,7 @@ private
   def event_replace_title_link(event, link_to_options)
 
     event_title = if link_to_options
-                    link_to *(link_to_options.unshift event.title)
+                    link_to *([event.title] + link_to_options)
                   else
                     h event.title
                   end
@@ -101,31 +93,35 @@ private
 
   def event_replace_unit(event)
     if doc = event.doc
-      content_tag(:p, doc.creator.group.try(:name), class: 'subtitle')
+      content_tag(:p, doc.creator.group.try(:name), class: 'unit')
     else
-      content_tag(:p, event.creator.group.try(:name), class: 'subtitle')
-    end
-  end
-
-  def event_replace_category_link(event)
-    if event.categories.present?
-      category_tag = content_tag(:p, class: 'category') do
-        event.categories.each do |category|
-          category_ln = link_to(category.title, category.public_uri)
-          concat content_tag(:span, category_ln, class: 'category.name.capitalize')
-        end
-      end
-      category_tag
-    else
-      ''
+      content_tag(:p, event.creator.group.try(:name), class: 'unit')
     end
   end
 
   def event_replace_category(event)
-    if event.categories.present?
-      category_tag = content_tag(:p, class: 'category') do
-        event.categories.each do |category|
-          concat content_tag(:span, category.title, class: 'category.name.capitalize')
+    replace_cateogry(event, event.categories)
+  end
+
+  def event_replace_category_type(event, category_type_name)
+    category_type = GpCategory::CategoryType
+      .where(content_id: event.content.category_content_id, name: category_type_name).first
+    if category_type
+      category_ids = event.categories.map{|c| c.id }
+      categories = GpCategory::Category.where(category_type_id: category_type, id: category_ids)
+      replace_cateogry(event, categories, category_type)
+    else
+      nil
+    end
+  end
+
+  def replace_cateogry(event, categories, category_type = nil)
+    if categories.present?
+      p_class = "category"
+      p_class += " #{category_type.name}" if category_type
+      category_tag = content_tag(:p, class: p_class) do
+        categories.each do |category|
+          concat content_tag(:span, category.title, class: category.name)
         end
       end
       category_tag
@@ -134,28 +130,14 @@ private
     end
   end
 
-  def event_replace_category_type(event, category_type_name)
-    if category_type = GpCategory::CategoryType.where(name: category_type_name).first
-      content_tag(:span, category_type.title, class: 'category.name.capitalize')
-    else
-      ''
-    end
-  end
-
-  def event_replace_category_type_link(event, category_type_name)
-    if category_type = GpCategory::CategoryType.where(name: category_type_name).first
-      category_ln = link_to(category_type.title, category_type.public_uri)
-      content_tag(:span, category_ln, class: 'category.name.capitalize')
-    else
-      ''
-    end
-  end
-
-
   def event_replace_image_link(event, link_to_options)
     image_tag = event_image_tag(event)
-    image_link = if image_tag.present? && link_to_options
-        link_to *([image_tag] + link_to_options)
+    image_link = if image_tag.present?
+         if link_to_options
+          link_to *([image_tag] + link_to_options)
+        else
+          image_tag
+        end
       else
         image_tag
       end
@@ -176,15 +158,25 @@ private
   end
 
   def event_image_tag(event)
-    ei = event_images(event, count: 1)
+    ei = event_image(event)
     ei.blank? ? '' : ei
+  end
+
+  def event_image(event)
+    if doc = event.doc
+      return nil unless image_file = doc.image_files.detect{|f| f.name == doc.list_image } || doc.image_files.first
+      image_tag("#{doc.content.public_node.public_uri}#{doc.name}/file_contents/#{url_encode image_file.name}", alt: image_file.title, title: image_file.title)
+    else
+      return nil unless f = event.image_files.first
+      image_tag("#{f.parent.content.public_node.public_uri}#{f.parent.name}/file_contents/#{url_encode f.name}", alt: f.title, title: f.title)
+    end
   end
 
   def event_replace_note(event)
     if doc = event.doc
-      content_tag(:p, hbr(doc.event_note), class: 'subtitle')
+      content_tag(:p, hbr(doc.event_note), class: 'note')
     else
-      ''
+      content_tag(:p, hbr(event.note), class: 'note')
     end
   end
 
