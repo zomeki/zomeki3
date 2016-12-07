@@ -6,7 +6,7 @@ namespace :delayed_job do
 
   def delayed_job_options
     pool_size = ENV['DELAYED_JOB_POOL_SIZE'] || 1
-    "--pool=*:#{pool_size}"
+    "--pool=*:#{pool_size}  start--pool=tracking --pool=sys_tasks:1"
   end
 
   def start
