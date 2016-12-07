@@ -5,8 +5,9 @@ module Cms::Model::Rel::SiteSetting
   attr_accessor :in_setting_site_pass_reminder_mail_sender
   attr_accessor :in_setting_site_file_upload_max_size
   attr_accessor :in_setting_site_extension_upload_max_size
+  attr_accessor :in_setting_site_allowed_attachment_type
 
-  SITE_SETTINGS = [:admin_protocol, :basic_auth_state, :common_ssl,
+  SITE_SETTINGS = [:admin_protocol, :basic_auth_state, :common_ssl, :allowed_attachment_type,
     :pass_reminder_mail_sender, :file_upload_max_size, :extension_upload_max_size]
   #SITE_SETTINGS = [:admin_protocol]
 
@@ -58,6 +59,11 @@ module Cms::Model::Rel::SiteSetting
     setting ? setting.value : nil;
   end
 
+  def setting_site_allowed_attachment_type
+    setting = Cms::SiteSetting.where(:site_id => id, :name => 'allowed_attachment_type').first
+    setting ? setting.value : 'gif,jpg,png,pdf,doc,docx,xls,xlsx,ppt,pptx,odt,ods,odp';
+  end
+
   def get_upload_max_size(ext)
     ext.gsub!(/^\./, '')
     list = ext_upload_max_size_list
@@ -91,6 +97,7 @@ module Cms::Model::Rel::SiteSetting
     @in_setting_site_pass_reminder_mail_sender   = setting_site_pass_reminder_mail_sender
     @in_setting_site_file_upload_max_size        = setting_site_file_upload_max_size
     @in_setting_site_extension_upload_max_size   = setting_site_extension_upload_max_size
+    @in_setting_site_allowed_attachment_type     = setting_site_allowed_attachment_type
   end
 
   def save_site_settings(options={})

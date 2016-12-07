@@ -42,6 +42,7 @@ class Cms::Admin::SitesController < Cms::Controller::Admin::Base
     @item = Cms::Site.new(site_params)
     @item.state = 'public'
     @item.portal_group_state = 'visible'
+    @item.load_site_settings
     _create(@item, notice: "登録処理が完了しました。 （反映にはWebサーバーの再起動が必要です。）") do
 
       @item.users << Core.user unless Core.user.root?

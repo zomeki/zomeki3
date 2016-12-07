@@ -10,6 +10,8 @@ class Cms::SiteSetting < ApplicationRecord
     options: [['使用する', 'enabled'], ['使用しない', 'disabled']], form_type: :radio_buttons},
     {id: "pass_reminder_mail_sender", name: "パスワード変更メール送信元アドレス",
       setting_name: :in_setting_site_pass_reminder_mail_sender , default: 'noreply'},
+    {id: "allowed_attachment_type", name: "添付ファイル/許可する種類",
+      setting_name: :in_setting_site_allowed_attachment_type , default: 'gif,jpg,png,pdf,doc,docx,xls,xlsx,ppt,pptx,odt,ods,odp'},
     {id: "file_upload_max_size", name: "添付ファイル最大サイズ",
       setting_name: :in_setting_site_file_upload_max_size , comment: 'MB', default: '50'}
   ]
