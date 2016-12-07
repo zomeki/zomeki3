@@ -43,12 +43,12 @@ module GpCalendar::EventHelper
           id = 'day%02d' % event.started_on.day if @date && event.started_on.month == @date.month
           class_str = 'date'
           class_str += ' holiday' if event.holiday.present?
-          concat content_tag(:td, t[:data], class: class_str, id: id)
+          concat content_tag(:td, t[:data].html_safe, class: class_str, id: id)
         elsif t[:data] =~ %r|title|
           class_str = event.kind
-          concat content_tag(:td, t[:data], id: id)
+          concat content_tag(:td, t[:data].html_safe, id: id)
         else
-          concat content_tag(:td, t[:data])
+          concat content_tag(:td, t[:data].html_safe)
         end
       end
     end
