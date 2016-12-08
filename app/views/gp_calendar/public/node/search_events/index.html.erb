@@ -12,45 +12,47 @@
 
     <%= form_for :item, url: "#{@node.public_uri}",  html: { method: :get, class: 'search' } do |f| %>
     <%= hidden_field_tag :all, 1 %>
-    <fieldset class="category">
-      <legend>カテゴリ</legend>
-      <%- @content.category_types.each do |category_type|
-        category_id = params[:categories].present? ? params[:categories]["#{category_type.id}"] : nil
-        -%>
-      <label for="categories_<%=category_type.id%>"><%= category_type.title %></label>
-      <%= select_tag "categories[#{category_type.id}]",
-        options_for_select(category_type.categories_for_option, category_id),
-        include_blank: true %>
-      <%- end -%>
+
+    <fieldset class="category"><legend>カテゴリ</legend>
+      <ul>
+        <%- @content.category_types.each do |category_type|
+          category_id = params[:categories].present? ? params[:categories]["#{category_type.id}"] : nil
+          -%>
+        <li><label for="categories_<%=category_type.id%>"><%= category_type.title %></label>
+        <%= select_tag "categories[#{category_type.id}]",
+          options_for_select(category_type.categories_for_option, category_id),
+          include_blank: true %></li>
+        <%- end -%>
+      </ul>
     </fieldset>
-    <fieldset class="date">
-      <legend>期間</legend>
-      <label for="start_date">開始日</label>
-      <%= text_field_tag :start_date, @start_date, class: "datepicker" %>
-      <span>～</span>
-      <label for="end_date">終了日</label>
-      <%= text_field_tag :end_date, @end_date, class: "datepicker" %>
+    <fieldset class="date"><legend>期間</legend>
+      <ul>
+        <li><label for="start_date">開始日</label><%= text_field_tag :start_date, @start_date, class: "datepicker" %></li>
+        <li><span>～</span></li>
+        <li><label for="end_date">終了日</label><%= text_field_tag :end_date, @end_date, class: "datepicker" %></li>
+      </ul>
     </fieldset>
     <div class="submitters">
     <%= submit_tag '検索', name: :search, data: { disable_with: false } %>
     </div>
     <!-- end .search --><% end %>
   </div>
+  <div class="resultEvents">
   <%- unless @events.empty? -%>
-  <table border="1">
-    <thead>
-      <tr>
-      <%- @content.search_list_style.each do |header| -%>
-        <th><%= header[:header].html_safe %></th>
-      <%- end -%>
-      </tr>
-    </thead>
-    <tbody>
-      <%- @events.each do |event| -%>
-        <%= event_table_replace(event, @content.search_list_style) %>
-      <%- end -%>
-    </tbody>
-  </table>
+    <table border="1">
+      <thead>
+        <tr>
+        <%- @content.search_list_style.each do |header| -%>
+          <th><%= header[:header].html_safe %></th>
+        <%- end -%>
+        </tr>
+      </thead>
+      <tbody>
+        <%- @events.each do |event| -%>
+          <%= event_table_replace(event, @content.search_list_style) %>
+        <%- end -%>
+      </tbody>
+    </table>
   <%- end -%>
-
+  </div>
 <!-- end .calendarEvents --></div>

@@ -30,6 +30,10 @@
     <th><%= f.label :description %></th>
     <td colspan="2"><%= f.text_area :description, :size => '100x3', :style => 'width: 700px;' %></td>
   </tr>
+  <tr>
+    <th><%= f.label :note %></th>
+    <td colspan="2"><%= f.text_area :note, :size => '100x3', :style => 'width: 700px;' %></td>
+  </tr>
 </table>
 
 <%- unless @content.category_types.empty? -%>

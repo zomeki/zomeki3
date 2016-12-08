@@ -19,6 +19,18 @@
 </table>
 <%- end -%>
 
+<%- if @item.name == 'allowed_attachment_type' -%>
+<table class="show">
+  <tr>
+    <th><%= @site.locale(:setting_allowed_attachment_type) %></th>
+    <td>
+      <div>例: gif,jpg,png,pdf,doc,docx,xls,xlsx,ppt,pptx,odt,ods,odp</div>
+      <%= f.text_field(:in_setting_site_allowed_attachment_type, style: 'width: 500px; ime-mode:disabled;') %>
+    </td>
+  </tr>
+</table>
+<%- end -%>
+
 <%- if @item.name == 'file_upload_max_size' -%>
 <table class="show">
   <tr>

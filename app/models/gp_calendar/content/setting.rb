@@ -10,12 +10,12 @@ class GpCalendar::Content::Setting < Cms::ContentSetting
     name: '表示形式/イベント一覧',
     upper_text: '<a href="#" class="show_dialog">置き換えテキストを確認する</a>',
     form_type: :table_field,
-    default_value: [{header: 'タイトル', data: '@title_link@'}]
+    default_value: [{header: '開催日', data: '@hold_date@'}, {header: 'タイトル', data: '@title_link@'}]
   set_config :today_list_style,
     name: '表示形式/今日のイベント',
     upper_text: '<a href="#" class="show_dialog">置き換えテキストを確認する</a>',
     form_type: :table_field,
-    default_value: [{header: 'タイトル', data: '@title_link@'}]
+    default_value: [{header: '開催日', data: '@hold_date@'}, {header: 'タイトル', data: '@title_link@'}]
   set_config :calendar_list_style,
     name: '表示形式/イベントカレンダー',
     upper_text: '<a href="#" class="show_dialog">置き換えテキストを確認する</a>',
@@ -24,10 +24,7 @@ class GpCalendar::Content::Setting < Cms::ContentSetting
     name: '表示形式/イベント検索',
     upper_text: '<a href="#" class="show_dialog">置き換えテキストを確認する</a>',
     form_type: :table_field,
-    default_value: [{header: 'タイトル', data: '@title_link@'}]
-  set_config :event_search_node,
-    name: 'イベント検索ディレクトリ',
-    options: lambda { Cms::Node.public_state.where(site_id: Core.site.id, model: 'GpCalendar::SearchEvent').map { |n| [%Q(#{n.title}（#{n.name}）), n.id] } }
+    default_value: [{header: '開催日', data: '@hold_date@'}, {header: 'タイトル', data: '@title_link@'}]
   set_config :default_image,
     name: '初期画像',
     comment: '（例 /images/sample.jpg ）'

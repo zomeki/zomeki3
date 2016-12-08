@@ -13,10 +13,14 @@ class GpCalendar::Public::Node::SearchEventsController < GpCalendar::Public::Nod
     @date =  @start_date.present? ? @start_date : Date.today
 
     categories = params[:categories].present? ? params[:categories].values.reject(&:blank?) : []
-    criteria = {categories: categories}
+    criteria = {}
     @events = GpCalendar::Event.public_state.content_and_criteria(@content, criteria).order(:started_on)
       .scheduled_between(@start_date, @end_date)
       .preload(:categories).to_a
+    categories.each do |category|
+      @events.reject! {|c| c.categories && !c.categories.map{|ct| ct.id.to_s }.include?(category) }
+    end
+
     merge_docs_into_events(event_docs(@start_date, @end_date, categories), @events)
 
     @holidays = GpCalendar::Holiday.public_state.content_and_criteria(@content, criteria).where(kind: :event)

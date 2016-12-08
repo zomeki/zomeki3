@@ -19,6 +19,7 @@ ja:
         sync_source_id: 同期元ID
         sync_source_source_class: 同期元タイプ
         sync_exported: 同期状態
+        note: 備考
       gp_calendar/holiday:
         id: ID
         state: 状態
