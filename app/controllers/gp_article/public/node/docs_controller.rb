@@ -30,7 +30,7 @@ class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
       @docs = @docs.paginate(page: params[:page], per_page: @content.feed_docs_number)
       return render_feed(@docs)
     end
-    @docs = @docs.paginate(page: params[:page], per_page: 30)
+    @docs = @docs.paginate(page: params[:page], per_page: @content.doc_list_number)
                  .preload_assocs(:public_node_ancestors_assocs, :public_index_assocs)
     return http_error(404) if @docs.current_page > @docs.total_pages
 

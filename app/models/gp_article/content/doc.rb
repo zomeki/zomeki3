@@ -251,8 +251,8 @@ class GpArticle::Content::Doc < Cms::Content
     setting_extra_value(:doc_list_pagination, :doc_list_style).to_s
   end
 
-  def doc_list_limit
-    setting_extra_value(:doc_list_pagination, :doc_list_limit).to_i
+  def doc_list_number
+    setting_extra_value(:doc_list_pagination, :doc_list_number).to_i
   end
 
   def doc_publish_more_pages

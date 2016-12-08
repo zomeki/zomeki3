@@ -69,7 +69,7 @@ class GpArticle::Content::Setting < Cms::ContentSetting
     default_value: 'simple',
     default_extra_values: {
       doc_list_style: 'by_date',
-      doc_list_limit: 10,
+      doc_list_number: 30,
       doc_publish_more_pages: 10
     }
   set_config :list_style, menu: :index,
@@ -219,8 +219,8 @@ class GpArticle::Content::Setting < Cms::ContentSetting
     when 'serial_no_settings'
       ex[:title] = params[:title]
     when 'doc_list_pagination'
-      ex[:doc_list_style] = params[:doc_list_style]
-      ex[:doc_list_limit] = params[:doc_list_limit]
+      ex[:doc_list_style]  = params[:doc_list_style]
+      ex[:doc_list_number] = params[:doc_list_number]
       ex[:doc_publish_more_pages] = params[:doc_publish_more_pages]
     end
     super(ex)
