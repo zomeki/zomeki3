@@ -23,5 +23,9 @@
       <%- end -%>
     <%- end -%>
   </div>
+  <%- if @content.simple_pagination? -%>
   <%= paginate @docs, {lang: @content.doc_list_lang} %>
+  <%- else -%>
+  <%= period_pagination @prev_doc, @next_doc, Page.current_node, {lang: @content.doc_list_lang} %>
+  <%- end -%>
 </div>

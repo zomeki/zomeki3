@@ -30,12 +30,35 @@ class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
       @docs = @docs.paginate(page: params[:page], per_page: @content.feed_docs_number)
       return render_feed(@docs)
     end
-    @docs = @docs.paginate(page: params[:page], per_page: @content.doc_list_number)
-                 .preload_assocs(:public_node_ancestors_assocs, :public_index_assocs)
-    return http_error(404) if @docs.current_page > @docs.total_pages
+    @docs = @docs.preload_assocs(:public_node_ancestors_assocs, :public_index_assocs)
+
+    if @content.simple_pagination?
+      @docs = @docs.paginate(page: params[:page], per_page: @content.doc_list_number)
+      return http_error(404) if @docs.current_page > @docs.total_pages
+    else
+
+      date = params[:date].present? ? params[:date].to_date : @docs.first.display_published_at
+
+      dates = if @content.monthly_pagination?
+        @fisrt_day = @docs.first.display_published_at.beginning_of_month
+        [date.beginning_of_month, date.end_of_month]
+      else
+        @fisrt_day = @docs.first.display_published_at.beginning_of_week
+        [date.beginning_of_week, date.end_of_week]
+      end
+
+      @prev_doc = @content.public_docs_for_list.order(display_published_at: :asc, published_at: :asc)
+        .select([:display_published_at, :published_at])
+        .where(GpArticle::Doc.arel_table[:display_published_at].gteq(dates.last + 1.day)).first
+      @next_doc = @content.public_docs_for_list.order(display_published_at: :desc, published_at: :desc)
+        .select([:display_published_at, :published_at])
+        .where(GpArticle::Doc.arel_table[:display_published_at].lt(dates.first - 1.day)).first
+
+      @docs = @docs.search_date_column(:display_published_at, 'between', dates)
+      return http_error(404) if @docs.blank?
+    end
 
     @items = @docs.group_by { |doc| doc.display_published_at.try(:strftime, '%Y年%-m月%-d日') }
-
     render :index_mobile if Page.mobile?
   end
 

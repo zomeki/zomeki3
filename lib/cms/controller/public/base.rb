@@ -10,6 +10,10 @@ class Cms::Controller::Public::Base < Sys::Controller::Public::Base
       page = m[1].to_i
       params[:page] = page if page > 0
     end
+    if d = Page.uri.match(/\.(\d+)\.html(\.r)?\z/)
+      date = d[1].to_s
+      params[:date] = date
+    end
   end
 
   def pre_dispatch

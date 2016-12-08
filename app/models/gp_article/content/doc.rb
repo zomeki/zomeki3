@@ -247,6 +247,18 @@ class GpArticle::Content::Doc < Cms::Content
     setting_value(:doc_list_pagination)
   end
 
+  def monthly_pagination?
+    setting_value(:doc_list_pagination) == 'monthly'
+  end
+
+  def weekly_pagination?
+    setting_value(:doc_list_pagination) == 'weekly'
+  end
+
+  def simple_pagination?
+    setting_value(:doc_list_pagination) == 'simple'
+  end
+
   def doc_list_style
     setting_extra_value(:doc_list_pagination, :doc_list_style).to_s
   end
