@@ -6,13 +6,9 @@
   </ul>
   <%- end -%>
   <div class="docs">
-    <%- if @content.doc_list_style == 'simple' %>
-      <%=raw '<ul>' if @content.wrapper_tag == 'li' %>
-      <%- @docs.each do |doc| -%>
-      <%= content_tag @content.wrapper_tag, doc_replace(doc, @content.list_style, @content.date_style, @content.time_style) %>
-      <%- end -%>
-      <%=raw '</ul>' if @content.wrapper_tag == 'li' %>
-    <%- else -%>
+    <%- if @content.monthly_pagination? -%><h2 class="date"><%= monthly_title(@dates) %></h2><%- end -%>
+    <%- if @content.weekly_pagination? -%><h2 class="date"><%= weekly_title(@dates) %></h2><%- end -%>
+    <%- if @content.doc_list_style == 'by_date' && @content.simple_pagination?%>
       <% @items.each do |date, docs| %>
         <h2 class="date"><%= date %></h2>
         <%=raw '<ul>' if @content.wrapper_tag == 'li' %>
@@ -21,6 +17,12 @@
         <%- end -%>
         <%=raw '</ul>' if @content.wrapper_tag == 'li' %>
       <%- end -%>
+    <%- else -%>
+      <%=raw '<ul>' if @content.wrapper_tag == 'li' %>
+      <%- @docs.each do |doc| -%>
+      <%= content_tag @content.wrapper_tag, doc_replace(doc, @content.list_style, @content.date_style, @content.time_style) %>
+      <%- end -%>
+      <%=raw '</ul>' if @content.wrapper_tag == 'li' %>
     <%- end -%>
   </div>
   <%- if @content.simple_pagination? -%>

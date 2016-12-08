@@ -39,6 +39,14 @@ module GpArticle::GpArticleHelper
     }.join.html_safe
   end
 
+  def monthly_title(dates)
+    dates.first.try(:strftime, '%Y年%-m月')
+  end
+
+  def weekly_title(dates)
+    %Q(#{dates.first.try(:strftime, '%Y年%-m月%d日')}～#{dates.last.try(:strftime, '%Y年%-m月%d日')})
+  end
+
   def period_pagination(prev_doc, next_doc, node, options = {})
     lang = options[:lang].presence || :ja
     previous_label = I18n.t("will_paginate.previous_label", {locale: lang})
@@ -51,8 +59,8 @@ module GpArticle::GpArticleHelper
 
     links = content_tag(:div, class: 'pagination') do
       if prev_doc
-        prev_date = prev_doc.display_published_at.beginning_of_month.strftime('.%Y%m%d') if node.content.monthly_pagination?
-        prev_date = prev_doc.display_published_at.beginning_of_week.strftime('.%Y%m%d') if node.content.weekly_pagination?
+        prev_date = prev_doc.published_at.beginning_of_month.strftime('.%Y%m') if node.content.monthly_pagination?
+        prev_date = prev_doc.published_at.beginning_of_week.strftime('.%Y%m%d')  if node.content.weekly_pagination?
         prev_date = '' if @fisrt_day.strftime('.%Y%m%d') == prev_date
         prev_link = link_to previous_label, "#{node.public_uri}index#{prev_date}.html"
         concat content_tag(:span, prev_link.html_safe, class: 'previous_page', rel: 'previous')
@@ -61,10 +69,9 @@ module GpArticle::GpArticleHelper
       end
       concat content_tag(:span, '|', class: 'separator')
       if next_doc
-        next_date = next_doc.display_published_at.beginning_of_month.strftime('.%Y%m%d') if node.content.monthly_pagination?
-        next_date = next_doc.display_published_at.beginning_of_week.strftime('.%Y%m%d') if node.content.weekly_pagination?
+        next_date = next_doc.published_at.beginning_of_month.strftime('.%Y%m') if node.content.monthly_pagination?
+        next_date = next_doc.published_at.beginning_of_week.strftime('.%Y%m%d')  if node.content.weekly_pagination?
         next_link = link_to next_label, "#{node.public_uri}index#{next_date}.html"
-
         concat content_tag(:span, next_link.html_safe, class: 'next_page', rel: 'next')
       else
         concat content_tag(:span, next_label, class: 'next_page disabled', rel: 'next')

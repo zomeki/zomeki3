@@ -116,7 +116,7 @@ class Cms::Controller::Script::Publication < ApplicationController
     first.upto(limit) do |p|
       page =  case params[:period]
       when 'monthly'
-        (p == 1 ? "" : (params[:start_at] - ( p - 1 ).month).beginning_of_month.strftime('.%Y%m%d'))
+        (p == 1 ? "" : (params[:start_at] - ( p - 1 ).month).beginning_of_month.strftime('.%Y%m'))
       when 'weekly'
         (p == 1 ? "" : (params[:start_at] - ( p - 1 ).week).beginning_of_week.strftime('.%Y%m%d'))
       else
@@ -141,7 +141,7 @@ class Cms::Controller::Script::Publication < ApplicationController
     first.upto(100) do |p|
       deps = []
       page_num   = ".p#{p}"
-      month_date = (params[:start_at] - ( p - 1 ).month).beginning_of_month.strftime('.%Y%m%d')
+      month_date = (params[:start_at] - ( p - 1 ).month).beginning_of_month.strftime('.%Y%m')
       week_date  = (params[:start_at] - ( p - 1 ).week).beginning_of_week.strftime('.%Y%m%d')
       case params[:period]
       when 'monthly'
