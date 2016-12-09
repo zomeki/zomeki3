@@ -114,7 +114,14 @@ class Cms::Controller::Script::Publication < ApplicationController
     file  = params[:file] || 'index'
     first = params[:first] || 1
     first.upto(limit) do |p|
-      page = (p == 1 ? "" : ".p#{p}")
+      page =  case params[:period]
+      when 'monthly'
+        (p == 1 ? "" : (params[:start_at] - ( p - 1 ).month).beginning_of_month.strftime('.%Y%m'))
+      when 'weekly'
+        (p == 1 ? "" : (params[:start_at] - ( p - 1 ).week).beginning_of_week.strftime('.%Y%m%d'))
+      else
+        (p == 1 ? "" : ".p#{p}")
+      end
       uri  = "#{params[:uri]}#{file}#{page}.html"
       path = "#{params[:path]}#{file}#{page}.html"
       smart_phone_path = (params[:smart_phone_path].present? ? "#{params[:smart_phone_path]}#{file}#{page}.html" : nil)
@@ -122,21 +129,44 @@ class Cms::Controller::Script::Publication < ApplicationController
       rs = publish_page(item, uri: uri, site: params[:site], path: path, smart_phone_path: smart_phone_path,
                               dependent: dep, smart_phone: params[:smart_phone])
       unless rs
-        stopp = p
-        break
+        if params[:period] == 'simple'
+          stopp = p
+          break
+        end
       end
       #return item.published? ## file updated
     end
 
     ## remove over files
-    first = stopp ? stopp : (limit + 1)
-    first.upto(9999) do |p|
-      dep = "#{params[:dependent]}.p#{p}"
-      pub = Sys::Publisher.find_by(publishable: item, dependent: dep)
-      break unless pub
-      pub.destroy
-      pub = Sys::Publisher.find_by(publishable: item, dependent: "#{dep}/ruby")
-      pub.destroy if pub
+    del_first = stopp ? stopp : (limit + 1)
+    first = 2
+    first.upto(100) do |p|
+      deps = []
+      page_num   = ".p#{p}"
+      month_date = (params[:start_at] - ( p - 1 ).month).beginning_of_month.strftime('.%Y%m')
+      week_date  = (params[:start_at] - ( p - 1 ).week).beginning_of_week.strftime('.%Y%m%d')
+      case params[:period]
+      when 'monthly'
+        deps << month_date if p >= del_first
+        deps << week_date
+        deps << page_num
+      when 'weekly'
+        deps << month_date
+        deps << week_date if p >= del_first
+        deps << page_num
+      else
+        deps << month_date
+        deps << week_date
+        deps << page_num if p >= del_first
+      end
+      deps.each do |dep|
+        d = "#{params[:dependent]}#{dep}"
+        pub = Sys::Publisher.find_by(publishable: item, dependent: d)
+        next unless pub
+        pub.destroy
+        pub = Sys::Publisher.find_by(publishable: item, dependent: "#{d}/ruby")
+        pub.destroy if pub
+      end
     end
   end
 end
