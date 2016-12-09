@@ -37,23 +37,23 @@ class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
       return http_error(404) if @docs.current_page > @docs.total_pages
     else
       @dates = if @content.monthly_pagination?
-        date = params[:date].present? ? "#{params[:date]}01".to_date : @docs.first.published_at
-        @fisrt_day = @docs.first.published_at.beginning_of_month
+        date = params[:date].present? ? "#{params[:date]}01".to_date : @content.published_first_day
+        @first_day = @content.published_first_day.beginning_of_month
         [date.beginning_of_month, date.end_of_month]
       else
-        date = params[:date].present? ? params[:date].to_date : @docs.first.published_at
-        @fisrt_day = @docs.first.published_at.beginning_of_week
+        date = params[:date].present? ? params[:date].to_date : @content.published_first_day
+        @first_day = @content.published_first_day.beginning_of_week
         [date.beginning_of_week, date.end_of_week]
       end
 
       @prev_doc = @content.public_docs_for_list.order(display_published_at: :asc, published_at: :asc)
         .select([:display_published_at, :published_at])
-        .where(GpArticle::Doc.arel_table[:published_at].gteq(@dates.last + 1.day)).first
+        .where(GpArticle::Doc.arel_table[:display_published_at].gteq(@dates.last + 1.day)).first
       @next_doc = @content.public_docs_for_list.order(display_published_at: :desc, published_at: :desc)
         .select([:display_published_at, :published_at])
-        .where(GpArticle::Doc.arel_table[:published_at].lt(@dates.first - 1.day)).first
+        .where(GpArticle::Doc.arel_table[:display_published_at].lt(@dates.first - 1.day)).first
 
-      @docs = @docs.search_date_column(:published_at, 'between', @dates)
+      @docs = @docs.search_date_column(:display_published_at, 'between', @dates)
       return http_error(404) if @docs.blank?
     end
 

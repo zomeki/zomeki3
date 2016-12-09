@@ -129,8 +129,10 @@ class Cms::Controller::Script::Publication < ApplicationController
       rs = publish_page(item, uri: uri, site: params[:site], path: path, smart_phone_path: smart_phone_path,
                               dependent: dep, smart_phone: params[:smart_phone])
       unless rs
-        stopp = p
-        break
+        if params[:period] == 'simple'
+          stopp = p
+          break
+        end
       end
       #return item.published? ## file updated
     end

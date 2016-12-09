@@ -117,7 +117,7 @@ class Core
     end
     if path =~ /\.p[0-9]+\.html$/
       path = path.gsub(/\.p[0-9]+\.html$/, '.html')
-    elsif path =~ /\.[0-9]+\.html$/
+    elsif path =~ /\.([0-9]{6}|[0-9]{8})\.html$/
       path = path.gsub(/\.[0-9]+\.html$/, '.html')
     end
     if path =~ /\/$/
