@@ -163,7 +163,6 @@ class Cms::Controller::Script::Publication < ApplicationController
         d = "#{params[:dependent]}#{dep}"
         pub = Sys::Publisher.find_by(publishable: item, dependent: d)
         next unless pub
-        dump "destroy!"
         pub.destroy
         pub = Sys::Publisher.find_by(publishable: item, dependent: "#{d}/ruby")
         pub.destroy if pub
