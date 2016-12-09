@@ -8,7 +8,7 @@ class GpArticle::Script::DocsController < Cms::Controller::Script::Publication
     publish_page(@node, :uri => "#{uri}index.atom", :path => "#{path}index.atom", :dependent => :atom)
     publish_more(@node, :uri => uri, :path => path, :smart_phone_path => smart_phone_path,
       :limit => @node.content.try(:doc_publish_more_pages), :start_at => @node.content.try(:published_first_day),
-      :period => @node.content.try(:doc_list_pagination))
+      :period => @node.content.try(:doc_list_pagination), :target_date => params[:target_date])
     render plain: 'OK'
   end
 

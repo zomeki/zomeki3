@@ -23,7 +23,7 @@ module GpArticle::Docs::PublishQueue
   end
 
   def enqueue_publisher?
-    name.present? && state.in?(%w(public closed))
+    name.present? && state.in?(%w(public finish))
   end
 
   def enqueue_publisher_for_piece
@@ -35,7 +35,9 @@ module GpArticle::Docs::PublishQueue
   end
 
   def enqueue_publisher_for_node
-    Cms::Publisher.register(content.site_id, content.public_nodes.select(:id))
+    Cms::Publisher.register(content.site_id, content.public_nodes.select(:id),
+        target_date: display_published_at || published_at
+      )
   end
 
   def enqueue_publisher_for_organization
@@ -51,7 +53,7 @@ module GpArticle::Docs::PublishQueue
       organization_content.public_pieces.each do |piece|
         piece.enqueue_publisher
       end
-    end 
+    end
   end
 
   def enqueue_publisher_for_category
@@ -76,8 +78,8 @@ module GpArticle::Docs::PublishQueue
     calendar_content = content.gp_calendar_content_event
     return unless calendar_content
 
-    changed_dates = [event_started_on, event_ended_on] 
-    changed_dates += [prev_edition.event_started_on, prev_edition.event_ended_on] if prev_edition 
+    changed_dates = [event_started_on, event_ended_on]
+    changed_dates += [prev_edition.event_started_on, prev_edition.event_ended_on] if prev_edition
     changed_dates.uniq!.compact!
 
     if changed_dates.present?
