@@ -108,34 +108,39 @@ class Cms::Controller::Script::Publication < ApplicationController
   end
 
   def publish_more(item, params = {})
-    stopp = nil
-    limit = params[:limit] || Zomeki.config.application["cms.publish_more_pages"].to_i rescue 0
-    limit = (limit < 1 ? 1 : 1 + limit)
-    file  = params[:file] || 'index'
-    first = params[:first] || 1
-    first.upto(limit) do |p|
-      page =  case params[:period]
-      when 'monthly'
-        (p == 1 ? "" : (params[:start_at] - ( p - 1 ).month).beginning_of_month.strftime('.%Y%m'))
-      when 'weekly'
-        (p == 1 ? "" : (params[:start_at] - ( p - 1 ).week).beginning_of_week.strftime('.%Y%m%d'))
-      else
-        (p == 1 ? "" : ".p#{p}")
-      end
-      uri  = "#{params[:uri]}#{file}#{page}.html"
-      path = "#{params[:path]}#{file}#{page}.html"
-      smart_phone_path = (params[:smart_phone_path].present? ? "#{params[:smart_phone_path]}#{file}#{page}.html" : nil)
-      dep  = "#{params[:dependent]}#{page}"
-      rs = publish_page(item, uri: uri, site: params[:site], path: path, smart_phone_path: smart_phone_path,
-                              dependent: dep, smart_phone: params[:smart_phone])
-      unless rs
-        if params[:period] == 'simple'
-          stopp = p
-          break
+    if params[:period] != 'simple' && params[:target_date].present?
+      publish_more_by_period(item, params)
+    else
+      stopp = nil
+      limit = params[:limit] || Zomeki.config.application["cms.publish_more_pages"].to_i rescue 0
+      limit = (limit < 1 ? 1 : 1 + limit)
+      file  = params[:file] || 'index'
+      first = params[:first] || 1
+      first.upto(limit) do |p|
+        page =  case params[:period]
+        when 'monthly'
+          (p == 1 ? "" : (params[:start_at] - ( p - 1 ).month).beginning_of_month.strftime('.%Y%m'))
+        when 'weekly'
+          (p == 1 ? "" : (params[:start_at] - ( p - 1 ).week).beginning_of_week.strftime('.%Y%m%d'))
+        else
+          (p == 1 ? "" : ".p#{p}")
         end
+        uri  = "#{params[:uri]}#{file}#{page}.html"
+        path = "#{params[:path]}#{file}#{page}.html"
+        smart_phone_path = (params[:smart_phone_path].present? ? "#{params[:smart_phone_path]}#{file}#{page}.html" : nil)
+        dep  = "#{params[:dependent]}#{page}"
+        rs = publish_page(item, uri: uri, site: params[:site], path: path, smart_phone_path: smart_phone_path,
+                                dependent: dep, smart_phone: params[:smart_phone])
+        unless rs
+          if params[:period] == 'simple'
+            stopp = p
+            break
+          end
+        end
+        #return item.published? ## file updated
       end
-      #return item.published? ## file updated
     end
+
 
     ## remove over files
     del_first = stopp ? stopp : (limit + 1)
@@ -167,6 +172,47 @@ class Cms::Controller::Script::Publication < ApplicationController
         pub = Sys::Publisher.find_by(publishable: item, dependent: "#{d}/ruby")
         pub.destroy if pub
       end
+    end
+  end
+
+  def publish_more_by_period(item, params = {})
+    file  = params[:file] || 'index'
+    target_date =  Date.parse(params[:target_date])
+    dates = case params[:period]
+    when 'monthly'
+      [
+        target_date.beginning_of_month - 1.month,
+        target_date.beginning_of_month,
+        target_date.beginning_of_month + 1.month,
+        target_date.beginning_of_month + 2.month
+      ]
+    when 'weekly'
+      [
+        target_date.beginning_of_week - 1.week,
+        target_date.beginning_of_week,
+        target_date.beginning_of_week + 1.week,
+        target_date.beginning_of_week + 2.week
+      ]
+    else
+      []
+    end
+
+    dates.each do |date|
+      page = dates = case params[:period]
+      when 'monthly'
+        date.strftime('.%Y%m') == params[:start_at].strftime('.%Y%m') ? "" : date.strftime('.%Y%m')
+      when 'weekly'
+        date.strftime('.%Y%m%d') == params[:start_at].strftime('.%Y%m%d') ? "" : date.strftime('.%Y%m%d')
+      else
+        next
+      end
+
+      uri  = "#{params[:uri]}#{file}#{page}.html"
+      path = "#{params[:path]}#{file}#{page}.html"
+      smart_phone_path = (params[:smart_phone_path].present? ? "#{params[:smart_phone_path]}#{file}#{page}.html" : nil)
+      dep  = "#{params[:dependent]}#{page}"
+      publish_page(item, uri: uri, site: params[:site], path: path, smart_phone_path: smart_phone_path,
+                   dependent: dep, smart_phone: params[:smart_phone])
     end
   end
 end
