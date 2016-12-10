@@ -37,6 +37,10 @@ class GpArticle::Content::Doc < Cms::Content
     public_docs.visible_in_list.order(display_published_at: :desc, published_at: :desc).first.try(:display_published_at) || Date.today
   end
 
+  def published_last_day
+    public_docs.visible_in_list.order(display_published_at: :asc, published_at: :asc).first.try(:display_published_at) || Date.today
+  end
+
   def organization_content_group
     if organization_content_group_setting
       @organization_content_group ||= organization_content_group_setting.organization_content_group

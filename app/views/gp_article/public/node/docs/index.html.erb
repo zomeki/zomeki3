@@ -6,8 +6,8 @@
   </ul>
   <%- end -%>
   <div class="docs">
-    <%- if @content.monthly_pagination? -%><h2 class="date"><%= monthly_title(@dates) %></h2><%- end -%>
-    <%- if @content.weekly_pagination? -%><h2 class="date"><%= weekly_title(@dates) %></h2><%- end -%>
+    <%- if @docs.present? && @content.monthly_pagination? -%><h2 class="date"><%= monthly_title(@dates) %></h2><%- end -%>
+    <%- if @docs.present? && @content.weekly_pagination? -%><h2 class="date"><%= weekly_title(@dates) %></h2><%- end -%>
     <%- if @content.doc_list_style == 'by_date' && @content.simple_pagination?%>
       <% @items.each do |date, docs| %>
         <h2 class="date"><%= date %></h2>
@@ -28,6 +28,6 @@
   <%- if @content.simple_pagination? -%>
   <%= paginate @docs, {lang: @content.doc_list_lang} %>
   <%- else -%>
-  <%= period_pagination @prev_doc, @next_doc, Page.current_node, {lang: @content.doc_list_lang} %>
+  <%= period_pagination @prev_doc, @next_doc, Page.current_node, {lang: @content.doc_list_lang} if @docs.present? %>
   <%- end -%>
 </div>
