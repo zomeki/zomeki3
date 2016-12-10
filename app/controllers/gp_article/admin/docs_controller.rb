@@ -221,6 +221,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
           state: (@item.tasks.where(name: 'publish').exists? ? 'prepared' : 'approved'),
           recognized_at: Time.now
         )
+        @item.set_queues
         Sys::OperationLog.log(request, item: @item)
       end
     end
