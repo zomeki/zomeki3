@@ -3,6 +3,8 @@ class Sys::Task < ApplicationRecord
 
   belongs_to :processable, polymorphic: true
 
+  after_save :set_queue , if: :close_task?
+
   def publish_task?
     name == 'publish'
   end

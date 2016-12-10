@@ -28,7 +28,7 @@ module Sys::Model::Rel::Task
   def set_queues
     return if tasks.blank?
     if state == 'recognized' || state == 'approved' || state == 'prepared'
-      tasks.each(&:set_queue)
+      tasks.each{|t| t.set_queue if t.publish_task? }
     end
   end
 
