@@ -30,6 +30,7 @@ class Sys::Script::TasksController < ApplicationController
         render_component_into_view controller: ctl, action: act, params: prms
       rescue => e
         Script.error e
+        info_log "Error: #{e}"
         puts "Error: #{e}"
       end
     end
