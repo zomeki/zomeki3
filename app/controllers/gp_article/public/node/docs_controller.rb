@@ -54,7 +54,7 @@ class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
         .where(GpArticle::Doc.arel_table[:display_published_at].lt(@dates.first - 1.day)).first
 
       @docs = @docs.search_date_column(:display_published_at, 'between', @dates)
-      return http_error(404) if @docs.blank?
+      return http_error(404) if params[:date].present? && @docs.blank?
     end
 
     @items = @docs.group_by { |doc| doc.display_published_at.try(:strftime, '%Y年%-m月%-d日') }

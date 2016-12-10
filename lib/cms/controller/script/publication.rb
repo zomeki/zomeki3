@@ -111,16 +111,20 @@ class Cms::Controller::Script::Publication < ApplicationController
     if params[:period] != 'simple' && params[:target_date].present?
       publish_more_by_period(item, params)
     else
+      p = 1
+      published = 0
       stopp = nil
       limit = params[:limit] || Zomeki.config.application["cms.publish_more_pages"].to_i rescue 0
       limit = (limit < 1 ? 1 : 1 + limit)
       file  = params[:file] || 'index'
       first = params[:first] || 1
-      first.upto(limit) do |p|
+      while published < limit do
         page =  case params[:period]
         when 'monthly'
+          date = (params[:start_at] - ( p - 1 ).month)
           (p == 1 ? "" : (params[:start_at] - ( p - 1 ).month).beginning_of_month.strftime('.%Y%m'))
         when 'weekly'
+          date = (params[:start_at] - ( p - 1 ).week)
           (p == 1 ? "" : (params[:start_at] - ( p - 1 ).week).beginning_of_week.strftime('.%Y%m%d'))
         else
           (p == 1 ? "" : ".p#{p}")
@@ -135,8 +139,15 @@ class Cms::Controller::Script::Publication < ApplicationController
           if params[:period] == 'simple'
             stopp = p
             break
+          else
+            if params[:end_at].blank? || params[:start_at].blank? || params[:end_at] > date
+              stopp = p
+              break
+            end
           end
         end
+        p += 1
+        published += 1
         #return item.published? ## file updated
       end
     end

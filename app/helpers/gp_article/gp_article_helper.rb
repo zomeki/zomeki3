@@ -50,11 +50,11 @@ module GpArticle::GpArticleHelper
   def period_pagination(prev_doc, next_doc, node, options = {})
     paginate_date_str = node.content.monthly_pagination? ? '.%Y%m' : '.%Y%m%d'
     lang = options[:lang].presence || :ja
-    previous_label = I18n.t("will_paginate.previous_label", {locale: lang})
-    next_label     = I18n.t("will_paginate.next_label", {locale: lang})
+    previous_label = I18n.t("will_paginate.previous_label", {locale: lang}).html_safe
+    next_label     = I18n.t("will_paginate.next_label", {locale: lang}).html_safe
     if request.mobile?
-      previous_label = I18n.t("will_paginate.mobile_previous_label", {locale: lang})
-      next_label     = I18n.t("will_paginate.mobile_next_label", {locale: lang})
+      previous_label = I18n.t("will_paginate.mobile_previous_label", {locale: lang}).html_safe
+      next_label     = I18n.t("will_paginate.mobile_next_label", {locale: lang}).html_safe
     end
 
 
