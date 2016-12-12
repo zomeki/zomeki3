@@ -24,7 +24,6 @@ class Cms::Script::NodesController < Cms::Controller::Script::Publication
   end
 
   def publish_node(node)
-    return if params[:all].nil? && node.model.in?('GpCategory::CategoryType')
 
     started_at = Time.now
     info_log "Publish node: #{node.model} #{node.name} #{node.title}"
