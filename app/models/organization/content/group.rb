@@ -61,6 +61,19 @@ class Organization::Content::Group < Cms::Content
     @related_article_content = GpArticle::Content::Doc.find_by(id: setting_extra_value(:article_relation, :gp_article_content_doc_id))
   end
 
+  def feed_display?
+    setting_value(:feed) != 'disabled'
+  end
+
+  def feed_docs_number
+    (setting_extra_value(:feed, :feed_docs_number).presence || 10).to_i
+  end
+
+  def feed_docs_period
+    setting_extra_value(:feed, :feed_docs_period)
+  end
+
+
   def doc_style
     setting_value(:doc_style).to_s
   end

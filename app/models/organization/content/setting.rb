@@ -23,6 +23,12 @@ class Organization::Content::Setting < Cms::ContentSetting
   set_config :gp_category_content_category_type_id,
     name: 'カテゴリ種別',
     options: lambda { GpCategory::Content::CategoryType.where(site_id: Core.site.id).map { |ct| [ct.name, ct.id] } }
+  set_config :feed,
+    name: "フィード",
+    form_type: :radio_buttons,
+    options: [['表示する', 'enabled'], ['表示しない', 'disabled']],
+    default_value: 'disabled',
+    default_extra_values: { feed_docs_number: '10' }
 
   belongs_to :content, foreign_key: :content_id, class_name: 'Organization::Content::Group'
 
