@@ -17,7 +17,7 @@
     <td>
       <%- if (link_checkable = log.link_checkable).is_a?(GpArticle::Doc) -%>
       <%= link_to log.title, gp_article_doc_path(content: link_checkable.content, id: link_checkable.id) %>
-      <%- elsif (link_checkable = log.link_checkable).is_a?(Cms::Node) -%>
+      <%- elsif (link_checkable = log.link_checkable).is_a?(Cms::Node) && Core.user.has_auth?(:designer) -%>
       <%= link_to log.title, link_checkable.admin_uri %>
       <%- else -%>
       <%= log.title %>
