@@ -1,5 +1,5 @@
 class GpCategory::Content::CategoryType < Cms::Content
-  DOCS_ORDER_OPTIONS = [['公開日（降順）', 'published_at_desc'], ['公開日（昇順）', 'published_at_asc'], 
+  DOCS_ORDER_OPTIONS = [['公開日（降順）', 'published_at_desc'], ['公開日（昇順）', 'published_at_asc'],
                         ['更新日（降順）', 'updated_at_desc'], ['更新日（昇順）', 'updated_at_asc']]
 
   default_scope { where(model: 'GpCategory::CategoryType') }
@@ -21,6 +21,15 @@ class GpCategory::Content::CategoryType < Cms::Content
 
   def category_types_for_option
     category_types.map {|ct| [ct.title, ct.id] }
+  end
+
+  def public_pieces_for_doc_list
+    public_pieces.where(model: ['GpCategory::CategoryType', 'GpCategory::Doc',
+      'GpCategory::CategoryList', 'GpCategory::RecentTab', 'GpCategory::Feed'])
+  end
+
+  def public_category_pieces
+    GpCategory::Piece::Category.public_state.where(model: 'GpCategory::Category')
   end
 
   def group_category_type_name

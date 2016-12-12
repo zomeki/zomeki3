@@ -66,7 +66,7 @@ module GpArticle::Docs::PublishQueue
 
     if changed_cats.present?
       Cms::Publisher.register(content.site_id, changed_cats)
-      category_content.public_pieces.each do |piece|
+      category_content.public_pieces_for_doc_list.each do |piece|
         piece.enqueue_publisher
       end
     end
