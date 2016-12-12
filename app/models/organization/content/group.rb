@@ -73,7 +73,6 @@ class Organization::Content::Group < Cms::Content
     setting_extra_value(:feed, :feed_docs_period)
   end
 
-
   def doc_style
     setting_value(:doc_style).to_s
   end
