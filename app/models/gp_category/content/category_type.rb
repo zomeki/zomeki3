@@ -24,8 +24,7 @@ class GpCategory::Content::CategoryType < Cms::Content
   end
 
   def public_pieces_for_doc_list
-    public_pieces.where(model: ['GpCategory::CategoryType', 'GpCategory::Doc',
-      'GpCategory::CategoryList', 'GpCategory::RecentTab', 'GpCategory::Feed'])
+    public_pieces.where(model: ['GpCategory::CategoryType', 'GpCategory::Doc', 'GpCategory::RecentTab'])
   end
 
   def group_category_type_name
