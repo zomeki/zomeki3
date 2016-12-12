@@ -22,6 +22,7 @@ class GpArticle::Doc < ApplicationRecord
   include GpTemplate::Model::Rel::Template
   include GpArticle::Model::Rel::RelatedDoc
   include Cms::Model::Rel::PublishUrl
+  include Cms::Model::Rel::Link
 
   include StateText
   include GpArticle::Docs::PublishQueue
@@ -80,7 +81,6 @@ class GpArticle::Doc < ApplicationRecord
                             }, class_name: 'Tag::Tag', join_table: 'gp_article_docs_tag_tags'
 
   has_many :holds, :as => :holdable, :dependent => :destroy
-  has_many :links, :dependent => :destroy
   has_many :comments, :dependent => :destroy
 
   before_save :make_file_contents_path_relative
@@ -110,7 +110,6 @@ class GpArticle::Doc < ApplicationRecord
 
   after_initialize :set_defaults
   after_save :set_display_attributes
-  after_save :save_links
 
   scope :visible_in_list, -> { where(feature_1: true) }
   scope :event_scheduled_between, ->(start_date, end_date, category_ids) {
@@ -896,16 +895,6 @@ class GpArticle::Doc < ApplicationRecord
     if results.any? {|r| !r[:result] }
       self.link_check_results = results
       errors.add(:base, 'リンクチェック結果を確認してください。')
-    end
-  end
-
-  def save_links
-    lib = links_in_body
-    links.each do |link|
-      link.destroy unless lib.detect {|l| l[:body] == link.body && l[:url] == link.url }
-    end
-    lib.each do |link|
-      links.create(body: link[:body], url: link[:url]) unless links.where(body: link[:body], url: link[:url]).first
     end
   end
 

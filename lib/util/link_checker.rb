@@ -16,7 +16,7 @@ class Util::LinkChecker
     end
 
     GpArticle::Content::Doc.where(site_id: Core.site.id).each do |c|
-      c.docs.each do |doc|
+      c.docs.public_state.each do |doc|
         doc.links.each do |link|
           info_log "Planning #{link.url} to check in GpArticle::Doc(#{doc.id})"
 
@@ -34,6 +34,27 @@ class Util::LinkChecker
           rescue => evar
             warn_log evar.message
           end
+        end
+      end
+    end
+
+    Cms::Node::Page.where(site_id: Core.site.id).public_state.each do |p|
+      p.links.each do |link|
+        info_log "Planning #{link.url} to check in Cms::Node::Page(#{p.id})"
+
+        begin
+          uri = URI.parse(link.url)
+          url = unless uri.absolute?
+                  next unless uri.path =~ /^\//
+                  "#{p.site.full_uri.sub(/\/$/, '')}#{uri.path}"
+                else
+                  uri.to_s
+                end
+
+          link_check.logs.create(link_checkable: p, title: p.title,
+                                 body: link.body, url: url)
+        rescue => evar
+          warn_log evar.message
         end
       end
     end
