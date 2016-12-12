@@ -28,10 +28,6 @@ class GpCategory::Content::CategoryType < Cms::Content
       'GpCategory::CategoryList', 'GpCategory::RecentTab', 'GpCategory::Feed'])
   end
 
-  def public_category_pieces
-    GpCategory::Piece::Category.public_state.where(model: 'GpCategory::Category')
-  end
-
   def group_category_type_name
     setting_value(:group_category_type_name).presence || 'groups'
   end
