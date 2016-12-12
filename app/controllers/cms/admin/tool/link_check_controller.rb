@@ -2,7 +2,7 @@ class Cms::Admin::Tool::LinkCheckController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 
   def pre_dispatch
-    return error_auth unless Core.user.has_auth?(:designer)
+    return error_auth unless Core.user.has_auth?(:creator)
     return redirect_to(action: :index) if params[:reset]
 
     params[:limit] ||= '30'

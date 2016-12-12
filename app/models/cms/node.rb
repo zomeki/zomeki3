@@ -254,6 +254,7 @@ protected
     include Cms::Model::Rel::Inquiry
     include Sys::Model::Rel::Task
     include Cms::Model::Rel::PublishUrl
+    include Cms::Model::Rel::Link
 
 #    validate :validate_inquiry,
 #      :if => %Q(state == 'public')
@@ -341,6 +342,10 @@ protected
       Sys::ObjectRelation.create(source: item, related: self, relation_type: 'replace') if rel_type == :replace
 
       return item
+    end
+
+    def links_in_body(all=false)
+      extract_links(self.body, all)
     end
   end
 

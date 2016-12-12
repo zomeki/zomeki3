@@ -12,11 +12,13 @@
     <th style="text-align: center;">結果</th>
   </tr>
   <%- @logs.each do |log| -%>
-  <%- if log.link_checkable && log.link_checkable.content && log.link_checkable.content.site_id == Core.site.id -%>
+  <%- if log.is_current_site_log? -%>
   <tr>
     <td>
       <%- if (link_checkable = log.link_checkable).is_a?(GpArticle::Doc) -%>
       <%= link_to log.title, gp_article_doc_path(content: link_checkable.content, id: link_checkable.id) %>
+      <%- elsif (link_checkable = log.link_checkable).is_a?(Cms::Node) && Core.user.has_auth?(:designer) -%>
+      <%= link_to log.title, link_checkable.admin_uri %>
       <%- else -%>
       <%= log.title %>
       <%- end -%>
