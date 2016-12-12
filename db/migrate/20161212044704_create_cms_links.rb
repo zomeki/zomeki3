@@ -17,6 +17,9 @@ class CreateCmsLinks < ActiveRecord::Migration[5.0]
         url:  l.url
       })
     end
+    Cms::Node::Page.record_timestamps = false
+    Cms::Node::Page.public_state.each(&:save)
+    Cms::Node::Page.record_timestamps = true
   end
 
   def down
