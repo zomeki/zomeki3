@@ -67,6 +67,7 @@ private
 
     public_uri = public_uri_for_replace
     admin_uri = admin_uri_for_replace
+    request_uri = request.fullpath.gsub(/index\.html/, '')
     preview_uri = "#{admin_uri}_preview/#{format('%04d', Page.site.id)}#{Page.preview_terminal}"
 
     doc = Page.mobile? ?
@@ -78,7 +79,11 @@ private
         next if node[attr].blank?
         uri = Addressable::URI.parse(node[attr])
         if uri.relative? && uri.path !~ %r|/_common/| && node[attr] !~ %r|\A#|
-          node[attr] = "#{preview_uri}#{node[attr]}"
+          if node[attr] !~ %r|\A\/|
+            node[attr] = "#{request_uri}#{node[attr]}"
+          else
+            node[attr] = "#{preview_uri}#{node[attr]}"
+          end
         end
       end
     end
