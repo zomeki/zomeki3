@@ -17,9 +17,12 @@ class CreateCmsLinks < ActiveRecord::Migration[5.0]
         url:  l.url
       })
     end
-    Cms::Node::Page.record_timestamps = false
-    Cms::Node::Page.public_state.each(&:save)
-    Cms::Node::Page.record_timestamps = true
+    Cms::Node::Page.public_state.each do |p|
+      next unless lib = p.links_in_body
+      lib.each do |link|
+       p.links.create(body: link[:body], url: link[:url], content_id: p.content_id)
+      end
+    end
   end
 
   def down
