@@ -34,7 +34,7 @@ class Survey::Admin::FormsController < Cms::Controller::Admin::Base
       criteria[:editable] = true
     end
 
-    @items = Survey::Form.all_with_content_and_criteria(@content, criteria).reorder(created_at: :desc)
+    @items = Survey::Form.all_with_content_and_criteria(@content, criteria).reorder(:sort_no)
       .paginate(page: params[:page], per_page: 30)
       .preload(content: { public_node: :site })
 

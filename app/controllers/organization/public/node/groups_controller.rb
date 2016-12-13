@@ -1,4 +1,5 @@
 class Organization::Public::Node::GroupsController < Cms::Controller::Public::Base
+  include GpArticle::Controller::Feed
   def pre_dispatch
     @content = Organization::Content::Group.find_by(id: Page.current_node.content.id)
     return http_error(404) unless @content
@@ -29,6 +30,22 @@ class Organization::Public::Node::GroupsController < Cms::Controller::Public::Ba
                                               .where(settings[:name].eq('organization_content_group_id')
                                                                         .and(settings[:value].eq(@content.id)))
                                               .where(site_id: @content.site.id)
+    if params[:format].in?(['rss', 'atom'])
+      docs = if article_contents.empty?
+          GpArticle::Doc.none
+        else
+          sys_group_ids = @group.public_descendants_with_preload.map{|g| g.sys_group.id }
+          docs = find_public_docs_with_group_id(sys_group_ids)
+          docs = docs.where(content_id: article_contents.pluck(:id))
+          docs = docs.order(@group.docs_order)
+          docs = docs.display_published_after(@content.feed_docs_period.to_i.days.ago) if @content.feed_docs_period.present?
+          docs = docs.paginate(page: params[:page], per_page: @content.feed_docs_number)
+          docs = docs.preload_assocs(:organization_groups_and_public_node_ancestors_assocs, :public_index_assocs)
+          docs
+        end
+      return render_feed(docs)
+    end
+
     @docs = if article_contents.empty?
               GpArticle::Doc.none
             else
