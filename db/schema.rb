@@ -779,7 +779,7 @@ ActiveRecord::Schema.define(version: 20161212044704) do
     t.index ["terminal_pc_or_smart_phone"], name: "index_gp_article_docs_on_terminal_pc_or_smart_phone", using: :btree
   end
 
-  create_table "gp_article_docs_tag_tags", id: false, force: :cascade do |t|
+  create_table "gp_article_docs_tag_tags", force: :cascade do |t|
     t.integer "doc_id"
     t.integer "tag_id"
   end
@@ -832,7 +832,7 @@ ActiveRecord::Schema.define(version: 20161212044704) do
     t.index ["state"], name: "index_gp_calendar_events_on_state", using: :btree
   end
 
-  create_table "gp_calendar_events_gp_category_categories", id: false, force: :cascade do |t|
+  create_table "gp_calendar_events_gp_category_categories", force: :cascade do |t|
     t.integer "event_id"
     t.integer "category_id"
   end
@@ -1610,5 +1610,4 @@ ActiveRecord::Schema.define(version: 20161212044704) do
     t.datetime "updated_at"
   end
 
-  add_foreign_key "sys_object_privileges", "cms_concepts", column: "concept_id"
 end
