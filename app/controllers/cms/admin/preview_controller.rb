@@ -67,7 +67,7 @@ private
 
     public_uri = public_uri_for_replace
     admin_uri = admin_uri_for_replace
-    request_uri = request.fullpath.gsub(/index\.html/, '')
+    request_uri = request.fullpath.gsub(/\/(.*?)\.html\z/, '')
     preview_uri = "#{admin_uri}_preview/#{format('%04d', Page.site.id)}#{Page.preview_terminal}"
 
     doc = Page.mobile? ?
