@@ -169,21 +169,13 @@
 .contentGpCategoryCategory .classification li .group {
   display: none;
 }
-.content li span:nth-child(2):before,
-.contentGpArticleDocs li span:nth-child(2):before,
-.contentGpCategory li span:nth-child(2):before {
-  content: "（";
-}
+
 .content li span:nth-child(2),
 .contentGpArticleDocs li span:nth-child(2),
 .contentGpCategory li span:nth-child(2) {
   margin-right: 0.5em;
 }
-.content li span:nth-child(3):after,
-.contentGpArticleDocs li span:nth-child(3):after,
-.contentGpCategory li span:nth-child(3):after {
-  content: "）";
-}
+
 
 /* contentGpArticleDoc
 ----------------------------------------------- */

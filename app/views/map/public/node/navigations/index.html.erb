@@ -1,7 +1,7 @@
 <div class="contentMapNavigations">
   <div id="canvas" style="height: 350px; width: 100%;"></div>
 
-  <%= javascript_include_tag "http://maps.googleapis.com/maps/api/js?key=#{@content.site.google_map_api_key}&region=jp" %>
+  <%= javascript_include_tag "//maps.googleapis.com/maps/api/js?key=#{@content.site.google_map_api_key}&region=jp" %>
   <%= javascript_include_tag '/_common/modules/map/js/navigations.js' %>
   <%= javascript_tag do %>
 (function($) {

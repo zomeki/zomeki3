@@ -372,4 +372,22 @@ $(function() {
   </tr>
 </table>
 <%- end -%>
-
+<%- if @item.name == 'doc_list_pagination' -%>
+<table class="show">
+  <tr>
+    <th>一覧表示件数</th>
+    <td><%= text_field_tag 'item[extra_values][doc_list_number]', @item.extra_values[:doc_list_number], class: 'number' %></td>
+  </tr>
+  <tr>
+    <th>日付毎</th>
+    <td>
+      <%- @item.extra_options[:doc_list_style_options].each do |option| name = :doc_list_style -%>
+      <%= radio_button_tag "item[extra_values][#{name}]", option[1], (@item.extra_values[name] || 'disabled') == option[1] %><%= label_tag "item_extra_values_#{name}_#{option[1]}", option[0] %>
+      <%- end -%>
+  </tr>
+  <tr>
+    <th>静的ページ数</th>
+    <td><%= text_field_tag 'item[extra_values][doc_publish_more_pages]', @item.extra_values[:doc_publish_more_pages], class: 'number' %></td>
+  </tr>
+</table>
+<%- end -%>

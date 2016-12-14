@@ -33,6 +33,14 @@ class GpArticle::Content::Doc < Cms::Content
     public_docs.visible_in_list
   end
 
+  def published_first_day
+    public_docs.visible_in_list.order(display_published_at: :desc, published_at: :desc).first.try(:display_published_at) || Date.today
+  end
+
+  def published_last_day
+    public_docs.visible_in_list.order(display_published_at: :asc, published_at: :asc).first.try(:display_published_at) || Date.today
+  end
+
   def organization_content_group
     if organization_content_group_setting
       @organization_content_group ||= organization_content_group_setting.organization_content_group
@@ -243,8 +251,32 @@ class GpArticle::Content::Doc < Cms::Content
     setting_extra_value(:list_style, :wrapper_tag) || 'li'
   end
 
+  def doc_list_pagination
+    setting_value(:doc_list_pagination)
+  end
+
+  def monthly_pagination?
+    setting_value(:doc_list_pagination) == 'monthly'
+  end
+
+  def weekly_pagination?
+    setting_value(:doc_list_pagination) == 'weekly'
+  end
+
+  def simple_pagination?
+    setting_value(:doc_list_pagination) == 'simple'
+  end
+
   def doc_list_style
-    setting_value(:doc_list_style).to_s
+    setting_extra_value(:doc_list_pagination, :doc_list_style).to_s
+  end
+
+  def doc_list_number
+    setting_extra_value(:doc_list_pagination, :doc_list_number).to_i
+  end
+
+  def doc_publish_more_pages
+    setting_extra_value(:doc_list_pagination, :doc_publish_more_pages).to_i
   end
 
   def rel_docs_style

@@ -25,6 +25,13 @@ module Sys::Model::Rel::Task
     @save_tasks
   end
 
+  def set_queues
+    return if tasks.blank?
+    if state == 'recognized' || state == 'approved' || state == 'prepared'
+      tasks.each{|t| t.set_queue if t.publish_task? }
+    end
+  end
+
   private
 
   def validate_tasks
@@ -40,7 +47,7 @@ module Sys::Model::Rel::Task
       if publish_task.process_at && close_task.process_at && publish_task.process_at > close_task.process_at
         errors.add(:base, '公開開始日時は公開終了日時より前の日時を入力してください。')
         publish_task.errors.add(:process_at)
-      end 
+      end
     end
   end
 
@@ -50,4 +57,5 @@ module Sys::Model::Rel::Task
       task.mark_for_destruction if task.name.blank? || task.process_at.blank?
     end
   end
+
 end

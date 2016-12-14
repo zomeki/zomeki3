@@ -34,7 +34,7 @@ class Survey::Admin::FormsController < Cms::Controller::Admin::Base
       criteria[:editable] = true
     end
 
-    @items = Survey::Form.all_with_content_and_criteria(@content, criteria).reorder(created_at: :desc)
+    @items = Survey::Form.all_with_content_and_criteria(@content, criteria).reorder(:sort_no)
       .paginate(page: params[:page], per_page: 30)
       .preload(content: { public_node: :site })
 
@@ -112,6 +112,7 @@ class Survey::Admin::FormsController < Cms::Controller::Admin::Base
     if @item.state_approvable? && @item.approvers.include?(Core.user)
       @item.approve(Core.user) do
         @item.update_column(:state, 'approved')
+        @item.set_queues
         Sys::OperationLog.log(request, item: @item)
       end
     end

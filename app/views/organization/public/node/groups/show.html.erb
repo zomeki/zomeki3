@@ -1,4 +1,11 @@
 <div class="contentOrganization contentOrganizationGroup<%= @group.parent ? 'Unit' : 'Department' %>">
+
+  <%- if @content.feed_display? -%>
+  <ul class="feed">
+    <li><%= link_to 'RSS' , "index.rss" , :class => 'feedRss', :title => 'RSSフィードを取得' %></li>
+    <li><%= link_to 'Atom', "index.atom", :class => 'feedAtom', :title => 'Atomフィードを取得' %></li>
+  </ul>
+  <%- end -%>
   <%- unless @docs.empty? -%>
   <div class="articleHeader"><h2>新着情報</h2></div>
   <ul>

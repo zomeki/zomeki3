@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161206072217) do
+ActiveRecord::Schema.define(version: 20161212044704) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -386,6 +386,16 @@ ActiveRecord::Schema.define(version: 20161206072217) do
     t.boolean  "checked"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "cms_links", force: :cascade do |t|
+    t.integer  "content_id"
+    t.string   "linkable_type"
+    t.integer  "linkable_id"
+    t.string   "body"
+    t.string   "url"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
   end
 
   create_table "cms_map_markers", force: :cascade do |t|
@@ -769,7 +779,7 @@ ActiveRecord::Schema.define(version: 20161206072217) do
     t.index ["terminal_pc_or_smart_phone"], name: "index_gp_article_docs_on_terminal_pc_or_smart_phone", using: :btree
   end
 
-  create_table "gp_article_docs_tag_tags", id: false, force: :cascade do |t|
+  create_table "gp_article_docs_tag_tags", force: :cascade do |t|
     t.integer "doc_id"
     t.integer "tag_id"
   end
@@ -822,7 +832,7 @@ ActiveRecord::Schema.define(version: 20161206072217) do
     t.index ["state"], name: "index_gp_calendar_events_on_state", using: :btree
   end
 
-  create_table "gp_calendar_events_gp_category_categories", id: false, force: :cascade do |t|
+  create_table "gp_calendar_events_gp_category_categories", force: :cascade do |t|
     t.integer "event_id"
     t.integer "category_id"
   end
@@ -1600,5 +1610,4 @@ ActiveRecord::Schema.define(version: 20161206072217) do
     t.datetime "updated_at"
   end
 
-  add_foreign_key "sys_object_privileges", "cms_concepts", column: "concept_id"
 end

@@ -2,6 +2,7 @@ class GpCategory::Script::CategoryTypesController < Cms::Controller::Script::Pub
   def publish
     uri  = @node.public_uri
     path = @node.public_path
+
     publish_more(@node, :uri => uri, :path => path, :dependent => :more)
 
     category_types = @node.content.public_category_types
@@ -52,11 +53,16 @@ class GpCategory::Script::CategoryTypesController < Cms::Controller::Script::Pub
 
     publish_page(cat.category_type, :uri => "#{uri}index.rss", :path => "#{path}index.rss", :dependent => "#{cat_path}rss")
     publish_page(cat.category_type, :uri => "#{uri}index.atom", :path => "#{path}index.atom", :dependent => "#{cat_path}atom")
-    publish_more(cat.category_type, :uri => uri, :path => path, :dependent => "#{cat_path}more")
-    publish_more(cat.category_type, :uri => uri, :path => smart_phone_path, :dependent => "#{cat_path}more_smart_phone", :smart_phone => true)
+
+    if @node.content.category_style == 'categories_with_docs'
+      publish_page(cat.category_type, :uri => uri, :path => path, :dependent => "#{cat_path}more")
+      publish_page(cat.category_type, :uri => uri, :path => smart_phone_path, :dependent => "#{cat_path}more_smart_phone", :smart_phone => true)
+    else
+      publish_more(cat.category_type, :uri => uri, :path => path, :dependent => "#{cat_path}more")
+      publish_more(cat.category_type, :uri => uri, :path => smart_phone_path, :dependent => "#{cat_path}more_smart_phone", :smart_phone => true)
+    end
     publish_more(cat.category_type, :uri => uri, :path => path, :file => 'more', :dependent => "#{cat_path}more_docs")
     publish_more(cat.category_type, :uri => uri, :path => smart_phone_path, :file => 'more', :dependent => "#{cat_path}more_docs_smart_phone", :smart_phone => true)
-
     if feed_pieces = category_feed_pieces(cat)
       feed_pieces.each do |piece|
         rss = piece.public_feed_uri('rss')

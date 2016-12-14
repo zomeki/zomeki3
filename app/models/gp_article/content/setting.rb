@@ -59,10 +59,19 @@ class GpArticle::Content::Setting < Cms::ContentSetting
     name: "言語設定",
     options: [['日本語', 'ja'], ['英語', 'en']],
     default_value: 'ja'
-  set_config :doc_list_style, menu: :index,
+  set_config :doc_list_pagination, menu: :index,
     name: "#{GpArticle::Doc.model_name.human}一覧表示形式",
-    options: [['日付毎', 'by_date'], ['記事一覧', 'simple']],
-    default_value: 'by_date'
+    form_type: :radio_buttons,
+    options: [['週', 'weekly'], ['月', 'monthly'], ['一覧', 'simple']],
+    extra_options: {
+      doc_list_style_options: [['日付毎', 'by_date'], ['記事一覧', 'simple']]
+    },
+    default_value: 'simple',
+    default_extra_values: {
+      doc_list_style: 'by_date',
+      doc_list_number: 30,
+      doc_publish_more_pages: 10
+    }
   set_config :list_style, menu: :index,
     name: "#{GpArticle::Doc.model_name.human}タイトル表示形式",
     form_type: :text_area,
@@ -209,6 +218,10 @@ class GpArticle::Content::Setting < Cms::ContentSetting
       ex[:state] = params[:state]
     when 'serial_no_settings'
       ex[:title] = params[:title]
+    when 'doc_list_pagination'
+      ex[:doc_list_style]  = params[:doc_list_style]
+      ex[:doc_list_number] = params[:doc_list_number]
+      ex[:doc_publish_more_pages] = params[:doc_publish_more_pages]
     end
     super(ex)
   end
