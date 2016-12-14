@@ -496,7 +496,7 @@ class GpArticle::Doc < ApplicationRecord
       if (node = organization.public_node) &&
          (og = organization.groups.where(state: 'public', sys_group_code: creator.group.try(:code)).first)
         crumb = node.bread_crumbs.crumbs.first
-        og.ancestors.each {|a| crumb << [a.sys_group.name, "#{node.public_uri}#{a.name}/"] }
+        og.ancestors.each {|a| crumb << [a.sys_group.name, "#{node.public_uri}#{a.path_from_root}/"] }
         crumbs << crumb
       end
     end
