@@ -164,8 +164,19 @@ private
 
   def event_image(event)
     if doc = event.doc
-      return nil unless image_file = doc.image_files.detect{|f| f.name == doc.list_image } || doc.image_files.first
-      image_tag("#{doc.content.public_node.public_uri}#{doc.name}/file_contents/#{url_encode image_file.name}", alt: image_file.title, title: image_file.title)
+      image_file = doc.list_image.present? ? nil : doc.image_files.detect{|f| f.name == doc.list_image }
+
+      if image_file
+        image_tag("#{doc.public_uri(without_filename: true)}file_contents/#{url_encode image_file.name}", alt: image_file.alt)
+      else
+        unless (img_tags = Nokogiri::HTML.parse(doc.body).css('img[src^="file_contents/"]')).empty?
+          filename = File.basename(img_tags.first.attributes['src'].value)
+          alt = img_tags.first.attributes['alt'].value
+          image_tag("#{doc.public_uri(without_filename: true)}file_contents/#{url_encode filename}", alt: alt)
+        else
+          ''
+        end
+      end
     else
       return nil unless f = event.image_files.first
       image_tag("#{f.parent.content.public_node.public_uri}#{f.parent.name}/file_contents/#{url_encode f.name}", alt: f.title, title: f.title)
