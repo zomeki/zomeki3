@@ -78,7 +78,7 @@ private
       doc.css(%Q![#{attr}]!).each do |node|
         next if node[attr].blank?
         uri = Addressable::URI.parse(node[attr])
-        if uri.relative? && uri.path !~ %r|/_common/| && node[attr] !~ %r|\A#|
+        if uri.relative? && uri.path !~ %r|/_common/| && node[attr] !~ %r|\A#| && node[attr] !~ %r|\A\/\/|
           if node[attr] !~ %r|\A\/|
             node[attr] = "#{request_uri}#{node[attr]}"
           else
