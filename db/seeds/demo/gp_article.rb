@@ -34,12 +34,12 @@ map       = Map::Content::Marker.first
 ## ---------------------------------------------------------
 ## cms/pieces
 recent     = create_cms_piece c_top, oshirase, 'GpArticle::RecentTab', 'recent-docs-tab', '新着タブ'
-recent.in_settings = {list_count: 10, date_style: '%Y年%m月%d日', list_style: '@title_link@@publish_date@@group@'}
+recent.in_settings = {list_count: 10, date_style: '%Y年%m月%d日', list_style: '@title_link@（@publish_date@@group@）'}
 recent.save
 
 smartphone = create_cms_piece c_top, oshirase, 'GpArticle::RecentTab', 'smart-recent-docs-tab', '【スマートフォン】新着タブ'
 smartphone.in_settings = {list_count: 5, date_style: '%Y年%m月%d日',
-  list_style: '@title_link@@publish_date@@group@', more_link_body: '一覧へ'}
+  list_style: '@title_link@（@publish_date@@group@）', more_link_body: '一覧へ'}
 smartphone.save
 
 mobile     = create_cms_piece c_top, oshirase, 'GpArticle::Doc', 'mobile-recent-docs', '【携帯】新着情報'
@@ -80,7 +80,7 @@ p_info.save
   {id: "inquiry_setting", value: "enabled",
       extra_values: {state: 'visible',
       display_fields: ['address', 'tel', 'fax', 'email', 'note']}},
-  {id: "list_style", value: "@title_link@@publish_date@@group@",
+  {id: "list_style", value: "@title_link@（@publish_date@@group@）",
     extra_values: {wrapper_tag: "li"}},
   {id: "time_style", value: "%H時%M分"},
   {id: "map_relation", value: "enabled",
@@ -134,7 +134,7 @@ end
   {id: "approval_relation", value: "enabled",
     extra_values: {approval_content_id: approval.id}},
   {id: "calendar_relation", value: "disabled"},
-  {id: "list_style", value: "@title_link@@publish_date@@group@",
+  {id: "list_style", value: "@title_link@（@publish_date@@group@）",
     extra_values: {wrapper_tag: 'li'}},
 ].each do |conf|
   item = GpArticle::Content::Setting.config(shitsumon, conf[:id])

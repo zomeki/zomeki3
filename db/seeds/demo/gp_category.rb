@@ -51,11 +51,11 @@ create_cms_node c_content, category, 20, nil, l_category, 'GpCategory::CategoryT
 [
   {id: "date_style", value: '%Y年%m月%d日'},
   {id: "category_type_style", value: 'all_categories',
-    extra_values: {category_type_doc_style: '@title_link@@publish_date@@group@', doc_number: 10}},
+    extra_values: {category_type_doc_style: '@title_link@（@publish_date@@group@）', doc_number: 10}},
   {id: "category_style", value: 'categories_with_docs',
-    extra_values: {category_doc_style: '@title_link@@publish_date@@group@', category_docs_number: 10}},
+    extra_values: {category_doc_style: '@title_link@（@publish_date@@group@）', category_docs_number: 10}},
   {id: "doc_style", value: 'all_docs',
-    extra_values: {doc_doc_style: '@title_link@@publish_date@@group@', doc_docs_number: 10}}
+    extra_values: {doc_doc_style: '@title_link@（@publish_date@@group@）', doc_docs_number: 10}}
 ].each do |conf|
   item = GpCategory::Content::Setting.config(category, conf[:id])
   item.value = conf[:value]
