@@ -1,6 +1,12 @@
 module Sys::Model::TextExtraction
   extend ActiveSupport::Concern
 
+  EXTNAMES = [
+    '.txt', '.pdf',
+    '.doc', '.xls', '.ppt',
+    '.docx', '.xlsx', '.pptx',
+  ]
+
   MIME_TYPES = [
     'text/plain', 'application/pdf',
     'application/msword', 'application/vnd.ms-excel', 'application/vnd.ms-powerpoint',
@@ -17,7 +23,7 @@ module Sys::Model::TextExtraction
     return unless Zomeki.config.application['sys.file_text_extraction']
     return unless has_attribute?(:extracted_text)
     return unless respond_to?(:mime_type) && respond_to?(:path)
-    return unless mime_type.in?(MIME_TYPES) && File.exists?(path.to_s)
+    return unless File.extname(path.to_s).in?(EXTNAMES) && File.exists?(path.to_s) && mime_type.in?(MIME_TYPES)
 
     jar = Rails.root.join('vendor/tika/tika-app.jar')
     result = `java -jar #{jar} --text #{path}`
