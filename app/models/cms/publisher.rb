@@ -23,7 +23,19 @@ class Cms::Publisher < ApplicationRecord
       return if items.blank?
 
       pubs = items.map do |item|
-        self.new(site_id: site_id, publishable: item, state: 'queued', extra_flag: extra_flag)
+        priority = if item.is_a?(Cms::Node) &&
+          node_item = Cms::Node.find_by(id: item.id)
+          if node_item.present? && node_item.top_page?
+            10
+          else
+            30
+          end
+        elsif item.is_a?(GpCategory::Category)
+          20
+        else
+          30
+        end
+        self.new(site_id: site_id, publishable: item, state: 'queued', extra_flag: extra_flag, priority: priority)
       end
       self.import(pubs)
 
