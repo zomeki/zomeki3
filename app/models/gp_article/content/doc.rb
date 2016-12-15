@@ -3,6 +3,8 @@ class GpArticle::Content::Doc < Cms::Content
 
   has_one :public_node, -> { public_state.where(model: 'GpArticle::Doc').order(:id) },
     foreign_key: :content_id, class_name: 'Cms::Node'
+  has_one :doc_node, -> { where(model: 'GpArticle::Doc').order(:id) },
+    foreign_key: :content_id, class_name: 'Cms::Node'
   has_one :public_archives_node, -> { public_state.where(model: 'GpArticle::Archive').order(:id) },
     foreign_key: :content_id, class_name: 'Cms::Node'
 
