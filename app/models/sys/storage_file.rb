@@ -14,13 +14,15 @@ class Sys::StorageFile < ApplicationRecord
 
   def self.import(r = 'sites')
     root = Rails.root.join(r.to_s.sub(/\A\//, ''))
-    return unless root.directory?
 
+    find_or_initialize_by(path: root.to_s).update!(available: true) and return if root.file?
+
+    return unless root.directory?
     transaction do
       update_all(available: false)
       Dir.glob(root.join('**/*')) do |file|
         next unless File.file?(file)
-        find_or_create_by!(path: file).update!(available: true)
+        find_or_initialize_by(path: file).update!(available: true)
       end
       unavailable.destroy_all
     end
