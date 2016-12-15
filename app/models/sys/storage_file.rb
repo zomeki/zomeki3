@@ -13,7 +13,7 @@ class Sys::StorageFile < ApplicationRecord
   before_save :set_mime_type
 
   def self.import(r = 'sites')
-    root = Rails.root.join(r.to_s.sub(/\A\//, ''))
+    root = r.start_with?(Rails.root.to_s) ? Pathname.new(r) : Rails.root.join(r.sub(/\A\//, ''))
 
     find_or_initialize_by(path: root.to_s).update!(available: true) and return if root.file?
 
