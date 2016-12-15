@@ -7,7 +7,7 @@ def menu_link(auth, key, label, uri)
   link_to(label, uri, :class => cls.join(' '))
 end
 %>
-<div class="mainMenu">
+
 <%- if Core.concept -%>
 <%= menu_link :creator, :content, 'コンテンツ', cms_contents_path -%>
 <%= menu_link :creator, :data, 'データ', cms_data_texts_path -%>
@@ -21,5 +21,3 @@ end
 <%- if Core.user.root? -%>
 <%= menu_link :manager, :setting, 'システム', sys_maintenances_path -%>
 <%- end -%>
-</div>
-
