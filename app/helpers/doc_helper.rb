@@ -41,7 +41,7 @@ private
   end
 
   def doc_image_tag(doc)
-    image_file = doc.list_image.present? ? nil : doc.image_files.detect{|f| f.name == doc.list_image }
+    image_file = doc.list_image.present? ? doc.image_files.detect{|f| f.name == doc.list_image } : nil
 
     if image_file
       image_tag("#{doc.public_uri(without_filename: true)}file_contents/#{url_encode image_file.name}", alt: image_file.alt)
