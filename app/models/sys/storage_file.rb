@@ -28,6 +28,20 @@ class Sys::StorageFile < ApplicationRecord
     end
   end
 
+  def self.mv(src, dst)
+    transaction do
+      find_by(path: dst).try!(:destroy!)
+      find_by(path: src).update!(path: dst)
+    end
+  end
+
+  def self.cp(src, dst)
+    transaction do
+      find_by(path: dst).try!(:destroy!)
+      create!(path: dst)
+    end
+  end
+
   private
 
   def file_existence
