@@ -21,7 +21,7 @@ class Sys::StorageFile < ApplicationRecord
     transaction do
       update_all(available: false)
       Dir.glob(root.join('**/*')) do |file|
-        next unless File.file?(file)
+        next unless ::File.file?(file)
         find_or_initialize_by(path: file).update!(available: true)
       end
       unavailable.destroy_all
@@ -43,10 +43,10 @@ class Sys::StorageFile < ApplicationRecord
   end
 
   def self.rm_rf(path)
-    unless File.exists?(path.to_s)
+    unless ::File.exists?(path.to_s)
       where(arel_table[:path].eq(path).or(arel_table[:path].matches("#{path.sub(/\/\z/, '')}/%"))).destroy_all
     else
-      if File.directory?(path) || path.end_with?('/')
+      if ::File.directory?(path) || path.end_with?('/')
         where(arel_table[:path].matches("#{path.sub(/\/\z/, '')}/%")).destroy_all
       else
         where(path: path).destroy
@@ -57,7 +57,7 @@ class Sys::StorageFile < ApplicationRecord
   private
 
   def file_existence
-    errors.add(:base, "File does not exist: #{path}") unless File.exists?(path.to_s)
+    errors.add(:base, "File does not exist: #{path}") unless ::File.exists?(path.to_s)
   end
 
   def set_mime_type
