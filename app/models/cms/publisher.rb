@@ -35,7 +35,7 @@ class Cms::Publisher < ApplicationRecord
       return if items.blank?
       pubs = items.map do |item|
         pub = self.new(site_id: site_id, publishable: item, state: 'queued', extra_flag: extra_flag)
-        pub.run_callbacks(:create) { false }
+        pub.run_callbacks(:create)
         pub
       end
       self.import(pubs)
