@@ -100,6 +100,7 @@ module Storage
   def self.rm_rf(path)
     ::FileUtils.rm_rf(path)
     #::FileUtils.remove_entry_secure(path, true) 
+    Sys::StorageFile.rm_rf(path)
   end
   
   def self.touch(path)

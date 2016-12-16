@@ -42,6 +42,18 @@ class Sys::StorageFile < ApplicationRecord
     end
   end
 
+  def self.rm_rf(path)
+    unless File.exists?(path.to_s)
+      where(arel_table[:path].eq(path).or(arel_table[:path].matches("#{path.sub(/\/\z/, '')}/%"))).destroy_all
+    else
+      if File.directory?(path) || path.end_with?('/')
+        where(arel_table[:path].matches("#{path.sub(/\/\z/, '')}/%")).destroy_all
+      else
+        where(path: path).destroy
+      end
+    end
+  end
+
   private
 
   def file_existence
