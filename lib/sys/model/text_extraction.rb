@@ -2,6 +2,7 @@ module Sys::Model::TextExtraction
   extend ActiveSupport::Concern
 
   EXTNAMES = [
+    '.dat',
     '.txt', '.pdf',
     '.doc', '.xls', '.ppt',
     '.docx', '.xlsx', '.pptx',
