@@ -151,6 +151,8 @@ ZomekiCMS::Application.routes.draw do
   scope "_public/#{mod}", :module => mod, :as => "" do
     get "layouts/:id/:file.:format" => "public/layouts#index",
       :as => nil
+    get "node_preview/"  => "public/node/preview#index",
+      :as => nil
     get "node_pages/"    => "public/node/pages#index",
       :as => nil
     get "node_sitemaps/" => "public/node/sitemaps#index",

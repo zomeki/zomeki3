@@ -123,7 +123,10 @@ class Core
     if path =~ /\/$/
       path += 'index.html'
     end
-
+    ## layout preview
+    if path =~ /^\/\*\.html(|\.r)$/
+      return @@internal_uri = '/_public/cms/node_preview/'
+    end
     node     = nil
     rest     = ''
     paths    = path.gsub(/\/+/, '/').split('/')

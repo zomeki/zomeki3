@@ -13,7 +13,18 @@ class Cms::Admin::PiecesController < Cms::Controller::Admin::Base
   end
 
   def show
-    exit
+    if params[:do] == 'preview'
+      preview
+    else
+      exit
+    end
+  end
+
+  def preview
+    @item = Cms::Piece.find(params[:id])
+    return error_auth unless @item.readable?
+
+    render :preview
   end
 
   def new

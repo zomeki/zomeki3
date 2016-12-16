@@ -6,8 +6,9 @@
     <th style="width: 25%;"><%= Cms::Piece.new.locale(:model) %></th>
     <th style="width: 120px; text-align: center;">更新日時</th>
     <th style="width: 60px; text-align: center;">状態</th>
+    <th style="width: 80px; text-align: center;">プレビュー</th>
   </tr>
-  
+
   <% for item in @items %>
   <tr class="<%= cycle '', 'cycle' %>">
     <td style="text-align: center;"><%= link_to :show, item.admin_uri %></td>
@@ -16,6 +17,7 @@
     <td><%= item.module_name %></td>
     <td style="text-align: center;"><%= item.updated_at.strftime('%Y-%m-%d %H:%M')%></td>
     <td style="text-align: center;"><%= item.status.name %></td>
+    <td style="text-align: center;"><%= link_to '表示', cms_piece_path(item.id, :concept => item.concept_id, :do => :preview) %></td>
   </tr>
   <% end %>
 
