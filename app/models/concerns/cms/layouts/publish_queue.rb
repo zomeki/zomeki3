@@ -24,7 +24,7 @@ module Cms::Layouts::PublishQueue
   end
 
   def enqueue_publisher_for_node
-    nodes = Cms::Node.public_state.where(layout_id: id).select(:id)
+    nodes = Cms::Node.public_state.where(layout_id: id).select(:id, :parent_id, :name)
     Cms::Publisher.register(site_id, nodes)
   end
 

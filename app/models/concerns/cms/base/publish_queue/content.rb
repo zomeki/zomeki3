@@ -7,7 +7,7 @@ module Cms::Base::PublishQueue::Content
   end
 
   def enqueue_publisher
-    Cms::Publisher.register(content.site_id, content.public_nodes.select(:id))
+    Cms::Publisher.register(content.site_id, content.public_nodes.select(:id, :parent_id, :name))
     content.public_pieces.each do |piece|
       piece.enqueue_publisher
     end

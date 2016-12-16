@@ -55,6 +55,7 @@ cms:
   #talk_opts: "-s 48000 -p 240 -r 1.1" # HQ
   talk_opts: "-s 40000 -p 200 -a 0.47 -r 1.1" # LQ
   talk_strlen: 100
+  talk_text_limit: 102400
   talk_thread_num: 2
 
 gp_article:
