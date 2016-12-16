@@ -26,7 +26,7 @@ module GpCalendar::Events::PublishQueue
     min_date = changed_dates.min.beginning_of_month
     max_date = changed_dates.max.beginning_of_month
 
-    Cms::Publisher.register(content.site_id, content.public_nodes.select(:id), 
+    Cms::Publisher.register(content.site_id, content.public_nodes.select(:id, :parent_id, :name),
       target_min_date: min_date.strftime('%Y-%m-%d'),
       target_max_date: max_date.strftime('%Y-%m-%d')
     )
