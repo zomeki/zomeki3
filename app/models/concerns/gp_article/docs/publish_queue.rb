@@ -35,7 +35,7 @@ module GpArticle::Docs::PublishQueue
   end
 
   def enqueue_publisher_for_node
-    Cms::Publisher.register(content.site_id, content.public_nodes.select(:id),
+    Cms::Publisher.register(content.site_id, content.public_nodes.select(:id, :parent_id, :name),
         target_date: display_published_at || published_at
       )
   end
@@ -86,7 +86,7 @@ module GpArticle::Docs::PublishQueue
       min_date = changed_dates.min.beginning_of_month
       max_date = changed_dates.max.beginning_of_month
 
-      Cms::Publisher.register(content.site_id, calendar_content.public_nodes.select(:id),
+      Cms::Publisher.register(content.site_id, calendar_content.public_nodes.select(:id, :parent_id, :name),
         target_min_date: min_date.strftime('%Y-%m-%d'),
         target_max_date: max_date.strftime('%Y-%m-%d')
       )
@@ -108,7 +108,7 @@ module GpArticle::Docs::PublishQueue
     changed_markers.uniq!
 
     if changed_markers.present?
-      Cms::Publisher.register(content.site_id, map_content.public_nodes.select(:id))
+      Cms::Publisher.register(content.site_id, map_content.public_nodes.select(:id, :parent_id, :name))
       map_content.public_pieces.each do |piece|
         piece.enqueue_publisher
       end

@@ -12,8 +12,9 @@ class Cms::Lib::Navi::Jtalk
     talk_dic    = Zomeki.config.application['cms.talk_dic']
     talk_opts   = Zomeki.config.application['cms.talk_opts']
     talk_strlen = Zomeki.config.application['cms.talk_strlen'].to_i
+    talk_text_limit = Zomeki.config.application['cms.talk_text_limit'].to_i
     talk_thread_num = Zomeki.config.application['cms.talk_thread_num'].to_i
-    talk_bytelimit = 8 * 1024
+
 
     text    = nil
     options = {}
@@ -38,8 +39,8 @@ class Cms::Lib::Navi::Jtalk
     site_id = options[:site_id] rescue nil
 
     #
-    text = text.mb_chars.limit(talk_bytelimit).to_s if talk_bytelimit < text.bytesize
     text = self.class.make_text(text, site_id)
+    text = text.slice(1..talk_text_limit) if talk_text_limit < text.length
     return false if text.blank?
 
     text.split(/[ 。]/).each do |str|
