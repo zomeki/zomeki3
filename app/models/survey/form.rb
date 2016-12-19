@@ -160,7 +160,6 @@ class Survey::Form < ApplicationRecord
     path = "_preview/#{format('%04d', site.id)}#{mobile ? 'm' : ''}#{public_uri(with_closed_preview: true)}#{params.present? ? "?#{params}" : ''}"
 
     d = Cms::SiteSetting::AdminProtocol.core_domain site, :freeze_protocol => true
-    dump "#{d}#{path}"
     "#{d}#{path}"
   end
 

@@ -17,7 +17,7 @@
     <td><%= item.module_name %></td>
     <td style="text-align: center;"><%= item.updated_at.strftime('%Y-%m-%d %H:%M')%></td>
     <td style="text-align: center;"><%= item.status.name %></td>
-    <td style="text-align: center;"><%= link_to '表示', cms_piece_path(item.id, :concept => item.concept_id, :do => :preview) %></td>
+    <td style="text-align: center;"><%= link_to '表示', cms_piece_path(item.id, concept: item.concept_id, do: :preview) %></td>
   </tr>
   <% end %>
 

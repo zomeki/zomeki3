@@ -13,8 +13,8 @@
     <td><%= layout.concept.try(:name) %></td>
     <td><%= layout.name %></td>
     <td><% query = "layout_id=#{layout.id}&piece_id=#{@item.id}" %>
-      <%= link_to h(layout.title), "#{Core.site.root_node.preview_uri}*.html?#{query}", :target => "_blank" %>
-      （<%= link_to "携帯", "#{Core.site.root_node.preview_uri(:mobile => true)}*.html?#{query}", :target => "_blank" %>）</td>
+      <%= link_to h(layout.title), "#{Core.site.root_node.preview_uri}*.html?#{query}", target: "_blank" %>
+      （<%= link_to "携帯", "#{Core.site.root_node.preview_uri(mobile: true)}*.html?#{query}", target: "_blank" %>）</td>
   </tr>
   <% end %>
 
@@ -23,5 +23,5 @@
 <p class="form">基本情報</p>
 
 <table class="show">
-  <%= piece_base_view @item, :container => :tr %>
+  <%= piece_base_view @item, container: :tr %>
 </table>

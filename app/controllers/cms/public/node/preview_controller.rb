@@ -13,7 +13,6 @@ class Cms::Public::Node::PreviewController < Cms::Controller::Public::Base
     @item = Page.site.root_node
     @item.concept_id  = layout.concept_id
     Page.current_node = @item
-    Page.current_node = @item
     Page.title        = @item.title
     Page.layout       = layout
 
