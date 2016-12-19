@@ -119,8 +119,9 @@ class Cms::Controller::Script::Publication < ApplicationController
       file  = params[:file] || 'index'
       first = params[:first] || 1
       start_at = params[:start_at] || Date.today
+      period = params[:period] || 'simple'
       while published < limit do
-        page =  case params[:period]
+        page =  case period
         when 'monthly'
           date = (start_at - ( p - 1 ).month)
           (p == 1 ? "" : (start_at - ( p - 1 ).month).beginning_of_month.strftime('.%Y%m'))
@@ -137,7 +138,7 @@ class Cms::Controller::Script::Publication < ApplicationController
         rs = publish_page(item, uri: uri, site: params[:site], path: path, smart_phone_path: smart_phone_path,
                                 dependent: dep, smart_phone: params[:smart_phone])
         unless rs
-          if params[:period] == 'simple'
+          if period == 'simple'
             stopp = p
             break
           else
@@ -162,7 +163,7 @@ class Cms::Controller::Script::Publication < ApplicationController
       page_num   = ".p#{p}"
       month_date = (start_at - ( p - 1 ).month).beginning_of_month.strftime('.%Y%m')
       week_date  = (start_at - ( p - 1 ).week).beginning_of_week.strftime('.%Y%m%d')
-      case params[:period]
+      case period
       when 'monthly'
         deps << month_date if p >= del_first
         deps << week_date
