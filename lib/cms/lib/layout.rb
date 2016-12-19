@@ -41,7 +41,7 @@ module Cms::Lib::Layout
       rel.select("*, #{Cms::DataFile.connection.quote(name)}::text as name_with_option")
         .order(concepts_order(concepts)).limit(1)
     end
-    dump relations
+
     if Core.mode == 'preview' && params[:piece_id]
       item = Cms::Piece.where(id: params[:piece_id])
         .select("*, name as name_with_option").limit(1)
