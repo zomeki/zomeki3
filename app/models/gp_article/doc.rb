@@ -341,11 +341,13 @@ class GpArticle::Doc < ApplicationRecord
       end
   end
 
-  def public_uri(without_filename: false)
+  def public_uri(without_filename: false, with_closed_preview: false)
     uri =
       if organization_content_related? && organization_group
         "#{organization_group.public_uri}docs/#{name}/"
-      elsif content.public_node
+      elsif with_closed_preview && content.doc_node
+        "#{content.doc_node.public_uri}#{name}/"
+      elsif !with_closed_preview && content.public_node
         "#{content.public_node.public_uri}#{name}/"
       end
     return '' unless uri
@@ -364,7 +366,7 @@ class GpArticle::Doc < ApplicationRecord
   end
 
   def preview_uri(site: nil, mobile: false, smart_phone: false, without_filename: false, **params)
-    base_uri = public_uri(without_filename: true)
+    base_uri = public_uri(without_filename: true, with_closed_preview: true)
     return nil if base_uri.blank?
 
     site ||= ::Page.site

@@ -61,9 +61,9 @@
 
     <div class="submit">
       <%- if @form_answer.form.confirmation? -%>
-      <%= submit_tag '確認画面へ' %>
+      <%= submit_tag '確認画面へ', disabled: Core.mode == 'preview' ? true : false %>
       <%- else -%>
-      <%= submit_tag '送信', data: { confirm: '送信してもよろしいですか？', disable_with: '送信中...' } %>
+      <%= submit_tag '送信', data: { confirm: '送信してもよろしいですか？', disable_with: '送信中...' }, disabled: Core.mode == 'preview' ? true : false %>
       <%- end -%>
     </div>
 
