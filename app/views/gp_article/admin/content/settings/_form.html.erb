@@ -391,3 +391,14 @@ $(function() {
   </tr>
 </table>
 <%- end -%>
+<%- if @item.name == 'pagination_label' -%>
+<table class="show">
+  <tr>
+    <th></th>
+    <td>
+      <div style="margin: 5px; line-height: 1.2;">次へ</div>
+      <%= text_field_tag 'item[extra_values][next_label]', @item.extra_values[:next_label], style: 'width: 400px;' %>
+    </td>
+  </tr>
+</table>
+<%- end -%>

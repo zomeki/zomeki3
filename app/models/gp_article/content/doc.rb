@@ -94,6 +94,14 @@ class GpArticle::Content::Doc < Cms::Content
     setting_value(:doc_list_lang).to_sym
   end
 
+  def prev_label
+    setting_value(:pagination_label).to_s
+  end
+
+  def next_label
+    setting_extra_value(:pagination_label, :next_label).to_s
+  end
+
   def list_style
     setting_value(:list_style).to_s
   end

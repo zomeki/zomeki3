@@ -56,6 +56,8 @@ module GpArticle::GpArticleHelper
       previous_label = I18n.t("will_paginate.mobile_previous_label", {locale: lang}).html_safe
       next_label     = I18n.t("will_paginate.mobile_next_label", {locale: lang}).html_safe
     end
+    previous_label = options[:prev_label] if options[:prev_label].present?
+    next_label     = options[:next_label] if options[:next_label].present?
 
 
     links = content_tag(:div, class: 'pagination') do
