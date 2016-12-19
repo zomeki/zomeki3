@@ -90,11 +90,6 @@ $(document).ready(function () {
     <table class="show">
       <tr>
         <th><%= f.label :body %></th>
-        <th style="text-align: right;">
-          <span style="margin-right: 10px;">
-            <%= f.select :lang, options_for_select(@content.lang_options, @item.lang) %>
-          </span>
-        </th>
       </tr>
     </table>
 
@@ -449,6 +444,10 @@ $(document).ready(function () {
           <%= f.check_box :terminal_pc_or_smart_phone %> <%= f.label :terminal_pc_or_smart_phone %>
           <%= f.check_box :terminal_mobile %> <%= f.label :terminal_mobile %>
         </td>
+      </tr>
+      <tr>
+        <th><%= f.label :lang %></th>
+        <td><%= f.select :lang, options_for_select(@content.lang_options, @item.lang) %></td>
       </tr>
     </table>
 
