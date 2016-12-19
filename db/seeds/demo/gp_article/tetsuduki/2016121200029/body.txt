@@ -1,0 +1,109 @@
+<p>妊婦一般健康診査は、赤ちゃんが順調に育っているか、お母さんの身体に負担がかかっていないかどうかを確認する大切な機会です。医療機関で定期的に健康診査をうけましょう。<br />
+妊娠届出時にお渡しする母子健康手帳別冊に妊婦一般健康診査受診票が14枚ついています。赤色・水色・ピンク色の3種類あります。色別に受診週数の目安や検査項目が異なります。（下記参照）<br />
+公費負担される検査項目は下記のとおりです。下記以外の検査等を受ける場合は自己負担金が必要となりますので、医療機関にご確認ください。</p>
+
+<table>
+	<caption>妊婦一般健康診査</caption>
+	<tbody>
+		<tr>
+			<th scope="col" style="width: 10%">回数</th>
+			<th scope="col" style="width: 14%">受診週数目安</th>
+			<th scope="col" style="width: 12%">受診票の色</th>
+			<th scope="col">検査項目</th>
+		</tr>
+		<tr>
+			<td style="text-align: center;">第1回</td>
+			<td style="text-align: center;">妊娠8週頃</td>
+			<td style="text-align: center;">赤色</td>
+			<td>問診、診察、尿検査、超音波検査、貧血検査、血糖検査、血液型（ABO・Rh）、HBs抗原検査（B型肝炎ウイルス）、HCV抗体検査（C型肝炎ウイルス）、HIV抗体価検査（エイズ）、梅毒脂質抗原使用検査、梅毒血清反応検査、赤血球不規則抗体検査、風しんウイルス抗体検査</td>
+		</tr>
+		<tr>
+			<td style="text-align: center;">第2回</td>
+			<td style="text-align: center;">妊娠12週頃</td>
+			<td style="text-align: center;">水色</td>
+			<td>問診、診察、尿検査</td>
+		</tr>
+		<tr>
+			<td style="text-align: center;">第3回</td>
+			<td style="text-align: center;">妊娠16週頃</td>
+			<td style="text-align: center;">水色</td>
+			<td>問診、診察、尿検査</td>
+		</tr>
+		<tr>
+			<td style="text-align: center;">第4回</td>
+			<td style="text-align: center;">妊娠20週頃</td>
+			<td style="text-align: center;">ピンク色</td>
+			<td>問診、診察、尿検査、超音波検査、クラミジア検査</td>
+		</tr>
+		<tr>
+			<td style="text-align: center;">第5回</td>
+			<td style="text-align: center;">妊娠24週頃</td>
+			<td style="text-align: center;">水色</td>
+			<td>問診、診察、尿検査</td>
+		</tr>
+		<tr>
+			<td style="text-align: center;">第6回</td>
+			<td style="text-align: center;">妊娠26週頃</td>
+			<td style="text-align: center;">ピンク色</td>
+			<td>問診、診察、尿検査、貧血検査、血糖検査、HTLV-1抗体検査</td>
+		</tr>
+		<tr>
+			<td style="text-align: center;">第7回</td>
+			<td style="text-align: center;">妊娠28週頃</td>
+			<td style="text-align: center;">水色</td>
+			<td>問診、診察、尿検査</td>
+		</tr>
+		<tr>
+			<td style="text-align: center;">第8回</td>
+			<td style="text-align: center;">妊娠30週頃</td>
+			<td style="text-align: center;">ピンク色</td>
+			<td>問診、診察、尿検査、超音波検査</td>
+		</tr>
+		<tr>
+			<td style="text-align: center;">第9回</td>
+			<td style="text-align: center;">妊娠32週頃</td>
+			<td style="text-align: center;">水色</td>
+			<td>問診、診察、尿検査</td>
+		</tr>
+		<tr>
+			<td style="text-align: center;">第10回</td>
+			<td style="text-align: center;">妊娠34週頃</td>
+			<td style="text-align: center;">水色</td>
+			<td>問診、診察、尿検査</td>
+		</tr>
+		<tr>
+			<td style="text-align: center;">第11回</td>
+			<td style="text-align: center;">妊娠36週頃</td>
+			<td style="text-align: center;">ピンク色</td>
+			<td>問診、診察、尿検査、貧血検査、B群溶血性レンサ球菌、超音波検査</td>
+		</tr>
+		<tr>
+			<td style="text-align: center;">第12回</td>
+			<td style="text-align: center;">妊娠37週頃</td>
+			<td style="text-align: center;">水色</td>
+			<td>問診、診察、尿検査</td>
+		</tr>
+		<tr>
+			<td style="text-align: center;">第13回</td>
+			<td style="text-align: center;">妊娠38週頃</td>
+			<td style="text-align: center;">水色</td>
+			<td>問診、診察、尿検査</td>
+		</tr>
+		<tr>
+			<td style="text-align: center;">第14回</td>
+			<td style="text-align: center;">妊娠39週頃</td>
+			<td style="text-align: center;">水色</td>
+			<td>問診、診察、尿検査</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>問診、診察には、血圧測定、体重測定、浮腫の確認、保健指導、食事・栄養指導等が含まれます。</p>
+
+<h2>注記：</h2>
+
+<ul>
+	<li>ただし、ぞめき市に住民票のない方は、妊婦一般健康診査受診票を使用できません。市外に転出した場合は、転入先の市町村で受診票の交換をしてください。</li>
+	<li>ぞめき市に転入して来られた妊婦の方は、保健センターまたは市役所1階母子・乳幼児コーナーへお越しください。妊婦一般健康診査受診票と乳児一般健康診査受診票（1か月児健康診査用）を交付します。</li>
+	<li>ぞめき市に住民登録をしている方で、里帰り出産等のため、県外の医療機関で妊婦健診をされる場合は、健診費用が払い戻しされる償還払い制度があります。</li>
+</ul>

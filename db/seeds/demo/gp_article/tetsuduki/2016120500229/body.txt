@@ -1,0 +1,11 @@
+<h2>住民基本台帳ネットワークシステムとは</h2>
+
+<p>住民基本台帳ネットワークシステムは、居住関係を公証する住民基本台帳のネットワーク化を図り、４情報（氏名、生年月日、性別、住所）と住民票コード等により、全国共通の本人確認を可能とするシステムです。</p>
+
+<h2>住民基本台帳とは</h2>
+
+<p>住民基本台帳とは、住民の居住関係の公証、選挙人名簿の登録その他の住民に関する事務の処理の基礎となる制度です。</p>
+
+<p>選挙人名簿の作成、国民健康保険や国民年金の被保険者としての資格の管理、学齢簿の作成など、市町村が行う各種行政サービスの基礎として、行政の合理化や住民の利便の増進に役立てています。</p>
+
+<p>詳しくは<a href="http://www.soumu.go.jp/main_sosiki/jichi_gyousei/c-gyousei/daityo/index.html" target="_blank">総務省-住基ネット<img alt="新しいウィンドウで外部サイトを開きます" class="external" src="/_themes/base/images/ic-blank.gif" style="height:15px; width:15px" /></a>、<a href="https://www.j-lis.go.jp/juki-net/cms_14.html" target="_blank">J-LIS 地方公共団体情報システム機構<img alt="新しいウィンドウで外部サイトを開きます" class="external" src="/_themes/base/images/ic-blank.gif" style="height:15px; width:15px" /></a>をご覧下さい。</p>

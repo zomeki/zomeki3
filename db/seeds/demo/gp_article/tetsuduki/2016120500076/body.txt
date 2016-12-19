@@ -1,0 +1,116 @@
+<h2>現在お持ちの外国人登録証明書の有効期限一覧表</h2>
+
+<h3>在留カードとみなされる方</h3>
+
+<p>◎在留資格が<span style="background-color:yellow"><ins>特定活動</ins></span>の方（特定研究活動等により在留期間が「5年」の者に限る）</p>
+
+<table border="1">
+	<thead>
+		<tr>
+			<th style="text-align: center">対象者（平成24年7月9日時点の年齢です）</th>
+			<th style="text-align: center">みなされる期間</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>16歳未満の方</td>
+			<td colspan="2">
+			<ol>
+				<li>平成27年7月8日</li>
+				<li>在留期間の満了日</li>
+				<li>16歳の誕生日</li>
+			</ol>
+			1か2か3のいずれか早い日まで</td>
+		</tr>
+		<tr>
+			<td>16歳以上の者</td>
+			<td colspan="2">
+			<ol>
+				<li>平成27年7月8日</li>
+				<li>在留期間の満了日</li>
+			</ol>
+			1か2のいずれか早い日まで</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>◎永住者の方</p>
+
+<table border="1">
+	<thead>
+		<tr>
+			<th style="text-align: center">対象者（平成24年7月9日時点の年齢です）</th>
+			<th style="text-align: center">みなされる期間</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>16歳未満の者</td>
+			<td>
+			<ol>
+				<li>平成27年7月8日</li>
+				<li>16歳の誕生日</li>
+			</ol>
+			1か2のいずれか早い日まで</td>
+		</tr>
+		<tr>
+			<td>16歳以上の者</td>
+			<td>平成27年7月8日まで</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>◎それ以外の在留資格の方</p>
+
+<table border="1">
+	<thead>
+		<tr>
+			<th style="text-align: center">対象者（平成24年7月9日時点の年齢です）</th>
+			<th style="text-align: center">みなされる期間</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>16歳未満の者</td>
+			<td>
+			<ol>
+				<li>在留期間の満了日</li>
+				<li>16歳の誕生日</li>
+			</ol>
+			1か2のいずれか早い日まで</td>
+		</tr>
+		<tr>
+			<td>16歳以上の者</td>
+			<td>在留期間の満了日まで</td>
+		</tr>
+	</tbody>
+</table>
+
+<h3>特別永住者証明書とみなされる方</h3>
+
+<p>◎特別永住者の方</p>
+
+<table border="1">
+	<thead>
+		<tr>
+			<th colspan="3" style="text-align: center">対象者（平成24年7月9日時点の年齢です）</th>
+			<th colspan="3" style="text-align: center">みなされる期間</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td colspan="3">16歳未満の者</td>
+			<td>16歳の誕生日まで</td>
+		</tr>
+		<tr>
+			<td rowspan="2">16歳以上の者</td>
+			<td rowspan="2">外国人登録証明書に書かれている次回確認基準日</td>
+			<td>平成27年7月8日以前の方</td>
+			<td>平成27年７月8日まで</td>
+		</tr>
+		<tr>
+			<td>平成27年7月9日以降の方</td>
+			<td>外国人登録証明書に書かれている次回確認基準日まで</td>
+		</tr>
+	</tbody>
+</table>

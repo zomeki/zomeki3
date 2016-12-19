@@ -1,0 +1,248 @@
+<p>平成28年度　特定健診・千円ドック・短期人間ドック・脳ドックについてのご案内です。</p>
+
+<p>40歳以上の方は年に1回、特定健診・千円ドック・短期人間ドック・脳ドック（一部医療機関を除く）のいずれか1つを受診しましょう。</p>
+
+<p>（20歳以上39歳以下の方は年に1回、短期人間ドックか脳ドックのいずれか1つを受診できます。）</p>
+
+<h2>■特定健診（特定健康診査）</h2>
+
+<p>生活習慣病予防のための健診です。</p>
+
+<p>ぞめき市国民健康保険加入の方は、<span style="color:#CC0000">無料で受診</span>できます。</p>
+
+<p>通院中の方も対象になります。</p>
+
+<table>
+	<caption>特定健診</caption>
+	<tbody>
+		<tr>
+			<th class="center top" scope="col" style="width: 18.2%">対象者</th>
+			<td>受診当日に国民健康保険に加入しており、今年度40歳から74歳になる方<br />
+			同年度内に千円ドック・短期人間ドック・脳ドック（一部医療機関を除く）を受診していない方</td>
+		</tr>
+		<tr>
+			<th class="center top" scope="col" style="width: 18.2%">実施医療機関</th>
+			<td>ぞめき市内の特定健診実施医療機関<br />
+			<a class="iconFile iconPdf" href="#">医療機関一覧[PDF：149KB]</a></td>
+		</tr>
+		<tr>
+			<th class="center top" scope="col" style="width: 18.2%">検査内容</th>
+			<td>身体計測、血圧、尿検査（蛋白・糖）、<br />
+			血液検査（血糖、脂質、肝機能、腎機能）</td>
+		</tr>
+		<tr>
+			<th class="center top" scope="col" style="width: 18.2%">料金</th>
+			<td><span style="color:#CC0000">無料</span></td>
+		</tr>
+		<tr>
+			<th class="center top" scope="col" style="width: 18.2%">がん検診との組み合わせ</th>
+			<td>希望により、各種がん検診と組み合わせて受診できます。<br />
+			（ぞめき市国民健康保険加入の方は料金<span style="color:#CC0000">無料</span>）</td>
+		</tr>
+		<tr>
+			<th class="center top" scope="col" style="width: 18.2%">受診方法</th>
+			<td>対象の方には、毎年4月末から5月頃、「特定健診受診券」を送付します。<br />
+			医療機関へ直接予約し、受診してください。<br />
+			受診の際には、「特定健診受診券｣と「質問票」、「国保の保険証」をご持参ください。</td>
+		</tr>
+		<tr>
+			<th class="center top" scope="col" style="width: 18.2%">受診時期</th>
+			<td>「特定健診受診券」がお手元に届いてから、平成29年3月末までの間</td>
+		</tr>
+		<tr>
+			<th class="center top" scope="col" style="width: 18.2%">その他</th>
+			<td>特定健診を受けない方へ、検査結果の情報提供についてのお知らせ 職場の健診を受ける方、医療機関で定期的に血液検査等を受ける方で特定健診の項目を満たす場合、結果を情報提供していただくことで､受診率にカウントできます。ご協力いただける場合、情報提供の所定の用紙がありますので保険年金課までご連絡ください。</td>
+		</tr>
+		<tr>
+			<th class="center top" scope="col" style="width: 18.2%">問い合わせ先</th>
+			<td>保険年金課　電話0000-01-0000</td>
+		</tr>
+	</tbody>
+</table>
+
+<h2>■千円ドック</h2>
+
+<p>特定健診より<span style="color:#CC0000">詳しい検査とがん検診</span>が身近な公共施設で受けられます。</p>
+
+<p>広報5月号 市民会館 広報12月号 1,000円（保険税の滞納のある方は、料金が異なります）</p>
+
+<table>
+	<caption>千円ドック</caption>
+	<tbody>
+		<tr>
+			<th style="width: 18.2%">対象者</th>
+			<td colspan="3" style="width: 0px;">受診当日に国民健康保険に加入しており、今年度40歳から74歳になる方 同年度内に特定健診・短期人間ドック・脳ドックを受診していない方</td>
+		</tr>
+		<tr>
+			<th rowspan="12" style="width: 18.2%">日程・会場・周知</th>
+			<td style="text-align: center;">日程</td>
+			<td style="text-align: center;">会場</td>
+			<td style="text-align: center;">周知時期</td>
+		</tr>
+		<tr>
+			<td style="text-align: center;">平成28年7月2日（土曜）</td>
+			<td style="text-align: center;">市民会館</td>
+			<td rowspan="3">
+			<p style="text-align: center;">広報5月号</p>
+			</td>
+		</tr>
+		<tr>
+			<td style="text-align: center;">平成28年7月3日（日曜）</td>
+			<td style="text-align: center;">市民会館</td>
+		</tr>
+		<tr>
+			<td style="text-align: center;">平成28年7月10日（日曜）</td>
+			<td style="text-align: center;">公民館</td>
+		</tr>
+		<tr>
+			<td style="text-align: center;">平成28年11月2日（水曜）</td>
+			<td style="text-align: center;">ふれあいセンター</td>
+			<td rowspan="4" style="text-align: center;">広報9月号</td>
+		</tr>
+		<tr>
+			<td style="text-align: center;">平成28年11月7日（月曜）</td>
+			<td style="text-align: center;">市民会館</td>
+		</tr>
+		<tr>
+			<td style="text-align: center;">平成28年11月15日（火曜）</td>
+			<td style="text-align: center;">公民館</td>
+		</tr>
+		<tr>
+			<td style="text-align: center;">平成28年11月16日（水曜）</td>
+			<td style="text-align: center;">労働福祉センター</td>
+		</tr>
+		<tr>
+			<td style="text-align: center;">平成29年2月13日（月曜）</td>
+			<td style="text-align: center;">市民会館</td>
+			<td rowspan="4" style="text-align: center;">広報12月号</td>
+		</tr>
+		<tr>
+			<td style="text-align: center;">平成29年2月14日（火曜）</td>
+			<td style="text-align: center;">婦人センター</td>
+		</tr>
+		<tr>
+			<td style="text-align: center;">平成29年2月15日（水曜）</td>
+			<td style="text-align: center;">公民館</td>
+		</tr>
+		<tr>
+			<td style="text-align: center;">平成29年2月16日（木曜）</td>
+			<td style="text-align: center;">公民館</td>
+		</tr>
+		<tr>
+			<th style="width: 18.2%">料金</th>
+			<td colspan="3"><span style="color:#CC0000">1,000円</span>（保険税の滞納のある方は、料金が異なります）</td>
+		</tr>
+		<tr>
+			<th style="width: 18.2%">検査内容</th>
+			<td colspan="3">
+			<ul>
+				<li>必須検査：特定健診、眼底検査、心電図検査、貧血検査、視力・聴力検査、 肺がん検診（胸部Ｘ線）、大腸がん検診（便潜血）</li>
+				<li>選択検査（無料）：胃がん検診（バリウム）、 前立腺がん検診（血液検査・治療中でない50歳以上の男性）</li>
+			</ul>
+			</td>
+		</tr>
+		<tr>
+			<th style="width: 18.2%">申込方法</th>
+			<td colspan="3">保険年金課へ直接または電話でお申込みください。 申込期間は広報でお知らせします。<br />
+			定員になり次第締め切ります。</td>
+		</tr>
+		<tr>
+			<th style="width: 18.2%">申込先</th>
+			<td colspan="3">保険年金課　電話0000-01-0000</td>
+		</tr>
+	</tbody>
+</table>
+
+<h2>■短期人間ドック（日帰りドック）</h2>
+
+<p>特定健診と各種がん検診、腹部超音波検査、心電図検査・眼底検査等が<span style="color:#CC0000">セットで受けられます</span>。</p>
+
+<table>
+	<caption>短期人間ドック</caption>
+	<tbody>
+		<tr>
+			<th style="width: 18.2%">対象者</th>
+			<td>平成28年4月1日から受診当日まで国民健康保険に継続加入している20歳以上の方<br />
+			国民健康保険税を滞納していない方<br />
+			同年度内に特定健診・千円ドック・脳ドックを受診していない方<br />
+			必須検査をすべて受けられる方</td>
+		</tr>
+		<tr>
+			<th style="width: 18.2%">実施医療機関・料金</th>
+			<td>
+			<ol>
+				<li>総合健診センター（ぞめき市本町）：料金2,500円</li>
+				<li>記念病院（ぞめき市本町）：料金3,000円</li>
+				<li>厚生年金病院（ぞめき市本町）：料金3,000円</li>
+				<li>病院（ぞめき市本町）：料金3,000円</li>
+			</ol>
+			</td>
+		</tr>
+		<tr>
+			<th style="width: 18.2%">検査内容</th>
+			<td>
+			<ol>
+				<li>必須検査：特定健診、腹部超音波検査、眼底検査、心電図検査、貧血検査、視力・聴力検査等、肺がん検診（胸部Ｘ線）、大腸がん検診（便潜血）、胃バリウム（1）または胃カメラ（2）（3）（4）</li>
+				<li>選択検査（無料）：前立腺がん検診（血液検査・治療中でない50歳以上の男性）、乳がん検診（マンモグラフィ・40歳以上偶数月生まれの女性・（1）（2）のみ）、子宮がん検診（子宮頸部細胞診・20歳以上偶数月生まれの女性・（1）（2）のみ）</li>
+			</ol>
+			</td>
+		</tr>
+		<tr>
+			<th style="width: 18.2%">申込方法</th>
+			<td>保険年金課へ直接または電話でお申込みください。<br />
+			定員になり次第締め切ります。<br />
+			受診までに日数がかかることがあります。</td>
+		</tr>
+		<tr>
+			<th style="width: 18.2%">申込先</th>
+			<td>保険年金課　電話0000-01-0000</td>
+		</tr>
+	</tbody>
+</table>
+
+<h2>■脳ドック</h2>
+
+<p><span style="color:#CC0000">MRI・MRA</span>と心電図検査、特定健診（一部医療機関除く）が受けられます。</p>
+
+<table>
+	<caption>脳ドック</caption>
+	<tbody>
+		<tr>
+			<th style="width: 18.2%">対象者</th>
+			<td>平成28年4月1日から受診当日まで国民健康保険に継続加入している20歳以上の方<br />
+			国民健康保険税を滞納していない方<br />
+			前年度脳ドックを受けていない方<br />
+			同年度内に千円ドック・短期人間ドック・特定健診（一部医療機関を除く）を受診していない方<br />
+			脳外科で治療・経過観察中でない方、頭痛・めまい等症状のない方、ペースメーカー等の金属が入っていない方</td>
+		</tr>
+		<tr>
+			<th style="width: 18.2%">実施医療機関</th>
+			<td>
+			<ol>
+				<li>厚生年金病院（ぞめき市本町）</li>
+				<li>記念病院（ぞめき市本町）</li>
+				<li>脳神経外科病院（ぞめき市本町）</li>
+			</ol>
+			</td>
+		</tr>
+		<tr>
+			<th style="width: 18.2%">料金</th>
+			<td><span style="color:#CC0000">7,000円</span></td>
+		</tr>
+		<tr>
+			<th style="width: 18.2%">検査内容</th>
+			<td>頭部MRI、頭部・頸部MRA、心電図検査、特定健診（※）<br />
+			※大川原脳神経外科病院で受診した場合は、特定健診の腹囲計測を除く内容のため、同年度に特定健診・各種がん検診を別の医療機関で受診できます。</td>
+		</tr>
+		<tr>
+			<th style="width: 18.2%">申込方法</th>
+			<td>保険年金課へ直接または電話でお申込みください。<br />
+			申込期間は<span style="color:#CC0000">広報5月号</span>でお知らせします。<br />
+			定員になり次第締め切ります。</td>
+		</tr>
+		<tr>
+			<th style="width: 18.2%">申込先</th>
+			<td>保険年金課　電話0000-01-0000</td>
+		</tr>
+	</tbody>
+</table>

@@ -1,3 +1,6 @@
+
+require 'nkf'
+require 'csv'
 ## ---------------------------------------------------------
 ## cms/concepts
 
@@ -7,15 +10,18 @@ c_content = @site.concepts.where(name: 'コンテンツ').first
 
 ## ---------------------------------------------------------
 ## cms/contents
-create_cms_content c_site, 'GpArticle::Doc', 'ぞめき市からのお知らせ', 'docs'
+create_cms_content c_site, 'GpArticle::Doc', 'ぞめき市からのお知らせ', 'articles'
+create_cms_content c_site, 'GpArticle::Doc', 'ぞめき市の手続き', 'docs'
 create_cms_content c_site, 'GpArticle::Doc', 'よくある質問', 'faq'
 
-oshirase  = GpArticle::Content::Doc.where(concept_id: c_site.id, code: 'docs').first
+oshirase  = GpArticle::Content::Doc.where(concept_id: c_site.id, code: 'articles').first
+tetsuduki = GpArticle::Content::Doc.where(concept_id: c_site.id, code: 'docs').first
 shitsumon = GpArticle::Content::Doc.where(concept_id: c_site.id, code: 'faq').first
 
 l_doc = Cms::Layout.where(site_id: @site.id, name: 'doc').first
 
-create_cms_node c_site, oshirase, 30, nil, l_doc, 'GpArticle::Doc', oshirase.code, oshirase.name, nil
+create_cms_node c_site, oshirase,  30, nil, l_doc, 'GpArticle::Doc', oshirase.code, oshirase.name, nil
+create_cms_node c_site, tetsuduki, 35, nil, l_doc, 'GpArticle::Doc', tetsuduki.code, tetsuduki.name, nil
 create_cms_node c_site, shitsumon, 40, nil, l_doc, 'GpArticle::Doc', shitsumon.code, shitsumon.name, nil
 
 category = GpCategory::Content::CategoryType.where(concept_id: c_content.id).first
@@ -64,7 +70,6 @@ p_info.in_settings = {list_count: '5', docs_order: 'published_at_desc', page_fil
   date_style: '%Y年%m月%d日 %H時%M分', gp_article_content_doc_ids: YAML.dump([oshirase.id])}
 p_info.save
 
-
 ## ---------------------------------------------------------
 ## cms/content_settings
 
@@ -104,6 +109,11 @@ p_info.save
   item.value = conf[:value]
   item.extra_values = conf[:extra_values] if conf[:extra_values]
   item.save
+
+  t_item = GpArticle::Content::Setting.config(tetsuduki, conf[:id])
+  t_item.value = conf[:value]
+  t_item.extra_values = conf[:extra_values] if conf[:extra_values]
+  t_item.save
 end
 
 [
@@ -146,14 +156,27 @@ end
 def create(content, c_types, title, body, options = {})
   category_ids = {}
   if options[:categories] && c_types
-    GpCategory::Category.where(category_type_id: c_types, name:  options[:categories]).each do |c|
+    categories = if options[:parent_category]
+      p_category = GpCategory::Category.where(category_type_id: c_types,
+        name: options[:parent_category], parent_id: nil).first
+      if p_category
+        GpCategory::Category.where(category_type_id: c_types, name: options[:categories], parent_id: p_category.id)
+      else
+        GpCategory::Category.where(category_type_id: c_types, name: options[:categories])
+      end
+    else
+      GpCategory::Category.where(category_type_id: c_types, name: options[:categories])
+    end
+    categories.each do |c|
       category_ids[c.category_type_id.to_s] = [] unless category_ids[c.category_type_id.to_s]
       category_ids[c.category_type_id.to_s] << c.id
     end
   end
 
-  doc = content.docs.create title: title, body: body, mobile_body: body,
-    in_category_ids: category_ids, state: 'public', raw_tags: options[:tags]
+  doc = content.docs.new title: title, body: body, mobile_body: body,
+    in_category_ids: category_ids, state: 'public', raw_tags: options[:tags], name: options[:name]
+  doc.save(validate: false)
+  doc
 end
 
 Core.user       = Sys::User.find_by(account: "#{@code_prefix}somu1")
@@ -161,24 +184,27 @@ Core.user_group = Core.user.groups[0]
 
 GpArticle::Doc.skip_callback(:save, :after, :enqueue_publisher_callback)
 
-create oshirase, categories, '転入届', read_data('gp_article/oshirase/tennyu/body'), {categories: ['juminhyo', 'hikkoshi']}
-create oshirase, categories, '出生届', read_data('gp_article/oshirase/shussei/body'), {categories: ['ninshin', 'koseki']}
-create oshirase, categories, '印鑑登録と印鑑登録証明書', read_data('gp_article/oshirase/inkan/body'), {categories: ['inkan']}
-create oshirase, categories, '離婚届', read_data('gp_article/oshirase/rikon/body'), {categories: ['kekkon', 'koseki']}
-create oshirase, categories, '死亡届', read_data('gp_article/oshirase/shibou/body'), {categories: ['koseki', 'shibo']}
-create oshirase, categories, '転籍届', read_data('gp_article/oshirase/tenseki/body'), {categories: ['juminhyo', 'koseki']}
-create oshirase, categories, '婚姻届', read_data('gp_article/oshirase/konin/body'), {categories: ['koseki', 'kekkon']}
-create oshirase, categories, '外国人住民に関する登録の制度', read_data('gp_article/oshirase/touroku/body'), {categories: ['gaikokujin']}
-create oshirase, categories, '手数料一覧', read_data('gp_article/oshirase/tesuryo/body'), {categories: ['shomei', 'hikkoshi']}
-create oshirase, categories, '証明書一覧', read_data('gp_article/oshirase/syomeisyo/body'), {categories: ['shomei']}
-create oshirase, categories, '申請書ダウンロード', read_data('gp_article/oshirase/shinseisyo/body'), {categories: ['shomei']}
-create oshirase, categories, '住民票コード', read_data('gp_article/oshirase/juminhyo_code/body'), {categories: ['jukinet']}
-create oshirase, categories, '住民基本台帳カード', read_data('gp_article/oshirase/daicho/body'), {categories: ['jukinet']}
-create oshirase, categories, 'パスポートの申請・交付', read_data('gp_article/oshirase/passport/body'), {categories: ['passport']}
-create oshirase, categories, '転出届', read_data('gp_article/oshirase/tensyutsu/body'), {categories: ['juminhyo']}
 create oshirase, categories, '住民票のお知らせ', read_data('gp_article/oshirase/juminhyo/body'), {categories: ['juminhyo', 'chumoku']}
-create oshirase, categories, '世帯主変更届', read_data('gp_article/oshirase/setainushi/body'), {categories: ['juminhyo']}
 create oshirase, categories, '入札のお知らせ', read_data('gp_article/oshirase/nyusatsu/body'), {categories: ['joho', 'chumoku'], tags: '入札'}
+
+csv = NKF.nkf('-w', File.open("#{Rails.root}/db/seeds/demo/gp_article/tetsuduki/docs.csv").read)
+CSV.parse(csv, :headers => true, :header_converters => :symbol) do |data|
+  doc = create tetsuduki, categories, data[:title], read_data("gp_article/tetsuduki/#{data[:name]}/body"),
+    {parent_category: data[:p_category], categories: [ data[:category] ], name: data[:name] }
+  file_dir = "#{Rails.root}/db/seeds/demo/gp_article/tetsuduki/#{data[:name]}/file_contents/"
+  if ::Storage.exists?(file_dir)
+    Dir::entries(file_dir).each do |file|
+      filepath = "#{file_dir}#{file}"
+      next if FileTest.directory?(filepath)
+      new_attributes = {name: file, title: file, site_id: @site.id}
+      Sys::File.new(new_attributes).tap do |new_file|
+        new_file.file = Sys::Lib::File::NoUploadedFile.new(filepath)
+        new_file.file_attachable = doc
+        new_file.save
+      end
+    end
+  end
+end
 
 create shitsumon, nil, 'ぞめき市外から転入したとき、住所変更の手続きはどうしたらよいですか', read_data('gp_article/shitsumon/body')
 

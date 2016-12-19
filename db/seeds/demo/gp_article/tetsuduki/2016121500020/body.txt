@@ -1,0 +1,75 @@
+<h2>地域医療への安定的な血液の供給のためにご協力お願いします。</h2>
+
+<p>16歳～69歳（※）で体重が、男性45kg、女性40kg以上の方</p>
+
+<p>※65歳以上の方の献血については、健康を考え60歳～64歳の間に献血経験がある方に限ります。</p>
+
+<p><strong>〇400ml献血</strong></p>
+
+<p>　男性：17歳～69歳　　　女性：18歳～69歳</p>
+
+<p>　体重が、男性女性ともに50kg以上の方。</p>
+
+<h3>＜平成28年度のバス献血の予定＞</h3>
+
+<table border="1">
+	<thead>
+		<tr>
+			<th scope="row">月　日</th>
+			<th colspan="2" scope="col">献血場所及び受付時間</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<th scope="row" style="text-align: left;">4月25日（月）</th>
+			<td>A店<br />
+			9：30～12：00</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<th scope="row" style="text-align: left;">6月10日（金）</th>
+			<td>市役所<br />
+			9：30～12：30</td>
+			<td>Bセンター<br />
+			15：30～16：30</td>
+		</tr>
+		<tr>
+			<th scope="row" style="text-align: left;">8月5日（金）</th>
+			<td>ショッピングセンター<br />
+			10：00～11：30</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<th scope="row" style="text-align: left;">10月5日（水）</th>
+			<td>市役所 9：30～12：15</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<th scope="row" style="text-align: left;">11月9日（水）</th>
+			<td>市民会館<br />
+			9：30～11：00</td>
+			<td>　</td>
+		</tr>
+		<tr>
+			<th scope="row" style="text-align: left;">12月28日（水）</th>
+			<td>A店<br />
+			9：30～12：15　・　13：30～16：30</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<th scope="row" style="text-align: left;">2月14日（火）</th>
+			<td>市役所<br />
+			9：30～12：30</td>
+			<td style="text-align: right;">&nbsp;</td>
+		</tr>
+		<tr>
+			<th scope="row" style="text-align: left;">3月6日（月）</th>
+			<td>Bセンター<br />
+			9：30～11：00</td>
+			<td>C店<br />
+			14：30～16：30</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>上記の会場以外にも、市内の多くの事業所さんにご協力いただいています。</p>

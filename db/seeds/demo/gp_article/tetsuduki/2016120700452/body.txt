@@ -1,0 +1,113 @@
+<h2>施設サービスを利用したときは</h2>
+
+<p>施設サービスを利用したときは、施設サービス費の1割または2割に加え、居住費・食費・日常生活費が全額自己負担になります。</p>
+
+<h2>所得が低い方は、居住費と食費の負担が軽減されます</h2>
+
+<p>所得が低い方の居住費と食費については、所得に応じた自己負担の限度額が設けられており、これを超えた分は「特定入所者介護サービス費」として、介護保険から給付されます。<br />
+給付を受けるには、申請が必要です。</p>
+
+<h2>負担限度額認定の適用条件について</h2>
+
+<p>被保険者の属する世帯全員が住民税非課税であるという要件に加え、「配偶者の所得」「預貯金等」も勘案されます。これに伴い、申請書の提出に加えて、被保険者及び配偶者等の預貯金額等、資産額がわかるものの写しの提出が必要となります。</p>
+
+<h2>適用条件</h2>
+
+<h3>所得要件</h3>
+
+<ul>
+	<li>被保険者の属する世帯全員が住民税非課税であること。</li>
+	<li>(別世帯であっても)配偶者が住民税非課税であること。</li>
+</ul>
+
+<p>※注釈夫婦のうち、一人だけ施設に入所している場合など、別世帯になっている配偶者の所得も勘案し、配偶者が課税されている場合は、補助（補足給付）の対象外となります。</p>
+
+<h3>資産要件</h3>
+
+<p>預貯金等が一定額（単身の場合は1,000万円、夫婦の場合は2,000万円）以下であること。</p>
+
+<p>※注釈1　申請の際、申請日の直近から原則として2か月前までの通帳等の写しを添付するようになります。<br />
+※注釈2　不正受給に対して、給付額の返還に加え、加算金が課される場合があります。</p>
+
+<table>
+	<caption>居住費・食費の自己負担限度額（日額）</caption>
+	<tbody>
+		<tr>
+			<th class="center" colspan="2" rowspan="2" scope="col" style="width: 40%">区分</th>
+			<th class="center" colspan="4" rowspan="1" scope="col" style="width: 42%">居住費</th>
+			<th class="center" colspan="1" rowspan="2" scope="col" style="width: 8%">食費</th>
+		</tr>
+		<tr>
+			<td class="center" style="width: 11%">従来型個室</td>
+			<td class="center" style="width: 10%">多床室</td>
+			<td class="center">ユニット型個室</td>
+			<td class="center">ユニット型準個室</td>
+		</tr>
+		<tr>
+			<td class="center" colspan="1" rowspan="2" style="width: 8.5%">第3段階</td>
+			<td colspan="1" rowspan="2">本人及び世帯全員が市民税非課税で、第2段階以外の方</td>
+			<td class="center" colspan="1" rowspan="2">1,310円</td>
+			<td class="center" colspan="1" rowspan="2">370円</td>
+			<td class="center" colspan="1" rowspan="2">1,310円</td>
+			<td class="center" colspan="1" rowspan="2">1,310円</td>
+			<td class="center" colspan="1" rowspan="2">650円</td>
+		</tr>
+		<tr>
+		</tr>
+		<tr>
+			<td class="center" colspan="1" rowspan="2">第2段階</td>
+			<td colspan="1" rowspan="2">本人及び世帯全員が市民税非課税で、前年の合計所得金額と課税年金収入額及び非課税年金収入額の合計が80万円以下の方</td>
+			<td class="center" colspan="1" rowspan="2">490円</td>
+			<td class="center" colspan="1" rowspan="2">370円</td>
+			<td class="center" colspan="1" rowspan="2">820円</td>
+			<td class="center" colspan="1" rowspan="2">490円</td>
+			<td class="center" colspan="1" rowspan="2">390円</td>
+		</tr>
+		<tr>
+		</tr>
+		<tr>
+			<td class="center" colspan="1" rowspan="2">第1段階</td>
+			<td colspan="1" rowspan="2">生活保護の受給者・老齢福祉年金の受給者で、本人及び世帯全員が市民税非課税の方</td>
+			<td class="center" colspan="1" rowspan="2">490円</td>
+			<td class="center" colspan="1" rowspan="2">0円</td>
+			<td class="center" colspan="1" rowspan="2">820円</td>
+			<td class="center" colspan="1" rowspan="2">490円</td>
+			<td class="center" colspan="1" rowspan="2">300円</td>
+		</tr>
+		<tr>
+		</tr>
+	</tbody>
+</table>
+
+<p>※注釈従来型個室については、介護老人福祉施設に入所した場合または短期入所生活介護を利用した場合、第3段階では820円、第2段階では420円、第1段階では320円です。</p>
+
+<h3>非課税年金の勘案(平成28年8月より)</h3>
+
+<p>利用者負担段階の第2段階と第3段階のいずれかに該当するか判定する際に、非課税年金【障害年金・遺族年金（寡婦年金・かん夫年金・母子年金・遺児年金等含む) 】についても算定の対象になります。これにより、27年度までは利用者負担段階が第2段階であっても、非課税年金を一定額受給されている方は、利用者負担段階が第3段階になる場合があります。</p>
+
+<h2>申請に必要なもの</h2>
+
+<ul>
+	<li>介護保険負担限度額認定申請書</li>
+	<li>印鑑（被保険者及び配偶者のもの）</li>
+	<li>被保険者及び配偶者の資産が確認できるものの写し（直近2か月以内に記帳された預金通帳や定期預金証券等でお持ちの全てのもの）</li>
+	<li>証券会社や銀行の口座残高がわかるものの写し(投資信託・有価証券等がある場合のみ)</li>
+	<li>借用証明書の写し(負債がある場合のみ)</li>
+	<li>申請者の本人確認書類（運転免許証・健康保険証等）</li>
+	<li>被保険者のマイナンバーが確認できるもの（通知カード・マイナンバーカード等）</li>
+</ul>
+
+<p><br />
+<span class="text-color-red">減額の決定がされた場合は、認定証を送付しますので、必ず、利用する施設へ提示してください。提示をしなかった場合は、減額の対象となりませんので、ご注意ください。</span><br />
+<strong class="text-color-blue">生活保護を受けている場合は、手続きの方法が異なりますので、生活福祉課までお問い合わせください。</strong><br />
+※注釈郵送による手続きを希望される場合は、お問い合わせください。</p>
+
+<h2>関連PDF</h2>
+
+<p><a class="iconFile iconPdf" href="#">介護保険負担限度額認定申請書[PDF：85KB]</a></p>
+
+<p><a class="iconFile iconPdf" href="#">介護保険負担限度額認定申請書（記入例）[PDF：126KB]</a></p>
+
+<p><a class="iconFile iconPdf" href="#">介護保険負担限度額認定証再交付申請書[PDF：22KB]</a></p>
+
+<p><a class="iconFile iconPdf" href="#">負担限度額一覧表[PDF：28KB]</a></p>

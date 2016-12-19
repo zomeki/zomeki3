@@ -1,0 +1,82 @@
+<h2>外国人住民の住民基本台帳制度が始まりました</h2>
+
+<ul>
+	<li>平成24年7月9日より外国人登録法は廃止になり、住民基本台帳法・入管法が変わりました。</li>
+	<li>外国人住民も、日本人と同様に住民基本台帳法が適用されます。</li>
+	<li>対象となるのは観光目的などの短期滞在者等を除く、適法に3ヶ月を超えて在留する外国人で、住所を有する方です。</li>
+</ul>
+
+<h3>住所変更等の届出</h3>
+
+<h4>市役所へ届出</h4>
+
+<ul>
+	<li>住居地変更の手続き</li>
+</ul>
+
+<p>届出の際には必ず、在留カード・特別永住者証明書をご持参ください。</p>
+
+<p>市外から転入される場合は、転出証明書が必要です。</p>
+
+<p>住所変更の際に在留カード等を提示すれば、同時に入管法上の住居地届を提出したものとみなされます。</p>
+
+<ul>
+	<li>特別永住者の住居地以外の変更手続（記載事項変更届・有効期間更新申請等）</li>
+</ul>
+
+<h4>入国管理局へ届出</h4>
+
+<ul>
+	<li>中長期在留者等の住居地以外の変更手続きについては、地方入国管理官署へ届出してください。</li>
+</ul>
+
+<h3>『外国人登録証明書』は法改正後も引き続き有効です</h3>
+
+<ul>
+	<li>法改正後、一定の期間は、「外国人登録証明書」を「在留カード」または「特別永住者証明書」とみなすこととなります。</li>
+	<li>永住者の方の「外国人登録証明書」は、法改正後「在留カード」とみなされますが、3年以内に地方入国管理官署で「在留カード」の交付申請が必要となります。</li>
+</ul>
+
+<h3>詳しくはこちらをご覧ください。</h3>
+
+<p><a href="/docs/2016120500076/">外国人登録証明書の有効期限一覧表</a></p>
+
+<h3>外国人住民の証明書について</h3>
+
+<ul>
+	<li>外国人住民の方も日本人と同様に住民票が作成されました。証明書については住民票・住民票記載事項証明書があります。</li>
+	<li>法改正前の外国人登録原票に記載されていた事項（住所履歴や通称名の変更履歴等）が必要な場合は、各個人で法務省に開示請求をしていただくことになります。</li>
+</ul>
+
+<p><a href="http://www.moj.go.jp/hisho/bunsho/hisho02_00016.html" target="_blank">外国人登録原票に係る開示請求について<img alt="新しいウィンドウで外部サイトを開きます" class="external" src="/_themes/base/images/ic-blank.gif" style="height:15px; width:15px" /></a></p>
+
+<h3>詳しくは総務省・法務省ホームページをご覧ください。</h3>
+
+<h4>＜総務省ホームページ＞</h4>
+
+<p>『外国人住民に係る住民基本台帳制度について』</p>
+
+<ul>
+	<li><a href="http://www.soumu.go.jp/main_sosiki/jichi_gyousei/c-gyousei/zairyu.html" target="_blank">日本語Japanese<img alt="新しいウィンドウで外部サイトを開きます" class="external" src="/_themes/base/images/ic-blank.gif" style="height:15px; width:15px" /></a></li>
+	<li><a href="http://www.soumu.go.jp/main_sosiki/jichi_gyousei/c-gyousei/zairyu_english.html" target="_blank">英語English<img alt="新しいウィンドウで外部サイトを開きます" class="external" src="/_themes/base/images/ic-blank.gif" style="height:15px; width:15px" /></a></li>
+	<li><a href="http://www.soumu.go.jp/main_sosiki/jichi_gyousei/c-gyousei/zairyu_korean.html" target="_blank">韓国・朝鮮語한국・조선어<img alt="新しいウィンドウで外部サイトを開きます" class="external" src="/_themes/base/images/ic-blank.gif" style="height:15px; width:15px" /></a></li>
+</ul>
+
+<h4>＜法務省入国管理局ホームページ＞</h4>
+
+<p>『日本に在留する外国人の皆さんへ　2012年7月　入管法が変わります　新たな在留制度がスタート！』</p>
+
+<ul>
+	<li><a href="http://www.immi-moj.go.jp/newimmiact_1/index.html" target="_blank">日本語Japanese<img alt="新しいウィンドウで外部サイトを開きます" class="external" src="/_themes/base/images/ic-blank.gif" style="height:15px; width:15px" /></a></li>
+	<li><a href="http://www.immi-moj.go.jp/newimmiact_1/en/index.html" target="_blank">英語English<img alt="新しいウィンドウで外部サイトを開きます" class="external" src="/_themes/base/images/ic-blank.gif" style="height:15px; width:15px" /></a></li>
+	<li>中国語<a href="http://www.immi-moj.go.jp/newimmiact_1/zh-CN/index.html" target="_blank"> 中文(简体字)<img alt="新しいウィンドウで外部サイトを開きます" class="external" src="/_themes/base/images/ic-blank.gif" style="height:15px; width:15px" /></a>、<a href="http://www.immi-moj.go.jp/newimmiact_1/zh-TW/index.html" target="_blank">中文(繁体字)<img alt="新しいウィンドウで外部サイトを開きます" class="external" src="/_themes/base/images/ic-blank.gif" style="height:15px; width:15px" /></a></li>
+	<li><a href="http://www.immi-moj.go.jp/newimmiact_1/ko/index.html" target="_blank">韓国・朝鮮語한국・조선어<img alt="新しいウィンドウで外部サイトを開きます" class="external" src="/_themes/base/images/ic-blank.gif" style="height:15px; width:15px" /></a></li>
+	<li><a href="http://www.immi-moj.go.jp/newimmiact_1/es/index.html" target="_blank">スペイン語Espa&ntilde;ol<img alt="新しいウィンドウで外部サイトを開きます" class="external" src="/_themes/base/images/ic-blank.gif" style="height:15px; width:15px" /></a></li>
+	<li><a href="http://www.immi-moj.go.jp/newimmiact_1/pt/index.html" target="_blank">ポルトガル語Portugu&ecirc;s<img alt="新しいウィンドウで外部サイトを開きます" class="external" src="/_themes/base/images/ic-blank.gif" style="height:15px; width:15px" /></a></li>
+</ul>
+
+<p>『特別永住者の皆さんへ　2012年7月特別永住者の制度が見直されます！』</p>
+
+<ul>
+	<li><a href="http://www.immi-moj.go.jp/newimmiact_2/index.html" target="_blank">日本語Japanese<img alt="新しいウィンドウで外部サイトを開きます" class="external" src="/_themes/base/images/ic-blank.gif" style="height:15px; width:15px" /></a></li>
+</ul>

@@ -1,0 +1,19 @@
+<h2>住民票等の申請書ダウンロード</h2>
+
+<p><a class="iconFile iconPdf" href="#">印鑑登録証明書交付申請書 兼 住民票等請求書PDF(57.8KBytes)</a></p>
+
+<p><a class="iconFile iconPdf" href="#">印鑑登録代理権授与通知書（委任状）PDF(57.8KBytes)</a></p>
+
+<p><a class="iconFile iconPdf" href="#">戸籍証明等請求書PDF(153KBytes)</a></p>
+
+<p><a class="iconFile iconPdf" href="#">郵送交付申請書PDF(60.3KBytes)</a></p>
+
+<p>住民票や戸籍証明等の請求に使用する委任状は<a href="/docs/2016120200044/">こちら</a></p>
+
+<h2>住民票コード・広域交付住民票申請書ダウンロード</h2>
+
+<p><a class="iconFile iconPdf" href="#">住民票コード通知票再交付申請書PDF(73.0KBytes)</a></p>
+
+<p><a class="iconFile iconPdf" href="#">住民票コード変更請求書PDF(97.8KBytes)</a></p>
+
+<p><a class="iconFile iconPdf" href="#">広域交付住民票申請書PDF(97.8KBytes)</a></p>

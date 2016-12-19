@@ -1,0 +1,38 @@
+<h2>自己負担金免除対象者</h2>
+
+<table>
+	<caption>つぎの(1)から(4)に該当する人は自己負担金が免除されます。</caption>
+	<tbody>
+		<tr>
+			<th class="center" scope="col">免除対象者</th>
+			<th class="center" scope="col">胃・肺・大腸・子宮・乳</th>
+			<th class="center" scope="col">前立腺</th>
+		</tr>
+		<tr>
+			<td>(1) 70歳以上の方</td>
+			<td style="text-align: center;">無料</td>
+			<td style="text-align: center;">500円</td>
+		</tr>
+		<tr>
+			<td>(2) 65～69歳で障がいがあり、後期高齢者被保険者証を交付されている方</td>
+			<td style="text-align: center;">無料</td>
+			<td style="text-align: center;">500円</td>
+		</tr>
+		<tr>
+			<td>(3) 非課税世帯（市・県民税が課税されていない世帯）</td>
+			<td style="text-align: center;">無料</td>
+			<td style="text-align: center;">500円</td>
+		</tr>
+		<tr>
+			<td>(4) 生活保護法による被保護世帯に属する方</td>
+			<td style="text-align: center;">無料</td>
+			<td style="text-align: center;">無料</td>
+		</tr>
+	</tbody>
+</table>
+
+<ul>
+	<li>免除対象者の人は必ず当日、医療機関または検診会場で<strong>本人確認書類（保険証等）を持参</strong>し申請してください。</li>
+	<li>前立腺がん検診のみ料金区分が違います。</li>
+	<li>「東日本大震災」にかかる災害救助法の適応となる方は、自己負担金が免除されますので、事前に保健センターまでお申し出ください。</li>
+</ul>

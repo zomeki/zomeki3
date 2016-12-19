@@ -1,0 +1,103 @@
+<p>平成17(2005）年から平成21年度の積極的接種勧奨の差し控えにより接種機会を逃した方々に、接種が確保されています。平成25年4月1日から、特例の対象者が拡大されました。</p>
+
+<h2>日本脳炎予防接種とは</h2>
+
+<p>日本脳炎の感染を予防するための予防接種です。</p>
+
+<p>日本脳炎は、ブタなどの体内で増えたウイルスが蚊によって媒介され感染します。感染すると高熱、けいれんなどの症状を示す急性脳炎になります。</p>
+
+<h2>特例対象者</h2>
+
+<h3><strong>平成7(1995)年4月2日から平成19（2007)年4月1日生まれで20歳未満の方</strong></h3>
+
+<p>20歳未満までの間、接種できます。第1期が終了していない方は、まず第1期から接種を受けて下さい。<br />
+特に<span class="text-color-red">平成28年度に18歳になる方</span>（平成10年4月2日から平成11年4月1日生まれ）で2期の予防接種をしていない場合は、なるべく早い時期に接種を受けましょう。</p>
+
+<table>
+	<caption>接種回数と接種間隔（平成23年5月20日までの接種の有無によって接種方法が異なります。）</caption>
+	<tbody>
+		<tr>
+			<th class="center" colspan="3" rowspan="1" scope="col"><strong>日本脳炎ワクチン</strong></th>
+			<th class="center" colspan="1" rowspan="2" scope="col"><strong>接種間隔</strong></th>
+		</tr>
+		<tr>
+			<th class="center" scope="col" style="width: 21%"><strong>既接種時期</strong></th>
+			<th scope="col" style="width: 19%"><strong>接種回数</strong></th>
+			<th class="center" scope="col" style="width: 20%"><strong>接種回数<br />
+			(全4回)</strong></th>
+		</tr>
+		<tr>
+			<td class="center" colspan="1" rowspan="4">平成23年5月20日以前</td>
+			<td>全く受けていない方</td>
+			<td class="center" style="text-align: center;">残り4回<br />
+			（1期3回、2期1回）</td>
+			<td>1回目の接種後6日以上（標準的には28日まで）の間隔をあけて2回目を接種し、その後6か月以上（標準的にはおおむね1年）の間隔をあけて3回目を接種。<br />
+			4回目（2期接種に相当）の接種は、9歳以上の方に対し、3回目の接種後6日以上の間隔をあけて接種。</td>
+		</tr>
+		<tr>
+			<td>1回接種を受けた方</td>
+			<td class="center" style="text-align: center;">残り3回<br />
+			（1期2回、2期1回）</td>
+			<td>2回目と3回目は6日以上の間隔をあけて接種。<br />
+			4回目（2期接種に相当）の接種は、9歳以上の方に対し、3回目の接種後6日以上の間隔をあけて接種。</td>
+		</tr>
+		<tr>
+			<td>2回接種を受けた方</td>
+			<td class="center" style="text-align: center;">残り2回<br />
+			（1期1回、2期1回）</td>
+			<td>3回目と4回目（2期接種に相当）は6日以上の間隔をあけて接種。ただし、4回目の接種については9歳以上の方に対して行う。</td>
+		</tr>
+		<tr>
+			<td>3回接種を受けた方</td>
+			<td class="center" style="text-align: center;">残り1回<br />
+			（2期1回）</td>
+			<td>4回目（2期接種に相当）の接種を行う。</td>
+		</tr>
+	</tbody>
+</table>
+
+<h3>平成19（2007)年4月2日から平成21(2009)年10月1日生まれの方で13歳未満の方</h3>
+
+<table class="table01">
+	<caption>接種回数と接種間隔（平成22年3月31日までの接種の有無によって接種方法が異なります。）</caption>
+	<tbody>
+		<tr>
+			<th class="center" scope="col" style="width: 21%"><strong>既接種時期</strong></th>
+			<th class="center" scope="col" style="width: 14%"><strong>接種回数</strong></th>
+			<th class="center" scope="col"><strong>接種期間</strong></th>
+			<th class="center" scope="col"><strong>接種間隔</strong></th>
+		</tr>
+		<tr>
+			<td colspan="1" rowspan="2" scope="col" style="width: 21%">平成22年3月31日以前</td>
+			<td class="center" scope="col" style="text-align: center;">1回以上</td>
+			<td scope="col" style="text-align: left;">生後6か月から90か月に至るまで、及び9歳以上13歳未満</td>
+			<td scope="col" style="text-align: left;">平成7年4月2日から平成19年4月1日生まれの方の接種方法に準ずる。6日以上の間隔をあけて接種。<br />
+			4回目（2期）の接種は9歳以上13歳未満に接種。<br />
+			3回目と4回目の間隔は6日以上あけて接種。</td>
+		</tr>
+		<tr>
+			<td style="text-align: center;">0回<br />
+			（全く無し）</td>
+			<td>生後6ヵ月から90ヵ月に至るまで、及び9歳以上13歳未満</td>
+			<td>1回目の接種後6日以上（標準的には28日まで）の間隔をあけて2回目を接種し、その後6か月以上（標準的にはおおむね1年）の間隔をあけて3回目を接種。<br />
+			4回目（2期）の接種は9歳以上13歳未満に接種。<br />
+			3回目と4回目の間隔は6日以上あけて接種。</td>
+		</tr>
+	</tbody>
+</table>
+
+<h2>接種費用</h2>
+
+<p>無料（ただし、接種対象年齢内で、接種日にぞめき市に住民登録のある人）</p>
+
+<h2>接種場所</h2>
+
+<p>委託している医療機関でできます。</p>
+
+<h2>日本脳炎予防接種（1期）はこちら</h2>
+
+<p><a href="/docs/2016121300170/">日本脳炎予防接種（1期）</a></p>
+
+<h2>日本脳炎予防接種（2期）はこちら</h2>
+
+<p><a href="/docs/2016121300187/">日本脳炎予防接種（2期）</a></p>

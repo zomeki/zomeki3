@@ -1,0 +1,5 @@
+<p>定期の予防接種により、重篤な健康被害が発生したときには、予防接種法の規定により、発生した健康被害の救済が行われることになっています。<br />
+接種後、気になる症状等がある場合は、接種した医療機関か保健センターにご相談ください。</p>
+
+<p><a class="iconFile iconPdf" href="file_contents/hoken_center54.pdf">リーフレット「ご存じですか？予防接種後健康被害救済制度」[PDF：870KB]</a><br />
+<a href="http://www.mhlw.go.jp/bunya/kenkou/kekkaku-kansenshou20/kenkouhigai_kyusai/">厚生労働省：健康被害救済制度に関するホームページ</a></p>
