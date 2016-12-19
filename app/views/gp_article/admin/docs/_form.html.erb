@@ -447,11 +447,7 @@ $(document).ready(function () {
       </tr>
       <tr>
         <th><%= f.label :lang %></th>
-        <td>
-          <span>
-            <%= f.select :lang, options_for_select(@content.lang_options, @item.lang) %>
-          </span>
-        </td>
+        <td><%= f.select :lang, options_for_select(@content.lang_options, @item.lang) %></td>
       </tr>
     </table>
 
