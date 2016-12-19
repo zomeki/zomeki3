@@ -55,10 +55,14 @@ class GpArticle::Content::Setting < Cms::ContentSetting
     lower_text: "CSV形式（例　対象文字,変換後文字 ）"
 
   # menu: :index
-  set_config :doc_list_lang, menu: :index,
-    name: "言語設定",
-    options: [['日本語', 'ja'], ['英語', 'en']],
-    default_value: 'ja'
+  set_config :pagination_label, menu: :index,
+    name: "ページ送り文字",
+    form_type: :text_field,
+    upper_text: '前へ',
+    default_value: '前へ',
+    default_extra_values: {
+      next_label: '次へ'
+    }
   set_config :doc_list_pagination, menu: :index,
     name: "#{GpArticle::Doc.model_name.human}一覧表示形式",
     form_type: :radio_buttons,
@@ -222,6 +226,8 @@ class GpArticle::Content::Setting < Cms::ContentSetting
       ex[:doc_list_style]  = params[:doc_list_style]
       ex[:doc_list_number] = params[:doc_list_number]
       ex[:doc_publish_more_pages] = params[:doc_publish_more_pages]
+    when 'pagination_label'
+      ex[:next_label] = params[:next_label]
     end
     super(ex)
   end
