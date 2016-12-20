@@ -3,6 +3,16 @@ require 'rails_helper'
 RSpec.describe Sys::File, type: :model do
   before :all do
     Zomeki.config.application['sys.file_text_extraction'] = true
+    @upload_path = Rails.root.join("tmp/test_#{SecureRandom.hex}.dat")
+  end
+
+  before :each do
+    allow_any_instance_of(Sys::File).to receive(:upload_path).and_return(@upload_path.to_s)
+    allow_any_instance_of(Sys::File).to receive(:path).and_return(@upload_path.to_s)
+  end
+
+  after :all do
+    @upload_path.delete
   end
 
   it 'has a valid factory' do

@@ -85,10 +85,12 @@ module Storage
   
   def self.mv(src, dst)
     ::FileUtils.mv(src, dst)
+    Sys::StorageFile.mv(src, dst)
   end
   
   def self.cp(src, dst)
     ::FileUtils.cp(src, dst)
+    Sys::StorageFile.cp(src, dst)
   end
   
   def self.rmdir(path)
@@ -98,6 +100,7 @@ module Storage
   def self.rm_rf(path)
     ::FileUtils.rm_rf(path)
     #::FileUtils.remove_entry_secure(path, true) 
+    Sys::StorageFile.rm_rf(path)
   end
   
   def self.touch(path)
@@ -115,10 +118,12 @@ module Storage
   def self.write(path, data)
     data = data.force_encoding(Encoding::UTF_8) if data.respond_to?(:force_encoding)
     ::File.write(path, data)
+    Sys::StorageFile.import(path)
   end
   
   def self.binwrite(path, data)
     ::File.binwrite(path, data)
+    Sys::StorageFile.import(path)
   end
   
   def self.chmod(mode, path)

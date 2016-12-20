@@ -9,7 +9,7 @@
 <%= action_menu :edit    if safe{@item.editable?} %>
 <%= action_menu :destroy if safe{@item.deletable?} %>
 <span class="separator"></span>
-<% if @site.basic_auth_enabled? %>
+<% if @site.use_basic_auth? %>
 <%= link_to "認証ON（更新）", enable_auth_cms_site_basic_auth_users_path(@site.id), :confirm => "Basic認証を有効にしますか？" %>
 <%= link_to "認証OFF", disable_auth_cms_site_basic_auth_users_path(@site.id), :confirm => "Basic認証を無効にしますか？" %>
 <% else %>

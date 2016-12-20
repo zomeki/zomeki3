@@ -117,6 +117,7 @@ namespace :zomeki do
         [Sys::File, Cms::DataFile].each do |klass|
           klass.find_each {|f| f.extract_text }
         end
+        Sys::StorageFile.import
 
         Zomeki.config.application['sys.file_text_extraction'] = c
       end

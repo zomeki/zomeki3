@@ -40,7 +40,7 @@ class Cms::Lib::Navi::Jtalk
 
     #
     text = self.class.make_text(text, site_id)
-    text = text.slice(1..talk_text_limit) if talk_text_limit < text.length
+    text = text.slice(0..talk_text_limit) if talk_text_limit < text.length
     return false if text.blank?
 
     text.split(/[ 。]/).each do |str|
