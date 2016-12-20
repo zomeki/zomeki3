@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161212044704) do
+ActiveRecord::Schema.define(version: 20161215030642) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1399,6 +1399,16 @@ ActiveRecord::Schema.define(version: 20161212044704) do
     t.text     "extra_value"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "sys_storage_files", force: :cascade do |t|
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+    t.string   "path",                          null: false
+    t.boolean  "available",      default: true, null: false
+    t.string   "mime_type"
+    t.text     "extracted_text"
+    t.index ["path"], name: "index_sys_storage_files_on_path", unique: true, using: :btree
   end
 
   create_table "sys_tasks", force: :cascade do |t|

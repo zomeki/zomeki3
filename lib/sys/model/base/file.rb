@@ -13,7 +13,9 @@ module Sys::Model::Base::File
     validate :validate_upload_file
     after_save :upload_internal_file
     after_destroy :remove_internal_file
-    after_save :extract_text
+
+    alias :path :upload_path
+    include Sys::Model::TextExtraction
   end
 
   class_methods do
@@ -344,22 +346,6 @@ module Sys::Model::Base::File
 
   def csv?
     mime_type.in?(%w!text/csv application/vnd.ms-excel!)
-  end
-
-  def extract_text
-    return unless Zomeki.config.application['sys.file_text_extraction']
-    return unless has_attribute?(:extracted_text)
-    return unless mime_type.in?(['text/plain', 'application/pdf',
-                                 'application/msword', 'application/vnd.ms-excel', 'application/vnd.ms-powerpoint',
-                                 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                                 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                                 'application/vnd.openxmlformats-officedocument.presentationml.presentation'])
-    file = Pathname.new(upload_path)
-    jar = Rails.root.join('vendor/tika/tika-app.jar')
-    result = `java -jar #{jar} --text #{file}`
-    update_column :extracted_text, result
-  rescue => e
-    warn_log e.message
   end
 
   private
