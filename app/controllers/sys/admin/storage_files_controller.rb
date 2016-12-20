@@ -48,7 +48,6 @@ class Sys::Admin::StorageFilesController < Cms::Controller::Admin::Base
     @do          = params[:do].blank? ? nil : params[:do]
     @is_dir      = ::Storage.directory?(@path)
     @is_file     = ::Storage.file?(@path)
-
     @current_uri = sys_storage_files_path(@dir).gsub(/\?.*/, '')
     @parent_uri  = sys_storage_files_path(:path => ::File.dirname(@dir)).gsub(/\?.*/, '')
   end
