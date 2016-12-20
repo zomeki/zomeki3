@@ -323,7 +323,7 @@ module Sys::Model::Base::File
     if image && image.format.in?(%w!GIF JPEG PNG!)
       image.crop!(Magick::NorthWestGravity, x, y, w, h)
       image.write(upload_path)
-      update_attributes(
+      update_columns(
         size: File.size(upload_path),
         image_width: image.columns,
         image_height: image.rows
@@ -333,7 +333,7 @@ module Sys::Model::Base::File
         thumb = Magick::Image.from_blob(File.read(upload_path)).first
         thumb = thumb.resize_to_fill(size[:width], size[:height], Magick::CenterGravity)
         thumb.write(upload_path(type: :thumb))
-        update_attributes(
+        update_columns(
           thumb_width: size[:width],
           thumb_height: size[:height],
           thumb_size: thumb.to_blob.size
