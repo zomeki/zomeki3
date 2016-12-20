@@ -13,7 +13,7 @@
   </tr>
 </table>
 
-<%- if @item[:mime_type].blank? || @item[:mime_type] =~ /(text|javascript)/i -%>
+<%- if @is_text_file -%>
 <p class="form">ファイル内容</p>
 <table class="show">
   <tr>
