@@ -187,24 +187,21 @@ GpArticle::Doc.skip_callback(:save, :after, :enqueue_publisher_callback)
 create oshirase, categories, '住民票のお知らせ', read_data('gp_article/oshirase/juminhyo/body'), {categories: ['juminhyo', 'chumoku']}
 create oshirase, categories, '入札のお知らせ', read_data('gp_article/oshirase/nyusatsu/body'), {categories: ['joho', 'chumoku'], tags: '入札'}
 
-csv = NKF.nkf('-w', File.open("#{Rails.root}/db/seeds/demo/gp_article/tetsuduki/docs.csv").read)
-CSV.parse(csv, :headers => true, :header_converters => :symbol) do |data|
-  doc = create tetsuduki, categories, data[:title], read_data("gp_article/tetsuduki/#{data[:name]}/body"),
-    {parent_category: data[:p_category], categories: [ data[:category] ], name: data[:name] }
-  file_dir = "#{Rails.root}/db/seeds/demo/gp_article/tetsuduki/#{data[:name]}/file_contents/"
-  if ::Storage.exists?(file_dir)
-    Dir::entries(file_dir).each do |file|
-      filepath = "#{file_dir}#{file}"
-      next if FileTest.directory?(filepath)
-      new_attributes = {name: file, title: file, site_id: @site.id}
-      Sys::File.new(new_attributes).tap do |new_file|
-        new_file.file = Sys::Lib::File::NoUploadedFile.new(filepath)
-        new_file.file_attachable = doc
-        new_file.save
-      end
-    end
-  end
-end
+create tetsuduki, categories, '転入届', read_data('gp_article/oshirase/tennyu/body'), {categories: ['juminhyo', 'hikkoshi']}
+create tetsuduki, categories, '出生届', read_data('gp_article/oshirase/shussei/body'), {categories: ['ninshin', 'koseki']}
+create tetsuduki, categories, '印鑑登録と印鑑登録証明書', read_data('gp_article/oshirase/inkan/body'), {categories: ['inkan']}
+create tetsuduki, categories, '離婚届', read_data('gp_article/oshirase/rikon/body'), {categories: ['kekkon', 'koseki']}
+create tetsuduki, categories, '死亡届', read_data('gp_article/oshirase/shibou/body'), {categories: ['koseki', 'shibo']}
+create tetsuduki, categories, '転籍届', read_data('gp_article/oshirase/tenseki/body'), {categories: ['juminhyo', 'koseki']}
+create tetsuduki, categories, '婚姻届', read_data('gp_article/oshirase/konin/body'), {categories: ['koseki', 'kekkon']}
+create tetsuduki, categories, '外国人住民に関する登録の制度', read_data('gp_article/oshirase/touroku/body'), {categories: ['gaikokujin']}
+create tetsuduki, categories, '手数料一覧', read_data('gp_article/oshirase/tesuryo/body'), {categories: ['shomei', 'hikkoshi']}
+create tetsuduki, categories, '証明書一覧', read_data('gp_article/oshirase/syomeisyo/body'), {categories: ['shomei']}
+create tetsuduki, categories, '申請書ダウンロード', read_data('gp_article/oshirase/shinseisyo/body'), {categories: ['shomei']}
+create tetsuduki, categories, '住民票コード', read_data('gp_article/oshirase/juminhyo_code/body'), {categories: ['jukinet']}
+create tetsuduki, categories, '住民基本台帳カード', read_data('gp_article/oshirase/daicho/body'), {categories: ['jukinet']}
+create tetsuduki, categories, 'パスポートの申請・交付', read_data('gp_article/oshirase/passport/body'), {categories: ['passport']}
+create tetsuduki, categories, '世帯主変更届', read_data('gp_article/oshirase/setainushi/body'), {categories: ['juminhyo']}
 
 create shitsumon, nil, 'ぞめき市外から転入したとき、住所変更の手続きはどうしたらよいですか', read_data('gp_article/shitsumon/body')
 
