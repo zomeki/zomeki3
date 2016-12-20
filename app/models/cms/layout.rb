@@ -15,16 +15,6 @@ class Cms::Layout < ApplicationRecord
   validates :name, presence: true, uniqueness: { scope: :concept_id },
     format: { with: /\A[0-9a-zA-Z\-_]+\z/, if: "name.present?", message: "は半角英数字、ハイフン、アンダースコアで入力してください。" }
 
-  scope :find_contains_piece_name, ->(piece_name) {
-    where(
-        self.arel_table[:body].matches("%[[piece/#{piece_name}]]%")
-        .or(self.arel_table[:mobile_body].matches("%[[piece/#{piece_name}]]%"))
-        .or(self.arel_table[:smart_phone_body].matches("%[[piece/#{piece_name}]]%"))
-      )
-      .order(:concept_id, :name)
-   }
-
-
   def states
     [['公開','public']]
   end
