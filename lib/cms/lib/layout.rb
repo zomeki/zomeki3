@@ -41,14 +41,14 @@ module Cms::Lib::Layout
       rel.select("*, #{Cms::DataFile.connection.quote(name)}::text as name_with_option")
         .order(concepts_order(concepts)).limit(1)
     end
+    pieces = Cms::Piece.union(relations).index_by(&:name_with_option)
 
     if Core.mode == 'preview' && params[:piece_id]
-      item = Cms::Piece.where(id: params[:piece_id])
-        .select("*, name as name_with_option").limit(1)
-      relations << item if item
+      item = Cms::Piece.find_by(id: params[:piece_id])
+      pieces[item.name] = item if item
     end
 
-    Cms::Piece.union(relations).index_by(&:name_with_option)
+    pieces
   end
 
   def self.find_data_texts(html, concepts)
