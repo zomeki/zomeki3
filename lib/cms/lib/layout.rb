@@ -44,8 +44,7 @@ module Cms::Lib::Layout
     pieces = Cms::Piece.union(relations).index_by(&:name_with_option)
 
     if Core.mode == 'preview' && params[:piece_id]
-      item = Cms::Piece.where(id: params[:piece_id])
-        .select("*").first
+      item = Cms::Piece.find_by(id: params[:piece_id])
       pieces[item.name] = item if item
     end
 
