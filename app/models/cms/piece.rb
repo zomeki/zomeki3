@@ -28,6 +28,11 @@ class Cms::Piece < ApplicationRecord
 
   scope :public_state, -> { where(state: 'public') }
 
+  def owner_layouts
+    Cms::Layout.where(id: bracketees.select(:owner_id).where(owner_type: 'Cms::Layout'))
+               .order(:concept_id, :name)
+  end
+
   def replace_new_piece
     if state == "public" && rep = replace_page
       rep.destroy

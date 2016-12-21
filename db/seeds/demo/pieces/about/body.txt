@@ -6,6 +6,7 @@
 <li><a href="#">市長のご挨拶</a></li>
 <li><a href="#">[[text/site-name]]の概要</a></li>
 <li><a href="#">[[text/site-name]]の人口</a></li>
+<li><a href="/docs/">[[text/site-name]]の手続き</a></li>
 <li><a href="#">統計情報</a></li>
 <li><a href="#">パンフレット</a></li>
 <li><a href="#">広報誌</a></li>

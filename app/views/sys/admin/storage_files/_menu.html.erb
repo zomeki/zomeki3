@@ -20,7 +20,7 @@ $(function(){
 <%= link_to "上へ", @parent_uri if @dir.index("/") && !@do && @is_dir %>
 <%= link_to :index, @parent_uri if @do || @is_file %>
 <%- if @do == "show" -%>
-  <%= link_to :edit   , "#{@current_uri}?do=edit" if @is_file %>
+  <%= link_to :edit   , "#{@current_uri}?do=edit" if @is_file && @is_text_file %>
   <%#= link_to :rename , "#{@current_uri}?do=rename" %>
   <%#= link_to :move   , "#{@current_uri}?do=move" %>
   <%= link_to :destroy, "#{@current_uri}?do=destroy", :confirm => "削除してよろしいですか？" %>

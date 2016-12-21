@@ -1,6 +1,6 @@
 <xml>
   <tabs>
-    <tab condition='and' more='/docs/' name='news' sort_no='10' title='新着情報'>
+    <tab condition='and' more='/articles/' name='news' sort_no='10' title='新着情報'>
       <elem_layers>0_descendants</elem_layers>
     </tab>
     <tab condition='or' more='/categories/bunya/nyusatsu/' name='nyusatsu' sort_no='20' title='入札・契約'>

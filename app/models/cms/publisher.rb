@@ -7,6 +7,8 @@ class Cms::Publisher < ApplicationRecord
 
   validate :validate_queue, on: :create
 
+  before_save :set_priority
+
   private
 
   def validate_queue
@@ -17,13 +19,24 @@ class Cms::Publisher < ApplicationRecord
     end
   end
 
+  def set_priority
+    self.priority = if publishable.is_a?(Cms::Node) && publishable.top_page?
+                    10
+                  elsif publishable.is_a?(GpCategory::Category)
+                    20
+                  else
+                    30
+                  end
+  end
+
   class << self
     def register(site_id, items, extra_flag = {})
       items = Array(items)
       return if items.blank?
-
       pubs = items.map do |item|
-        self.new(site_id: site_id, publishable: item, state: 'queued', extra_flag: extra_flag)
+        pub = self.new(site_id: site_id, publishable: item, state: 'queued', extra_flag: extra_flag)
+        pub.run_callbacks(:save) { false }
+        pub
       end
       self.import(pubs)
 

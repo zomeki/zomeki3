@@ -91,7 +91,7 @@ module Cms::Controller::Layout
     body = Page.layout.body_tag(request).clone.to_s
 
     ## render the piece
-    Cms::Lib::Layout.find_design_pieces(body, concepts).each do |name, item|
+    Cms::Lib::Layout.find_design_pieces(body, concepts, params).each do |name, item|
       Page.current_piece = item
       begin
         next if item.content_id && !item.content

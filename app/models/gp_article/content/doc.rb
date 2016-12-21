@@ -3,6 +3,8 @@ class GpArticle::Content::Doc < Cms::Content
 
   has_one :public_node, -> { public_state.where(model: 'GpArticle::Doc').order(:id) },
     foreign_key: :content_id, class_name: 'Cms::Node'
+  has_one :doc_node, -> { where(model: 'GpArticle::Doc').order(:id) },
+    foreign_key: :content_id, class_name: 'Cms::Node'
   has_one :public_archives_node, -> { public_state.where(model: 'GpArticle::Archive').order(:id) },
     foreign_key: :content_id, class_name: 'Cms::Node'
 
@@ -90,6 +92,14 @@ class GpArticle::Content::Doc < Cms::Content
 
   def doc_list_lang
     setting_value(:doc_list_lang).to_sym
+  end
+
+  def prev_label
+    setting_value(:pagination_label).to_s
+  end
+
+  def next_label
+    setting_extra_value(:pagination_label, :next_label).to_s
   end
 
   def list_style

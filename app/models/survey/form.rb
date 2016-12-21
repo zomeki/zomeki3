@@ -143,16 +143,21 @@ class Survey::Form < ApplicationRecord
     update_column(:state, 'closed')
   end
 
-  def public_uri
-    return nil unless content.public_node
-    "#{content.public_node.public_uri}#{name}"
+  def public_uri(with_closed_preview: false)
+    node = if with_closed_preview
+      content.form_node
+    else
+      content.public_node
+    end
+    return nil unless node
+    "#{node.public_uri}#{name}"
   end
 
   def preview_uri(site: nil, mobile: false, params: {})
-    return nil unless public_uri
+    return nil unless public_uri(with_closed_preview: true)
     site ||= ::Page.site
     params = params.map{|k, v| "#{k}=#{v}" }.join('&')
-    path = "_preview/#{format('%04d', site.id)}#{mobile ? 'm' : ''}#{public_uri}#{params.present? ? "?#{params}" : ''}"
+    path = "_preview/#{format('%04d', site.id)}#{mobile ? 'm' : ''}#{public_uri(with_closed_preview: true)}#{params.present? ? "?#{params}" : ''}"
 
     d = Cms::SiteSetting::AdminProtocol.core_domain site, :freeze_protocol => true
     "#{d}#{path}"

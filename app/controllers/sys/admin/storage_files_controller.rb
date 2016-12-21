@@ -104,6 +104,8 @@ class Sys::Admin::StorageFilesController < Cms::Controller::Admin::Base
       :mime_type => ::Storage.mime_type(@path),
       :body      => body,
     }
+    @is_text_file = @item[:mime_type].blank? || @item[:mime_type] =~ /(text|javascript)/i
+
     render :show_file, formats: [:html]
   end
 

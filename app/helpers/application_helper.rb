@@ -46,6 +46,8 @@ module ApplicationHelper
       defaults[:previous_label] = I18n.t("will_paginate.mobile_previous_label", {locale: lang})
       defaults[:next_label]     = I18n.t("will_paginate.mobile_next_label", {locale: lang})
     end
+    defaults[:previous_label] = options[:prev_label] if options[:prev_label].present?
+    defaults[:next_label]     = options[:next_label] if options[:next_label].present?
     links = will_paginate(items, defaults.merge!(options))
     return links if links.blank?
 

@@ -3,27 +3,27 @@ module Cms::Lib::Layout
     concept = defined?(Page.current_item.concept) ? Page.current_item.concept : nil
     concept ||= Page.current_node.inherited_concept
   end
-  
+
   def self.inhertited_concepts
     return [] unless current_concept
     current_concept.ancestors.reverse
   end
-  
+
   def self.inhertited_layout
     layout = defined?(Page.current_item.layout) ? Page.current_item.layout : nil
     layout ||= Page.current_node.inherited_layout
   end
-  
+
   def self.concepts_order(concepts, options = {})
     return 'concept_id' if concepts.blank?
-    
+
     table = options.has_key?(:table_name) ? options[:table_name] + '.' : ''
     order = "CASE #{table}concept_id"
     concepts.each_with_index {|c, i| order += " WHEN #{c.id} THEN #{i}"}
     order += " ELSE 100 END, #{table}id"
   end
 
-  def self.find_design_pieces(html, concepts)
+  def self.find_design_pieces(html, concepts, params)
     names = html.scan(/\[\[piece\/([^\]]+)\]\]/).map{|n| n[0] }.uniq
     return {} if names.blank?
 
@@ -40,6 +40,12 @@ module Cms::Lib::Layout
             end
       rel.select("*, #{Cms::DataFile.connection.quote(name)}::text as name_with_option")
         .order(concepts_order(concepts)).limit(1)
+    end
+
+    if Core.mode == 'preview' && params[:piece_id]
+      item = Cms::Piece.where(id: params[:piece_id])
+        .select("*, name as name_with_option").limit(1)
+      relations << item if item
     end
 
     Cms::Piece.union(relations).index_by(&:name_with_option)

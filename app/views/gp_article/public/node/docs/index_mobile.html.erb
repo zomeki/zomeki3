@@ -8,8 +8,8 @@
     <%- end -%>
   </div>
   <%- if @content.simple_pagination? -%>
-  <%= paginate @docs, {lang: @content.doc_list_lang} %>
+  <%= paginate @docs, {prev_label: @content.prev_label, next_label: @content.next_label} %>
   <%- else -%>
-  <%= period_pagination @prev_doc, @next_doc, Page.current_node, {lang: @content.doc_list_lang} if @docs.present?%>
+  <%= period_pagination @prev_doc, @next_doc, Page.current_node, {prev_label: @content.prev_label, next_label: @content.next_label} if @docs.present?%>
   <%- end -%>
 </div>

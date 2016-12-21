@@ -10,7 +10,7 @@ class Cms::Layout < ApplicationRecord
   include Cms::Layouts::PublishQueue
 
   belongs_to :status,  :foreign_key => :state, :class_name => 'Sys::Base::Status'
-  
+
   validates :state, :title, presence: true
   validates :name, presence: true, uniqueness: { scope: :concept_id },
     format: { with: /\A[0-9a-zA-Z\-_]+\z/, if: "name.present?", message: "は半角英数字、ハイフン、アンダースコアで入力してください。" }
@@ -26,7 +26,7 @@ class Cms::Layout < ApplicationRecord
   def publishable? # TODO dummy
     return true
   end
-  
+
   def piece_names
     names = []
     body.scan(/\[\[piece\/([0-9a-zA-Z_-]+)\]\]/) do |name|
@@ -34,7 +34,7 @@ class Cms::Layout < ApplicationRecord
     end
     return names.uniq
   end
-  
+
   def pieces(concept = nil)
     pieces = []
     piece_names.each do |name|
@@ -51,7 +51,7 @@ class Cms::Layout < ApplicationRecord
     end
     return pieces
   end
-  
+
   def head_tag(request)
     tag = head_tag_with_request(request)
 
@@ -65,10 +65,10 @@ class Cms::Layout < ApplicationRecord
     tag = tag.gsub(/<link [^>]+>/i, '').gsub(/(\r\n|\n)+/, "\n") if request.mobile?
     tag.html_safe
   end
-  
+
   def head_tag_with_request(request)
     tags = []
-    
+
     if request.mobile? && !mobile_head.blank?
       tags << mobile_head
     elsif request.smart_phone? && !smart_phone_head.blank?
@@ -76,11 +76,11 @@ class Cms::Layout < ApplicationRecord
     else
       tags << head.to_s
     end
-                    
+
     tags.delete('')
     tags.join("\n")
   end
-  
+
   def body_tag(request)
     if request.mobile? && !mobile_body.blank?
       mobile_body.html_safe
@@ -90,15 +90,15 @@ class Cms::Layout < ApplicationRecord
       body.html_safe
     end
   end
-  
+
   def public_path
-    site.public_path + '/layout/' + name + '/style.css' 
+    site.public_path + '/layout/' + name + '/style.css'
   end
-  
+
   def public_uri # TODO dummy
-    '/layout/' + name + '/style.css' 
+    '/layout/' + name + '/style.css'
   end
-  
+
   def request_publish_data # TODO dummy
     _res = {
       :page_type => 'text/css',
@@ -106,15 +106,15 @@ class Cms::Layout < ApplicationRecord
       :page_data => stylesheet,
     }
   end
-  
+
   def tamtam_css(request)
     tag = head_tag_with_request(request)
-    
+
     css = ''
     tag.scan(/<link [^>]*?rel="stylesheet"[^>]*?>/i) do |m|
       css += %Q(@import "#{m.gsub(/.*href="(.*?)".*/, '\1')}";\n)
     end
-    
+
     4.times do
       css = convert_css_for_tamtam(css)
     end
@@ -122,7 +122,7 @@ class Cms::Layout < ApplicationRecord
     css.gsub!(/[a-z]:after/i, '-after')
     css
   end
-  
+
   def convert_css_for_tamtam(css)
     css.gsub(/^@import .*/) do |m|
       path = m.gsub(/^@import ['"](.*?)['"];/, '\1')
@@ -141,14 +141,14 @@ class Cms::Layout < ApplicationRecord
       m
     end
   end
-  
+
   def extended_css(options = {})
     css = extend_css(public_path)
     if options[:skip_charset] == true
       css.gsub!(/(^|\n)@charset .*?(\n|$)/, '\1')
     end
   end
-  
+
   def extend_css(path)
     return '' unless FileTest.exist?(path)
     css = ::File.new(path).read
@@ -167,7 +167,7 @@ class Cms::Layout < ApplicationRecord
     end
     css
   end
-  
+
   def duplicate(rel_type = nil)
     item = self.class.new(self.attributes)
     item.id            = nil
@@ -175,12 +175,12 @@ class Cms::Layout < ApplicationRecord
     item.updated_at    = nil
     item.recognized_at = nil
     item.published_at  = nil
-    
+
     if rel_type == nil
       item.name          = nil
       item.title         = item.title.gsub(/^(【複製】)*/, "【複製】")
     end
-    
+
     return item.save(:validate => false)
   end
 end
