@@ -84,6 +84,17 @@ class Cms::Content < ApplicationRecord
     setting_extra_values(name)[extra_name]
   end
 
+  def model_content_klass
+    model.sub('::', '::Content::').constantize
+  rescue NameError
+    nil
+  end
+
+  def downcast
+    klass = model_content_klass
+    klass ? becomes(klass) : self
+  end
+
   private
 
   def config(name)

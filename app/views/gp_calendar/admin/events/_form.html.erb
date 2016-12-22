@@ -1,5 +1,3 @@
-<%- inline_id = @item.id || params[:_tmp].presence || Util::Sequencer.next_id(:tmp, md5: true) -%>
-
 <span class="note">※は必須項目です。</span>
 
 <table class="show">
@@ -57,17 +55,7 @@
 </table>
 <%- end -%>
 
-<table class="show">
-  <tr>
-    <th>添付ファイル</th>
-    <td><%= link_to '開く▼', "javascript:void(0);", :onclick=> "toggle_form(this, '#inline_files')" %></td>
-  </tr>
-</table>
-
-<div id="inline_files" style="display: none;">
-  <%= hidden_field_tag :_tmp, inline_id %>
-  <iframe src="<%= gp_calendar_event_files_path(@content, inline_id) %>" style="width: 100%; height: 400px;"></iframe>
-</div>
+<%= render 'sys/admin/_partial/files/form', f: f, item: @item, content: @content %>
 
 <%- if @content.event_sync_import? -%>
 <p class="form">同期元情報</p>

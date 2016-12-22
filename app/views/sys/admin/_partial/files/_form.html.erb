@@ -1,19 +1,21 @@
 <%
-
-inline_id = item.unid || params[:_tmp]
+inline_id = if item.new_record?
+              item.in_tmp_id ||= Util::Sequencer.next_id(:tmp, md5: true)
+            else
+              "#{item.class}-#{item.id}"
+            end
 return if inline_id.blank?
+%>
+<%= f.hidden_field :in_tmp_id if item.new_record? %>
 
-%><%= hidden_field_tag :_tmp, inline_id %>
+<p class="form">添付ファイル</p>
 
 <table class="show">
-  <tr>
-    <th>添付ファイル</th>
-    <td>
-      <a href="#" onclick="$(this).toggleOpen('#inlineFiles'); return false;">開く▼</a>
-    </td>
-  </tr>
+  <tr><td>
+    <a href="#" onclick="$(this).toggleOpen('#inlineFiles'); return false;">開く▼</a>
+  </td></tr>
 </table>
 
-<div id="inlineFiles" class="inlineForm" style="display: none;">
-<iframe src="<%= sys_inline_files_path(inline_id) %>" style="width: 100%; height: 340px;" frameborder="0"></iframe>
+<div id="inlineFiles" style="display: none;">
+<iframe src="<%= sys_inline_files_path(inline_id, content: content) %>" style="width: 100%; height: 400px;" frameborder="0"></iframe>
 </div>

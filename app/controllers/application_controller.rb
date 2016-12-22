@@ -34,13 +34,36 @@ class ApplicationController < ActionController::Base
   end
 
   def send_data(data, options = {})
-    if options.include?(:filename)
-      options[:filename] = URI::escape(options[:filename]) if request.user_agent =~ /(MSIE|Trident)/
-    end
-    super(data, options)
+    options = set_default_file_options(options)
+    super
   end
 
-private
+  def send_file(path, options = {})
+    options = set_default_file_options(options)
+    super
+  end
+
+  private
+
+  def set_default_file_options(options)
+    if options.include?(:filename)
+      options[:filename] = URI::escape(options[:filename]) if request.user_agent =~ /(MSIE|Trident)/
+      options[:type] ||= Rack::Mime.mime_type(File.extname(options[:filename]))
+      options[:disposition] ||= detect_disposition_from_mime(options[:type])
+    end
+    options
+  end
+
+  def detect_disposition_from_mime(mime_type)
+    if request.user_agent =~ /Android/
+      'attachment'
+    elsif mime_type.to_s =~ %r!\Aimage/|\Aapplication/pdf\z!
+      'inline'
+    else
+      'attachment'
+    end
+  end
+
   def rescue_action(error)
     case error
     when ActionController::InvalidAuthenticityToken

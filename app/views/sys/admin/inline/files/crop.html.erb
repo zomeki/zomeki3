@@ -20,10 +20,10 @@ function coordinates(c){
 <%= render 'menu' %>
 
 <br>
-<p><%= image_tag @file_content_path, id: 'cropbox' %></p>
+<p><%= image_tag url_for(action: :download, id: @item), id: 'cropbox' %></p>
 <br>
 
-<%= form_tag(crop_gp_article_doc_file_path(@content, doc_id: @doc_id, id: @item.id), :html => {method: :put}) do |f| %>
+<%= form_tag url_for(action: :crop, id: @item), html: { method: :put } do |f| %>
   <% for attribute in [:x, :y, :x2, :y2, :w, :h] %>
     <%= hidden_field_tag attribute %>
   <% end %>

@@ -51,7 +51,6 @@ class GpCalendar::Admin::EventsController < Cms::Controller::Admin::Base
     @item = @content.events.build(event_params)
     _create(@item) do
       set_categories
-      @item.fix_tmp_files(params[:_tmp])
       gp_calendar_sync_events_export(doc_or_event: @item) if @content.event_sync_export?
     end
   end
@@ -86,7 +85,7 @@ class GpCalendar::Admin::EventsController < Cms::Controller::Admin::Base
 
   def event_params
     params.require(:item).permit(
-      :description, :ended_on, :href, :started_on, :state, :target, :title, :note,
+      :description, :ended_on, :href, :started_on, :state, :target, :title, :note, :in_tmp_id,
       :creator_attributes => [:id, :group_id, :user_id]
     )
   end

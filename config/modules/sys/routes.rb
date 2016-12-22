@@ -70,9 +70,15 @@ ZomekiCMS::Application.routes.draw do
       :path        => ":parent/object_privileges"
     resources :inline_files,
       :controller  => "admin/inline/files",
-      :path        => ":parent/inline_files" do
+      :path        => ":content/:parent/inline_files" do
         member do
+          get :content, :path => 'file_contents/(*path)'
           get :download
+          get :crop
+          post :crop
+        end
+        collection do
+          get :view
         end
       end
     resources :storage_files,

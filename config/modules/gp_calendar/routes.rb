@@ -19,9 +19,7 @@ ZomekiCMS::Application.routes.draw do
     resources(:events,
       :controller => 'admin/events',
       :path       => ':content/events') do
-      get 'file_contents/:basename.:extname' => 'admin/events/files#content'
-      resources :files,
-        :controller => 'admin/events/files'
+      get 'file_contents/(*path)' => 'admin/events/files#content'
     end
 
     resources :holidays,
