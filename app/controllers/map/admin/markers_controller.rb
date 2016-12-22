@@ -23,7 +23,6 @@ class Map::Admin::MarkersController < Cms::Controller::Admin::Base
   def create
     @item = @content.markers.build(marker_params)
     _create(@item) do
-      set_categories
       set_file
     end
   end
@@ -32,7 +31,6 @@ class Map::Admin::MarkersController < Cms::Controller::Admin::Base
     @item = @content.markers.find(params[:id])
     @item.attributes = marker_params
     _update(@item) do
-      set_categories
       set_file
     end
   end
@@ -54,15 +52,6 @@ class Map::Admin::MarkersController < Cms::Controller::Admin::Base
 
   private
 
-  def set_categories
-    category_ids = if params[:categories]
-                     params[:categories].values.flatten.reject{|c| c.blank? }.uniq
-                   else
-                     []
-                   end
-    @item.category_ids = category_ids
-  end
-
   def set_file
     if params[:delete_file]
       @item.files.each {|f| f.destroy } unless @item.files.empty?
@@ -77,6 +66,10 @@ class Map::Admin::MarkersController < Cms::Controller::Admin::Base
   end
 
   def marker_params
-    params.require(:item).permit(:latitude, :longitude, :state, :title, :window_text)
+    params.require(:item).permit(:latitude, :longitude, :state, :title, :window_text).tap do |permitted|
+      [:in_category_ids].each do |key|
+        permitted[key] = params[:item][key].to_unsafe_h if params[:item][key]
+      end
+    end
   end
 end

@@ -2,6 +2,7 @@ class Map::Marker < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Rel::File
   include Cms::Model::Auth::Content
+  include GpCategory::Model::Rel::Category
 
   include StateText
   include Cms::Base::PublishQueue::Content
@@ -14,9 +15,6 @@ class Map::Marker < ApplicationRecord
 
   # Proper
   validates_presence_of :state
-
-  has_many :categorizations, :class_name => 'GpCategory::Categorization', :as => :categorizable, :dependent => :destroy
-  has_many :categories, :class_name => 'GpCategory::Category', :through => :categorizations
 
   validates :title, :presence => true
   validates :latitude, :presence => true, :numericality => true
