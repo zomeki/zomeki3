@@ -184,7 +184,7 @@ module Sys::Model::Base::File
   end
 
   def upload_path(options = {})
-    site_dir = site_id ? "sites/#{format('%04d', site_id)}" : ""
+    site_dir = site_id ? "sites/#{format('%04d', site_id)}" : "."
     md_dir  = self.class.to_s.underscore.pluralize
     id_dir  = format('%08d', id).gsub(/(.*)(..)(..)(..)$/, '\1/\2/\3/\4/\1\2\3\4')
     id_file = options[:type] ? options[:type].to_s : format('%07d', id)

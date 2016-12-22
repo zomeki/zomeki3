@@ -70,7 +70,7 @@ class Map::Admin::MarkersController < Cms::Controller::Admin::Base
     if (param_file = params[:file])
       @item.files.each {|f| f.destroy } unless @item.files.empty?
       filename = "image#{File.extname(param_file.original_filename)}"
-      file = @item.files.build(file: param_file, name: filename, title: filename)
+      file = @item.files.build(file: param_file, name: filename, title: filename, site_id: Core.site.id)
       file.allowed_type = 'gif,jpg,png'
       file.save
     end
