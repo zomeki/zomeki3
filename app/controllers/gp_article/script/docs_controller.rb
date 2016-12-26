@@ -15,7 +15,6 @@ class GpArticle::Script::DocsController < Cms::Controller::Script::Publication
       target_date: params[:target_date]
     }
     if @node.content.try(:doc_list_pagination) != 'simple' && params[:target_date].present?
-      "publish_more_by_period"
       publish_more_by_period(@node, publish_more_params)
     else
       publish_more(@node, publish_more_params)
