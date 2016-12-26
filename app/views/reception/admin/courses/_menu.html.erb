@@ -1,5 +1,4 @@
-<%- action = I18n.t("actions.#{action_name}", default: '') -%>
-<h2><%= @content.name %> ： <%= Reception::Course.model_name.human %><%= action %></h2>
+<h2><%= @content.name %> ： <%= Reception::Course.model_name.human %><%=t "actions.#{action_name}", default: '' %></h2>
 
 <div class="actionMenu">
   <%= action_menu :new %>
