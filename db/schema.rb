@@ -1055,6 +1055,8 @@ ActiveRecord::Schema.define(version: 20161222041456) do
     t.string   "applied_from"
     t.datetime "applied_at"
     t.string   "token"
+    t.string   "remote_addr"
+    t.string   "user_agent"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
     t.index ["open_id"], name: "index_reception_applicants_on_open_id", using: :btree

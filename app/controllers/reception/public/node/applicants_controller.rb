@@ -18,6 +18,8 @@ class Reception::Public::Node::ApplicantsController < Cms::Controller::Public::B
     @applicant = Reception::Applicant.new(applicant_params)
     @applicant.applied_from = 'public'
     @applicant.state = 'applied'
+    @applicant.remote_addr = request.remote_ip
+    @applicant.user_agent = request.user_agent
 
     case
     when params[:commit]

@@ -12,6 +12,8 @@ class CreateReceptionApplicants < ActiveRecord::Migration[5.0]
       t.string      :applied_from
       t.datetime    :applied_at
       t.string      :token
+      t.string      :remote_addr
+      t.string      :user_agent
       t.timestamps
     end
   end
