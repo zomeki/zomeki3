@@ -42,12 +42,10 @@ class Map::Admin::MarkersController < Cms::Controller::Admin::Base
 
   def file_content
     item = @content.markers.find(params[:id])
-    return http_error(404) if item.files.empty?
     file = item.files.first
-    mt = file.mime_type.presence || Rack::Mime.mime_type(File.extname(file.name))
-    type, disposition = (mt =~ %r!^image/|^application/pdf$! ? [mt, 'inline'] : [mt, 'attachment'])
-    disposition = 'attachment' if request.env['HTTP_USER_AGENT'] =~ /Android/
-    send_file file.upload_path, :type => type, :filename => file.name, :disposition => disposition
+    return http_error(404) unless file
+
+    send_file file.upload_path, filename: file.name
   end
 
   private

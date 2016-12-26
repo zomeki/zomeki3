@@ -32,15 +32,9 @@ class GpCalendar::Public::Node::SearchEventsController < GpCalendar::Public::Nod
   end
 
   def file_content
-    @event = @content.events.find_by(name: params[:name])
-    return http_error(404) unless @event
-    file = @event.files.find_by(name: "#{params[:basename]}.#{params[:extname]}")
-    return http_error(404) unless file
-
-    mt = file.mime_type.presence || Rack::Mime.mime_type(File.extname(file.name))
-    type, disposition = (mt =~ %r!^image/|^application/pdf$! ? [mt, 'inline'] : [mt, 'attachment'])
-    disposition = 'attachment' if request.env['HTTP_USER_AGENT'] =~ /Android/
-    send_file file.upload_path, :type => type, :filename => file.name, :disposition => disposition
+    @event = @content.events.find_by!(name: params[:name])
+    file = @event.files.find_by!(name: "#{params[:basename]}.#{params[:extname]}")
+    send_file file.upload_path, filename: file.name
   end
 
 end

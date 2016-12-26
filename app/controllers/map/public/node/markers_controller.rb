@@ -29,14 +29,11 @@ class Map::Public::Node::MarkersController < Cms::Controller::Public::Base
   end
 
   def file_content
-    @marker = @content.markers.find_by(name: params[:name])
-    return http_error(404) if @marker.nil? || @marker.files.empty?
-
+    @marker = @content.markers.find_by!(name: params[:name])
     file = @marker.files.first
-    mt = file.mime_type.presence || Rack::Mime.mime_type(File.extname(file.name))
-    type, disposition = (mt =~ %r!^image/|^application/pdf$! ? [mt, 'inline'] : [mt, 'attachment'])
-    disposition = 'attachment' if request.env['HTTP_USER_AGENT'] =~ /Android/
-    send_file file.upload_path, :type => type, :filename => file.name, :disposition => disposition
+    return http_error(404) unless file
+
+    send_file file.upload_path, filename: file.name
   end
 
   private
