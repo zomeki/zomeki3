@@ -1,5 +1,3 @@
-<h2><%= @content.name %><%= @form ? " ： #{@form.title}" : '' %><%= defined?(sub) ? " ： #{sub}" : '' %></h2>
-
 <div class="actionMenu">
   <%- if action_name == 'index' -%>
   <%= link_to '新規作成', url_for(action: 'new') %>

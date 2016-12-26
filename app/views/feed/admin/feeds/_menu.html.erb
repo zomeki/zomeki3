@@ -1,6 +1,9 @@
-<%= render 'feed/admin/shared/menu', index_path: feed_feeds_path(content: @content),
-                                                 sub: "#{Feed::Feed.model_name.human}#{case action_name.to_sym
-                                                                                             when :index; '一覧'
-                                                                                             when :new;   '登録'
-                                                                                             when :edit;  '編集'
-                                                                                             end}" %>
+<h2><%= @content.name %> ： <%= Feed::Feed.model_name.human %><%=t "actions.#{action_name}", default: '' %></h2>
+
+<div class="actionMenu">
+  <%= action_menu :new %>
+  <%= action_menu :index %>
+  <%= action_menu :show %>
+  <%= action_menu :edit if @item.try(:editable?) %>
+  <%= action_menu :destroy if @item.try(:deletable?) %>
+</div>

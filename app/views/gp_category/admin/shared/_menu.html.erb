@@ -1,5 +1,3 @@
-<h2><%= @content.name %><%= defined?(sub) ? " ： #{sub}" : '' %></h2>
-
 <%- if controller_name == 'categories' -%>
 <div class="navi">
   <%= link_to "#{GpCategory::CategoryType.model_name.human}一覧", gp_category_category_types_path %>
