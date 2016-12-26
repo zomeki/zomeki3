@@ -1,0 +1,17 @@
+<%= form_tag url_for(action: :index), method: :get, class: 'search' do -%>
+<%= hidden_field_tag :target, params[:target] %>
+<table>
+  <tr>
+    <th>キーワード</th>
+    <td rowspan="2" class="submitters">
+      <%= submit_tag '検索', data: { disable_with: false } %>
+      <%= submit_tag 'リセット', name: 'reset_criteria', data: { disable_with: false } %>
+      <span class="separator">|</span>
+      <%= submit_tag 'CSV出力', name: 'csv', data: { disable_with: false } %>
+    </td>
+  </tr>
+  <tr>
+    <td><%= text_field_tag 'criteria[keyword]', params.dig(:criteria, :keyword), style: 'width: 400px' %></td>
+  </tr>
+</table>
+<%- end -%>

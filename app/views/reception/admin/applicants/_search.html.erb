@@ -1,0 +1,17 @@
+<%= form_tag url_for(action: :index), method: :get, class: 'search' do -%>
+<table>
+  <tr>
+    <th><%= Reception::Applicant.human_attribute_name :state %></th>
+    <td rowspan="2" class="submitters">
+      <%= submit_tag '検索', data: { disable_with: false } %>
+      <%= submit_tag 'リセット', name: 'reset_criteria', data: { disable_with: false } %>
+      <span class="separator">|</span>
+      <%= submit_tag 'CSV出力', name: 'csv', data: { disable_with: false } %>
+    </td>
+  </tr>
+  <tr>
+    <td><%= select_tag 'criteria[state]',
+              options_for_select(Reception::Applicant::STATE_OPTIONS, params.dig(:criteria, :state)), include_blank: true %></td>
+  </tr>
+</table>
+<%- end -%>

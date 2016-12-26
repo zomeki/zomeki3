@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161215030642) do
+ActiveRecord::Schema.define(version: 20161222041456) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1041,6 +1041,57 @@ ActiveRecord::Schema.define(version: 20161215030642) do
     t.integer  "visitors"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "reception_applicants", force: :cascade do |t|
+    t.integer  "open_id"
+    t.integer  "seq_no"
+    t.string   "state"
+    t.string   "name"
+    t.string   "kana"
+    t.string   "tel"
+    t.string   "email"
+    t.text     "remark"
+    t.string   "applied_from"
+    t.datetime "applied_at"
+    t.string   "token"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.index ["open_id"], name: "index_reception_applicants_on_open_id", using: :btree
+  end
+
+  create_table "reception_courses", force: :cascade do |t|
+    t.integer  "content_id"
+    t.string   "state"
+    t.string   "name"
+    t.string   "title"
+    t.text     "subtitle"
+    t.text     "body"
+    t.text     "remark"
+    t.text     "description"
+    t.integer  "capacity"
+    t.integer  "fee"
+    t.text     "fee_remark"
+    t.integer  "sort_no"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.index ["content_id"], name: "index_reception_courses_on_content_id", using: :btree
+  end
+
+  create_table "reception_opens", force: :cascade do |t|
+    t.integer  "course_id"
+    t.string   "state"
+    t.string   "title"
+    t.integer  "sort_no"
+    t.date     "open_on"
+    t.time     "start_at"
+    t.time     "end_at"
+    t.string   "place"
+    t.string   "lecturer"
+    t.datetime "expired_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["course_id"], name: "index_reception_opens_on_course_id", using: :btree
   end
 
   create_table "simple_captcha_data", force: :cascade do |t|

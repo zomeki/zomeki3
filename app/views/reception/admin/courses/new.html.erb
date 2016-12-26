@@ -1,0 +1,5 @@
+<%= form_for @item, as: :item, url: { action: :create } do |f| %>
+  <%= error_messages_for :item %>
+  <%= render 'form', f: f %>
+  <%= submit [['下書き保存', :draft],['即時公開', :public]] %>
+<% end %>

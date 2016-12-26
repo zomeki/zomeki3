@@ -1,0 +1,10 @@
+<%- categories.each do |category| -%>
+<li class="category<%= category.name.try(:camelize) %>">
+  <%= link_to category.title, "#{@node.public_uri}categories/#{category.category_type.name}/#{category.path_from_root_category}/" %>
+  <%- unless category.public_children.empty? -%>
+  <ul>
+    <%= render 'all_categories_categories', categories: category.public_children %>
+  </ul>
+  <%- end -%>
+</li>
+<%- end -%>

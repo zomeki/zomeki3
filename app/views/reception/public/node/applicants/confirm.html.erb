@@ -1,0 +1,16 @@
+<div class="contentReceptionCourse">
+  <h2><%= @course.title %></h2>
+
+  <%= render 'show', applicant: @applicant %>
+
+  <%= form_for @applicant, as: :item, url: "#{@course.public_uri}/applicants" do |f| -%>
+    <%= f.error_messages %>
+    <%- [:open_id, :name, :kana, :tel, :email, :email_confirmation, :remark].each do |key| -%>
+      <%= f.hidden_field key %>
+    <%- end -%>
+    <div class="submit">
+      <%= f.submit '申し込む', name: 'commit' %>
+      <%= f.submit '変更する', name: 'back' %>
+    </div>
+  <%- end -%>
+</div>

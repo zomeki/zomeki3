@@ -1,0 +1,52 @@
+ja:
+  activerecord:
+    models:
+      reception/course: 講座
+      reception/open: 開催講座
+      reception/applicant: 申込者
+    attributes:
+      reception/course:
+        state: 状態
+        name: URL名
+        title: タイトル
+        subtitle: サブタイトル
+        body: 内容
+        capacity: 定員
+        fee: 受講料
+        fee_remark: 受講料（備考）
+        remark: 備考
+        description: 説明
+        sort_no: 並び順
+        created_at: 作成日時
+        updated_at: 更新日時
+      reception/open:
+        state: 状態
+        title: 表示名
+        open_on: 開催日
+        start_at: 開始時刻
+        end_at: 終了時刻
+        place: 開催場所
+        lecturer: 講師名
+        expired_at: 申込終了日時
+        sort_no: 並び順
+        created_at: 作成日時
+        updated_at: 更新日時
+        applicants_count: 申込人数
+      reception/applicant:
+        seq_no: 受付番号
+        state: 状態
+        name: 名前
+        kana: フリガナ
+        tel: 電話番号
+        email: E-mail
+        email_confirmation: E-mail（確認用）
+        remark: 備考
+        applied_at: 申込日時
+        applied_from: 申込方法
+        token: トークン
+      reception/piece/course:
+        docs_filter: 表示対象
+        docs_order: 表示順
+        doc_style: 表示形式
+        date_style: 日付形式
+        docs_number: 表示件数

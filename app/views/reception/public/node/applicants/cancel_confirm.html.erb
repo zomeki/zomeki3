@@ -1,0 +1,15 @@
+<div class="contentReceptionCourse">
+  <h2><%= @course.title %></h2>
+
+  <p>キャンセルする内容をご確認ください。</p>
+
+  <%= render 'show', applicant: @applicant %>
+
+  <%= form_for @applicant, as: :item, url: "#{@course.public_uri}/applicants/#{@applicant.token}/" do |f| -%>
+    <%= f.error_messages %>
+    <%= hidden_field_tag :seq_no, params[:seq_no] %>
+    <div class="submit">
+      <%= f.submit '送信する', name: 'commit' %>
+    </div>
+  <%- end -%>
+</div>

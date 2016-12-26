@@ -1,0 +1,17 @@
+<%- action = I18n.t("actions.#{action_name}", default: '') -%>
+<h2><%= @content.name %> ： <%= @course.title %> ： <%= Reception::Open.model_name.human %><%= action %></h2>
+
+<div class="actionMenu">
+  <%= link_to '戻る', reception_courses_path if action_name == 'index' %>
+  <%= action_menu :new %>
+  <%= action_menu :index %>
+  <%= action_menu :show %>
+  <%= action_menu :edit if @item.try(:editable?) %>
+  <%= action_menu :destroy if @item.try(:deletable?) %>
+
+  <%- case action_name -%>
+  <%- when 'show' -%>
+    <%= link_to '公開', { action: :show, do: :publish } unless @item.state_public? %>
+    <%= link_to '非公開', { action: :show, do: :close } if @item.state_public? %>
+  <%- end -%>
+</div>

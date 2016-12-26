@@ -1,0 +1,43 @@
+<span class="note">※は必須項目です。</span>
+
+<p class="form">基本情報</p>
+
+<table class="show">
+  <tr>
+    <th><%= f.label :title %></th>
+    <td><%= f.text_field :title, class: 'title' %></td>
+  </tr>
+  <tr>
+    <th><%= f.label :open_on %> <span class="note">※</span></th>
+    <td>
+      <span><%= f.text_field :open_on, value: i18n_l(@item.open_on), class: 'datepicker' %></span>
+      <span style="margin-left: 10px;">
+        <span><%= f.text_field :start_at, value: @item.start_at.try(:strftime, '%H:%M'), class: 'timepicker' %></span>
+        <span>～</span>
+        <span><%= f.text_field :end_at, value: @item.end_at.try(:strftime, '%H:%M'), class: 'timepicker' %></span>
+      </span>
+    </td>
+  </tr>
+  <tr>
+    <th><%= f.label :place %></th>
+    <td><%= f.text_field :place, class: 'title' %></td>
+  </tr>
+  <tr>
+    <th><%= f.label :lecturer %></th>
+    <td><%= f.text_field :lecturer, class: 'title' %></td>
+  </tr>
+  <tr>
+    <th><%= f.label :expired_at %></th>
+    <td><%= f.text_field :expired_at, value: i18n_l(@item.expired_at), class: 'datetimepicker' %></td>
+  </tr>
+</table>
+
+<%= creator_form f %>
+
+<%= javascript_tag do -%>
+$(document).ready(function () {
+  <%= enable_datetimepicker_script -%>
+  <%= enable_datepicker_script -%>
+  $('.timepicker').timepicker({stepMinute: 5});
+});
+<%- end -%>

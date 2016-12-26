@@ -1,0 +1,41 @@
+<span class="note">※は必須項目です。</span>
+
+<p class="form">基本情報</p>
+
+<table class="show">
+  <%- if @item.persisted? -%>
+  <tr>
+    <th><%= f.label :seq_no %></th>
+    <td><%= @item.seq_no %></td>
+  </tr>
+  <%- end -%>
+  <tr>
+    <th><%= f.label :state %></th>
+    <td>
+      <%= f.radio_buttons :state, Reception::Applicant::STATE_OPTIONS %>
+      <span style="margin-left: 20px;">※受付状態にすると、申込者に受付完了メールを送信します。<span>
+    </td>
+  </tr>
+  <tr>
+    <th><%= f.label :name %> <span class="note">※</span></th>
+    <td><%= f.text_field :name, class: 'title' %></td>
+  </tr>
+  <tr>
+    <th><%= f.label :kana %> <span class="note">※</span></th>
+    <td><%= f.text_field :kana, class: 'title' %></td>
+  </tr>
+  <tr>
+    <th><%= f.label :tel %> <span class="note">※</span></th>
+    <td><%= f.text_field :tel, class: 'title' %></td>
+  </tr>
+  <tr>
+    <th><%= f.label :email %> <span class="note">※</span></th>
+    <td><%= f.text_field :email, class: 'title' %></td>
+  </tr>
+  <tr>
+    <th><%= f.label :remark %></th>
+    <td><%= f.text_area :remark %></td>
+  </tr>
+</table>
+
+<%= creator_form f %>

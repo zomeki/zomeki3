@@ -1,0 +1,48 @@
+<p class="form">基本情報</p>
+
+<table class="show">
+  <tr>
+    <th><%= @item.class.human_attribute_name :title %></th>
+    <td><%= @item.title %></td>
+  </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :subtitle %></th>
+    <td><%=simple_format @item.subtitle %></td>
+  </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :body %></th>
+    <td><%=raw @item.replace_file_path_for_admin(@item.body) %></td>
+  </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :capacity %></th>
+    <td><%= @item.capacity %></td>
+  </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :fee %></th>
+    <td><%= "#{@item.fee} 円" if @item.fee.present? %> <span style="margin-left: 10px;"><%= @item.fee_remark %></span></td>
+  </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :remark %></th>
+    <td><%=raw @item.replace_file_path_for_admin(@item.remark) %></td>
+  </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :sort_no %></th>
+    <td><%= @item.sort_no %></td>
+  </tr>
+</table>
+
+<p class="form">申込フォーム情報</p>
+
+<table class="show">
+  <tr>
+    <th><%= @item.class.human_attribute_name :description %></th>
+    <td><%=raw @item.replace_file_path_for_admin(@item.description) %></td>
+  </tr>
+</table>
+
+<%- if @content.visible_category_types.present? -%>
+<p class="form">カテゴリ設定</p>
+<%= render 'gp_category/admin/_partial/categories/view', item: @item, category_types: @content.visible_category_types %>
+<%- end -%>
+
+<%= creator_view @item %>

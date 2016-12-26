@@ -1,0 +1,46 @@
+<%- courses.each do |course| -%>
+<div class="course">
+  <h2><%= course.title %></h2>
+  <h3><%=br course.subtitle %></h3>
+  <div class="body"><%=raw course.replace_file_path_for_public(course.body) %></div>
+  
+  <table class="show">
+    <tr class="hold_date">
+      <td>開催日時</td>
+      <td>
+        <ul>
+          <%- course.public_opens.each do |open| -%>
+            <li>
+              <span><%= open.open_at_text %></span>
+              <span class="link"><%= link_to_if open.applicable?, open.link_state_text, "#{course.public_uri}/applicants/new?open_id=#{open.id}" %></span>
+            </li>
+          <%- end -%>
+        </ul>
+      </td>
+    </tr>
+    <tr class="total_number">
+      <td>定員</td>
+      <td><%= "#{course.capacity} 名" if course.capacity.present? %></td>
+    </tr>
+    <tr class="charge">
+      <td>受講料</td>
+      <td>
+        <span><%= "#{course.fee} 円" if course.fee.present? %>
+        <span><%= course.fee_remark %></span>
+      </td>
+    </tr>
+    <tr class="place">
+      <td>場所</td>
+      <td><%=raw course.public_opens.map(&:place).select(&:present?).uniq.map { |p| "<span>#{p}</span>" }.join(', ') %></td>
+    </tr>
+    <tr class="name">
+      <td>講師</td>
+      <td><%=raw course.public_opens.map(&:lecturer).select(&:present?).uniq.map { |l| "<span>#{l}</span>" }.join(', ') %></td>
+    </tr>
+    <tr class="remarks">
+      <td>備考</td>
+      <td><%=raw course.replace_file_path_for_public(course.remark) %></td>
+    </tr>
+  </table>
+</div>
+<%- end -%>

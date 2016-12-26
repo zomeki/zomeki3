@@ -1,0 +1,30 @@
+<p class="form">基本情報</p>
+
+<table class="show">
+  <tr>
+    <th><%= @item.class.human_attribute_name :seq_no %></th>
+    <td><%= @item.seq_no %></td>
+  </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :state %></th>
+    <td><%= @item.state_text %></td>
+  </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :name %></th>
+    <td><%= @item.name %></td>
+  </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :kana %></th>
+    <td><%= @item.kana %></td>
+  </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :tel %></th>
+    <td><%= @item.tel %></td>
+  </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :email %></th>
+    <td><%= @item.email %></td>
+  </tr>
+</table>
+
+<%= creator_view @item %>
