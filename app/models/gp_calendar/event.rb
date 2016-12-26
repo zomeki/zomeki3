@@ -3,6 +3,7 @@ class GpCalendar::Event < ApplicationRecord
   include Sys::Model::Rel::Creator
   include Sys::Model::Rel::File
   include Cms::Model::Auth::Content
+  include GpCategory::Model::Rel::Category
 
   include StateText
   include GpCalendar::EventSync
@@ -18,8 +19,6 @@ class GpCalendar::Event < ApplicationRecord
 
   # Proper
   validates :state, :presence => true
-
-  has_and_belongs_to_many :categories, :class_name => 'GpCategory::Category', :join_table => 'gp_calendar_events_gp_category_categories'
 
   after_initialize :set_defaults
   before_save :set_name
@@ -81,7 +80,7 @@ class GpCalendar::Event < ApplicationRecord
 
     if criteria[:categories].present?
       rel = rel.distinct.includes(:categories)
-          .where(gp_calendar_events_gp_category_categories: {category_id: criteria[:categories]})
+               .where(gp_category_categorizations: { category_id: criteria[:categories] })
     end
 
     rel = rel.where(events[:state].eq(criteria[:state])) if criteria[:state].present?

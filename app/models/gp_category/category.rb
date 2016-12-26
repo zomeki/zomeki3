@@ -33,12 +33,14 @@ class GpCategory::Category < ApplicationRecord
   validates :title, :presence => true
   validates :state, :presence => true
 
-  has_and_belongs_to_many :events, -> { order(:started_on, :ended_on) },
-                          class_name: 'GpCalendar::Event', join_table: 'gp_calendar_events_gp_category_categories'
+  has_many :categorizations, dependent: :destroy
+  has_many :doc_categorizations, -> { where(categorized_as: 'GpArticle::Doc') }, class_name: 'GpCategory::Categorization'
 
-  has_many :categorizations, -> { where(categorized_as: 'GpArticle::Doc') }, :dependent => :destroy
-  has_many :docs, :through => :categorizations, :source => :categorizable, :source_type => 'GpArticle::Doc'
-  has_many :markers, :through => :categorizations, :source => :categorizable, :source_type => 'Map::Marker'
+  has_many :docs, through: :doc_categorizations, source: :categorizable, source_type: 'GpArticle::Doc'
+  has_many :markers, through: :categorizations, source: :categorizable, source_type: 'Map::Marker'
+  has_many :events, -> { order(:started_on, :ended_on) },
+                    through: :categorizations, source: :categorizable, source_type: 'GpCalendar::Event'
+
   has_many :marker_icons, :class_name => 'Map::MarkerIcon', :as => :relatable, :dependent => :destroy
   has_many :category_sets, :class_name => 'Gnav::CategorySet', :dependent => :destroy
 

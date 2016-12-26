@@ -50,7 +50,6 @@ class GpCalendar::Admin::EventsController < Cms::Controller::Admin::Base
   def create
     @item = @content.events.build(event_params)
     _create(@item) do
-      set_categories
       gp_calendar_sync_events_export(doc_or_event: @item) if @content.event_sync_export?
     end
   end
@@ -60,7 +59,6 @@ class GpCalendar::Admin::EventsController < Cms::Controller::Admin::Base
     @item.attributes = event_params
     location = @item.sync_source_host ? gp_calendar_events_path(imported: 'yes') : gp_calendar_events_path
     _update(@item, location: location) do
-      set_categories
       gp_calendar_sync_events_export(doc_or_event: @item) if @content.event_sync_export?
     end
   end
@@ -74,19 +72,14 @@ class GpCalendar::Admin::EventsController < Cms::Controller::Admin::Base
 
   private
 
-  def set_categories
-    category_ids = if params[:categories]
-                     params[:categories].values.flatten.reject(&:blank?).uniq
-                   else
-                     []
-                   end
-    @item.category_ids = category_ids
-  end
-
   def event_params
     params.require(:item).permit(
       :description, :ended_on, :href, :started_on, :state, :target, :title, :note, :in_tmp_id,
       :creator_attributes => [:id, :group_id, :user_id]
-    )
+    ).tap do |permitted|
+      [:in_category_ids].each do |key|
+        permitted[key] = params[:item][key].to_unsafe_h if params[:item][key]
+      end
+    end
   end
 end
