@@ -6,10 +6,19 @@ class GpArticle::Script::DocsController < Cms::Controller::Script::Publication
     smart_phone_path = @node.public_smart_phone_path.to_s
     publish_page(@node, :uri => "#{uri}index.rss", :path => "#{path}index.rss", :dependent => :rss)
     publish_page(@node, :uri => "#{uri}index.atom", :path => "#{path}index.atom", :dependent => :atom)
-    publish_more(@node, :uri => uri, :path => path, :smart_phone_path => smart_phone_path,
-      :limit => @node.content.try(:doc_publish_more_pages), :start_at => @node.content.try(:published_first_day),
-      :end_at => @node.content.try(:published_last_day),
-      :period => @node.content.try(:doc_list_pagination), :target_date => params[:target_date])
+    publish_more_params = {
+      uri: uri, path: path, smart_phone_path: smart_phone_path,
+      limit: @node.content.try(:doc_publish_more_pages),
+      start_at: @node.content.try(:published_first_day),
+      end_at: @node.content.try(:published_last_day),
+      period: @node.content.try(:doc_list_pagination),
+      target_date: params[:target_date]
+    }
+    if @node.content.try(:doc_list_pagination) != 'simple' && params[:target_date].present?
+      publish_more_by_period(@node, publish_more_params)
+    else
+      publish_more(@node, publish_more_params)
+    end
     render plain: 'OK'
   end
 
