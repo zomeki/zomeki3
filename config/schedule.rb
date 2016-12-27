@@ -66,6 +66,6 @@ every :day, at: '3:00 am' do
 end
 
 # 不要なsys_tasksデータを削除します。
-every :month, at: 'start of the month at 3:00 am' do
+every :month, at: 'start of the month at 2:00 am' do
   rake 'zomeki:sys:tasks:delete_expired'
 end
