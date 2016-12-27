@@ -6,6 +6,6 @@ class AdBanner::Script::ClicksController < ApplicationController
         click.destroy
       end
     end
-    render text: 'OK'
+    render plain: 'OK'
   end
 end
