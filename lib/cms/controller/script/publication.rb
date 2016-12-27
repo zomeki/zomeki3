@@ -151,9 +151,8 @@ class Cms::Controller::Script::Publication < ApplicationController
       if period == 'simple'
         break unless rs
       else
-        break if rs.blank? && params[:end_at].blank?
-        break if rs.blank? && params[:start_at].blank?
-        break if rs.blank? && params[:end_at] && params[:end_at] > date
+        break if rs.blank? && (params[:end_at].blank? || params[:start_at].blank?)
+        break if rs.blank? && params[:end_at] > date
       end
     end
 
