@@ -1,4 +1,4 @@
-<%= init_ckeditor %>
+<%= init_ckeditor baseHref: "#{gp_article_doc_path(@content, @item.id.to_i)}/" %>
 
 <script type="text/javascript">
 $(document).ready(function () {

@@ -1,4 +1,4 @@
-<%= init_ckeditor %>
+<%= init_ckeditor baseHref: "#{reception_course_path(@content, @item.id.to_i)}/" %>
 <span class="note">※は必須項目です。</span>
 
 <p class="form">基本情報</p>
