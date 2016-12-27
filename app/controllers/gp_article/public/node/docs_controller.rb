@@ -57,7 +57,7 @@ class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
       return http_error(404) if params[:date].present? && @docs.blank?
     end
 
-    @items = @docs.group_by { |doc| doc.display_published_at.try(:strftime, '%Y年%-m月%-d日') }
+    @items = @docs.group_by { |doc| doc.display_published_at.try(:strftime, @content.date_style) }
     render :index_mobile if Page.mobile?
   end
 

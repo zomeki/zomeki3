@@ -43,8 +43,8 @@ module GpArticle::GpArticleHelper
     dates.first.try(:strftime, '%Y年%-m月')
   end
 
-  def weekly_title(dates)
-    %Q(#{dates.first.try(:strftime, '%Y年%-m月%d日')}～#{dates.last.try(:strftime, '%Y年%-m月%d日')})
+  def weekly_title(dates, date_style)
+    %Q(#{dates.first.try(:strftime, date_style)}～#{dates.last.try(:strftime, date_style)})
   end
 
   def period_pagination(prev_doc, next_doc, node, options = {})
