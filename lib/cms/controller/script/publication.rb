@@ -130,75 +130,54 @@ class Cms::Controller::Script::Publication < ApplicationController
   end
 
   def publish_more(item, params = {})
-    @p = 1
-    @stopp = nil
-    @limit = params[:limit] || Zomeki.config.application["cms.publish_more_pages"].to_i rescue 0
-    @limit = (@limit < 1 ? 1 : 1 + @limit)
-    @file  = params[:file] || 'index'
-    @first = params[:first] || 1
-    @start_at = params[:start_at] || Date.today
-    @period = params[:period] || 'simple'
-    case @period
-    when 'monthly'
-      publish_more_period(item, params)
-    when 'weekly'
-      publish_more_period(item, params)
-    else
-      publish_more_simple(item, params)
+    stopp = nil
+    limit = params[:limit] || Zomeki.config.application["cms.publish_more_pages"].to_i rescue 0
+    limit = (limit < 1 ? 1 : 1 + limit)
+    file  = params[:file] || 'index'
+    first = params[:first] || 1
+    start_at = params[:start_at] || Date.today
+    period = params[:period] || 'simple'
+
+    first.upto(limit) do |p|
+      date = page_date(period, start_at, p)
+      page = page_number(period, date, p)
+      uri  = "#{params[:uri]}#{file}#{page}.html"
+      path = "#{params[:path]}#{file}#{page}.html"
+      smart_phone_path = (params[:smart_phone_path].present? ? "#{params[:smart_phone_path]}#{file}#{page}.html" : nil)
+      dep  = "#{params[:dependent]}#{page}"
+      rs = publish_page(item, uri: uri, site: params[:site], path: path, smart_phone_path: smart_phone_path,
+                              dependent: dep, smart_phone: params[:smart_phone])
+      stopp = p
+      if period == 'simple'
+        break unless rs
+      else
+        break if rs.blank? && params[:end_at].blank?
+        break if rs.blank? && params[:start_at].blank?
+        break if rs.blank? && params[:end_at] && params[:end_at] > date
+      end
     end
 
     ## remove over files
-    del_first = @stopp ? @stopp : (@limit + 1)
+    del_first = stopp ? stopp : (limit + 1)
     first = 1
     first.upto(100) do |dp|
       deps = []
       page_num   = ".p#{dp}"
-      month_date = page_date('monthly', @start_at, dp)
-      week_date  = page_date('weekly', @start_at, dp)
+      month_date = page_date('monthly', start_at, dp)
+      week_date  = page_date('weekly', start_at, dp)
 
       month_num  = month_date.beginning_of_month.strftime('.%Y%m')
       week_num   = week_date.beginning_of_week.strftime('.%Y%m%d')
 
-      deps << "#{params[:dependent]}#{month_num}" if (@period != 'monthly') || (dp >= del_first && @period == 'monthly')
-      deps << "#{params[:dependent]}#{week_num}"  if (@period != 'weekly')  || (dp >= del_first && @period == 'weekly')
-      deps << "#{params[:dependent]}#{page_num}"  if (@period != 'simple')  || (dp >= del_first && @period == 'simple')
+      deps << month_num if (period != 'monthly') || (dp >= del_first && period == 'monthly')
+      deps << week_num  if (period != 'weekly')  || (dp >= del_first && period == 'weekly')
+      deps << page_num  if (period != 'simple')  || (dp >= del_first && period == 'simple')
       deps = deps.reject(&:blank?)
       next if deps.blank?
       deps = deps.map{|d| "#{params[:dependent]}#{d}" }
       Sys::Publisher.where(publishable: item, dependent: deps).destroy_all
       r_deps = deps.map{|d| "#{d}/ruby" }
       Sys::Publisher.where(publishable: item, dependent: r_deps).destroy_all
-    end
-  end
-
-  def publish_more_period(item, params)
-    @first.upto(@limit) do |p|
-      date = page_date(@period, @start_at, p)
-      page = page_number(@period, date, p)
-      uri  = "#{params[:uri]}#{@file}#{page}.html"
-      path = "#{params[:path]}#{@file}#{page}.html"
-      smart_phone_path = (params[:smart_phone_path].present? ? "#{params[:smart_phone_path]}#{@file}#{page}.html" : nil)
-      dep  = "#{params[:dependent]}#{page}"
-      rs = publish_page(item, uri: uri, site: params[:site], path: path, smart_phone_path: smart_phone_path,
-                              dependent: dep, smart_phone: params[:smart_phone])
-      @stopp = p
-      break if rs.blank? && params[:end_at].blank?
-      break if rs.blank? && params[:start_at].blank?
-      break if rs.blank? && params[:end_at] && params[:end_at] > date
-    end
-  end
-
-  def publish_more_simple(item, params)
-    @first.upto(@limit) do |p|
-      page = (p == 1 ? "" : ".p#{p}")
-      uri  = "#{params[:uri]}#{@file}#{page}.html"
-      path = "#{params[:path]}#{@file}#{page}.html"
-      smart_phone_path = (params[:smart_phone_path].present? ? "#{params[:smart_phone_path]}#{@file}#{page}.html" : nil)
-      dep  = "#{params[:dependent]}#{page}"
-      rs = publish_page(item, uri: uri, site: params[:site], path: path, smart_phone_path: smart_phone_path,
-                              dependent: dep, smart_phone: params[:smart_phone])
-      @stopp = p
-      break unless rs
     end
   end
 
