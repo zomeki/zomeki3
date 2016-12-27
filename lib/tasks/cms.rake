@@ -56,5 +56,14 @@ namespace :zomeki do
         Cms::Site.generate_nginx_configs
       end
     end
+
+    namespace :data_files do
+      desc 'Rebuild data files'
+      task(:rebuild => :environment) do
+        Cms::DataFile.where(state: 'public').find_each do |item|
+          item.upload_public_file
+        end
+      end
+    end
   end
 end
