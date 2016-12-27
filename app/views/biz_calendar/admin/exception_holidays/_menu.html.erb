@@ -1,4 +1,4 @@
-<h2><%= @content.name %> ： <%= @place.title  %> ： <%= BizCalendar::ExceptionHoliday.model_name.human %><%=t "actions.#{action_name}", default: '' %></h2>
+<h2><%= menu_header @content.name, @place.title, BizCalendar::ExceptionHoliday.model_name.human %></h2>
 
 <div class="actionMenu">
 <%= action_menu :new if Core.user.has_auth?(:designer) && Core.user.has_priv?(:create, :item => Core.concept) %>

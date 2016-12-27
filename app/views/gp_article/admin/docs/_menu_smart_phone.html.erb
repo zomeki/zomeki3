@@ -1,4 +1,4 @@
-<h2><%= @content.name %> ： <%= GpArticle::Doc.model_name.human %><%=t "actions.#{action_name}", default: '' %></h2>
+<h2><%= menu_header @content.name, GpArticle::Doc.model_name.human %></h2>
 
 <div class="actionMenu">
   <%- if action_name.in?(%w|index|) -%>

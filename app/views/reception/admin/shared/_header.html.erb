@@ -4,5 +4,5 @@
 
 <div class="contentMenu">
 <%= link_to "#{Reception::Course.model_name.human}一覧", reception_courses_path(content: @content), class: 'fixed' %>
-<%= link_to '設定', reception_content_settings_path, class: 'fixed' if @content.editable? -%>
+<%= link_to "#{Reception::Course.model_name.human}設定", reception_content_settings_path, class: 'fixed' if @content.editable? -%>
 </div>

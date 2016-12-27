@@ -1,3 +1,3 @@
-<h2><%= @content.name %> ： <%= @category_type.title %><%=t "actions.#{action_name}", default: '' %></h2>
+<h2><%= menu_header @content.name, @category_type.title %></h2>
 
 <%= render 'gp_category/admin/shared/menu' %>

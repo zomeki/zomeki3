@@ -1,4 +1,4 @@
-<h2><%= @content.name %> ： <%= @course.title %> ： <%= Reception::Open.model_name.human %><%=t "actions.#{action_name}", default: '' %></h2>
+<h2><%= menu_header @content.name, @course.title, Reception::Open.model_name.human %></h2>
 
 <div class="actionMenu">
   <%= link_to '戻る', reception_courses_path if action_name == 'index' %>
