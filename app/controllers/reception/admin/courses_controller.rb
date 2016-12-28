@@ -64,7 +64,7 @@ class Reception::Admin::CoursesController < Cms::Controller::Admin::Base
       :name, :title, :subtitle, :body, :capacity, :fee, :fee_remark, :remark, :description, :sort_no, :in_tmp_id,
       :creator_attributes => [:id, :group_id, :user_id]
     ).tap do |permitted|
-      [:in_category_ids].each do |key|
+      [:in_file_names, :in_category_ids].each do |key|
         permitted[key] = params[:item][key].to_unsafe_h if params[:item][key]
       end
     end

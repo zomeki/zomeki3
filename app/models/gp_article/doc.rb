@@ -83,7 +83,6 @@ class GpArticle::Doc < ApplicationRecord
   has_many :holds, :as => :holdable, :dependent => :destroy
   has_many :comments, :dependent => :destroy
 
-  before_save :make_file_contents_path_relative
   before_save :set_name
   before_save :set_published_at
   before_save :replace_public
@@ -848,11 +847,6 @@ class GpArticle::Doc < ApplicationRecord
         errors.add attr, :platform_dependent_characters, :chars => chars
       end
     end
-  end
-
-  def make_file_contents_path_relative
-    self.body = self.body.gsub(%r!("|')[^"'(]*?/(file_contents/)!, '\1\2') if self.body.present?
-    self.mobile_body = self.mobile_body.gsub(%r!("|')[^"'(]*?/(file_contents/)!, '\1\2') if self.mobile_body.present?
   end
 
   def event_dates_range

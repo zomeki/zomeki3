@@ -474,10 +474,6 @@ $(document).ready(function () {
   </div>
 </div>
 
-<%- @item.files.each do |file| -%>
-  <%= hidden_field_tag "file_names[#{file.id}]", file.name %>
-<%- end -%>
-
 <%= javascript_tag do -%>
 <%= toggle_form_function %>
 

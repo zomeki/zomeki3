@@ -19,3 +19,7 @@ return if inline_id.blank?
 <div id="inlineFiles" style="display: none;">
 <iframe src="<%= sys_inline_files_path(inline_id, content: content) %>" style="width: 100%; height: 400px;" frameborder="0"></iframe>
 </div>
+
+<%- item.files.each do |file| -%>
+  <%= hidden_field_tag "item[in_file_names][#{file.id}]", file.name %>
+<%- end -%>

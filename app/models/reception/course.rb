@@ -143,21 +143,8 @@ class Reception::Course < ApplicationRecord
   end
 
   concerning :File do
-    included do
-      before_save :make_file_path_relative
-    end
-
-    def make_file_path_relative
-      [:body, :remark, :description].each do |column|
-        text = read_attribute(column)
-        if text.present?
-          self[column] = text.gsub(%r{("|')/.+?/inline_files/\d+/(file_contents.+?)("|')}, "\\1\\2\\3")
-        end
-      end
-    end
-
     def admin_uri
-      "#{content.admin_uri}/#{name}"
+      "#{content.admin_uri}/#{id}"
     end
 
     def replace_file_path_for_admin(text)
