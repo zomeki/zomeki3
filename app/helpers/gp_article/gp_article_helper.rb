@@ -39,8 +39,8 @@ module GpArticle::GpArticleHelper
     }.join.html_safe
   end
 
-  def monthly_title(dates)
-    dates.first.try(:strftime, '%Y年%-m月')
+  def monthly_title(dates, date_style)
+    dates.first.try(:strftime, date_style)
   end
 
   def weekly_title(dates, date_style)

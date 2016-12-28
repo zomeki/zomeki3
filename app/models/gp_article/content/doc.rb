@@ -289,6 +289,10 @@ class GpArticle::Content::Doc < Cms::Content
     setting_extra_value(:doc_list_pagination, :doc_publish_more_pages).to_i
   end
 
+  def doc_monthly_style
+    setting_extra_value(:doc_list_pagination, :doc_monthly_style)
+  end
+
   def rel_docs_style
     setting_value(:rel_docs_style).to_s
   end
