@@ -12,10 +12,10 @@ class Reception::Admin::ApplicantsController < Cms::Controller::Admin::Base
   end
 
   def index
-    @items = @open.applicants.search_with_criteria(params[:criteria] || {}).order(id: :asc)
+    @items = @open.applicants.search_with_criteria(params[:criteria] || {}).order(:seq_no, :applied_at)
     return download_csv(@items) if params[:csv].present?
 
-    @items = @items.paginate(page: params[:page], per_page: 30)
+    @items = @items.paginate(page: params[:page], per_page: 50)
     _index @items
   end
 

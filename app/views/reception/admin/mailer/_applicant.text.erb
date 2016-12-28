@@ -1,0 +1,11 @@
+<%- if applicant.seq_no.present? -%>
+受付番号: <%= applicant.seq_no %>
+<%- end -%>
+参加日: <%= applicant.open.open_at_text %>
+お名前: <%= applicant.name %>
+フリガナ: <%= applicant.kana %>
+電話番号: <%= applicant.tel %>
+メールアドレス: <%= applicant.email %>
+<%- if applicant.remark.present? -%>
+備考: <%= applicant.remark %>
+<%- end -%>

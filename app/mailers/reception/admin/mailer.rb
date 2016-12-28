@@ -4,6 +4,6 @@ class Reception::Admin::Mailer < ApplicationMailer
     @course = applicant.course
     @applicant = applicant
 
-    mail from: from, to: to, subject: "#{@course.title}（#{@content.site.name}）：お申込み受付"
+    mail from: from, to: to, subject: "#{@course.title}（#{@content.site.name}）：お申込み受付完了"
   end
 end

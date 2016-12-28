@@ -25,9 +25,13 @@
     <th><%= @item.class.human_attribute_name :email %></th>
     <td><%= @item.email %></td>
   </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :remark %></th>
+    <td><%=br @item.remark %></td>
+  </tr>
 </table>
 
-<p class="form">登録元情報</p>
+<p class="form">登録者情報</p>
 
 <table class="show">
   <tr>

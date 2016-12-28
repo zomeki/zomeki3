@@ -64,6 +64,6 @@ class Reception::Applicant < ApplicationRecord
   end
 
   def set_seq_no
-    self.seq_no ||= Util::Sequencer.next_id('reception_applicants')
+    self.seq_no ||= Util::Sequencer.next_id('reception_applicants', version: course.content_id) if state == 'received'
   end
 end

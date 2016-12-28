@@ -1,8 +1,6 @@
-「<%= @course.title %>」へお申込み頂きありがとうございました。以下の内容で受け取りました。
+「<%= @course.title %>」へお申込み頂きありがとうございました。
+以下の内容で受け取りました。
 
-参加日: <%= @applicant.open.open_at_text %>
-お名前: <%= @applicant.name %>
-フリガナ: <%= @applicant.kana %>
-電話番号: <%= @applicant.tel %>
-メールアドレス: <%= @applicant.email %>
-備考: <%= @applicant.remark %>
+<%= render 'reception/admin/mailer/applicant', applicant: @applicant %>
+
+受付が完了しましたら再度ご連絡差し上げます。

@@ -40,18 +40,14 @@ class Reception::Public::Node::ApplicantsController < Cms::Controller::Public::B
     end
   end
 
-  def edit
+  def cancel
     @applicant = @course.applicants.find_by(token: params[:token])
     return http_error(404) if @applicant.nil? || !@applicant.cancelable?
-  end
-
-  def update
-    @applicant = @course.applicants.find_by(token: params[:token])
-    return http_error(404) if @applicant.nil? || !@applicant.cancelable?
+    return render :cancel if request.get?
 
     if @applicant.seq_no != params[:seq_no].to_i
-      @applicant.errors.add(:base, '受付番号を照合できませんでした。受付番号をお確かめください。')
-      return render :edit
+      @applicant.errors.add(:base, '受付番号を照会できませんでした。受付番号をお確かめください。')
+      return render :cancel
     end
 
     @applicant.state = 'canceled'
@@ -62,7 +58,7 @@ class Reception::Public::Node::ApplicantsController < Cms::Controller::Public::B
         send_canceled_mail(@applicant)
         render :cancel_finish
       else
-        render :edit
+        render :cancel
       end
     else
       render :cancel_confirm

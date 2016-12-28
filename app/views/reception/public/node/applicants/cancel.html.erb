@@ -2,7 +2,7 @@
   <h2><%= @course.title %></h2>
   <h3>講座のキャンセルはこちら</h3>
 
-  <%= form_for @applicant, as: :item, url: "#{@course.public_uri}/applicants/#{@applicant.token}/" do |f| -%>
+  <%= form_for @applicant, as: :item, url: "#{@course.public_uri}/applicants/#{@applicant.token}/cancel", html: { method: :patch } do |f| -%>
     <%= f.error_messages %>
     <p>キャンセルする受付番号を入力してください。</p>
     <%= text_field_tag :seq_no %>

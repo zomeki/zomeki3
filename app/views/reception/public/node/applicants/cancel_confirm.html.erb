@@ -5,7 +5,7 @@
 
   <%= render 'show', applicant: @applicant %>
 
-  <%= form_for @applicant, as: :item, url: "#{@course.public_uri}/applicants/#{@applicant.token}/" do |f| -%>
+  <%= form_for @applicant, as: :item, url: "#{@course.public_uri}/applicants/#{@applicant.token}/cancel", html: { method: :patch } do |f| -%>
     <%= f.error_messages %>
     <%= hidden_field_tag :seq_no, params[:seq_no] %>
     <div class="submit">
