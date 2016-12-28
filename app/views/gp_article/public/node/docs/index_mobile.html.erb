@@ -1,6 +1,6 @@
 <div class="contentGpArticleDocs">
   <div class="docs">
-    <%- if @docs.present? && @content.monthly_pagination? -%><div class="h2 date"><%= monthly_title(@dates) %></div><%- end -%>
+    <%- if @docs.present? && @content.monthly_pagination? -%><div class="h2 date"><%= monthly_title(@dates, @content.doc_monthly_style) %></div><%- end -%>
     <%- if @docs.present? && @content.weekly_pagination? -%><div class="h2 date"><%= weekly_title(@dates, @content.date_style) %></div><%- end -%>
     <% @items.each do |date, docs| %>
       <%- if @content.doc_list_style == 'by_date' && @content.simple_pagination?%>
