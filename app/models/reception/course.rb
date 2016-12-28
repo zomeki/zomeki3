@@ -95,10 +95,6 @@ class Reception::Course < ApplicationRecord
     "#{::File.dirname(public_path)}/file_contents"
   end
 
-  def admin_uri
-    "/_system/reception/c#{content.concept_id}/#{content.id}/courses/#{id}"
-  end
-
   def bread_crumbs(node)
     crumbs = []
 
@@ -155,17 +151,21 @@ class Reception::Course < ApplicationRecord
       [:body, :remark, :description].each do |column|
         text = read_attribute(column)
         if text.present?
-          self[column] = text.gsub(%r|"/_system/sys/.+?/inline_files/\d+/(file_contents.+?)"|, %Q|"\\1"|)
+          self[column] = text.gsub(%r{("|')/.+?/inline_files/\d+/(file_contents.+?)("|')}, "\\1\\2\\3")
         end
       end
     end
 
+    def admin_uri
+      "#{content.admin_uri}/#{name}"
+    end
+
     def replace_file_path_for_admin(text)
-      text.gsub(%r|"file_contents/(.+)"|, %Q|"#{admin_uri}/file_contents/\\1"|) if text.present?
+      text.gsub(%r{("|')file_contents/(.+?)("|')}, "\\1#{admin_uri}/file_contents/\\2\\3") if text.present?
     end
 
     def replace_file_path_for_public(text)
-      text.gsub(%r|"file_contents/(.+)"|, %Q|"#{public_uri}/file_contents/\\1"|) if text.present?
+      text.gsub(%r{("|')file_contents/(.+?)("|')}, "\\1#{public_uri}/file_contents/\\2\\3") if text.present?
     end
   end
 end
