@@ -116,7 +116,7 @@ class Reception::Course < ApplicationRecord
     if content
       if (node = content.public_node)
         crumb = node.bread_crumbs.crumbs.first
-        crumb << [title, self.public_uri]
+        crumb << [title, "#{self.public_uri}/"]
         crumbs << crumb
       end
     end

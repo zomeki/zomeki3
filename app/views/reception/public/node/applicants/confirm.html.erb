@@ -3,7 +3,7 @@
 
   <%= render 'show', applicant: @applicant %>
 
-  <%= form_for @applicant, as: :item, url: "#{@course.public_uri}/applicants" do |f| -%>
+  <%= form_for @applicant, as: :item, url: "#{@course.public_uri}/applicants/" do |f| -%>
     <%= f.error_messages %>
     <%- [:open_id, :name, :kana, :tel, :email, :email_confirmation, :remark].each do |key| -%>
       <%= f.hidden_field key %>

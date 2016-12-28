@@ -38,12 +38,12 @@ ZomekiCMS::Application.routes.draw do
   ## public
   scope "_public/#{mod}", :module => mod, :as => '' do
     # courses
-    get 'node_courses(/index)' => 'public/node/courses#index'
-    get 'node_courses/:name(/index)' => 'public/node/courses#show'
+    get 'node_courses/(index)' => 'public/node/courses#index'
+    get 'node_courses/:name/(index)' => 'public/node/courses#show'
     get "node_courses/:name/file_contents/(*path)" => "public/node/courses/files#content"
     # applicants
-    get 'node_courses/:name/applicants/new' => 'public/node/applicants#new'
-    post 'node_courses/:name/applicants(/index)' => 'public/node/applicants#create'
+    get 'node_courses/:name/applicants(/index)' => 'public/node/applicants#index'
+    post 'node_courses/:name/applicants(/index)' => 'public/node/applicants#index'
     get 'node_courses/:name/applicants/:token/cancel' => 'public/node/applicants#cancel'
     patch 'node_courses/:name/applicants/:token/cancel' => 'public/node/applicants#cancel'
     # categories

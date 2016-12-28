@@ -1,5 +1,5 @@
 class Reception::Public::Node::ApplicantsController < Cms::Controller::Public::Base
-  before_action :check_applicable, only: [:new, :create]
+  before_action :check_applicable, only: [:index]
 
   def pre_dispatch
     @node = Page.current_node
@@ -10,12 +10,11 @@ class Reception::Public::Node::ApplicantsController < Cms::Controller::Public::B
     Page.title = @course.title
   end
 
-  def new
+  def index
     @applicant = Reception::Applicant.new(open_id: params[:open_id])
-  end
+    return render :index if request.get?
 
-  def create
-    @applicant = Reception::Applicant.new(applicant_params)
+    @applicant.attributes = applicant_params
     @applicant.applied_from = 'public'
     @applicant.state = 'applied'
     @applicant.remote_addr = request.remote_ip
@@ -27,15 +26,15 @@ class Reception::Public::Node::ApplicantsController < Cms::Controller::Public::B
         send_applied_mail(@applicant)
         render :finish
       else
-        render :new
+        render :index
       end
     when params[:back]
-      render :new
+      render :index
     else
       if @applicant.valid?(:public_applicant)
         render :confirm
       else
-        render :new
+        render :index
       end
     end
   end
