@@ -9,6 +9,10 @@ class Sys::Editor < ApplicationRecord
   before_save :set_user
   before_save :set_group
 
+  def group_and_user_name
+    "#{group.try!(:name)}#{user.try!(:name)}"
+  end
+
   private
 
   def set_user

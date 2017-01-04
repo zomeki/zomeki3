@@ -261,10 +261,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   def hold_document
     unless (holds = @item.holds).empty?
       holds = holds.each{|h| h.destroy if h.user == Core.user }.reject(&:destroyed?)
-      alerts = holds.map do |hold|
-          in_editing_from = (hold.updated_at.today? ? I18n.l(hold.updated_at, :format => :short_ja) : I18n.l(hold.updated_at, :format => :default_ja))
-          "#{hold.user.group.name}#{hold.user.name}さんが#{in_editing_from}から編集中です。"
-        end
+      alerts = holds.map { |hold| "#{hold.group_and_user_name}さんが#{hold.formatted_updated_at}から編集中です。" }
       flash.now[:alert] = "<ul><li>#{alerts.join('</li><li>')}</li></ul>".html_safe unless alerts.blank?
     end
     @item.holds.create(user: Core.user)
@@ -272,8 +269,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
   def check_intercepted
     unless @item.holds.detect{|h| h.user == Core.user }
-      user = @item.operation_logs.first.user
-      flash[:alert] = "#{user.group.name}#{user.name}さんが記事を編集したため、編集内容を反映できません。"
+      flash[:alert] = "#{@item.last_editor.try(:group_and_user_name)}さんが記事を編集したため、編集内容を反映できません。"
       render :action => :edit
     end
   end
