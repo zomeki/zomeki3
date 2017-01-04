@@ -4,9 +4,10 @@ class GpArticle::Admin::Mailer < ApplicationMailer
     @src_doc = src_doc
 
     to = @src_doc.creator.try(:user).try(:email)
+
     return if to.blank?
 
-    @detail_uri = gp_article_doc_url(host: host, content: @src_doc.content, id: @src_doc.id)
+    @detail_uri = gp_article_doc_url(host: host, content: @src_doc.content, concept: @src_doc.content.try(:concept_id), id: @src_doc.id)
 
     mail from: 'noreply',
          to: to,

@@ -629,11 +629,12 @@ class GpArticle::Doc < ApplicationRecord
     return self.class.none unless state_public? || state_closed?
     return self.class.none if public_uri.blank?
     links.klass.where(links.table[:url].matches("%#{self.public_uri(without_filename: true).sub(/\/$/, '')}%"))
+      .where(linkable_type: self.class.to_s)
   end
 
   def backlinked_docs
     return [] if backlinks.blank?
-    self.class.where(id: backlinks.pluck(:doc_id))
+    self.class.where(id: backlinks.pluck(:linkable_id))
   end
 
   def check_accessibility
