@@ -6,8 +6,6 @@ module Cms::Model::Rel::PublishUrl
     after_save :set_public_name
   end
 
-private
-
   def set_public_name
     return unless respond_to?(:state_public?) ? state_public? : state == 'public'
     return unless (node = kind_of?(Cms::Node) ? self : content.try!(:public_node))
