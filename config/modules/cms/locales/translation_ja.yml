@@ -38,7 +38,7 @@ ja:
         setting_transfer_dest_domain: "転送先サイトURL"
         setting_site_admin_protocol: "プロトコル"
         setting_common_ssl: "共有SSL"
-        setting_pass_reminder_mail_sender: "送信元アドレス"
+        setting_admin_mail_sender: "管理者メール送信元アドレス"
         setting_allowed_attachment_type: "添付ファイル/許可する種類"
         setting_file_upload_max_size: "添付ファイル最大サイズ"
         setting_file_upload_max_size: "添付ファイル最大サイズ"

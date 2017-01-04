@@ -2,14 +2,15 @@ module Cms::Model::Rel::SiteSetting
   attr_accessor :in_setting_site_admin_protocol
   attr_accessor :in_setting_site_basic_auth_state
   attr_accessor :in_setting_site_common_ssl
-  attr_accessor :in_setting_site_pass_reminder_mail_sender
+  attr_accessor :in_setting_site_admin_mail_sender
   attr_accessor :in_setting_site_file_upload_max_size
   attr_accessor :in_setting_site_extension_upload_max_size
   attr_accessor :in_setting_site_allowed_attachment_type
 
-  SITE_SETTINGS = [:admin_protocol, :basic_auth_state, :common_ssl, :allowed_attachment_type,
-    :pass_reminder_mail_sender, :file_upload_max_size, :extension_upload_max_size]
-  #SITE_SETTINGS = [:admin_protocol]
+  SITE_SETTINGS = [
+    :admin_protocol, :basic_auth_state, :common_ssl, :allowed_attachment_type,
+    :admin_mail_sender, :file_upload_max_size, :extension_upload_max_size
+  ]
 
   def self.included(mod)
   end
@@ -44,9 +45,9 @@ module Cms::Model::Rel::SiteSetting
     return nil
   end
 
-  def setting_site_pass_reminder_mail_sender
-    setting = Cms::SiteSetting.where(:site_id => id, :name => 'pass_reminder_mail_sender').first
-    setting ? setting.value : nil;
+  def setting_site_admin_mail_sender
+    setting = Cms::SiteSetting.where(:site_id => id, :name => 'admin_mail_sender').first
+    setting ? setting.value : 'noreply'
   end
 
   def setting_site_file_upload_max_size
@@ -94,7 +95,7 @@ module Cms::Model::Rel::SiteSetting
     @in_setting_site_admin_protocol              = setting_site_admin_protocol
     @in_setting_site_basic_auth_state            = setting_site_basic_auth_state
     @in_setting_site_common_ssl                  = setting_site_common_ssl
-    @in_setting_site_pass_reminder_mail_sender   = setting_site_pass_reminder_mail_sender
+    @in_setting_site_admin_mail_sender           = setting_site_admin_mail_sender
     @in_setting_site_file_upload_max_size        = setting_site_file_upload_max_size
     @in_setting_site_extension_upload_max_size   = setting_site_extension_upload_max_size
     @in_setting_site_allowed_attachment_type     = setting_site_allowed_attachment_type

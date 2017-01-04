@@ -8,7 +8,7 @@ class GpArticle::Admin::Mailer < ApplicationMailer
 
     @detail_uri = gp_article_doc_url(host: host, content: @src_doc.content, concept: @src_doc.content.try(:concept_id), id: @src_doc.id)
 
-    mail from: 'noreply',
+    mail from: @doc.content.site.setting_site_admin_mail_sender,
          to: to,
          subject: "【#{@src_doc.content.site.name.presence || 'CMS'}】リンク切れ通知"
   end
