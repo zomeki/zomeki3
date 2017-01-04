@@ -24,7 +24,7 @@ if ($terminal = 2) {
 # navigation_ruby
 if ($cookie_navigation_ruby = 'on') {
   rewrite ^(.*)/$ $1/index.html;
-  rewrite ^(.+)\.html$ $1.html.r last;
+  rewrite ^(.+)\.html$ $1.html.r redirect;
 }
 
 # ssl
