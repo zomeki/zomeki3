@@ -97,14 +97,8 @@ namespace :zomeki do
     namespace :publish_url do
       desc 'Set pulished Url'
       task(:set => :environment) do
-        Cms::Node::Page.record_timestamps = false
-        GpArticle::Doc.record_timestamps = false
-
-        Cms::Node::Page.public_state.each(&:save)
-        GpArticle::Doc.public_state.each(&:save)
-
-        Cms::Node::Page.record_timestamps = true
-        GpArticle::Doc.record_timestamps = true
+        Cms::Node::Page.public_state.each(&:set_public_name)
+        GpArticle::Doc.public_state.each(&:set_public_name)
       end
     end
 
