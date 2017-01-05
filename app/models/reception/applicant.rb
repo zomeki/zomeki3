@@ -7,18 +7,26 @@ class Reception::Applicant < ApplicationRecord
   APPLIED_FROM_OPTIONS = [['フォーム','public'],['登録','admin']]
 
   attr_accessor :email_confirmation
+  attr_accessor :in_register_from_admin, :in_register_from_public
   has_secure_token :token
 
   belongs_to :open
+  has_one :applicant_token, dependent: :destroy
 
   before_save :set_applied_at
-  before_save :set_seq_no
+
+  with_options unless: :temporary_state? do
+    before_save :set_seq_no
+    after_save :update_received_applicants_count
+    after_save :update_applicant_token
+  end
 
   validates :name, presence: true
   validates :kana, presence: true
   validates :tel, presence: true
   validates :email, presence: true, confirmation: true
-  validate :validate_capacity, on: :public_applicant
+  validate :validate_capacity_for_admin, if: :in_register_from_admin
+  validate :validate_capacity_for_public, if: :in_register_from_public
 
   scope :received_state, -> { where(state: 'received') }
   scope :canceled_state, -> { where(state: 'canceled') }
@@ -47,13 +55,19 @@ class Reception::Applicant < ApplicationRecord
     APPLIED_FROM_OPTIONS.rassoc(applied_from).try(:first)
   end
 
-  def cancelable?
-    state == 'received' && open.state_public? && open.available_period?
+  def temporary_state?
+    state.in?(%w(tmp_applied tmp_canceled))
   end
 
   private
 
-  def validate_capacity
+  def validate_capacity_for_admin
+    if changes.dig(:state, 1) == 'received' && !open.within_capacity?
+      errors.add(:base, '定員を超過したため受付できません。')
+    end
+  end
+
+  def validate_capacity_for_public
     if open && !open.within_capacity?
       errors.add(:base, 'ご指定の参加日は定員を超過したためお申込できません。')
     end
@@ -64,6 +78,16 @@ class Reception::Applicant < ApplicationRecord
   end
 
   def set_seq_no
-    self.seq_no ||= Util::Sequencer.next_id('reception_applicants', version: course.content_id) if state == 'received'
+    self.seq_no ||= Util::Sequencer.next_id('reception_applicants', version: course.content_id)
+  end
+
+  def update_received_applicants_count
+    open.update_received_applicants_count
+  end
+
+  def update_applicant_token
+    token = applicant_token || build_applicant_token
+    token.attributes = attributes.slice('open_id', 'state', 'seq_no', 'token')
+    token.save
   end
 end

@@ -16,13 +16,14 @@ class Reception::Public::Node::ApplicantsController < Cms::Controller::Public::B
 
     @applicant.attributes = applicant_params
     @applicant.applied_from = 'public'
-    @applicant.state = 'applied'
+    @applicant.state = Zomeki.config.application['sys.type'] == 'web' ? 'tmp_applied' : 'applied'
     @applicant.remote_addr = request.remote_ip
     @applicant.user_agent = request.user_agent
+    @applicant.in_register_from_public = true
 
     case
     when params[:commit]
-      if @applicant.save(context: :public_applicant)
+      if @applicant.save
         send_applied_mail(@applicant)
         render :finish
       else
@@ -31,7 +32,7 @@ class Reception::Public::Node::ApplicantsController < Cms::Controller::Public::B
     when params[:back]
       render :index
     else
-      if @applicant.valid?(:public_applicant)
+      if @applicant.valid?
         render :confirm
       else
         render :index
@@ -40,21 +41,22 @@ class Reception::Public::Node::ApplicantsController < Cms::Controller::Public::B
   end
 
   def cancel
-    @applicant = @course.applicants.find_by(token: params[:token])
-    return http_error(404) if @applicant.nil? || !@applicant.cancelable?
+    @token = @course.applicant_tokens.find_by(token: params[:token])
+    return http_error(404) if @token.nil? || !@token.cancelable?
     return render :cancel if request.get?
 
-    if @applicant.seq_no != params[:seq_no].to_i
-      @applicant.errors.add(:base, '受付番号を照会できませんでした。受付番号をお確かめください。')
+    if @token.seq_no != params[:seq_no].to_i
+      @token.errors.add(:base, '受付番号を照会できませんでした。受付番号をお確かめください。')
       return render :cancel
     end
 
-    @applicant.state = 'canceled'
-
     case
     when params[:commit]
-      if @applicant.save(validate: false)
-        send_canceled_mail(@applicant)
+      applicant = @course.applicants.where(token: @token.token).first_or_initialize
+      applicant.attributes = @token.attributes.slice('open_id', 'seq_no')
+      applicant.state = Zomeki.config.application['sys.type'] == 'web' ? 'tmp_canceled' : 'canceled'
+      if applicant.save(validate: false)
+        send_canceled_mail(applicant)
         render :cancel_finish
       else
         render :cancel

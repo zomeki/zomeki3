@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161222041456) do
+ActiveRecord::Schema.define(version: 20170105012734) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1043,6 +1043,18 @@ ActiveRecord::Schema.define(version: 20161222041456) do
     t.datetime "updated_at"
   end
 
+  create_table "reception_applicant_tokens", force: :cascade do |t|
+    t.integer  "open_id"
+    t.integer  "applicant_id"
+    t.integer  "seq_no"
+    t.string   "state"
+    t.string   "token"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.index ["applicant_id"], name: "index_reception_applicant_tokens_on_applicant_id", using: :btree
+    t.index ["open_id"], name: "index_reception_applicant_tokens_on_open_id", using: :btree
+  end
+
   create_table "reception_applicants", force: :cascade do |t|
     t.integer  "open_id"
     t.integer  "seq_no"
@@ -1091,8 +1103,9 @@ ActiveRecord::Schema.define(version: 20161222041456) do
     t.string   "place"
     t.string   "lecturer"
     t.datetime "expired_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
+    t.integer  "received_applicants_count", default: 0, null: false
     t.index ["course_id"], name: "index_reception_opens_on_course_id", using: :btree
   end
 

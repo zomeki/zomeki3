@@ -53,8 +53,11 @@ class Reception::Course < ApplicationRecord
   }
 
   def applicants
-    opens = Reception::Open.arel_table
-    Reception::Applicant.joins(:open).where(opens[:course_id].eq(id))
+    Reception::Applicant.joins(:open).where(Reception::Open.arel_table[:course_id].eq(id))
+  end
+
+  def applicant_tokens
+    Reception::ApplicantToken.joins(:open).where(Reception::Open.arel_table[:course_id].eq(id))
   end
 
   def applicable_opens

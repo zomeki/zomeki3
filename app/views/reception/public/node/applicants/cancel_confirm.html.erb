@@ -3,13 +3,13 @@
 
   <p>キャンセルする内容をご確認ください。</p>
 
-  <%= render 'show', applicant: @applicant %>
+  <%= render 'show_token', token: @token %>
 
-  <%= form_for @applicant, as: :item, url: "#{@course.public_uri}/applicants/#{@applicant.token}/cancel", html: { method: :patch } do |f| -%>
+  <%= form_for @token, as: :item, url: "#{@course.public_uri}/applicants/#{@token.token}/cancel", html: { method: :patch } do |f| -%>
     <%= f.error_messages %>
     <%= hidden_field_tag :seq_no, params[:seq_no] %>
     <div class="submit">
-      <%= f.submit '送信する', name: 'commit' %>
+      <%= f.submit 'キャンセルする', name: 'commit' %>
     </div>
   <%- end -%>
 </div>

@@ -31,6 +31,7 @@ class Reception::Admin::ApplicantsController < Cms::Controller::Admin::Base
   def create
     @item = @open.applicants.build(applicant_params)
     @item.applied_from = 'admin'
+    @item.in_register_from_admin = true
     changes = @item.changes
 
     _create @item do
@@ -41,6 +42,7 @@ class Reception::Admin::ApplicantsController < Cms::Controller::Admin::Base
   def update
     @item = @open.applicants.find(params[:id])
     @item.attributes = applicant_params
+    @item.in_register_from_admin = true
     changes = @item.changes
 
     _update @item do

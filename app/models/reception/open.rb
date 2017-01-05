@@ -10,8 +10,7 @@ class Reception::Open < ApplicationRecord
   STATE_OPTIONS = [['下書き','draft'],['公開','public']]
 
   belongs_to :course
-  has_many :applicants
-  has_many :received_applicants, -> { where(state: 'received') }, class_name: 'Reception::Applicant'
+  has_many :applicants, dependent: :destroy
 
   after_save :save_tasks
 
@@ -28,10 +27,11 @@ class Reception::Open < ApplicationRecord
     ].reduce(:or))
   }
   scope :within_capacity, -> {
-    sql = Reception::Applicant.select('count("reception_applicants"."id")')
-                              .where(state: 'received')
-                              .where("reception_applicants.open_id = reception_opens.id").to_sql
-    where(%Q|"reception_courses"."capacity" IS NULL OR "reception_courses"."capacity" > (#{sql})|)
+    courses = Reception::Course.arel_table
+    joins(:course).where([
+      courses[:capacity].eq(nil),
+      courses[:capacity].gt(arel_table[:received_applicants_count]),
+    ].reduce(:or))
   }
 
   def content
@@ -61,7 +61,7 @@ class Reception::Open < ApplicationRecord
   end
 
   def within_capacity?
-    course.capacity.nil? || received_applicants.count < course.capacity
+    course.capacity.nil? || received_applicants_count < course.capacity
   end
 
   def applicable?
@@ -84,6 +84,10 @@ class Reception::Open < ApplicationRecord
     # to publish piece
     self.updated_at = Time.now
     save
+  end
+
+  def update_received_applicants_count
+    update_column(:received_applicants_count, applicants.where(state: 'received').count)
   end
 
   private
