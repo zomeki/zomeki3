@@ -6,8 +6,6 @@ module Cms::Model::Rel::Link
     after_save :save_links
   end
 
-  private
-
   def save_links
     lib = links_in_body
     links.each do |link|
