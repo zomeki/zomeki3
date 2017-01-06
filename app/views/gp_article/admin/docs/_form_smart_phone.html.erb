@@ -1,4 +1,4 @@
-<%- inline_id = @item.id || (@item.in_tmp_id ||= Util::Sequencer.next_id(:tmp, md5: true)) -%>
+<%= init_ckeditor baseHref: "#{gp_article_doc_path(@content, @item.id.to_i)}/" %>
 
 <script type="text/javascript">
 $(document).ready(function () {
@@ -65,7 +65,6 @@ $(document).ready(function () {
     <div id="normal_body_form" style="<%= 'display:none;' if @item.template %>">
       <div class="label1"><%= f.label :body %></div>
       <div class="cke_editor_wrapper">
-        <%= init_ckeditor :baseHref => "#{gp_article_doc_path(@content, inline_id)}/" %>
         <%= f.text_area :body, :class => 'body ckeditor' %>
       </div>
       <div>
@@ -89,20 +88,12 @@ $(document).ready(function () {
         <%= f.text_field :body_more_link_text, :style => 'width: 200px;' %>
       </div>
       <div class="cke_editor_wrapper">
-        <%= init_ckeditor :baseHref => "#{gp_article_doc_path(@content, inline_id)}/" %>
         <%= f.text_area :body_more, :class => 'body ckeditor' %>
       </div>
     </div>
     <%- end -%>
 
-    <p class="form">添付ファイル</p>
-
-    <div><%= link_to '開く▼', "javascript:void(0);", {:onclick => "toggle_form(this, '#inline_files')"}%></div>
-
-    <div id="inline_files" style="display: none;">
-      <%= f.hidden_field :in_tmp_id %>
-      <div class="iframe-wrapper"><iframe src="<%= gp_article_doc_files_path(@content, inline_id) %>" style="height: 400px;"></iframe></div>
-    </div>
+    <%= render 'sys/admin/_partial/files/form', f: f, item: @item, content: @content %>
 
     <p class="form">記事設定</p>
 
@@ -348,7 +339,6 @@ $(document).ready(function () {
       <div class="label1"><%= f.label :mobile_body %></div>
     </div>
     <div>
-      <%= init_ckeditor :baseHref => "#{gp_article_doc_path(@content, inline_id)}/" %>
       <%= f.text_area :mobile_body, :class => 'body ckeditor' %>
     </div>
   </div>

@@ -1,0 +1,40 @@
+<%= render 'search' %>
+
+<%= page_entries_info @items %>
+<table class="index">
+  <tr>
+    <th style="text-align: center; width: 60px;">詳細</th>
+    <th><%= Reception::Course.human_attribute_name :title %></th>
+    <th style="text-align: center; width: 120px;"><%= Reception::Open.human_attribute_name :open_on %></th>
+    <th style="text-align: center; width: 60px;"><%= Reception::Course.human_attribute_name :capacity %></th>
+    <th style="text-align: center; width: 60px;"><%= Reception::Open.human_attribute_name :applicants_count %></th>
+    <th style="text-align: center; width: 60px;"><%= Reception::Course.human_attribute_name :sort_no %></th>
+    <th style="text-align: center; width: 120px;"><%= Reception::Course.human_attribute_name :created_at %></th>
+    <th style="text-align: center; width: 80px;"><%= Reception::Course.human_attribute_name :state %></th>
+  </tr>
+  <%- @items.each do |item| -%>
+    <%-
+      first_open = item.opens.first
+      rowspan = item.opens.present? ? item.opens.size : 1
+      cycle_class = cycle '', 'cycle'
+    -%>
+    <tr class="<%= cycle_class %>">
+      <td rowspan="<%= rowspan %>" style="text-align: center;"><%= link_to :show, reception_course_path(content: @content, id: item.id) %></td>
+      <td rowspan="<%= rowspan %>" style="text-align: left;"><%= link_to item.title, reception_course_opens_path(content: @content, course_id: item.id) %></td>
+      <td style="text-align: center; border-top: 1px solid #ccc;"><%= first_open.open_on if first_open %></td>
+      <td rowspan="<%= rowspan %>" style="text-align: center;"><%= item.capacity %></td>
+      <td style="text-align: center; border-top: 1px solid #ccc;"><%= link_to first_open.applicants.size, reception_course_open_applicants_path(content: @content, course_id: item.id, open_id: first_open.id) if first_open %></td>
+      <td rowspan="<%= rowspan %>" style="text-align: center;"><%= item.sort_no %></td>
+      <td rowspan="<%= rowspan %>" style="text-align: center;"><%=i18n_l item.created_at %></td>
+      <td rowspan="<%= rowspan %>" style="text-align: center;"><%= item.state_text %></td>
+    </tr>
+    <%- item.opens.drop(1).each do |open| -%>
+    <tr class="<%= cycle_class %>">
+      <td style="text-align: center; border-top: 1px solid #ccc;"><%=i18n_l open.open_on %></td>
+      <td style="text-align: center; border-top: 1px solid #ccc;"><%= link_to open.applicants.size, reception_course_open_applicants_path(content: @content, course_id: item.id, open_id: open.id) %></td>
+    </tr>
+    <%- end -%>
+  <%- end -%>
+</table>
+
+<%= paginate @items -%>

@@ -106,4 +106,12 @@ class GpCalendar::Content::Event < Cms::Content
   def event_sync_default_will_sync
     setting_extra_value(:event_sync_export, :default_will_sync).to_s
   end
+
+  def allowed_attachment_type
+    'gif,jpg,png'
+  end
+
+  def attachment_embed_link
+    false
+  end
 end

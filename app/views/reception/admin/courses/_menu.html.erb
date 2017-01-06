@@ -1,0 +1,20 @@
+<h2><%= menu_header @content.name, Reception::Course.model_name.human %></h2>
+
+<div class="actionMenu">
+  <%= action_menu :new %>
+  <%= action_menu :index %>
+  <%= action_menu :show %>
+  <%= action_menu :edit if @item.try(:editable?) %>
+  <%= action_menu :destroy if @item.try(:deletable?) %>
+
+  <%- case action_name -%>
+  <%- when 'index' -%>
+    <span class="separator"></span>
+    <%= link_to "講座一覧", { action: :index }, (params[:target].blank? ? { class: 'current' } : {}) %>
+    <%= link_to '公開中', { action: :index, target: 'public' }, (params[:target] == 'public' ? { class: 'current' } : {}) %>
+    <%= link_to '非公開', { action: :index, target: 'closed' }, (params[:target] == 'closed' ? { class: 'current' } : {}) %>
+  <%- when 'show' -%>
+    <%= link_to '公開', { action: :show, do: :publish } unless @item.state_public? %>
+    <%= link_to '非公開', { action: :show, do: :close } if @item.state_public? %>
+  <%- end -%>
+</div>

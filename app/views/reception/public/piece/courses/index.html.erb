@@ -1,0 +1,7 @@
+<%- unless @courses.empty? -%>
+<ul class="courses">
+  <%- @courses.each do |course| -%>
+  <li><%= course_replace(course, @piece.doc_style, @piece.date_style) %></li>
+  <%- end -%>
+</ul>
+<%- end -%>

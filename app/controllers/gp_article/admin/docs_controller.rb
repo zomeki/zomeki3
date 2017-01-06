@@ -147,8 +147,6 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
     location = url_for(action: 'edit') if @item.state_draft?
     _update(@item, location: location) do
-      update_file_names
-
       @item = @content.docs.find_by(id: @item.id)
       @item.send_approval_request_mail if @item.state_approvable?
 
@@ -278,18 +276,6 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     @item.holds.destroy_all
   end
 
-  def update_file_names
-    if (file_names = params[:file_names])
-      new_body = @item.body
-      file_names.each do |key, value|
-        file = @item.files.where(id: key).first
-        next if file.nil? || file.name == value
-        new_body = new_body.gsub("file_contents/#{value}", "file_contents/#{file.name}")
-      end
-      @item.update_columns(body: new_body) unless @item.body == new_body
-    end
-  end
-
   def sync_events_export
     if @content.calendar_related? && (calendar_content = @content.gp_calendar_content_event)
       gp_calendar_sync_events_export(doc_or_event: @item, event_content: calendar_content) if calendar_content.event_sync_export?
@@ -343,7 +329,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
       :in_share_accounts => [],
       :in_approval_flow_ids => [],
     ).tap do |permitted|
-      [:in_category_ids, :in_event_category_ids, :in_marker_category_ids, :in_approval_assignment_ids].each do |key|
+      [:in_file_names, :in_category_ids, :in_event_category_ids, :in_marker_category_ids, :in_approval_assignment_ids].each do |key|
         permitted[key] = params[:item][key].to_unsafe_h if params[:item][key]
       end
     end

@@ -1,0 +1,30 @@
+<div class"form">
+  <div class="open_on">
+    <div>参加日選択 <span class="note">※必須</span></div>
+    <div><%= f.select :open_id, options_for_select(@course.applicable_opens.map { |open| [open.open_at_text, open.id] }, @applicant.open_id) %></div>
+  </div>
+  <div class="name">
+    <div>お名前 <span class="note">※必須</span></div>
+    <div><%= f.text_field :name %></div>
+  </div>
+  <div class="kana">
+    <div>フリガナ <span class="note">※必須</span></div>
+    <div><%= f.text_field :kana %></div>
+  </div>
+  <div class="tel">
+    <div>電話番号 <span class="note">※必須</span></div>
+    <div><%= f.text_field :tel %></div>
+  </div>
+  <div class="email">
+    <div>メールアドレス <span class="note">※必須</span></div>
+    <div><%= f.text_field :email %></div>
+  </div>
+  <div class="email_confirmation">
+    <div>メールアドレス（確認用） <span class="note">※必須</span></div>
+    <div><%= f.text_field :email_confirmation %></div>
+  </div>
+  <div class="remark">
+    <div>備考</div>
+    <div><%= f.text_area :remark %></div>
+  </div>
+</div>

@@ -1,4 +1,3 @@
-<h2><%= @content.name %><%= defined?(sub) ? " ： #{sub}" : '' %></h2>
 <%-
 menus1 = []
 menus1 << action_menu(:new) if Core.user.has_auth?(:designer) && Core.user.has_priv?(:create, item: Core.concept)

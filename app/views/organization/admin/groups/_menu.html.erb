@@ -1,5 +1,3 @@
-<%= render 'organization/admin/shared/menu', sub: "#{Organization::Group.model_name.human}#{case action_name
-                                                                                            when 'index'; '一覧'
-                                                                                            when 'new';   '登録'
-                                                                                            when 'edit';  '編集'
-                                                                                            end}" %>
+<h2><%= menu_header @content.name, @item ? @item.sys_group.name : nil, Organization::Group.model_name.human %></h2>
+
+<%= render 'organization/admin/shared/menu' %>

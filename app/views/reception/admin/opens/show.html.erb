@@ -1,0 +1,26 @@
+<p class="form">基本情報</p>
+
+<table class="show">
+  <tr>
+    <th><%= @item.class.human_attribute_name :title %></th>
+    <td><%= @item.title %></td>
+  </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :open_on %></th>
+    <td><%= @item.open_at_text %></td>
+  </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :place %></th>
+    <td><%= @item.place %></td>
+  </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :lecturer %></th>
+    <td><%= @item.lecturer %></td>
+  </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :expired_at %></th>
+    <td><%=i18n_l @item.expired_at %></td>
+  </tr>
+</table>
+
+<%= creator_view @item %>

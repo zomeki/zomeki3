@@ -1,11 +1,11 @@
-<h2><%= @content.name %>：<%= @place.title  %>：休業日</h2>
+<h2><%= menu_header @content.name, @place.title, BizCalendar::BussinessHoliday.model_name.human %></h2>
 
 <div class="actionMenu">
 <%= action_menu :new if Core.user.has_auth?(:designer) && Core.user.has_priv?(:create, :item => Core.concept) %>
 <%= action_menu :index %>
 <%= action_menu :show %>
 <%= action_menu :edit if safe{@item.editable?} %>
-<%= action_menu :destroy   if safe{@item.deletable?} %>
+<%= action_menu :destroy if safe{@item.deletable?} %>
 
 <% if params[:action] == 'index' %>
 <span class="separator"></span>

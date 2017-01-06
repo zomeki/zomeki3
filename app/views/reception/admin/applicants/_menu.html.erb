@@ -1,0 +1,16 @@
+<h2><%= menu_header @content.name, @course.title, @open.title, Reception::Applicant.model_name.human %></h2>
+
+<div class="actionMenu">
+  <%- if action_name == 'index' -%>
+  <%= link_to '戻る', reception_courses_path %>
+  <span class="separator"></span>
+  <%- end -%>
+  <%= action_menu :new %>
+  <%= action_menu :index %>
+  <%= action_menu :show %>
+  <%= action_menu :edit if @item.try(:editable?) %>
+  <%= action_menu :destroy if @item.try(:deletable?) %>
+  <span style="margin-left: 20px;">
+    <%= "定員：#{@course.capacity}名" if @course.capacity.present? %>
+  </span>
+</div>

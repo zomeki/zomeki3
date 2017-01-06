@@ -100,4 +100,10 @@ module ApplicationHelper
   def i18n_view(path)
     I18n.t("view.#{controller.controller_path}.#{path}")
   end
+
+  def menu_header(*texts, with_action_name: true)
+    header = texts.compact.join(' ：  ')
+    header << I18n.t("actions.#{action_name}", default: '') if with_action_name
+    header
+  end
 end

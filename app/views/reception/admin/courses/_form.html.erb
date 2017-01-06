@@ -1,0 +1,53 @@
+<%= init_ckeditor baseHref: "#{reception_course_path(@content, @item.id.to_i)}/" %>
+<span class="note">※は必須項目です。</span>
+
+<p class="form">基本情報</p>
+
+<table class="show">
+  <tr>
+    <th><%= f.label :title %> <span class="note">※</span></th>
+    <td><%= f.text_field :title, class: 'title' %></td>
+  </tr>
+  <tr>
+    <th><%= f.label :subtitle %></th>
+    <td><%= f.text_area :subtitle, class: 'title' %></td>
+  </tr>
+  <tr>
+    <th><%= f.label :body %></th>
+    <td class="cke_editor_wrapper"><%= f.text_area :body, class: 'ckeditor' %></td>
+  </tr>
+  <tr>
+    <th><%= f.label :capacity %></th>
+    <td><%= f.text_field :capacity, class: 'number' %></td>
+  </tr>
+  <tr>
+    <th><%= f.label :fee %></th>
+    <td><%= f.text_field :fee, class: 'number' %> 円  <span style="margin-left: 10px;"><%= f.text_field :fee_remark, class: 'title' %></span></td>
+  </tr>
+  <tr>
+    <th><%= f.label :remark %></th>
+    <td class="cke_editor_wrapper"><%= f.text_area :remark, class: 'ckeditor' %></td>
+  </tr>
+  <tr>
+    <th><%= f.label :sort_no %></th>
+    <td><%= f.text_field :sort_no, class: 'number' %></td>
+  </tr>
+</table>
+
+<p class="form">申込フォーム情報</p>
+
+<table class="show">
+  <tr>
+    <th><%= f.label :description %></th>
+    <td class="cke_editor_wrapper"><%= f.text_area :description, class: 'ckeditor' %></td>
+  </tr>
+</table>
+
+<%= render 'sys/admin/_partial/files/form', f: f, item: @item, content: @content %>
+
+<%- if @content.visible_category_types.present? -%>
+<p class="form">カテゴリ設定</p>
+<%= render 'gp_category/admin/_partial/categories/form', f: f, item: @item, category_types: @content.visible_category_types %>
+<%- end -%>
+
+<%= creator_form f %>

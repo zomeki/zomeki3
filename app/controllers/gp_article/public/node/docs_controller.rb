@@ -85,19 +85,11 @@ class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
       return http_error(404) unless @doc.creator.group == @group.sys_group
     end
 
-    paths = params[:path].split('/')
-    basename = paths.last
-    extname = params[:format]
-    thumb = paths[0].to_sym if paths.size == 2
+    params[:file] = File.basename(params[:path])
+    params[:type] = :thumb if params[:path] =~ /(\/|^)thumb\//
 
-    if (file = @doc.files.find_by(name: "#{basename}.#{extname}"))
-      mt = Rack::Mime.mime_type(".#{extname}")
-      type, disposition = (mt =~ %r!^image/|^application/pdf$! ? [mt, 'inline'] : [mt, 'attachment'])
-      disposition = 'attachment' if request.env['HTTP_USER_AGENT'] =~ /Android/
-      send_file file.upload_path(type: thumb), type: type, filename: file.name, disposition: disposition
-    else
-      http_error(404)
-    end
+    file = @doc.files.find_by!(name: "#{params[:file]}.#{params[:format]}")
+    send_file file.upload_path(type: params[:type]), filename: file.name
   end
 
   def qrcode
@@ -106,15 +98,11 @@ class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
     return http_error(404) unless @doc.qrcode_visible?
 
     if ::Storage.exists?(@doc.qrcode_path)
-      mt = Rack::Mime.mime_type(".png")
-      disposition = request.env['HTTP_USER_AGENT'] =~ /Android/ ? 'attachment' : 'inline'
-      send_file @doc.qrcode_path, :type => mt, :filename => 'qrcode.ping', :disposition => disposition
+      send_file @doc.qrcode_path, filename: 'qrcode.png'
     else
       qrcode = Util::Qrcode.create_date(@doc.public_full_uri, @doc.qrcode_path)
       if qrcode
-        mt = Rack::Mime.mime_type(".png")
-        disposition = request.env['HTTP_USER_AGENT'] =~ /Android/ ? 'attachment' : 'inline'
-        send_data qrcode, :type => mt, :filename => 'qrcode.ping', :disposition => disposition
+        send_data qrcode, filename: 'qrcode.png'
       else
         http_error(404)
       end

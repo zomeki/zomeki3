@@ -325,4 +325,12 @@ class GpArticle::Content::Doc < Cms::Content
     lang = setting_value(:lang)
     lang.to_s.split(',').map { |str| str.split(' ') }
   end
+
+  def allowed_attachment_type
+    setting_value(:allowed_attachment_type)
+  end
+
+  def attachment_thumbnail_size
+    setting_value(:attachment_thumbnail_size)
+  end
 end

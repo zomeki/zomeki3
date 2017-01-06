@@ -1,0 +1,25 @@
+<%= render 'search' %>
+
+<%= page_entries_info @items %>
+<table class="index">
+  <tr>
+    <th style="text-align: center; width: 60px;">詳細</th>
+    <th style=" text-align: center;width: 120px;"><%= Reception::Applicant.human_attribute_name :seq_no %></th>
+    <th style="text-align: center; width: 120px;"><%= Reception::Applicant.human_attribute_name :applied_at %></th>
+    <th><%= Reception::Applicant.human_attribute_name :name %></th>
+    <th style="text-align: center; width: 120px;"><%= Reception::Applicant.human_attribute_name :applied_from %></th>
+    <th style="text-align: center; width: 100px;"><%= Reception::Applicant.human_attribute_name :state %></th>
+  </tr>
+  <%- @items.each do |item| -%>
+  <tr class="<%= cycle '', 'cycle' %>">
+    <td style="text-align: center;"><%= link_to :show, { action: :show, id: item.id } %></td>
+    <td style="text-align: center;"><%= item.seq_no %></td>
+    <td style="text-align: center;"><%=i18n_l item.applied_at %></td>
+    <td style="text-align: left;"><%= item.name %></td>
+    <td style="text-align: center;"><%= item.applied_from_text %></td>
+    <td style="text-align: center;"><%= item.state_text %></td>
+  </tr>
+  <%- end -%>
+</table>
+
+<%= paginate @items -%>
