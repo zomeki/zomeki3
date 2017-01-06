@@ -16,11 +16,11 @@ class Reception::Content::Setting < Cms::ContentSetting
     name: "講座一覧表示形式",
     options: [['全講座一覧','all_courses'],['カテゴリ一覧','all_categories']],
     default_value: 'all_courses'
-  set_config :list_style,
-    name: "講座タイトル表示形式",
-    form_type: :text_area,
-    default_value: '@title',
-    upper_text: '<a href="#" class="show_dialog">置き換えテキストを確認する</a>'
+  #set_config :list_style,
+  #  name: "講座タイトル表示形式",
+  #  form_type: :text_area,
+  #  default_value: '@title',
+  #  upper_text: '<a href="#" class="show_dialog">置き換えテキストを確認する</a>'
 
   belongs_to :content, foreign_key: :content_id, class_name: 'Reception::Content::Course'
 
