@@ -85,11 +85,6 @@ class GpArticle::Content::Doc < Cms::Content
     GpCategory::Category.find_by(id: setting.try(:default_category_id))
   end
 
-  def group_category_type
-    return nil unless gp_category_content_category_type
-    gp_category_content_category_type.group_category_type
-  end
-
   def doc_list_lang
     setting_value(:doc_list_lang).to_sym
   end
