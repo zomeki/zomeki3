@@ -29,9 +29,10 @@ class GpCategory::Category < ApplicationRecord
   belongs_to :parent, :foreign_key => :parent_id, :class_name => self.name, :counter_cache => :children_count
   has_many :children, :foreign_key => :parent_id, :class_name => self.name, :dependent => :destroy
 
-  validates :name, :presence => true, :uniqueness => {:scope => [:category_type_id, :parent_id]}
-  validates :title, :presence => true
-  validates :state, :presence => true
+  validates :name, presence: true, uniqueness: { scope: [:category_type_id, :parent_id] },
+                   format: { with: /\A[0-9A-Za-z@\.\-_\+\s]+\z/ }
+  validates :title, presence: true
+  validates :state, presence: true
 
   has_many :categorizations, dependent: :destroy
   has_many :doc_categorizations, -> { where(categorized_as: 'GpArticle::Doc') }, class_name: 'GpCategory::Categorization'
