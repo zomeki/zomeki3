@@ -38,9 +38,10 @@ class GpCategory::CategoryType < ApplicationRecord
   has_many :public_root_categories, -> { public_state.with_root },
     :foreign_key => :category_type_id, :class_name => 'GpCategory::Category'
 
-  validates :name, :presence => true, :uniqueness => {:scope => :content_id}
-  validates :title, :presence => true
-  validates :state, :presence => true
+  validates :name, presence: true, uniqueness: { scope: :content_id },
+                   format: { with: /\A[0-9A-Za-z@\.\-_\+\s]+\z/ }
+  validates :title, presence: true
+  validates :state, presence: true
 
   after_initialize :set_defaults
 
