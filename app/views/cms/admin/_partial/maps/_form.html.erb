@@ -63,7 +63,7 @@ $(function() {
   $('#addMarkerForm').on('click', function() {
     var idx = $('#markerFormTbody tr').length;
     var elem = $('#markerFormTbody tr:last').clone();
-    elem.find('input[type="text"]').val('');
+    elem.find('input:text').removeAttr('value');
 
     var html = elem.html()
       .replace(/markers_attributes_\d+/g, "markers_attributes_" + idx)
@@ -132,6 +132,7 @@ $(function() {
           <th class="name">名称</th>
           <td class="name">
             <%= f3.text_field :name, id: "item_maps_attributes_0_markers_attributes_#{f3.index}Name" %>
+          </td>
           <th class="point">座標</th>
           <td class="point">
             <%= f3.text_field :lat, id: "item_maps_attributes_0_markers_attributes_#{f3.index}Lat" %>.<!--
@@ -139,7 +140,8 @@ $(function() {
           </td>
           <td class="action">
             <a href="#" onclick="me.setMarker('item_maps_attributes_0_markers_attributes_<%= f3.index %>'); return false;">≪クリックした座標を設定する</a>
-            <a href="#" onclick="me.unsetMarker('item_maps_attributes_0_markers_attributes_<%= f3.index %>'); return false;">≪クリア</a></td>
+            <a href="#" onclick="me.unsetMarker('item_maps_attributes_0_markers_attributes_<%= f3.index %>'); return false;">≪クリア</a>
+          </td>
         </tr>
       <%- end -%>
       </tbody>
