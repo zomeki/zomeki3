@@ -134,7 +134,7 @@ class Sys::Admin::StorageFilesController < Cms::Controller::Admin::Base
     return update if params[:do] == "update"
 
     if params[:create_directory]
-      if name = validate_name(params[:item][:new_directory])
+      if name = validate_dir_name(params[:item][:new_directory])
         if ::Storage.exists?("#{@path}/#{name}")
           flash[:notice] = "ディレクトリは既に存在します。"
         elsif name =~ /^_/
@@ -203,6 +203,10 @@ class Sys::Admin::StorageFilesController < Cms::Controller::Admin::Base
   end
 
 protected
+
+  def validate_dir_name(name)
+    name.to_s =~ /^[0-9A-Za-z@\.\-\_]+$/ ? name : nil
+  end
 
   def validate_name(name)
     if name.to_s !~ /^[0-9A-Za-z@\.\-\_]+$/
