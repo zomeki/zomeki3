@@ -35,6 +35,11 @@ every '9-54/15 * * * *' do
   rake 'zomeki:survey:answers:pull'
 end
 
+# 広告バナーのクリック数を取り込みます。
+every '12-57/15 * * * *' do
+  rake 'zomeki:ad_banner:clicks:pull'
+end
+
 # サイトの設定を定期的に更新します。
 every '25,55 * * * *' do
   rake 'zomeki:cms:sites:update_server_configs'
@@ -63,4 +68,9 @@ end
 # アクセスランキングデータを取り込みます。
 every :day, at: '3:00 am' do
   rake 'zomeki:rank:ranks:exec'
+end
+
+# 不要なsys_tasksデータを削除します。
+every :month, at: 'start of the month at 2:00 am' do
+  rake 'zomeki:sys:tasks:delete_expired'
 end

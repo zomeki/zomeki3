@@ -319,14 +319,18 @@ class Cms::Site < ApplicationRecord
   end
 
   def generate_nginx_admin_configs
-    return if admin_domain.blank?
     servers = Rails.root.join('config/nginx/admin_servers')
     unless (template = servers.join('template.conf.erb')).file?
       logger.warn 'Server template not found.'
       return false
     end
     erb = ERB.new(template.read, nil, '-').result(binding)
-    servers.join("site_#{'%04d' % id}.conf").write erb
+    conf_file = servers.join("site_#{'%04d' % id}.conf")
+    if admin_domain.blank?
+      FileUtils.rm_f(conf_file)
+    else
+      conf_file.write erb
+    end
   end
 
   def destroy_nginx_configs

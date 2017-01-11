@@ -9,13 +9,8 @@
   </tr>
 </table>
 
-<%- unless @item.categories.empty? -%>
-<table class="show">
-  <tr>
-    <th><%= GpCategory::Category.model_name.human %></th>
-    <td><%= @item.categories.map(&:title).join(', ') %></td>
-  </tr>
-</table>
+<%- if @content.category_types.present? -%>
+<%= render 'gp_category/admin/_partial/categories/view', item: @item, category_types: @content.category_types %>
 <%- end -%>
 
 <table class="show">

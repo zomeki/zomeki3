@@ -289,6 +289,10 @@ class GpArticle::Content::Doc < Cms::Content
     setting_extra_value(:doc_list_pagination, :doc_publish_more_pages).to_i
   end
 
+  def doc_monthly_style
+    setting_extra_value(:doc_list_pagination, :doc_monthly_style)
+  end
+
   def rel_docs_style
     setting_value(:rel_docs_style).to_s
   end
@@ -320,5 +324,13 @@ class GpArticle::Content::Doc < Cms::Content
   def lang_options
     lang = setting_value(:lang)
     lang.to_s.split(',').map { |str| str.split(' ') }
+  end
+
+  def allowed_attachment_type
+    setting_value(:allowed_attachment_type)
+  end
+
+  def attachment_thumbnail_size
+    setting_value(:attachment_thumbnail_size)
   end
 end

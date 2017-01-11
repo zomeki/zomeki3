@@ -1,0 +1,26 @@
+<div class="show">
+  <div class="name">
+    <div>参加日</div>
+    <div><%= applicant.open.open_at_text if applicant.open %></div>
+  </div>
+  <div class="name">
+    <div>お名前</div>
+    <div><%= applicant.name %></div>
+  </div>
+  <div class="kana">
+    <div>フリガナ</div>
+    <div><%= applicant.kana %></div>
+  </div>
+  <div class="tel">
+    <div>電話番号</div>
+    <div><%= applicant.tel %></div>
+  </div>
+  <div class="email">
+    <div>メールアドレス</div>
+    <div><%= applicant.email %></div>
+  </div>
+  <div class="remark">
+    <div>備考</div>
+    <div><%= applicant.remark %></div>
+  </div>
+</div>

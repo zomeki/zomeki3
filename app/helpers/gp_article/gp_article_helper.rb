@@ -39,12 +39,12 @@ module GpArticle::GpArticleHelper
     }.join.html_safe
   end
 
-  def monthly_title(dates)
-    dates.first.try(:strftime, '%Y年%-m月')
+  def monthly_title(dates, date_style)
+    dates.first.try(:strftime, date_style)
   end
 
-  def weekly_title(dates)
-    %Q(#{dates.first.try(:strftime, '%Y年%-m月%d日')}～#{dates.last.try(:strftime, '%Y年%-m月%d日')})
+  def weekly_title(dates, date_style)
+    %Q(#{dates.first.try(:strftime, date_style)}～#{dates.last.try(:strftime, date_style)})
   end
 
   def period_pagination(prev_doc, next_doc, node, options = {})

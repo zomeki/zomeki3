@@ -1,0 +1,15 @@
+<%= render 'shared/admin/content/settings/form', f: f, item: @item -%>
+
+<%= render 'reception/admin/shared/doc_style_tags' %>
+<%= javascript_tag do %>
+$(function() {
+  $('a.show_dialog').on('click', function() {
+    $('#doc_style_tags').dialog({width: 400});
+    return false;
+  });
+});
+<% end %>
+
+<%- if @item.name == 'gp_category_content_category_type_id' -%>
+<%= render 'gp_category/admin/_partial/content/settings/category_type_id', f: f, item: @item %>
+<%- end -%>

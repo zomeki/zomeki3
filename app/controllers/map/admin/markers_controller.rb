@@ -23,7 +23,6 @@ class Map::Admin::MarkersController < Cms::Controller::Admin::Base
   def create
     @item = @content.markers.build(marker_params)
     _create(@item) do
-      set_categories
       set_file
     end
   end
@@ -32,7 +31,6 @@ class Map::Admin::MarkersController < Cms::Controller::Admin::Base
     @item = @content.markers.find(params[:id])
     @item.attributes = marker_params
     _update(@item) do
-      set_categories
       set_file
     end
   end
@@ -44,24 +42,13 @@ class Map::Admin::MarkersController < Cms::Controller::Admin::Base
 
   def file_content
     item = @content.markers.find(params[:id])
-    return http_error(404) if item.files.empty?
     file = item.files.first
-    mt = file.mime_type.presence || Rack::Mime.mime_type(File.extname(file.name))
-    type, disposition = (mt =~ %r!^image/|^application/pdf$! ? [mt, 'inline'] : [mt, 'attachment'])
-    disposition = 'attachment' if request.env['HTTP_USER_AGENT'] =~ /Android/
-    send_file file.upload_path, :type => type, :filename => file.name, :disposition => disposition
+    return http_error(404) unless file
+
+    send_file file.upload_path, filename: file.name
   end
 
   private
-
-  def set_categories
-    category_ids = if params[:categories]
-                     params[:categories].values.flatten.reject{|c| c.blank? }.uniq
-                   else
-                     []
-                   end
-    @item.category_ids = category_ids
-  end
 
   def set_file
     if params[:delete_file]
@@ -70,13 +57,17 @@ class Map::Admin::MarkersController < Cms::Controller::Admin::Base
     if (param_file = params[:file])
       @item.files.each {|f| f.destroy } unless @item.files.empty?
       filename = "image#{File.extname(param_file.original_filename)}"
-      file = @item.files.build(file: param_file, name: filename, title: filename)
+      file = @item.files.build(file: param_file, name: filename, title: filename, site_id: Core.site.id)
       file.allowed_type = 'gif,jpg,png'
       file.save
     end
   end
 
   def marker_params
-    params.require(:item).permit(:latitude, :longitude, :state, :title, :window_text)
+    params.require(:item).permit(:latitude, :longitude, :state, :title, :window_text).tap do |permitted|
+      [:in_category_ids].each do |key|
+        permitted[key] = params[:item][key].to_unsafe_h if params[:item][key]
+      end
+    end
   end
 end

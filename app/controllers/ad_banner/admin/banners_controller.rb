@@ -51,10 +51,7 @@ class AdBanner::Admin::BannersController < Cms::Controller::Admin::Base
 
   def file_content
     item = @content.banners.find(params[:id])
-    mt = item.mime_type.presence || Rack::Mime.mime_type(File.extname(item.name))
-    type, disposition = (mt =~ %r!^image/|^application/pdf$! ? [mt, 'inline'] : [mt, 'attachment'])
-    disposition = 'attachment' if request.env['HTTP_USER_AGENT'] =~ /Android/
-    send_file item.upload_path, :type => type, :filename => item.name, :disposition => disposition
+    send_file item.upload_path, filename: item.name
   end
 
   private

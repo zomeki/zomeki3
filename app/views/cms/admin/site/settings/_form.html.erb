@@ -9,11 +9,11 @@
 </table>
 <%- end -%>
 
-<%- if @item.name == 'pass_reminder_mail_sender' -%>
+<%- if @item.name == 'admin_mail_sender' -%>
 <table class="show">
   <tr>
-    <th><%= @site.locale(:setting_pass_reminder_mail_sender) %></th>
-    <td><%= f.text_field(:in_setting_site_pass_reminder_mail_sender, class: 'name') %></td>
+    <th><%= @site.locale(:setting_admin_mail_sender) %></th>
+    <td><%= f.text_field(:in_setting_site_admin_mail_sender, class: 'name') %></td>
   </tr>
 </table>
 </table>

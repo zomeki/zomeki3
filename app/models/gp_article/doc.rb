@@ -83,7 +83,6 @@ class GpArticle::Doc < ApplicationRecord
   has_many :holds, :as => :holdable, :dependent => :destroy
   has_many :comments, :dependent => :destroy
 
-  before_save :make_file_contents_path_relative
   before_save :set_name
   before_save :set_published_at
   before_save :replace_public
@@ -629,11 +628,12 @@ class GpArticle::Doc < ApplicationRecord
     return self.class.none unless state_public? || state_closed?
     return self.class.none if public_uri.blank?
     links.klass.where(links.table[:url].matches("%#{self.public_uri(without_filename: true).sub(/\/$/, '')}%"))
+      .where(linkable_type: self.class.name)
   end
 
   def backlinked_docs
     return [] if backlinks.blank?
-    self.class.where(id: backlinks.pluck(:doc_id))
+    self.class.where(id: backlinks.pluck(:linkable_id))
   end
 
   def check_accessibility
@@ -848,11 +848,6 @@ class GpArticle::Doc < ApplicationRecord
         errors.add attr, :platform_dependent_characters, :chars => chars
       end
     end
-  end
-
-  def make_file_contents_path_relative
-    self.body = self.body.gsub(%r!("|')[^"'(]*?/(file_contents/)!, '\1\2') if self.body.present?
-    self.mobile_body = self.mobile_body.gsub(%r!("|')[^"'(]*?/(file_contents/)!, '\1\2') if self.mobile_body.present?
   end
 
   def event_dates_range

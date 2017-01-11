@@ -105,8 +105,6 @@ class Cms::DataFile < ApplicationRecord
     return true
   end
 
-  private
-
   def upload_public_file
     Util::File.put(public_path, src: upload_path, mkdir: true) if FileTest.exist?(upload_path)
     Util::File.put(public_thumbnail_path, src: upload_path(type: :thumb), mkdir: true) if FileTest.exist?(upload_path(type: :thumb))

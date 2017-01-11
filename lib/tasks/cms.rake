@@ -56,5 +56,44 @@ namespace :zomeki do
         Cms::Site.generate_nginx_configs
       end
     end
+
+    namespace :data_files do
+      desc 'Rebuild data files'
+      task(:rebuild => :environment) do
+        Cms::DataFile.where(state: 'public').find_each do |item|
+          item.upload_public_file
+        end
+      end
+    end
+
+    namespace :brackets do
+      desc 'Rebuild brackets'
+      task(:rebuild => :environment) do
+        [Cms::Layout, Cms::Node, Cms::Piece, GpArticle::Doc].each do |model|
+          model.find_each do |item|
+            item.save_brackets
+          end
+        end
+      end
+    end
+
+    namespace :links do
+      desc 'Rebuild links'
+      task(:rebuild => :environment) do
+        [Cms::Node::Page, GpArticle::Doc].each do |model|
+          model.find_each do |item|
+            item.save_links
+          end
+        end
+      end
+    end
+
+    namespace :publish_urls do
+      desc 'Rebuild publish urls'
+      task(:rebuild => :environment) do
+        Cms::Node::Page.public_state.find_each(&:set_public_name)
+        GpArticle::Doc.public_state.find_each(&:set_public_name)
+      end
+    end
   end
 end

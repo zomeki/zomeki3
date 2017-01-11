@@ -1,0 +1,14 @@
+<div class="contentReceptionCourse">
+  <%= render 'reception/public/node/shared/show_courses', courses: [@course] %>
+
+  <h3>お申込みフォーム</h3>
+  <div><%=raw @course.replace_file_path_for_public(@course.description) %></div>
+
+  <%= form_for @applicant, as: :item, url: "#{@course.public_uri}/applicants/" do |f| -%>
+    <%= f.error_messages %>
+    <%= render 'form', f: f %>
+    <div class="submit">
+      <%= f.submit '確認画面へ', name: 'confirm' %>
+    </div>
+  <%- end -%>
+</div>

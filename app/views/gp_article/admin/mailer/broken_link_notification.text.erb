@@ -1,7 +1,7 @@
 「<%= @src_doc.title %>」からリンクしている「<%= @doc.title %>」が削除されました。
   対象のリンクは次の通りです。
 
-<%= @doc.backlinks.where(doc_id: @src_doc.id).map { |l| "  ・#{l.body} ( #{l.url} )" }.join("\n") %>
+<%= @doc.backlinks.where(linkable_id: @src_doc.id).map { |l| "  ・#{l.body} ( #{l.url} )" }.join("\n") %>
 
   次のURLをクリックしてリンクを確認してください。
 

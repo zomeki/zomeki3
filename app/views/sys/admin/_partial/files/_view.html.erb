@@ -1,0 +1,16 @@
+<%
+return if item.new_record?
+inline_id = "#{item.class}-#{item.id}"
+%>
+
+<p class="form">添付ファイル</p>
+
+<table class="show">
+  <tr><td>
+    <a href="#" onclick="$(this).toggleOpen('#inlineFiles'); return false;">開く▼</a>
+  </td></tr>
+</table>
+
+<div id="inlineFiles" style="display: none;">
+<iframe src="<%= view_sys_inline_files_path(inline_id, content: content) %>" style="width: 100%;" frameborder="0"></iframe>
+</div>

@@ -1,0 +1,40 @@
+<%= render 'shared/admin/piece/form', f: f do -%>
+<p class="form">詳細設定</p>
+
+<table class="show">
+  <tr>
+    <th><%= @item.locale :docs_filter %></th>
+    <td><%= f.array_select 'in_settings[docs_filter]', @item.class::DOCS_FILTER_OPTIONS %></td>
+  </tr>
+  <tr>
+    <th><%= @item.locale :docs_order %></th>
+    <td><%= f.array_select 'in_settings[docs_order]', @item.class::DOCS_ORDER_OPTIONS %></td>
+  </tr>
+  <tr>
+    <th><%= @item.locale :doc_style %></th>
+    <td>
+      <%= link_to '置き換えテキストを確認する', '#', id: 'show_dialog' %><br />
+      <%= f.array_text_area 'in_settings[doc_style]', size: '100x10' %>
+    </td>
+  </tr>
+  <tr>
+    <th><%= @item.locale :date_style %></th>
+    <td><%= f.array_text_field 'in_settings[date_style]', size: 50 %> 年：%Y 月：%m 日：%d 時：%H 分：%M 秒：%S</td>
+  </tr>
+  <tr>
+    <th><%= @item.locale :docs_number %></th>
+    <td><%= f.array_text_field 'in_settings[docs_number]', class: 'number' %></td>
+  </tr>
+</table>
+
+<%= render 'reception/admin/shared/doc_style_tags' %>
+
+<%= javascript_tag do %>
+$(function() {
+  $('#show_dialog').on('click', function() {
+    $('#doc_style_tags').dialog({width: 400});
+    return false;
+  });
+});
+<%- end -%>
+<%- end -%>

@@ -1,6 +1,0 @@
-<%= render 'menu' %>
-
-<%= form_for @item, as: :item, url: { action: :create, content: @content, event_id: @event_id }, html: { multipart: true } do |f| %>
-  <%= error_messages_for :item %>
-  <%= render 'form', f: f, submit_label: 'アップロード' %>
-<% end %>

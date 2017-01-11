@@ -1,0 +1,8 @@
+「<%= @course.title %>」の受付が完了しました。
+
+<%= render 'applicant', applicant: @applicant %>
+
+以下のURLからお申込みをキャンセルできます。
+キャンセルには上記の受付番号が必要となります。
+
+<%= "#{@course.public_full_uri}/applicants/#{@applicant.token}/cancel" -%>

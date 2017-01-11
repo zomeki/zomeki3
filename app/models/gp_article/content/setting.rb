@@ -74,7 +74,8 @@ class GpArticle::Content::Setting < Cms::ContentSetting
     default_extra_values: {
       doc_list_style: 'by_date',
       doc_list_number: 30,
-      doc_publish_more_pages: 10
+      doc_publish_more_pages: 10,
+      doc_monthly_style: '%Y年%m月'
     }
   set_config :list_style, menu: :index,
     name: "#{GpArticle::Doc.model_name.human}タイトル表示形式",
@@ -223,8 +224,9 @@ class GpArticle::Content::Setting < Cms::ContentSetting
     when 'serial_no_settings'
       ex[:title] = params[:title]
     when 'doc_list_pagination'
-      ex[:doc_list_style]  = params[:doc_list_style]
-      ex[:doc_list_number] = params[:doc_list_number]
+      ex[:doc_list_style]    = params[:doc_list_style]
+      ex[:doc_list_number]   = params[:doc_list_number]
+      ex[:doc_monthly_style] = params[:doc_monthly_style]
       ex[:doc_publish_more_pages] = params[:doc_publish_more_pages]
     when 'pagination_label'
       ex[:next_label] = params[:next_label]

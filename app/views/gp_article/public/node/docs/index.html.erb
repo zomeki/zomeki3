@@ -6,8 +6,8 @@
   </ul>
   <%- end -%>
   <div class="docs">
-    <%- if @docs.present? && @content.monthly_pagination? -%><h2 class="date"><%= monthly_title(@dates) %></h2><%- end -%>
-    <%- if @docs.present? && @content.weekly_pagination? -%><h2 class="date"><%= weekly_title(@dates) %></h2><%- end -%>
+    <%- if @docs.present? && @content.monthly_pagination? -%><h2 class="date"><%= monthly_title(@dates, @content.doc_monthly_style) %></h2><%- end -%>
+    <%- if @docs.present? && @content.weekly_pagination? -%><h2 class="date"><%= weekly_title(@dates, @content.date_style) %></h2><%- end -%>
     <%- if @content.doc_list_style == 'by_date' && @content.simple_pagination?%>
       <% @items.each do |date, docs| %>
         <h2 class="date"><%= date %></h2>

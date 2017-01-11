@@ -1,6 +1,0 @@
-<%= render 'menu' %>
-
-<%= form_for @item, as: :item, url: { action: :create, content: @content, doc_id: @doc_id }, html: { multipart: true } do |f| %>
-  <%= error_messages_for :item %>
-  <%= render 'form_multiple', f: f, submit_label: 'アップロード' %>
-<% end %>

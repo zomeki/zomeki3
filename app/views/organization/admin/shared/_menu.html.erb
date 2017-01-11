@@ -1,5 +1,3 @@
-<h2><%= @content.name %><%= @item ? " ： #{@item.sys_group.name}" : '' %><%= defined?(sub) ? " ： #{sub}" : '' %></h2>
-
 <%- if @parent_sys_group -%>
 <div class="navi">
   <%- @parent_sys_group.ancestors.reject { |g| g == @content.root_sys_group }.each_with_index do |g, i| -%>

@@ -3,7 +3,7 @@ class Sys::OperationLog < ApplicationRecord
 
   default_scope { order(updated_at: :desc) }
 
-  ACTION_OPTIONS = [["作成","create"], ["更新","update"], ["承認","recognize"], ["承認","approve"], ["削除","destroy"], ["公開","publish"], ["非公開","close"], ["ログイン","login"], ["ログアウト","logout"]]
+  ACTION_OPTIONS = [["作成","create"], ["更新","update"], ["承認","recognize"], ["承認","approve"], ["削除","destroy"], ["公開","publish"], ["非公開","close"], ["期限切れ","expire"], ["ログイン","login"], ["ログアウト","logout"]]
 
   belongs_to :loggable, :polymorphic => true
   belongs_to :user, :class_name => 'Sys::User'
