@@ -178,6 +178,8 @@ class GpArticle::Content::Setting < Cms::ContentSetting
   after_update :update_docs_event_state, if: -> { name == 'calendar_relation' }
   after_update :update_docs_marker_state, if: -> { name == 'map_relation' }
 
+  validate :validate_doc_list_pagination, if: -> { name == 'doc_list_pagination' }
+
   def extra_values=(params)
     ex = extra_values
     case name
@@ -281,6 +283,15 @@ class GpArticle::Content::Setting < Cms::ContentSetting
   def update_docs_marker_state
     if content.map_content_marker.nil?
       content.docs.where(marker_state: 'visible').update_all(marker_state: 'hidden')
+    end
+  end
+
+  def validate_doc_list_pagination
+    if extra_values[:doc_list_number].to_s !~ /\A\d+\z/
+      errors.add("#{name}.doc_list_number", I18n.t('activerecord.errors.messages.not_a_number'))
+    end
+    if extra_values[:doc_publish_more_pages].to_s !~ /\A\d+\z/
+      errors.add("#{name}.doc_publish_more_pages", I18n.t('activerecord.errors.messages.not_a_number'))
     end
   end
 end
