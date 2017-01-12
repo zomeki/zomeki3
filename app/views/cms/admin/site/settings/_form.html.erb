@@ -1,11 +1,9 @@
-
 <%- if @item.name == 'common_ssl' -%>
 <table class="show">
   <tr>
     <th><%= @site.locale(:setting_common_ssl) %></th>
     <td><%= f.radio_buttons(:in_setting_site_common_ssl, @item.class::SSL_OPTIONS) %></td>
   </tr>
-</table>
 </table>
 <%- end -%>
 
@@ -15,7 +13,6 @@
     <th><%= @site.locale(:setting_admin_mail_sender) %></th>
     <td><%= f.text_field(:in_setting_site_admin_mail_sender, class: 'name') %></td>
   </tr>
-</table>
 </table>
 <%- end -%>
 
@@ -50,3 +47,11 @@
 </table>
 <%- end -%>
 
+<%- if @item.name == 'link_check' -%>
+<table class="show">
+  <tr>
+    <th><%= @site.locale(:setting_link_check) %></th>
+    <td><%= f.radio_buttons(:in_setting_site_link_check, @item.class::LINK_CHECK_OPTIONS) %></td>
+  </tr>
+</table>
+<%- end -%>

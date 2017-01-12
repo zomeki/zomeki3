@@ -886,6 +886,7 @@ class GpArticle::Doc < ApplicationRecord
   end
 
   def validate_broken_link_existence
+    return if content.site.setting_site_link_check != 'enabled'
     return if in_ignore_link_check == '1'
 
     results = check_links_in_body

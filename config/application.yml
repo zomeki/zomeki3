@@ -5,9 +5,6 @@ sys:
   #承認者候補に他所属の管理者を表示
   recognizers_include_admin: false
 
-  #自動リンクチェック
-  auto_link_check: true
-
   # 静的ファイルの書き出しを無効化
   clean_statics: false
 
