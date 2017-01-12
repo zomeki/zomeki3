@@ -7,16 +7,12 @@ class Organization::Public::Node::GroupsController < Cms::Controller::Public::Ba
   end
 
   def index
-    http_error(404) if params[:page]
-
     sys_group_codes = @content.root_sys_group.children.pluck(:code)
     @groups = @content.groups.public_state.where(sys_group_code: sys_group_codes)
       .preload_assocs(:public_descendants_and_public_node_ancestors_assocs)
   end
 
   def show
-    http_error(404) if params[:page]
-
     @group = @content.find_group_by_path_from_root(params[:group_names])
     return http_error(404) unless @group.try(:public?)
 
@@ -56,6 +52,7 @@ class Organization::Public::Node::GroupsController < Cms::Controller::Public::Ba
                 .paginate(page: params[:page], per_page: per_page)
                 .preload_assocs(:organization_groups_and_public_node_ancestors_assocs, :public_index_assocs)
             end
+    return http_error(404) if @docs.current_page > @docs.total_pages
 
     render 'more' if @more
   end
