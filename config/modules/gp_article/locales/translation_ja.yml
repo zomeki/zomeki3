@@ -62,6 +62,9 @@ ja:
       gp_article/doc/maps/markers:
         lat: 緯度
         lng: 経度
+      gp_article/content/setting/doc_list_pagination:
+        doc_list_number: 一覧表示件数
+        doc_publish_more_pages: 静的ページ数
       gp_article/category_type:
         name: カテゴリ種別ID
         title: カテゴリ種別名
