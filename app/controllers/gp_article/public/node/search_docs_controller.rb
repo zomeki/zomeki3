@@ -6,15 +6,14 @@ class GpArticle::Public::Node::SearchDocsController < Cms::Controller::Public::B
   end
 
   def index
-    @s_keyword = params[:s_keyword].to_s
+    @keyword = params.dig(:criteria, :keyword)
+    @category_ids = params.dig(:criteria, :category_ids) || []
 
-    if @s_keyword.blank?
-      @docs = []
-    else
-      @docs = @content.public_docs.search_with_text(:title, :body, @s_keyword)
-                      .order('display_published_at DESC, published_at DESC')
-                      .paginate(page: params[:page], per_page: 20)
-      return http_error(404) if @docs.current_page > @docs.total_pages
-    end
+    @docs = @content.public_docs
+    @docs = @docs.search_with_text(:title, :body, @keyword) if @keyword.present?
+    @docs = @docs.categorized_into(@category_ids) if @category_ids.present?
+    @docs = @docs.order(display_published_at: :desc, published_at: :desc)
+                 .paginate(page: params[:page], per_page: 20)
+    return http_error(404) if @docs.current_page > @docs.total_pages
   end
 end

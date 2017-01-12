@@ -1,9 +1,30 @@
 <form method="get" action="<%= @node.public_uri %>">
+  <%- if @piece.content.visible_category_types.present? -%>
+  <div class="categories">
+    <%- @piece.content.visible_category_types.each do |category_type| -%>
+      <label for="criteria_category_ids"><%= category_type.title %>で探す</label>
+      <div class="checkboxes">
+        <div class="checkboxesContainer">
+          <%= render 'categories', categories: category_type.public_root_categories %>
+        </div>
+      </div>
+    <%- end -%>
+  </div>
+  <%- end -%>
   <div class="keyword">
-    <label for="s_keyword">キーワードからさがす</label>
-    <%= text_field_tag :s_keyword, @s_keyword %>
+    <label for="criteria_keyword">キーワードでさがす</label>
+    <%= text_field_tag 'criteria[keyword]', @keyword %>
   </div>
   <div class="submitters">
     <input type="submit" value="検索" />
   </div>
 </form>
+
+<script type="text/javascript">
+$(function() {
+  $('ul li.level1 > input:checkbox').on('click', function(e) {
+    var checkboxes = $(this).siblings('ul').find('input:checkbox');
+    checkboxes.prop('checked', $(this).prop('checked'));
+  })
+});
+</script>

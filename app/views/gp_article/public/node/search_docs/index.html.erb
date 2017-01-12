@@ -1,15 +1,6 @@
 <div class="contentGpArticleDocs">
   <div class="searchInfo">
-    <%- if @s_keyword.blank? -%>
-    <div class="nosearch">検索条件を入力してください。</div>
-    <%- else -%>
-    <div class="keyword">
-      <%= @s_keyword %>
-    </div>
-    <div class="hit">
-      <span class="label">検索結果</span><span class="count"><%= @docs.total_entries %></span><span class="unit">件</span>
-    </div>
-    <%- end -%>
+    <%= render 'search_info' %>
   </div>
   <%- unless @docs.empty? -%>
   <div class="docs">

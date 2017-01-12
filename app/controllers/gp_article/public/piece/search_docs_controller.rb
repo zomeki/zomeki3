@@ -8,6 +8,7 @@ class GpArticle::Public::Piece::SearchDocsController < Sys::Controller::Public::
   end
 
   def index
-    @s_keyword = params[:s_keyword].to_s
+    @keyword = params.dig(:criteria, :keyword)
+    @category_ids = params.dig(:criteria, :category_ids) || []
   end
 end
