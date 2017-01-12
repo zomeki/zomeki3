@@ -7,6 +7,8 @@ class GpArticle::Content::Doc < Cms::Content
     foreign_key: :content_id, class_name: 'Cms::Node'
   has_one :public_archives_node, -> { public_state.where(model: 'GpArticle::Archive').order(:id) },
     foreign_key: :content_id, class_name: 'Cms::Node'
+  has_one :public_search_docs_node, -> { public_state.where(model: 'GpArticle::SearchDoc').order(:id) },
+    foreign_key: :content_id, class_name: 'Cms::Node'
 
   has_many :settings, -> { order(:sort_no) },
     foreign_key: :content_id, class_name: 'GpArticle::Content::Setting', dependent: :destroy

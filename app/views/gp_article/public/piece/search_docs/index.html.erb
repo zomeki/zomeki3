@@ -1,0 +1,9 @@
+<form method="get" action="<%= @node.public_uri %>">
+  <div class="keyword">
+    <label for="s_keyword">キーワードからさがす</label>
+    <%= text_field_tag :s_keyword, @s_keyword %>
+  </div>
+  <div class="submitters">
+    <input type="submit" value="検索" />
+  </div>
+</form>

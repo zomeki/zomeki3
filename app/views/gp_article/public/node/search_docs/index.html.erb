@@ -1,0 +1,24 @@
+<div class="contentGpArticleDocs">
+  <div class="searchInfo">
+    <%- if @s_keyword.blank? -%>
+    <div class="nosearch">検索条件を入力してください。</div>
+    <%- else -%>
+    <div class="keyword">
+      <%= @s_keyword %>
+    </div>
+    <div class="hit">
+      <span class="label">検索結果</span><span class="count"><%= @docs.total_entries %></span><span class="unit">件</span>
+    </div>
+    <%- end -%>
+  </div>
+  <%- unless @docs.empty? -%>
+  <div class="docs">
+    <%=raw '<ul>' if @content.wrapper_tag == 'li' %>
+    <%- @docs.each do |doc| -%>
+    <%= content_tag @content.wrapper_tag, doc_replace(doc, @content.list_style, @content.date_style, @content.time_style) %>
+    <%- end -%>
+    <%=raw '</ul>' if @content.wrapper_tag == 'li' %>
+  </div>
+  <%= paginate @docs %>
+  <%- end -%>
+</div>
