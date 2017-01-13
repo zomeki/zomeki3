@@ -7,7 +7,7 @@
       <th><%= item.title %></th>
     </tr>
     <tr>
-      <td><%=simple_format template_values[item.name] %></td>
+      <td><%=simple_format template_values[item.name].to_s.gsub(/("|')file_contents\//, '\1' + file_uri) %></td>
     </tr>
   </table>
   <%- else -%>
