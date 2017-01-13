@@ -76,7 +76,6 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   end
 
   def show
-
     _show @item
   end
 
@@ -85,6 +84,9 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
     if @content.default_category
       @item.in_category_ids = { @content.default_category.category_type_id.to_s => [@content.default_category.id.to_s] }
+    end
+    if @content.default_template
+      @item.template_id = @content.default_template.id
     end
   end
 

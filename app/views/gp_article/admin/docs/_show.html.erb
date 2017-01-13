@@ -99,7 +99,7 @@ $(document).ready(function () {
     </table>
 
     <%- if @item.template -%>
-    <%= render 'gp_template/admin/shared/show', template: @item.template, template_values: @item.template_values %>
+    <%= render 'gp_template/admin/shared/show', template: @item.template, template_values: @item.template_values, file_uri: @item.file_content_uri %>
     <%- else -%>
     <table class="show">
       <tr>
