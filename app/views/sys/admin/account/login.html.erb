@@ -1,4 +1,4 @@
-<%= render 'header', title: 'ログイン' %>
+<%= render 'layout', title: 'ログイン' do -%>
 
 <%= form_tag do -%>
   <%= hidden_field_tag :uri, @uri %>
@@ -19,4 +19,4 @@
   </div>
 <%- end -%>
 
-<%= render 'footer' %>
+<%- end -%>
