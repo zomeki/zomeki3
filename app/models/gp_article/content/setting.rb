@@ -75,7 +75,7 @@ class GpArticle::Content::Setting < Cms::ContentSetting
       doc_list_style: 'by_date',
       doc_list_number: 30,
       doc_publish_more_pages: 10,
-      doc_monthly_style: '%Y年%月'
+      doc_monthly_style: '%Y年%m月'
     }
   set_config :list_style, menu: :index,
     name: "#{GpArticle::Doc.model_name.human}タイトル表示形式",

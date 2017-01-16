@@ -13,8 +13,6 @@ ZomekiCMS::Application.routes.draw do
     resources :content_settings, :only => [:index, :show, :edit, :update],
       :controller => 'admin/content/settings',
       :path       => ':content/content_settings'
-    match ':content/content_settings/copy_groups' => 'admin/content/settings#copy_groups',
-      :as => :content_settings_copy_groups, :via => [:get, :post]
 
     ## contents
     resources(:category_types,

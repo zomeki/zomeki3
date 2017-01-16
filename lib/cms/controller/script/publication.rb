@@ -184,11 +184,13 @@ class Cms::Controller::Script::Publication < ApplicationController
     period   = params[:period] || 'monthly'
     file     = params[:file] || 'index'
     start_at = params[:start_at] || Date.today
+    start_at = period == 'monthly' ? start_at.beginning_of_month : start_at.beginning_of_week
     target_date = Date.parse(params[:target_date])
     dates = target_dates(period, target_date)
 
     dates.each do |date|
-      page = get_page_number(period, date, p)
+      p = start_at.to_date == date ? 1 : nil
+      page = page_number(period, date, p)
       uri  = "#{params[:uri]}#{file}#{page}.html"
       path = "#{params[:path]}#{file}#{page}.html"
       smart_phone_path = (params[:smart_phone_path].present? ? "#{params[:smart_phone_path]}#{file}#{page}.html" : nil)
@@ -202,17 +204,17 @@ class Cms::Controller::Script::Publication < ApplicationController
     case period
     when 'monthly'
       [
-        target_date.beginning_of_month - 1.month,
-        target_date.beginning_of_month,
         target_date.beginning_of_month + 1.month,
-        target_date.beginning_of_month + 2.month
+        target_date.beginning_of_month,
+        target_date.beginning_of_month - 1.month,
+        target_date.beginning_of_month - 2.month
       ]
     when 'weekly'
       [
-        target_date.beginning_of_week - 1.week,
-        target_date.beginning_of_week,
         target_date.beginning_of_week + 1.week,
-        target_date.beginning_of_week + 2.week
+        target_date.beginning_of_week,
+        target_date.beginning_of_week - 1.week,
+        target_date.beginning_of_week - 2.week
       ]
     else
       []

@@ -106,23 +106,6 @@ class GpCategory::CategoryType < ApplicationRecord
     Cms::Lib::BreadCrumbs.new(crumbs)
   end
 
-  def copy_from_groups(groups)
-    categories.each {|c| c.update_attribute(:state, 'closed') }
-
-    groups.each do |group|
-      if (category = categories.where(parent_id: nil, group_code: group.code).first)
-        new_state = (group.state == 'disabled' ? 'closed' : 'public')
-        category.update_attributes(state: new_state, name: group.name_en, title: group.name, sort_no: group.sort_no)
-      else
-        if (old_category = categories.find_by(parent_id: nil, name: group.name_en))
-          old_category.update_column(:name, "#{old_category.name}_#{old_category.id}")
-        end
-        category = categories.create(parent_id: nil, group_code: group.code, name: group.name_en, title: group.name, sort_no: group.sort_no)
-      end
-      category.copy_from_group(group) unless group.children.empty?
-    end
-  end
-
   def sitemap_visible?
     self.sitemap_state == 'visible'
   end
