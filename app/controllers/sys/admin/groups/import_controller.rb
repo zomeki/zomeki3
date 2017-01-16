@@ -44,29 +44,29 @@ class Sys::Admin::Groups::ImportController < Cms::Controller::Admin::Base
       code        = data[:code]
       parent_code = data[:parent_code]
 
-      if code.blank? || parent_code.blank?
+      if code.blank?
         @results[2] += 1
         next
       end
 
-      unless parent = Sys::Group.find_by(code: parent_code)
-        @results[2] += 1
-        next
+      if parent_code.present?
+        unless parent = Sys::Group.in_site(Core.site).find_by(code: parent_code)
+          @results[2] += 1
+          next
+        end
+        unless parent.sites.include?(Core.site)
+          @results[2] += 1
+          next
+        end
+      else
+        unless Sys::Group.in_site(Core.site).where(code: code).exists?
+          @results[2] += 1
+          next
+        end
       end
 
-      if parent.code != 'root' && !parent.site_ids.include?(Core.site.id)
-        @results[2] += 1
-        next
-      end
-
-      group = Sys::Group.find_by(code: code) || Sys::Group.new(code: code)
-
-      if !group.new_record? && !group.site_ids.include?(Core.site.id)
-        @results[2] += 1
-        next
-      end
-
-      group.parent_id    = parent.id
+      group = Sys::Group.in_site(Core.site).find_by(code: code) || Sys::Group.new(code: code)
+      group.parent_id    = parent.try(:id).to_i
       group.state        = data[:state]
       group.level_no     = data[:level_no]
       group.sort_no      = data[:sort_no]
@@ -103,17 +103,12 @@ class Sys::Admin::Groups::ImportController < Cms::Controller::Admin::Base
         next
       end
 
-      unless group = Sys::Group.find_by(code: group_code)
+      unless group = Sys::Group.in_site(Core.site).find_by(code: group_code)
         @results[2] += 1
         next
       end
 
-      unless group.site_ids.include?(Core.site.id)
-        @results[2] += 1
-        next
-      end
-
-      user = Sys::User.find_by(account: account) || Sys::User.new(account: account)
+      user = Sys::User.in_site(Core.site).find_by(account: account) || Sys::User.new(account: account)
       user.state        = data[:state]
       user.ldap         = data[:ldap]
       user.ldap_version = data[:ldap_version]

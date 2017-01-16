@@ -7,11 +7,8 @@ class Sys::Admin::UsersController < Cms::Controller::Admin::Base
   end
 
   def index
-    @item = Sys::User.new # for search
-    @item.in_group_id = params[:s_group_id]
-
     @items = Core.site.users.search_with_params(params).order("LPAD(account, 15, '0')")
-      .paginate(page: params[:page], per_page: params[:limit])
+                            .paginate(page: params[:page], per_page: params[:limit])
 
     _index @items
   end
@@ -25,20 +22,15 @@ class Sys::Admin::UsersController < Cms::Controller::Admin::Base
   def new
     @item = Sys::User.new(
       :state       => 'enabled',
-      :ldap        => '0',
+      :ldap        => 0,
       :auth_no     => 2
     )
   end
 
   def create
     @item = Sys::User.new(user_params)
-
-    _create(@item) do
-      unless Core.user.root?
-        @item.sites.clear
-        @item.sites << Core.site
-      end
-    end
+    @item.ldap = 0
+    _create(@item)
   end
 
   def update

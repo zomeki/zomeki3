@@ -7,18 +7,18 @@ protected
   def logged_in?
     current_user != false
   end
-  
+
   def new_login(_account, _password)
-    return false unless user = Sys::User.authenticate(_account, _password)
-    session[ACCOUNT_KEY]  = user.account
+    return false unless user = Sys::User.authenticate(_account, _password, site: Core.site)
+    session[ACCOUNT_KEY] = user.account
     session[PASSWD_KEY] = user.encrypt_password
     @@current_user = user
   end
-  
+
   def current_user
     return @@current_user if @@current_user
     return false if (!session[ACCOUNT_KEY] || !session[PASSWD_KEY])
-    unless user = Sys::User.authenticate(session[ACCOUNT_KEY], session[PASSWD_KEY], true)
+    unless user = Sys::User.authenticate(session[ACCOUNT_KEY], session[PASSWD_KEY], encrypted: true, site: Core.site)
       return false
     end
     @@current_user = user

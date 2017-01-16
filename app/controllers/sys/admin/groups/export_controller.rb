@@ -21,8 +21,8 @@ class Sys::Admin::Groups::ExportController < Cms::Controller::Admin::Base
     end
   end
 
-  def all_groups
-    Sys::Group.root.descendants_in_site(Core.site).drop(1)
+  def site_groups
+    Sys::Group.roots.in_site(Core.site).flat_map { |g| g.descendants_in_site(Core.site) }
   end
 
   def export_groups
@@ -30,10 +30,10 @@ class Sys::Admin::Groups::ExportController < Cms::Controller::Admin::Base
       csv << [:code, :parent_code, :state, :level_no, :sort_no,:ldap,
         :ldap_version, :name, :name_en, :address, :tel, :tel_attend, :fax,
         :email, :note]
-      all_groups.each do |group|
+      site_groups.each do |group|
         row = []
         row << group.code
-        row << group.parent.code
+        row << group.parent.try!(:code)
         row << group.state
         row << group.level_no
         row << group.sort_no
@@ -54,6 +54,10 @@ class Sys::Admin::Groups::ExportController < Cms::Controller::Admin::Base
     send_data(csv, :type => 'text/csv; charset=Shift_JIS', :filename => "sys_groups_#{Time.now.to_i}.csv")
   end
 
+  def site_users
+    Sys::User.in_site(Core.site).where.not(id: Sys::User::ROOT_ID).order(:id)
+  end
+
   def export_users
     csv = CSV.generate do |csv|
 
@@ -65,7 +69,7 @@ class Sys::Admin::Groups::ExportController < Cms::Controller::Admin::Base
         :group_code]
       end
 
-      Core.site.users.order(:id).each do |user|
+      site_users.each do |user|
         next unless user.groups[0]
         row = []
         row << user.account

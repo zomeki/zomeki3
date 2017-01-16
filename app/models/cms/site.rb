@@ -53,6 +53,8 @@ class Cms::Site < ApplicationRecord
 
   ## site image
   attr_accessor :site_image, :del_site_image
+  attr_accessor :in_root_group_id
+
   after_save { save_cms_data_file(:site_image, :site_id => id) }
   after_destroy { destroy_cms_data_file(:site_image) }
 
@@ -75,6 +77,7 @@ class Cms::Site < ApplicationRecord
   after_destroy :destroy_nginx_admin_configs
 
   after_create :make_concept
+  after_create :make_site_belonging
   after_save :make_node
   after_save :copy_common_directory
 
@@ -464,24 +467,28 @@ class Cms::Site < ApplicationRecord
     Sys::User.in_site(self)
   end
 
-  def users_for_option
-    @users_for_option ||= users.where(state: 'enabled').order(:id)
-      .map { |u| [u.name_with_account, u.id] }
+  def managers
+    users.where(auth_no: 5).order(:account)
   end
 
-  def all_users_for_option
-    @all_users_for_option = Sys::User.where(state: 'enabled').order(:id)
-      .map { |u| [u.name_with_account, u.id] }
+  def users_for_option
+    @users_for_option ||=
+      users.where(state: 'enabled').order(:id)
+           .map { |u| [u.name_with_account, u.id] }
   end
 
   def groups_for_option
-    @groups_for_option ||= Sys::Group.root.descendants_in_site(self).drop(1)
-      .map { |g| [g.tree_name(depth: -1), g.id] }
+    @groups_for_option ||=
+      Sys::Group.in_site(self).where(level_no: 2)
+                .flat_map { |g| g.descendants_in_site(self) }
+                .map { |g| [g.tree_name(depth: -1), g.id] }
   end
 
-  def all_groups_for_option
-    @all_groups_for_option = Sys::Group.where(level_no: 2).map(&:descendants).flatten(1)
-      .map { |g| [g.tree_name(depth: -1), g.id] }
+  def groups_for_option_with_root
+    @groups_for_option ||=
+      Sys::Group.roots.in_site(self)
+                .flat_map { |g| g.descendants_in_site(self) }
+                .map { |g| [g.tree_name, g.id] }
   end
 
   def og_type_text
@@ -584,5 +591,15 @@ protected
                        directory: 0, name: 'index.html', title: name, body: 'ZOMEKI')
 
     update_column(:node_id, node.id)
+  end
+
+  def make_site_belonging
+    if in_root_group_id == '0'
+      group = Sys::Group.new(state: 'enabled', parent_id: 0, level_no: 1, code: 'root', name: name, name_en: 'top', ldap: 0)
+      group.sites << self
+      group.save(validate: false)
+    else
+      site_belongings.create(group_id: in_root_group_id)
+    end
   end
 end

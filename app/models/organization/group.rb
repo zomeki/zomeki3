@@ -14,7 +14,7 @@ class Organization::Group < ApplicationRecord
   DOCS_ORDER_OPTIONS = [['公開日（降順）', 'display_published_at DESC, published_at DESC'],
                         ['公開日（昇順）', 'display_published_at ASC, published_at ASC']]
 
-  default_scope { order("#{self.table_name}.sort_no IS NULL, #{self.table_name}.sort_no") }
+  default_scope { order("#{self.table_name}.sort_no IS NULL").order(:sort_no, :sys_group_code) }
 
   # Page
   belongs_to :concept, :class_name => 'Cms::Concept'
@@ -25,21 +25,10 @@ class Organization::Group < ApplicationRecord
   belongs_to :content, :foreign_key => :content_id, :class_name => 'Organization::Content::Group'
   validates :content_id, :presence => true
 
-  belongs_to :sys_group, :foreign_key => :sys_group_code, :primary_key => :code, :class_name => 'Sys::Group'
-
-  has_many :sys_group_children, :through => :sys_group, :source => :children
-  has_one :sys_group_parent, :through => :sys_group, :source => :parent
-
-  has_many :children, :through => :sys_group_children, :source => :organization_group
-  has_one :parent, :through => :sys_group_parent, :source => :organization_group
-
-  # conditional associations
-  has_many :public_children, -> { public_state }, :through => :sys_group_children, :source => :organization_group
-
   after_initialize :set_defaults
 
-  validates :sys_group_code, :presence => true, :uniqueness => true
-  validates :name, :presence => true, :format => /\A[0-9A-Za-z\._-]*\z/i
+  validates :sys_group_code, presence: true, uniqueness: { scope: :content_id }
+  validates :name, presence: true, format: /\A[0-9A-Za-z\._-]*\z/i
   validate :name_uniqueness_in_siblings
 
   scope :public_state, -> { where(state: 'public') }
@@ -47,6 +36,23 @@ class Organization::Group < ApplicationRecord
     conds = [:layout_id, :more_layout_id].map { |c| arel_table[c].eq(layout_id) }
     where(conds.reduce(:or))
   }
+
+  def sys_group
+    Sys::Group.in_site(content.site).where(code: sys_group_code).first
+  end
+
+  def parent
+    return nil if sys_group.nil? || sys_group.parent.nil?
+    content.groups.where(sys_group_code: sys_group.parent.code).first
+  end
+
+  def children
+    content.groups.where(sys_group_code: sys_group.children.in_site(content.site).select(:code))
+  end
+
+  def public_children
+    children.public_state
+  end
 
   def sitemap_state_text
     SITEMAP_STATE_OPTIONS.detect{|o| o.last == self.sitemap_state }.try(:first).to_s
@@ -92,11 +98,6 @@ class Organization::Group < ApplicationRecord
     return groups
   end
 
-  def public_descendants_with_preload
-    preload_assocs(:public_descendants_assocs)
-    public_descendants
-  end
-
   def bread_crumbs(public_node)
     crumbs = []
 
@@ -138,7 +139,7 @@ class Organization::Group < ApplicationRecord
   end
 
   def name_uniqueness_in_siblings
-    siblings = parent ? parent.children : content.root_groups
+    siblings = parent ? parent.children : content.top_layer_groups
     errors.add(:name, :taken) unless siblings.where(name: name).where.not(id: id).empty?
   end
 end

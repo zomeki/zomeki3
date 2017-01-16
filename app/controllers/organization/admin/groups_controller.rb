@@ -1,6 +1,8 @@
 class Organization::Admin::GroupsController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 
+  before_action :refresh_groups
+
   def pre_dispatch
     return http_error(404) unless @content = Organization::Content::Group.find_by(id: params[:content])
     return error_auth unless Core.user.has_priv?(:read, :item => @content.concept)
@@ -9,11 +11,10 @@ class Organization::Admin::GroupsController < Cms::Controller::Admin::Base
   end
 
   def index
-    @content.refresh_groups
     sys_group_codes = if @parent_sys_group
                         @parent_sys_group.children.pluck(:code)
                       else
-                        @content.root_sys_group.children.pluck(:code)
+                        @content.top_layer_sys_group_codes
                       end
     @items = @content.groups.where(sys_group_code: sys_group_codes)
                             .paginate(page: params[:page], per_page: 30)
@@ -32,6 +33,10 @@ class Organization::Admin::GroupsController < Cms::Controller::Admin::Base
   end
 
   private
+
+  def refresh_groups
+    @content.refresh_groups
+  end
 
   def group_params
     params.require(:item).permit(

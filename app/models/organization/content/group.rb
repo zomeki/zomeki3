@@ -10,37 +10,38 @@ class Organization::Content::Group < Cms::Content
   has_many :groups, foreign_key: :content_id, class_name: 'Organization::Group', dependent: :destroy
 
   def refresh_groups
-    return unless root_sys_group
-
-    root_sys_group.children.each do |child|
-      next if (root_sys_group.sites & child.sites).empty?
-      copy_from_sys_group(child)
+    sys_groups = top_layer_sys_groups.flat_map { |g| g.descendants_in_site(site) }
+    sys_groups.each do |sys_group|
+      group = groups.where(sys_group_code: sys_group.code).first_or_create(name: sys_group.name_en)
+      unless group.valid?
+        group.name = "#{sys_group.name_en}_#{sys_group.code}"
+        group.save
+      end
     end
 
     groups.each do |group|
-      group.destroy if group.sys_group.nil? ||
-                       (root_sys_group.sites & group.sys_group.sites).empty?
+      sys_group = group.sys_group
+      group.destroy if sys_group.nil? || !sys_group.sites.include?(site)
     end
   end
 
-  def root_sys_group
-    return unless site_id
-    belongings = Cms::SiteBelonging.arel_table
-    Sys::Group.joins(:site_belongings).where(belongings[:site_id].eq(site_id))
-              .where(parent_id: 0, level_no: 1).first
+  def top_layer_sys_groups
+    Sys::Group.in_site(site).where(level_no: 2)
   end
 
-  def root_groups
-    sys_group_codes = root_sys_group.children.pluck(:code)
-    groups.where(sys_group_code: sys_group_codes)
+  def top_layer_sys_group_codes
+    top_layer_sys_groups.pluck(:code)
+  end
+
+  def top_layer_groups
+    groups.where(sys_group_code: top_layer_sys_group_codes)
   end
 
   def find_group_by_path_from_root(path_from_root)
     group_names = path_from_root.split('/')
     return nil if group_names.empty?
 
-    sys_group_codes = root_sys_group.children.pluck(:code)
-    group = groups.where(sys_group_code: sys_group_codes, name: group_names.shift).first
+    group = top_layer_groups.where(name: group_names.shift).first
     return nil unless group
 
     group_names.inject(group) {|result, item|
@@ -91,21 +92,5 @@ class Organization::Content::Group < Cms::Content
 
   def category_content
     GpCategory::Content::CategoryType.where(id: setting_value(:gp_category_content_category_type_id)).first
-  end
-
-  private
-
-  def copy_from_sys_group(sys_group)
-    group = groups.where(sys_group_code: sys_group.code).first_or_create(name: sys_group.name_en)
-    unless group.valid?
-      group.name = "#{sys_group.name_en}_#{sys_group.code}"
-      group.save
-    end
-    unless sys_group.children.empty?
-      sys_group.children.each do |child|
-        next if (sys_group.sites & child.sites).empty?
-        copy_from_sys_group(child)
-      end
-    end
   end
 end

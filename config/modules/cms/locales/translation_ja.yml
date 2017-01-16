@@ -49,6 +49,7 @@ ja:
         og_image: 画像
         smart_phone_publication: スマートフォンを別に書き出す
         spp_target: 書き出し対象
+        in_root_group_id: 最上位グループ
 
       cms/site_basic_auth_user:
         state: "状態"
