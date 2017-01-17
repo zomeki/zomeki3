@@ -111,18 +111,23 @@ class Cms::Site < ApplicationRecord
   end
 
   def domain
-    return '' if full_uri.blank?
-    URI.parse(full_uri).host
+    URI.parse(full_uri.to_s).host
   end
 
   def mobile_domain
-    return '' if mobile_full_uri.blank?
-    URI.parse(mobile_full_uri).host
+    URI.parse(mobile_full_uri.to_s).host
   end
 
   def admin_domain
-    return '' if admin_full_uri.blank?
-    URI.parse(admin_full_uri).host
+    URI.parse(admin_full_uri.to_s).host
+  end
+
+  def public_domains
+    [domain, mobile_domain].select(&:present?).uniq
+  end
+
+  def admin_domains
+    [admin_domain].select(&:present?).uniq
   end
 
   def publish_uri

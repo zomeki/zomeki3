@@ -1,7 +1,7 @@
 <% zomeki_root = Rails.root -%>
 server {
   listen 80;
-  server_name <%= domain %>;
+  server_name <%= public_domains.join(' ') %>;
   root <%= public_path %>;
   access_log <%= zomeki_root %>/log/access_site_<%= '%04d' % id %>.log main;
   error_log <%= zomeki_root %>/log/error_site_<%= '%04d' % id %>.log warn;
