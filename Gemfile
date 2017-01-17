@@ -9,6 +9,7 @@ gem 'pg', '~> 0.15'
 #gem 'puma', '~> 3.0'
 # Use Unicorn as the app server
 gem 'unicorn'
+gem 'unicorn-worker-killer', '~> 0.4.4'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets
