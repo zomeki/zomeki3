@@ -54,10 +54,6 @@ class Sys::Admin::Groups::ImportController < Cms::Controller::Admin::Base
           @results[2] += 1
           next
         end
-        unless parent.sites.include?(Core.site)
-          @results[2] += 1
-          next
-        end
       else
         unless Sys::Group.in_site(Core.site).where(code: code).exists?
           @results[2] += 1

@@ -8,8 +8,6 @@ class Cms::Admin::SitesController < Cms::Controller::Admin::Base
   end
 
   def index
-    @item = Cms::Site.new # for search
-
     @items = Cms::Site.order(:id)
     # システム管理者以外は所属サイトしか操作できない
     @items = @items.where(id: current_user.site_ids) unless current_user.root?
@@ -44,8 +42,6 @@ class Cms::Admin::SitesController < Cms::Controller::Admin::Base
     @item.portal_group_state = 'visible'
     @item.load_site_settings
     _create(@item, notice: "登録処理が完了しました。 （反映にはWebサーバーの再起動が必要です。）") do
-
-      @item.users << Core.user unless Core.user.root?
       update_configs
     end
   end
