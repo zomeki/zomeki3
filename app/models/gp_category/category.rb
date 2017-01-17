@@ -141,21 +141,6 @@ class GpCategory::Category < ApplicationRecord
     docs.order(inherited_docs_order).mobile(::Page.mobile?).public_state
   end
 
-  def copy_from_group(group)
-    group.children.each do |child_group|
-      if (child = children.where(group_code: child_group.code).first)
-        new_state = (child_group.state == 'disabled' ? 'closed' : 'public')
-        child.update_attributes(state: new_state, name: child_group.name_en, title: child_group.name, sort_no: child_group.sort_no)
-      else
-        if (old_child = children.find_by(name: child_group.name_en))
-          old_child.update_column(:name, "#{old_child.name}_#{old_child.id}")
-        end
-        child = children.create(group_code: child_group.code, name: child_group.name_en, title: child_group.name, sort_no: child_group.sort_no)
-      end
-      child.copy_from_group(child_group) unless child_group.children.empty?
-    end
-  end
-
   def sitemap_visible?
     self.sitemap_state == 'visible'
   end

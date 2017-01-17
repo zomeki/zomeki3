@@ -19,6 +19,12 @@
     <td><%= f.text_field :admin_full_uri, :class => 'url' %></td>
   </tr>
   <%- end -%>
+  <%- if @item.new_record? -%>
+  <tr>
+    <th><%= @item.locale(:in_root_group_id) %></th>
+    <td><%= f.select :in_root_group_id, options_for_select([['(新規作成)',0]] + Sys::Group.roots.pluck(:name, :id)) %></td>
+  </tr>
+  <%- end -%>
 </table>
 
 <br />

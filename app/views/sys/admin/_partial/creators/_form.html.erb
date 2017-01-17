@@ -1,17 +1,13 @@
 <%
 return unless Core.user.has_auth?(:manager)
 
-if Core.user.root?
-  groups = Core.site.all_groups_for_option
-  users = Core.site.all_users_for_option
-else
-  groups = Core.site.groups_for_option
-  users = Core.site.users_for_option
-end
+groups = Core.site.groups_for_option
+users = Core.site.users_for_option
+users += [[Core.user.name_with_account, Core.user.id]] unless users.detect { |u| u[1] == Core.user.id }
 
 if item.creator.blank?
   item.build_creator(
-    group_id: Core.user_group.id,
+    group_id: groups.detect { |g| g[1] == Core.user_group.id } ? Core.user_group.id : groups.first.try(:last),
     user_id: Core.user.id
   )
 end

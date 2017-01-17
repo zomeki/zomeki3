@@ -6,7 +6,7 @@
 <%= action_menu :show %>
 <%= action_menu :edit    if safe{@item.editable?} %>
 <%- unless %w!index new edit destroy!.include?(action_name) -%>
-  <%- if @item.last? -%>
+  <%- if @item && @item.last? -%>
   最後のサイトは削除できません。
   <%- else -%>
   <%= action_menu :destroy if safe{@item.deletable?} %>

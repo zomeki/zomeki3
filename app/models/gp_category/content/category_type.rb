@@ -27,14 +27,6 @@ class GpCategory::Content::CategoryType < Cms::Content
     public_pieces.where(model: ['GpCategory::CategoryType', 'GpCategory::Doc', 'GpCategory::RecentTab'])
   end
 
-  def group_category_type_name
-    setting_value(:group_category_type_name).presence || 'groups'
-  end
-
-  def group_category_type
-    category_types.find_by(name: group_category_type_name)
-  end
-
   def list_style
     setting_value(:list_style).to_s
   end

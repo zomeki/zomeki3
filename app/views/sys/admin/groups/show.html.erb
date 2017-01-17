@@ -1,12 +1,13 @@
 <p class="form">基本情報</p>
 
 <table class="show">
+  <%- if Core.user.root? -%>
   <tr>
-<%- if Core.user.root? -%>
     <th><%=t 'activerecord.models.cms/site' %></th>
-    <td><%= @item.sites.collect{|r| r.name}.join('，') %></td>
-  </tr><tr>
-<%- end -%>
+    <td><%= @item.sites.map(&:name).join('，') %></td>
+  </tr>
+  <%- end -%>
+  <tr>
     <th><%= @item.locale(:state) %></th>
     <td><%= @item.status.name %></td>
   </tr><tr>
@@ -18,9 +19,6 @@
   </tr><tr>
     <th><%= @item.locale(:name_en) %></th>
     <td><%= @item.name_en %></td>
-  </tr><tr>
-    <th><%= @item.locale(:ldap) %></th>
-    <td><%= @item.ldap_label %></td>
   </tr><tr>
     <th><%= @item.locale(:sort_no) %></th>
     <td><%= @item.sort_no %></td>

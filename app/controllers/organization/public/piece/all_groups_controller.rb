@@ -7,8 +7,7 @@ class Organization::Public::Piece::AllGroupsController < Sys::Controller::Public
   end
 
   def index
-    sys_group_codes = @piece.content.root_sys_group.children.pluck(:code)
-    @groups = @piece.content.groups.public_state.where(sys_group_code: sys_group_codes)
-      .preload_assocs(:public_descendants_and_public_node_ancestors_assocs)
+    @groups = @piece.content.top_layer_groups.public_state
+                    .preload_assocs(:public_node_ancestors_assocs)
   end
 end
