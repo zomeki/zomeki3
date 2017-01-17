@@ -141,10 +141,6 @@ class Cms::Site < ApplicationRecord
     return url
   end
 
-  def has_mobile?
-    !mobile_full_uri.blank?
-  end
-
   def site_domain?(script_uri)
     return false if Cms::SiteSetting::AdminProtocol.core_domain?
     parsed_uri = Addressable::URI.parse(script_uri)
@@ -208,54 +204,6 @@ class Cms::Site < ApplicationRecord
                      .or(sites[:admin_full_uri].matches("#{https_base}%")))
           .order(:id)
     end
-  end
-
-  def self.make_virtual_hosts_config
-    conf = '';
-    order(:id).each do |site|
-      next unless ::File.exist?(site.public_path)
-      next unless ::File.exist?(site.config_path + "/rewrite.conf")
-
-      domain = site.domain
-      next unless domain.to_s =~ /^[1-9a-z\.\-\_]+$/i
-
-      conf.concat(<<-EOT)
-<VirtualHost *:80>
-    ServerName #{domain}
-      EOT
-
-      if (md = site.mobile_domain).to_s =~ /^[1-9a-z\.\-\_]+$/i
-        conf.concat(<<-EOT)
-    ServerAlias #{md}
-    SetEnvIf Host #{Regexp.quote(md)} MOBILE_SITE
-        EOT
-      end
-
-      conf.concat(<<-EOT)
-    AddType text/x-component .htc
-    Alias /_common/ "#{Rails.root}/public/_common/"
-    DocumentRoot #{site.public_path}
-    Include #{Rails.root}/config/rewrite/base.conf
-    Include #{site.config_path}/rewrite.conf
-</VirtualHost>
-
-      EOT
-    end
-    conf
-  end
-
- def self.put_virtual_hosts_config
-    conf = make_virtual_hosts_config
-    Util::File.put virtual_hosts_config_path, data: conf
-    FileUtils.touch reload_virtual_hosts_text_path
-  end
-
-  def self.virtual_hosts_config_path
-    Rails.root.join('config/virtual-hosts/sites.conf')
-  end
-
-  def self.reload_virtual_hosts_text_path
-    Rails.root.join('tmp/reload_virtual_hosts.txt')
   end
 
   def self.generate_apache_configs
