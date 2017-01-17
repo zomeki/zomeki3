@@ -1,5 +1,4 @@
 require 'yaml/store'
-
 class Cms::Admin::SitesController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 
@@ -27,16 +26,11 @@ class Cms::Admin::SitesController < Cms::Controller::Admin::Base
   end
 
   def new
-    return error_auth unless Core.user.root? || Core.user.site_creatable?
-
-    @item = Cms::Site.new(
-      :state      => 'public',
-    )
+    @item = Cms::Site.new(state: 'public')
+    return error_auth unless @item.creatable?
   end
 
   def create
-    return error_auth unless Core.user.root? || Core.user.site_creatable?
-
     @item = Cms::Site.new(site_params)
     @item.state = 'public'
     @item.portal_group_state = 'visible'

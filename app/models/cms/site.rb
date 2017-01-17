@@ -43,11 +43,10 @@ class Cms::Site < ApplicationRecord
   has_many :admin_protocol_settings, class_name: 'Cms::SiteSetting::AdminProtocol'
   has_many :emergency_layout_settings, class_name: 'Cms::SiteSetting::EmergencyLayout'
 
-  validates :state, :name, :full_uri, presence: true
-  validates :full_uri, uniqueness: true
-  validates :mobile_full_uri, uniqueness: true, if: "mobile_full_uri.present?"
-  validates :admin_full_uri, uniqueness: true, if: "admin_full_uri.present?"
-  validate :validate_attributes
+  validates :state, :name, presence: true
+  validates :full_uri, presence: true, uniqueness: true, url: true
+  validates :mobile_full_uri, uniqueness: true, url: true, if: -> { mobile_full_uri.present? }
+  validates :admin_full_uri, uniqueness: true, url: true, if: -> { admin_full_uri.present? }
 
   after_initialize :set_defaults
 
@@ -81,6 +80,24 @@ class Cms::Site < ApplicationRecord
   after_save :make_node
   after_save :copy_common_directory
 
+  def creatable?
+    return false unless Core.user.has_auth?(:manager)
+    Core.user.root? || Core.user.site_creatable?
+  end
+
+  def readable?
+    return false unless Core.user.has_auth?(:manager)
+    Core.user.root? || Core.user.sites.include?(self)
+  end
+
+  def editable?
+    readable?
+  end
+
+  def deletable?
+    readable?
+  end
+
   def states
     [['公開','public']]
   end
@@ -112,18 +129,23 @@ class Cms::Site < ApplicationRecord
   end
 
   def domain
-    return '' if full_uri.blank?
-    URI.parse(full_uri).host
+    URI.parse(full_uri.to_s).host
   end
 
   def mobile_domain
-    return '' if mobile_full_uri.blank?
-    URI.parse(mobile_full_uri).host
+    URI.parse(mobile_full_uri.to_s).host
   end
 
   def admin_domain
-    return '' if admin_full_uri.blank?
-    URI.parse(admin_full_uri).host
+    URI.parse(admin_full_uri.to_s).host
+  end
+
+  def public_domains
+    [domain, mobile_domain].select(&:present?).uniq
+  end
+
+  def admin_domains
+    [admin_domain].select(&:present?).uniq
   end
 
   def publish_uri
@@ -135,10 +157,6 @@ class Cms::Site < ApplicationRecord
     url  = Sys::Setting.setting_extra_value(:common_ssl, :common_ssl_uri)
     url += "_ssl/#{format('%04d', id)}/"
     return url
-  end
-
-  def has_mobile?
-    !mobile_full_uri.blank?
   end
 
   def site_domain?(script_uri)
@@ -204,54 +222,6 @@ class Cms::Site < ApplicationRecord
                      .or(sites[:admin_full_uri].matches("#{https_base}%")))
           .order(:id)
     end
-  end
-
-  def self.make_virtual_hosts_config
-    conf = '';
-    order(:id).each do |site|
-      next unless ::File.exist?(site.public_path)
-      next unless ::File.exist?(site.config_path + "/rewrite.conf")
-
-      domain = site.domain
-      next unless domain.to_s =~ /^[1-9a-z\.\-\_]+$/i
-
-      conf.concat(<<-EOT)
-<VirtualHost *:80>
-    ServerName #{domain}
-      EOT
-
-      if (md = site.mobile_domain).to_s =~ /^[1-9a-z\.\-\_]+$/i
-        conf.concat(<<-EOT)
-    ServerAlias #{md}
-    SetEnvIf Host #{Regexp.quote(md)} MOBILE_SITE
-        EOT
-      end
-
-      conf.concat(<<-EOT)
-    AddType text/x-component .htc
-    Alias /_common/ "#{Rails.root}/public/_common/"
-    DocumentRoot #{site.public_path}
-    Include #{Rails.root}/config/rewrite/base.conf
-    Include #{site.config_path}/rewrite.conf
-</VirtualHost>
-
-      EOT
-    end
-    conf
-  end
-
- def self.put_virtual_hosts_config
-    conf = make_virtual_hosts_config
-    Util::File.put virtual_hosts_config_path, data: conf
-    FileUtils.touch reload_virtual_hosts_text_path
-  end
-
-  def self.virtual_hosts_config_path
-    Rails.root.join('config/virtual-hosts/sites.conf')
-  end
-
-  def self.reload_virtual_hosts_text_path
-    Rails.root.join('tmp/reload_virtual_hosts.txt')
   end
 
   def self.generate_apache_configs
@@ -515,21 +485,11 @@ class Cms::Site < ApplicationRecord
     spp_target == 'only_top'
   end
 
-protected
+  protected
+
   def fix_full_uri
-    self.full_uri += '/' if full_uri.present? && full_uri.to_s[-1] != '/'
-  end
-
-  def validate_attributes
-    if full_uri.to_s.index('_')
-      errors.add :full_uri, 'に「_」は使用できません。'
-      return
-    end
-
-    begin
-      URI.parse(full_uri)
-    rescue URI::InvalidURIError => e
-      errors.add :full_uri, 'は正しいURLではありません。'
+    [:full_uri, :mobile_full_uri, :admin_full_uri].each do |column|
+      self[column] += '/' if self[column].present? && self[column][-1] != '/'
     end
   end
 
