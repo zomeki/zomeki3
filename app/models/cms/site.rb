@@ -43,11 +43,10 @@ class Cms::Site < ApplicationRecord
   has_many :admin_protocol_settings, class_name: 'Cms::SiteSetting::AdminProtocol'
   has_many :emergency_layout_settings, class_name: 'Cms::SiteSetting::EmergencyLayout'
 
-  validates :state, :name, :full_uri, presence: true
-  validates :full_uri, uniqueness: true
-  validates :mobile_full_uri, uniqueness: true, if: "mobile_full_uri.present?"
-  validates :admin_full_uri, uniqueness: true, if: "admin_full_uri.present?"
-  validate :validate_attributes
+  validates :state, :name, presence: true
+  validates :full_uri, presence: true, uniqueness: true, url: true
+  validates :mobile_full_uri, uniqueness: true, url: true, if: -> { mobile_full_uri.present? }
+  validates :admin_full_uri, uniqueness: true, url: true, if: -> { admin_full_uri.present? }
 
   after_initialize :set_defaults
 
@@ -515,21 +514,11 @@ class Cms::Site < ApplicationRecord
     spp_target == 'only_top'
   end
 
-protected
+  protected
+
   def fix_full_uri
-    self.full_uri += '/' if full_uri.present? && full_uri.to_s[-1] != '/'
-  end
-
-  def validate_attributes
-    if full_uri.to_s.index('_')
-      errors.add :full_uri, 'に「_」は使用できません。'
-      return
-    end
-
-    begin
-      URI.parse(full_uri)
-    rescue URI::InvalidURIError => e
-      errors.add :full_uri, 'は正しいURLではありません。'
+    [:full_uri, :mobile_full_uri, :admin_full_uri].each do |column|
+      self[column] += '/' if self[column].present? && self[column][-1] != '/'
     end
   end
 

@@ -35,6 +35,7 @@ ja:
         onebyte_characters: "は半角で入力してください。"
         platform_dependent_characters: "に機種依存文字が含まれています。（%{chars}）"
         taken_in_site: "はすでにサイト内に登録されています。"
+        invalid_url: "は正しいURLではありません。"
       models:
         sys/creator:
           attributes:
