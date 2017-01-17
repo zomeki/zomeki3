@@ -1,0 +1,10 @@
+<%- categories.each do |category| -%>
+  <div><%= category.title %></div>
+  <ul>
+    <li class="category level<%= category.level_no %>">
+      <%= check_box_tag 'criteria[category_ids][]', category.id, @category_ids.include?(category.id.to_s), id: "criteria_category_ids_#{category.id}" %>
+      <%= label_tag "criteria_category_ids_#{category.id}", category.level_no == 1 ? "#{category.title} 全て" : category.title %>
+      <%= render 'categories', categories: category.public_children if category.public_children.size > 0 -%>
+    </li>
+  </ul>
+<%- end -%>
