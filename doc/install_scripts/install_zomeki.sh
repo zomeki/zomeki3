@@ -21,7 +21,7 @@ centos() {
   yum -y install libxml2-devel libxslt-devel openldap-devel nodejs patch
 
   rpm -ivh http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
-  yum -y install --enablerepo=remi ImageMagick-last-devel
+  yum -y install --enablerepo=remi ImageMagick6-devel
 
   git clone https://github.com/zomeki/zomeki3.git /var/www/zomeki
   chown -R zomeki:zomeki /var/www/zomeki
