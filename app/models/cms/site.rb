@@ -80,6 +80,24 @@ class Cms::Site < ApplicationRecord
   after_save :make_node
   after_save :copy_common_directory
 
+  def creatable?
+    return false unless Core.user.has_auth?(:manager)
+    Core.user.root? || Core.user.site_creatable?
+  end
+
+  def readable?
+    return false unless Core.user.has_auth?(:manager)
+    Core.user.root? || Core.user.sites.include?(self)
+  end
+
+  def editable?
+    readable?
+  end
+
+  def deletable?
+    readable?
+  end
+
   def states
     [['公開','public']]
   end
