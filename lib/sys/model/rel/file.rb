@@ -62,9 +62,21 @@ module Sys::Model::Rel::File
 
   def make_file_path_relative
     self.class.columns_having_file_name.each do |column|
-      text = read_attribute(column)
-      self[column] = text.gsub(%r{("|')/[^'"]+?/inline_files/\d+/(file_contents[^'"]+?)("|')}, "\\1\\2\\3") if text.present?
+      attr = read_attribute(column)
+      next if attr.blank?
+
+      if attr.is_a?(String)
+        self[column] = make_file_path_relative_for(attr)
+      elsif attr.is_a?(Hash)
+        attr.each do |key, value|
+          self[column][key] = make_file_path_relative_for(value)
+        end
+      end
     end
+  end
+
+  def make_file_path_relative_for(text)
+    text.gsub(%r{("|')/[^'"]+?/inline_files/\d+/(file_contents[^'"]+?)("|')}, "\\1\\2\\3")
   end
 
   def fix_file_name
@@ -72,10 +84,22 @@ module Sys::Model::Rel::File
       file = files.find_by(id: id)
       next if file.nil? || file.name == name
       self.class.columns_having_file_name.each do |column|
-        text = read_attribute(column)
-        self[column] = text.gsub(%r{("|')file_contents/#{name}("|')}, "\\1file_contents/#{file.name}\\2") if text.present?
+        attr = read_attribute(column)
+        next if attr.blank?
+
+        if attr.is_a?(String)
+          self[column] = fix_file_name_for(attr, name, file.name)
+        elsif attr.is_a?(Hash)
+          attr.each do |key, value|
+            self[column][key] = fix_file_name_for(value, name, file.name)
+          end
+        end
       end
     end
+  end
+
+  def fix_file_name_for(text, from, to)
+    text.gsub(%r{("|')file_contents/#{from}("|')}, "\\1file_contents/#{to}\\2")
   end
 
   class_methods do

@@ -40,7 +40,8 @@ display_embed_link = @content.respond_to?(:attachment_embed_link) ? @content.att
         <%- end -%>
       </td>
       <td>
-        <span class="item_name" item_name="<%= item.name %>"><%= item.name %></span>
+        <span class="item_name"><%= item.name %></span>
+        <span class="item_title"><%= "（#{item.title}）" if item.title.present? %></span>
         <%- if display_embed_link -%>
           <%- if item.image_file? -%>
             <div class="pasteLinks">

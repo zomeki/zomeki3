@@ -1,20 +1,20 @@
-<%= form_for :item, :url => '',  :html => {:method => :get, :class => 'search'} do |f| %>
+<%= form_tag '', method: :get, class: 'search' do |f| %>
 <%
 group_options = [['** グループ未設定','no_group']] + Core.site.groups_for_option
 %>
 <table>
   <tr>
     <th>ユーザーID</th>
-    <td ><%= text_field_tag 's_account', params[:s_account], :style => 'width: 120px; ime-mode: disabled;' %></td>
+    <td ><%= text_field_tag 's_account', params[:s_account], style: 'width: 120px; ime-mode: disabled;' %></td>
     <th>氏名</th>
-    <td ><%= text_field_tag 's_name', params[:s_name], :style => 'width: 120px;' %></td>
+    <td ><%= text_field_tag 's_name', params[:s_name], style: 'width: 120px;' %></td>
     <th>グループ</th>
     <td><%= select_tag 's_group_id', options_for_select(group_options, params[:s_group_id]), include_blank: true %></td>
     <th>状態</th>
     <td><%= select_tag 's_state', options_for_select([['有効','enabled'], ['無効','disabled']], params[:s_state]), include_blank: true %></td>
     <td class="submitters">
-      <%= submit_tag '検索', :name => :search %>
-      <%= submit_tag 'リセット', :name => :reset %>
+      <%= submit_tag '検索', name: :search %>
+      <%= submit_tag 'リセット', name: :reset %>
     </td>
   </tr>
 </table>

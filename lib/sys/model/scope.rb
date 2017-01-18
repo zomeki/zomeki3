@@ -26,5 +26,10 @@ module Sys::Model::Scope
       sql = '((' + relations.map{|rel| rel.to_sql}.join(') UNION (') + ')) AS ' + self.table_name 
       from(sql)
     end
+
+    def replace_for_all(column, from, to)
+      column = connection.quote_column_name(column)
+      update_all(["#{column} = REPLACE(#{column}, ?, ?)", from, to])
+    end
   end
 end

@@ -7,6 +7,8 @@ class GpArticle::Content::Doc < Cms::Content
     foreign_key: :content_id, class_name: 'Cms::Node'
   has_one :public_archives_node, -> { public_state.where(model: 'GpArticle::Archive').order(:id) },
     foreign_key: :content_id, class_name: 'Cms::Node'
+  has_one :public_search_docs_node, -> { public_state.where(model: 'GpArticle::SearchDoc').order(:id) },
+    foreign_key: :content_id, class_name: 'Cms::Node'
 
   has_many :settings, -> { order(:sort_no) },
     foreign_key: :content_id, class_name: 'GpArticle::Content::Setting', dependent: :destroy
@@ -83,11 +85,6 @@ class GpArticle::Content::Doc < Cms::Content
   def default_category
     setting = GpArticle::Content::Setting.find_by(id: settings.find_by(name: 'gp_category_content_category_type_id').try(:id))
     GpCategory::Category.find_by(id: setting.try(:default_category_id))
-  end
-
-  def group_category_type
-    return nil unless gp_category_content_category_type
-    gp_category_content_category_type.group_category_type
   end
 
   def doc_list_lang

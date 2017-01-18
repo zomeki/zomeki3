@@ -4,6 +4,9 @@ class Sys::StorageFile < ApplicationRecord
 
   scope :available, -> { where(available: true) }
   scope :unavailable, -> { where.not(available: true) }
+  scope :files_under_directory, ->(dir) {
+    where(arel_table[:path].matches("#{dir.to_s.chomp('/')}/%"))
+  }
 
   validates :path, presence: true, uniqueness: true
   validates :available, presence: true
@@ -15,23 +18,28 @@ class Sys::StorageFile < ApplicationRecord
   def self.import(r = 'sites')
     root = r.start_with?(Rails.root.to_s) ? Pathname.new(r) : Rails.root.join(r.sub(/\A\//, ''))
 
-    find_or_initialize_by(path: root.to_s).update!(available: true) and return if root.file?
-
-    return unless root.directory?
-    transaction do
-      update_all(available: false)
-      Dir.glob(root.join('**/*')) do |file|
-        next unless ::File.file?(file)
-        find_or_initialize_by(path: file).update!(available: true)
+    if root.file?
+      find_or_initialize_by(path: root.to_s).update!(available: true)
+    elsif root.directory?
+      transaction do
+        files_under_directory(root).update_all(available: false)
+        Dir.glob(root.join('**/*')) do |file|
+          next unless ::File.file?(file)
+          find_or_initialize_by(path: file).update!(available: true)
+        end
+        unavailable.destroy_all
       end
-      unavailable.destroy_all
     end
   end
 
   def self.mv(src, dst)
     transaction do
-      find_by(path: dst).try!(:destroy!)
-      find_by(path: src).update!(path: dst)
+      if ::File.directory?(dst)
+        files_under_directory(src).replace_for_all(:path, src.chomp('/'), dst.chomp('/'))
+      else
+        find_by(path: dst).try!(:destroy!)
+        find_by(path: src).update!(path: dst)
+      end
     end
   end
 
@@ -47,7 +55,7 @@ class Sys::StorageFile < ApplicationRecord
       where(arel_table[:path].eq(path).or(arel_table[:path].matches("#{path.sub(/\/\z/, '')}/%"))).destroy_all
     else
       if ::File.directory?(path) || path.end_with?('/')
-        where(arel_table[:path].matches("#{path.sub(/\/\z/, '')}/%")).destroy_all
+        files_under_directory(path).destroy_all
       else
         where(path: path).destroy
       end

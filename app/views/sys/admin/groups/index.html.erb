@@ -1,40 +1,39 @@
 <div class="crudTree">
 <div class="tree">
-
+  <%- if @parent -%>
   <p>
     <%= link_to :show, sys_group_url(@parent.parent_id, @parent) %>
-    <%= @parent.name %></p>
-  
+    <%= @parent.name %>
+  </p>
+  <%- end -%>
   <div class="links">
-    <div><%= link_to :up, url_for(:parent => @parent.parent_id) if @parent.level_no > 1 %></div>
-    <% for item in @groups %>
-    <%= link_to :show, url_for(:action => :show, :id => item) %>
-    <%= link_to h(item.name), url_for(:action => :index, :parent => item) %>
-    <span class="remark"><%= item.sort_no %></span><br />
-    <% end %>
+    <div><%= link_to :up, url_for(:parent => @parent.parent_id) if @parent && @parent.level_no > 1 %></div>
+    <%- @groups.each do |group| -%>
+      <%= link_to :show, { action: :show, id: group } %>
+      <%= link_to h(group.name), { action: :index, parent: group } %>
+      <span class="remark"><%= group.sort_no %></span><br />
+    <%- end -%>
   </div>
-  
 </div>
 <div class="content">
 
 <table class="index">
-  
   <tr>
     <th style="width: 60px; text-align: center;">詳細</th>
     <th style="width: 30%;">ユーザーID</th>
     <th style="width: ;">氏名</th>
     <th style="width: 60px; text-align: center;">状態</th>
   </tr>
-  
-  <% for item in @users %>
-  <tr class="<%= cycle '', 'cycle' %>">
-    <td style="text-align: center;"><%= link_to '詳細', sys_group_user_path(@parent, item) %></td>
-    <td><%= item.account %></td>
-    <td><%= item.name %></td>
-    <td style="text-align: center;"><%= safe{item.status.name} %></td>
-  </tr>
-  <% end %>
-
+  <%- if @parent -%>
+    <%- @users.each do |user| -%>
+    <tr class="<%= cycle '', 'cycle' %>">
+      <td style="text-align: center;"><%= link_to '詳細', sys_group_user_path(@parent, user) %></td>
+      <td><%= user.account %></td>
+      <td><%= user.name %></td>
+      <td style="text-align: center;"><%= safe{user.status.name} %></td>
+    </tr>
+    <%- end -%>
+  <%- end -%>
 </table>
 
 </div>

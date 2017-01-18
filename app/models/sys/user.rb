@@ -6,6 +6,8 @@ class Sys::User < ApplicationRecord
 
   include StateText
 
+  ROOT_ID = 1
+
   has_many :users_groups, foreign_key: :user_id, class_name: 'Sys::UsersGroup', dependent: :destroy
   has_many :groups, through: :users_groups, source: :group
   has_many :users_roles, foreign_key: :user_id, class_name: 'Sys::UsersRole', dependent: :destroy
@@ -15,17 +17,19 @@ class Sys::User < ApplicationRecord
 
   attr_accessor :in_group_id
 
-  validates :account, uniqueness: true
   validates :state, :account, :name, :ldap, presence: true
-  validates :in_group_id, presence: true, if: %Q(in_group_id == '')
+  validates :in_group_id, presence: true, if: -> { in_group_id == '' }
   validate :admin_auth_no_fixation
 
-  after_save :save_group, :if => %Q(@_in_group_id_changed)
+  validates :account, uniqueness: true, if: :root?
+  validate :validate_account_uniqueness_in_site, if: -> { !root? && @in_group_id }
+
+  after_save :save_group, if: -> { @_in_group_id_changed }
 
   before_destroy :block_root_deletion
 
-  scope :in_site, ->(site) { joins(:users_groups => :site_belongings).where(cms_site_belongings: {site_id: site.id}) }
-  scope :in_group, ->(group) { joins(:users_groups).where(sys_users_groups: {group_id: group.id}) }
+  scope :in_site, ->(site) { joins(users_groups: :site_belongings).where(cms_site_belongings: { site_id: Array(site).map(&:id) }) }
+  scope :in_group, ->(group) { joins(:users_groups).where(sys_users_groups: { group_id: group.id }) }
 
   scope :search_with_params, ->(params = {}) {
     rel = all
@@ -58,11 +62,19 @@ class Sys::User < ApplicationRecord
   end
 
   def editable?
-    Core.user.has_auth?(:manager)
+    Core.user.has_auth?(:manager) && editable_user?
   end
 
   def deletable?
-    Core.user.has_auth?(:manager)
+    Core.user.has_auth?(:manager) && deletable_user?
+  end
+
+  def editable_user?
+    !root? || (root? && Core.user.root?)
+  end
+
+  def deletable_user?
+    !root?
   end
 
   def authes
@@ -151,20 +163,23 @@ class Sys::User < ApplicationRecord
     return true
   end
 
-  def self.find_managers
-    self.where(state: 'enabled', auth_no: 5).order(:account)
-  end
-
   ## -----------------------------------
   ## Authenticates
 
+  def self.login_users(account, site: nil)
+    root_users = self.where(state: 'enabled', account: account, id: ROOT_ID)
+    users = self.where(state: 'enabled', account: account)
+    users = users.in_site(site) if site
+    self.union([root_users, users])
+  end
+
   ## Authenticates a user by their account name and unencrypted password.  Returns the user or nil.
-  def self.authenticate(in_account, in_password, encrypted = false)
+  def self.authenticate(in_account, in_password, encrypted: false, site: nil)
     crypt_pass  = Zomeki.config.application["sys.crypt_pass"]
     in_password = Util::String::Crypt.decrypt(in_password, crypt_pass) if encrypted
 
     user = nil
-    self.where(state: 'enabled', account: in_account).each do |u|
+    login_users(in_account, site: site).each do |u|
       if u.ldap == 1
         ## LDAP Auth
         next unless ou1 = u.groups[0]
@@ -206,18 +221,32 @@ class Sys::User < ApplicationRecord
   end
 
   def root?
-    self.id == 1
+    id == ROOT_ID
   end
 
   def sites
-    self.groups.inject([]){|s_ids, g| s_ids.concat(g.sites) }.uniq
+    groups.flat_map(&:sites).uniq
   end
 
   def site_ids
-    self.sites.map(&:id)
+    sites.map(&:id)
   end
 
-protected
+  protected
+
+  def validate_account_uniqueness_in_site
+    group = Sys::Group.find_by(id: in_group_id)
+
+    users = self.class.where(account: account)
+    users = users.in_site(group.sites) if group && group.sites
+    users = users.where.not(id: id) if persisted?
+    root_users = self.class.where(account: account, id: ROOT_ID)
+
+    if self.class.union([users, root_users]).exists?
+      errors.add(:account, :taken_in_site)
+    end
+  end
+
   def password_required?
     password.blank?
   end
@@ -262,6 +291,10 @@ protected
   class << self
     def readable
       all
+    end
+
+    def root
+      self.where(id: ROOT_ID).first
     end
   end
 end

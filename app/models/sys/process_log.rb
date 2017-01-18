@@ -10,6 +10,7 @@ class Sys::ProcessLog < ApplicationRecord
     ["アクセスランキング取り込み" , "rank/script/ranks/exec"],
     ["フィード取り込み" , "feed/script/feeds/read"],
     ["問合せ取り込み", "survey/script/answers/pull"],
+    ["広告クリック数取り込み", "ad_banner/script/clicks/pull"],
     ["関連ページ書き出し", "cms/script/nodes/publish"],
     ["記事ページ書き出し", "gp_article/script/docs/publish_doc"]
   ]

@@ -2,8 +2,6 @@ class Sys::Group < ApplicationRecord
   include Sys::Model::Base
   include Cms::Model::Base::Page
   include Sys::Model::Base::Config
-  include Cms::Model::Base::Page::Publisher
-  include Cms::Model::Base::Page::TalkTask
   include Sys::Model::Tree
   include Sys::Model::Auth::Manager
 
@@ -18,19 +16,19 @@ class Sys::Group < ApplicationRecord
   has_many :users, -> { order(:id) }, :through => :users_groups
 
   has_many :site_belongings, :dependent => :destroy, :class_name => 'Cms::SiteBelonging'
-  has_many :sites, :through => :site_belongings, :class_name => 'Cms::Site'
+  has_many :sites, -> { order(:id) }, :through => :site_belongings, :class_name => 'Cms::Site'
 
-  has_one :organization_group, :primary_key => :code, :foreign_key => :sys_group_code, 
-    :class_name => 'Organization::Group'
-
-  validates :state, :level_no, :name, :ldap, presence: true
-  validates :code, presence: true, uniqueness: true
-  validates :name_en, presence: true, uniqueness: { scope: :parent_id }, format: { with: /\A[0-9A-Za-z\._-]*\z/i }
-
-  before_destroy :before_destroy
+  before_destroy :disable_users
   after_save :copy_name_en_as_url_name
 
-  scope :in_site, ->(site) { joins(:site_belongings).where(cms_site_belongings: {site_id: site.id}) }
+  validates :state, :level_no, :name, :ldap, presence: true
+  validates :code, presence: true
+  validates :name_en, presence: true,
+                      uniqueness: { scope: :parent_id, unless: :root? },
+                      format: { with: /\A[0-9A-Za-z\._-]*\z/i }
+  validate :validate_code_uniqueness_in_site
+
+  scope :in_site, ->(sites) { joins(:site_belongings).where(cms_site_belongings: {site_id: Array(sites).map(&:id)}) }
   scope :in_group, ->(group) { where(parent_id: group.id) }
 
   def creatable?
@@ -85,8 +83,17 @@ class Sys::Group < ApplicationRecord
     descendants.map {|g| [g.tree_name(depth: -1), g.id] }
   end
 
-private
-  def before_destroy
+  private
+
+  def validate_code_uniqueness_in_site
+    groups = self.class.in_site(sites).where(code: code)
+    groups = groups.where.not(id: id) if persisted?
+    if groups.exists?
+      errors.add(:code, :taken_in_site)
+    end
+  end
+
+  def disable_users
     users.each do |user|
       if user.groups.size == 1
         u = Sys::User.find_by(id: user.id)

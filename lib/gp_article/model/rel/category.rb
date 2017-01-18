@@ -42,11 +42,6 @@ module GpArticle::Model::Rel::Category
   def save_categories
     category_ids = in_category_ids.values.flatten.select(&:present?).map(&:to_i).uniq
 
-    if content.category_types.include?(content.group_category_type) && creator && creator.group
-      group_category = content.group_category_type.categories.find_by(group_code: creator.group.code)
-      category_ids |= [group_category.id]
-    end
-
     if content.default_category && content.category_types.include?(content.default_category_type)
       category_ids |= [content.default_category.id]
     end

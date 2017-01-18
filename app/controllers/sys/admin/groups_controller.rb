@@ -4,16 +4,24 @@ class Sys::Admin::GroupsController < Cms::Controller::Admin::Base
   def pre_dispatch
     return error_auth unless Core.user.has_auth?(:manager)
 
-    id = params[:parent] == '0' ? 1 : params[:parent]
-
-    @parent = Sys::Group.find(id)
-    return error_auth unless @parent.id == 1 || @parent.site_ids.include?(Core.site.id)
-
-    @groups = Core.site.groups.in_group(@parent).order(:sort_no, :code, :id).all
-    @users = Core.site.users.in_group(@parent).order(:account).all
+    if params[:parent] == '0'
+      @parent = nil
+    else
+      @parent = Sys::Group.find(params[:parent])
+      return error_auth unless @parent.site_ids.include?(Core.site.id)
+    end
   end
 
   def index
+    if @parent
+      @groups = Core.site.groups.in_group(@parent).order(:sort_no, :code, :id)
+      @users = Core.site.users.in_group(@parent).order(:account)
+    else
+      @groups = Core.site.groups.where(parent_id: 0).order(:sort_no, :code, :id)
+      return redirect_to url_for(action: :index, parent: @groups.first.id) if @groups.size == 1
+      @users = []
+    end
+
     _index @groups
   end
 
@@ -26,7 +34,7 @@ class Sys::Admin::GroupsController < Cms::Controller::Admin::Base
   def new
     @item = Sys::Group.new(
       :state      => 'enabled',
-      :parent_id  => @parent.id,
+      :parent_id  => @parent.try!(:id),
       :ldap       => 0,
       :web_state  => 'public'
     )
@@ -34,22 +42,18 @@ class Sys::Admin::GroupsController < Cms::Controller::Admin::Base
 
   def create
     @item = Sys::Group.new(group_params)
-    @item.parent_id = @parent.id
-    parent = Sys::Group.find_by(id: @item.parent_id)
-    @item.level_no = parent ? parent.level_no + 1 : 1
-    _create(@item) do
-      @item.sites << Core.site if @item.sites.empty?
-    end
+    @item.ldap = 0
+    @item.level_no = @item.parent.try!(:level_no).to_i + 1
+    @item.sites << Core.site if @item.sites.empty?
+    _create(@item)
   end
 
   def update
     @item = Sys::Group.find(params[:id])
     @item.attributes = group_params
-    parent = Sys::Group.find_by(id: @item.parent_id)
-    @item.level_no = parent ? parent.level_no + 1 : 1
-    _update(@item) do
-      @item.sites << Core.site if @item.sites.empty?
-    end
+    @item.level_no = @item.parent.try!(:level_no).to_i + 1
+    @item.sites << Core.site if @item.sites.empty?
+    _update(@item)
   end
 
   def destroy

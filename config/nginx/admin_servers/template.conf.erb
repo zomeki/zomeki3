@@ -1,14 +1,14 @@
 <% zomeki_root = Rails.root -%>
 server {
   listen 80;
-  server_name <%= admin_domain %>;
+  server_name <%= admin_domains.join(' ') %>;
   root <%= public_path %>;
   access_log <%= zomeki_root %>/log/access_site_<%= '%04d' % id %>.log main;
   error_log <%= zomeki_root %>/log/error_site_<%= '%04d' % id %>.log warn;
 
   include <%= zomeki_root %>/config/nginx/rewrite.conf;
   include <%= zomeki_root %>/config/nginx/servers_common.conf;
-  include <%= zomeki_root %>/config/nginx/servers/site_<%= '%04d' % id %>.d/*.conf;
+  include <%= zomeki_root %>/config/nginx/admin_servers/site_<%= '%04d' % id %>.d/*.conf;
 
   location ~ ^/(<%= ZomekiCMS::ADMIN_URL_PREFIX %>|_preview) {
     try_files $uri @proxy;

@@ -1,0 +1,20 @@
+<%- if @category_ids.present? -%>
+  <div class="category_ids">
+    <%- @content.visible_category_types.each do |category_type| -%>
+      <%- next if (categories = category_type.public_categories.where(id: @category_ids)).blank? -%>
+      <div>
+        <span class="label"><%= category_type.title %></span>
+        <%= categories.pluck(:title).join(', ') %>
+      </div>
+    <%- end -%>
+  </div>
+<%- end -%>
+<%- if @keyword.present? -%>
+  <div class="keyword">
+    <span class="label">キーワード</span>
+    <%= @keyword %>
+  </div>
+<%- end -%>
+<div class="hit">
+  <span class="label">検索結果</span><span class="count"><%= @docs.total_entries %></span><span class="unit">件</span>
+</div>

@@ -211,6 +211,10 @@ class Cms::Stylesheet < ApplicationRecord
     src = upload_path
     dst = ::File.join(::File.dirname(upload_path), @new_name)
 
+    if ::File.directory?(src) && ::File.directory?(dst)
+      dst = ::File.join(dst, ::File.basename(src))
+    end
+
     is_dir = directory?
     ::Storage.mv(src, dst) if src != dst
 
@@ -240,6 +244,10 @@ class Cms::Stylesheet < ApplicationRecord
     end
     return false if errors.size != 0
     return false unless valid_exists?(dst, :file)
+
+    if ::File.directory?(src) && ::File.directory?(dst)
+      dst = ::File.join(dst, ::File.basename(src))
+    end
 
     is_dir = directory?
     ::Storage.mv(src, dst)

@@ -1,8 +1,12 @@
 <div class="navi">
-<% ancestors = @parent.ancestors; ancestors.each_with_index do |c, k| %>
-<%= link_to h(c.name), sys_groups_path(c) %>
-<% if ancestors.size != k + 1 %><span class="separator">&gt;</span><% end %>
-<% end %>
+<%- if @parent -%>
+  <%- ancestors = @parent.ancestors; ancestors.each_with_index do |c, k| -%>
+  <%= link_to h(c.name), sys_groups_path(c) %>
+  <% if ancestors.size != k + 1 %><span class="separator">&gt;</span><% end %>
+  <%- end -%>
+<%- else -%>
+  グループ
+<%- end -%>
 </div>
 
 <div class="actionMenu">
