@@ -557,7 +557,7 @@ class Cms::Site < ApplicationRecord
     if in_root_group_id == '0'
       group = Sys::Group.new(state: 'enabled', parent_id: 0, level_no: 1, code: 'root', name: name, name_en: 'top', ldap: 0)
       group.sites << self
-      group.save(validate: false)
+      group.save
     else
       site_belongings.create(group_id: in_root_group_id)
     end
