@@ -13,11 +13,15 @@
   </tr><tr>
     <th><%= @item.locale(:parent_id) %></th>
     <td>
-      <%-
-      groups_for_option = Core.site.groups_for_option_with_root
-      groups_for_option = [['(ルート階層)',0]] + groups_for_option if Core.user.root?
-      -%>
-      <%= f.select :parent_id, groups_for_option %>
+      <%- if @item.root? -%>
+        <span>(ルート階層)</span>
+      <%- else -%>
+        <%-
+        groups_for_option = Core.site.groups_for_option_except(@item)
+        groups_for_option = [['(ルート階層)',0]] + groups_for_option if Core.user.root?
+        -%>
+        <%= f.select :parent_id, groups_for_option %>
+      <%- end -%>
     </td>
   </tr><tr>
     <th><%= @item.locale(:code) %></th>

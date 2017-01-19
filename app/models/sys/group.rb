@@ -75,8 +75,12 @@ class Sys::Group < ApplicationRecord
     opts[:prefix] * [level_no - 1 + opts[:depth], 0].max + name
   end
 
-  def descendants_in_site(site, items = [])
-    descendants {|child| child.in_site(site) }
+  def descendants_in_site(site)
+    descendants do |child|
+      rel = child.in_site(site)
+      rel = yield(rel) || rel if block_given?
+      rel
+    end
   end
 
   def descendants_for_option(groups=[])
