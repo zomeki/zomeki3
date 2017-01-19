@@ -22,7 +22,8 @@ class Sys::Group < ApplicationRecord
   after_save :copy_name_en_as_url_name
 
   validates :state, :level_no, :name, :ldap, presence: true
-  validates :code, presence: true
+  validates :code, presence: true,
+                   format: { with: /\A[\x20-\x7F]*\z/ }
   validates :name_en, presence: true,
                       uniqueness: { scope: :parent_id, unless: :root? },
                       format: { with: /\A[0-9A-Za-z\._-]*\z/i }
