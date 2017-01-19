@@ -13,7 +13,7 @@ class Cms::Layout < ApplicationRecord
 
   validates :state, :title, presence: true
   validates :name, presence: true, uniqueness: { scope: :concept_id },
-    format: { with: /\A[0-9a-zA-Z\-_]+\z/, if: "name.present?", message: "は半角英数字、ハイフン、アンダースコアで入力してください。" }
+    format: { with: /\A[0-9a-zA-Z\-_]+\z/, if: "name.present?", message: :invalid_bracket_name }
 
   def states
     [['公開','public']]

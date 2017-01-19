@@ -18,7 +18,9 @@ class Cms::Content < ApplicationRecord
   has_many :public_pieces, -> { public_state }, foreign_key: :content_id, class_name: 'Cms::Piece'
 
   validates :concept_id, :state, :model, :name, presence: true
-  validates :code, presence: true, uniqueness: { scope: [:site_id] }
+  validates :code, presence: true,
+                   uniqueness: { scope: [:site_id] },
+                   format: { with: /\A[0-9a-zA-Z\-_]+\z/, if: "name.present?", message: :invalid_bracket_name }
 
   before_create :set_default_settings_from_configs
   after_save :save_settings
