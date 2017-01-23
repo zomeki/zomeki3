@@ -6,10 +6,11 @@ module Cms::Model::Rel::SiteSetting
   attr_accessor :in_setting_site_file_upload_max_size
   attr_accessor :in_setting_site_extension_upload_max_size
   attr_accessor :in_setting_site_allowed_attachment_type
+  attr_accessor :in_setting_site_link_check
 
   SITE_SETTINGS = [
     :admin_protocol, :basic_auth_state, :common_ssl, :allowed_attachment_type,
-    :admin_mail_sender, :file_upload_max_size, :extension_upload_max_size
+    :admin_mail_sender, :file_upload_max_size, :extension_upload_max_size, :link_check
   ]
 
   def self.included(mod)
@@ -65,6 +66,15 @@ module Cms::Model::Rel::SiteSetting
     setting ? setting.value : 'gif,jpg,png,pdf,doc,docx,xls,xlsx,ppt,pptx,odt,ods,odp';
   end
 
+  def setting_site_link_check
+    setting = Cms::SiteSetting.where(:site_id => id, :name => 'link_check').first
+    setting ? setting.value : 'enabled';
+  end
+
+  def setting_site_link_check_label
+    Cms::SiteSetting::LINK_CHECK_OPTIONS.rassoc(setting_site_link_check).try(:first)
+  end
+
   def get_upload_max_size(ext)
     ext.gsub!(/^\./, '')
     list = ext_upload_max_size_list
@@ -99,6 +109,7 @@ module Cms::Model::Rel::SiteSetting
     @in_setting_site_file_upload_max_size        = setting_site_file_upload_max_size
     @in_setting_site_extension_upload_max_size   = setting_site_extension_upload_max_size
     @in_setting_site_allowed_attachment_type     = setting_site_allowed_attachment_type
+    @in_setting_site_link_check                  = setting_site_link_check
   end
 
   def save_site_settings(options={})

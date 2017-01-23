@@ -7,7 +7,6 @@ module Zomeki
     { "application" => {
       "sys.crypt_pass"                => "cms",
       "sys.recognizers_include_admin" => false,
-      "sys.auto_link_check"           => true,
       "cms.publish_more_pages"        => 0
     }}
   end

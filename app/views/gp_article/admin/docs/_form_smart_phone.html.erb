@@ -68,7 +68,7 @@ $(document).ready(function () {
         <%= f.text_area :body, :class => 'body ckeditor' %>
       </div>
       <div>
-        <%= submit_tag 'リンクチェック', name: 'link_check_in_body' %>
+        <%= submit_tag 'リンクチェック', name: 'link_check_in_body' if @content.site.setting_site_link_check == 'enabled' %>
         <%= submit_tag 'アクセシビリティチェック', name: 'accessibility_check' if Zomeki.config.application['cms.enable_accessibility_check'] %>
       </div>
     </div>
