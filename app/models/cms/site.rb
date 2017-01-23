@@ -454,10 +454,10 @@ class Cms::Site < ApplicationRecord
                 .map { |g| [g.tree_name(depth: -1), g.id] }
   end
 
-  def groups_for_option_with_root
+  def groups_for_option_except(group)
     @groups_for_option ||=
-      Sys::Group.roots.in_site(self)
-                .flat_map { |g| g.descendants_in_site(self) }
+      Sys::Group.roots.in_site(self).where.not(id: group.id)
+                .flat_map { |g| g.descendants_in_site(self) { |rel| rel.where.not(id: group.id) } }
                 .map { |g| [g.tree_name, g.id] }
   end
 

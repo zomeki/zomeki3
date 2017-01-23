@@ -21,7 +21,7 @@ class Cms::Piece < ApplicationRecord
 
   validates :state, :model, :name, :title, presence: true
   validates :name, uniqueness: { scope: :concept_id, if: %Q(!replace_page?) },
-    format: { with: /\A[0-9a-zA-Z\-_]+\z/, if: "name.present?", message: "は半角英数字、ハイフン、アンダースコアで入力してください。" }
+    format: { with: /\A[0-9a-zA-Z\-_]+\z/, if: "name.present?", message: :invalid_bracket_name }
 
   after_save :save_settings
   after_save :replace_new_piece

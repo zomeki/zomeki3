@@ -40,13 +40,7 @@ module GpArticle::Model::Rel::Category
   end
 
   def save_categories
-    category_ids = in_category_ids.values.flatten.select(&:present?).map(&:to_i).uniq
-
-    if content.default_category && content.category_types.include?(content.default_category_type)
-      category_ids |= [content.default_category.id]
-    end
-
-    self.category_ids = category_ids
+    self.category_ids = in_category_ids.values.flatten.select(&:present?).map(&:to_i).uniq
   end
 
   def save_event_categories

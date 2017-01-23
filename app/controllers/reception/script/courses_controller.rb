@@ -1,5 +1,5 @@
 class Reception::Script::CoursesController < Cms::Controller::Script::Publication
-  def publish
-    render plain: 'OK'
+  def self.publishable?
+    false
   end
 end

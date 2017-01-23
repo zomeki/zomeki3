@@ -17,11 +17,13 @@ class Sys::User < ApplicationRecord
 
   attr_accessor :in_group_id
 
-  validates :state, :account, :name, :ldap, presence: true
+  validates :state, :name, :ldap, presence: true
   validates :in_group_id, presence: true, if: -> { in_group_id == '' }
   validate :admin_auth_no_fixation
 
-  validates :account, uniqueness: true, if: :root?
+  validates :account, presence: true,
+                      format: { with: /\A[\x20-\x7F]*\z/ },
+                      uniqueness: { if: :root? }
   validate :validate_account_uniqueness_in_site, if: -> { !root? && @in_group_id }
 
   after_save :save_group, if: -> { @_in_group_id_changed }
