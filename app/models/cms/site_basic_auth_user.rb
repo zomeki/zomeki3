@@ -2,29 +2,13 @@ class Cms::SiteBasicAuthUser < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Base::Page
   include Sys::Model::Rel::Creator
-  include Sys::Model::Auth::Manager
-
-  scope :root_location, -> {
-          where(target_type: 'all')
-        }
-  scope :system_location, -> {
-          where(target_type: '_system')
-        }
-  scope :directory_location, -> {
-          where(target_type: 'directory')
-        }
-  scope :enabled, -> {
-          where(state: 'enabled')
-        }
-  scope :directory_auth, -> {
-    select(:target_location).directory_location
-    .enabled.group(:target_location)
-    .except(:order).order(:target_location)
-  }
-
-  after_initialize :set_defaults
+  include Cms::Model::Auth::Site
 
   include StateText
+
+  belongs_to :site
+
+  after_initialize :set_defaults
 
   validates :site_id, :state, :name, :password, presence: true
   validates :target_location, presence: {message: :blank},
@@ -32,6 +16,16 @@ class Cms::SiteBasicAuthUser < ApplicationRecord
     if: %Q(is_directory?)
 
   TARGET_TYPE_LIST = [['サイト全体','all'],['管理画面','_system'],['ディレクトリ','directory'],]
+
+  scope :root_location, -> { where(target_type: 'all') }
+  scope :system_location, -> { where(target_type: '_system') }
+  scope :directory_location, -> { where(target_type: 'directory') }
+  scope :enabled, -> { where(state: 'enabled') }
+  scope :directory_auth, -> {
+    select(:target_location).directory_location
+    .enabled.group(:target_location)
+    .except(:order).order(:target_location)
+  }
 
   def states
     [['有効','enabled'],['無効','disabled']]
@@ -45,10 +39,10 @@ class Cms::SiteBasicAuthUser < ApplicationRecord
   def is_directory?
     target_type == 'directory'
   end
+
   private
 
   def set_defaults
     self.target_type    ||= TARGET_TYPE_LIST.first.last if self.has_attribute?(:target_type)
   end
-
 end
