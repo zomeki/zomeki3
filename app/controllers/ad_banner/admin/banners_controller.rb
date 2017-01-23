@@ -7,7 +7,7 @@ class AdBanner::Admin::BannersController < Cms::Controller::Admin::Base
   end
 
   def index
-    items = @content.banners.except(:order).order(created_at: :desc)
+    items = @content.banners.except(:order).order(sort_no: :asc, created_at: :desc)
 
     items = if params[:published].present?
               items.published
