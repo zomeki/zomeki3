@@ -781,7 +781,7 @@ class GpArticle::Doc < ApplicationRecord
            else
              Date.strptime(Core.now, '%Y-%m-%d').strftime('%Y%m%d')
            end
-    seq = Util::Sequencer.next_id('gp_article_docs', :version => date)
+    seq = Util::Sequencer.next_id('gp_article_docs', version: date, site_id: content.site_id)
     self.name = Util::String::CheckDigit.check(date + format('%04d', seq))
   end
 
@@ -827,7 +827,7 @@ class GpArticle::Doc < ApplicationRecord
 
   def set_serial_no
     return if self.serial_no.present?
-    seq = Util::Sequencer.next_id('gp_article_doc_serial_no', :version => self.content_id)
+    seq = Util::Sequencer.next_id('gp_article_doc_serial_no', version: self.content_id, site_id: content.site_id)
     self.serial_no = seq
   end
 

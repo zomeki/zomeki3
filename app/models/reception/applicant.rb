@@ -78,7 +78,7 @@ class Reception::Applicant < ApplicationRecord
   end
 
   def set_seq_no
-    self.seq_no ||= Util::Sequencer.next_id('reception_applicants', version: course.content_id)
+    self.seq_no ||= Util::Sequencer.next_id('reception_applicants', version: course.content_id, site_id: content.site_id)
   end
 
   def update_received_applicants_count

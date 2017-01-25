@@ -1,6 +1,6 @@
 <%
 inline_id = if item.new_record?
-              item.in_tmp_id ||= Util::Sequencer.next_id(:tmp, md5: true)
+              item.in_tmp_id ||= SecureRandom.hex(16)
             else
               "#{item.class}-#{item.id}"
             end
