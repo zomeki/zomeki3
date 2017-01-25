@@ -6,9 +6,8 @@ class Cms::Script::NodesController < Cms::Controller::Script::Publication
 
     @ids = {}
 
-    case params[:target_module]
-    when 'cms'
-      Cms::Node.where(id: params[:target_node_id]).each do |node|
+    if params[:target_node_id].present?
+      Cms::Node.public_state.where(id: params[:target_node_id]).each do |node|
         publish_node(node)
       end
     else
