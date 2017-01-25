@@ -110,6 +110,10 @@ class GpCategory::Category < ApplicationRecord
     categories << self
   end
 
+  def public_ancestors
+    ancestors.select { |c| c.state == 'public' }
+  end
+
   def path_from_root_category
     ancestors.map{|a| a.name }.join('/')
   end

@@ -14,7 +14,6 @@ class Sys::Task < ApplicationRecord
   end
 
   def set_queue
-    Sys::TaskJob.set(wait_until: self.process_at, priority: 10).perform_later(id)
+    Sys::TaskJob.set(wait_until: self.process_at).perform_later(id)
   end
-
 end
