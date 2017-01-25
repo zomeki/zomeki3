@@ -1,13 +1,12 @@
 module Zomeki
   def self.version
-    "3.0.18 build-18"
+    "3.0.19 build-19"
   end
 
   def self.default_config
     { "application" => {
       "sys.crypt_pass"                => "cms",
       "sys.recognizers_include_admin" => false,
-      "sys.auto_link_check"           => true,
       "cms.publish_more_pages"        => 0
     }}
   end

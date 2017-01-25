@@ -6,7 +6,7 @@ class GpArticle::Admin::Tool::DocsController < Cms::Controller::Admin::Base
     results = {ok: 0, ng: 0}
     errors = []
 
-    docs.each do |doc|
+    docs.find_each(batch_size: 100) do |doc|
       begin
         if doc.rebuild(render_public_as_string("#{doc.public_uri}index.html", site: content.site))
           doc.publish_page(render_public_as_string("#{doc.public_uri}index.html.r", site: content.site),

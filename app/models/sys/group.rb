@@ -22,7 +22,8 @@ class Sys::Group < ApplicationRecord
   after_save :copy_name_en_as_url_name
 
   validates :state, :level_no, :name, :ldap, presence: true
-  validates :code, presence: true
+  validates :code, presence: true,
+                   format: { with: /\A[\x20-\x7F]*\z/ }
   validates :name_en, presence: true,
                       uniqueness: { scope: :parent_id, unless: :root? },
                       format: { with: /\A[0-9A-Za-z\._-]*\z/i }
@@ -75,8 +76,12 @@ class Sys::Group < ApplicationRecord
     opts[:prefix] * [level_no - 1 + opts[:depth], 0].max + name
   end
 
-  def descendants_in_site(site, items = [])
-    descendants {|child| child.in_site(site) }
+  def descendants_in_site(site)
+    descendants do |child|
+      rel = child.in_site(site)
+      rel = yield(rel) || rel if block_given?
+      rel
+    end
   end
 
   def descendants_for_option(groups=[])
