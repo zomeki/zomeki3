@@ -4,13 +4,17 @@ return unless Core.user.has_auth?(:manager)
 groups = Core.site.groups_for_option
 users = Core.site.users_for_option
 
-root_user = Sys::User.root
-root_group = root_user.groups.first
-groups += [[root_group.name, root_group.id]] unless groups.detect { |g| g[1] == root_group.id }
-users += [[root_user.name_with_account, root_user.id]] unless users.detect { |u| u[1] == root_user.id }
+# for root user
+out_of_site = !Core.user.sites.include?(Core.site)
+if out_of_site
+  root_user = Sys::User.root
+  root_group = root_user.groups.first
+  groups += [[root_group.name, root_group.id]]
+  users += [[root_user.name_with_account, root_user.id]]
+end
 
 if item.creator.blank?
-  if Core.user.root?
+  if Core.user.root? && out_of_site
     item.build_creator(
       group_id: groups.first.try!(:last),
       user_id: Core.user.id

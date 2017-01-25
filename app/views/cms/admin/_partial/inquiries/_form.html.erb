@@ -1,5 +1,7 @@
 <%-
-item.build_default_inquiry
+groups_for_option = Core.site.groups_for_option
+group = Core.user.root? ? Sys::Group.find_by(id: groups_for_option.first.try(:last)) : Core.user_group
+item.build_default_inquiry(group: group)
 -%>
 
 <table class="show">
@@ -25,7 +27,7 @@ item.build_default_inquiry
     <table class="show">
       <tr>
         <th><%= f2.label :group_id -%></th>
-        <td><%= f2.select :group_id, Core.site.groups_for_option, include_blank: true %></td>
+        <td><%= f2.select :group_id, groups_for_option, include_blank: true %></td>
       </tr>
     </table>
     </span>
@@ -86,39 +88,4 @@ item.build_default_inquiry
 <hr />
 <%= button_tag '連絡先を追加する', :type => :button, :id => 'addInquiryForm' -%>
 
-<script type="text/javascript">
- $(function(){
-   $(document).on('click', '.deleteInquiry', function(e) {
-     if (!confirm('削除してよろしいですか？')) { return; }
-     $(this).siblings('input[id$=_destroy]').val(true);
-     $(this).closest('.inquiryForm').hide();
-   });
-   $('#addInquiryForm').on('click', function(e) {
-     var no  = $('.inquiryForm').size();
-     var elm = $('.inquiryForm:last').clone();
-     elm.find('input, select').each(function() {
-       $(this).attr({
-         id: this.id.replace(/(\d+)/, no),
-         name: this.name.replace(/(\d+)/, no),
-         value: ''
-       });
-     });
-     elm.find('select option').each(function() {
-       $(this).attr({selected: false});
-     });
-     elm.find('p.form').show().html('連絡先' + String(no+1));
-     elm.find('[id^=item_inquiries_attributes][id$=group_id]').show();
-     elm.find('[id^=inquiryTableA]').show();
-     elm.find('[id^=inquiryTableB]').hide();
-     elm.find('[id^=inquiryGroupLabel]').hide();
-     elm.find('.deleteInquiry').show();
-     elm.show();
-     $('#inquiryForms').append(elm);
-   });
-   $('form').on('submit', function(e) {
-     var state = $('input[name=inquiry_state]:checked').val();
-     if (state == undefined) { state = 'hidden'; }
-     $('input.inquiryState').val(state);
-   });
- });
-</script>
+<%= render 'cms/admin/_partial/inquiries/script', f: f, item: item %>
