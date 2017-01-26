@@ -1,7 +1,7 @@
-<div class="mainMenu">
+<ul class="mainMenu">
 <%= render 'layouts/admin/cms/menu', current: :content %>
-</div>
+</ul>
 
-<div class="contentMenu">
-<%= link_to "#{Approval::ApprovalFlow.model_name.human}一覧", approval_approval_flows_path(content: @content), class: 'fixed' -%>
-</div>
+<ul class="contentMenu">
+<%= content_tag('li') { link_to "#{Approval::ApprovalFlow.model_name.human}一覧", approval_approval_flows_path(content: @content), class: 'fixed' } -%>
+</ul>

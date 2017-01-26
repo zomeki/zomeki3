@@ -4,7 +4,9 @@ def menu_link(auth, key, label, uri)
   return '' unless Core.user.has_auth?(auth)
   cls = [key.to_s]
   cls << 'current' if @current == key
-  link_to(label, uri, :class => cls.join(' '))
+  content_tag 'li' do
+    link_to(label, uri, :class => cls.join(' '))
+  end
 end
 %>
 
