@@ -1,2 +1,10 @@
 <%= render 'shared/admin/piece/show' do -%>
+<p class="form">詳細設定</p>
+
+<table class="show">
+  <tr>
+    <th><%= @item.locale :in_category_type_ids %></th>
+    <td><%= @item.category_types.map(&:title).join(', ') %></td>
+  </tr>
+</table>
 <%- end -%>
