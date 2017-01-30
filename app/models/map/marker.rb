@@ -72,7 +72,7 @@ class Map::Marker < ApplicationRecord
            else
              Date.strptime(Core.now, '%Y-%m-%d').strftime('%Y%m%d')
            end
-    seq = Util::Sequencer.next_id('map_markers', :version => date)
+    seq = Util::Sequencer.next_id('map_markers', version: date, site_id: content.site_id)
     self.name = Util::String::CheckDigit.check(date + format('%04d', seq))
   end
 end
