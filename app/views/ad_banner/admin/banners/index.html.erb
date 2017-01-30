@@ -4,10 +4,11 @@
     <th>サムネイル</th>
     <th><%= AdBanner::Group.model_name.human %></th>
     <th><%= AdBanner::Banner.human_attribute_name :advertiser_name %></th>
-    <th><%= AdBanner::Banner.human_attribute_name :published_at %></th>
-    <th><%= AdBanner::Banner.human_attribute_name :closed_at %></th>
-    <th><%= AdBanner::Banner.human_attribute_name :created_at %></th>
+    <th style="width: 120px;"><%= AdBanner::Banner.human_attribute_name :published_at %></th>
+    <th style="width: 120px;"><%= AdBanner::Banner.human_attribute_name :closed_at %></th>
+    <th style="width: 120px;"><%= AdBanner::Banner.human_attribute_name :created_at %></th>
     <th style="text-align: center; width: 60px;"><%= AdBanner::Banner.human_attribute_name :state %></th>
+    <th style="text-align: center; width: 60px;"><%= AdBanner::Banner.human_attribute_name :sort_no %></th>
   </tr>
 
   <%- @items.each do |item| -%>
@@ -16,10 +17,11 @@
     <td style="text-align: center;"><%= link_to image_tag(file_content_ad_banner_banner_path(content: @content, id: item.id), width: 100), item.url, target: '_blank' %></td>
     <td style="text-align: left;"><%= item.group.try(:title) %></td>
     <td style="text-align: left;"><%= item.advertiser_name %></td>
-    <td style="text-align: left; width: 150px;"><%=i18n_l item.published_at %></td>
-    <td style="text-align: left; width: 150px;"><%=i18n_l item.closed_at %></td>
-    <td style="text-align: left; width: 150px;"><%=i18n_l item.created_at %></td>
+    <td style="text-align: left;"><%=i18n_l item.published_at %></td>
+    <td style="text-align: left;"><%=i18n_l item.closed_at %></td>
+    <td style="text-align: left;"><%=i18n_l item.created_at %></td>
     <td style="text-align: center;"><%= item.status.try(:name) %></td>
+    <td style="text-align: center;"><%= item.sort_no %></td>
   </tr>
   <%- end -%>
 </table>

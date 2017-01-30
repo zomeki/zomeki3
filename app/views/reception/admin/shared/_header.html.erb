@@ -1,8 +1,8 @@
-<div class="mainMenu">
+<ul class="mainMenu">
 <%= render 'layouts/admin/cms/menu', current: :content %>
-</div>
+</ul>
 
-<div class="contentMenu">
-<%= link_to "#{Reception::Course.model_name.human}一覧", reception_courses_path(content: @content), class: 'fixed' %>
-<%= link_to "#{Reception::Course.model_name.human}設定", reception_content_settings_path, class: 'fixed' if @content.editable? -%>
-</div>
+<ul class="contentMenu">
+<%= content_tag('li') { link_to "#{Reception::Course.model_name.human}一覧", reception_courses_path(content: @content), class: 'fixed' } %>
+<%= content_tag('li') { link_to "#{Reception::Course.model_name.human}設定", reception_content_settings_path, class: 'fixed' } if @content.editable? -%>
+</ul>

@@ -9,7 +9,6 @@ class Tag::Publisher::Tag < Cms::Publisher
       node_map = make_node_map(publishers)
       node_map.each do |node, pubs|
         param = {
-          target_module: 'cms',
           target_node_id: node.id,
           target_tag_id: pubs.map(&:publishable_id)
         }

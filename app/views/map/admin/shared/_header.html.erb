@@ -1,9 +1,9 @@
-<div class="mainMenu">
+<ul class="mainMenu">
 <%= render 'layouts/admin/cms/menu', current: :content -%>
-</div>
+</ul>
 
-<div class="contentMenu">
-<%= link_to "#{Map::Marker.model_name.human}一覧", map_markers_path, class: 'fixed' -%>
-<%= link_to "#{Map::Marker.model_name.human}設定", map_category_types_path, class: 'fixed' -%>
-<%= link_to 'マップ設定', map_content_settings_path, class: 'fixed' if @content.editable? -%>
-</div>
+<ul class="contentMenu">
+<%= content_tag('li') { link_to "#{Map::Marker.model_name.human}一覧", map_markers_path, class: 'fixed' } -%>
+<%= content_tag('li') { link_to "#{Map::Marker.model_name.human}設定", map_category_types_path, class: 'fixed' } -%>
+<%= content_tag('li') { link_to 'マップ設定', map_content_settings_path, class: 'fixed' } if @content.editable? -%>
+</ul>

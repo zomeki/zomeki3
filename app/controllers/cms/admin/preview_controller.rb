@@ -37,8 +37,13 @@ class Cms::Admin::PreviewController < Cms::Controller::Admin::Base
 
     else
       node = Core.search_node(path)
-      env  = {}
-      opt  = _routes.recognize_path(node, env)
+      opt  = _routes.recognize_path(node, {})
+
+      if opt[:controller] == 'exception'
+        file_path = File.join(Page.site.public_path, path)
+        return send_file(file_path, type: ::Storage.mime_type(path), filename: ::File.basename(path), disposition: 'inline') if File.exist?(file_path)
+      end
+
       ctl  = opt[:controller]
       act  = opt[:action]
     end

@@ -1,5 +1,6 @@
 class Cms::PublisherJob < ApplicationJob
   queue_as :cms_publisher
+  queue_with_priority 20
 
   def perform
     loop_count = 0

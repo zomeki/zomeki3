@@ -1,2 +1,2 @@
-<%= link_to '操作ログ', sys_operation_logs_path, class: (current == :log ? 'current' : '') -%>
-<%= link_to 'プロセスログ', sys_process_logs_path, class: (current == :process ? 'current' : '') -%>
+<%= content_tag('li') { link_to '操作ログ', sys_operation_logs_path, class: (current == :log ? 'current' : '') } -%>
+<%= content_tag('li') { link_to 'プロセスログ', sys_process_logs_path, class: (current == :process ? 'current' : '') } -%>
