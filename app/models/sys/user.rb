@@ -60,15 +60,17 @@ class Sys::User < ApplicationRecord
   end
 
   def readable?
-    Core.user.has_auth?(:manager)
+    Core.user.root? ||
+      (Core.user.has_auth?(:manager) && (sites & Core.user.sites).present?) ||
+      (Core.user.id == id)
   end
 
   def editable?
-    Core.user.has_auth?(:manager) && editable_user?
+    readable? && editable_user?
   end
 
   def deletable?
-    Core.user.has_auth?(:manager) && deletable_user?
+    readable? && deletable_user?
   end
 
   def editable_user?

@@ -3,7 +3,7 @@ class Cms::Concept < ApplicationRecord
   include Sys::Model::Rel::Creator
   include Sys::Model::Tree
   include Sys::Model::Base::Page
-  include Sys::Model::Auth::Manager
+  include Cms::Model::Auth::Site
 
   include StateText
 
@@ -12,6 +12,7 @@ class Cms::Concept < ApplicationRecord
   has_many :public_children, -> { where(state: 'public').order(:sort_no) },
     foreign_key: :parent_id, class_name: self.name
 
+  belongs_to :site
   belongs_to :parent, foreign_key: :parent_id, class_name: self.name
 
   has_many :layouts, -> { order(:name) },

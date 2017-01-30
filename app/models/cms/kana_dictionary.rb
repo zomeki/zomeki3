@@ -2,7 +2,9 @@ class Cms::KanaDictionary < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Base::Config
   include Sys::Model::Rel::Creator
-  include Sys::Model::Auth::Manager
+  include Cms::Model::Auth::Site
+
+  belongs_to :site
 
   validates :name, presence: true
 
