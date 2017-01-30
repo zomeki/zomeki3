@@ -1,7 +1,7 @@
 <form method="get" action="<%= @node.public_uri %>">
-  <%- if @piece.content.visible_category_types.present? -%>
+  <%- if @piece.category_types.present? -%>
   <div class="categories">
-    <%- @piece.content.visible_category_types.each do |category_type| -%>
+    <%- @piece.category_types.each do |category_type| -%>
       <label for="criteria_category_ids"><%= category_type.title %>で探す</label>
       <div class="checkboxes">
         <div class="checkboxesContainer">
