@@ -9,6 +9,7 @@ module Cms::Model::Rel::PublishUrl
   def set_public_name
     return unless respond_to?(:state_public?) ? state_public? : state == 'public'
     return unless (node = kind_of?(Cms::Node) ? self : content.try!(:public_node))
+    return unless public_uri
     rel = publish_urls.find_or_initialize_by(content_id: content_id, node_id: node.id)
     rel.name = "#{uri = public_uri.to_s}#{'index.html' if uri.end_with?('/')}"
     rel.save
