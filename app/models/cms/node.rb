@@ -113,6 +113,7 @@ class Cms::Node < ApplicationRecord
 
   def public_uri
     return @public_uri if @public_uri
+    return unless site
     uri = site.uri
     ancestors.each{|n| uri += "#{n.name}/" if n.name != '/' }
     uri = uri.gsub(/\/$/, '') if directory == 0
@@ -121,6 +122,7 @@ class Cms::Node < ApplicationRecord
 
   def public_full_uri
     return @public_full_uri if @public_full_uri
+    return unless site
     uri = site.full_uri
     ancestors.each{|n| uri += "#{n.name}/" if n.name != '/' }
     uri = uri.gsub(/\/$/, '') if directory == 0
