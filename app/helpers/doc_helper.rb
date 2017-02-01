@@ -46,7 +46,14 @@ private
     if image_file
       image_tag("#{doc.public_uri(without_filename: true)}file_contents/#{url_encode image_file.name}", alt: image_file.alt)
     else
-      unless (img_tags = Nokogiri::HTML.parse(doc.body).css('img[src^="file_contents/"]')).empty?
+      body =
+        if doc.template
+          rich_text_names = doc.template.public_items.where(item_type: 'rich_text').map(&:name)
+          rich_text_names.map { |name| doc.template_values[name] }.join('')
+        else
+          doc.body
+        end
+      unless (img_tags = Nokogiri::HTML.parse(body).css('img[src^="file_contents/"]')).empty?
         filename = File.basename(img_tags.first.attributes['src'].value)
         alt = img_tags.first.attributes['alt'].value
         image_tag("#{doc.public_uri(without_filename: true)}file_contents/#{url_encode filename}", alt: alt)

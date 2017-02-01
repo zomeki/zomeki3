@@ -1,13 +1,11 @@
 class Sys::Sequence < ApplicationRecord
   self.table_name = 'sys_sequences'
 
-  scope :versioned, ->(v) { where(version: v) }
+  validates :version, uniqueness: { scope: [:site_id, :name] }
 
-  validates :version, :uniqueness => {:scope => :name}
-
-  def self.next(name, version)
+  def self.next(name, version, site_id)
     self.transaction do
-      seq = self.lock.find_or_create_by(name: name, version: version)
+      seq = self.lock.find_or_create_by(name: name, version: version, site_id: site_id)
       seq.increment!(:value)
       return seq
     end

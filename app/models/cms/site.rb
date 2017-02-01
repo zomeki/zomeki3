@@ -438,7 +438,7 @@ class Cms::Site < ApplicationRecord
   end
 
   def managers
-    users.where(auth_no: 5).order(:account)
+    users.where(auth_no: 5).where.not(id: Sys::User::ROOT_ID).order(:account)
   end
 
   def users_for_option
@@ -455,10 +455,9 @@ class Cms::Site < ApplicationRecord
   end
 
   def groups_for_option_except(group)
-    @groups_for_option ||=
-      Sys::Group.roots.in_site(self).where.not(id: group.id)
-                .flat_map { |g| g.descendants_in_site(self) { |rel| rel.where.not(id: group.id) } }
-                .map { |g| [g.tree_name, g.id] }
+    Sys::Group.roots.in_site(self).where.not(id: group.id)
+              .flat_map { |g| g.descendants_in_site(self) { |rel| rel.where.not(id: group.id) } }
+              .map { |g| [g.tree_name, g.id] }
   end
 
   def og_type_text

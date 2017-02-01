@@ -1,7 +1,7 @@
 class Sys::ObjectPrivilege < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Base::Config
-  include Sys::Model::Auth::Manager
+  include Cms::Model::Auth::Site::Role
 
   belongs_to :privilegable, polymorphic: true
   belongs_to :concept, class_name: 'Cms::Concept'

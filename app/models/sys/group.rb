@@ -3,7 +3,7 @@ class Sys::Group < ApplicationRecord
   include Cms::Model::Base::Page
   include Sys::Model::Base::Config
   include Sys::Model::Tree
-  include Sys::Model::Auth::Manager
+  include Cms::Model::Auth::Site
 
   include StateText
 

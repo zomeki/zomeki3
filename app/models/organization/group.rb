@@ -81,6 +81,10 @@ class Organization::Group < ApplicationRecord
     groups << self
   end
 
+  def public_ancestors
+    ancestors.select { |g| g.state == 'public' }
+  end
+
   def path_from_root
     ancestors.map(&:name).join('/')
   end

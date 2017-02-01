@@ -103,6 +103,8 @@ ja:
       gp_article/piece/comment:
         docs_number: 表示件数
         authors_visibility: 投稿者表示
+      gp_article/piece/search_doc:
+        in_category_type_ids: カテゴリ種別
       gp_article/comment:
         body: 内容
         author_name: 投稿者名

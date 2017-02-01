@@ -6,7 +6,7 @@ class GpCategory::Script::CategoryTypesController < Cms::Controller::Script::Pub
     publish_more(@node, :uri => uri, :path => path, :dependent => :more)
 
     category_types = @node.content.public_category_types
-    category_types = category_types.where(id: params[:target_category_type_id]) if params[:target_category_type_id].present?
+    category_types.where!(id: params[:target_category_type_id]) if params[:target_category_type_id].present?
     category_types.each do |category_type|
       uri = "#{@node.public_uri}#{category_type.name}/"
       path = "#{@node.public_path}#{category_type.name}/"
@@ -19,14 +19,10 @@ class GpCategory::Script::CategoryTypesController < Cms::Controller::Script::Pub
       publish_more(category_type, :uri => uri, :path => path, :file => 'more', :dependent => "#{category_type.name}/more_docs")
       publish_more(category_type, :uri => uri, :path => smart_phone_path, :file => 'more', :dependent => "#{category_type.name}/more_docs_smart_phone", :smart_phone => true)
 
-      if (child_id = params[:target_category_id]).present?
-        category_type.public_categories.where(id: child_id).each do |category|
-          publish_category(category, follow_children: false)
-        end
-      else
-        category_type.public_root_categories.each do |category|
-          publish_category(category)
-        end
+      categories = category_type.public_categories.reorder(:level_no, :sort_no)
+      categories.where!(id: params[:target_category_id]) if params[:target_category_id].present?
+      categories.each do |category|
+        publish_category(category)
       end
     end
 
@@ -43,7 +39,7 @@ class GpCategory::Script::CategoryTypesController < Cms::Controller::Script::Pub
     GpCategory::Piece::Feed.where(:id => feed_piece_ids).all
   end
 
-  def publish_category(cat, follow_children: true)
+  def publish_category(cat)
     publish_category_for_template_modules(cat)
 
     cat_path = "#{cat.category_type.name}/#{cat.path_from_root_category}/"
@@ -73,12 +69,6 @@ class GpCategory::Script::CategoryTypesController < Cms::Controller::Script::Pub
     end
 
     info_log %Q!OK: Published to "#{path}"!
-
-    return unless follow_children
-
-    cat.public_children.each do |c|
-      publish_category(c)
-    end
   end
 
   def publish_category_for_template_modules(cat)

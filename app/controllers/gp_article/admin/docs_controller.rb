@@ -23,8 +23,8 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
     criteria = doc_criteria
     @items = GpArticle::Doc.content_and_criteria(@content, criteria)
-      .order(updated_at: :desc)
-      .preload(:prev_edition, :content, creator: [:user, :group])
+                           .order(updated_at: :desc)
+                           .preload(:prev_edition, :content, creator: [:user, :group])
 
     if params[:csv]
       return export_csv(@items, GpArticle::Model::Criteria.new(criteria))
@@ -92,7 +92,6 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
   def create
     @item = @content.docs.build(doc_params)
-    @item.set_inquiry_group if Core.user.root?
     @item.replace_words_with_dictionary
 
     if params[:link_check_in_body]
@@ -130,7 +129,6 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
   def update
     @item.attributes = doc_params
-    @item.set_inquiry_group if Core.user.root?
     @item.replace_words_with_dictionary
 
     if params[:link_check_in_body]

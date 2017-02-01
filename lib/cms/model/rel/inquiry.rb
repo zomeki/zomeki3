@@ -10,13 +10,13 @@ module Cms::Model::Rel::Inquiry
     [['表示','visible'],['非表示','hidden']]
   end
 
-  def build_default_inquiry(params = {})
-    if inquiries.size == 0
-      if g =  Core.user.group
-        inquiries.build({:state => default_inquiry_state, :group_id => g.id, :tel => g.tel, :fax => g.fax, :email => g.email}.merge(params))
-      else
-        inquiries.build(params)
-      end
+  def build_default_inquiry(options = {})
+    return if inquiries.present?
+
+    if (g = options[:group] || Core.user_group)
+      inquiries.build(state: default_inquiry_state, group_id: g.id, tel: g.tel, fax: g.fax, email: g.email)
+    else
+      inquiries.build
     end
   end
 
@@ -56,12 +56,6 @@ module Cms::Model::Rel::Inquiry
 
   def inquiry_display_field?(name)
     inquiry_display_fields.include?(name.to_s)
-  end
-
-  def set_inquiry_group
-    return if (group_id = creator.try(:group_id)).blank?
-    return if group_id.to_i.in?(inquiries.map(&:group_id))
-    inquiries.build(group_id: group_id)
   end
 
   private

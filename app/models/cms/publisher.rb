@@ -40,7 +40,7 @@ class Cms::Publisher < ApplicationRecord
       end
       self.import(pubs)
 
-      Cms::PublisherJob.set(priority: 20).perform_later unless Cms::PublisherJob.queued?
+      Cms::PublisherJob.perform_later unless Cms::PublisherJob.queued?
     end
   end
 end

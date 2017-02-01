@@ -30,7 +30,7 @@ module GpCategory::Categories::PublishQueue
   end
 
   def enqueue_publisher_for_category
-    Cms::Publisher.register(content.site_id, ancestors)
+    Cms::Publisher.register(content.site_id, public_ancestors)
   end
 
   def enqueue_publisher_for_doc

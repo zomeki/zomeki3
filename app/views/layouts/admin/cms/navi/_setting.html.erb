@@ -1,5 +1,5 @@
-<%= link_to 'メンテナンス情報', sys_maintenances_path, class: (current == :maintenace ? 'current' : '') -%>
-<%= link_to 'モード設定', edit_sys_setting_path(id: 'maintenance_mode'), class: (current == :maintenance_mode ? 'current' : '') -%>
-<%= link_to '辞書', sys_kana_dictionaries_path, class: (current == :dictionary ? 'current' : '') -%>
-<%= link_to 'メール', sys_tests_path, class: (current == :test ? 'current' : '') -%>
-<%= link_to 'SSL', edit_sys_setting_path(id: 'common_ssl'), class: (current == :common_ssl ? 'current' : '') -%>
+<%= content_tag('li') { link_to 'メンテナンス情報', sys_maintenances_path, class: (current == :maintenace ? 'current' : '') } -%>
+<%= content_tag('li') { link_to 'モード設定', edit_sys_setting_path(id: 'maintenance_mode'), class: (current == :maintenance_mode ? 'current' : '') } -%>
+<%= content_tag('li') { link_to '辞書', sys_kana_dictionaries_path, class: (current == :dictionary ? 'current' : '') } -%>
+<%= content_tag('li') { link_to 'メール', sys_tests_path, class: (current == :test ? 'current' : '') } -%>
+<%= content_tag('li') { link_to 'SSL', edit_sys_setting_path(id: 'common_ssl'), class: (current == :common_ssl ? 'current' : '') } -%>

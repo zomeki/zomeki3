@@ -9,7 +9,6 @@ class GpCategory::Publisher::Category < Cms::Publisher
       node_map = make_node_map(publishers)
       node_map.each do |(node, category_type), pubs|
         param = {
-          target_module: 'cms',
           target_node_id: node.id,
           target_category_type_id: category_type.id,
           target_category_id: pubs.map(&:publishable_id)

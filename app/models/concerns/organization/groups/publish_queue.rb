@@ -21,6 +21,6 @@ module Organization::Groups::PublishQueue
   end
 
   def enqueue_publisher_for_group
-    Cms::Publisher.register(content.site_id, ancestors)
+    Cms::Publisher.register(content.site_id, public_ancestors)
   end
 end

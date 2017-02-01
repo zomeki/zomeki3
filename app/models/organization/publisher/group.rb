@@ -9,7 +9,6 @@ class Organization::Publisher::Group < Cms::Publisher
       node_map = make_node_map(publishers)
       node_map.each do |node, pubs|
         param = {
-          target_module: 'cms',
           target_node_id: node.id,
           target_organization_group_id: pubs.map(&:publishable_id),
         }
