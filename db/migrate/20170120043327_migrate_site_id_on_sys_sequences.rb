@@ -10,7 +10,7 @@ class MigrateSiteIdOnSysSequences < ActiveRecord::Migration[5.0]
 
     content_seqs = Sys::Sequence.where(name: %w(gp_article_doc_serial_no reception_applicants)).all
     content_seqs.each do |seq|
-      if (content = Cms::Content.find_by(id: seq.value))
+      if (content = Cms::Content.find_by(id: seq.version))
         seq.update_column(:site_id, content.site_id)
       end
     end
