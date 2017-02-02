@@ -1,10 +1,6 @@
 ZomekiCMS::Application.routes.draw do
   mod = 'gp_article'
 
-  ## script
-  get "/_script/#{mod}/script/docs/publish" => "#{mod}/script/docs#publish"
-  get "/_script/#{mod}/script/archives/publish" => "#{mod}/script/archives#publish"
-
   ## admin
   scope "#{ZomekiCMS::ADMIN_URL_PREFIX}/#{mod}/c:concept", :module => mod, :as => mod do
     resources :content_base,

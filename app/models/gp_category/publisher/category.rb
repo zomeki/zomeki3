@@ -13,7 +13,7 @@ class GpCategory::Publisher::Category < Cms::Publisher
           target_category_type_id: category_type.id,
           target_category_id: pubs.map(&:publishable_id)
         }
-        ::Script.run("cms/script/nodes/publish?#{param.to_param}", force: true)
+        ::Script.run("cms/nodes/publish?#{param.to_param}", force: true)
       end
     end
 

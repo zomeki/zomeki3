@@ -52,8 +52,11 @@ class Script
     self.log "[#{start.strftime('%Y-%m-%d %H:%M:%S')}] script:#{@@path} ... start"
 
     ## dispatch
-    app = ActionDispatch::Integration::Session.new(Rails.application)
-    app.get "/_script/sys/run/#{path}"
+    uri = URI.parse(path)
+    script = "#{File.dirname(uri.path).camelize}Script".constantize
+    method = File.basename(uri.path)
+    params = Rack::Utils.parse_nested_query(uri.query)
+    script.new(params).public_send(method)
     self.log "success " + "#{@@proc.success}" + (@@proc.total ? "/#{@@proc.total}" : "")
 
     ## finish
@@ -122,6 +125,16 @@ class Script
       puts message
     end
     return message
+  end
+
+  def self.progress
+    self.current
+    yield
+    self.success
+  rescue => e
+    self.error e
+    debug_log e
+    debug_log e.backtrace.join("\n")
   end
 
 protected

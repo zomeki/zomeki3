@@ -1,7 +1,7 @@
 namespace :zomeki do
   namespace :maintenance do
     desc 'Replace @title@ to @title_link@ in settings'
-    task(:replace_title_with_title_link => :environment) do
+    task :replace_title_with_title_link => :environment do
       ccs = Cms::ContentSetting.arel_table
       Cms::ContentSetting.where(ccs[:value].matches('%@title@%')).each do |cs|
         info_log "#{cs.content.class.name}(#{cs.content_id}):#{cs.content.name}"
@@ -22,7 +22,7 @@ namespace :zomeki do
     end
 
     desc 'Clean invalid links'
-    task(:clean_invalid_links => :environment) do
+    task :clean_invalid_links => :environment do
       count = 0
       GpArticle::Link.find_each do |l|
         next if l.doc && l.doc.state_public?
@@ -96,7 +96,7 @@ namespace :zomeki do
 
     namespace :publish_url do
       desc 'Set pulished Url'
-      task(:set => :environment) do
+      task :set => :environment do
         Rake::Task['zomeki:cms:publish_urls:rebuild'].invoke
       end
     end

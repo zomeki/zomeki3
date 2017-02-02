@@ -236,6 +236,10 @@ class Cms::Node < ApplicationRecord
     parent.try(:parent_id) == 0 && name == 'index.html'
   end
 
+  def script_model
+    "#{model.pluralize}Script"
+  end
+
 protected
   def remove_file
     close_page# rescue nil

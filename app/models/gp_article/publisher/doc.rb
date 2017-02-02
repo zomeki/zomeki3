@@ -12,7 +12,7 @@ class GpArticle::Publisher::Doc < Cms::Publisher
           node_id: node.id,
           target_doc_id: pubs.map(&:publishable_id)
         }
-        ::Script.run("gp_article/script/docs/publish_doc?#{param.to_param}", force: true)
+        ::Script.run("gp_article/docs/publish_doc?#{param.to_param}", force: true)
       end
     end
 

@@ -1,0 +1,135 @@
+class Cms::NodesScript < Cms::Script::Publication
+  include Sys::Lib::File::Transfer
+
+  def publish
+    @transfer_to_publish = Zomeki.config.application['sys.transfer_to_publish']
+
+    @ids = {}
+
+    if params[:target_node_id].present?
+      Cms::Node.public_state.where(id: params[:target_node_id]).each do |node|
+        publish_node(node)
+      end
+    else
+      Cms::Node.public_state.where(parent_id: 0).order(:name, :id).each do |node|
+        publish_node(node)
+      end
+    end
+
+    # file transfer
+    transfer_files(:logging => true) if @transfer_to_publish
+  end
+
+  def publish_node(node)
+    started_at = Time.now
+    info_log "Publish node: #{node.model} #{node.name} #{node.title}"
+
+    return if @ids.key?(node.id)
+    @ids[node.id] = true
+
+    return unless node.site
+
+    unless node.public?
+      node.close_page
+      return
+    end
+
+    ## page
+    if node.model == 'Cms::Page'
+      begin
+        uri = "#{node.public_uri}?node_id=#{node.id}"
+        publish_page(node, uri: uri, site: node.site, path: node.public_path,
+                                                      smart_phone_path: node.public_smart_phone_path)
+      rescue Script::InterruptException => e
+        raise e
+      rescue => e
+        Script.error "#{node.class}##{node.id} #{e}"
+      end
+      return
+    end
+
+    ## modules' page
+    unless node.model == 'Cms::Directory'
+      begin
+        script = node.script_model.constantize
+        return unless script.publishable?
+
+        publish_page(node, uri: node.public_uri, site: node.site, path: node.public_path,
+                                                      smart_phone_path: node.public_smart_phone_path)
+        script.new(params.merge(node: node)).publish
+
+      rescue Script::InterruptException => e
+        raise e
+      rescue LoadError => e
+        Script.error "#{node.class}##{node.id} #{e}"
+        return
+      rescue Exception => e
+        Script.error "#{node.class}##{node.id} #{e}"
+        return
+      end
+    end
+
+    last_name = nil
+    nodes = Cms::Node.arel_table
+    Cms::Node.where(parent_id: node.id)
+             .where(nodes[:name].not_eq(nil).and(nodes[:name].not_eq('')).and(nodes[:name].not_eq(last_name)))
+             .order(:directory, :name, :id).each do |child_node|
+      last_name = child_node.name
+      publish_node(child_node)
+    end
+
+    info_log "Published node: #{node.model} #{node.name} #{node.title} in #{(Time.now - started_at).round(2)} [secs.]"
+  end
+
+  def publish_by_task
+    item = params[:item]
+    if item.state == 'recognized' && item.model == 'Cms::Page'
+      Script.current
+      info_log "-- Publish: #{item.class}##{item.id}"
+      item = Cms::Node::Page.find(item.id)
+      uri  = "#{item.public_uri}?node_id=#{item.id}"
+      path = "#{item.public_path}"
+
+      unless item.publish(render_public_as_string(uri, site: item.site))
+        raise item.errors.full_messages
+      else
+        Sys::OperationLog.script_log(:item => item, :site => item.site, :action => 'publish')
+      end
+
+      ruby_uri  = (uri =~ /\?/) ? uri.gsub(/(.*\.html)\?/, '\\1.r?') : "#{uri}.r"
+      ruby_path = "#{path}.r"
+      if item.published? || !::File.exist?(ruby_uri)
+        item.publish_page(render_public_as_string(ruby_uri, site: item.site),
+                          path: ruby_path, dependent: :ruby)
+      end
+
+      info_log %Q!OK: Published to "#{path}"!
+      params[:task].destroy
+
+      Script.success
+    end
+  rescue => e
+    error_log e.message
+  end
+
+  def close_by_task
+    item = params[:item]
+    if item.state == 'public' && item.model == 'Cms::Page'
+      Script.current
+
+      info_log "-- Close: #{item.class}##{item.id}"
+      item = Cms::Node::Page.find(item.id)
+
+      if item.close
+        Sys::OperationLog.script_log(:item => item, :site => item.site, :action => 'close')
+      end
+
+      info_log 'OK: Closed'
+      params[:task].destroy
+
+      Script.success
+    end
+  rescue => e
+    error_log e.message
+  end
+end

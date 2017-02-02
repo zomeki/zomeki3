@@ -6,18 +6,18 @@ class Sys::ProcessLog < ApplicationRecord
   attr_accessor :title
 
   PROCESSE_LIST = [
-    ["音声書き出し"  , "cms/script/talk_tasks/exec"],
-    ["アクセスランキング取り込み" , "rank/script/ranks/exec"],
-    ["フィード取り込み" , "feed/script/feeds/read"],
-    ["問合せ取り込み", "survey/script/answers/pull"],
-    ["広告クリック数取り込み", "ad_banner/script/clicks/pull"],
-    ["関連ページ書き出し", "cms/script/nodes/publish"],
-    ["記事ページ書き出し", "gp_article/script/docs/publish_doc"]
+    ["音声書き出し"  , "cms/talk_tasks/exec"],
+    ["アクセスランキング取り込み" , "rank/ranks/exec"],
+    ["フィード取り込み" , "feed/feeds/read"],
+    ["問合せ取り込み", "survey/answers/pull"],
+    ["広告クリック数取り込み", "ad_banner/clicks/pull"],
+    ["関連ページ書き出し", "/publish"],
+    ["関連ページ書き出し", "/publish_doc"],
+    ["再構築", "/rebuild"]
   ]
 
-
   def summary_lael
-    PROCESSE_LIST.each{|a| return a[0] if name =~ %r|#{a[1]}| }
+    PROCESSE_LIST.each{|a| return a[0] if name =~ Regexp.new(a[1]) }
     return nil
   end
 

@@ -7,7 +7,7 @@ namespace :zomeki do
 
     namespace :load do
       desc 'Load documents.'
-      task(:documents =>  [:environment, :set_user_and_group]) do
+      task :documents =>  [:environment, :set_user_and_group] do
         next if (content_id = ENV['content_id'].to_i).zero?
 
         documents = YAML.load_file(Rails.root.join("tmp/gp_article_#{content_id}_documents.yml"))
@@ -47,7 +47,7 @@ namespace :zomeki do
 
     namespace :migrate do
       desc 'Change state "recognize" to "approve".'
-      task(:recognize_to_approve => :environment) do
+      task :recognize_to_approve => :environment do
         GpArticle::Doc.where(state: 'recognize').each{|d| d.update_column(:state, 'approvable') }
         GpArticle::Doc.where(state: 'recognized').each{|d| d.update_column(:state, 'approved') }
       end

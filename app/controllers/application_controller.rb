@@ -190,13 +190,6 @@ class ApplicationController < ActionController::Base
 #    end
 #  end
 
-  def envs_to_request_as_smart_phone
-    return @envs_to_request_as_smart_phone if @envs_to_request_as_smart_phone
-    user_agent = 'Mozilla/5.0 (iPhone; CPU iPhone OS 7_1_1 like Mac OS X) AppleWebKit/537.51.2 (KHTML, like Gecko) Version/7.0 Mobile/11D201 Safari/9537.53'
-    jpmobile = Jpmobile::Mobile::AbstractMobile.carrier('HTTP_USER_AGENT' => user_agent)
-    @envs_to_request_as_smart_phone = {'HTTP_USER_AGENT' => user_agent, 'rack.jpmobile' => jpmobile}
-  end
-
   def request_as_mobile
     user_agent = 'DoCoMo/2.0 ISIM0808(c500;TB;W24H16)'
     request.env['rack.jpmobile'] = Jpmobile::Mobile::AbstractMobile.carrier('HTTP_USER_AGENT' => user_agent)

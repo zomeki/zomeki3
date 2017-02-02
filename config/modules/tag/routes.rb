@@ -1,9 +1,6 @@
 ZomekiCMS::Application.routes.draw do
   mod = 'tag'
 
-  ## script
-  get "/_script/#{mod}/script/tags/publish" => "#{mod}/script/tags#publish"
-
   ## admin
   scope "#{ZomekiCMS::ADMIN_URL_PREFIX}/#{mod}/c:concept", :module => mod, :as => mod do
     resources :content_base,
