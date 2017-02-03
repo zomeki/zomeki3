@@ -48,9 +48,9 @@ class Organization::Public::Node::GroupsController < Cms::Controller::Public::Ba
               find_public_docs_with_group_id(sys_group_ids)
                 .where(content_id: article_contents.pluck(:id))
                 .order(@group.docs_order)
-                .paginate(page: params[:page], per_page: per_page)
                 .preload_assocs(:organization_groups_and_public_node_ancestors_assocs, :public_index_assocs)
             end
+    @docs = @docs.paginate(page: params[:page], per_page: per_page)
     return http_error(404) if @docs.current_page > @docs.total_pages
 
     render 'more' if @more

@@ -240,6 +240,12 @@ class Cms::Node < ApplicationRecord
     "#{model.pluralize}Script"
   end
 
+  def script_klass
+    script_model.constantize
+  rescue NameError => e
+    nil
+  end
+
 protected
   def remove_file
     close_page# rescue nil

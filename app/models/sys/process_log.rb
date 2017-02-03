@@ -6,9 +6,10 @@ class Sys::ProcessLog < ApplicationRecord
   attr_accessor :title
 
   PROCESSE_LIST = [
-    ["音声書き出し"  , "cms/talk_tasks/exec"],
-    ["アクセスランキング取り込み" , "rank/ranks/exec"],
-    ["フィード取り込み" , "feed/feeds/read"],
+    ["日時指定処理", "sys/tasks/exec"],
+    ["音声書き出し", "cms/talk_tasks/exec"],
+    ["アクセスランキング取り込み", "rank/ranks/exec"],
+    ["フィード取り込み", "feed/feeds/read"],
     ["問合せ取り込み", "survey/answers/pull"],
     ["広告クリック数取り込み", "ad_banner/clicks/pull"],
     ["関連ページ書き出し", "/publish"],

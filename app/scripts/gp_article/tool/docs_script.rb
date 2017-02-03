@@ -3,6 +3,7 @@ class GpArticle::Tool::DocsScript < Cms::Script::Base
 
   def rebuild
     content = GpArticle::Content::Doc.find(params[:content_id])
+    return unless content
 
     doc_ids = content.public_docs.order(display_published_at: :desc, published_at: :desc).pluck(:id)
     doc_ids.each_slice(100) do |sliced_doc_ids|
@@ -19,8 +20,8 @@ class GpArticle::Tool::DocsScript < Cms::Script::Base
     end
 
     content.public_nodes.each do |node|
-      script = node.script_model.constantize
-      script.new(node_id: node.id).publish if script.publishable?
+      script_klass = node.script_klass
+      script_klass.new(node_id: node.id).publish if script_klass && script_klass.publishable?
     end
   end
 end

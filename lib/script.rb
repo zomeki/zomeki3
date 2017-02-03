@@ -133,8 +133,8 @@ class Script
     self.success
   rescue => e
     self.error e
-    debug_log e
-    debug_log e.backtrace.join("\n")
+    error_log e
+    error_log e.backtrace.join("\n")
   end
 
 protected

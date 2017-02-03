@@ -51,12 +51,12 @@ class Cms::NodesScript < Cms::Script::Publication
     ## modules' page
     unless node.model == 'Cms::Directory'
       begin
-        script = node.script_model.constantize
-        return unless script.publishable?
+        script_klass = node.script_klass
+        return unless script_klass.publishable?
 
         publish_page(node, uri: node.public_uri, site: node.site, path: node.public_path,
                                                       smart_phone_path: node.public_smart_phone_path)
-        script.new(params.merge(node: node)).publish
+        script_klass.new(params.merge(node: node)).publish
 
       rescue Script::InterruptException => e
         raise e

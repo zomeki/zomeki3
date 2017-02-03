@@ -1,6 +1,6 @@
 class Sys::TasksScript < Cms::Script::Base
   def exec
-    tasks = Sys::Task.order(process_at: :desc).includes(:processable)
+    tasks = Sys::Task.order(process_at: :desc).preload(:processable)
     tasks = tasks.where(site_id: Script.options[:site_id]) if Script.options && Script.options[:site_id]
     tasks = tasks.where(Sys::Task.arel_table[:process_at].lteq(Time.now))
 
@@ -15,8 +15,8 @@ class Sys::TasksScript < Cms::Script::Base
           raise 'Processable Not Found'
         end
 
-        script = "#{task.processable_type.pluralize}Script".constantize
-        script.new(params.merge(task: task, item: task.processable)).public_send("#{task.name}_by_task")
+        script_klass = "#{task.processable_type.pluralize}Script".constantize
+        script_klass.new(params.merge(task: task, item: task.processable)).public_send("#{task.name}_by_task")
       rescue => e
         ::Script.error e
         info_log "Error: #{e}"
