@@ -93,5 +93,11 @@ gem 'rsync', '~> 1.0.9'
 gem 'simple_captcha2', '~> 0.3.4', require: 'simple_captcha'
 gem 'will_paginate', '~> 3.1.3'
 gem 'whenever', require: false
+gem 'octokit', '~> 4.6.2'
 
 gem 'logical_query_parser', '~> 0.1.0'
+
+# Plugins
+Dir.glob(File.join(File.dirname(__FILE__), 'config', 'plugins', '**', "Gemfile")) do |gemfile|
+  eval(IO.read(gemfile), binding)
+end

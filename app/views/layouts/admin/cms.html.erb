@@ -40,20 +40,21 @@
     <nav id="navi">
       <div id="naviContainer">
         <ul class="selector">
-          <li><%= link_to Core.site.try!(:name), cms_navi_sites_path, :id => "currentNaviSite" %></li>
-          <li><%= link_to Core.concept.try!(:name), cms_navi_concepts_path, :id => "currentNaviConcept" %></li>
+          <li><%= link_to Core.site.try!(:name), main_app.cms_navi_sites_path, :id => "currentNaviSite" %></li>
+          <li><%= link_to Core.concept.try!(:name), main_app.cms_navi_concepts_path, :id => "currentNaviConcept" %></li>
         </ul>
+        <%- if lookup_context.exists?('header', controller.controller_path, true) -%>
         <%= render controller.controller_path + '/header' %>
+        <%- end -%>
       <!-- /#naviContainer --></div>
     <!-- /#navi --></nav>
     <div id="main">
       <div id="content">
         <div id="contentContainer">
           <div id="contentHeader">
-            <% dir = "#{Rails.root}/app/views/#{controller.controller_path}" %>
-            <% if FileTest.exist?("#{dir}/_menu.html.erb") %>
+            <%- if lookup_context.exists?('menu', controller.controller_path, true) -%>
             <%= render controller.controller_path + '/menu' %>
-            <% end %>
+            <%- end -%>
           </div>
           <div id="contentBody">
             <%= render 'layouts/admin/notice' %>

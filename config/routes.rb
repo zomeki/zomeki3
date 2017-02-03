@@ -88,10 +88,13 @@ Rails.application.routes.draw do
   get "_public/*path.html.r.m3u"       => "cms/public/talk#down_m3u"
 
   # Modules
-  Dir::entries("#{Rails.root}/config/modules").each do |mod|
-    next if mod =~ /^\./
-    file = "#{Rails.root}/config/modules/#{mod}/routes.rb"
-    load(file) if FileTest.exist?(file)
+  Dir.glob("#{Rails.root}/config/modules/**/routes.rb").each do |file|
+    load file
+  end
+
+  # Plugins
+  Dir.glob("#{Rails.root}/config/plugins/**/routes.rb").each do |file|
+    load file
   end
 
   # Exception

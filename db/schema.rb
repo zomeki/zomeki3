@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170106083335) do
+ActiveRecord::Schema.define(version: 20170201091140) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1381,6 +1381,17 @@ ActiveRecord::Schema.define(version: 20170106083335) do
     t.integer  "item_id"
     t.string   "item_name"
     t.integer  "site_id"
+  end
+
+  create_table "sys_plugins", force: :cascade do |t|
+    t.string   "name"
+    t.string   "title"
+    t.string   "version"
+    t.string   "state"
+    t.text     "note"
+    t.integer  "sort_no"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "sys_process_logs", force: :cascade do |t|

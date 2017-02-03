@@ -48,10 +48,9 @@
       <div id="content">
         <div id="contentContainer">
           <div id="contentHeader">
-            <% dir = "#{Rails.root}/app/views/#{controller.controller_path}" %>
-            <% if FileTest.exist?("#{dir}/_menu_smart_phone.html.erb") %>
+            <%- if lookup_context.exists?('menu', controller.controller_path, true) -%>
             <%= render controller.controller_path + '/menu' %>
-            <% end %>
+            <%- end -%>
           </div>
           <div id="contentBody">
             <%= render 'layouts/admin/notice' %>

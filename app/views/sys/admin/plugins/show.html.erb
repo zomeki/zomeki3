@@ -1,0 +1,24 @@
+<p class="form">基本設定</p>
+
+<table class="show">
+  <tr>
+    <th><%= @item.class.human_attribute_name :name %></th>
+    <td><%= @item.name %></td>
+  </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :title %></th>
+    <td><%= @item.title %></td>
+  </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :version %></th>
+    <td><%= @item.version %></td>
+  </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :state %></th>
+    <td><%= @item.state_label %></td>
+  </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :note %></th>
+    <td><%=hbr @item.note %></td>
+  </tr>
+</table>

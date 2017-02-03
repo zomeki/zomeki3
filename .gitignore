@@ -24,5 +24,6 @@
 /config/nginx/*.conf
 /config/nginx/**/*.d
 /config/nginx/**/*.conf
+/config/plugins
 
 /vendor/tika/**/*.jar
