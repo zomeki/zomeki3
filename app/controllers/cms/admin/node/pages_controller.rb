@@ -43,7 +43,7 @@ class Cms::Admin::Node::PagesController < Cms::Admin::Node::BaseController
     uri  = item.public_uri
     uri  = (uri =~ /\?/) ? uri.gsub(/(.*\.html)\?/, '\\1.r?') : "#{uri}.r"
     path = "#{item.public_path}.r"
-    item.publish_page(render_public_as_string(uri, :site => item.site), :path => path, :dependent => :ruby)
+    item.publish_page(render_public_as_string(uri, site: item.site), path: path, dependent: :ruby)
   end
 
   def publish(item)
@@ -53,10 +53,10 @@ class Cms::Admin::Node::PagesController < Cms::Admin::Node::BaseController
 
   def publish_by_update(item)
     item.public_uri = "#{item.public_uri}?node_id=#{item.id}"
-    if item.publish(render_public_as_string(item.public_uri))
+    if item.publish(render_public_as_string(item.public_uri, site: item.site))
       publish_ruby(item)
-      item.rebuild(render_public_as_string(item.public_uri, jpmobile: envs_to_request_as_smart_phone),
-                   :path => item.public_smart_phone_path, :dependent => :smart_phone)
+      item.rebuild(render_public_as_string(item.public_uri, site: item.site, agent_type: :smart_phone),
+                   path: item.public_smart_phone_path, dependent: :smart_phone)
       flash[:notice] = "公開処理が完了しました。"
     else
       flash[:notice] = "公開処理に失敗しました。"

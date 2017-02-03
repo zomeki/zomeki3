@@ -222,12 +222,6 @@ private
       @@site          = find_site_by_script_uri(@@script_uri)
       Page.site       = @@site
       @@internal_uri  = '/_public/cms/layouts' + @@request_uri.gsub(/.*?_layouts/, '')
-    when 'script'
-      if @@env.key?('SERVER_PROTOCOL') == false
-        @@site          = nil
-        Page.site       = @@site
-        @@internal_uri  = @@request_uri
-      end
     else
       @@site          = find_site_by_script_uri(@@script_uri)
       Page.site       = @@site

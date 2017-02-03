@@ -37,11 +37,13 @@ class Cms::Admin::PreviewController < Cms::Controller::Admin::Base
 
     else
       node = Core.search_node(path)
-      opt  = _routes.recognize_path(node, {})
+      opt  = Rails.application.routes.recognize_path(node)
 
       if opt[:controller] == 'exception'
         file_path = File.join(Page.site.public_path, path)
-        return send_file(file_path, type: ::Storage.mime_type(path), filename: ::File.basename(path), disposition: 'inline') if File.exist?(file_path)
+        if File.exist?(file_path) && File.ftype(file_path) == 'file'
+          return send_file(file_path, type: ::Storage.mime_type(path), filename: ::File.basename(path), disposition: 'inline')
+        end
       end
 
       ctl  = opt[:controller]
@@ -52,8 +54,12 @@ class Cms::Admin::PreviewController < Cms::Controller::Admin::Base
     #opt[:layout_id] = params[:layout_id] if params[:layout_id]
     #opt[:authenticity_token] = params[:authenticity_token] if params[:authenticity_token]
 
-    component_response = render_component :controller => ctl, :action => act, :params => params
-    response.content_type = component_response.content_type if component_response.respond_to?(:content_type)
+    rendered = Sys::Lib::Controller.dispatch(ctl, act, params: params, base_url: request.base_url)
+    return redirect_to(rendered.redirect_url) if rendered.redirect_url
+
+    response.body = rendered.body
+    response.content_type = rendered.content_type if rendered.respond_to?(:content_type)
+    render html: response.body.html_safe, layout: false
   end
 
 private
@@ -63,8 +69,8 @@ private
   end
 
   def add_preview_mark
-    html = render_to_string(partial: 'cms/admin/preview/preview_mark')
-    self.response_body = response.body.to_s.sub(/(<body[^>]*?>)/i, '\\1' + html)
+    html = render_to_string(partial: 'cms/admin/preview/preview_mark', formats: [:html])
+    response.body = response.body.to_s.sub(/(<body[^>]*?>)/i, '\\1' + html)
   end
 
   def replace_links_for_preview

@@ -12,7 +12,7 @@ class Organization::Publisher::Group < Cms::Publisher
           target_node_id: node.id,
           target_organization_group_id: pubs.map(&:publishable_id),
         }
-        ::Script.run("cms/script/nodes/publish?#{param.to_param}", force: true)
+        ::Script.run("cms/nodes/publish?#{param.to_param}", force: true)
       end
     end
 

@@ -12,7 +12,7 @@ class Tag::Publisher::Tag < Cms::Publisher
           target_node_id: node.id,
           target_tag_id: pubs.map(&:publishable_id)
         }
-        ::Script.run("cms/script/nodes/publish?#{param.to_param}", force: true)
+        ::Script.run("cms/nodes/publish?#{param.to_param}", force: true)
       end
     end
 

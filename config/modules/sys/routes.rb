@@ -1,9 +1,6 @@
 ZomekiCMS::Application.routes.draw do
   mod = "sys"
 
-  ## script
-  get "/_script/#{mod}/run/*path" => "#{mod}/script/runner#run"
-
   ## admin
   scope "#{ZomekiCMS::ADMIN_URL_PREFIX}/#{mod}", :module => mod, :as => mod do
     get "tests" => "admin/tests#index",

@@ -2,7 +2,7 @@ namespace :zomeki do
   namespace :gp_category do
     namespace :load do
       desc 'Load categories.'
-      task(:categories => :environment) do
+      task :categories => :environment do
         next if (content_id = ENV['content_id'].to_i).zero?
 
         Core.user       = Sys::User.first

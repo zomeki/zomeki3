@@ -1,4 +1,8 @@
 namespace :zomeki do
+  task :init_core do
+    Core.initialize
+  end
+
   desc 'Configure zomeki'
   task configure: :environment do
     Rake::Task['zomeki:configure:apache'].invoke

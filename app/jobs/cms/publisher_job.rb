@@ -4,8 +4,8 @@ class Cms::PublisherJob < ApplicationJob
 
   def perform
     loop_count = 0
-    while Cms::Publisher.exists? && (loop_count += 1) <= 100
-      publishers = Cms::Publisher.order(:priority, :id).limit(30).all
+    while Cms::Publisher.exists? && (loop_count += 1) <= 1000
+      publishers = Cms::Publisher.order(:priority, :id).limit(10).all
       break if publishers.blank?
   
       publishers.update_all(state: 'performing')

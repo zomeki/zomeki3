@@ -18,19 +18,18 @@ module Cms::Controller::Layout
 
     begin
       node = Core.search_node(path)
-      env  = {}
-      opt  = _routes.recognize_path(node, env)
+      opt  = Rails.application.routes.recognize_path(node)
       opt  = qp.merge(opt)
       ctl  = opt[:controller]
       act  = opt[:action]
 
       opt[:authenticity_token] = params[:authenticity_token] if params[:authenticity_token]
-      body = render_component_into_view :controller => ctl, :action => act, :params => opt,
-                                        :jpmobile => options[:jpmobile]
+      body = Sys::Lib::Controller.render(ctl, act, params: opt, agent_type: options[:agent_type])
 
       error_log(body) if Page.error
     rescue => e
-      error_log(e.message)
+      error_log e
+      error_log e.backtrace.join("\n")
       Page.error = 404
     end
 
@@ -84,7 +83,7 @@ module Cms::Controller::Layout
     end
 
     if params[:filename_base] =~ /^more($|_)/i &&
-       Page.current_item.respond_to?(:more_layout) && Page.current_item.more_layout
+      Page.current_item.respond_to?(:more_layout) && Page.current_item.more_layout
       Page.layout = Page.current_item.more_layout
     end
 
@@ -97,8 +96,7 @@ module Cms::Controller::Layout
         next if item.content_id && !item.content
         mnames= item.model.underscore.pluralize.split('/')
 
-        data = render_component_into_view :params => params,
-          :controller => mnames[0] + '/public/piece/' + mnames[1], :action => 'index'
+        data = Sys::Lib::Controller.render("#{mnames[0]}/public/piece/#{mnames[1]}", 'index', params: params)
         if data =~ /^<html/ && Rails.env.to_s == 'production'
           # component error
         else
@@ -130,7 +128,6 @@ module Cms::Controller::Layout
     end
 
     ## render the emoji
-    require 'jpmobile' #v0.0.4
     body.gsub!(/\[\[emoji\/([0-9a-zA-Z\._-]+)\]\]/) do |m|
       name = m.gsub(/\[\[emoji\/([0-9a-zA-Z\._-]+)\]\]/, '\1')
       Cms::Lib::Mobile::Emoji.convert(name, request.mobile)
