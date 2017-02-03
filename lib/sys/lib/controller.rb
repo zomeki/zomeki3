@@ -5,11 +5,11 @@ class Sys::Lib::Controller
       request = create_request(controller_name, action_name, options)
       response = create_response(request)
       status, headers = controller.dispatch(action_name, request, response)
-      return status, headers, response
+      response
     end
 
     def render(controller_name, action_name, options)
-      _, _, response = dispatch(controller_name, action_name, options)
+      response = dispatch(controller_name, action_name, options)
       response.body.to_s.html_safe
     end
 
