@@ -1383,6 +1383,17 @@ ActiveRecord::Schema.define(version: 20170201091140) do
     t.integer  "site_id"
   end
 
+  create_table "sys_plugins", force: :cascade do |t|
+    t.string   "name"
+    t.string   "title"
+    t.string   "version"
+    t.string   "state"
+    t.text     "note"
+    t.integer  "sort_no"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "sys_process_logs", force: :cascade do |t|
     t.integer  "process_id"
     t.datetime "started_at"
