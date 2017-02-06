@@ -16,6 +16,6 @@ class GpArticle::Admin::Mailer < ApplicationMailer
   private
 
   def host
-    Cms::SiteSetting::AdminProtocol.core_domain(@src_doc.content.site).sub(/\/+$/, '')
+    @src_doc.content.site.main_admin_uri.sub(/\/+$/, '')
   end
 end

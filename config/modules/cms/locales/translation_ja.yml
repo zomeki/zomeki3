@@ -36,7 +36,6 @@ ja:
         setting_transfer_dest_host: "転送先サーバーホスト"
         setting_transfer_dest_dir: "転送先サーバーディレクトリ"
         setting_transfer_dest_domain: "転送先サイトURL"
-        setting_site_admin_protocol: "プロトコル"
         setting_common_ssl: "共有SSL"
         setting_admin_mail_sender: "管理者メール送信元アドレス"
         setting_allowed_attachment_type: "添付ファイル/許可する種類"

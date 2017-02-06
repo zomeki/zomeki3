@@ -374,8 +374,7 @@ class GpArticle::Doc < ApplicationRecord
     page_flag = mobile ? 'm' : smart_phone ? 's' : ''
 
     path = "_preview/#{format('%04d', site.id)}#{page_flag}#{base_uri}preview/#{id}/#{filename}#{params.present? ? "?#{params}" : ''}"
-    d = Cms::SiteSetting::AdminProtocol.core_domain site, :freeze_protocol => true
-    "#{d}#{path}"
+    "#{site.main_admin_uri}#{path}"
   end
 
   def file_content_uri

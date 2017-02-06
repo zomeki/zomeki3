@@ -41,7 +41,6 @@ class Cms::Site < ApplicationRecord
     class_name: 'Cms::Concept'
   has_many :public_root_concepts, -> { where(level_no: 1, state: 'public').order(:sort_no, :name, :id) },
     class_name: 'Cms::Concept'
-  has_many :admin_protocol_settings, class_name: 'Cms::SiteSetting::AdminProtocol'
   has_many :emergency_layout_settings, class_name: 'Cms::SiteSetting::EmergencyLayout'
 
   validates :state, :name, presence: true
@@ -58,12 +57,6 @@ class Cms::Site < ApplicationRecord
   after_save { save_cms_data_file(:site_image, :site_id => id) }
   after_destroy { destroy_cms_data_file(:site_image) }
 
-  ## file transfer
-  after_save { save_file_transfer(:site_id => id) }
-
-  ## site settings
-  after_save { save_site_settings(:site_id => id) }
-
   before_validation :fix_full_uri
   before_destroy :block_last_deletion
 
@@ -74,6 +67,17 @@ class Cms::Site < ApplicationRecord
   after_create :make_site_belonging
   after_save :make_node
   after_save :copy_common_directory
+
+  scope :matches_to_domain, ->(domain) {
+    where([
+      arel_table[:full_uri].matches("http://#{domain}%"),
+      arel_table[:full_uri].matches("https://#{domain}%"),
+      arel_table[:mobile_full_uri].matches("http://#{domain}%"),
+      arel_table[:mobile_full_uri].matches("https://#{domain}%"),
+      arel_table[:admin_full_uri].matches("http://#{domain}%"),
+      arel_table[:admin_full_uri].matches("https://#{domain}%")
+    ].reduce(:or))
+  }
 
   def creatable?
     return false unless Core.user.has_auth?(:manager)
@@ -154,25 +158,8 @@ class Cms::Site < ApplicationRecord
     return url
   end
 
-  def site_domain?(script_uri)
-    return false if Cms::SiteSetting::AdminProtocol.core_domain?
-    parsed_uri = Addressable::URI.parse(script_uri)
-    parsed_uri.path = '/'
-
-    parsed_uri.scheme = 'http'
-    http_base = parsed_uri.to_s
-    parsed_uri.scheme = 'https'
-    https_base = parsed_uri.to_s
-    return true if site_domains.index(http_base).present? || site_domains.index(https_base).present?
-    return false
-  end
-
-  def site_domains
-    domains = []
-    domains << "#{full_uri}" if !full_uri.blank?
-    domains << "#{mobile_full_uri}" if !mobile_full_uri.blank?
-    domains << "#{admin_full_uri}" if !admin_full_uri.blank?
-    domains
+  def main_admin_uri
+    admin_full_uri.presence || full_uri
   end
 
   def related_sites(options = {})
@@ -189,34 +176,6 @@ class Cms::Site < ApplicationRecord
 
   def site_image_uri
     cms_data_file_uri(:site_image, :site_id => id)
-  end
-
-  def self.all_with_full_uri(full_uri)
-    parsed_uri = Addressable::URI.parse(full_uri)
-    parsed_uri.path = '/'
-    parsed_uri.query = nil
-    parsed_uri.fragment = nil
-
-    parsed_uri.scheme = 'http'
-    http_base = parsed_uri.to_s
-    parsed_uri.scheme = 'https'
-    https_base = parsed_uri.to_s
-    sites = self.arel_table
-    if Cms::SiteSetting::AdminProtocol.core_domain?
-      self.where(sites[:full_uri].matches("#{http_base}%")
-                     .or(sites[:full_uri].matches("#{https_base}%"))
-                     .or(sites[:mobile_full_uri].matches("#{http_base}%"))
-                     .or(sites[:mobile_full_uri].matches("#{https_base}%")))
-          .order(:id)
-    else
-      self.where(sites[:full_uri].matches("#{http_base}%")
-                     .or(sites[:full_uri].matches("#{https_base}%"))
-                     .or(sites[:mobile_full_uri].matches("#{http_base}%"))
-                     .or(sites[:mobile_full_uri].matches("#{https_base}%"))
-                     .or(sites[:admin_full_uri].matches("#{http_base}%"))
-                     .or(sites[:admin_full_uri].matches("#{https_base}%")))
-          .order(:id)
-    end
   end
 
   def last?
@@ -444,6 +403,11 @@ class Cms::Site < ApplicationRecord
   end
 
   class << self
+    def all_with_full_uri(full_uri)
+      uri = Addressable::URI.parse(full_uri)
+      matches_to_domain(uri.host).order(:id)
+    end
+
     def reload_servers
       FileUtils.touch reload_servers_text_path
     end

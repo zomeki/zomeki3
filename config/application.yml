@@ -16,10 +16,6 @@ sys:
   transfer_opt_include: "config/rsync/public_include.lst"
   transfer_opt_remote_shell: "ssh -p 22"
 
-  # 管理画面URL（ドメイン）
-  # 'site'(default) or 'core'
-  core_domain: "site"
-
   # ファイルからのテキスト抽出
   file_text_extraction: false
 

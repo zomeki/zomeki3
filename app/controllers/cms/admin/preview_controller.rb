@@ -113,13 +113,9 @@ private
   end
 
   def admin_uri_for_replace
-    if Core.script_uri
-      uri = Addressable::URI.parse(Core.script_uri)
-      uri.path = '/'
-      uri.query = uri.fragment = nil
-      uri.to_s
-    else
-      Cms::SiteSetting::AdminProtocol.core_domain Page.site, freeze_protocol: true
-    end
+    uri = Addressable::URI.parse(Core.script_uri)
+    uri.path = '/'
+    uri.query = uri.fragment = nil
+    uri.to_s
   end
 end

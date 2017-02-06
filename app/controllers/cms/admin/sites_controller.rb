@@ -19,9 +19,6 @@ class Cms::Admin::SitesController < Cms::Controller::Admin::Base
     @item = Cms::Site.find(params[:id])
     return error_auth unless @item.readable?
 
-    @item.load_file_transfer
-    @item.load_site_settings
-
     _show @item
   end
 
@@ -34,7 +31,6 @@ class Cms::Admin::SitesController < Cms::Controller::Admin::Base
     @item = Cms::Site.new(site_params)
     @item.state = 'public'
     @item.portal_group_state = 'visible'
-    @item.load_site_settings
     _create(@item, notice: "登録処理が完了しました。 （反映にはWebサーバーの再起動が必要です。）") do
       update_configs
     end
@@ -42,8 +38,6 @@ class Cms::Admin::SitesController < Cms::Controller::Admin::Base
 
   def update
     @item = Cms::Site.find(params[:id])
-    @item.load_site_settings
-
     @item.attributes = site_params
     _update @item do
       update_configs
@@ -71,8 +65,8 @@ class Cms::Admin::SitesController < Cms::Controller::Admin::Base
 
   def site_params
     params.require(:item).permit(
-      :body, :full_uri, :in_setting_site_admin_protocol,
-      :mobile_full_uri, :admin_full_uri, :name, :og_description, :og_image, :og_title, :og_type, :related_site,
+      :body, :full_uri, :mobile_full_uri, :admin_full_uri,
+      :name, :og_description, :og_image, :og_title, :og_type, :related_site,
       :smart_phone_layout, :smart_phone_publication, :spp_target, :site_image, :del_site_image, :google_map_api_key,
       :in_root_group_id,
       :creator_attributes => [:id, :group_id, :user_id]

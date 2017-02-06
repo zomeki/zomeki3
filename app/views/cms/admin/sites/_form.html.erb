@@ -13,12 +13,10 @@
     <th><%= @item.locale(:mobile_full_uri) %></th>
     <td><%= f.text_field :mobile_full_uri, :class => 'url' %></td>
   </tr>
-  <%- if !Cms::SiteSetting::AdminProtocol.core_domain? -%>
   <tr>
     <th><%= @item.locale(:admin_full_uri) %></th>
     <td><%= f.text_field :admin_full_uri, :class => 'url' %></td>
   </tr>
-  <%- end -%>
   <%- if @item.new_record? -%>
   <tr>
     <th><%= @item.locale(:in_root_group_id) %></th>
@@ -49,15 +47,6 @@
 </table>
 
 <br />
-<p class="form">管理画面設定</p>
-
-<table class="show">
-  <tr>
-    <th><%= @item.locale(:setting_site_admin_protocol) %></th>
-    <td><%= f.select :in_setting_site_admin_protocol, Cms::SiteSetting::AdminProtocol::ADMIN_PROTOCOLS, :include_blank => "" %></td>
-  </tr>
-</table>
-
 <p class="form">スマートフォン書き出し設定</p>
 
 <table class="show">

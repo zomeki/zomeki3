@@ -11,12 +11,10 @@
     <th><%= @item.locale(:mobile_full_uri) %></th>
     <td><%= @item.mobile_full_uri %></td>
   </tr>
-  <%- if !Cms::SiteSetting::AdminProtocol.core_domain? -%>
   <tr>
     <th><%= @item.locale(:admin_full_uri) %></th>
     <td><%= @item.admin_full_uri %></td>
   </tr>
-  <%- end -%>
 </table>
 
 <br />
@@ -33,15 +31,6 @@
 </table>
 
 <br />
-<p class="form">管理画面設定</p>
-
-<table class="show">
-  <tr>
-    <th><%= @item.locale(:setting_site_admin_protocol) %></th>
-    <td><%= @item.setting_site_admin_protocol %></td>
-  </tr>
-</table>
-
 <p class="form">スマートフォン書き出し設定</p>
 
 <table class="show">
