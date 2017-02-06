@@ -28,7 +28,15 @@ server {
   }
   <%- end -%>
 
-  location ~ ^(/|/_mobile|/_smartphone) {
+  location ~ ^/_smartphone {
+    try_files $uri $uri/index.html <%= '$request_uri $request_uri/index.html' if @site.smart_phone_layout_same_as_pc? %> @proxy;
+    <%- if @site.use_basic_auth? && @site.basic_auth_user_enabled? -%>
+    auth_basic_user_file <%= "#{::File.dirname(@site.public_path)}/.htpasswd" %>;
+    auth_basic "Please enter your ID and password";
+    <%- end -%>
+  }
+
+  location ~ ^(/|/_mobile) {
     try_files $uri $uri/index.html @proxy;
     <%- if @site.use_basic_auth? && @site.basic_auth_user_enabled? -%>
     auth_basic_user_file <%= "#{::File.dirname(@site.public_path)}/.htpasswd" %>;

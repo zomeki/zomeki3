@@ -11,6 +11,7 @@ class Cms::Site < ApplicationRecord
   include StateText
 
   OGP_TYPE_OPTIONS = [['article', 'article'], ['product', 'product'], ['profile', 'profile']]
+  SMART_PHONE_LAYOUT_OPTIONS = [['スマートフォンレイアウトを優先', 'smart_phone'], ['PCレイアウトで表示', 'pc']]
   SMART_PHONE_PUBLICATION_OPTIONS = [['書き出さない', 'no'], ['書き出す', 'yes']]
   SPP_TARGET_OPTIONS = [['トップページのみ書き出す', 'only_top'], ['すべて書き出す', 'all']]
 
@@ -263,6 +264,14 @@ class Cms::Site < ApplicationRecord
     OGP_TYPE_OPTIONS.detect{|o| o.last == self.og_type }.try(:first).to_s
   end
 
+  def smart_phone_layout_text
+    SMART_PHONE_LAYOUT_OPTIONS.rassoc(smart_phone_layout).try(:first).to_s
+  end
+
+  def smart_phone_layout_same_as_pc?
+    smart_phone_layout == 'pc'
+  end
+
   def smart_phone_publication_text
     SMART_PHONE_PUBLICATION_OPTIONS.detect{|o| o.last == smart_phone_publication }.try(:first).to_s
   end
@@ -362,6 +371,7 @@ class Cms::Site < ApplicationRecord
   private
 
   def set_defaults
+    self.smart_phone_layout ||= SMART_PHONE_LAYOUT_OPTIONS.first.last if self.has_attribute?(:smart_phone_layout)
     self.smart_phone_publication ||= SMART_PHONE_PUBLICATION_OPTIONS.first.last if self.has_attribute?(:smart_phone_publication)
     self.spp_target ||= SPP_TARGET_OPTIONS.first.last if self.has_attribute?(:spp_target)
   end
