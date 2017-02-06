@@ -40,8 +40,8 @@ namespace :zomeki do
     namespace :sites do
       desc 'Update server configs'
       task :update_server_configs => :environment do
-        Cms::Site.generate_apache_configs
-        Cms::Site.generate_nginx_configs
+        Rails::Generators.invoke('cms:nginx:site_config', ['--force'])
+        Rails::Generators.invoke('cms:apache:site_config', ['--force'])
       end
     end
 

@@ -68,12 +68,6 @@ class Cms::Site < ApplicationRecord
 
   after_save :generate_files
   after_destroy :destroy_files
-  after_save :generate_apache_configs
-  after_destroy :destroy_apache_configs
-  after_destroy :destroy_apache_admin_configs
-  after_save :generate_nginx_configs
-  after_destroy :destroy_nginx_configs
-  after_destroy :destroy_nginx_admin_configs
 
   after_create :make_concept
   after_create :make_site_belonging
@@ -224,201 +218,6 @@ class Cms::Site < ApplicationRecord
     end
   end
 
-  def self.generate_apache_configs
-    all.each(&:generate_apache_configs)
-  end
-
-  def generate_apache_configs
-    virtual_hosts = Rails.root.join('config/apache/virtual_hosts')
-    unless (template = virtual_hosts.join('template.conf.erb')).file?
-      logger.warn 'VirtualHost template not found.'
-      return false
-    end
-    erb = ERB.new(template.read, nil, '-').result(binding)
-    virtual_hosts.join("site_#{'%04d' % id}.conf").write erb
-  end
-
-  def destroy_apache_configs
-    conf = Rails.root.join("config/apache/virtual_hosts/site_#{'%04d' % id}.conf")
-    return false unless conf.exist?
-    conf.delete
-  end
-
-  def self.generate_apache_admin_configs
-    all.each(&:generate_apache_admin_configs)
-  end
-
-  def generate_apache_admin_configs
-    return if admin_domain.blank?
-    virtual_hosts = Rails.root.join('config/apache/admin_virtual_hosts')
-    unless (template = virtual_hosts.join('template.conf.erb')).file?
-      logger.warn 'VirtualHost template not found.'
-      return false
-    end
-    erb = ERB.new(template.read, nil, '-').result(binding)
-    virtual_hosts.join("site_#{'%04d' % id}.conf").write erb
-  end
-
-  def destroy_apache_admin_configs
-    conf = Rails.root.join("config/apache/admin_virtual_hosts/site_#{'%04d' % id}.conf")
-    return false unless conf.exist?
-    conf.delete
-  end
-
-  def self.reload_nginx_servers
-    FileUtils.touch reload_servers_text_path
-  end
-
-  def self.reload_servers_text_path
-    Rails.root.join('tmp/reload_servers.txt')
-  end
-
-  def self.generate_nginx_configs
-    all.each(&:generate_nginx_configs)
-  end
-
-  def generate_nginx_configs
-    servers = Rails.root.join('config/nginx/servers')
-    unless (template = servers.join('template.conf.erb')).file?
-      logger.warn 'Server template not found.'
-      return false
-    end
-    erb = ERB.new(template.read, nil, '-').result(binding)
-    servers.join("site_#{'%04d' % id}.conf").write erb
-  end
-
-  def self.generate_nginx_admin_configs
-    all.each(&:generate_nginx_admin_configs)
-  end
-
-  def generate_nginx_admin_configs
-    servers = Rails.root.join('config/nginx/admin_servers')
-    unless (template = servers.join('template.conf.erb')).file?
-      logger.warn 'Server template not found.'
-      return false
-    end
-    erb = ERB.new(template.read, nil, '-').result(binding)
-    conf_file = servers.join("site_#{'%04d' % id}.conf")
-    if admin_domain.blank?
-      FileUtils.rm_f(conf_file)
-    else
-      conf_file.write erb
-    end
-  end
-
-  def destroy_nginx_configs
-    conf = Rails.root.join("config/nginx/servers/site_#{'%04d' % id}.conf")
-    return false unless conf.exist?
-    conf.delete
-  end
-
-  def destroy_nginx_admin_configs
-    conf = Rails.root.join("config/nginx/admin_servers/site_#{'%04d' % id}.conf")
-    return false unless conf.exist?
-    conf.delete
-  end
-
-  def basic_auth_user_enabled?
-    basic_auth_users.root_location.enabled.exists?
-  end
-
-  def system_basic_auth_user_enabled?
-    basic_auth_users.system_location.enabled.exists?
-  end
-
-  def directory_basic_auth_user_enabled?(directory)
-    basic_auth_users.directory_location.enabled.where(target_location: directory).exists?
-  end
-
-  def basic_auth_enabled?
-    pw_file = "#{::File.dirname(public_path)}/.htpasswd"
-    return ::File.exists?(pw_file)
-  end
-
-  def system_basic_auth_enabled?
-    pw_file = "#{::File.dirname(public_path)}/.htpasswd_system"
-    return ::File.exists?(pw_file)
-  end
-
-  def directory_basic_auth_enabled?(directory)
-    pw_file = "#{::File.dirname(public_path)}/.htpasswd_#{directory}"
-    return ::File.exists?(pw_file)
-  end
-
-  def enable_basic_auth
-    self.load_site_settings
-    self.in_setting_site_basic_auth_state = 'enabled'
-    self.save
-
-    ac_file = "#{::File.dirname(public_path)}/.htaccess"
-    pw_file = "#{::File.dirname(public_path)}/.htpasswd"
-
-    conf  = %Q(<FilesMatch "^(?!#{ZomekiCMS::ADMIN_URL_PREFIX})">\n)
-    conf += %Q(    AuthUserFile #{pw_file}\n)
-    conf += %Q(    AuthGroupFile /dev/null\n)
-    conf += %Q(    AuthName "Please enter your ID and password"\n)
-    conf += %Q(    AuthType Basic\n)
-    conf += %Q(    require valid-user\n)
-    conf += %Q(    allow from all\n)
-    conf += %Q(</FilesMatch>\n)
-    #conf += %Q(<FilesMatch "^_dynamic">\n)
-    #conf += %Q(    Order allow,deny\n)
-    #conf += %Q(    Allow from All\n)
-    #conf += %Q(    Satisfy Any\n)
-    #conf += %Q(</FilesMatch>\n)
-    Util::File.put(ac_file, :data => conf)
-
-    salt = Zomeki.config.application['sys.crypt_pass']
-    conf = ""
-    basic_auth_users.root_location.enabled.each do |user|
-      conf += %Q(#{user.name}:#{user.password.crypt(salt)}\n)
-    end
-
-    Util::File.put(pw_file, :data => conf)
-    enable_system_basic_auth(salt)
-    enable_directory_basic_auth(salt)
-    generate_nginx_configs
-    generate_nginx_admin_configs
-    Cms::Site.reload_nginx_servers
-    return true
-  end
-
-  def enable_system_basic_auth(salt)
-    system_pw_file = "#{::File.dirname(public_path)}/.htpasswd_system"
-    if auth_users = basic_auth_users.system_location.enabled
-      conf = ""
-      auth_users.system_location.where(state: 'enabled').each do |user|
-        conf += %Q(#{user.name}:#{user.password.crypt(salt)}\n)
-      end
-      Util::File.put(system_pw_file, :data => conf)
-    end
-  end
-
-  def enable_directory_basic_auth(salt)
-    if auth_users = basic_auth_users.directory_auth
-      auth_users.each do |d|
-        directory_pw_file = "#{::File.dirname(public_path)}/.htpasswd_#{d.target_location}"
-        conf = ""
-        basic_auth_users.directory_location.enabled.where(target_location: d.target_location).each do |user|
-          conf += %Q(#{user.name}:#{user.password.crypt(salt)}\n)
-        end
-        Util::File.put(directory_pw_file, :data => conf)
-      end
-    end
-  end
-
-  def disable_basic_auth
-    self.load_site_settings
-    self.in_setting_site_basic_auth_state = 'disabled'
-    self.save
-    ac_file = "#{::File.dirname(public_path)}/.htaccess"
-    FileUtils.rm_f(ac_file)
-    generate_nginx_configs
-    generate_nginx_admin_configs
-    return true
-  end
-
-
   def last?
     self.class.count == 1
   end
@@ -482,6 +281,70 @@ class Cms::Site < ApplicationRecord
 
   def spp_only_top?
     spp_target == 'only_top'
+  end
+
+  def apache_config_path
+    "config/apache/virtual_hosts/site_#{'%04d' % id}.conf"
+  end
+
+  def apache_admin_config_path
+    "config/apache/admin_virtual_hosts/site_#{'%04d' % id}.conf"
+  end
+
+  def nginx_config_path
+    "config/nginx/servers/site_#{'%04d' % id}.conf"
+  end
+
+  def nginx_admin_config_path
+    "config/nginx/admin_servers/site_#{'%04d' % id}.conf"
+  end
+
+  def basic_auth_htaccess_path
+    "#{::File.dirname(public_path)}/.htaccess"
+  end
+
+  def basic_auth_htpasswd_path
+    "#{::File.dirname(public_path)}/.htpasswd"
+  end
+
+  def basic_auth_user_enabled?
+    basic_auth_users.root_location.enabled.exists?
+  end
+
+  def system_basic_auth_user_enabled?
+    basic_auth_users.system_location.enabled.exists?
+  end
+
+  def directory_basic_auth_user_enabled?(directory)
+    basic_auth_users.directory_location.enabled.where(target_location: directory).exists?
+  end
+
+  def basic_auth_enabled?
+    ::File.exists?(basic_auth_htpasswd_path)
+  end
+
+  def system_basic_auth_enabled?
+    ::File.exists?("#{basic_auth_htpasswd_path}_system")
+  end
+
+  def directory_basic_auth_enabled?(directory)
+    ::File.exists?("#{basic_auth_htpasswd_path}_#{directory}")
+  end
+
+  def basic_auth_state_enabled?
+    settings.where(name: 'basic_auth_state', value: 'enabled').exists?
+  end
+
+  def enable_basic_auth
+    self.load_site_settings
+    self.in_setting_site_basic_auth_state = 'enabled'
+    self.save
+  end
+
+  def disable_basic_auth
+    self.load_site_settings
+    self.in_setting_site_basic_auth_state = 'disabled'
+    self.save
   end
 
   protected
@@ -559,6 +422,16 @@ class Cms::Site < ApplicationRecord
       group.save
     else
       site_belongings.create(group_id: in_root_group_id)
+    end
+  end
+
+  class << self
+    def reload_servers
+      FileUtils.touch reload_servers_text_path
+    end
+
+    def reload_servers_text_path
+      Rails.root.join('tmp/reload_servers.txt')
     end
   end
 end

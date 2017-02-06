@@ -62,11 +62,9 @@ class Cms::Admin::SitesController < Cms::Controller::Admin::Base
   protected
 
   def update_configs
-    Cms::Site.generate_apache_configs
-    Cms::Site.generate_apache_admin_configs
-    Cms::Site.generate_nginx_configs
-    Cms::Site.generate_nginx_admin_configs
-    Cms::Site.reload_nginx_servers
+    Rails::Generators.invoke('cms:nginx:site_config', ['--force', "--site_id=#{@item.id}"])
+    Rails::Generators.invoke('cms:apache:site_config', ['--force', "--site_id=#{@item.id}"])
+    Cms::Site.reload_servers
   end
 
   private

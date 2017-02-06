@@ -12,19 +12,13 @@ namespace :zomeki do
 
   namespace :configure do
     task :apache do
-      Pathname.glob(Rails.root.join('config/apache/*.erb')).each do |erb|
-        next unless erb.file?
-        erb.sub_ext('').write(ERB.new(erb.read, nil, '-').result(binding))
-      end
-      Cms::Site.generate_apache_configs
+      Rails::Generators.invoke('cms:apache:base_config', ['--force'])
+      Rails::Generators.invoke('cms:apache:site_config', ['--force'])
     end
 
     task :nginx do
-      Pathname.glob(Rails.root.join('config/nginx/*.erb')).each do |erb|
-        next unless erb.file?
-        erb.sub_ext('').write(ERB.new(erb.read, nil, '-').result(binding))
-      end
-      Cms::Site.generate_nginx_configs
+      Rails::Generators.invoke('cms:nginx:base_config', ['--force'])
+      Rails::Generators.invoke('cms:nginx:site_config', ['--force'])
     end
 
     task :tika do
