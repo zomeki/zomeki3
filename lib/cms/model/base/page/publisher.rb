@@ -77,9 +77,6 @@ module Cms::Model::Base::Page::Publisher
     pub = publishers.where(dependent: options[:dependent] ? options[:dependent].to_s : nil).first
 
     return true if mobile_page?
-    if options[:dependent].to_s =~ /ruby\z/i
-      return true if !Zomeki.config.application['cms.use_kana']
-    end
     return true if hash && pub && hash == pub.content_hash && ::File.exist?(path)
 
 clean_statics = Zomeki.config.application['sys.clean_statics']

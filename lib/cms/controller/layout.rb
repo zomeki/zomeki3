@@ -2,6 +2,10 @@ module Cms::Controller::Layout
   @no_cache    = nil
 
   def render_public_as_string(path, options = {})
+    site = options[:site]
+    return nil if path =~ /.r$/ && !site.use_kana?
+    return nil if path =~ /.mp3$/ && !site.use_talk?
+
     Core.publish = true unless options[:preview]
     mode = Core.set_mode('preview')
 
@@ -12,7 +16,7 @@ module Cms::Controller::Layout
     end
 
     Page.initialize
-    Page.site   = options[:site] || Core.site
+    Page.site   = site
     Page.uri    = path
     Page.mobile = options[:mobile]
 
@@ -35,7 +39,7 @@ module Cms::Controller::Layout
 
     error = Page.error
     Page.initialize
-    Page.site = options[:site] || Core.site
+    Page.site = site
     Page.uri  = path
 
     Core.set_mode(mode)

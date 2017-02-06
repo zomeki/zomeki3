@@ -1,11 +1,6 @@
 require 'digest/md5'
 class Cms::TalkTasksScript < Cms::Script::Publication
   def exec
-    if !Zomeki.config.application['cms.use_kana']
-      Script.log "use_kana is disabled (application.yml)"
-      return
-    end
-
     tasks = Cms::TalkTask.select(:id).order(:id)
     tasks = tasks.where(site_id: Script.options[:site_id]) if Script.options && Script.options[:site_id]
     Script.total tasks.size

@@ -10,6 +10,7 @@ module Cms::Model::Base::Page::TalkTask
     pub = publishers.where(dependent: options[:dependent] ? options[:dependent].to_s : nil).first
     return true unless pub
     return true if pub.path !~ /\.html\z/
+    return true unless Page.site.use_talk?
     #return true if !published? && ::File.exist?("#{pub.path}.mp3")
 
     path = "#{pub.path}.mp3"
@@ -26,11 +27,8 @@ module Cms::Model::Base::Page::TalkTask
       task = talk_tasks.find_or_initialize_by(dependent: pub.dependent)
       task.path         = pub.path
       task.content_hash = pub.content_hash
-      task.site_id      = Core.site.try(:id)
-      ids = Zomeki.config.application['cms.use_kana_exclude_site_ids'] || []
-      unless ids.include?(task.site_id)
-        task.save if task.changed?
-      end
+      task.site_id      = Page.site.id
+      task.save
     end
     return true
   end

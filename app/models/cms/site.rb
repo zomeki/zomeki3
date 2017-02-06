@@ -356,6 +356,14 @@ class Cms::Site < ApplicationRecord
     self.save
   end
 
+  def use_kana?
+    setting_site_kana_talk.in?(%w(enabled kana_only))
+  end
+
+  def use_talk?
+    setting_site_kana_talk == 'enabled'
+  end
+
   protected
 
   def fix_full_uri

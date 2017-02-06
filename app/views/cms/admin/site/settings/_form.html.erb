@@ -55,3 +55,12 @@
   </tr>
 </table>
 <%- end -%>
+
+<%- if @item.name == 'kana_talk' -%>
+<table class="show">
+  <tr>
+    <th><%= @site.locale(:setting_kana_talk) %></th>
+    <td><%= f.radio_buttons(:in_setting_site_kana_talk, @item.class::KANA_TALK_OPTIONS) %></td>
+  </tr>
+</table>
+<%- end -%>

@@ -7,10 +7,11 @@ module Cms::Model::Rel::SiteSetting
   attr_accessor :in_setting_site_extension_upload_max_size
   attr_accessor :in_setting_site_allowed_attachment_type
   attr_accessor :in_setting_site_link_check
+  attr_accessor :in_setting_site_kana_talk
 
   SITE_SETTINGS = [
     :admin_protocol, :basic_auth_state, :common_ssl, :allowed_attachment_type,
-    :admin_mail_sender, :file_upload_max_size, :extension_upload_max_size, :link_check
+    :admin_mail_sender, :file_upload_max_size, :extension_upload_max_size, :link_check, :kana_talk
   ]
 
   def self.included(mod)
@@ -75,6 +76,15 @@ module Cms::Model::Rel::SiteSetting
     Cms::SiteSetting::LINK_CHECK_OPTIONS.rassoc(setting_site_link_check).try(:first)
   end
 
+  def setting_site_kana_talk
+    setting = Cms::SiteSetting.where(:site_id => id, :name => 'kana_talk').first
+    setting ? setting.value : 'enabled';
+  end
+
+  def setting_site_kana_talk_label
+    Cms::SiteSetting::KANA_TALK_OPTIONS.rassoc(setting_site_kana_talk).try(:first)
+  end
+
   def get_upload_max_size(ext)
     ext.gsub!(/^\./, '')
     list = ext_upload_max_size_list
@@ -110,6 +120,7 @@ module Cms::Model::Rel::SiteSetting
     @in_setting_site_extension_upload_max_size   = setting_site_extension_upload_max_size
     @in_setting_site_allowed_attachment_type     = setting_site_allowed_attachment_type
     @in_setting_site_link_check                  = setting_site_link_check
+    @in_setting_site_kana_talk                   = setting_site_kana_talk
   end
 
   def save_site_settings(options={})

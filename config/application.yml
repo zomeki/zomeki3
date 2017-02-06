@@ -27,13 +27,6 @@ cms:
   #ページ数付きページ書き出し数
   publish_more_pages: 10
 
-  # Kana, Talk
-  use_kana: true
-  use_kana_exclude_site_ids:
-#    - 1
-#    - 2
-#    - 3
-
   # Accessibility check setting
   enable_accessibility_check: true
 
