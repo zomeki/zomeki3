@@ -178,7 +178,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
     _publish(@item) do
       publish_ruby(@item)
-      @item.rebuild(render_public_as_string(@item.public_uri, site: item.content.site, agent_type: :smart_phone),
+      @item.rebuild(render_public_as_string(@item.public_uri, site: @item.content.site, agent_type: :smart_phone),
                     path: @item.public_smart_phone_path, dependent: :smart_phone)
       sync_events_export
     end
