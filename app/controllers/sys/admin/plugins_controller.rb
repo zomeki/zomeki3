@@ -65,15 +65,15 @@ class Sys::Admin::PluginsController < Cms::Controller::Admin::Base
   end
 
   def bundle_install
-    # prevent bundler/setup
-    rubyopt = ENV['RUBYOPT']
-    ENV['RUBYOPT'] = nil
+    # remove bundler/setup and gem path
+    tmp = ENV.to_h.slice('RUBYOPT', 'GEM_PATH')
+    tmp.each { |key, _| ENV[key] = nil }
 
     require 'open3'
     stdout, stderr, status = Open3.capture3("bundle install")
     status.success?
   ensure
-    ENV['RUBYOPT'] = rubyopt if rubyopt
+    tmp.each { |key, val| ENV[key] = val if val }
   end
 
   def restart_application
