@@ -4,7 +4,7 @@ namespace :delayed_job do
   end
 
   def delayed_job_options
-    "--pool=sys_tasks:1 --pool=cms_rebuild:1 --pool=*:#{pool_size}"
+    "--pool=sys_tasks:1 --pool=cms_rebuild:1 --pool=cms_publisher:#{pool_size}"
   end
 
   def pool_size
@@ -12,7 +12,7 @@ namespace :delayed_job do
   end
 
   def max_memory
-    (ENV['DELAYED_JOB_MAX_MEMORY'] || 1024**2).to_i
+    (ENV['DELAYED_JOB_MAX_MEMORY'] || 1024*512).to_i
   end
 
   def start
