@@ -41,8 +41,7 @@ class Cms::Public::CommonSslController < ApplicationController
                                              agent_type: Page.smart_phone? ? :smart_phone : :pc)
     return redirect_to(rendered.redirect_url) if rendered.redirect_url
 
-    response.body = rendered.body
-    response.content_type = rendered.content_type unless rendered.class == String
-    render html: response.body.html_safe, layout: false
+    response.content_type = rendered.content_type if rendered.respond_to?(:content_type)
+    self.response_body = rendered.body
   end
 end

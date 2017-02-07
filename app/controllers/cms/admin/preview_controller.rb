@@ -57,9 +57,8 @@ class Cms::Admin::PreviewController < Cms::Controller::Admin::Base
     rendered = Sys::Lib::Controller.dispatch(ctl, act, params: params, base_url: request.base_url)
     return redirect_to(rendered.redirect_url) if rendered.redirect_url
 
-    response.body = rendered.body
     response.content_type = rendered.content_type if rendered.respond_to?(:content_type)
-    render html: response.body.html_safe, layout: false
+    self.response_body = rendered.body
   end
 
 private
