@@ -18,11 +18,12 @@
   <tr>
     <th>承認者</th>
     <td>
-      <div style="margin-bottom: 10px;"><%= select_tag 'groups', options_for_select(Core.site.groups_for_option), prompt: '-- グループを選択してください --', name: nil %></div>
-
+      <div style="margin-bottom: 10px;">
+        <%= select_tag 'groups', options_for_select(Core.site.groups_for_option), prompt: '-- グループを選択してください --', name: nil %>
+      </div>
       <div>
         ユーザー<br />
-        <%= select_tag 'candidates', options_for_select([]), multiple: true, style: 'height: 150px; width: 150px;' %>
+        <%= select_tag 'candidates', options_for_select([]), multiple: true, style: 'height: 150px; width: 250px;' %>
       </div>
       <div style="margin: 10px;">
         <span><%= button_tag '▼追加', type: :button, onclick: "$('#approvals_0 > option').attr('selected', false); $('#candidates > option:selected').attr('selected', true).appendTo($('#approvals_0'));" %></span>
@@ -132,7 +133,7 @@ $(document).ready(function () {
       $('#candidates').html('<option value=""></option>');
     } else {
       $('#candidates').html('<option value="">更新中...</option>');
-      $.get('<%= sys_group_users_path(parent: 'PARENT', options: true) %>'.replace('PARENT', group_id), function (data) {
+      $.get('<%= url_for(action: :index, user_options: true) %>', { group_id: group_id }, function(data) {
         $('#candidates').html(data);
       });
     }

@@ -111,6 +111,8 @@ ActiveRecord::Schema.define(version: 20170201091140) do
     t.datetime "approved_at"
     t.integer  "or_group_id"
     t.integer  "selected_index"
+    t.integer  "group_id"
+    t.string   "assign_type"
     t.index ["assignable_type", "assignable_id"], name: "index_approval_assignments_on_assignable_type_and_assignable_id", using: :btree
     t.index ["selected_index"], name: "index_approval_assignments_on_selected_index", using: :btree
     t.index ["user_id"], name: "index_approval_assignments_on_user_id", using: :btree

@@ -24,12 +24,40 @@ class Approval::Approval < ApplicationRecord
   end
 
   def approvers_label
-    a = assignments.group_by(&:or_group_id).map { |_, assigns| assigns.map(&:user_label).join(" or ") }
-    if approval_type_select?
-      (a.size > 1) ? "[#{a.map{|aa| aa =~ / or / ? "（#{aa}）" : aa }.join(' or ')}]" : a.join
-    else
-      a.join(" and ")
+    approvers = assignments.group_by(&:or_group_id).map do |_, asns|
+      asns.map(&:assigner_label).join(' or ')
     end
+    if approval_type_select?
+      "[#{approvers.join(', ')}]"
+    else
+      approvers = approvers.map { |a| "(#{a})" } if approvers.size > 1
+      approvers.join(' and ')
+    end
+  end
+
+  def approvers_label_for_fix
+    approvers = []
+    assignments.group_by(&:or_group_id).each do |_, asns|
+      approvers << asns.flat_map(&:assigners).map(&:name).join(' or ')
+    end
+    approvers.join(' and ')
+  end
+
+  def approvers_options_for_select
+    opts = []
+    assignments.group_by(&:or_group_id).map do |_, asns|
+      if asns.size == 1 && asns.first.assign_type_group_users?
+        asns.flat_map(&:assigners).each do |user|
+          opts << [user.name, user.id.to_s] if user != Core.user
+        end
+      else
+        assigners = asns.flat_map(&:assigners) - [Core.user]
+        label = assigners.map(&:name).join(' or ')
+        value = assigners.map(&:id).join(',')
+        opts << [label, value]
+      end
+    end
+    opts.uniq
   end
 
   private

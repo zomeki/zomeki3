@@ -7,6 +7,8 @@ class Approval::Admin::ApprovalFlowsController < Cms::Controller::Admin::Base
   end
 
   def index
+    return user_options if params[:user_options]
+
     @items = @content.approval_flows.paginate(page: params[:page], per_page: 30).order(:sort_no)
     _index @items
   end
@@ -42,21 +44,33 @@ class Approval::Admin::ApprovalFlowsController < Cms::Controller::Admin::Base
 
   private
 
+  def user_options
+    group = Sys::Group.find(params[:group_id])
+    options = [["*自所属ユーザー", "gu0"],["*#{group.name}所属ユーザー", "gu#{group.id}"]] + group.users.map { |u| [u.name, u.id] }
+    render plain: view_context.options_for_select(options), layout: false
+  end
+
   def set_approvals
     return unless params[:approvals]
 
     indexes = params[:approvals].keys
-    @item.approvals.each{|a| a.destroy unless indexes.include?(a.index.to_s) }
+    @item.approvals.each { |a| a.destroy unless indexes.include?(a.index.to_s) }
 
     params[:approvals].each do |key, value|
       next unless value.is_a?(Array)
-      approval = @item.approvals.find_by(index: key) || @item.approvals.create(index: key, approval_type: params[:approval_types][key])
+
+      approval = @item.approvals.where(index: key).first_or_initialize
       approval.approval_type = params[:approval_types][key]
       approval.save! if approval.changed?
       approval.assignments.destroy_all
-      value.each_with_index do |uids, ogid|
-        uids.split(",").each do |uid|
-          approval.assignments.create(user_id: uid, or_group_id: ogid)
+
+      value.each_with_index do |ids, ogid|
+        ids.split(",").each do |id|
+          if match = id.match(/^gu(\d+)/)
+            approval.assignments.create(group_id: match[1], or_group_id: ogid, assign_type: 'group_users')
+          else
+            approval.assignments.create(user_id: id, or_group_id: ogid, assign_type: 'user')
+          end
         end
       end
     end
