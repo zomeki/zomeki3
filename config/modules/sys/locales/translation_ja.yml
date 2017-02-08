@@ -5,6 +5,7 @@ ja:
       sys/group: "グループ"
       sys/role_name: "ロール"
       sys/object_privilege: "権限"
+      sys/plugin: "プラグイン"
     attributes:
 
       sys/sequence:
@@ -145,3 +146,13 @@ ja:
         success: "成功"
         error: "失敗"
         summary: "処理"
+
+      sys/plugin:
+        id: "ID"
+        name: "プラグイン名"
+        title: "タイトル"
+        version: "バージョン"
+        state: "状態"
+        note: "備考"
+        sort_no: "並び順"
+        created_at: "作成日時"

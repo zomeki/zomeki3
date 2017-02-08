@@ -1,0 +1,20 @@
+<table class="index">
+  <tr>
+    <th style="width: 60px; text-align: center;">詳細</th>
+    <th style="width: 200px;"><%= Sys::Plugin.human_attribute_name :name %></th>
+    <th style="width: ;"><%= Sys::Plugin.human_attribute_name :title %></th>
+    <th style="width: 250px;"><%= Sys::Plugin.human_attribute_name :version %></th>
+    <th style="width: 80px;"><%= Sys::Plugin.human_attribute_name :state %></th>
+    <th style="width: 120px; text-align: center;"><%= Sys::Plugin.human_attribute_name :created_at %></th>
+  </tr>
+  <%- @items.each do |item| -%>
+  <tr class="<%= cycle '', 'cycle' %>">
+    <td style="text-align: center;"><%= link_to :show, { action: :show, id: item } %></td>
+    <td><%= link_to_if item.state_enabled?, item.name, item.engine_route %></td>
+    <td><%= item.title %></td>
+    <td><%= item.version %></td>
+    <td><%= item.state_label %></td>
+    <td style="text-align: center;"><%=l item.created_at if item.created_at %></td>
+  </tr>
+  <%- end -%>
+</table>

@@ -1,0 +1,7 @@
+Rails.application.routes.draw do
+  <%- @plugins.each do |plugin| -%>
+  if defined?(<%= plugin.engine_class_name %>)
+    mount <%= plugin.engine_class_name %> => '<%= plugin.engine_route %>'
+  end
+  <%- end -%>
+end

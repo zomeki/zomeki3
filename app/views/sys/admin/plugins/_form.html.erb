@@ -1,0 +1,36 @@
+<p class="form">基本設定</p>
+
+<table class="show">
+  <tr>
+    <th><%= f.label :name %></th>
+    <td><%= f.select :name, Sys::Plugin.search_repos.map { |repo| [repo[:full_name], title: repo[:description]] }, include_blank: true %></td>
+  </tr>
+  <tr>
+    <th><%= f.label :title %></th>
+    <td><%= f.text_field :title, class: 'title' %></td>
+  </tr>
+  <tr>
+    <th><%= f.label :version %></th>
+    <td><%= f.select :version, @item.class.version_options(@item.name) %></td>
+  </tr>
+  <tr>
+    <th><%= f.label :state %></th>
+    <td><%= f.radio_buttons :state, @item.class::STATE_OPTIONS %></td>
+  </tr>
+  <tr>
+    <th><%= f.label :note %></th>
+    <td><%= f.text_area :note %></td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+$(function() {
+  $('#item_name').on('change', function () {
+    $('#item_title').val($(this).find('option:selected').attr('title'));
+    $('#item_version').html('<option>検索中...</option>');
+    $.get('<%= url_for(action: :index, version_options: true) %>', { name: $('#item_name').val() }, function(data) {
+      $('#item_version').html(data);
+    });
+  });
+});
+</script>

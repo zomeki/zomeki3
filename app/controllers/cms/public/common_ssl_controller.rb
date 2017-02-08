@@ -26,7 +26,7 @@ class Cms::Public::CommonSslController < ApplicationController
       node = Core.search_node(path)
       env  = {}
       env[:method] = :post if request.post?
-      opt  = _routes.recognize_path(node, env)
+      opt  = Rails.application.routes.recognize_path(node, env)
       ctl  = opt[:controller]
       act  = opt[:action]
 
@@ -37,7 +37,11 @@ class Cms::Public::CommonSslController < ApplicationController
       return redirect_to ::File.join(Page.site.full_uri, path) if node !~ /^\/_public\/survey\/node_forms/
     end
 
-    component_response = render_component :controller => ctl, :action => act, :params => params, :jpmobile => (Page.smart_phone? ? envs_to_request_as_smart_phone : nil)
-    response.content_type = component_response.content_type unless component_response.class == String
+    rendered = Sys::Lib::Controller.dispatch(ctl, act, params: params, base_url: request.base_url,
+                                             agent_type: Page.smart_phone? ? :smart_phone : :pc)
+    return redirect_to(rendered.redirect_url) if rendered.redirect_url
+
+    response.content_type = rendered.content_type if rendered.respond_to?(:content_type)
+    self.response_body = rendered.body
   end
 end

@@ -56,11 +56,8 @@ class Cms::KanaDictionary < ApplicationRecord
   end
 
   def self.dic_mtime(_site_id=nil)
-    pkey = "mecab_dic_mtime"
-    return Core.config[pkey] if Core.config[pkey]
-
     file = user_dic(_site_id)
-    return Core.config[pkey] = ::File.mtime(file)
+    ::File.mtime(file)
   end
 
   def convert_csv

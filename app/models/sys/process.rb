@@ -3,10 +3,10 @@ class Sys::Process < ApplicationRecord
   include Sys::Model::Base
 
   PROCESSE_LIST = [
-    ["日時指定処理" , "sys/script/tasks/exec"],
-    ["音声書き出し"  , "cms/script/talk_tasks/exec"],
-    ["アクセスランキング取り込み" , "rank/script/ranks/exec"],
-    ["フィード取り込み" , "feed/script/feeds/read"],
+    ["日時指定処理" , "sys/tasks/exec"],
+    ["音声書き出し"  , "cms/talk_tasks/exec"],
+    ["アクセスランキング取り込み" , "rank/ranks/exec"],
+    ["フィード取り込み" , "feed/feeds/read"],
   ]
 
   attr_accessor :title
