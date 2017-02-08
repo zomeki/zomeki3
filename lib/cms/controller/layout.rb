@@ -3,8 +3,8 @@ module Cms::Controller::Layout
 
   def render_public_as_string(path, options = {})
     site = options[:site]
-    return nil if path =~ /.r$/ && !site.use_kana?
-    return nil if path =~ /.mp3$/ && !site.use_talk?
+    return nil if path =~ /\.r$/ && !site.use_kana?
+    return nil if path =~ /\.mp3$/ && !site.use_talk?
 
     Core.publish = true unless options[:preview]
     mode = Core.set_mode('preview')
