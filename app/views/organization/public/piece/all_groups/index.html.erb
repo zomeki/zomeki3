@@ -2,11 +2,11 @@
 <ul>
   <%- @groups.each do |group| -%>
   <li>
-    <%= link_to group.sys_group.name, group.public_uri %>
+    <%= group_replace(group, @piece.list_style) %>
     <%- unless group.public_children.empty? -%>
     <ul>
       <%- group.public_children.each do |child| -%>
-      <%= group_li(child) %>
+      <%= group_li(child, @piece.list_style) %>
       <%- end -%>
     </ul>
     <%- end -%>

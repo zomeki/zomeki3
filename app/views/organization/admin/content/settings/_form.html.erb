@@ -38,3 +38,15 @@ $(function() {
   </tr>
 </table>
 <%- end -%>
+
+<%- if @item.name == 'list_style' -%>
+<%= render 'organization/admin/shared/group_list_style_tags' %>
+<%= javascript_tag do %>
+$(function() {
+  $('a.show_group_list_style_dialog').on('click', function() {
+    $('#group_list_style_tags').dialog({width: 400});
+    return false;
+  });
+});
+<%- end -%>
+<%- end -%>
