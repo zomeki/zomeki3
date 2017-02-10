@@ -24,14 +24,23 @@ class Approval::Approval < ApplicationRecord
   end
 
   def approvers_label
-    approvers = assignments.group_by(&:or_group_id).map do |_, asns|
-      asns.map(&:assigner_label).join(' or ')
+    approver_labels = assignments.group_by(&:or_group_id).map do |_, asns|
+      asns.map(&:assigner_label)
     end
+    approver_labels = approver_labels.map do |labels|
+      label = labels.join(' or ')
+      if approver_labels.size > 1 && labels.size > 1
+        "(#{label})"
+      else
+        label
+      end
+    end
+
+    label = approver_labels.join(' and ')
     if approval_type_select?
-      "[#{approvers.join(', ')}]"
+      "[#{label}]"
     else
-      approvers = approvers.map { |a| "(#{a})" } if approvers.size > 1
-      approvers.join(' and ')
+      label
     end
   end
 
