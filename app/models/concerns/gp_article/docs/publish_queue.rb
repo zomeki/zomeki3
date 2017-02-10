@@ -80,7 +80,7 @@ module GpArticle::Docs::PublishQueue
 
     changed_dates = [event_started_on, event_ended_on]
     changed_dates += [prev_edition.event_started_on, prev_edition.event_ended_on] if prev_edition
-    changed_dates.uniq!.compact!
+    changed_dates.uniq.compact!
 
     if changed_dates.present?
       min_date = changed_dates.min.beginning_of_month
