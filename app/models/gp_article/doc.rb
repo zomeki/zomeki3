@@ -167,6 +167,7 @@ class GpArticle::Doc < ApplicationRecord
 
     search_columns = [:name, :title, :body, :subtitle, :summary, :mobile_title, :mobile_body]
     rel = rel.search_with_logical_query(*search_columns, criteria[:free_word]) if criteria[:free_word].present?
+    rel = rel.where(serial_no: criteria[:serial_no]) if criteria[:serial_no].present?
 
     rel
   }
