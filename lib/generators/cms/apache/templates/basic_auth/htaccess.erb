@@ -1,0 +1,8 @@
+<FilesMatch "^(?!<%= ZomekiCMS::ADMIN_URL_PREFIX %>)">
+    AuthUserFile <%= @site.basic_auth_htpasswd_path %>
+    AuthGroupFile /dev/null
+    AuthName "Please enter your ID and password"
+    AuthType Basic
+    require valid-user
+    allow from all
+</FilesMatch>

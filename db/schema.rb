@@ -604,6 +604,7 @@ ActiveRecord::Schema.define(version: 20170201091140) do
     t.string   "spp_target"
     t.string   "google_map_api_key"
     t.string   "admin_full_uri"
+    t.string   "smart_phone_layout"
   end
 
   create_table "cms_stylesheets", force: :cascade do |t|

@@ -27,9 +27,7 @@ module Cms::Model::Base::Page::Publisher
     params = params.size > 0 ? "?#{params.join('&')}" : ""
 
     path = "_preview/#{format('%04d', site.id)}#{mobile}#{public_uri}#{params}"
-
-    _core_uri = Cms::SiteSetting::AdminProtocol.core_domain site, :freeze_protocol => true
-    "#{_core_uri}#{path}"
+    "#{site.main_admin_uri}#{path}"
   end
 
   def publish_uri(options = {})
@@ -77,9 +75,6 @@ module Cms::Model::Base::Page::Publisher
     pub = publishers.where(dependent: options[:dependent] ? options[:dependent].to_s : nil).first
 
     return true if mobile_page?
-    if options[:dependent].to_s =~ /ruby\z/i
-      return true if !Zomeki.config.application['cms.use_kana']
-    end
     return true if hash && pub && hash == pub.content_hash && ::File.exist?(path)
 
 clean_statics = Zomeki.config.application['sys.clean_statics']

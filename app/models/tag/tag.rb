@@ -36,9 +36,7 @@ class Tag::Tag < ApplicationRecord
     return nil unless public_uri
     params = params.map{|k, v| "#{k}=#{v}" }.join('&')
     path = "_preview/#{format('%04d', site.id)}#{mobile ? 'm' : ''}#{public_uri}#{params.present? ? "?#{params}" : ''}"
-
-    d = Cms::SiteSetting::AdminProtocol.core_domain site, :freeze_protocol => true
-    "#{d}#{path}"
+    "#{site.main_admin_uri}#{path}"
   end
 
   def bread_crumbs(tag_node)

@@ -11,6 +11,7 @@ class Cms::Site < ApplicationRecord
   include StateText
 
   OGP_TYPE_OPTIONS = [['article', 'article'], ['product', 'product'], ['profile', 'profile']]
+  SMART_PHONE_LAYOUT_OPTIONS = [['スマートフォンレイアウトを優先', 'smart_phone'], ['PCレイアウトで表示', 'pc']]
   SMART_PHONE_PUBLICATION_OPTIONS = [['書き出さない', 'no'], ['書き出す', 'yes']]
   SPP_TARGET_OPTIONS = [['トップページのみ書き出す', 'only_top'], ['すべて書き出す', 'all']]
 
@@ -40,7 +41,6 @@ class Cms::Site < ApplicationRecord
     class_name: 'Cms::Concept'
   has_many :public_root_concepts, -> { where(level_no: 1, state: 'public').order(:sort_no, :name, :id) },
     class_name: 'Cms::Concept'
-  has_many :admin_protocol_settings, class_name: 'Cms::SiteSetting::AdminProtocol'
   has_many :emergency_layout_settings, class_name: 'Cms::SiteSetting::EmergencyLayout'
 
   validates :state, :name, presence: true
@@ -57,28 +57,27 @@ class Cms::Site < ApplicationRecord
   after_save { save_cms_data_file(:site_image, :site_id => id) }
   after_destroy { destroy_cms_data_file(:site_image) }
 
-  ## file transfer
-  after_save { save_file_transfer(:site_id => id) }
-
-  ## site settings
-  after_save { save_site_settings(:site_id => id) }
-
   before_validation :fix_full_uri
   before_destroy :block_last_deletion
 
   after_save :generate_files
   after_destroy :destroy_files
-  after_save :generate_apache_configs
-  after_destroy :destroy_apache_configs
-  after_destroy :destroy_apache_admin_configs
-  after_save :generate_nginx_configs
-  after_destroy :destroy_nginx_configs
-  after_destroy :destroy_nginx_admin_configs
 
   after_create :make_concept
   after_create :make_site_belonging
   after_save :make_node
   after_save :copy_common_directory
+
+  scope :matches_to_domain, ->(domain) {
+    where([
+      arel_table[:full_uri].matches("http://#{domain}%"),
+      arel_table[:full_uri].matches("https://#{domain}%"),
+      arel_table[:mobile_full_uri].matches("http://#{domain}%"),
+      arel_table[:mobile_full_uri].matches("https://#{domain}%"),
+      arel_table[:admin_full_uri].matches("http://#{domain}%"),
+      arel_table[:admin_full_uri].matches("https://#{domain}%")
+    ].reduce(:or))
+  }
 
   def creatable?
     return false unless Core.user.has_auth?(:manager)
@@ -159,25 +158,8 @@ class Cms::Site < ApplicationRecord
     return url
   end
 
-  def site_domain?(script_uri)
-    return false if Cms::SiteSetting::AdminProtocol.core_domain?
-    parsed_uri = Addressable::URI.parse(script_uri)
-    parsed_uri.path = '/'
-
-    parsed_uri.scheme = 'http'
-    http_base = parsed_uri.to_s
-    parsed_uri.scheme = 'https'
-    https_base = parsed_uri.to_s
-    return true if site_domains.index(http_base).present? || site_domains.index(https_base).present?
-    return false
-  end
-
-  def site_domains
-    domains = []
-    domains << "#{full_uri}" if !full_uri.blank?
-    domains << "#{mobile_full_uri}" if !mobile_full_uri.blank?
-    domains << "#{admin_full_uri}" if !admin_full_uri.blank?
-    domains
+  def main_admin_uri
+    admin_full_uri.presence || full_uri
   end
 
   def related_sites(options = {})
@@ -195,229 +177,6 @@ class Cms::Site < ApplicationRecord
   def site_image_uri
     cms_data_file_uri(:site_image, :site_id => id)
   end
-
-  def self.all_with_full_uri(full_uri)
-    parsed_uri = Addressable::URI.parse(full_uri)
-    parsed_uri.path = '/'
-    parsed_uri.query = nil
-    parsed_uri.fragment = nil
-
-    parsed_uri.scheme = 'http'
-    http_base = parsed_uri.to_s
-    parsed_uri.scheme = 'https'
-    https_base = parsed_uri.to_s
-    sites = self.arel_table
-    if Cms::SiteSetting::AdminProtocol.core_domain?
-      self.where(sites[:full_uri].matches("#{http_base}%")
-                     .or(sites[:full_uri].matches("#{https_base}%"))
-                     .or(sites[:mobile_full_uri].matches("#{http_base}%"))
-                     .or(sites[:mobile_full_uri].matches("#{https_base}%")))
-          .order(:id)
-    else
-      self.where(sites[:full_uri].matches("#{http_base}%")
-                     .or(sites[:full_uri].matches("#{https_base}%"))
-                     .or(sites[:mobile_full_uri].matches("#{http_base}%"))
-                     .or(sites[:mobile_full_uri].matches("#{https_base}%"))
-                     .or(sites[:admin_full_uri].matches("#{http_base}%"))
-                     .or(sites[:admin_full_uri].matches("#{https_base}%")))
-          .order(:id)
-    end
-  end
-
-  def self.generate_apache_configs
-    all.each(&:generate_apache_configs)
-  end
-
-  def generate_apache_configs
-    virtual_hosts = Rails.root.join('config/apache/virtual_hosts')
-    unless (template = virtual_hosts.join('template.conf.erb')).file?
-      logger.warn 'VirtualHost template not found.'
-      return false
-    end
-    erb = ERB.new(template.read, nil, '-').result(binding)
-    virtual_hosts.join("site_#{'%04d' % id}.conf").write erb
-  end
-
-  def destroy_apache_configs
-    conf = Rails.root.join("config/apache/virtual_hosts/site_#{'%04d' % id}.conf")
-    return false unless conf.exist?
-    conf.delete
-  end
-
-  def self.generate_apache_admin_configs
-    all.each(&:generate_apache_admin_configs)
-  end
-
-  def generate_apache_admin_configs
-    return if admin_domain.blank?
-    virtual_hosts = Rails.root.join('config/apache/admin_virtual_hosts')
-    unless (template = virtual_hosts.join('template.conf.erb')).file?
-      logger.warn 'VirtualHost template not found.'
-      return false
-    end
-    erb = ERB.new(template.read, nil, '-').result(binding)
-    virtual_hosts.join("site_#{'%04d' % id}.conf").write erb
-  end
-
-  def destroy_apache_admin_configs
-    conf = Rails.root.join("config/apache/admin_virtual_hosts/site_#{'%04d' % id}.conf")
-    return false unless conf.exist?
-    conf.delete
-  end
-
-  def self.reload_nginx_servers
-    FileUtils.touch reload_servers_text_path
-  end
-
-  def self.reload_servers_text_path
-    Rails.root.join('tmp/reload_servers.txt')
-  end
-
-  def self.generate_nginx_configs
-    all.each(&:generate_nginx_configs)
-  end
-
-  def generate_nginx_configs
-    servers = Rails.root.join('config/nginx/servers')
-    unless (template = servers.join('template.conf.erb')).file?
-      logger.warn 'Server template not found.'
-      return false
-    end
-    erb = ERB.new(template.read, nil, '-').result(binding)
-    servers.join("site_#{'%04d' % id}.conf").write erb
-  end
-
-  def self.generate_nginx_admin_configs
-    all.each(&:generate_nginx_admin_configs)
-  end
-
-  def generate_nginx_admin_configs
-    servers = Rails.root.join('config/nginx/admin_servers')
-    unless (template = servers.join('template.conf.erb')).file?
-      logger.warn 'Server template not found.'
-      return false
-    end
-    erb = ERB.new(template.read, nil, '-').result(binding)
-    conf_file = servers.join("site_#{'%04d' % id}.conf")
-    if admin_domain.blank?
-      FileUtils.rm_f(conf_file)
-    else
-      conf_file.write erb
-    end
-  end
-
-  def destroy_nginx_configs
-    conf = Rails.root.join("config/nginx/servers/site_#{'%04d' % id}.conf")
-    return false unless conf.exist?
-    conf.delete
-  end
-
-  def destroy_nginx_admin_configs
-    conf = Rails.root.join("config/nginx/admin_servers/site_#{'%04d' % id}.conf")
-    return false unless conf.exist?
-    conf.delete
-  end
-
-  def basic_auth_user_enabled?
-    basic_auth_users.root_location.enabled.exists?
-  end
-
-  def system_basic_auth_user_enabled?
-    basic_auth_users.system_location.enabled.exists?
-  end
-
-  def directory_basic_auth_user_enabled?(directory)
-    basic_auth_users.directory_location.enabled.where(target_location: directory).exists?
-  end
-
-  def basic_auth_enabled?
-    pw_file = "#{::File.dirname(public_path)}/.htpasswd"
-    return ::File.exists?(pw_file)
-  end
-
-  def system_basic_auth_enabled?
-    pw_file = "#{::File.dirname(public_path)}/.htpasswd_system"
-    return ::File.exists?(pw_file)
-  end
-
-  def directory_basic_auth_enabled?(directory)
-    pw_file = "#{::File.dirname(public_path)}/.htpasswd_#{directory}"
-    return ::File.exists?(pw_file)
-  end
-
-  def enable_basic_auth
-    self.load_site_settings
-    self.in_setting_site_basic_auth_state = 'enabled'
-    self.save
-
-    ac_file = "#{::File.dirname(public_path)}/.htaccess"
-    pw_file = "#{::File.dirname(public_path)}/.htpasswd"
-
-    conf  = %Q(<FilesMatch "^(?!#{ZomekiCMS::ADMIN_URL_PREFIX})">\n)
-    conf += %Q(    AuthUserFile #{pw_file}\n)
-    conf += %Q(    AuthGroupFile /dev/null\n)
-    conf += %Q(    AuthName "Please enter your ID and password"\n)
-    conf += %Q(    AuthType Basic\n)
-    conf += %Q(    require valid-user\n)
-    conf += %Q(    allow from all\n)
-    conf += %Q(</FilesMatch>\n)
-    #conf += %Q(<FilesMatch "^_dynamic">\n)
-    #conf += %Q(    Order allow,deny\n)
-    #conf += %Q(    Allow from All\n)
-    #conf += %Q(    Satisfy Any\n)
-    #conf += %Q(</FilesMatch>\n)
-    Util::File.put(ac_file, :data => conf)
-
-    salt = Zomeki.config.application['sys.crypt_pass']
-    conf = ""
-    basic_auth_users.root_location.enabled.each do |user|
-      conf += %Q(#{user.name}:#{user.password.crypt(salt)}\n)
-    end
-
-    Util::File.put(pw_file, :data => conf)
-    enable_system_basic_auth(salt)
-    enable_directory_basic_auth(salt)
-    generate_nginx_configs
-    generate_nginx_admin_configs
-    Cms::Site.reload_nginx_servers
-    return true
-  end
-
-  def enable_system_basic_auth(salt)
-    system_pw_file = "#{::File.dirname(public_path)}/.htpasswd_system"
-    if auth_users = basic_auth_users.system_location.enabled
-      conf = ""
-      auth_users.system_location.where(state: 'enabled').each do |user|
-        conf += %Q(#{user.name}:#{user.password.crypt(salt)}\n)
-      end
-      Util::File.put(system_pw_file, :data => conf)
-    end
-  end
-
-  def enable_directory_basic_auth(salt)
-    if auth_users = basic_auth_users.directory_auth
-      auth_users.each do |d|
-        directory_pw_file = "#{::File.dirname(public_path)}/.htpasswd_#{d.target_location}"
-        conf = ""
-        basic_auth_users.directory_location.enabled.where(target_location: d.target_location).each do |user|
-          conf += %Q(#{user.name}:#{user.password.crypt(salt)}\n)
-        end
-        Util::File.put(directory_pw_file, :data => conf)
-      end
-    end
-  end
-
-  def disable_basic_auth
-    self.load_site_settings
-    self.in_setting_site_basic_auth_state = 'disabled'
-    self.save
-    ac_file = "#{::File.dirname(public_path)}/.htaccess"
-    FileUtils.rm_f(ac_file)
-    generate_nginx_configs
-    generate_nginx_admin_configs
-    return true
-  end
-
 
   def last?
     self.class.count == 1
@@ -464,6 +223,14 @@ class Cms::Site < ApplicationRecord
     OGP_TYPE_OPTIONS.detect{|o| o.last == self.og_type }.try(:first).to_s
   end
 
+  def smart_phone_layout_text
+    SMART_PHONE_LAYOUT_OPTIONS.rassoc(smart_phone_layout).try(:first).to_s
+  end
+
+  def smart_phone_layout_same_as_pc?
+    smart_phone_layout == 'pc'
+  end
+
   def smart_phone_publication_text
     SMART_PHONE_PUBLICATION_OPTIONS.detect{|o| o.last == smart_phone_publication }.try(:first).to_s
   end
@@ -484,6 +251,78 @@ class Cms::Site < ApplicationRecord
     spp_target == 'only_top'
   end
 
+  def apache_config_path
+    "config/apache/virtual_hosts/site_#{'%04d' % id}.conf"
+  end
+
+  def apache_admin_config_path
+    "config/apache/admin_virtual_hosts/site_#{'%04d' % id}.conf"
+  end
+
+  def nginx_config_path
+    "config/nginx/servers/site_#{'%04d' % id}.conf"
+  end
+
+  def nginx_admin_config_path
+    "config/nginx/admin_servers/site_#{'%04d' % id}.conf"
+  end
+
+  def basic_auth_htaccess_path
+    "#{::File.dirname(public_path)}/.htaccess"
+  end
+
+  def basic_auth_htpasswd_path
+    "#{::File.dirname(public_path)}/.htpasswd"
+  end
+
+  def basic_auth_user_enabled?
+    basic_auth_users.root_location.enabled.exists?
+  end
+
+  def system_basic_auth_user_enabled?
+    basic_auth_users.system_location.enabled.exists?
+  end
+
+  def directory_basic_auth_user_enabled?(directory)
+    basic_auth_users.directory_location.enabled.where(target_location: directory).exists?
+  end
+
+  def basic_auth_enabled?
+    ::File.exists?(basic_auth_htpasswd_path)
+  end
+
+  def system_basic_auth_enabled?
+    ::File.exists?("#{basic_auth_htpasswd_path}_system")
+  end
+
+  def directory_basic_auth_enabled?(directory)
+    ::File.exists?("#{basic_auth_htpasswd_path}_#{directory}")
+  end
+
+  def basic_auth_state_enabled?
+    settings.where(name: 'basic_auth_state', value: 'enabled').exists?
+  end
+
+  def enable_basic_auth
+    self.load_site_settings
+    self.in_setting_site_basic_auth_state = 'enabled'
+    self.save
+  end
+
+  def disable_basic_auth
+    self.load_site_settings
+    self.in_setting_site_basic_auth_state = 'disabled'
+    self.save
+  end
+
+  def use_kana?
+    setting_site_kana_talk.in?(%w(enabled kana_only))
+  end
+
+  def use_talk?
+    setting_site_kana_talk == 'enabled'
+  end
+
   protected
 
   def fix_full_uri
@@ -499,6 +338,7 @@ class Cms::Site < ApplicationRecord
   private
 
   def set_defaults
+    self.smart_phone_layout ||= SMART_PHONE_LAYOUT_OPTIONS.first.last if self.has_attribute?(:smart_phone_layout)
     self.smart_phone_publication ||= SMART_PHONE_PUBLICATION_OPTIONS.first.last if self.has_attribute?(:smart_phone_publication)
     self.spp_target ||= SPP_TARGET_OPTIONS.first.last if self.has_attribute?(:spp_target)
   end
@@ -559,6 +399,21 @@ class Cms::Site < ApplicationRecord
       group.save
     else
       site_belongings.create(group_id: in_root_group_id)
+    end
+  end
+
+  class << self
+    def all_with_full_uri(full_uri)
+      uri = Addressable::URI.parse(full_uri)
+      matches_to_domain(uri.host).order(:id)
+    end
+
+    def reload_servers
+      FileUtils.touch reload_servers_text_path
+    end
+
+    def reload_servers_text_path
+      Rails.root.join('tmp/reload_servers.txt')
     end
   end
 end
