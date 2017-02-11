@@ -1,0 +1,9 @@
+<%- unless @items.empty? -%>
+<ul>
+  <%- @items.each do |item| -%>
+  <li><%= link_to item.word, item.public_uri %></li>
+  <%- end -%>
+</ul>
+<%- end -%>
+
+<%= paginate @items %>

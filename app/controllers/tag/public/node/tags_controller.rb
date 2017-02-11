@@ -6,13 +6,10 @@ class Tag::Public::Node::TagsController < Cms::Controller::Public::Base
   end
 
   def index
-    return render plain: '' if Core.publish
-
-    if @content.tags.empty?
-      http_error(404)
-    else
-      redirect_to Core.mode == 'preview' ? @content.tags.first.preview_uri : @content.tags.first.public_uri
-    end
+    @items = @content.tags
+                     .paginate(page: params[:page], per_page: 50)
+                     .preload_assocs(:public_node_ancestors_assocs)
+    return http_error(404) if @items.current_page > @items.total_pages
   end
 
   def show
