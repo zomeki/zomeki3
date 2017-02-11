@@ -35,6 +35,7 @@ class Sys::Admin::GroupUsersController < Cms::Controller::Admin::Base
   
   def create
     @item = Sys::User.new(user_params)
+    @item.ldap = 0
     _create(@item, :location => sys_groups_path(@parent))
   end
   
