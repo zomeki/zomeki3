@@ -16,6 +16,7 @@ category_ids = params.dig(:criteria, :category_ids) || []
 <%= hidden_field_tag :detail_flag, params[:detail_flag] %>
 <table>
   <tr>
+    <th>記事番号</th>
     <th>タイトル・内容・ディレクトリ名など</th>
     <%- if @content.visible_category_types.present? -%>
     <th>カテゴリ種別</th>
@@ -29,6 +30,7 @@ category_ids = params.dig(:criteria, :category_ids) || []
     </td>
   </tr>
   <tr>
+    <td><%= text_field_tag 'criteria[serial_no]', params.dig(:criteria, :serial_no), style: 'width: 100px;' %></td>
     <td><%= text_field_tag 'criteria[free_word]', params.dig(:criteria, :free_word), style: 'width: 400px;' %></td>
     <%- if @content.visible_category_types.present? -%>
     <td>
