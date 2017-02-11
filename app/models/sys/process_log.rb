@@ -2,7 +2,6 @@ class Sys::ProcessLog < ApplicationRecord
   include Sys::Model::Base
 
   belongs_to :user, class_name: 'Sys::User'
-  belongs_to :parent, foreign_key: :parent_id, class_name: 'Sys::Process'
   attr_accessor :title
 
   PROCESSE_LIST = [
@@ -12,8 +11,8 @@ class Sys::ProcessLog < ApplicationRecord
     ["フィード取り込み", "feed/feeds/read"],
     ["問合せ取り込み", "survey/answers/pull"],
     ["広告クリック数取り込み", "ad_banner/clicks/pull"],
-    ["関連ページ書き出し", "/publish"],
-    ["関連ページ書き出し", "/publish_doc"],
+    ["関連ページ書き出し", "cms/nodes/publish"],
+    ["記事ページ書き出し", "gp_article/docs/publish_doc"],
     ["再構築", "/rebuild"]
   ]
 

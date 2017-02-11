@@ -11,16 +11,15 @@
     <th style="width: 80px;"><%= Sys::ProcessLog.human_attribute_name :total %></th>
     <th style="width: 60px;"><%= Sys::ProcessLog.human_attribute_name :success %></th>
     <th style="width: 60px;"><%= Sys::ProcessLog.human_attribute_name :error %></th>
-
   </tr>
   <% @items.each do |item| %>
   <tr class="<%= cycle '', 'cycle' %>">
-    <td style="text-align: center;"><%= link_to :show, sys_process_log_path(:id => item.id) %></td>
+    <td style="text-align: center;"><%= link_to :show, { action: :show, id: item.id } %></td>
     <td><%= item.name %></td>
     <td><%= item.summary_lael %></td>
-    <td style="text-align: center;"><%= safe{item.started_at.strftime('%Y-%m-%d %H:%M')} %></td>
-    <td style="text-align: center;"><%= safe{item.updated_at.strftime('%Y-%m-%d %H:%M')} %></td>
-    <td style="text-align: center;"><%= safe{item.closed_at.strftime('%Y-%m-%d %H:%M')} %></td>
+    <td style="text-align: center;"><%=l item.started_at if item.started_at %></td>
+    <td style="text-align: center;"><%=l item.updated_at if item.updated_at %></td>
+    <td style="text-align: center;"><%=l item.closed_at if item.closed_at %></td>
     <td style="text-align: center;"><%= item.current %><%= "/#{item.total}" if item.total %></td>
     <td style="text-align: center;"><%= item.success %></td>
     <td style="text-align: center;"><%= item.error %></td>
