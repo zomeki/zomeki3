@@ -58,11 +58,6 @@ class GpTemplate::Admin::TemplatesController < Cms::Controller::Admin::Base
     end
   end
 
-  def form
-    @template_values = params[:item] && params[:item][:template_values] ? params[:item][:template_values] : {}
-    render 'form', :layout => false
-  end
-
   private
 
   def template_params

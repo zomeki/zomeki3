@@ -14,12 +14,15 @@ ZomekiCMS::Application.routes.draw do
     resources(:templates,
       :controller => 'admin/templates',
       :path       => ':content/templates') do
-      member do
-        post :form
-        put :form
-      end
       resources :items,
         :controller => 'admin/items'
+      resources :forms,
+        :controller => 'admin/forms' do
+        collection do
+          post :build
+          put :build
+        end
+      end
     end
   end
 end
