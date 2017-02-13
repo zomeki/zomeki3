@@ -3,44 +3,44 @@
 <div class="actionMenu">
 <%- case action_name -%>
 <%- when 'index' -%>
-  <%= link_to '新規作成', new_gp_article_doc_path %>
+  <%= link_to '新規作成', { action: :new } %>
   <span class="separator"></span>
-  <%= link_to '作成記事', gp_article_docs_path(target: 'user', target_state: params[:target_state], target_public: nil), (params[:target] == 'user' ? {class: 'current'} : {}) %>
-  <%= link_to '所属記事', gp_article_docs_path(target: 'group', target_state: params[:target_state], target_public: nil), (params[:target] == 'group' ? {class: 'current'} : {}) %>
+  <%= link_to '作成記事', { target: 'user', target_state: params[:target_state], target_public: nil }, (params[:target] == 'user' ? {class: 'current'} : {}) %>
+  <%= link_to '所属記事', { target: 'group', target_state: params[:target_state], target_public: nil }, (params[:target] == 'group' ? {class: 'current'} : {}) %>
   <%- if Core.user.has_auth?(:manager) -%>
-  <%= link_to '全所属', gp_article_docs_path(target: 'all', target_state: params[:target_state], target_public: nil), (params[:target] == 'all' ? {class: 'current'} : {}) %>
+  <%= link_to '全所属', { target: 'all', target_state: params[:target_state], target_public: nil }, (params[:target] == 'all' ? {class: 'current'} : {}) %>
   <%- end -%>
   <span class="separator"></span>
-  <%= link_to '公開前', gp_article_docs_path(target: params[:target], target_state: 'processing', target_public: nil), (params[:target_state] == 'processing' ? {class: 'current'} : {}) %>
-  <%= link_to '公開中', gp_article_docs_path(target: params[:target], target_state: 'public', target_public: nil), (params[:target_state] == 'public' ? {class: 'current'} : {}) %>
-  <%= link_to '公開終了', gp_article_docs_path(target: params[:target], target_state: 'finish', target_public: nil), (params[:target_state] == 'finish' ? {class: 'current'} : {}) %>
-  <%= link_to '全記事', gp_article_docs_path(target: params[:target], target_state: 'all', target_public: nil), (params[:target_state] == 'all' ? {class: 'current'} : {}) %>
+  <%= link_to '公開前', { target: params[:target], target_state: 'processing', target_public: nil }, (params[:target_state] == 'processing' ? {class: 'current'} : {}) %>
+  <%= link_to '公開中', { target: params[:target], target_state: 'public', target_public: nil }, (params[:target_state] == 'public' ? {class: 'current'} : {}) %>
+  <%= link_to '公開終了', { target: params[:target], target_state: 'finish', target_public: nil }, (params[:target_state] == 'finish' ? {class: 'current'} : {}) %>
+  <%= link_to '全記事', { target: params[:target], target_state: 'all', target_public: nil }, (params[:target_state] == 'all' ? {class: 'current'} : {}) %>
   <span class="separator"></span>
-  <%= link_to '公開記事', gp_article_docs_path(target: '', target_state: '', target_public: 1), (params[:target_public] == '1' ? {class: 'current'} : {}) %>
+  <%= link_to '公開記事', { target: '', target_state: '', target_public: 1 }, (params[:target_public] == '1' ? {class: 'current'} : {}) %>
 <%- when 'new', 'create' -%>
-  <%= link_to "#{GpArticle::Doc.model_name.human}一覧", gp_article_docs_path %>
+  <%= link_to "#{GpArticle::Doc.model_name.human}一覧", { action: :index } %>
 <%- when 'show' -%>
-  <%= link_to "#{GpArticle::Doc.model_name.human}一覧", gp_article_docs_path %>
+  <%= link_to "#{GpArticle::Doc.model_name.human}一覧", { action: :index } %>
   <%= link_to '履歴', gp_article_doc_histories_path(@content, @item) if @item.was_replaced? %>
   <span class="separator"></span>
-  <%= link_to '編集', edit_gp_article_doc_path, disable_with: '編集' if @item.try(:editable?) && !@item.will_be_replaced? %>
-  <%= link_to '削除', gp_article_doc_path, :method => :delete, :confirm => '削除してよろしいですか？' if @item.try(:deletable?) %>
-  <%= link_to '更新をキャンセル', gp_article_doc_path, :method => :delete, :confirm => '更新をキャンセルしてよろしいですか？' if @item.try(:deletable?) && @item.will_replace? %>
-  <%= link_to :duplicate, {:do => :duplicate}, :confirm => '複製してよろしいですか？' %>
-  <%= link_to '承認', approve_gp_article_doc_path, :method => :post, :confirm => '承認してよろしいですか？' if @item.state_approvable? &&
-                                                                                                        @item.approvers.include?(Core.user) %>
+  <%= link_to '編集', { action: :edit }, disable_with: '編集' if @item.try(:editable?) && !@item.will_be_replaced? %>
+  <%= link_to '削除', { action: :destroy }, method: :delete, confirm: '削除してよろしいですか？' if @item.try(:deletable?) %>
+  <%= link_to '更新をキャンセル', { action: :destroy }, method: :delete, confirm: '更新をキャンセルしてよろしいですか？' if @item.try(:deletable?) && @item.will_replace? %>
+  <%= link_to :duplicate, { do: :duplicate}, confirm: '複製してよろしいですか？' %>
+  <%= link_to '承認', { action: :approve }, method: :post, confirm: '承認してよろしいですか？' if @item.state_approvable? &&
+                                                                                           @item.approvers.include?(Core.user) %>
   <%-
   task = @item.tasks.find_by(name: 'publish')
   pubmsg = task ? "公開日時が設定されています。\n（ #{task.process_at.strftime('%Y-%m-%d %H:%M')} ）\n直ちに公開してよろしいですか？" : '公開してよろしいですか？'
   -%>
-  <%= link_to :publish, publish_gp_article_doc_path, :method => :post, :confirm => pubmsg if (@item.state_approved? || @item.state_prepared?) &&
-                                                                                             @item.approval_participators.include?(Core.user) %>
-  <%= link_to :finish, {:do => :close}, :confirm => '公開を終了してよろしいですか？' if @item.closable? %>
+  <%= link_to :publish, { action: :publish }, method: :post, confirm: pubmsg if (@item.state_approved? || @item.state_prepared?) &&
+                                                                                 @item.approval_participators.include?(Core.user) %>
+  <%= link_to :finish, { do: :close }, confirm: '公開を終了してよろしいですか？' if @item.closable? %>
 <%- when 'edit', 'update' -%>
-  <%= link_to "#{GpArticle::Doc.model_name.human}一覧", gp_article_docs_path %>
+  <%= link_to "#{GpArticle::Doc.model_name.human}一覧", { action: :index } %>
   <span class="separator"></span>
-  <%= link_to '詳細', gp_article_doc_path %>
-  <%= link_to '更新をキャンセル', gp_article_doc_path, :method => :delete, :confirm => '更新をキャンセルしてよろしいですか？' if @item.try(:deletable?) && @item.will_replace? %>
+  <%= link_to '詳細', { action: :show } %>
+  <%= link_to '更新をキャンセル', { action: :destroy }, method: :delete, confirm: '更新をキャンセルしてよろしいですか？' if @item.try(:deletable?) && @item.will_replace? %>
   <span class="separator"></span>
   <%= link_to 'プレビュー(PC)', @item.preview_uri,
               target: 'preview' if @item.terminal_pc_or_smart_phone && @content.public_node && @item.preview_uri.present? %>
