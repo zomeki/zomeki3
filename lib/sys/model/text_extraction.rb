@@ -27,7 +27,7 @@ module Sys::Model::TextExtraction
     return unless File.extname(path.to_s).in?(EXTNAMES) && File.exists?(path.to_s) && mime_type.in?(MIME_TYPES)
 
     jar = Rails.root.join('vendor/tika/tika-app.jar')
-    result = `java -jar #{jar} --text #{path}`
+    result = `java -XX:TieredStopAtLevel=1 -Xverify:none -jar #{jar} --text #{path}`
     update_column :extracted_text, result
   rescue => e
     warn_log e.message

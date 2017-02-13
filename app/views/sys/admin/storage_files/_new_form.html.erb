@@ -39,6 +39,32 @@ $(function(){
   $('a#newUpload').click(function(){
     var html = $('#newForm table.upload').length ? '' : $('#newUploadTemplate').html();
     $('#newForm').html(html);
+    $('#newForm [id=upload_overwrite]').attr('id', "upload_overwrite_check");
+    $('#newForm [for=upload_overwrite]').attr('for', "upload_overwrite_check");
+    $('#newForm [id=open_zip]').attr('id', "open_zip_check");
+    $('#newForm [for=open_zip]').attr('for', "open_zip_check");
+    $('#newForm #sizeError').attr('id', "sizeErrorMsg");
+
+    $("#newForm input[type=file]").on('change', function () {
+      var files = $("#newForm input[type=file]")[0].files;
+      var length = files.length;
+      var total_size = 0;
+      if (length > 0) {
+        for (var i = 0; i < length; i++) {
+          total_size = total_size + files[i].size;
+        }
+        if (total_size > 104857600) {
+          msg = "選択したファイルの合計サイズが容量制限を超えています。<br />一度にアップロードできる合計ファイルサイズは100MBまでです。";
+          $("#sizeErrorMsg").html(msg);
+          $('#newForm [type=submit]').prop('disabled', true);
+        } else {
+          $("#sizeErrorMsg").html('');
+          $('#newForm [type=submit]').prop('disabled', false);
+        }
+      }
+      return false;
+    });
+
     return false;
   });
 });
@@ -64,17 +90,54 @@ $(function(){
   </table>
 </div>
 <div id="newUploadTemplate" style="display: none;">
+  <div id="sizeError" class="alert"></div>
   <table class="upload">
     <tr>
       <th>アップロード</th>
-      <td><input name="item[new_upload]" type="file" size="50" /></td>
-      <td><input type="submit" name="upload_file" value="アップロード" onclick="return checkFilename();" /></td>
+      <td><%= file_field_tag 'item[new_upload][]', id: 'files', multiple: true, required: true, style: 'width: 500px;' %></td>
+      <td>
+        <input type="submit" name="upload_file" value="アップロード" />
+        <div>
+          <p>
+            <input id="upload_overwrite" type="checkbox" name="item[upload_overwrite]" value="upload_overwrite">
+            <label for="upload_overwrite">上書き保存を認める</label>
+          </p>
+          <p>
+            <input id="open_zip" type="checkbox" value="skip" name="item[open_zip]">
+            <label for="open_zip">ZIPファイルを展開しない</label>
+          </p>
+        </div>
+      </td>
     </tr>
   </table>
 </div>
 <% end %>
 
 <%= form_for :item, :url => "", :html => {:method => :post, :multipart => true} do |f| %>
-<%= error_messages_for :item %>
-<div id="newForm"></div>
+  <%= error_messages_for :item %>
+
+  <%- if @notice -%><div class="notice"><%== @notice -%></div><%- end -%>
+
+  <%- if @unzip_results && @unzip_results.size > 0 -%>
+  <div class="notice">
+    <%= "#{@unzip_results.size}" -%>件のZIPファイルを展開してアップロードしました。<br />
+    <%- @unzip_results.each do |zip| -%>
+      ▼<%= zip[:name] -%>：ZIPファイルを展開してアップロードします。<br />
+      <%- if zip[:res].size > 0 -%><ul style="list-style-type: square;"><%- zip[:res].each do |res| -%>
+        <li><%= res[:name] -%>：<span style="<%= "color: red;" if res[:status] == 'NG' %>"><%= res[:msg] -%></span></li>
+      <%- end -%></ul><%- end -%>
+    <%- end -%>
+  </div>
+  <%- end -%>
+
+  <%- unless @errors.blank? -%>
+    <div class="alert">
+      <%= @errors.size.to_s -%>件のエラーがあります。<br />
+      <ul style="list-style-type: square;">
+      <%- @errors.each do |error| -%>
+      <li><%= error[:name] -%>：<%= error[:msg] -%></li>
+      <%- end -%></ul>
+    </div>
+  <%- end -%>
+  <div id="newForm"></div>
 <% end %>
