@@ -125,7 +125,7 @@ module Cms::Model::Rel::SiteSetting
     SITE_SETTINGS.each do |name|
       v = instance_variable_get("@in_setting_site_#{name}")
       next unless v
-      setting = Cms::SiteSetting.where(site_id: id, name: name).first
+      setting = Cms::SiteSetting.where(site_id: id, name: name).first_or_initialize
       setting.value = v
       setting.save
     end
