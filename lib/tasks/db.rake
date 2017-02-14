@@ -1,7 +1,7 @@
 namespace :zomeki do
   namespace :db do
     namespace :site do
-      desc 'Dump site.'
+      desc 'Dump site (options: SITE_ID=x, DIR=x)'
       task :dump => :environment do
         site = Cms::Site.find(ENV['SITE_ID'])
         id_map = load_id_map(site)
@@ -20,7 +20,7 @@ namespace :zomeki do
         puts "done."
       end
 
-      desc 'Dump all sites.'
+      desc 'Dump all sites (options: DIR=x)'
       task :dump_all => :environment do
         Cms::Site.order(:id).each do |site|
           ENV['SITE_ID'] = site.id.to_s
@@ -29,7 +29,7 @@ namespace :zomeki do
         end
       end
 
-      desc 'Restore site.'
+      desc 'Restore site  (options: SITE_ID=x, DIR=x)'
       task :restore => :environment do
         site = Cms::Site.find(ENV['SITE_ID'])
         id_map = load_id_map(site)
