@@ -10,7 +10,7 @@ module Cms::Model::Base::Page::TalkTask
     pub = publishers.where(dependent: options[:dependent] ? options[:dependent].to_s : nil).first
     return true unless pub
     return true if pub.path !~ /\.html\z/
-    return true unless Page.site.use_talk?
+    return true unless pub.site.use_talk?
     #return true if !published? && ::File.exist?("#{pub.path}.mp3")
 
     path = "#{pub.path}.mp3"
@@ -27,7 +27,7 @@ module Cms::Model::Base::Page::TalkTask
       task = talk_tasks.find_or_initialize_by(dependent: pub.dependent)
       task.path         = pub.path
       task.content_hash = pub.content_hash
-      task.site_id      = Page.site.id
+      task.site_id      = pub.site_id
       task.save
     end
     return true

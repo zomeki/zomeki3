@@ -7,6 +7,14 @@ class Sys::Publisher < ApplicationRecord
   before_save :check_path
   before_destroy :remove_files
 
+  def site_id
+    path.scan(%r{^./sites/(\d+)}).dig(0, 0).try!(:to_i)
+  end
+
+  def site
+    @site ||= Cms::Site.find_by(id: site_id)
+  end
+
   def modify_path
     self.path = path.gsub(/^#{Rails.root.to_s}/, '.')
   end
