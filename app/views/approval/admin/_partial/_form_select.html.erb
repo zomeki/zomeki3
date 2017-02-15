@@ -3,18 +3,14 @@ in_name = "item[in_approval_assignment_ids][#{approval_flow.id}][#{approval.id}]
 e1_name = "assignments1_#{approval.id}"
 e2_name = "assignments2_#{approval.id}"
 
-user_opts = []
-approval.assignments.group_by(&:or_group_id).map do |_, assignments|
-  user_opts << [assignments.map(&:user_label).join('or'), assignments.map(&:user_id_label).join(',')]
-end
-user_opts.uniq!
+user_opts = approval.approvers_options_for_select
 
 e2_list =
   if (assignments = params.dig(:item, :in_approval_assignment_ids, approval_flow.id.to_s, approval.id.to_s))
     assignments.to_s.split(' ').uniq
   elsif (request = item.approval_requests.find_by(approval_flow_id: approval_flow.id))
     request.selected_assignments.where(selected_index: approval.index).group_by(&:or_group_id)
-      .map {|_, assignments| assignments.map(&:user_id_label).join(',') }.uniq
+      .map {|_, assignments| assignments.map(&:assigner_id).join(',') }.uniq
   else
     []
   end
@@ -26,7 +22,7 @@ e1_opt, e2_opt = user_opts.partition { |opt| !e2_list.include?(opt[1].to_s) }
 <table class="noDesign">
   <tr>
     <td>
-      <%= select_tag e1_name, options_for_select(e1_opt), multiple: true, style: "width: 240px; height: 140px;" %>
+      <%= select_tag e1_name, options_for_select(e1_opt), multiple: true, style: "width: 300px; height: 140px;" %>
     </td>
     <td>
       <input type="button" value="追加 →" id="add_<%= e2_name %>" /><br /><br />
@@ -34,7 +30,7 @@ e1_opt, e2_opt = user_opts.partition { |opt| !e2_list.include?(opt[1].to_s) }
     </td>
     <td>
       <div class="<%= 'field_with_errors' if item.errors['承認者'].size > 0 %>" style="display:block;">
-        <%= select_tag e2_name, options_for_select(e2_opt), multiple: true, style: "width: 240px; height: 140px;" %>
+        <%= select_tag e2_name, options_for_select(e2_opt), multiple: true, style: "width: 300px; height: 140px;" %>
       </div>
     </td>
   </tr>

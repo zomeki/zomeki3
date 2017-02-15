@@ -8,7 +8,6 @@ class Sys::Admin::AccountController < Sys::Controller::Admin::Base
     @uri = @uri.gsub(/^http:\/\/[^\/]+/, '')
     return unless request.post?
 
-
     unless new_login(params[:account], params[:password])
       flash.now[:alert] = 'ユーザーＩＤ・パスワードを正しく入力してください。'
       respond_to do |format|
@@ -33,17 +32,6 @@ class Sys::Admin::AccountController < Sys::Controller::Admin::Base
 
     cookies.delete :sys_login_referrer
     Sys::OperationLog.log(request, :user => current_user)
-
-    unless current_user.root? || current_user.sites.include?(Core.site)
-      if Cms::SiteSetting::AdminProtocol.core_domain?
-        @uri = "#{admin_uri}?cms_navi[site]=#{current_user.site_ids.first}"
-      else
-        logger.warn %Q!"#{current_user.name}" doesn't belong to "#{Core.site.name}", logged out.!
-        logout
-        flash.now[:alert] = 'ユーザーＩＤ・パスワードを正しく入力してください。'
-        return
-      end
-    end
 
     respond_to do |format|
       format.html { redirect_to @uri }

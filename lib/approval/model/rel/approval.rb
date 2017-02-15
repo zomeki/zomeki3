@@ -119,10 +119,10 @@ module Approval::Model::Rel::Approval
 
   def save_approval_requests
     return if in_approval_flow_ids.blank?
+
     in_approval_flow_ids.reject!(&:blank?)
     in_approval_flow_ids.each do |approval_flow_id|
-      request = approval_requests.find_by(approval_flow_id: approval_flow_id) ||
-        approval_requests.create(user_id: Core.user.id, approval_flow_id: approval_flow_id)
+      request = approval_requests.where(approval_flow_id: approval_flow_id).first_or_create(user_id: Core.user.id)
 
       if in_approval_assignment_ids && (assignments = in_approval_assignment_ids[approval_flow_id])
         request.selected_assignments.destroy_all

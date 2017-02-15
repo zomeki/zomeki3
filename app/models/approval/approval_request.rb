@@ -91,11 +91,11 @@ class Approval::ApprovalRequest < ApplicationRecord
     selected_assignments.where(selected_index: current_index)
   end
 
-  def selected_assignments_label(approval)
-    selected_assignments.where(selected_index: approval.index)
-      .group_by(&:or_group_id)
-      .map { |_, assignments| assignments.map(&:user_label).join('or') }
-      .join(' and ')
+  def selected_approvers_label(approval)
+    approvers = selected_assignments.where(selected_index: approval.index).group_by(&:or_group_id).map do |_, asns|
+      asns.map(&:assigner_label).join(' or ')
+    end
+    approvers.join(' and ')
   end
 
   def current_approvable_approvers
@@ -125,18 +125,18 @@ class Approval::ApprovalRequest < ApplicationRecord
   def create_current_assignments
     current_assignments.destroy_all
 
-    load_current_assignments.each do |assignment|
-      current_assignments.create(user_id: assignment.user_id, or_group_id: assignment.or_group_id) 
-    end
-    reload # flush cache
-  end
-
-  def load_current_assignments
     if current_approval.approval_type_select?
-      assignments = current_selected_assignments
-      assignments.present? ? assignments : current_approval.assignments
+      current_selected_assignments.each do |asn|
+        current_assignments.create(user_id: asn.user_id, or_group_id: asn.or_group_id)
+      end
     else
-      current_approval.assignments
+      current_approval.assignments.each do |asn|
+        asn.assigners.each do |assigner|
+          current_assignments.create(user_id: assigner.id, or_group_id: asn.or_group_id)
+        end
+      end
     end
+
+    reload # flush cache
   end
 end

@@ -4,6 +4,11 @@ class Organization::Content::Setting < Cms::ContentSetting
     form_type: :radio_buttons,
     options: [['使用する', 'enabled'], ['使用しない', 'disabled']],
     default_value: 'disabled'
+  set_config :list_style,
+    name: "#{Organization::Group.model_name.human}一覧表示形式",
+    form_type: :text_area,
+    upper_text: '<a href="#" class="show_group_list_style_dialog">置き換えテキストを確認する</a>',
+    default_value: '@name_link@'
   set_config :doc_style,
     name: "#{GpArticle::Doc.model_name.human}表示形式",
     form_type: :text_area,

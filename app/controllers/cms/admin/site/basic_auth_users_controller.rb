@@ -41,6 +41,7 @@ class Cms::Admin::Site::BasicAuthUsersController < Cms::Controller::Admin::Base
 
   def enable_auth
     @site.enable_basic_auth
+    update_configs
 
     flash[:notice] = 'Basic認証を有効にしました。'
     redirect_to cms_site_basic_auth_users_path(@site)
@@ -48,6 +49,7 @@ class Cms::Admin::Site::BasicAuthUsersController < Cms::Controller::Admin::Base
 
   def disable_auth
     @site.disable_basic_auth
+    update_configs
 
     flash[:notice] = 'Basic認証を無効にしました。'
     redirect_to cms_site_basic_auth_users_path(@site)
@@ -66,9 +68,15 @@ class Cms::Admin::Site::BasicAuthUsersController < Cms::Controller::Admin::Base
         @site.disable_basic_auth
       end
     end
+
+    update_configs
   end
 
-  private
+  def update_configs
+    Rails::Generators.invoke('cms:apache:basic_auth', ['--force', "--site_id=#{@site.id}"])
+    Rails::Generators.invoke('cms:nginx:site_config', ['--force', "--site_id=#{@site.id}"])
+    Cms::Site.reload_servers
+  end
 
   def basic_auth_user_params
     params.require(:item).permit(

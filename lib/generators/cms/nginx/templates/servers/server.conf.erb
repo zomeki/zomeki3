@@ -1,0 +1,46 @@
+<%- zomeki_root = Rails.root -%>
+server {
+  listen 80;
+  server_name <%= @site.public_domains.join(' ') %>;
+  root <%= @site.public_path %>;
+  access_log <%= zomeki_root %>/log/access_site_<%= '%04d' % @site.id %>.log main;
+  error_log <%= zomeki_root %>/log/error_site_<%= '%04d' % @site.id %>.log warn;
+
+  include <%= zomeki_root %>/config/nginx/rewrite.conf;
+  include <%= zomeki_root %>/config/nginx/servers_common.conf;
+  include <%= zomeki_root %>/config/nginx/servers/site_<%= '%04d' % @site.id %>.d/*.conf;
+
+  location ~ ^/(<%= ZomekiCMS::ADMIN_URL_PREFIX %>|_preview) {
+    try_files $uri @proxy;
+    <%- if @site.use_basic_auth? && @site.system_basic_auth_user_enabled?  -%>
+    auth_basic_user_file <%= "#{::File.dirname(@site.public_path)}/.htpasswd_system" %>;
+    auth_basic "Please enter your ID and password";
+    <%- end -%>
+  }
+
+  <%- @site.basic_auth_users.directory_auth.each do |d|
+    next unless @site.directory_basic_auth_user_enabled?(d.target_location)
+    next unless @site.use_basic_auth? -%>
+  location ~ ^(/|/_mobile/|/_smartphone/)<%= d.target_location %>/ {
+    try_files $uri $uri/index.html @proxy;
+    auth_basic_user_file <%= "#{::File.dirname(@site.public_path)}/.htpasswd_#{d.target_location}" %>;
+    auth_basic "Please enter your ID and password";
+  }
+  <%- end -%>
+
+  location ~ ^/_smartphone {
+    try_files $uri $uri/index.html <%= '$request_uri $request_uri/index.html' if @site.smart_phone_layout_same_as_pc? %> @proxy;
+    <%- if @site.use_basic_auth? && @site.basic_auth_user_enabled? -%>
+    auth_basic_user_file <%= "#{::File.dirname(@site.public_path)}/.htpasswd" %>;
+    auth_basic "Please enter your ID and password";
+    <%- end -%>
+  }
+
+  location ~ ^(/|/_mobile) {
+    try_files $uri $uri/index.html @proxy;
+    <%- if @site.use_basic_auth? && @site.basic_auth_user_enabled? -%>
+    auth_basic_user_file <%= "#{::File.dirname(@site.public_path)}/.htpasswd" %>;
+    auth_basic "Please enter your ID and password";
+    <%- end -%>
+  }
+}

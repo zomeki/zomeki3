@@ -14,7 +14,7 @@ class Cms::Admin::Site::SettingsController < Cms::Controller::Admin::Base
   end
 
   def show
-    @item = Cms::SiteSetting.where(name: params[:id], site_id: @site.id).first || Cms::SiteSetting.new(name: params[:id], site_id: @site.id)
+    @item = Cms::SiteSetting.where(name: params[:id], site_id: @site.id).first_or_initialize
     _show @item
   end
 
@@ -27,7 +27,7 @@ class Cms::Admin::Site::SettingsController < Cms::Controller::Admin::Base
   end
 
   def update
-    @item = Cms::SiteSetting.where(name: params[:id], site_id: @site.id).first || Cms::SiteSetting.new(name: params[:id], site_id: @site.id)
+    @item = Cms::SiteSetting.where(name: params[:id], site_id: @site.id).first_or_initialize
     @site.attributes = site_setting_params
     _update(@site)
   end
@@ -42,7 +42,8 @@ class Cms::Admin::Site::SettingsController < Cms::Controller::Admin::Base
       :in_setting_site_file_upload_max_size, :in_setting_site_extension_upload_max_size,
       :in_setting_site_common_ssl,
       :in_setting_site_allowed_attachment_type,
-      :in_setting_site_link_check
+      :in_setting_site_link_check,
+      :in_setting_site_kana_talk
     )
   end
 end

@@ -1,5 +1,5 @@
 class Sys::Sequence < ApplicationRecord
-  self.table_name = 'sys_sequences'
+  include Sys::Model::Base
 
   validates :version, uniqueness: { scope: [:site_id, :name] }
 

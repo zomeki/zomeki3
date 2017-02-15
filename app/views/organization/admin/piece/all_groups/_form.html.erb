@@ -1,1 +1,24 @@
-<%= render 'shared/admin/piece/form', f: f %>
+<%= render 'shared/admin/piece/form', f: f do %>
+
+<p class="form">詳細設定</p>
+
+<table class="show">
+  <tr>
+    <th><%= @item.locale :list_style %></th>
+    <td>
+      <%= link_to '置き換えテキストを確認する', '#', class: 'show_group_list_style_dialog' %><br />
+      <%= f.array_text_area 'in_settings[list_style]', size: '100x10' %>
+    </td>
+  </tr>
+</table>
+
+<%= render 'organization/admin/shared/group_list_style_tags' %>
+<%= javascript_tag do %>
+$(function() {
+  $('a.show_group_list_style_dialog').on('click', function() {
+    $('#group_list_style_tags').dialog({width: 400});
+    return false;
+  });
+});
+<%- end -%>
+<%- end -%>

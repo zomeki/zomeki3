@@ -1,5 +1,6 @@
 module Cms::Model::Rel::SiteSetting
-  attr_accessor :in_setting_site_admin_protocol
+  extend ActiveSupport::Concern
+
   attr_accessor :in_setting_site_basic_auth_state
   attr_accessor :in_setting_site_common_ssl
   attr_accessor :in_setting_site_admin_mail_sender
@@ -7,18 +8,15 @@ module Cms::Model::Rel::SiteSetting
   attr_accessor :in_setting_site_extension_upload_max_size
   attr_accessor :in_setting_site_allowed_attachment_type
   attr_accessor :in_setting_site_link_check
+  attr_accessor :in_setting_site_kana_talk
 
   SITE_SETTINGS = [
-    :admin_protocol, :basic_auth_state, :common_ssl, :allowed_attachment_type,
-    :admin_mail_sender, :file_upload_max_size, :extension_upload_max_size, :link_check
+    :basic_auth_state, :common_ssl, :allowed_attachment_type,
+    :admin_mail_sender, :file_upload_max_size, :extension_upload_max_size, :link_check, :kana_talk
   ]
 
-  def self.included(mod)
-  end
-
-  def setting_site_admin_protocol
-    setting = Cms::SiteSetting::AdminProtocol.where(site_id: id).first
-    setting ? setting.value : nil;
+  included do
+    after_save :save_site_settings
   end
 
   def setting_site_basic_auth_state
@@ -75,6 +73,15 @@ module Cms::Model::Rel::SiteSetting
     Cms::SiteSetting::LINK_CHECK_OPTIONS.rassoc(setting_site_link_check).try(:first)
   end
 
+  def setting_site_kana_talk
+    setting = Cms::SiteSetting.where(:site_id => id, :name => 'kana_talk').first
+    setting ? setting.value : 'enabled';
+  end
+
+  def setting_site_kana_talk_label
+    Cms::SiteSetting::KANA_TALK_OPTIONS.rassoc(setting_site_kana_talk).try(:first)
+  end
+
   def get_upload_max_size(ext)
     ext.gsub!(/^\./, '')
     list = ext_upload_max_size_list
@@ -102,7 +109,6 @@ module Cms::Model::Rel::SiteSetting
   end
 
   def load_site_settings
-    @in_setting_site_admin_protocol              = setting_site_admin_protocol
     @in_setting_site_basic_auth_state            = setting_site_basic_auth_state
     @in_setting_site_common_ssl                  = setting_site_common_ssl
     @in_setting_site_admin_mail_sender           = setting_site_admin_mail_sender
@@ -110,23 +116,18 @@ module Cms::Model::Rel::SiteSetting
     @in_setting_site_extension_upload_max_size   = setting_site_extension_upload_max_size
     @in_setting_site_allowed_attachment_type     = setting_site_allowed_attachment_type
     @in_setting_site_link_check                  = setting_site_link_check
+    @in_setting_site_kana_talk                   = setting_site_kana_talk
   end
 
-  def save_site_settings(options={})
-    return true unless options
-    return true unless options[:site_id]
+  private
 
-    _site_id = options[:site_id]
-
+  def save_site_settings
     SITE_SETTINGS.each do |name|
-      _value = eval("in_setting_site_#{name.to_s}")
-      if setting = Cms::SiteSetting.where(:site_id => _site_id, :name => name.to_s).first
-        setting.value = _value
-        setting.save
-      else
-        Cms::SiteSetting.create(:site_id => _site_id, :name => name.to_s, :value => _value)
-      end
+      v = instance_variable_get("@in_setting_site_#{name}")
+      next unless v
+      setting = Cms::SiteSetting.where(site_id: id, name: name).first_or_initialize
+      setting.value = v
+      setting.save
     end
   end
-
 end

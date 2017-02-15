@@ -22,7 +22,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     return user_options if params[:user_options]
 
     criteria = doc_criteria
-    @items = GpArticle::Doc.content_and_criteria(@content, criteria)
+    @items = GpArticle::Doc.distinct.content_and_criteria(@content, criteria)
                            .order(updated_at: :desc)
                            .preload(:prev_edition, :content, creator: [:user, :group])
 

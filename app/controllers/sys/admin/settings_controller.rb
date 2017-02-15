@@ -16,14 +16,6 @@ class Sys::Admin::SettingsController < Cms::Controller::Admin::Base
     _show @item
   end
 
-  def new
-    error_auth
-  end
-
-  def create
-    error_auth
-  end
-
   def update
     @item = Sys::Setting.config(params[:id])
     @item.value = params[:item][:value]
@@ -43,20 +35,6 @@ class Sys::Admin::SettingsController < Cms::Controller::Admin::Base
 
       @item.extra_values = extra_values
     end
-    _update(@item, location: edit_sys_setting_path(id: params[:id])) do
-      update_config if @item.name.in?('ssl')
-    end
+    _update(@item, location: edit_sys_setting_path(id: params[:id]))
   end
-
-  def destroy
-    error_auth
-  end
-
-  def update_config
-    Cms::Site.generate_apache_configs
-    Cms::Site.generate_nginx_configs
-    Cms::Site.generate_apache_admin_configs
-    Cms::Site.generate_nginx_admin_configs
-  end
-
 end

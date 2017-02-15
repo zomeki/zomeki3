@@ -29,19 +29,13 @@ namespace :zomeki do
       task :exec => :environment do
         Script.run('cms/talk_tasks/exec')
       end
-
-      desc 'Clean excluded talk tasks'
-      task :clean_excluded_tasks => :environment do
-        ids = Zomeki.config.application['cms.use_kana_exclude_site_ids'] || []
-        Cms::TalkTask.find_each{|t| t.destroy if ids.include?(t.site_id) }
-      end
     end
 
     namespace :sites do
       desc 'Update server configs'
       task :update_server_configs => :environment do
-        Cms::Site.generate_apache_configs
-        Cms::Site.generate_nginx_configs
+        Rails::Generators.invoke('cms:nginx:site_config', ['--force'])
+        Rails::Generators.invoke('cms:apache:site_config', ['--force'])
       end
     end
 

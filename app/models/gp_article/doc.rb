@@ -167,6 +167,7 @@ class GpArticle::Doc < ApplicationRecord
 
     search_columns = [:name, :title, :body, :subtitle, :summary, :mobile_title, :mobile_body]
     rel = rel.search_with_logical_query(*search_columns, criteria[:free_word]) if criteria[:free_word].present?
+    rel = rel.where(serial_no: criteria[:serial_no]) if criteria[:serial_no].present?
 
     rel
   }
@@ -374,8 +375,7 @@ class GpArticle::Doc < ApplicationRecord
     page_flag = mobile ? 'm' : smart_phone ? 's' : ''
 
     path = "_preview/#{format('%04d', site.id)}#{page_flag}#{base_uri}preview/#{id}/#{filename}#{params.present? ? "?#{params}" : ''}"
-    d = Cms::SiteSetting::AdminProtocol.core_domain site, :freeze_protocol => true
-    "#{d}#{path}"
+    "#{site.main_admin_uri}#{path}"
   end
 
   def file_content_uri

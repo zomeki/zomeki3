@@ -2,8 +2,6 @@ class Cms::Lib::Navi::Kana
 
   class << self
     def convert(html, site_id = nil)
-      return nil unless Zomeki.config.application['cms.use_kana']
-
       html = html.to_utf8.gsub(/\r\n/, "\n")
       tmp = mask_html(html)
 
