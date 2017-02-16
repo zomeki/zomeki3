@@ -21,7 +21,6 @@
   <%= link_to "#{GpArticle::Doc.model_name.human}一覧", { action: :index } %>
 <%- when 'show' -%>
   <%= link_to "#{GpArticle::Doc.model_name.human}一覧", { action: :index } %>
-  <%= link_to '履歴', gp_article_doc_histories_path(@content, @item) if @item.was_replaced? %>
   <span class="separator"></span>
   <%= link_to '編集', { action: :edit }, disable_with: '編集' if @item.try(:editable?) && !@item.will_be_replaced? %>
   <%= link_to '削除', { action: :destroy }, method: :delete, confirm: '削除してよろしいですか？' if @item.try(:deletable?) %>
