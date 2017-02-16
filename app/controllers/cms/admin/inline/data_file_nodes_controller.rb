@@ -1,6 +1,3 @@
 class Cms::Admin::Inline::DataFileNodesController < Cms::Admin::Data::FileNodesController
-  def pre_dispatch
-    simple_layout
-    super
-  end
+  layout 'admin/files'
 end
