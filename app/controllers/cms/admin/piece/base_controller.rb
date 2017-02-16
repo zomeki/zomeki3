@@ -37,6 +37,7 @@ class Cms::Admin::Piece::BaseController < Cms::Controller::Admin::Base
   def update
     @item = model.find(params[:id])
     @item.attributes = base_params
+    @item.touch
 
     _update @item do
       Core.set_concept(session, @item.concept_id)
