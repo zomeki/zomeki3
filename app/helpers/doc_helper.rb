@@ -41,9 +41,11 @@ private
   end
 
   def doc_image_tag(doc)
-    image_file = doc.list_image.present? ? doc.image_files.detect{|f| f.name == doc.list_image } : nil
-
-    if image_file
+    if doc.list_image.present? && (image_file = doc.image_files.detect { |f| f.name == doc.list_image })
+      image_tag("#{doc.public_uri(without_filename: true)}file_contents/#{url_encode image_file.name}", alt: image_file.alt)
+    elsif doc.template &&
+      (attach_item = doc.template.public_items.where(item_type: 'attachment_file').first) &&
+      (image_file = doc.image_files.detect { |f| f.name == doc.template_values[attach_item.name] })
       image_tag("#{doc.public_uri(without_filename: true)}file_contents/#{url_encode image_file.name}", alt: image_file.alt)
     else
       body =

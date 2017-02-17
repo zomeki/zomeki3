@@ -14,19 +14,21 @@ class GpArticle::Model::Criteria
     [:texts,'リンクURL','href'],[:assocs,'関連記事','related_docs'],[:texts,'携帯記事','mobile_body']
   ]
 
-  attr_accessor :params
-  attr_accessor :target, :target_state, :target_public
-  attr_accessor :free_word
-  attr_accessor :category_type_ids, :category_ids
-  attr_accessor :date_column, :date_operation, :dates
-  attr_accessor :state
-  attr_accessor :user_operation, :user_group_id, :user_name
-  attr_accessor :marker_state, :event_state, :texts, :assocs, :tasks
+  ATTRIBUTES = [
+    :target, :target_state, :target_public,
+    :serial_no, :free_word,
+    :category_type_ids, :category_ids,
+    :date_column, :date_operation, :dates,
+    :state,
+    :user_operation, :user_group_id, :user_name,
+    :marker_state, :event_state, :texts, :assocs, :tasks
+  ]
+  attr_accessor(*ATTRIBUTES)
 
   def initialize(params = {})
-    super
+    params = params.slice(*ATTRIBUTES)
+    super(params)
 
-    self.params = params
     self.category_type_ids ||= []
     self.category_ids ||= []
     self.dates ||= []
@@ -111,6 +113,7 @@ class GpArticle::Model::Criteria
     headers = []
     headers << "所属:#{target_text}" if target_text.present?
     headers << "公開:#{target_state_text}" if target_state_text.present?
+    headers << "記事番号:#{serial_no}" if serial_no.present?
     headers << "キーワード:#{free_word}" if free_word.present?
     headers << "カテゴリ:#{category_texts.join(' ')}" if category_texts.present?
     headers << "日付:#{date_options_text}" if date_options_text.present?

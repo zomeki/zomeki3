@@ -1,8 +1,6 @@
 class Organization::Admin::GroupsController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 
-  before_action :refresh_groups
-
   def pre_dispatch
     return http_error(404) unless @content = Organization::Content::Group.find_by(id: params[:content])
     return error_auth unless Core.user.has_priv?(:read, :item => @content.concept)
@@ -33,10 +31,6 @@ class Organization::Admin::GroupsController < Cms::Controller::Admin::Base
   end
 
   private
-
-  def refresh_groups
-    @content.refresh_groups
-  end
 
   def group_params
     params.require(:item).permit(
