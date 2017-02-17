@@ -13,7 +13,8 @@ class GpCategory::Category < ApplicationRecord
 
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
   SITEMAP_STATE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
-  DOCS_ORDER_OPTIONS = [['公開日（降順）', 'display_published_at DESC, published_at DESC'], ['公開日（昇順）', 'display_published_at ASC, published_at ASC'],
+  DOCS_ORDER_OPTIONS = [['上位設定を継承', ''],
+                        ['公開日（降順）', 'display_published_at DESC, published_at DESC'], ['公開日（昇順）', 'display_published_at ASC, published_at ASC'],
                         ['更新日（降順）', 'display_updated_at DESC, updated_at DESC'], ['更新日（昇順）', 'display_updated_at ASC, updated_at ASC']]
 
   default_scope { order(category_type_id: :asc, parent_id: :asc, level_no: :asc, sort_no: :asc, name: :asc) }
@@ -170,10 +171,15 @@ class GpCategory::Category < ApplicationRecord
   end
 
   def inherited_docs_order
-    return self.docs_order if self.docs_order.present?
-    return parent.inherited_docs_order if parent
-    category_type.docs_order if category_type.docs_order.present?
-    content.docs_order
+    if docs_order.present?
+      docs_order_as_hash(docs_order)
+    elsif parent
+      parent.inherited_docs_order
+    elsif category_type.docs_order.present?
+      docs_order_as_hash(category_type.docs_order)
+    else
+      docs_order_as_hash(content.translated_docs_order)
+    end
   end
 
   def unique_sort_key
@@ -228,5 +234,13 @@ class GpCategory::Category < ApplicationRecord
     return unless old_path.directory?
 
     old_path.rename(new_path)
+  end
+
+  def docs_order_as_hash(order_text)
+    return {} if order_text.blank?
+    order_text.split(',').each_with_object({}) do |order, hash|
+      key, value = order.strip.split(' ')
+      hash.merge!(key => value)
+    end
   end
 end

@@ -79,6 +79,16 @@ class GpCategory::Content::CategoryType < Cms::Content
     setting_value(:docs_order).to_s
   end
 
+  def translated_docs_order
+    map = {
+      'published_at_desc' => 'display_published_at DESC, published_at DESC',
+      'published_at_asc' => 'display_published_at ASC, published_at ASC',
+      'updated_at_desc' => 'display_updated_at DESC, updated_at DESC',
+      'updated_at_asc' => 'display_updated_at ASC, updated_at ASC'
+    }
+    map[docs_order] || map['published_at_desc']
+  end
+
   def feed_display?
     setting_value(:feed) != 'disabled'
   end
