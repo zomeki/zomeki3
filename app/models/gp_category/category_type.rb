@@ -12,7 +12,8 @@ class GpCategory::CategoryType < ApplicationRecord
 
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
   SITEMAP_STATE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
-  DOCS_ORDER_OPTIONS = [['公開日（降順）', 'display_published_at DESC, published_at DESC'], ['公開日（昇順）', 'display_published_at ASC, published_at ASC'],
+  DOCS_ORDER_OPTIONS = [['コンテンツ設定を継承', ''],
+                        ['公開日（降順）', 'display_published_at DESC, published_at DESC'], ['公開日（昇順）', 'display_published_at ASC, published_at ASC'],
                         ['更新日（降順）', 'display_updated_at DESC, updated_at DESC'], ['更新日（昇順）', 'display_updated_at ASC, updated_at ASC']]
 
   default_scope { order(sort_no: :asc, name: :asc) }
@@ -120,7 +121,7 @@ class GpCategory::CategoryType < ApplicationRecord
   def set_defaults
     self.state         = STATE_OPTIONS.first.last         if self.has_attribute?(:state) && self.state.nil?
     self.sitemap_state = SITEMAP_STATE_OPTIONS.first.last if self.has_attribute?(:sitemap_state) && self.sitemap_state.nil?
-    self.docs_order    = DOCS_ORDER_OPTIONS.first.last    if self.has_attribute?(:docs_order) && self.docs_order.nil?
+    self.docs_order    = DOCS_ORDER_OPTIONS.second.last   if self.has_attribute?(:docs_order) && self.docs_order.nil?
     self.sort_no = 10 if self.has_attribute?(:sort_no) && self.sort_no.nil?
   end
 
