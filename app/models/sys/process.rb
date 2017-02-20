@@ -72,7 +72,7 @@ class Sys::Process < ApplicationRecord
       proc = self.where(name: attrs[:name]).order(id: :desc)
       proc = proc.where(site_id: attrs[:site_id]) if attrs[:lock_by] == :site
       proc = proc.first
-      if proc.state == "running"
+      if proc && proc.state == "running"
         limit = attrs[:time_limit] || 0
         return false if (proc.updated_at.to_i + limit) > Time.now.to_i
       end
