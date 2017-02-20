@@ -8,11 +8,11 @@ class Organization::Publisher::Group < Cms::Publisher
 
       node_map = make_node_map(publishers)
       node_map.each do |node, pubs|
-        param = {
+        ::Script.run("cms/nodes/publish",
+          site_id: pubs.first.site_id,
           target_node_id: node.id,
-          target_organization_group_id: pubs.map(&:publishable_id),
-        }
-        ::Script.run("cms/nodes/publish?#{param.to_param}", force: true)
+          target_organization_group_id: pubs.map(&:publishable_id)
+        )
       end
     end
 
@@ -22,9 +22,7 @@ class Organization::Publisher::Group < Cms::Publisher
       node_map = {}
       publishers.each do |pub|
         og = pub.publishable
-        if !og || !og.content || og.content.public_nodes.blank?
-          pub.destroy
-        else
+        if og && og.content
           og.content.public_nodes.each do |node|
             node_map[node] ||= []
             node_map[node] << pub

@@ -1,6 +1,5 @@
 class Sys::Admin::ProcessesController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
-  include Cms::Controller::Scaffold::Process
 
   def pre_dispatch
     return error_auth unless Core.user.has_auth?(:designer)
@@ -12,27 +11,45 @@ class Sys::Admin::ProcessesController < Cms::Controller::Admin::Base
   end
 
   def index
-    @items = []
-    Sys::Process::PROCESSE_LIST.each do |title, name|
-      item = Sys::Process.find_by(name: name) || Sys::Process.new
-      item.title  = title
-      item.name ||= name
-      @items << item
+    @items = Sys::Process::RUNNABLE_PROCESSES.map do |title, name|
+      Sys::Process.where(name: name, site_id: Core.site.id).order(id: :desc).first_or_initialize
     end
   end
 
   def show
-    #res = ::Script.run(@process_name); raise "process: #{@process_name}"
-
-    @process = Sys::Process.find_by(name: @process_name) || Sys::Process.new(name: @process_name)
-    Sys::Process::PROCESSE_LIST.each {|title, name| @process.title = title if name == @process_name }
-    options = {site_id: Core.site.id}
+    @item = Sys::Process.where(name: @process_name, site_id: Core.site.id).order(id: :desc).first_or_initialize
 
     case params[:do]
     when 'start_process'
-      start_process(@process_name, options)
+      start_process(@item)
+      redirect_to action: :show
     when 'stop_process'
-      stop_process(@process_name, options)
+      stop_process(@item)
+      redirect_to action: :show
+    end
+  end
+
+  private
+
+  def start_process(item)
+    if item.state == "running"
+      flash[:notice] = "プロセスが既に実行されています。"
+    else
+      begin
+        ::Script.run_from_web(item.name, site_id: Core.site.id)
+        flash[:notice] = "プロセスを開始しました。"
+      rescue => e
+        flash[:notice] = e.to_s
+      end
+    end
+  end
+
+  def stop_process(item)
+    if !item || item.state != "running"
+      flash[:notice] = "プロセスは実行されていません。"
+    else
+      item.update_attributes(interrupt: "stop")
+      flash[:notice] = "プロセスの停止を要求しました。"
     end
   end
 end

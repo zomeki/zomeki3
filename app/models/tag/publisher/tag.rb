@@ -8,11 +8,11 @@ class Tag::Publisher::Tag < Cms::Publisher
 
       node_map = make_node_map(publishers)
       node_map.each do |node, pubs|
-        param = {
+        ::Script.run("cms/nodes/publish",
+          site_id: pubs.first.site_id,
           target_node_id: node.id,
           target_tag_id: pubs.map(&:publishable_id)
-        }
-        ::Script.run("cms/nodes/publish?#{param.to_param}", force: true)
+        )
       end
     end
 
@@ -22,9 +22,7 @@ class Tag::Publisher::Tag < Cms::Publisher
       node_map = {}
       publishers.each do |pub|
         tag = pub.publishable
-        if !tag || !tag.content || tag.content.public_nodes.blank?
-          pub.destroy
-        else
+        if tag && tag.content
           tag.content.public_nodes.each do |node|
             node_map[node] ||= []
             node_map[node] << pub

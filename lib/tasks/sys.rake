@@ -18,8 +18,11 @@ namespace :zomeki do
     namespace :tasks do
       desc 'Exec tasks'
       task :exec => :environment do
-        Script.run('sys/tasks/exec')
+        Cms::Site.order(:id).pluck(:id).each do |site_id|
+          Script.run('sys/tasks/exec', site_id: site_id, lock_by: :site)
+        end
       end
+
       task :delete_expired => :environment do
         puts 'Start delete expired sys_tasks...'
         Sys::Task

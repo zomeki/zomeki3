@@ -4,11 +4,24 @@ namespace :delayed_job do
   end
 
   def delayed_job_options
-    "--pool=sys_tasks:1 --pool=cms_rebuild:1 --pool=cms_publisher:#{pool_size}"
+    options = [
+      "--pool=sys_tasks:#{task_workers}",
+      "--pool=cms_rebuild:#{rebuild_workers}",
+      "--pool=cms_publisher:#{publisher_workers}"
+    ]
+    options.join(' ')
   end
 
-  def pool_size
-    (ENV['DELAYED_JOB_POOL_SIZE'] || 1).to_i
+  def task_workers
+    (ENV['TASK_WORKERS'] || 1).to_i
+  end
+
+  def rebuild_workers
+    (ENV['REBUILD_WORKERS'] || 1).to_i
+  end
+
+  def publisher_workers
+    (ENV['PUBLISHER_WORKERS'] || 1).to_i
   end
 
   def max_memory

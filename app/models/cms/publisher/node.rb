@@ -6,12 +6,16 @@ class Cms::Publisher::Node < Cms::Publisher
       pubs, extra_pubs = publishers.partition { |pub| pub.extra_flag.blank? }
 
       if pubs.size > 0
-        param = { target_node_id: pubs.map(&:publishable_id) }
-        ::Script.run("cms/nodes/publish?#{param.to_param}", force: true)
+        ::Script.run("cms/nodes/publish",
+          site_id: pubs.first.site_id,
+          target_node_id: pubs.map(&:publishable_id)
+        )
       end
       extra_pubs.each do |pub|
-        param = { target_node_id: pub.publishable_id }.merge(pub.extra_flag)
-        ::Script.run("cms/nodes/publish?#{param.to_param}", force: true)
+        ::Script.run("cms/nodes/publish", pub.extra_flag.reverse_merge(
+          site_id: pub.site_id,
+          target_node_id: pub.publishable_id
+        ))
       end
     end
   end

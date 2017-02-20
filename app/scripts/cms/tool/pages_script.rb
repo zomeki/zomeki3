@@ -7,7 +7,7 @@ class Cms::Tool::PagesScript < Cms::Script::Base
     ::Script.total nodes.size
 
     nodes.each do |node|
-      ::Script.progress do
+      ::Script.progress(node) do
         page = Cms::Node::Page.find(node.id)
         if page.rebuild(render_public_as_string(page.public_uri, site: node.site))
           page.publish_page(render_public_as_string("#{page.public_uri}.r"), site: node.site, path: "#{page.public_path}.r", dependent: :ruby)

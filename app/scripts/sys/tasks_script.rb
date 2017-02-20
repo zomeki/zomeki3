@@ -1,12 +1,11 @@
 class Sys::TasksScript < Cms::Script::Base
   def exec
-    tasks = Sys::Task.order(process_at: :desc).preload(:processable)
-    tasks = tasks.where(site_id: Script.options[:site_id]) if Script.options && Script.options[:site_id]
+    tasks = Sys::Task.order(process_at: :desc)
+    tasks = tasks.where(site_id: ::Script.site.id) if ::Script.site
     tasks = tasks.where(Sys::Task.arel_table[:process_at].lteq(Time.now))
+                 .preload(:processable)
 
     ::Script.total tasks.size
-
-    return if tasks.empty?
 
     tasks.each do |task|
       begin

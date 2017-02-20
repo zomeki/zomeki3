@@ -3,7 +3,9 @@ namespace :zomeki do
     namespace :clicks do
       desc 'Fetch ad_banner clicks'
       task :pull => :environment do
-        Script.run('ad_banner/clicks/pull')
+        Cms::Site.order(:id).pluck(:id).each do |site_id|
+          Script.run('ad_banner/clicks/pull', site_id: site_id, lock_by: :site)
+        end
       end
     end
   end
