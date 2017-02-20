@@ -67,7 +67,7 @@
       <td class="num"><%= proc.error.to_i %></td>
     </tr><tr>
       <th class="log">オプション</th>
-      <td class="log" colspan="5"><div><%= CGI.unescape(proc.extra_options.to_query) if proc.extra_options.present? %></div></td>
+      <td class="log" colspan="5"><div><%= CGI.unescape(proc.script_options.to_query) if proc.script_options.present? %></div></td>
     </tr><tr>
       <th class="log">ログ</th>
       <td class="log" colspan="5"><div><%=hbr proc.message %></div></td>

@@ -91,7 +91,7 @@ class Sys::Process < ApplicationRecord
     proc.error       = 0
     proc.message     = nil
     proc.interrupt   = nil
-    proc.extra_options = attrs[:options]
+    proc.script_options = attrs[:options]
     proc.save
     proc
   end

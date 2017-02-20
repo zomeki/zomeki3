@@ -1430,7 +1430,7 @@ ActiveRecord::Schema.define(version: 20170214072433) do
     t.integer  "error"
     t.text     "message"
     t.integer  "site_id"
-    t.jsonb    "extra_options", default: {}
+    t.jsonb    "script_options", default: {}
   end
 
   create_table "sys_publishers", force: :cascade do |t|
