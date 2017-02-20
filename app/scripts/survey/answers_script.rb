@@ -1,17 +1,22 @@
 class Survey::AnswersScript < Cms::Script::Base
   def pull
     ApplicationRecordSlave.each_slaves do
-      s_form_answers = Survey::Slave::FormAnswer.where('created_at < ?', (Time.now - 5).strftime('%Y-%m-%d %H:%M:%S'))
-
-      Script.total s_form_answers.size
-
-      s_form_answers.each do |s_form_answer|
-        Script.current
-        pull_answers(s_form_answer)
-        Script.success
+      form_answers = Survey::Slave::FormAnswer.where('created_at < ?', (Time.now - 5).strftime('%Y-%m-%d %H:%M:%S'))
+      if ::Script.site
+        form_ids = Survey::Form.where(
+          content_id: Survey::Content::Form.select(:id).where(site_id: ::Script.site.id)
+        ).pluck(:id)
+        form_answers = form_answers.where(form_id: form_ids)
       end
 
-      s_form_answers.each(&:destroy)
+      ::Script.total form_answers.size
+
+      form_answers.each do |form_answer|
+        ::Script.progress(form_answer) do
+          pull_answers(form_answer)
+          form_answer.destroy
+        end
+      end
     end
   end
 

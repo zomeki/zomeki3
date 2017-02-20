@@ -18,7 +18,7 @@
     <td style="text-align: center;"><%=l item.started_at if item.started_at %></td>
     <td style="text-align: center;"><%=l item.updated_at if item.updated_at %></td>
     <td style="text-align: center;"><%=l item.closed_at if item.closed_at %></td>
-    <td style="text-align: center;"><%= item.current %><%= "/#{item.total}" if item.total %></td>
+    <td style="text-align: center;"><%= item.current_per_total %></td>
     <td style="text-align: right;"><%= item.success %></td>
     <td style="text-align: right;"><%= item.error %></td>
   </tr>

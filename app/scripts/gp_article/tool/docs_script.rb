@@ -8,7 +8,7 @@ class GpArticle::Tool::DocsScript < Cms::Script::Base
     doc_ids = content.public_docs.order(display_published_at: :desc, published_at: :desc).pluck(:id)
     doc_ids.each_slice(100) do |sliced_doc_ids|
       content.public_docs.where(id: sliced_doc_ids).each do |doc|
-        ::Script.progress do
+        ::Script.progress(doc) do
           if doc.rebuild(render_public_as_string("#{doc.public_uri}index.html", site: content.site))
             doc.publish_page(render_public_as_string("#{doc.public_uri}index.html.r", site: content.site),
                              path: "#{doc.public_path}.r", dependent: :ruby)

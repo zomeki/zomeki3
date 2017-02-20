@@ -4,7 +4,7 @@ class Survey::FormsScript < Cms::Script::Publication
 
   def publish_by_task
     if (item = params[:item]).try(:state_approved?)
-      Script.current
+      ::Script.current
       info_log "-- Publish: #{item.class}##{item.id}"
 
       if item.publish
@@ -15,13 +15,13 @@ class Survey::FormsScript < Cms::Script::Publication
 
       info_log %Q!OK: Published to "#{item.class}##{item.id}"!
       params[:task].destroy
-      Script.success
+      ::Script.success
     end
   end
 
   def close_by_task
     if (item = params[:item]).try(:state_public?)
-      Script.current
+      ::Script.current
       info_log "-- Close: #{item.class}##{item.id}"
 
       item.close
@@ -30,7 +30,7 @@ class Survey::FormsScript < Cms::Script::Publication
 
       info_log 'OK: Closed'
       params[:task].destroy
-      Script.success
+      ::Script.success
     end
   end
 end

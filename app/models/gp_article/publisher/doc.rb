@@ -8,11 +8,11 @@ class GpArticle::Publisher::Doc < Cms::Publisher
 
       node_map = make_node_map(publishers)
       node_map.each do |node, pubs|
-        param = {
+        ::Script.run("gp_article/docs/publish_doc",
+          site_id: pubs.first.site_id,
           node_id: node.id,
           target_doc_id: pubs.map(&:publishable_id)
-        }
-        ::Script.run("gp_article/docs/publish_doc?#{param.to_param}", force: true)
+        )
       end
     end
 
@@ -22,9 +22,7 @@ class GpArticle::Publisher::Doc < Cms::Publisher
       node_map = {}
       publishers.each do |pub|
         doc = pub.publishable
-        if !doc || !doc.content || doc.content.public_nodes.blank?
-          pub.destroy
-        else
+        if doc && doc.content
          doc.content.public_nodes.each do |node|
             node_map[node] ||= []
             node_map[node] << pub

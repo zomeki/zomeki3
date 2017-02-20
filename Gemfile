@@ -93,6 +93,7 @@ gem 'rsync', '~> 1.0.9'
 gem 'rubyzip', '~> 1.2.1'
 gem 'simple_captcha2', '~> 0.4.2', require: 'simple_captcha'
 gem 'will_paginate', '~> 3.1.5'
+gem 'get_process_mem', '~> 0.2.1'
 
 gem 'octokit', '~> 4.6.2'
 

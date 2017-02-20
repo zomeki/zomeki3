@@ -7,13 +7,14 @@ class Sys::Admin::ProcessLogsController < Cms::Controller::Admin::Base
   end
 
   def index
-    @items = Sys::ProcessLog.search_with_params(params).order(id: :desc)
-                            .paginate(page: params[:page], per_page: params[:limit])
+    @items = Sys::Process.where(site_id: Core.site.id).search_with_params(params)
+                         .order(id: :desc)
+                         .paginate(page: params[:page], per_page: params[:limit])
     _index @items
   end
 
   def show
-    @item = Sys::ProcessLog.find(params[:id])
+    @item = Sys::Process.find(params[:id])
     _show @item
   end
 end

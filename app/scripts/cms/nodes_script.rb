@@ -2,22 +2,23 @@ class Cms::NodesScript < Cms::Script::Publication
   include Sys::Lib::File::Transfer
 
   def publish
-    @transfer_to_publish = Zomeki.config.application['sys.transfer_to_publish']
-
     @ids = {}
 
+    nodes = Cms::Node.public_state.order(:name, :id)
+    nodes.where!(site_id: ::Script.site.id) if ::Script.site
+
     if params[:target_node_id].present?
-      Cms::Node.public_state.where(id: params[:target_node_id]).each do |node|
+      nodes.where(id: params[:target_node_id]).each do |node|
         publish_node(node)
       end
     else
-      Cms::Node.public_state.where(parent_id: 0).order(:name, :id).each do |node|
+      nodes.where(parent_id: 0).each do |node|
         publish_node(node)
       end
     end
 
     # file transfer
-    transfer_files(:logging => true) if @transfer_to_publish
+    transfer_files(logging: true) if Zomeki.config.application['sys.transfer_to_publish']
   end
 
   def publish_node(node)
@@ -40,10 +41,10 @@ class Cms::NodesScript < Cms::Script::Publication
         uri = "#{node.public_uri}?node_id=#{node.id}"
         publish_page(node, uri: uri, site: node.site, path: node.public_path,
                                                       smart_phone_path: node.public_smart_phone_path)
-      rescue Script::InterruptException => e
+      rescue ::Script::InterruptException => e
         raise e
       rescue => e
-        Script.error "#{node.class}##{node.id} #{e}"
+        ::Script.error "#{node.class}##{node.id} #{e}"
       end
       return
     end
@@ -58,23 +59,21 @@ class Cms::NodesScript < Cms::Script::Publication
                                                       smart_phone_path: node.public_smart_phone_path)
         script_klass.new(params.merge(node: node)).publish
 
-      rescue Script::InterruptException => e
+      rescue ::Script::InterruptException => e
         raise e
       rescue LoadError => e
-        Script.error "#{node.class}##{node.id} #{e}"
+        ::Script.error "#{node.class}##{node.id} #{e}"
         return
       rescue Exception => e
-        Script.error "#{node.class}##{node.id} #{e}"
+        ::Script.error "#{node.class}##{node.id} #{e}"
         return
       end
     end
 
-    last_name = nil
-    nodes = Cms::Node.arel_table
-    Cms::Node.where(parent_id: node.id)
-             .where(nodes[:name].not_eq(nil).and(nodes[:name].not_eq('')).and(nodes[:name].not_eq(last_name)))
-             .order(:directory, :name, :id).each do |child_node|
-      last_name = child_node.name
+    child_nodes = Cms::Node.where(parent_id: node.id)
+                           .where.not(name: [nil, ''])
+                           .order(:directory, :name, :id)
+    child_nodes.each do |child_node|
       publish_node(child_node)
     end
 
@@ -84,7 +83,7 @@ class Cms::NodesScript < Cms::Script::Publication
   def publish_by_task
     item = params[:item]
     if item.state == 'recognized' && item.model == 'Cms::Page'
-      Script.current
+      ::Script.current
       info_log "-- Publish: #{item.class}##{item.id}"
       item = Cms::Node::Page.find(item.id)
       uri  = "#{item.public_uri}?node_id=#{item.id}"
@@ -106,7 +105,7 @@ class Cms::NodesScript < Cms::Script::Publication
       info_log %Q!OK: Published to "#{path}"!
       params[:task].destroy
 
-      Script.success
+      ::Script.success
     end
   rescue => e
     error_log e.message
@@ -115,7 +114,7 @@ class Cms::NodesScript < Cms::Script::Publication
   def close_by_task
     item = params[:item]
     if item.state == 'public' && item.model == 'Cms::Page'
-      Script.current
+      ::Script.current
 
       info_log "-- Close: #{item.class}##{item.id}"
       item = Cms::Node::Page.find(item.id)
@@ -127,7 +126,7 @@ class Cms::NodesScript < Cms::Script::Publication
       info_log 'OK: Closed'
       params[:task].destroy
 
-      Script.success
+      ::Script.success
     end
   rescue => e
     error_log e.message

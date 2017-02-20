@@ -2,50 +2,86 @@ class Sys::Process < ApplicationRecord
   self.table_name = "sys_processes"
   include Sys::Model::Base
 
-  PROCESSE_LIST = [
-    ["日時指定処理" , "sys/tasks/exec"],
-    ["音声書き出し"  , "cms/talk_tasks/exec"],
-    ["アクセスランキング取り込み" , "rank/ranks/exec"],
-    ["フィード取り込み" , "feed/feeds/read"],
+  ALL_PROCESSES = [
+    ["日時指定処理", "sys/tasks/exec"],
+    ["音声書き出し", "cms/talk_tasks/exec"],
+    ["アクセスランキング取り込み", "rank/ranks/exec"],
+    ["フィード取り込み", "feed/feeds/read"],
+    ["問合せ取り込み", "survey/answers/pull"],
+    ["広告クリック数取り込み", "ad_banner/clicks/pull"],
+    ["関連ページ書き出し", "cms/nodes/publish"],
+    ["記事ページ書き出し", "gp_article/docs/publish_doc"],
+    ["再構築", "/rebuild"]
   ]
 
-  attr_accessor :title
-  after_save :update_history
+  RUNNABLE_PROCESSE_NAMES = [
+    "sys/tasks/exec",
+    "cms/talk_tasks/exec",
+    "rank/ranks/exec",
+    "feed/feeds/read"
+  ]
+  RUNNABLE_PROCESSES = ALL_PROCESSES.select { |p| p.last.in?(RUNNABLE_PROCESSE_NAMES) }
 
-  has_many :histories, class_name: "Sys::ProcessLog", foreign_key: "process_id", dependent: :destroy
+  STATES = [["実行中", "running"], ["完了", "closed"], ["停止", "stop"]]
 
-  def status
-    labels = {
-      "running" => "実行中",
-      "closed"  => "完了",
-      "stop"    => "停止",
-    }
-    return labels[state] || state
+  scope :search_with_params, ->(params = {}) {
+    rel = all
+    params.each do |n, v|
+      next if v.to_s == ''
+      case n
+      when 's_id'
+        rel.where!(id: v)
+      when 's_user_id'
+        rel.where!(user_id: v)
+      when 's_name'
+        rel.where!(arel_table[:name].matches("%#{v}"))
+      when 'start_date'
+        rel.where!(arel_table[:started_at].gteq(v))
+      when 'close_date'
+        date = Date.strptime(params[:close_date], "%Y-%m-%d") + 1.days rescue nil
+        rel.where!(arel_table[:started_at].lteq(date)) if date
+      end
+    end
+    rel
+  }
+
+  def title
+    ALL_PROCESSES.detect { |p| name =~ Regexp.new(p.last) }.try!(:first)
   end
 
-  def update_history
-    item = Sys::ProcessLog.where(name: name, created_at: created_at).first ||
-      histories.build(created_at: created_at)
-    item.attributes = self.attributes.except(self.class.primary_key)
-    item.save
+  def status
+    STATES.rassoc(state).try!(:last)
+  end
+
+  def current_per_total
+    str = current.to_s
+    str << "/#{total}" if total
+    str
+  end
+
+  def success_per_total
+    str = success.to_s
+    str << "/#{total}" if total
+    str
   end
 
   def self.lock(attrs = {})
     raise "lock name is blank." if attrs[:name].blank?
 
-    if proc = self.find_by(name: attrs[:name])
-      #if proc.closed_at.nil?
+    if attrs[:lock_by]
+      proc = self.where(name: attrs[:name]).order(id: :desc)
+      proc = proc.where(site_id: attrs[:site_id]) if attrs[:lock_by] == :site
+      proc = proc.first
       if proc.state == "running"
-        kill = attrs[:time_limit] || 0
-        return false if (proc.updated_at.to_i + kill) > Time.now.to_i
+        limit = attrs[:time_limit] || 0
+        return false if (proc.updated_at.to_i + limit) > Time.now.to_i
       end
     end
-    attrs.delete(:time_limit)
 
-    proc ||= new
-    proc.created_at  = DateTime.now
-    proc.updated_at  = DateTime.now
-    proc.started_at  = DateTime.now
+    proc = self.new(name: attrs[:name], site_id: attrs[:site_id])
+    proc.created_at  = Time.now
+    proc.updated_at  = Time.now
+    proc.started_at  = Time.now
     proc.closed_at   = nil
     proc.user_id     = Core.user ? Core.user.id : nil
     proc.state       = "running"
@@ -55,13 +91,13 @@ class Sys::Process < ApplicationRecord
     proc.error       = 0
     proc.message     = nil
     proc.interrupt   = nil
-    proc.attributes  = attrs
+    proc.script_options = attrs[:options]
     proc.save
-    return proc
+    proc
   end
 
   def unlock
-    self.closed_at = DateTime.now
+    self.closed_at = Time.now
     self.state     = "closed"
     return self.save
   end
