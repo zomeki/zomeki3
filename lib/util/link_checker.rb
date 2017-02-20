@@ -8,19 +8,23 @@ class Util::LinkChecker
     Cms::LinkCheckLog.where(site_id: site.id).delete_all
 
     GpArticle::Content::Doc.where(site_id: site.id).each do |content|
-      content.docs.public_state.find_each do |doc|
+      logs = []
+      content.docs.public_state.preload(:links).find_each do |doc|
         doc.links.each do |link|
           next unless url = link.make_absolute_url(site)
-          Cms::LinkCheckLog.create(site_id: site.id, link_checkable: doc, title: doc.title, body: link.body, url: url)
+          logs << Cms::LinkCheckLog.new(site_id: site.id, link_checkable: doc, title: doc.title, body: link.body, url: url, checked: false)
         end
       end
+      Cms::LinkCheckLog.import(logs)
     end
 
-    Cms::Node::Page.public_state.where(site_id: site.id).find_each do |page|
+    Cms::Node::Page.public_state.where(site_id: site.id).preload(:links).find_each do |page|
+      logs = []
       page.links.each do |link|
         next unless url = link.make_absolute_url(site)
-        Cms::LinkCheckLog.create(site_id: site.id, link_checkable: page, title: page.title, body: link.body, url: url)
+        logs << Cms::LinkCheckLog.new(site_id: site.id, link_checkable: page, title: page.title, body: link.body, url: url, checked: false)
       end
+      Cms::LinkCheckLog.import(logs)
     end
   end
 
