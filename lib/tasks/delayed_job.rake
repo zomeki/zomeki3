@@ -77,11 +77,6 @@ namespace :delayed_job do
       start
     elsif procs.size < pids.size && !delayed_job_running?
       restart
-    else
-      mems = procs.map { |p| p[5].to_i }
-      if mems.any? { |mem| mem > max_memory } && !delayed_job_running?
-        restart
-      end
     end
   end
 
