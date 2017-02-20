@@ -9,43 +9,20 @@ class Cms::Admin::Tool::LinkCheckController < Cms::Controller::Admin::Base
   end
 
   def index
-    link_check = Util::LinkChecker.check_in_progress
-
     if request.post?
-      Cms::LinkCheckLog.find_each{|c| c.destroy unless c.link_checkable }
+      Util::LinkChecker.check(Core.site)
+      return redirect_to action: :index
+    end
 
-      #unless link_check
-#TODO: Consider to execute check
-        #Thread.fork {
-          Util::LinkChecker.check
-        #}
-        #sleep 3
-      #end
+    site_logs = Cms::LinkCheckLog.where(site_id: Core.site.id)
 
-      redirect_to tool_link_check_path
-    else
-      @logs = (if link_check
-                current = link_check.logs.where(checked: true).count
-                total = link_check.logs.count
-                flash[:notice] = "リンクチェックを実行中です。(#{current}/#{total}件)"
-                @reload = true
-                link_check.logs
-              else
-                Util::LinkChecker.last_check.try(:logs) || Cms::LinkCheckLog.none
-              end).where(checked: true)
+    @logs = site_logs.search_with_params(params).order(:id)
+                     .paginate(page: params[:page], per_page: params[:limit])
 
-      if params[:only]
-        @logs = case params[:only]
-                when 'failed'
-                  @logs.where(result: false)
-                when 'succeeded'
-                  @logs.where(result: true)
-                else
-                  @logs
-                end
-      end
-      @logs = @logs.paginate(page: params[:page], per_page: params[:limit])
-
+    if (@running = site_logs.where(checked: false).exists?)
+      current = site_logs.where(checked: true).count
+      total = site_logs.count
+      flash.now[:notice] = "リンクチェックを実行中です。(#{current}/#{total}件)"
     end
   end
 end

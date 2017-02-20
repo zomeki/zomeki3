@@ -1,42 +1,39 @@
-<%- if @reload -%>
+<%- if @running -%>
 <div id="reload_count"></div>
 <%- end -%>
 
-<%#- unless @logs.empty? -%>
 <table class="index">
   <tr>
     <th style="text-align: center;">ページタイトル</th>
-    <th style="text-align: center;">ステータス</th>
-    <th style="text-align: center;">リンクテキスト</th>
-    <th style="text-align: center;">リンクURL</th>
-    <th style="text-align: center;">結果</th>
+    <th style="text-align: center; width: 250px;">ステータス</th>
+    <th style="text-align: center; width: 300px;">リンクテキスト</th>
+    <th style="text-align: center; width: 400px;">リンクURL</th>
+    <th style="text-align: center; width: 40px;">結果</th>
   </tr>
   <%- @logs.each do |log| -%>
-  <%- if log.is_current_site_log? -%>
-  <tr>
-    <td>
-      <%- if (link_checkable = log.link_checkable).is_a?(GpArticle::Doc) -%>
-      <%= link_to log.title, gp_article_doc_path(content: link_checkable.content, id: link_checkable.id) %>
-      <%- elsif (link_checkable = log.link_checkable).is_a?(Cms::Node) && Core.user.has_auth?(:designer) -%>
-      <%= link_to log.title, link_checkable.admin_uri %>
-      <%- else -%>
-      <%= log.title %>
-      <%- end -%>
-    </td>
-    <td><%= log.status %> <%= log.reason %></td>
-    <td><%= log.body %></td>
-    <td><%= link_to log.url, log.url, target: 'preview' %></td>
-    <td><%= log.result ? '○' : '×' %></td>
-  </tr>
-  <%- end -%>
+    <tr class="<%= cycle '', 'cycle' %>">
+      <td>
+        <%- if (link_checkable = log.link_checkable).is_a?(GpArticle::Doc) -%>
+          <%= link_to log.title, gp_article_doc_path(content: link_checkable.content, id: link_checkable.id) %>
+        <%- elsif (link_checkable = log.link_checkable).is_a?(Cms::Node) && Core.user.has_auth?(:designer) -%>
+          <%= link_to log.title, link_checkable.admin_uri %>
+        <%- else -%>
+          <%= log.title %>
+        <%- end -%>
+      </td>
+      <td><%= log.status %> <%= log.reason %></td>
+      <td><%= log.body %></td>
+      <td><%= link_to log.url, log.url, target: 'preview' %></td>
+      <td style="text-align: center;"><%= log.result ? '○' : '×' %></td>
+    </tr>
   <%- end -%>
 </table>
-<%= paginate @logs %>
-<%#- end -%>
 
+<%= paginate @logs %>
+
+<%- if @running -%>
 <%= javascript_tag do -%>
 $(document).ready(function () {
-<%- if @reload -%>
   (function () {
     var count = 10;
     var interval_id = setInterval(function () {
@@ -47,6 +44,6 @@ $(document).ready(function () {
         }
       }, 1000);
   })();
-<%- end -%>
 });
+<%- end -%>
 <%- end -%>

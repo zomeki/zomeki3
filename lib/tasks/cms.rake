@@ -13,7 +13,9 @@ namespace :zomeki do
     namespace :link_check do
       desc 'Check links.'
       task :check => :environment do
-        Util::LinkChecker.check
+        Cms::Site.order(:id).each do |site|
+          Util::LinkChecker.check(site)
+        end
       end
     end
 
