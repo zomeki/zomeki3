@@ -4,40 +4,27 @@ class Sys::Admin::StorageFilesController < Cms::Controller::Admin::Base
   before_action :force_html_format
   before_action :validate_path
 
-  @root  = nil
-  @roots = []
-  @navi  = []
-
   def pre_dispatch
     return error_auth unless Core.user.has_auth?(:designer)
 
-    sites   = Cms::Site.order(:id).all
-    @roots  = [["sites", "sites"]]
+    @site_path = Rails.root.join("sites/#{format('%04d', Core.site.id)}").to_s
+    @roots =
+      if Core.user.root?
+        Dir.glob("#{@site_path}/*").map { |path| [dir = File.basename(path), dir] }
+      else
+        [['public', 'public']]
+      end
+
+    params[:path] = 'public' if params[:path].blank?
+    @root = params[:path].split('/').first
   end
 
   def validate_path
-    return error_auth if !Core.user.root? && params[:path] =~ /^(public|upload)/
-
-    @path = ::File.join(Rails.root.to_s, params[:path].to_s)
-    #return http_error(404) if params[:path] && !::Storage.exists?(@path)
-
-    return error_auth if params[:path] =~ /^sites\/\d{4}/ && params[:path] !~ /^#{::File.join('sites', format('%04d', Core.site.id))}/
-
+    @path = ::File.join(@site_path, params[:path].to_s)
+    return http_error(404) unless File.exist?(@path)
+    return error_auth if !Core.user.root? && @path !~ %r{^#{@site_path}/public}
 
     @dir = params[:path]
-    @roots.each do |dir, path|
-      if @dir.to_s =~ /^#{Regexp.escape(dir)}(\/|$)/
-        @root = dir
-        break
-      end
-    end
-
-    if !@root
-      @root = @roots.first[1]
-      @path = ::File.join(@path, @root)
-      @dir  = @root
-    end
-
     @navi = []
     dirs = @dir.split(/\//)
     dirs.each_with_index do |n, idx|
