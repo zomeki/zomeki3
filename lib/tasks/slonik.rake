@@ -15,7 +15,13 @@ namespace :slonik do
     ActiveRecord::Base.connection.class.class_eval do
       alias :old_execute :execute
       def execute(sql, name = nil)
-        if /^(create|alter|drop)/i.match sql
+        if /^create (table|sequence|view) "([^"]+)" /i.match sql
+          target = $1
+          name = $2
+          command = %Q{slonik_execute_script -c "#{sql.gsub(/"/, '\"')}; ALTER #{target} "#{name}" OWNER TO zomeki" 1 | sed "s/set id = 1,//" | slonik}
+          puts command
+          system command
+        elsif /^(create|alter|drop)/i.match sql
           command = %Q{slonik_execute_script -c "#{sql.gsub(/"/, '\"')}" 1 | sed "s/set id = 1,//" | slonik}
           puts command
           system command
