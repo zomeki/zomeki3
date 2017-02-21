@@ -11,12 +11,6 @@ class Sys::File < ApplicationRecord
     file_attachable.files.update_all(tmp_id: nil)
   end
 
-  ## garbage collect
-  def self.garbage_collect
-    self.where.not(tmp_id: nil).where(file_attachable_type: nil, file_attachable_id: nil)
-      .where(arel_table[:created_at].lt(2.days.ago)).destroy_all
-  end
-
   def duplicated
     c_tmp_id, c_file_attachable_type, c_file_attachable_id = if tmp_id
                                                                [tmp_id, nil, nil]
@@ -33,5 +27,14 @@ class Sys::File < ApplicationRecord
 
   def parent
     file_attachable
+  end
+
+  class << self
+    def cleanup
+      self.where.not(tmp_id: nil)
+          .where(file_attachable_type: nil, file_attachable_id: nil)
+          .where(arel_table[:created_at].lt(2.days.ago))
+          .destroy_all
+    end
   end
 end

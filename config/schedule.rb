@@ -70,7 +70,7 @@ every :day, at: '3:00 am' do
   rake 'zomeki:rank:ranks:exec'
 end
 
-# 不要なsys_tasksデータを削除します。
-every :month, at: 'start of the month at 2:00 am' do
-  rake 'zomeki:sys:tasks:delete_expired'
+# 不要データを削除します。
+every :day, at: '2:00 am' do
+  rake 'zomeki:sys:cleanup'
 end
