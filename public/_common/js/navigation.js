@@ -154,11 +154,7 @@ function Navigation_Talk(flag) {
     uri += '.mp3' + param;
     if (player.html() == '') {
       html = '<div id="navigationTalkCreatingFileNotice" style="display: none;">ただいま音声ファイルを作成しています。しばらくお待ちください。</div>';
-      html += '<object type="application/x-shockwave-flash" data="/_common/swf/dewplayer/dewplayer-vol.swf" width="240" height="20" id="dewplayer" name="dewplayer">' +
-      '<param name="wmode" value="transparent" />' +
-      '<param name="movie" value="/_common/swf/dewplayer/dewplayer-vol.swf" />' +
-      '<param name="flashvars" value="mp3=' + uri + '&autostart=1" />' +
-      '</object>';
+      html += '<audio src=" ' + uri + '" id="naviTalkPlayer" controls autoplay />';
       player.html(html);
 
       $.ajax({type: "HEAD", url: uri, data: {file_check: '1'}, success: function(data, status, xhr) {

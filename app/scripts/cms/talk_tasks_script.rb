@@ -1,16 +1,18 @@
 require 'digest/md5'
 class Cms::TalkTasksScript < Cms::Script::Publication
   def exec
-    tasks = Cms::TalkTask.select(:id).order(:id)
-    tasks = tasks.where(site_id: Script.options[:site_id]) if Script.options && Script.options[:site_id]
-    Script.total tasks.size
+    task_ids = Cms::TalkTask.order(:id)
+    task_ids = task_ids.where(site_id: ::Script.site.id) if ::Script.site
+    task_ids = task_ids.pluck(:id)
 
-    tasks.each do |v|
-      task = Cms::TalkTask.find_by(id: v[:id])
+    ::Script.total task_ids.size
+
+    task_ids.each do |task_id|
+      task = Cms::TalkTask.find_by(id: task_id)
       next unless task
 
       begin
-        Script.current
+        ::Script.current
 clean_statics = Zomeki.config.application['sys.clean_statics']
 if clean_statics
         if File.exist?("#{task.path}.mp3")
@@ -25,14 +27,14 @@ else
           rs = true
         end
 end
-        Script.success if rs
+        ::Script.success if rs
         task.destroy
         raise "MakeSoundError" unless rs
-      rescue Script::InterruptException => e
+      rescue ::Script::InterruptException => e
         raise e
       rescue Exception => e
         puts "#{e}: #{task.path}"
-        Script.error "#{e}: #{task.path}"
+        ::Script.error "#{e}: #{task.path}"
         #error_log "#{e} #{task.path}"
       end
     end

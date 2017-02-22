@@ -5,7 +5,7 @@ class AdBanner::Tool::BannersScript < Cms::Script::Base
     ::Script.total content.banners.size
 
     content.banners.each do |banner|
-      ::Script.progress do
+      ::Script.progress(banner) do
         banner.publish_or_close_image
       end
     end

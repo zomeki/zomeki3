@@ -1,6 +1,8 @@
 class Sys::Admin::GroupsController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 
+  after_action :refresh_organization_groups, only: [:create, :update, :destroy]
+
   def pre_dispatch
     return error_auth unless Core.user.has_auth?(:manager)
 
@@ -68,5 +70,11 @@ class Sys::Admin::GroupsController < Cms::Controller::Admin::Base
       :address, :code, :email, :fax, :ldap, :name, :name_en, :note,
       :parent_id, :sort_no, :state, :tel, :tel_attend, :site_ids => []
     )
+  end
+
+  def refresh_organization_groups
+    Organization::Content::Group.where(site_id: @item.site_ids).each do |content|
+      content.refresh_groups
+    end
   end
 end

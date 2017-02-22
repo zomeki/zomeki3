@@ -13,21 +13,27 @@ namespace :zomeki do
     namespace :link_check do
       desc 'Check links.'
       task :check => :environment do
-        Util::LinkChecker.check
+        Cms::Site.order(:id).each do |site|
+          Util::LinkChecker.check(site)
+        end
       end
     end
 
     namespace :nodes do
       desc 'Publish nodes'
       task :publish => :environment do
-        Script.run('cms/nodes/publish')
+        Cms::Site.order(:id).pluck(:id).each do |site_id|
+          Script.run('cms/nodes/publish', site_id: site_id, lock_by: :site)
+        end
       end
     end
 
     namespace :talks do
       desc 'Exec talk tasks'
       task :exec => :environment do
-        Script.run('cms/talk_tasks/exec')
+        Cms::Site.order(:id).pluck(:id).each do |site_id|
+          Script.run('cms/talk_tasks/exec', site_id: site_id, lock_by: :global)
+        end
       end
     end
 

@@ -71,7 +71,7 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'hpricot', '0.8.6'
 gem 'tamtam', '0.0.3'
 
-gem 'activerecord-import', '~> 0.16.1'
+gem 'activerecord-import', '~> 0.17.1'
 gem 'addressable', '~> 2.3.8'
 gem 'delayed_job_active_record', '~> 4.1.1'
 gem 'daemons', '~> 1.2.3'
@@ -90,8 +90,10 @@ gem 'rest-more', '~> 3.3.4'
 gem 'rmagick', '~> 2.15.4'
 gem 'rqrcode_png', '~> 0.1.5'
 gem 'rsync', '~> 1.0.9'
-gem 'simple_captcha2', '~> 0.3.4', require: 'simple_captcha'
-gem 'will_paginate', '~> 3.1.3'
+gem 'rubyzip', '~> 1.2.1'
+gem 'simple_captcha2', '~> 0.4.2', require: 'simple_captcha'
+gem 'will_paginate', '~> 3.1.5'
+gem 'get_process_mem', '~> 0.2.1'
 
 gem 'octokit', '~> 4.6.2'
 

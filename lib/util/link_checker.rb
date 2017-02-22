@@ -1,65 +1,42 @@
 class Util::LinkChecker
-  def self.check
-    in_progress = check_in_progress
-    in_progress.update_column(:in_progress, false) if in_progress
-    if in_progress.nil? || !in_progress.in_progress
-      link_check = plan_check
-      link_check.execute
+  def self.check(site)
+    plan_check(site)
+    execute(site)
+  end
+
+  def self.plan_check(site)
+    Cms::LinkCheckLog.where(site_id: site.id).delete_all
+
+    GpArticle::Content::Doc.where(site_id: site.id).each do |content|
+      logs = []
+      content.docs.public_state.preload(:links).find_each do |doc|
+        doc.links.each do |link|
+          next unless url = link.make_absolute_url(site)
+          logs << Cms::LinkCheckLog.new(site_id: site.id, link_checkable: doc, title: doc.title, body: link.body, url: url, checked: false)
+        end
+      end
+      Cms::LinkCheckLog.import(logs)
+    end
+
+    Cms::Node::Page.public_state.where(site_id: site.id).preload(:links).find_each do |page|
+      logs = []
+      page.links.each do |link|
+        next unless url = link.make_absolute_url(site)
+        logs << Cms::LinkCheckLog.new(site_id: site.id, link_checkable: page, title: page.title, body: link.body, url: url, checked: false)
+      end
+      Cms::LinkCheckLog.import(logs)
     end
   end
 
-  def self.plan_check(link_check=nil)
-    if link_check
-      link_check.logs.clear
-    else
-      link_check = Cms::LinkCheck.create
+  def self.execute(site)
+    Cms::LinkCheckLog.where(site_id: site.id, checked: false).order(:id).find_each do |log|
+      res = Util::LinkChecker.check_url(log.url)
+      log.status = res[:status]
+      log.reason = res[:reason]
+      log.result = res[:result]
+      log.checked = true
+      log.save
     end
-
-    GpArticle::Content::Doc.where(site_id: Core.site.id).each do |c|
-      c.docs.public_state.each do |doc|
-        doc.links.each do |link|
-          info_log "Planning #{link.url} to check in GpArticle::Doc(#{doc.id})"
-
-          begin
-            uri = URI.parse(link.url)
-            url = unless uri.absolute?
-                    next unless uri.path =~ /^\//
-                    "#{doc.content.site.full_uri.sub(/\/$/, '')}#{uri.path}"
-                  else
-                    uri.to_s
-                  end
-
-            link_check.logs.create(link_checkable: doc, title: doc.title,
-                                   body: link.body, url: url)
-          rescue => evar
-            warn_log evar.message
-          end
-        end
-      end
-    end
-
-    Cms::Node::Page.where(site_id: Core.site.id).public_state.each do |p|
-      p.links.each do |link|
-        info_log "Planning #{link.url} to check in Cms::Node::Page(#{p.id})"
-
-        begin
-          uri = URI.parse(link.url)
-          url = unless uri.absolute?
-                  next unless uri.path =~ /^\//
-                  "#{p.site.full_uri.sub(/\/$/, '')}#{uri.path}"
-                else
-                  uri.to_s
-                end
-
-          link_check.logs.create(link_checkable: p, title: p.title,
-                                 body: link.body, url: url)
-        rescue => evar
-          warn_log evar.message
-        end
-      end
-    end
-
-    return link_check
   end
 
   def self.check_url(url)
@@ -97,13 +74,5 @@ class Util::LinkChecker
   rescue => evar
     warn_log evar.message
     {status: nil, reason: evar.message, result: false}
-  end
-
-  def self.check_in_progress
-    Cms::LinkCheck.find_by(in_progress: true)
-  end
-
-  def self.last_check
-    Cms::LinkCheck.first
   end
 end

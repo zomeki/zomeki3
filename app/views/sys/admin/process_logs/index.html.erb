@@ -3,24 +3,24 @@
 <table class="index">
   <tr>
     <th style="width: 60px; padding: 0px; text-align: center;">詳細</th>
-    <th style="width: 200px;"><%= Sys::ProcessLog.human_attribute_name :name %></th>
-    <th style="width: 200px;"><%= Sys::ProcessLog.human_attribute_name :summary %></th>
-    <th style="width: 120px; text-align: center;"><%= Sys::ProcessLog.human_attribute_name :started_at %></th>
-    <th style="width: 120px; text-align: center;"><%= Sys::ProcessLog.human_attribute_name :updated_at %></th>
-    <th style="width: 120px; text-align: center;"><%= Sys::ProcessLog.human_attribute_name :closed_at %></th>
-    <th style="width: 80px;"><%= Sys::ProcessLog.human_attribute_name :total %></th>
-    <th style="width: 60px;"><%= Sys::ProcessLog.human_attribute_name :success %></th>
-    <th style="width: 60px;"><%= Sys::ProcessLog.human_attribute_name :error %></th>
+    <th style="width: 200px;"><%= Sys::Process.human_attribute_name :name %></th>
+    <th style="width: 200px;"><%= Sys::Process.human_attribute_name :title %></th>
+    <th style="width: 120px; text-align: center;"><%= Sys::Process.human_attribute_name :started_at %></th>
+    <th style="width: 120px; text-align: center;"><%= Sys::Process.human_attribute_name :updated_at %></th>
+    <th style="width: 120px; text-align: center;"><%= Sys::Process.human_attribute_name :closed_at %></th>
+    <th style="width: 80px;"><%= Sys::Process.human_attribute_name :total %></th>
+    <th style="width: 60px;"><%= Sys::Process.human_attribute_name :success %></th>
+    <th style="width: 60px;"><%= Sys::Process.human_attribute_name :error %></th>
   </tr>
   <% @items.each do |item| %>
   <tr class="<%= cycle '', 'cycle' %>">
     <td style="text-align: center;"><%= link_to :show, { action: :show, id: item.id } %></td>
     <td><%= item.name %></td>
-    <td><%= item.summary_lael %></td>
+    <td><%= item.title %></td>
     <td style="text-align: center;"><%=l item.started_at if item.started_at %></td>
     <td style="text-align: center;"><%=l item.updated_at if item.updated_at %></td>
     <td style="text-align: center;"><%=l item.closed_at if item.closed_at %></td>
-    <td style="text-align: center;"><%= item.current %><%= "/#{item.total}" if item.total %></td>
+    <td style="text-align: center;"><%= item.current_per_total %></td>
     <td style="text-align: center;"><%= item.success %></td>
     <td style="text-align: center;"><%= item.error %></td>
   </tr>
@@ -28,4 +28,3 @@
 </table>
 
 <%= paginate @items %>
-

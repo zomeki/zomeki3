@@ -18,12 +18,8 @@ $(function() {
   $('#captchaTalk').on('click', function(e) {
     var player = $('#captchaTalkPlayer');
     if (player.html() == '') {
-      var uri = '/_tools/captcha/talk?key=' + $('input[name="captcha_key"]').val() + '%26time=' + (new Date).getTime();
-      var html = '<object type="application/x-shockwave-flash" data="/_common/swf/dewplayer/dewplayer-vol.swf" width="240" height="20" id="dewplayer" name="dewplayer">' +
-        '<param name="wmode" value="transparent" />' +
-        '<param name="movie" value="/_common/swf/dewplayer/dewplayer-vol.swf" />' +
-        '<param name="flashvars" value="mp3=' + uri + '&autostart=1" />' +
-        '</object>';
+      var uri = '/_tools/captcha/talk?key=' + $('input[name="captcha_key"]').val() + '&time=' + (new Date).getTime();
+      var html = '<audio src=" ' + uri + '" controls autoplay />';
       player.html(html);
       $('#captchaTalk').text('よみあげ中');
     } else {

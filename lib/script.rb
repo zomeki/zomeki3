@@ -1,78 +1,52 @@
 class Script
+  cattr_reader :site
   cattr_reader :options
 
   def self.run_from_web(path, options = {})
-    ## reset
-    if proc = Sys::Process.find_by(name: path)
-      raise "プロセスが既に実行されています。" if proc.state == "running"
-      proc.attributes = {
-        :state      => nil,
-        :user_id    => Core.user.id,
-        :site_id    => Core.site.try(:id),
-        :started_at => nil,
-        :closed_at  => nil,
-        :interrupt  => nil,
-        :total      => 0,
-        :current    => 0,
-        :success    => 0,
-        :error      => 0,
-        :message    => nil,
-      }
-      proc.save
-    end
     ## run
     ruby   = "#{RbConfig::CONFIG["bindir"]}/ruby"
     runner = "#{Rails.root}/bin/rails runner"
     opts   = options.inspect
     cmd    = "#{ruby} #{runner} -e #{Rails.env} \"Script.run('#{path}', #{opts})\""
     system("#{cmd} >/dev/null &")
-
+    sleep 10
     return true
   end
 
   def self.run(path, options = {})
-    @@kill     = 10800 # sec
+    @@kill     = 3.hours.to_i
     @@path     = path
     @@proc     = nil
     @@time     = nil
-    @@options  = options
     @@success  = 0
     @@reflesh  = 10
+    @@site     = Cms::Site.find_by(id: options.delete(:site_id))
+    @@lock_by  = options.delete(:lock_by)
+    @@options  = options
 
     ENV['INPUTRC'] ||= '/etc/inputrc'
 
-    ## locked
-    if !self.lock
-      puts "already running"
-      return "already running"
+    self.start_process do
+      ## start
+      start = Time.now
+      self.log "[#{start.strftime('%Y-%m-%d %H:%M:%S')}] script:#{@@path} ... start"
+
+      ## dispatch
+      uri = URI.parse(path)
+      script = "#{File.dirname(uri.path).camelize}Script".constantize
+      method = File.basename(uri.path)
+      script.new(@@options).public_send(method)
+      self.log "success #{@@proc.success_per_total}"
+
+      ## finish
+      finish = Time.now
+      past   = sprintf('%.2f', finish - start)
+      self.log "[#{finish.strftime('%Y-%m-%d %H:%M:%S')}] script:#{@@path} ... finished (#{past} sec)"
     end
-
-    ## start
-    start = Time.now
-    self.log "[#{start.strftime('%Y-%m-%d %H:%M:%S')}] script:#{@@path} ... start"
-
-    ## dispatch
-    uri = URI.parse(path)
-    script = "#{File.dirname(uri.path).camelize}Script".constantize
-    method = File.basename(uri.path)
-    params = Rack::Utils.parse_nested_query(uri.query)
-    script.new(params).public_send(method)
-    self.log "success " + "#{@@proc.success}" + (@@proc.total ? "/#{@@proc.total}" : "")
-
-    ## finish
-    finish = Time.now
-    past   = sprintf('%.2f', finish - start)
-    self.log "[#{finish.strftime('%Y-%m-%d %H:%M:%S')}] script:#{@@path} ... finished (#{past} sec)"
-    self.unlock
-
-  rescue Exception => e
-    self.error e
-    self.error e.backtrace.slice(0, 20).join("\n")
-    self.unlock
   end
 
   def self.total(num = 1)
-    return unless defined? @@proc
+    return unless @@proc
     if num.is_a?(Fixnum)
       @@proc.total += num
     else
@@ -86,12 +60,16 @@ class Script
   end
 
   def self.current(num = 1)
-    return unless defined? @@proc
-    @@proc.current += num
+    return unless @@proc
     if (@@proc.current % @@reflesh) == 0
       value = @@proc.interrupted?
       raise InterruptException.new(value) if value == "stop"
     end
+    if @@proc.started_at.to_i + @@kill < Time.now.to_i
+      @@proc.update_attributes(interrupt: 'timeout') 
+      raise InterruptException.new("timeout.")
+    end
+    @@proc.current += num
     if @@proc.current >= @@proc.current_was + 100
       @@proc.save
     end
@@ -99,7 +77,7 @@ class Script
   end
 
   def self.success(num = 1)
-    return unless defined? @@proc
+    return unless @@proc
     @@proc.success += num
     if num > 0 && (@@proc.success % @@reflesh) == 0
       @@proc.updated_at = DateTime.now
@@ -109,7 +87,7 @@ class Script
   end
 
   def self.error(message = nil)
-    return unless defined? @@proc
+    return unless @@proc
     if message
       @@proc.error += 1
       self.log "Error: #{message}"
@@ -118,38 +96,50 @@ class Script
   end
 
   def self.log(message)
-    return unless defined? @@proc
-    if !message.blank?
-      @@proc.message = "" if @@proc.message.blank?
-      @@proc.message += "#{message}\n"
+    return unless @@proc
+    if message.present?
+      @@proc.message = "#{@@proc.message}#{message}\n"
       puts message
     end
     return message
   end
 
-  def self.progress
+  def self.progress(item)
     self.current
     yield
     self.success
+  rescue ::Script::InterruptException => e
+    raise e
   rescue => e
-    self.error e
+    self.error "#{item.class}##{item.id}: #{e}"
     error_log e
     error_log e.backtrace.join("\n")
   end
 
-protected
+  protected
 
-  def self.lock
-    @@proc = Sys::Process.lock(:name => @@path, :time_limit => @@kill)
-    @@time = @@proc.created_at if @@proc
-    @@proc
+  def self.start_process
+    if self.lock
+      yield
+    else
+      puts "already running"
+      return "already running"
+    end
+  rescue ::Script::InterruptException => e
+    self.log e
+  rescue => e
+    self.log e
+    self.log e.backtrace.slice(0, 20).join("\n")
+    error_log e
+    error_log e.backtrace.join("\n")
+  ensure
+    self.unlock
   end
 
-  def self.keep_lock(attrs = {})
-    return false if @@time != @@proc.created_at
-    @@proc.updated_at = DateTime.now
-    @@proc.attributes = attrs
-    @@proc.save
+  def self.lock
+    @@proc = Sys::Process.lock(name: @@path, site_id: @@site.try(:id), options: @@options, time_limit: @@kill, lock_by: @@lock_by)
+    @@time = @@proc.created_at if @@proc
+    @@proc
   end
 
   def self.unlock

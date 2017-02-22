@@ -9,6 +9,13 @@ class Cms::Publisher < ApplicationRecord
 
   before_save :set_priority
 
+  scope :queued_items, -> {
+    where([
+      arel_table[:state].eq('queued'),
+      [arel_table[:state].eq('performing'), arel_table[:updated_at].lt(Time.now - 3.hours)].reduce(:and)
+    ].reduce(:or))
+  }
+
   private
 
   def validate_queue

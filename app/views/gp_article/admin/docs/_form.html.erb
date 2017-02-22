@@ -650,7 +650,7 @@ $(function() {
       $(this).val(prevTemplateId);
     }
     if (this.value) {
-      $.post('<%= form_gp_template_template_path(@content.gp_temlate_content_template, id: '_ID_') %>'.replace(/_ID_/, this.value), $('form').serialize(), function(data) {
+      $.post('<%= build_gp_template_template_forms_path(@content.gp_temlate_content_template, template_id: '_ID_') %>'.replace(/_ID_/, this.value), $('form').serialize(), function(data) {
         $('#template_body_form').html(data);
       });
       $('#normal_body_form').hide();

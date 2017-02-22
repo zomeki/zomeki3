@@ -23,7 +23,7 @@ class GpArticle::DocsScript < Cms::Script::Publication
   def publish_doc
     docs = @node.content.public_docs.where(id: params[:target_doc_id])
     docs.find_each do |doc|
-      ::Script.progress do
+      ::Script.progress(doc) do
         uri = doc.public_uri
         path = doc.public_path
         if doc.publish(render_public_as_string(uri, site: doc.content.site))
@@ -39,7 +39,7 @@ class GpArticle::DocsScript < Cms::Script::Publication
 
   def publish_by_task
     if (item = params[:item]) && (item.state_approved? || item.state_prepared?)
-      Script.current
+      ::Script.current
       info_log "-- Publish: #{item.class}##{item.id}"
 
       uri = item.public_uri.to_s
@@ -63,13 +63,13 @@ class GpArticle::DocsScript < Cms::Script::Publication
 
       info_log %Q!OK: Published to "#{path}"!
       params[:task].destroy
-      Script.success
+      ::Script.success
     end
   end
 
   def close_by_task
     if (item = params[:item]) && item.state_public?
-      Script.current
+      ::Script.current
       info_log "-- Close: #{item.class}##{item.id}"
 
       item.close
@@ -78,7 +78,7 @@ class GpArticle::DocsScript < Cms::Script::Publication
 
       info_log 'OK: Finished'
       params[:task].destroy
-      Script.success
+      ::Script.success
     end
   end
 end

@@ -15,17 +15,18 @@ namespace :zomeki do
       end
     end
 
+    desc 'Cleanup unnecessary data.'
+    task :cleanup => :environment do
+      Sys::File.cleanup
+      Sys::Task.cleanup
+    end
+
     namespace :tasks do
       desc 'Exec tasks'
       task :exec => :environment do
-        Script.run('sys/tasks/exec')
-      end
-      task :delete_expired => :environment do
-        puts 'Start delete expired sys_tasks...'
-        Sys::Task
-          .where(Sys::Task.arel_table[:process_at].lt(Time.now - 3.months))
-          .delete_all
-        puts 'done'
+        Cms::Site.order(:id).pluck(:id).each do |site_id|
+          Script.run('sys/tasks/exec', site_id: site_id, lock_by: :site)
+        end
       end
     end
   end

@@ -8,12 +8,12 @@ class GpCategory::Publisher::Category < Cms::Publisher
 
       node_map = make_node_map(publishers)
       node_map.each do |(node, category_type), pubs|
-        param = {
+        ::Script.run("cms/nodes/publish",
+          site_id: pubs.first.site_id,
           target_node_id: node.id,
           target_category_type_id: category_type.id,
           target_category_id: pubs.map(&:publishable_id)
-        }
-        ::Script.run("cms/nodes/publish?#{param.to_param}", force: true)
+        )
       end
     end
 
@@ -23,9 +23,7 @@ class GpCategory::Publisher::Category < Cms::Publisher
       node_map = {}
       publishers.each do |pub|
         cat = pub.publishable
-        if !cat || !cat.category_type || !cat.category_type.content || cat.category_type.content.public_nodes.blank?
-          pub.destroy
-        else
+        if cat && cat.category_type && cat.category_type.content
           cat.category_type.content.public_nodes.each do |node|
             node_map[[node, cat.category_type]] ||= []
             node_map[[node, cat.category_type]] << pub

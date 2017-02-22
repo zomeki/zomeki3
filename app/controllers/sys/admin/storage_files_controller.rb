@@ -4,40 +4,27 @@ class Sys::Admin::StorageFilesController < Cms::Controller::Admin::Base
   before_action :force_html_format
   before_action :validate_path
 
-  @root  = nil
-  @roots = []
-  @navi  = []
-
   def pre_dispatch
     return error_auth unless Core.user.has_auth?(:designer)
 
-    sites   = Cms::Site.order(:id).all
-    @roots  = [["sites", "sites"]]
+    @site_path = Rails.root.join("sites/#{format('%04d', Core.site.id)}").to_s
+    @roots =
+      if Core.user.root?
+        Dir.glob("#{@site_path}/*").map { |path| [dir = File.basename(path), dir] }
+      else
+        [['public', 'public']]
+      end
+
+    params[:path] = 'public' if params[:path].blank?
+    @root = params[:path].split('/').first
   end
 
   def validate_path
-    return error_auth if !Core.user.root? && params[:path] =~ /^(public|upload)/
-
-    @path = ::File.join(Rails.root.to_s, params[:path].to_s)
-    #return http_error(404) if params[:path] && !::Storage.exists?(@path)
-
-    return error_auth if params[:path] =~ /^sites\/\d{4}/ && params[:path] !~ /^#{::File.join('sites', format('%04d', Core.site.id))}/
-
+    @path = ::File.join(@site_path, params[:path].to_s)
+    return http_error(404) unless File.exist?(@path)
+    return error_auth if !Core.user.root? && @path !~ %r{^#{@site_path}/public}
 
     @dir = params[:path]
-    @roots.each do |dir, path|
-      if @dir.to_s =~ /^#{Regexp.escape(dir)}(\/|$)/
-        @root = dir
-        break
-      end
-    end
-
-    if !@root
-      @root = @roots.first[1]
-      @path = ::File.join(@path, @root)
-      @dir  = @root
-    end
-
     @navi = []
     dirs = @dir.split(/\//)
     dirs.each_with_index do |n, idx|
@@ -50,6 +37,8 @@ class Sys::Admin::StorageFilesController < Cms::Controller::Admin::Base
     @is_file     = ::Storage.file?(@path)
     @current_uri = sys_storage_files_path(@dir).gsub(/\?.*/, '')
     @parent_uri  = sys_storage_files_path(:path => ::File.dirname(@dir)).gsub(/\?.*/, '')
+
+    @upload_maxsize = Core.site.try(:setting_site_file_upload_max_size) || 5
   end
 
   def index
@@ -164,19 +153,62 @@ class Sys::Admin::StorageFilesController < Cms::Controller::Admin::Base
           flash[:notice] = "許可されていないファイルです。（#{Core.site.setting_site_allowed_attachment_type}）"
         end
       end
-    elsif params[:upload_file] && file = params[:item][:new_upload]
 
-      if name = validate_name(file.original_filename)
-        ::Storage.binwrite("#{@path}/#{name}", file.read)
-        flash[:notice] = "アップロードが完了しました。"
+    elsif params[:upload_file] && files = params[:item][:new_upload]
+      if session[:prev_authenticity_token] == params[:authenticity_token]
         return redirect_to(@current_uri)
-      else
-        if @invalid_filename
-          flash[:notice] = "ファイル名は半角英数字で入力してください。"
+      end
+      session[:prev_authenticity_token] = params[:authenticity_token]
+
+      notice = ''
+      errors  = []
+      unzip_results = []
+      success = 0
+      @overwrite = params[:item][:upload_overwrite] ? true : false
+      @open_zip  = params[:item][:open_zip] ? false : true
+      
+      files.each do |file|
+        if filesize_error = validate_filesize(file.original_filename, file.size)
+          errors << {name: file.original_filename, msg: filesize_error}
+        elsif @open_zip && file.original_filename =~ /^.+\.zip$/
+          begin
+            res = unzip(file, @overwrite)
+          rescue => e
+            res = [{ name: file.original_filename, msg: "ZIPファイルの解凍に失敗しました。(#{e})", status: 'NG' }]
+          end
+          unzip_results << {name: file.original_filename, msg: "ZIPファイルを展開してアップロードします。", res: res}
+        elsif name = validate_name(file.original_filename)
+          if !@overwrite && ::Storage.exists?("#{@path}/#{name}")
+            errors << {name: file.original_filename, msg: "ファイルは既に存在します。"}
+          else
+            ::Storage.binwrite("#{@path}/#{name}", file.read)
+            success = success + 1
+          end
         else
-          flash[:notice] = "許可されていないファイルです。（#{Core.site.setting_site_allowed_attachment_type}）"
+          if @invalid_filename
+            errors << {name: file.original_filename, msg: "ファイル名は半角英数字で入力してください。"}
+          else
+            errors << {name: file.original_filename, msg: "許可されていないファイルです。（#{Core.site.setting_site_allowed_attachment_type}）"}
+          end
         end
       end
+      
+      @notice = "#{success}件のファイルアップロード処理が完了しました。" if success > 0
+      @errors = errors
+      @unzip_results = unzip_results
+      
+      @dirs  = []
+      @files = []
+      files  = ::Storage.entries(@path)
+      files.each { |filename|
+        next if @path =~ /^#{Rails.root.join('sites')}/ && "#{@path}/#{filename}" !~ /^#{Rails.root.join('sites', format('%04d', Core.site.id))}/
+        @dirs << filename if ::Storage.directory?("#{@path}/#{filename}")
+      }
+      files.each {|filename| @files << filename if ::Storage.file?("#{@path}/#{filename}")}
+      
+      @items = @dirs.sort + @files.sort
+      return render :index
+
     end
 
     redirect_to @current_uri
@@ -209,11 +241,18 @@ protected
   end
 
   def validate_name(name)
+    @invalid_filename = false
     if name.to_s !~ /^[0-9A-Za-z@\.\-\_]+$/
       @invalid_filename = true
       return nil
     end
+    
+    return nil unless validate_mime_type(name)
 
+    return name
+  end
+
+  def validate_mime_type(name)
     if Core.site.setting_site_allowed_attachment_type.present?
       types = {}
       Core.site.setting_site_allowed_attachment_type.to_s.split(/ *, */).each do |m|
@@ -231,7 +270,69 @@ protected
     return name
   end
 
+  def validate_filesize(name, size)
+    maxsize = @upload_maxsize
+    if Core.site
+      ext = ::File.extname(name.to_s).downcase
+      if _maxsize = Core.site.get_upload_max_size(ext)
+        maxsize = _maxsize
+      end
+    end
+    
+    if size > maxsize.to_i  * (1024**2)
+      return "容量制限を超えています。＜#{maxsize}MB＞"
+    end
+
+    return nil
+  end
+
   def force_html_format
     request.format = :html
+  end
+
+  def unzip(file, overwrite = false)
+    require 'zip'
+    
+    outpath = @path
+    
+    ret = []
+
+    Zip::InputStream.open(file.tempfile, 0) do |input|
+      while (entry = input.get_next_entry)
+        entry_name = entry.name.to_utf8
+        save_path = ::File.join(@path, entry_name)
+        save_dir  = ::File.dirname(save_path)
+
+        if save_dir !~ /^[0-9A-Za-z@\.\-\_\/]+$/
+          ret << {name: entry_name, msg: "ディレクトリ名は半角英数字で入力してください。", status: 'NG'}
+          next
+        end
+
+        if entry.name_is_directory?
+          ::Storage.mkdir_p("#{save_dir}") unless ::Storage.exists?("#{save_dir}")
+        else
+          if entry.name !~ /^[0-9A-Za-z@\.\-\_\/]+$/
+            ret << {name: entry_name, msg: "ファイル名は半角英数字で入力してください。", status: 'NG'}
+            next
+          end
+          unless name = validate_mime_type(entry.name)
+            ret << {name: entry_name, msg: "許可されていないファイルです。（#{Core.site.setting_site_allowed_attachment_type}）", status: 'NG'}
+            next
+          end
+          if !overwrite && ::Storage.exists?(save_path)
+            ret << {name: entry_name, msg: "ファイルは既に存在します。", status: 'NG'}
+            next
+          end
+          ::Storage.mkdir_p("#{save_dir}") unless ::Storage.exists?("#{save_dir}")
+          entry.get_input_stream do |stream|
+            ::Storage.binwrite(save_path, stream.read)
+          end
+
+          ret << {name: entry_name, msg: "アップロード完了", status: 'OK'}
+        end
+      end
+    end
+
+    return ret
   end
 end

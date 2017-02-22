@@ -246,15 +246,40 @@ class Cms::Node < ApplicationRecord
     nil
   end
 
-protected
+  protected
+
   def remove_file
     close_page# rescue nil
     return true
   end
 
   class Directory < Cms::Node
+    after_update :move_directory, if: -> { name_was.present? && name.present? && name_changed? }
+
     def close_page(options = {})
       return true
+    end
+
+   private
+
+    def path_changes
+      path1 = public_path
+      path2 = public_smart_phone_path
+      {
+        path1.sub(/#{name}\/\z/, "#{name_was}/") => path1,
+        path2.sub(/#{name}\/\z/, "#{name_was}/") => path2
+      }
+    end
+
+    def move_directory
+      path_changes.each do |src, dest|
+        FileUtils.move(src, dest) if Dir.exist?(src)
+
+        src = src.gsub(Rails.root.to_s, '.')
+        dest = dest.gsub(Rails.root.to_s, '.')
+        Sys::Publisher.where(Sys::Publisher.arel_table[:path].matches("#{src}%"))
+                      .replace_for_all(:path, src, dest)
+      end
     end
   end
 
