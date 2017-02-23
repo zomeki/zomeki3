@@ -29,5 +29,6 @@ class GpCalendar::Public::Piece::EventsController < GpCalendar::Public::Piece::B
     merge_docs_into_events(event_docs(start_date, end_date, @piece.category_ids), @events)
 
     @events.sort! {|a, b| a.started_on <=> b.started_on}
+    @events = @events.slice(0, @piece.docs_number) if @piece.docs_number
   end
 end
