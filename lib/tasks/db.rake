@@ -31,7 +31,7 @@ namespace :zomeki do
 
       desc 'Restore site  (options: SITE_ID=x, DIR=x)'
       task :restore => :environment do
-        site = Cms::Site.find(ENV['SITE_ID'])
+        site = Cms::Site.new(id: ENV['SITE_ID'])
         id_map = load_id_map(site)
 
         unless check_model_and_id_map_consistency(backup_models, id_map)
