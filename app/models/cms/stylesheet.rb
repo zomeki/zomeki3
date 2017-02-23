@@ -13,8 +13,8 @@ class Cms::Stylesheet < ApplicationRecord
 
   after_destroy :remove_file
 
-  def self.new_by_path(path)
-    item = find_by_path(path) || new(path: path)
+  def self.new_by_path(site_id, path)
+    item = find_by(site_id: site_id, path: path) || new(site_id: site_id, path: path)
     item.base_path = "#{Core.site.public_path}/_themes"
     item.base_uri  = '/_themes/'
     item.name      = ::File.basename(path)
@@ -29,7 +29,7 @@ class Cms::Stylesheet < ApplicationRecord
     dir = ::File.dirname(path)
     return @_concept = nil if !dir.blank? && dir =~ /^(\.+|\/)$/
 
-    parent = self.class.new_by_path(dir)
+    parent = self.class.new_by_path(site_id, dir)
     @_concept = parent ? parent.concept : nil
   end
 
@@ -95,7 +95,7 @@ class Cms::Stylesheet < ApplicationRecord
       child_path = ::File.join(upload_path, name)
       next if ::Storage.file?(child_path)
       cpath = path.blank? ? name : ::File.join(path, name)
-      items << self.class.new_by_path(cpath)
+      items << self.class.new_by_path(site_id, cpath)
     end
     items
   end
@@ -107,7 +107,7 @@ class Cms::Stylesheet < ApplicationRecord
       child_path = ::File.join(upload_path, name)
       next if ::Storage.directory?(child_path)
       cpath = path.blank? ? name : ::File.join(path, name)
-      items << self.class.new_by_path(cpath)
+      items << self.class.new_by_path(site_id, cpath)
     end
     items
   end
