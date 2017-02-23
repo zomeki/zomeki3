@@ -370,9 +370,14 @@ namespace :zomeki do
 
         poly_models.each do |model, (ptype, pkey)|
           types = model.group(ptype).pluck(ptype).compact
-          id_map[model.table_name] = model.union(
-            types.map { |type|  model.where(ptype => type, pkey => id_map[type.tableize.sub('/', '_')]) }
-          ).pluck(:id)
+          id_map[model.table_name] =
+            if types.present?
+              model.union(
+                types.map { |type|  model.where(ptype => type, pkey => id_map[type.tableize.sub('/', '_')]) }
+              ).pluck(:id)
+            else
+              []
+            end
         end
 
         id_map[:cms_map_markers] = Cms::MapMarker.where(map_id: id_map[:cms_maps]).pluck(:id)
