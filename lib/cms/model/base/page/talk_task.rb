@@ -7,6 +7,7 @@ module Cms::Model::Base::Page::TalkTask
 
   def publish_page(content, options = {})
     return false unless super
+    return true if options[:dependent].to_s =~ %r{smart_phone$}
     pub = publishers.where(dependent: options[:dependent] ? options[:dependent].to_s : nil).first
     return true unless pub
     return true if pub.path !~ /\.html\z/
