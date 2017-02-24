@@ -5,7 +5,7 @@
       <%- @form_answer.form.public_questions.each do |question| -%>
       <div class="question">
         <div class="question_content">
-          <%= label_tag "question_answer_#{question.id}", question.title %>
+          <%= label_tag "question_answers_#{question.id}", question.title %>
         </div>
 
         <% if question.form_type != 'free' %>
