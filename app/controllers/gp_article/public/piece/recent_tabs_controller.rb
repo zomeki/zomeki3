@@ -24,7 +24,7 @@ class GpArticle::Public::Piece::RecentTabsController < Sys::Controller::Public::
         else
           @piece.content.public_docs_for_list
         end
-      docs = docs.order(display_published_at: :desc, published_at: :desc)
+      docs = docs.order(@piece.docs_order_as_sql)
                  .limit(@piece.list_count)
                  .preload_assocs(:public_node_ancestors_assocs, :public_index_assocs)
 

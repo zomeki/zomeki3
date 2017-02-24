@@ -80,6 +80,7 @@ ja:
       gp_article/piece/recent_tab:
         list_count: 表示件数
         list_style: 表示形式
+        docs_order: 表示順
         date_style: 日付形式
         more_label: 一覧リンク文字
         name: タブID

@@ -23,6 +23,17 @@ class GpArticle::Piece::Doc < Cms::Piece
     setting_value(:docs_order).to_s
   end
 
+  def docs_order_as_sql
+    map = {
+      'published_at_desc' => { display_published_at: :desc, published_at: :desc },
+      'published_at_asc' => { display_published_at: :asc, published_at: :asc },
+      'updated_at_desc' => { display_updated_at: :desc, updated_at: :desc },
+      'updated_at_asc' => { display_updated_at: :asc, updated_at: :asc },
+      'random' => 'RANDOM()'
+    }
+    map[docs_order] || map['published_at_desc']
+  end
+
   def doc_style
     setting_value(:doc_style).to_s
   end
