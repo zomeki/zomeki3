@@ -18,6 +18,7 @@ class Sys::Group < ApplicationRecord
   has_many :site_belongings, :dependent => :destroy, :class_name => 'Cms::SiteBelonging'
   has_many :sites, -> { order(:id) }, :through => :site_belongings, :class_name => 'Cms::Site'
 
+  before_save :disable_users, if: -> { state_changed? && state == 'disabled' }
   before_destroy :disable_users
   after_save :copy_name_en_as_url_name
 
@@ -27,27 +28,19 @@ class Sys::Group < ApplicationRecord
   validates :name_en, presence: true,
                       uniqueness: { scope: :parent_id, unless: :root? },
                       format: { with: /\A[0-9A-Za-z\._-]*\z/i }
+  validate :validate_disable_state
   validate :validate_code_uniqueness_in_site
 
   scope :in_site, ->(sites) { joins(:site_belongings).where(cms_site_belongings: {site_id: Array(sites).map(&:id)}) }
   scope :in_group, ->(group) { where(parent_id: group.id) }
 
-  def creatable?
-    Core.user.has_auth?(:manager)
-  end
-  
-  def readable?
-    Core.user.has_auth?(:manager)
-  end
-  
-  def editable?
-    Core.user.has_auth?(:manager)
-  end
-  
   def deletable?
-    Core.user.has_auth?(:manager)
+    super &&
+      children.size == 0 &&
+      !users.where(state: 'enabled').exists? &&
+      !Sys::Creator.where(group_id: id, creatable_type: 'GpArticle::Doc').exists?
   end
-  
+
   def ldap_states
     [['同期',1],['非同期',0]]
   end
@@ -98,12 +91,32 @@ class Sys::Group < ApplicationRecord
     end
   end
 
+  def disableable?
+    children.size == 0 &&
+      !users.where(state: 'enabled', auth_no: 5).exists?
+  end
+
+  def validate_disable_state
+    if state_changed? && state == 'disabled' && !disableable?
+      errors.add(:base, 'このグループは無効にできません。')
+    end
+  end
+
   def disable_users
     users.each do |user|
       if user.groups.size == 1
         u = Sys::User.find_by(id: user.id)
         u.state = 'disabled'
         u.save
+      end
+    end
+    return true
+  end
+
+  def delete_users
+    users.each do |user|
+      if user.groups.size == 1
+        user.destroy
       end
     end
     return true
