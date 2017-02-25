@@ -35,9 +35,8 @@ class Approval::ApprovalRequest < ApplicationRecord
 
     transaction do
       histories.create(operator: user, reason: 'approve', comment: '')
-      if assignment = current_assignments.find_by(user_id: user.id)
-        current_assignments.where(or_group_id: assignment.or_group_id).update_all(approved_at: Time.now)
-      end
+      or_group_ids = current_assignments.where(user_id: user.id).pluck(:or_group_id)
+      current_assignments.where(or_group_id: or_group_ids).update_all(approved_at: Time.now)
       current_assignments.reload # flush cache
     end
 
