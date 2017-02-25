@@ -46,6 +46,7 @@ class Script
   end
 
   def self.total(num = 1)
+    return unless defined? @@proc
     return unless @@proc
     if num.is_a?(Fixnum)
       @@proc.total += num
@@ -60,6 +61,7 @@ class Script
   end
 
   def self.current(num = 1)
+    return unless defined? @@proc
     return unless @@proc
     if (@@proc.current % @@reflesh) == 0
       value = @@proc.interrupted?
@@ -77,6 +79,7 @@ class Script
   end
 
   def self.success(num = 1)
+    return unless defined? @@proc
     return unless @@proc
     @@proc.success += num
     if num > 0 && (@@proc.success % @@reflesh) == 0
@@ -87,6 +90,7 @@ class Script
   end
 
   def self.error(message = nil)
+    return unless defined? @@proc
     return unless @@proc
     if message
       @@proc.error += 1
@@ -96,6 +100,7 @@ class Script
   end
 
   def self.log(message)
+    return unless defined? @@proc
     return unless @@proc
     if message.present?
       @@proc.message = "#{@@proc.message}#{message}\n"
