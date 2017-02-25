@@ -23,7 +23,10 @@ class Cms::Admin::Tool::RebuildController < Cms::Controller::Admin::Base
                             .where(site_id: Core.site.id, model: content_models)
                             .where(Cms::Node.arel_table[:state].eq('public'))
                             .order(:name)
-    @nodes = Cms::Node.public_state.where(site_id: Core.site.id, model: ['Cms::Page', 'Cms::Sitemap'])
+    @nodes = Cms::Node.public_state
+                      .where(site_id: Core.site.id, model: ['Cms::Page', 'Cms::Sitemap'])
+                      .preload(:site, parent: { parent: { parent: nil } })
+                      .sort_by { |n| n.public_uri }
   end
 
   def rebuild_contents
