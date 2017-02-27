@@ -1,10 +1,10 @@
-<div class="show">
-  <div class="name">
-    <div>受付番号</div>
-    <div><%= token.seq_no %></div>
+<div class="questions">
+  <div class="question seq_no">
+    <div class="question_content">受付番号</div>
+    <div class="answer_content"><%= token.seq_no %></div>
   </div>
-  <div class="name">
-    <div>参加日</div>
-    <div><%= token.open.open_at_text if token.open %></div>
+  <div class="question open_id">
+    <div class="question_content">参加日</div>
+    <div class="answer_content"><%= token.open.open_at_text if token.open %></div>
   </div>
 </div>
