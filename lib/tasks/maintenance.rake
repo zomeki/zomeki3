@@ -92,6 +92,15 @@ namespace :zomeki do
           site.send(:force_copy_common_directory)
         end
       end
+
+      desc 'Sync _common directory for all sites'
+      task sync: :environment do
+        Cms::Site.all.each do |site|
+          com = "rsync -rlptvz --delete public/_common/ sites/#{format('%04d', site.id)}/public/_common/"
+          puts com
+          system com
+        end
+      end
     end
 
     namespace :publish_url do
