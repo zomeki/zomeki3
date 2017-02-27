@@ -4,8 +4,8 @@ class Map::Admin::CategoryTypesController < Cms::Controller::Admin::Base
   before_action :get_item_and_setting, only: [:edit, :update]
 
   def pre_dispatch
-    return error_auth unless @content = Map::Content::Marker.find_by(id: params[:content])
-    return error_auth unless Core.user.has_priv?(:read, :item => @content.concept)
+    @content = Map::Content::Marker.find(params[:content])
+    return error_auth unless Core.user.has_priv?(:read, item: @content.concept)
   end
 
   def index

@@ -4,14 +4,11 @@ class Cms::Admin::Content::BaseController < Cms::Controller::Admin::Base
   
   def pre_dispatch_content
     @content = Cms::Content.find(params[:id])
-    return error_auth if params[:action] != 'show' && !Core.user.has_auth?(:designer)
+    return error_auth unless Core.user.has_auth?(:designer)
   end
 
   def model
-    return @model_class if @model_class
-    mclass = self.class.to_s.gsub(/^(\w+)::Admin/, '\1').gsub(/Controller$/, '').singularize
-    eval(mclass)
-    @model_class = eval(mclass)
+    @model_class ||= self.class.to_s.gsub(/^(\w+)::Admin/, '\1').gsub(/Controller$/, '').singularize.constantize
   rescue
     @model_class = Cms::Content
   end
@@ -22,7 +19,7 @@ class Cms::Admin::Content::BaseController < Cms::Controller::Admin::Base
 
   def show
     @item = model.find(params[:id])
-    return error_auth if params[:action] != 'show' && !@item.readable?
+    return error_auth unless @item.readable?
     _show @item
   end
 

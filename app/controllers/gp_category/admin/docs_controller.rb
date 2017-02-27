@@ -5,6 +5,7 @@ class GpCategory::Admin::DocsController < Cms::Controller::Admin::Base
 
   def pre_dispatch
     @content = GpCategory::Content::CategoryType.find(params[:content])
+    return error_auth unless Core.user.has_priv?(:read, item: @content.concept)
     @category_type = @content.category_types.find(params[:category_type_id])
     @category = @category_type.categories.find(params[:category_id])
     return redirect_to(action: :index) if params[:reset_criteria]

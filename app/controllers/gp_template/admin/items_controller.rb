@@ -3,8 +3,8 @@ class GpTemplate::Admin::ItemsController < Cms::Controller::Admin::Base
 
   def pre_dispatch
     @content = GpTemplate::Content::Template.find(params[:content])
+    return error_auth unless Core.user.has_priv?(:read, item: @content.concept)
     @template = @content.templates.find(params[:template_id])
-    return error_auth unless Core.user.has_priv?(:read, :item => @content.concept)
   end
 
   def index

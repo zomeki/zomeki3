@@ -4,8 +4,8 @@ class GpCalendar::Admin::EventsController < Cms::Controller::Admin::Base
   include Cms::ApiGpCalendar
 
   def pre_dispatch
-    return error_auth unless @content = GpCalendar::Content::Event.find_by(id: params[:content])
-    return error_auth unless Core.user.has_priv?(:read, :item => @content.concept)
+    @content = GpCalendar::Content::Event.find(params[:content])
+    return error_auth unless Core.user.has_priv?(:read, item: @content.concept)
     return redirect_to url_for(action: :index) if params[:reset_criteria]
 #    return redirect_to(request.env['REQUEST_PATH']) if params[:reset_criteria]
   end
