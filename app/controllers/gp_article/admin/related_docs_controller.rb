@@ -1,11 +1,9 @@
-require 'csv'
 class GpArticle::Admin::RelatedDocsController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 
-  layout :select_layout
-
   def pre_dispatch
-    return http_error(404) unless @content = GpArticle::Content::Doc.find_by(id: params[:content])
+    @content = GpArticle::Content::Doc.find(params[:content])
+    return error_auth unless Core.user.has_priv?(:read, item: @content.concept)
   end
 
   def show

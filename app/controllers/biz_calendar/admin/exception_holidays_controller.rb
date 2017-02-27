@@ -3,8 +3,8 @@ class BizCalendar::Admin::ExceptionHolidaysController < Cms::Controller::Admin::
 
   def pre_dispatch
     @content = BizCalendar::Content::Place.find(params[:content])
+    return error_auth unless Core.user.has_priv?(:read, item: @content.concept)
     @place = @content.places.find(params[:place_id])
-    return error_auth unless Core.user.has_priv?(:read, :item => @content.concept)
   end
 
   def index

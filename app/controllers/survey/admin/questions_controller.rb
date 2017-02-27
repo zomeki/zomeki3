@@ -3,8 +3,8 @@ class Survey::Admin::QuestionsController < Cms::Controller::Admin::Base
 
   def pre_dispatch
     @content = Survey::Content::Form.find(params[:content])
+    return error_auth unless Core.user.has_priv?(:read, item: @content.concept)
     @form = @content.forms.find(params[:form_id])
-    return error_auth unless Core.user.has_priv?(:read, :item => @content.concept)
   end
 
   def index

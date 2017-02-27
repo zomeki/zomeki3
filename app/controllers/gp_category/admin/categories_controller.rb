@@ -3,6 +3,7 @@ class GpCategory::Admin::CategoriesController < Cms::Controller::Admin::Base
 
   def pre_dispatch
     @content = GpCategory::Content::CategoryType.find(params[:content])
+    return error_auth unless Core.user.has_priv?(:read, item: @content.concept)
     @category_type = GpCategory::CategoryType.find(params[:category_type_id])
     @parent_category = @category_type.categories.find_by(id: params[:category_id])
   end

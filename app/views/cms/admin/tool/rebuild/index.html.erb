@@ -9,7 +9,7 @@
 <p class="form">ページ</p>
 <%= form_tag tool_rebuild_nodes_path do -%>
   <%= select_tag :target_node_ids,
-                 options_for_select(@nodes.map { |c| ["#{c.title}（#{c.name}）", c.id] }), multiple: true, size: 10 %>
+                 options_for_select(@nodes.map { |c| ["#{c.title}（#{c.public_uri}）", c.id] }), multiple: true, size: 10 %>
   <%= submit_tag '再構築', data: { disable_with: '再構築' } %>
   <span id="message4" style="margin-left: 10px; color: #b40;"></span>
 <%- end -%>

@@ -3,23 +3,25 @@ class Script
   cattr_reader :options
 
   def self.run_from_web(path, options = {})
-    ## run
+    unless proc = Sys::Process.lock(name: path, site_id: options.delete(:site_id), options: options, lock_by: :site)
+      raise "プロセスが既に実行されています。"
+    end
+
     ruby   = "#{RbConfig::CONFIG["bindir"]}/ruby"
     runner = "#{Rails.root}/bin/rails runner"
-    opts   = options.inspect
+    opts   = options.merge(process_id: proc.id).inspect
     cmd    = "#{ruby} #{runner} -e #{Rails.env} \"Script.run('#{path}', #{opts})\""
     system("#{cmd} >/dev/null &")
-    sleep 10
     return true
   end
 
   def self.run(path, options = {})
     @@kill     = 3.hours.to_i
     @@path     = path
-    @@proc     = nil
     @@time     = nil
     @@success  = 0
     @@reflesh  = 10
+    @@proc     = Sys::Process.find_by(id: options.delete(:process_id)) if options[:process_id]
     @@site     = Cms::Site.find_by(id: options.delete(:site_id))
     @@lock_by  = options.delete(:lock_by)
     @@options  = options
@@ -46,6 +48,7 @@ class Script
   end
 
   def self.total(num = 1)
+    return unless defined? @@proc
     return unless @@proc
     if num.is_a?(Fixnum)
       @@proc.total += num
@@ -60,6 +63,7 @@ class Script
   end
 
   def self.current(num = 1)
+    return unless defined? @@proc
     return unless @@proc
     if (@@proc.current % @@reflesh) == 0
       value = @@proc.interrupted?
@@ -77,6 +81,7 @@ class Script
   end
 
   def self.success(num = 1)
+    return unless defined? @@proc
     return unless @@proc
     @@proc.success += num
     if num > 0 && (@@proc.success % @@reflesh) == 0
@@ -87,6 +92,7 @@ class Script
   end
 
   def self.error(message = nil)
+    return unless defined? @@proc
     return unless @@proc
     if message
       @@proc.error += 1
@@ -96,6 +102,7 @@ class Script
   end
 
   def self.log(message)
+    return unless defined? @@proc
     return unless @@proc
     if message.present?
       @@proc.message = "#{@@proc.message}#{message}\n"
@@ -137,7 +144,7 @@ class Script
   end
 
   def self.lock
-    @@proc = Sys::Process.lock(name: @@path, site_id: @@site.try(:id), options: @@options, time_limit: @@kill, lock_by: @@lock_by)
+    @@proc ||= Sys::Process.lock(name: @@path, site_id: @@site.try(:id), options: @@options, time_limit: @@kill, lock_by: @@lock_by)
     @@time = @@proc.created_at if @@proc
     @@proc
   end

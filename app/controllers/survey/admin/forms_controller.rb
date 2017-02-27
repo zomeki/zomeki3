@@ -1,11 +1,10 @@
 require 'csv'
-
 class Survey::Admin::FormsController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 
   def pre_dispatch
     @content = Survey::Content::Form.find(params[:content])
-    return error_auth unless Core.user.has_priv?(:read, :item => @content.concept)
+    return error_auth unless Core.user.has_priv?(:read, item: @content.concept)
     @item = @content.forms.find(params[:id]) if params[:id].present?
   end
 

@@ -28,6 +28,7 @@ class Cms::Admin::Node::BaseController < Cms::Controller::Admin::Base
 
   def show
     @item = model.find(params[:id])
+    return error_auth unless @item.readable?
     _show @item
   end
 

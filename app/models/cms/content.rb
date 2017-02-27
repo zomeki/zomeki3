@@ -25,6 +25,10 @@ class Cms::Content < ApplicationRecord
   before_create :set_default_settings_from_configs
   after_save :save_settings
 
+  def readable?
+    Core.user.has_priv?(:read, item: concept)
+  end
+
   def in_settings
     unless @in_settings
       values = {}
