@@ -20,7 +20,6 @@ class Sys::Group < ApplicationRecord
 
   before_save :disable_users, if: -> { state_changed? && state == 'disabled' }
   before_destroy :disable_users
-  after_save :copy_name_en_as_url_name
 
   validates :state, :level_no, :name, :ldap, presence: true
   validates :code, presence: true,
@@ -120,10 +119,6 @@ class Sys::Group < ApplicationRecord
       end
     end
     return true
-  end
-
-  def copy_name_en_as_url_name
-    Organization::Group.where(sys_group_code: code).update_all(name: name_en)
   end
 
   class << self
