@@ -4,7 +4,7 @@ class Cms::Admin::Content::BaseController < Cms::Controller::Admin::Base
   
   def pre_dispatch_content
     @content = Cms::Content.find(params[:id])
-    return error_auth unless Core.user.has_auth?(:designer)
+    return error_auth unless Core.user.has_priv?(:read, item: @content.concept)
   end
 
   def model
