@@ -18,10 +18,10 @@ class Script
   def self.run(path, options = {})
     @@kill     = 3.hours.to_i
     @@path     = path
+    @@proc     = nil
     @@time     = nil
     @@success  = 0
     @@reflesh  = 10
-    @@proc     = Sys::Process.find_by(id: options.delete(:process_id)) if options[:process_id]
     @@site     = Cms::Site.find_by(id: options.delete(:site_id))
     @@lock_by  = options.delete(:lock_by)
     @@options  = options
@@ -144,7 +144,12 @@ class Script
   end
 
   def self.lock
-    @@proc ||= Sys::Process.lock(name: @@path, site_id: @@site.try(:id), options: @@options, time_limit: @@kill, lock_by: @@lock_by)
+    @@proc =
+      if @@options[:process_id]
+        Sys::Process.find_by(id: @@options[:process_id])
+      else
+        Sys::Process.lock(name: @@path, site_id: @@site.try(:id), options: @@options, time_limit: @@kill, lock_by: @@lock_by)
+      end
     @@time = @@proc.created_at if @@proc
     @@proc
   end
