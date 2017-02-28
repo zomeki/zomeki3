@@ -1,5 +1,5 @@
 module Reception::CourseHelper
-  def course_replace(course, doc_style, date_style, time_style='')
+  def course_replace(course, doc_style, datetime_style)
 
     contents = {
       title: -> { course_replace_title(course) },
@@ -8,7 +8,7 @@ module Reception::CourseHelper
       total_number: -> { course_replace_total_number(course) },
       charge: -> { course_replace_charge(course) },
       remarks: -> { course_replace_remarks(course) },
-      hold_date: -> { course_replace_hold_date(course, date_style) },
+      hold_date: -> { course_replace_hold_date(course, datetime_style) },
       place: -> { course_replace_place(course) },
       name: -> { course_replace_name(course) },
       link: -> { course_replace_link(course) },
@@ -61,11 +61,11 @@ module Reception::CourseHelper
     end
   end
 
-  def course_replace_hold_date(course, date_style)
+  def course_replace_hold_date(course, datetime_style)
     open = course.public_opens.select(&:applicable?).first
     if open && open.open_on
-      ds = localize_wday(date_style, open.open_on.wday)
-      content_tag(:span, open.open_on.strftime(ds), class: 'hold_date')
+      ds = localize_wday(datetime_style, open.open_on.wday)
+      content_tag(:span, open.open_on_start_at.strftime(ds), class: 'hold_date')
     end
   end
 
