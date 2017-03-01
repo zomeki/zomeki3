@@ -58,12 +58,6 @@ class Cms::Script::Publication < Cms::Script::Base
 
     #uri  = (params[:uri] =~ /\.html$/ ? "#{params[:uri]}.r" : "#{params[:uri]}index.html.r")
     path = (params[:path] =~ /\.html$/ ? "#{params[:path]}.r" : "#{params[:path]}index.html.r")
-    smart_phone_path =
-      if params[:smart_phone_path].present? && publish_smart_phone_page?(site, item)
-        params[:smart_phone_path] =~ /\.html$/ ? "#{params[:smart_phone_path]}.r" : "#{params[:smart_phone_path]}index.html.r"
-      else
-        nil
-      end
     dep  = params[:dependent] ? "#{params[:dependent]}/ruby" : "ruby"
 
     ruby = nil
@@ -80,10 +74,17 @@ class Cms::Script::Publication < Cms::Script::Base
         Timeout.timeout(600) do
           rendered = render_public_as_string(uri, site: site)
           item.publish_page(rendered, path: path, dependent: dep)
-          if smart_phone_path
-            rendered = render_public_as_string(uri, site: site, agent_type: :smart_phone)
-            item.publish_page(rendered, path: smart_phone_path, dependent: "#{dep}_smart_phone")
-          end
+
+          #smart_phone_path =
+          #  if params[:smart_phone_path].present? && publish_smart_phone_page?(site, item)
+          #    params[:smart_phone_path] =~ /\.html$/ ? "#{params[:smart_phone_path]}.r" : "#{params[:smart_phone_path]}index.html.r"
+          #  else
+          #    nil
+          #  end
+          #if smart_phone_path
+          #  rendered = render_public_as_string(uri, site: site, agent_type: :smart_phone)
+          #  item.publish_page(rendered, path: smart_phone_path, dependent: "#{dep}_smart_phone")
+          #end
         end
       rescue Timeout::Error => e
         ::Script.error "#{uri} Timeout"

@@ -2,8 +2,8 @@ class Approval::Admin::ApprovalFlowsController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 
   def pre_dispatch
-    return error_auth unless @content = Approval::Content::ApprovalFlow.find_by(id: params[:content])
-    return error_auth unless Core.user.has_priv?(:read, :item => @content.concept)
+    @content = Approval::Content::ApprovalFlow.find(params[:content])
+    return error_auth unless Core.user.has_priv?(:read, item: @content.concept)
   end
 
   def index

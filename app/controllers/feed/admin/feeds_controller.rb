@@ -2,8 +2,8 @@ class Feed::Admin::FeedsController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 
   def pre_dispatch
-    return error_auth unless @content = Feed::Content::Feed.find_by(id: params[:content])
-    return error_auth unless Core.user.has_priv?(:read, :item => @content.concept)
+    @content = Feed::Content::Feed.find(params[:content])
+    return error_auth unless Core.user.has_priv?(:read, item: @content.concept)
   end
 
   def index

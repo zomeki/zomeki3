@@ -10,8 +10,8 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   before_action :check_intercepted, only: [:update]
 
   def pre_dispatch
-    return http_error(404) unless @content = GpArticle::Content::Doc.find_by(id: params[:content])
-    return error_auth unless Core.user.has_priv?(:read, :item => @content.concept)
+    @content = GpArticle::Content::Doc.find(params[:content])
+    return error_auth unless Core.user.has_priv?(:read, item: @content.concept)
     return redirect_to url_for(params.permit(:target, :target_state, :target_public).merge(action: :index)) if params[:reset_criteria]
 
     @item = @content.docs.find(params[:id]) if params[:id].present?

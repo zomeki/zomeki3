@@ -3,16 +3,22 @@
 <table class="show">
   <tr>
     <th><%= @item.locale(:state) %></th>
-    <td><%= f.radio_buttons :state, @item.states, :class => 'status' %></td>
+    <td><%= f.radio_buttons :state, @item.states, class: 'status' %></td>
   </tr><tr>
     <th><%= @item.locale(:published_at) %></th>
-    <td><%= f.text_field :published_at, :class => 'datetime pulished_at' %></td>
+    <td><%= f.text_field :published_at, value: @item.published_at.try(:strftime, '%Y-%m-%d %H:%M'), class: 'datetimepicker pulished_at' %></td>
   </tr><tr>
     <th><%= @item.locale(:title) %></th>
-    <td><%= f.text_field :title, :class => 'string title' %></td>
+    <td><%= f.text_field :title, class: 'string title' %></td>
   </tr><tr>
     <th colspan="2"><%= @item.locale(:body) %></th>
   </tr><tr>
-    <td colspan="2"><%= f.text_area :body, :class => 'string body ckeditor' %></td>
+    <td colspan="2"><%= f.text_area :body, class: 'string body ckeditor' %></td>
   </tr>
 </table>
+
+<script type="text/javascript">
+$(function() {
+  <%= enable_datetimepicker_script -%>
+});
+</script>

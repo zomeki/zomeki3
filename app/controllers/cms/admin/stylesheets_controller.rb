@@ -10,7 +10,7 @@ class Cms::Admin::StylesheetsController < Cms::Controller::Admin::Base
     @path      = params[:path].to_s
     @full_path = "#{@root}/#{@path}"
     @base_uri  = ["#{Core.site.public_path}/", "/"]
-    @item      = Cms::Stylesheet.new_by_path(@path)
+    @item      = Cms::Stylesheet.new_by_path(Core.site.id, @path)
 
     if @path == ''
       root_dir = @item.upload_path

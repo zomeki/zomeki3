@@ -17,7 +17,7 @@ module Cms
       private
 
       def rewrite(env)
-        env['PATH_INFO'].gsub!(%r{/_(mobile|smartphone)}, '')
+        env['PATH_INFO'].gsub!(%r{^/_(mobile|smartphone)}, '')
       end
     end
   end
