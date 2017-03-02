@@ -3,22 +3,22 @@ module Cms::Model::Auth::Concept
 
   def creatable?
     return false unless Core.user.has_auth?(:designer)
-    return Core.user.has_priv?(:create, item: concept)
+    return Core.user.has_priv?(:create, item: concept, site_id: read_attribute(:site_id))
   end
   
   def readable?
     return false unless Core.user.has_auth?(:designer)
-    return Core.user.has_priv?(:read, item: concept)
+    return Core.user.has_priv?(:read, item: concept, site_id: read_attribute(:site_id))
   end
   
   def editable?
     return false unless Core.user.has_auth?(:designer)
-    return Core.user.has_priv?(:update, item: concept)
+    return Core.user.has_priv?(:update, item: concept, site_id: read_attribute(:site_id))
   end
 
   def deletable?
     return false unless Core.user.has_auth?(:designer)
-    return Core.user.has_priv?(:delete, item: concept)
+    return Core.user.has_priv?(:delete, item: concept, site_id: read_attribute(:site_id))
   end
 
   class_methods do

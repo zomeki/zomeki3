@@ -152,8 +152,9 @@ class Sys::User < ApplicationRecord
 
   def has_priv?(action, options = {})
     return true if root?
+    return true if has_auth?(:manager) &&
+                   (options[:site_id].in?(site_ids) || (options[:item] && options[:item].site_id.in?(site_ids)))
     return false unless options[:item]
-    return true if has_auth?(:manager) && options[:item].site_id.in?(site_ids)
 
     role_ids = Sys::ObjectPrivilege.where(action: action.to_s, privilegable: options[:item]).pluck(:role_id)
     users_roles.where(role_id: role_ids).exists?
