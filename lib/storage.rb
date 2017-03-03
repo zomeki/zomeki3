@@ -40,7 +40,10 @@ module Storage
   
   def self.entries(path)
     paths = []
-    ::Dir::entries(path).each {|p| paths << p if p !~ /^\.+$/ }
+    ::Dir::entries(path).each do |p|
+      p = p.force_encoding(Encoding.default_external).encode('utf-8', undef: :replace, invalid: :replace, replace: '?')
+      paths << p if p !~ /^\.+$/
+    end
     paths
   end
   
