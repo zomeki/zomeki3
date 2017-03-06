@@ -390,7 +390,11 @@ $(function() {
     <td><%= text_field_tag 'item[extra_values][doc_publish_more_pages]', @item.extra_values[:doc_publish_more_pages], class: 'number' %></td>
   </tr>
   <tr>
-    <th>月表示形式</th>
+    <th>週タイトル表示形式</th>
+    <td><%= text_field_tag 'item[extra_values][doc_weekly_style]', @item.extra_values[:doc_weekly_style], class: 'title' %></td>
+  </tr>
+  <tr>
+    <th>月タイトル表示形式</th>
     <td><%= text_field_tag 'item[extra_values][doc_monthly_style]', @item.extra_values[:doc_monthly_style], class: 'title' %></td>
   </tr>
 </table>

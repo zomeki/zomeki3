@@ -6,10 +6,14 @@
   </ul>
   <%- end -%>
   <div class="docs">
-    <%- if @docs.present? && @content.monthly_pagination? -%><h2 class="date"><%= monthly_title(@dates, @content.doc_monthly_style) %></h2><%- end -%>
-    <%- if @docs.present? && @content.weekly_pagination? -%><h2 class="date"><%= weekly_title(@dates, @content.date_style) %></h2><%- end -%>
-    <%- if @content.doc_list_style == 'by_date' && @content.simple_pagination?%>
-      <% @items.each do |date, docs| %>
+    <%- if @docs.present? -%>
+      <h2 class="date">
+        <%= monthly_page_title(@current_dates, @content.doc_monthly_title_style) if @content.monthly_pagination? %>
+        <%= weekly_page_title(@current_dates, @content.doc_weekly_title_style) if @content.weekly_pagination? %>
+      </h2>
+    <%- end -%>
+    <%- if @content.doc_list_style == 'by_date' && @content.simple_pagination? %>
+      <%- @items.each do |date, docs| -%>
         <h2 class="date"><%= date %></h2>
         <%=raw '<ul>' if @content.wrapper_tag == 'li' %>
         <%- docs.each do |doc| -%>
@@ -26,8 +30,8 @@
     <%- end -%>
   </div>
   <%- if @content.simple_pagination? -%>
-  <%= paginate @docs, {prev_label: @content.prev_label, next_label: @content.next_label} %>
+    <%= paginate @docs, prev_label: @content.prev_label, next_label: @content.next_label %>
   <%- else -%>
-  <%= period_pagination @prev_doc, @next_doc, Page.current_node, {prev_label: @content.prev_label, next_label: @content.next_label} if @docs.present? %>
+    <%= paginate_by_date Page.current_node.public_uri, @first_date, @prev_date, @next_date, page_style: @content.doc_list_pagination, prev_label: @content.prev_label, next_label: @content.next_label if @docs.present? %>
   <%- end -%>
 </div>

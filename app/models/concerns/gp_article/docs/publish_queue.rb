@@ -35,9 +35,17 @@ module GpArticle::Docs::PublishQueue
   end
 
   def enqueue_publisher_for_node
-    Cms::Publisher.register(content.site_id, content.public_nodes.select(:id, :parent_id, :name),
-        target_date: display_published_at || published_at
-      )
+    extra_flag =
+      if content.simple_pagination?
+        nil
+      else
+        column = content.docs_order_columns.first
+        changed_dates = [read_attribute(column)]
+        changed_dates << prev_edition.read_attribute(column) if prev_edition
+        changed_dates = changed_dates.compact.map { |d| d.strftime('%Y-%m-%d') }.uniq.sort
+        { target_date: changed_dates }
+      end
+    Cms::Publisher.register(content.site_id, content.public_nodes.select(:id, :parent_id, :name), extra_flag)
   end
 
   def enqueue_publisher_for_organization

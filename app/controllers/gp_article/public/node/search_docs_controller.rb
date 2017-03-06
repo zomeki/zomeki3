@@ -12,7 +12,7 @@ class GpArticle::Public::Node::SearchDocsController < Cms::Controller::Public::B
     @docs = @content.public_docs
     @docs = @docs.search_with_text(:title, :body, @keyword) if @keyword.present?
     @docs = @docs.categorized_into(@category_ids) if @category_ids.present?
-    @docs = @docs.order(display_published_at: :desc, published_at: :desc)
+    @docs = @docs.order(@content.docs_order_as_hash)
                  .paginate(page: params[:page], per_page: 20)
     return http_error(404) if @docs.current_page > @docs.total_pages
   end

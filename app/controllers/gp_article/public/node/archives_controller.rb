@@ -15,8 +15,8 @@ class GpArticle::Public::Node::ArchivesController < Cms::Controller::Public::Bas
     end
 
     @docs = @content.public_docs_for_list
-                    .with_date_between(:display_published_at, started_at, ended_at)
-                    .order(display_published_at: :desc, published_at: :desc)
+                    .with_date_between(@content.docs_order_column, started_at, ended_at)
+                    .order(@content.docs_order_as_hash)
 
     if @docs.empty?
       warn_log 'No archived docs'
@@ -24,16 +24,7 @@ class GpArticle::Public::Node::ArchivesController < Cms::Controller::Public::Bas
     end
 
     header_format = @month ? '%Y年%-m月' : '%Y年'
-    @items = @docs.inject([]) do |result, doc|
-        date = doc.display_published_at.strftime(header_format)
-
-        unless result.empty?
-          last_date = result.last[:doc].display_published_at.strftime(header_format)
-          date = nil if date == last_date
-        end
-
-        result.push(date: date, doc: doc)
-      end
+    @items = @docs.group_by { |doc| doc[@content.docs_order_column].try(:strftime, header_format) }
   end
 
   private

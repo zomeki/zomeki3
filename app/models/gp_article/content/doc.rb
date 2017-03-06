@@ -37,14 +37,6 @@ class GpArticle::Content::Doc < Cms::Content
     public_docs.visible_in_list
   end
 
-  def published_first_day
-    public_docs.visible_in_list.order(display_published_at: :desc, published_at: :desc).first.try(:display_published_at) || Date.today
-  end
-
-  def published_last_day
-    public_docs.visible_in_list.order(display_published_at: :asc, published_at: :asc).first.try(:display_published_at) || Date.today
-  end
-
   def organization_content_group
     if organization_content_group_setting
       @organization_content_group ||= organization_content_group_setting.organization_content_group
@@ -286,8 +278,39 @@ class GpArticle::Content::Doc < Cms::Content
     setting_extra_value(:doc_list_pagination, :doc_publish_more_pages).to_i
   end
 
-  def doc_monthly_style
+  def doc_monthly_title_style
     setting_extra_value(:doc_list_pagination, :doc_monthly_style)
+  end
+
+  def doc_weekly_title_style
+    setting_extra_value(:doc_list_pagination, :doc_weekly_style)
+  end
+
+  def docs_order
+    setting_value(:docs_order).to_s
+  end
+
+  def docs_order_columns
+    if docs_order.blank? || docs_order =~ /^published_at/
+      [:display_published_at, :published_at]
+    else
+      [:display_updated_at, :updated_at]
+    end
+  end
+
+  def docs_order_column
+    docs_order_columns.first
+  end
+
+  def docs_order_direction
+    docs_order.include?('asc') ? :asc : :desc
+  end
+
+  def docs_order_as_hash
+    direction = docs_order_direction
+    docs_order_columns.each_with_object({}) do |column, hash|
+      hash.merge!(column => direction)
+    end
   end
 
   def rel_docs_style
