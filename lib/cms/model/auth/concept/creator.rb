@@ -2,19 +2,19 @@ module Cms::Model::Auth::Concept::Creator
   extend ActiveSupport::Concern
 
   def creatable?
-    Core.user.has_priv?(:create, item: concept)
+    Core.user.has_priv?(:create, item: concept, site_id: read_attribute(:site_id))
   end
-  
+
   def readable?
-    Core.user.has_priv?(:read, item: concept)
+    Core.user.has_priv?(:read, item: concept, site_id: read_attribute(:site_id))
   end
-  
+
   def editable?
-    Core.user.has_priv?(:update, item: concept)
+    Core.user.has_priv?(:update, item: concept, site_id: read_attribute(:site_id))
   end
 
   def deletable?
-    Core.user.has_priv?(:delete, item: concept)
+    Core.user.has_priv?(:delete, item: concept, site_id: read_attribute(:site_id))
   end
 
   class_methods do
