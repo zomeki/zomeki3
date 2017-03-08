@@ -48,6 +48,12 @@ class Reception::Open < ApplicationRecord
     end
   end
 
+  def open_on_start_at
+    d = open_on.to_datetime
+    d += start_at.seconds_since_midnight.seconds if start_at
+    d
+  end
+
   def state_draft?
     state == 'draft'
   end
