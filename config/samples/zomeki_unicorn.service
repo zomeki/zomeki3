@@ -6,7 +6,7 @@ After=postgresql-9.5.service
 Type=simple
 User=zomeki
 WorkingDirectory=/var/www/zomeki/
-Environment=RAILS_ENV=delayed_job
+Environment=RAILS_ENV=production
 SyslogIdentifier=zomeki_unicorn
 PIDFile=/var/www/zomeki/tmp/pids/unicorn.pid
 ExecStart=/usr/local/rbenv/shims/bundle exec unicorn_rails -c config/unicorn/production.rb -E production
