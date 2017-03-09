@@ -165,11 +165,12 @@ private
   end
 
   def event_image(event)
-    if doc = event.doc
+    if (doc = event.doc)
       doc_image_tag(doc)
-    else
-      return nil unless f = event.image_files.first
+    elsif (f = event.image_files.first)
       image_tag("#{f.parent.content.public_node.public_uri}#{f.parent.name}/file_contents/#{url_encode f.name}", alt: f.title, title: f.title)
+    elsif event.content.default_image.present?
+      image_tag(event.content.default_image)
     end
   end
 
