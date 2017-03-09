@@ -8,8 +8,8 @@
   <div class="docs">
     <%- if @docs.present? -%>
       <h2 class="date">
-        <%= monthly_page_title(@current_dates, @content.doc_monthly_title_style) if @content.monthly_pagination? %>
-        <%= weekly_page_title(@current_dates, @content.doc_weekly_title_style) if @content.weekly_pagination? %>
+        <%= monthly_page_title(@page_info[:current_dates], @content.doc_monthly_title_style) if @content.monthly_pagination? %>
+        <%= weekly_page_title(@page_info[:current_dates], @content.doc_weekly_title_style) if @content.weekly_pagination? %>
       </h2>
     <%- end -%>
     <%- if @content.doc_list_style == 'by_date' && @content.simple_pagination? %>
@@ -32,6 +32,6 @@
   <%- if @content.simple_pagination? -%>
     <%= paginate @docs, prev_label: @content.prev_label, next_label: @content.next_label %>
   <%- else -%>
-    <%= paginate_by_date Page.current_node.public_uri, @first_date, @prev_date, @next_date, page_style: @content.doc_list_pagination, prev_label: @content.prev_label, next_label: @content.next_label if @docs.present? %>
+    <%= paginate_by_date Page.current_node.public_uri, page_info: @page_info, page_style: @content.doc_list_pagination, prev_label: @content.prev_label, next_label: @content.next_label if @docs.present? %>
   <%- end -%>
 </div>

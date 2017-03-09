@@ -106,20 +106,18 @@ class Cms::Script::Publication < Cms::Script::Base
   end
 
   def simple_pages(first, limit)
-    first.upto(limit).map { |p| { id: p, pagination: p == 1 ? "" : ".p#{p}" } }
+    first.upto(limit).map do |p|
+      { id: p, pagination: p == 1 ? "" : simple_pagination(p) }
+    end
   end
 
-  def weekly_pages(first, limit, first_date, last_date, direction = :desc)
-    first.upto(limit).each_with_object([]) do |p, pages|
-      case direction
-      when :desc
-        date = first_date - (p - 1).week
-        next if last_date && last_date > date
-      when :asc
-        date = first_date + (p - 1).week
-        next if last_date && last_date < date
-      end
-      pages << { id: date, pagination: p == 1 ? "" : weekly_pagination(date) }
+  def simple_pagination(p)
+    ".p#{p}"
+  end
+
+  def weekly_pages(page_dates)
+    page_dates.map.with_index(1) do |date, p|
+      { id: date, pagination: p == 1 ? "" : weekly_pagination(date) }
     end
   end
 
@@ -127,17 +125,9 @@ class Cms::Script::Publication < Cms::Script::Base
     date.beginning_of_week.strftime('.%Y%m%d')
   end
 
-  def monthly_pages(first, limit, first_date, last_date, direction = :desc)
-    first.upto(limit).each_with_object([]) do |p, pages|
-      case direction
-      when :desc
-        date = first_date - (p - 1).month
-        next if last_date && last_date > date
-      when :asc
-        date = first_date + (p - 1).month
-        next if last_date && last_date < date
-      end
-      pages << { id: date, pagination: p == 1 ? "" : monthly_pagination(date) }
+  def monthly_pages(page_dates)
+    page_dates.map.with_index(1) do |date, p|
+      { id: date, pagination: p == 1 ? "" : monthly_pagination(date) }
     end
   end
 
@@ -149,8 +139,8 @@ class Cms::Script::Publication < Cms::Script::Base
     Zomeki.config.application["cms.publish_more_pages"].to_i
   end
 
-  def publish_more(item, uri:, path:, smart_phone_path: nil, dependent: nil,
-                         first: 1, limit: default_limit_from_config, file: 'index', page_style: 'simple')
+  def publish_more(item, uri:, path:, smart_phone_path: nil, dependent: nil, file: 'index',
+                         first: 1, limit: default_limit_from_config, page_style: 'simple')
     limit = (limit < 1 ? 1 : 1 + limit)
 
     pages = simple_pages(first, limit)
@@ -160,7 +150,6 @@ class Cms::Script::Publication < Cms::Script::Base
       p_smart_phone_path = (smart_phone_path.present? ? "#{smart_phone_path}#{file}#{page[:pagination]}.html" : nil)
       p_dep  = "#{dependent}#{page[:pagination]}"
       rs = publish_page(item, uri: p_uri, path: p_path, smart_phone_path: p_smart_phone_path, dependent: p_dep)
-
       break unless rs
 
       page[:published] = true
@@ -170,17 +159,14 @@ class Cms::Script::Publication < Cms::Script::Base
     clean_publshers(item, pages, dependent: dependent)
   end
 
-  def publish_more_dates(item, uri:, path:, smart_phone_path: nil, dependent: nil,
-                               first: 1, limit: default_limit_from_config, file: 'index',
-                               page_style: 'monthly', first_date:, last_date:, direction:)
-    limit = (limit < 1 ? 1 : 1 + limit)
-
+  def publish_more_dates(item, uri:, path:, smart_phone_path: nil, dependent: nil, file: 'index',
+                               page_style: 'monthly', page_dates:)
     pages =
       case page_style.to_sym
       when :weekly
-        weekly_pages(first, limit, first_date, last_date, direction)
+        weekly_pages(page_dates)
       when :monthly
-        monthly_pages(first, limit, first_date, last_date, direction)
+        monthly_pages(page_dates)
       else
         raise 'invalid page page_style option'
       end
@@ -192,19 +178,15 @@ class Cms::Script::Publication < Cms::Script::Base
       p_dep  = "#{dependent}#{page[:pagination]}"
       rs = publish_page(item, uri: p_uri, path: p_path, smart_phone_path: p_smart_phone_path, dependent: p_dep)
 
-      break if rs.nil? &&
-        ((direction == :desc && last_date > page[:id]) || (direction == :asc && last_date < page[:id]))
-
-      page[:published] = true
+      page[:published] = true if rs
     end
 
     ## remove over files
     clean_publshers(item, pages, dependent: dependent)
   end
 
-  def publish_target_dates(item, uri:, path:, smart_phone_path: nil, dependent: nil,
-                               first: 1, limit: default_limit_from_config, file: 'index',
-                               page_style: 'monthly', first_date:, last_date:, target_dates: [])
+  def publish_target_dates(item, uri:, path:, smart_phone_path: nil, dependent: nil, file: 'index',
+                                 page_style: 'monthly', first_date:, target_dates: [])
     target_dates.each do |date|
       pagination =
         case page_style.to_sym
@@ -217,7 +199,11 @@ class Cms::Script::Publication < Cms::Script::Base
       p_path = "#{path}#{file}#{pagination}.html"
       p_smart_phone_path = (smart_phone_path.present? ? "#{smart_phone_path}#{file}#{pagination}.html" : nil)
       p_dep  = "#{dependent}#{pagination}"
-      publish_page(item, uri: p_uri, path: p_path, smart_phone_path: p_smart_phone_path, dependent: p_dep)
+      rs = publish_page(item, uri: p_uri, path: p_path, smart_phone_path: p_smart_phone_path, dependent: p_dep)
+
+      unless rs
+        item.publishers.where(dependent: related_dependents(p_dep)).destroy_all
+      end
     end
   end
 
@@ -225,25 +211,30 @@ class Cms::Script::Publication < Cms::Script::Base
     published_deps = pages.select { |page| page[:published] }
                           .map { |page| "#{dependent}#{page[:pagination]}" }
 
-    overall_deps = overall_dependents(:simple, dependent)
-    overall_deps += overall_dependents(:weekly, dependent)
-    overall_deps += overall_dependents(:monthly, dependent)
+    overall_deps = overall_dependents(:simple, dependent) +
+                   overall_dependents(:weekly, dependent) +
+                   overall_dependents(:monthly, dependent)
 
-    needless_deps = overall_deps - published_deps
-    needless_deps = needless_deps.flat_map { |dep| [dep, "#{dep}/ruby", "#{dep}_smart_phone", "#{dep}/ruby_smart_phone"] } 
+    needless_deps = (overall_deps - published_deps).flat_map { |dep| related_dependents(dep) } 
     item.publishers.where(dependent: needless_deps).destroy_all
   end
 
+  def related_dependents(dep)
+    [dep, "#{dep}/ruby", "#{dep}_smart_phone", "#{dep}/ruby_smart_phone"]
+  end
+
   def overall_dependents(page_style, dependent)
-    pages =
+    paginations =
       case page_style.to_sym
       when :simple
-        simple_pages(2, 300)
+        2.upto(200).map { |p| simple_pagination(p) }
       when :weekly
-        weekly_pages(2, 300, Time.now + 1.years, Time.now - 5.years)
+        dates = (Date.today - 5.years) .. (Date.today + 1.years)
+        dates.select { |d| d.wday == 1 }.map { |d| weekly_pagination(d) }
       when :monthly
-        monthly_pages(2, 300, Time.now + 1.years, Time.now - 5.years)
+        dates = (Date.today - 5.years) .. (Date.today + 1.years)
+        dates.select { |d| d.day == 1 }.map { |d| monthly_pagination(d) }
       end
-    pages.map { |p| "#{dependent}#{p[:pagination]}" }
+    paginations.map { |p| "#{dependent}#{p}" }
   end
 end

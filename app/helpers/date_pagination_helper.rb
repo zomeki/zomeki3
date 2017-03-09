@@ -1,20 +1,20 @@
 module DatePaginationHelper
-  def paginate_by_date(base_uri, first_date, prev_date, next_date, page_style: :monthly, prev_label:, next_label:, lang: :ja)
+  def paginate_by_date(base_uri, page_info:, page_style: :monthly, prev_label: nil, next_label: nil, lang: :ja)
     prev_label = prev_label.presence || date_pagination_prev_label(lang)
     next_label = next_label.presence || date_pagination_next_label(lang)
 
     links = content_tag(:div, class: 'pagination') do
-      if prev_date
-        prev_pagination = date_style_pagination(prev_date, page_style)
-        prev_pagination = '' if prev_pagination == date_style_pagination(first_date, page_style)
+      if page_info[:prev_date]
+        prev_pagination = date_style_pagination(page_info[:prev_date], page_style)
+        prev_pagination = '' if prev_pagination == date_style_pagination(page_info[:first_date], page_style)
         prev_link = link_to prev_label, "#{base_uri}index#{prev_pagination}.html"
         concat content_tag(:span, prev_link, class: 'previous_page', rel: 'previous')
       else
         concat content_tag(:span, prev_label, class: 'previous_page disabled', rel: 'previous')
       end
       concat content_tag(:span, '|', class: 'separator')
-      if next_date
-        next_pagination = date_style_pagination(next_date, page_style)
+      if page_info[:next_date]
+        next_pagination = date_style_pagination(page_info[:next_date], page_style)
         next_link = link_to next_label, "#{base_uri}index#{next_pagination}.html"
         concat content_tag(:span, next_link, class: 'next_page', rel: 'next')
       else

@@ -36,17 +36,13 @@ class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
       @docs = @docs.paginate(page: params[:page], per_page: @content.doc_list_number)
       return http_error(404) if @docs.current_page > @docs.total_pages
     else
-      query = DatePaginationQuery.new(@docs,
-                                      column: @content.docs_order_column,
-                                      direction: @content.docs_order_direction,
-                                      style: @content.doc_list_pagination,
-                                      current_date: params[:date].presence)
-      @current_dates = query.current_page_dates
-      @first_date = query.first_page_date
-      @prev_date = query.prev_page_date
-      @next_date = query.next_page_date
+      @page_info = DatePaginationQuery.new(@docs,
+                                           page_style: @content.doc_list_pagination,
+                                           column: @content.docs_order_column,
+                                           direction: @content.docs_order_direction,
+                                           current_date: current_date).page_info
 
-      @docs = @docs.search_date_column(@content.docs_order_column, 'between', @current_dates)
+      @docs = @docs.search_date_column(@content.docs_order_column, 'between', @page_info[:current_dates])
       return http_error(404) if params[:date].present? && @docs.blank?
     end
 
@@ -103,6 +99,14 @@ class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
   end
 
   private
+
+  def current_date
+    if params[:date].present?
+      params[:date].size == 6 ? "#{params[:date]}01".to_time : params[:date].to_time
+    else
+      nil
+    end
+  end
 
   def public_or_preview_docs(id: nil, name: nil)
     unless Core.mode == 'preview'

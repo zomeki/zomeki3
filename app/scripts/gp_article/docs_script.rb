@@ -7,47 +7,37 @@ class GpArticle::DocsScript < Cms::Script::Publication
     publish_page(@node, uri: "#{uri}index.atom", path: "#{path}index.atom", dependent: :atom)
 
     content = @node.content
-    common_params = {
-      uri: uri, path: path, smart_phone_path: smart_phone_path,
-      limit: content.doc_publish_more_pages
-    }
+    common_params = { uri: uri, path: path, smart_phone_path: smart_phone_path }
     if content.doc_list_pagination == 'simple'
-      publish_more(@node, common_params)
+      publish_more(@node, common_params.merge(limit: content.doc_publish_more_pages))
     else
       if params[:target_date].present?
-        target_dates = load_neighbor_dates(content, params[:target_date])
-        first_date, last_date = load_first_and_last_date(content)
         publish_target_dates(@node, common_params.merge(
                                     page_style: content.doc_list_pagination,
-                                    first_date: first_date, last_date: last_date, target_dates: target_dates))
+                                    first_date: date_pagination_query(content).first_page_date,
+                                    target_dates: load_neighbor_dates(content, params[:target_date])))
       else
-        first_date, last_date = load_first_and_last_date(content)
         publish_more_dates(@node, common_params.merge(
                                   page_style: content.doc_list_pagination,
-                                  direction: content.docs_order_direction,
-                                  first_date: first_date, last_date: last_date))
+                                  page_dates: date_pagination_query(content).page_dates))
       end
     end
   end
 
-  def load_first_and_last_date(content)
-    query = DatePaginationQuery.new(content.public_docs_for_list,
-                                    column: content.docs_order_column,
-                                    style: content.doc_list_pagination,
-                                    direction: content.docs_order_direction)
-    return query.first_page_date, query.last_page_date
+  def date_pagination_query(content, current_date = nil)
+    DatePaginationQuery.new(content.public_docs_for_list,
+                            page_style: content.doc_list_pagination,
+                            column: content.docs_order_column,
+                            direction: content.docs_order_direction,
+                            current_date: current_date)
   end
 
   def load_neighbor_dates(content, target_date)
     dates = []
     Array(target_date).each do |date|
-      date = Time.parse(date)
-      query = DatePaginationQuery.new(content.public_docs_for_list,
-                                      column: content.docs_order_column,
-                                      style: content.doc_list_pagination,
-                                      direction: content.docs_order_direction,
-                                      current_date: date)
-      dates += [query.next_page_date, date, query.prev_page_date]
+      current_date = Time.parse(date)
+      query = date_pagination_query(content, current_date)
+      dates += [query.next_page_date, current_date, query.prev_page_date]
     end
     dates.compact.uniq
   end
