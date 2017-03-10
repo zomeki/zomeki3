@@ -1,3 +1,19 @@
 <h2><%= menu_header @content.name, @form.title, Survey::Question.model_name.human %></h2>
 
-<%= render 'survey/admin/shared/menu' %>
+<div class="actionMenu">
+<%- case action_name -%>
+<%- when 'index' -%>
+  <%= link_to :new, { action: :new } %>
+<%- when 'show'-%>
+  <%= link_to :index, { action: :index } %>
+  <span class="separator"></span>
+  <%= link_to :edit, { action: :edit } if @item.editable? %>
+  <%= link_to :destroy, { action: :destroy }, method: :delete, confirm: '削除してよろしいですか？' if @item.deletable? %>
+<%- when 'new', 'create' -%>
+  <%= link_to :index, { action: :index } %>
+<%- when 'edit', 'update' -%>
+  <%= link_to :index, { action: :index } %>
+  <span class="separator"></span>
+  <%= link_to :show, { action: :show } %>
+<%- end -%>
+</div>
