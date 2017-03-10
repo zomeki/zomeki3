@@ -1,44 +1,52 @@
 <ul class="courses">
 <%- courses.each do |course| -%>
   <li>
-    <div class="title"><%= course.title %></div>
-    <div class="subtitle"><%=br course.subtitle %></div>
-    <div class="summary"><%=raw course.replace_file_path_for_public(course.body) %></div>
-    <div class="hold_dates">
-      <span>開催日時</span>
-      <span>
-        <ul>
-          <%- course.public_opens.each do |open| -%>
-            <li>
-              <span><%= open.open_at_text %></span>
-              <span class="link"><%= link_to_if open.applicable?, open.link_state_text, "#{course.public_uri}/applicants/?open_id=#{open.id}" %></span>
-            </li>
-          <%- end -%>
-        </ul>
-      </span>
-    </div>
-    <div class="total_number">
-      <span>定員</span>
-      <span><%= "#{course.capacity} 名" if course.capacity.present? %></span>
-    </div>
-    <div class="charge">
-      <span>受講料</span>
-      <span>
-        <span><%= "#{course.fee} 円" if course.fee.present? %></span>
-        <span><%= course.fee_remark %></span>
-      </span>
-    </div>
-    <div class="place">
-      <span>場所</span>
-      <span><%=raw course.public_opens.map(&:place).select(&:present?).uniq.map { |p| "<span>#{p}</span>" }.join(', ') %></span>
-    </div>
-    <div class="name">
-      <span>講師</span>
-      <span><%=raw course.public_opens.map(&:lecturer).select(&:present?).uniq.map { |l| "<span>#{l}</span>" }.join(', ') %></span>
-    </div>
-    <div class="remarks">
-      <span>備考</span>
-      <span><%=raw course.replace_file_path_for_public(course.remark) %></span>
+    <h2 class="title"><%= course.title %></h2>
+    <div class="body">
+      <h3 class="subtitle"><%=br course.subtitle %></h3>
+      <div class="summary"><%=raw course.replace_file_path_for_public(course.body) %></div>
+      <table class="detail">
+        <tbody>
+          <tr class="hold_dates">
+            <th scope="row">開催日時</th>
+            <td>
+              <ul>
+                <%- course.public_opens.each do |open| -%>
+                  <li>
+                    <span><%= open.open_at_text %></span>
+                    <span class="link">
+                      <%= link_to_if open.applicable?, open.link_state_text, "#{course.public_uri}/applicants/?open_id=#{open.id}" %>
+                    </span>
+                  </li>
+                <%- end -%>
+              </ul>
+            </td>
+          </tr>
+          <tr class="total_number">
+            <th scope="row">定員</th>
+            <td><%= "#{course.capacity} 名" if course.capacity.present? %></td>
+          </tr>
+          <tr class="charge">
+            <th scope="row">受講料</th>
+            <td>
+              <span><%= "#{course.fee} 円" if course.fee.present? %></span>
+              <span><%= course.fee_remark %></span>
+            </td>
+          </tr>
+          <tr class="place">
+            <th scope="row">場所</th>
+            <td><%=raw course.public_opens.map(&:place).select(&:present?).uniq.map { |p| "<span>#{p}</span>" }.join(', ') %></td>
+          </tr>
+          <tr class="name">
+            <th scope="row">講師</th>
+            <td><%=raw course.public_opens.map(&:lecturer).select(&:present?).uniq.map { |l| "<span>#{l}</span>" }.join(', ') %></td>
+          </tr>
+          <tr class="remarks">
+            <th scope="row">備考</th>
+            <td><%=raw course.replace_file_path_for_public(course.remark) %></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </li>
 <%- end -%>
