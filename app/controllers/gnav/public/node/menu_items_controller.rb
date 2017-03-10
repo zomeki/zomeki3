@@ -5,7 +5,7 @@ class Gnav::Public::Node::MenuItemsController < Cms::Controller::Public::Base
   end
 
   def index
-    @menu_items = @content.menu_items.paginate(page: params[:page], per_page: 20)
+    @menu_items = @content.public_menu_items.paginate(page: params[:page], per_page: 20)
       .preload_assocs(:public_node_ancestors_assocs)
     return http_error(404) if @menu_items.current_page > @menu_items.total_pages
 
@@ -15,7 +15,7 @@ class Gnav::Public::Node::MenuItemsController < Cms::Controller::Public::Base
   def show
     http_error(404) if params[:page]
 
-    @menu_item = @content.menu_items.find_by(name: params[:name])
+    @menu_item = @content.public_menu_items.find_by(name: params[:name])
     return http_error(404) unless @menu_item
 
     Page.current_item = @menu_item
