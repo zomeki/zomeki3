@@ -8,11 +8,13 @@ class Cms::DataFile < ApplicationRecord
   include Cms::Model::Auth::Concept::Creator
 
   include StateText
-  include Cms::Base::PublishQueue::Bracketee
 
   belongs_to :concept, :foreign_key => :concept_id, :class_name => 'Cms::Concept'
   belongs_to :site   , :foreign_key => :site_id   , :class_name => 'Cms::Site'
   belongs_to :node   , :foreign_key => :node_id   , :class_name => 'Cms::DataFileNode'
+
+  after_save    Cms::Publisher::BracketeeCallbacks.new, if: :changed?
+  after_destroy Cms::Publisher::BracketeeCallbacks.new
 
   after_destroy :remove_public_file
 

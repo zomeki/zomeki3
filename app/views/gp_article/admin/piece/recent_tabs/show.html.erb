@@ -7,6 +7,10 @@
     <td><%= @item.setting_value(:list_count) %></td>
   </tr>
   <tr>
+    <th><%= @item.locale :docs_order %></th>
+    <td><%= @item.class::DOCS_ORDER_OPTIONS.detect{|o| o.last == @item.setting_value(:docs_order) }.try(:first) %></td>
+  </tr>
+  <tr>
     <th><%= @item.locale :list_style %></th>
     <td colspan="3"><%= @item.setting_value(:list_style) %></td>
   </tr>

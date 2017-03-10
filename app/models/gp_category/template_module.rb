@@ -19,17 +19,16 @@ class GpCategory::TemplateModule < ApplicationRecord
                                         ['自カテゴリ直下のカテゴリ+1階層目カテゴリ表示（カテゴリで分類）', 'docs_8']]}
   MODULE_TYPE_FEATURE_OPTIONS = [['全記事', ''], ['新着記事', 'feature_1'], ['記事', 'feature_2']]
 
-  #TODO: migrate to strong_parameters
-  #attr_accessible :name, :title, :module_type, :module_type_feature, :wrapper_tag, :doc_style, :num_docs,
-  #                :upper_text, :lower_text
-
   belongs_to :content, :foreign_key => :content_id, :class_name => 'GpCategory::Content::CategoryType'
   validates :content_id, presence: true
 
+  after_initialize :set_defaults
+
+  after_save     GpCategory::Publisher::TemplateModuleCallbacks.new, if: :changed?
+  before_destroy GpCategory::Publisher::TemplateModuleCallbacks.new
+
   validates :name, presence: true, uniqueness: { scope: :content_id }
   validates :title, presence: true
-
-  after_initialize :set_defaults
 
   def module_type_text
     MODULE_TYPE_OPTIONS.values.flatten(1).detect{|o| o.last == module_type }.try(:first).to_s

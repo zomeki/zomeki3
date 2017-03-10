@@ -6,7 +6,6 @@ class Organization::Group < ApplicationRecord
   include Cms::Model::Auth::Content
 
   include StateText
-  include Organization::Groups::PublishQueue
   include Organization::Groups::Preload
 
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
@@ -26,6 +25,9 @@ class Organization::Group < ApplicationRecord
   validates :content_id, :presence => true
 
   after_initialize :set_defaults
+
+  after_save     Organization::Publisher::GroupCallbacks.new, if: :changed?
+  before_destroy Organization::Publisher::GroupCallbacks.new
 
   validates :sys_group_code, presence: true, uniqueness: { scope: :content_id }
   validates :name, presence: true, format: /\A[0-9A-Za-z\._-]*\z/i

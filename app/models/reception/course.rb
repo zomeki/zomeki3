@@ -6,7 +6,6 @@ class Reception::Course < ApplicationRecord
   include GpCategory::Model::Rel::Category
 
   include StateText
-  include Cms::Base::PublishQueue::Content
 
   STATE_OPTIONS = [['下書き','draft'],['公開中','public'],['非公開','closed']]
 
@@ -18,6 +17,9 @@ class Reception::Course < ApplicationRecord
 
   before_save :set_defaults
   after_save :set_name
+
+  after_save     Cms::Publisher::ContentCallbacks.new, if: :changed?
+  before_destroy Cms::Publisher::ContentCallbacks.new
 
   validates :title, presence: true
   validates :name, exclusion: { in: %w(categories) }

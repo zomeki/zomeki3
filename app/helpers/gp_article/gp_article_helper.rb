@@ -38,48 +38,4 @@ module GpArticle::GpArticleHelper
       end
     }.join.html_safe
   end
-
-  def monthly_title(dates, date_style)
-    dates.first.try(:strftime, date_style)
-  end
-
-  def weekly_title(dates, date_style)
-    %Q(#{dates.first.try(:strftime, date_style)}～#{dates.last.try(:strftime, date_style)})
-  end
-
-  def period_pagination(prev_doc, next_doc, node, options = {})
-    paginate_date_str = node.content.monthly_pagination? ? '.%Y%m' : '.%Y%m%d'
-    lang = options[:lang].presence || :ja
-    previous_label = I18n.t("will_paginate.previous_label", {locale: lang}).html_safe
-    next_label     = I18n.t("will_paginate.next_label", {locale: lang}).html_safe
-    if request.mobile?
-      previous_label = I18n.t("will_paginate.mobile_previous_label", {locale: lang}).html_safe
-      next_label     = I18n.t("will_paginate.mobile_next_label", {locale: lang}).html_safe
-    end
-    previous_label = options[:prev_label] if options[:prev_label].present?
-    next_label     = options[:next_label] if options[:next_label].present?
-
-
-    links = content_tag(:div, class: 'pagination') do
-      if prev_doc
-        prev_date = prev_doc.display_published_at.beginning_of_month.strftime(paginate_date_str) if node.content.monthly_pagination?
-        prev_date = prev_doc.display_published_at.beginning_of_week.strftime(paginate_date_str)  if node.content.weekly_pagination?
-        prev_date = '' if @first_day.strftime(paginate_date_str) == prev_date
-        prev_link = link_to previous_label, "#{node.public_uri}index#{prev_date}.html"
-        concat content_tag(:span, prev_link.html_safe, class: 'previous_page', rel: 'previous')
-      else
-        concat content_tag(:span, previous_label, class: 'previous_page disabled', rel: 'previous')
-      end
-      concat content_tag(:span, '|', class: 'separator')
-      if next_doc
-        next_date = next_doc.display_published_at.beginning_of_month.strftime(paginate_date_str) if node.content.monthly_pagination?
-        next_date = next_doc.display_published_at.beginning_of_week.strftime(paginate_date_str)  if node.content.weekly_pagination?
-        next_link = link_to next_label, "#{node.public_uri}index#{next_date}.html"
-        concat content_tag(:span, next_link.html_safe, class: 'next_page', rel: 'next')
-      else
-        concat content_tag(:span, next_label, class: 'next_page disabled', rel: 'next')
-      end
-    end
-    links.html_safe
-  end
 end

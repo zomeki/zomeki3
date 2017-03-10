@@ -8,7 +8,6 @@ class GpCategory::Category < ApplicationRecord
   include Cms::Model::Base::Page::TalkTask
 
   include StateText
-  include GpCategory::Categories::PublishQueue
   include GpCategory::Categories::Preload
 
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
@@ -55,6 +54,9 @@ class GpCategory::Category < ApplicationRecord
   after_initialize :set_defaults
 
   before_validation :set_attributes_from_parent
+
+  after_save     GpCategory::Publisher::CategoryCallbacks.new, if: :changed?
+  before_destroy GpCategory::Publisher::CategoryCallbacks.new
 
   scope :with_root, -> { where(parent_id: nil) }
   scope :public_state, -> { where(state: 'public') }

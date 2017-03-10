@@ -12,7 +12,6 @@ class Cms::Piece < ApplicationRecord
   include Cms::Model::Auth::Concept
 
   include StateText
-  include Cms::Base::PublishQueue::Bracketee
 
   has_many :settings, -> { order(:sort_no) }, :foreign_key => :piece_id,
     :class_name => 'Cms::PieceSetting', :dependent => :destroy
@@ -25,6 +24,9 @@ class Cms::Piece < ApplicationRecord
 
   after_save :save_settings
   after_save :replace_new_piece
+
+  after_save    Cms::Publisher::BracketeeCallbacks.new, if: :changed?
+  after_destroy Cms::Publisher::BracketeeCallbacks.new
 
   scope :public_state, -> { where(state: 'public') }
 

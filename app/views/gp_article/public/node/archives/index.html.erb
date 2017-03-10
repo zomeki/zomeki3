@@ -1,11 +1,12 @@
 <div class="contentGpArticleDocs">
   <div class="docs">
-    <% @items.each_with_index do |item, idx| %>
-    <%- if item[:date] -%><%= '</ul>'.html_safe unless idx.zero? -%>
-    <h2 class="date"><%= item[:date] %></h2><ul>
+    <%- @items.each do |date, docs| -%>
+      <h2 class="date"><%= date %></h2>
+      <ul>
+        <%- docs.each do |doc| -%>
+          <li><%= doc_replace(doc, @content.list_style, @content.date_style, @content.time_style) %></li>
+        <%- end -%>
+      </ul>
     <%- end -%>
-    <li><%= doc_replace(item[:doc], @content.list_style, @content.date_style, @content.time_style) %></li>
-    <%- end -%>
-    <%= '</ul>'.html_safe unless @items.empty? -%>
   </div>
 </div>

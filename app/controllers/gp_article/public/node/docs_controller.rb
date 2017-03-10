@@ -24,7 +24,7 @@ class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
   end
 
   def index
-    @docs = @content.public_docs_for_list.order(display_published_at: :desc, published_at: :desc)
+    @docs = @content.public_docs_for_list.order(@content.docs_order_as_hash)
     if params[:format].in?(['rss', 'atom'])
       @docs = @docs.display_published_after(@content.feed_docs_period.to_i.days.ago) if @content.feed_docs_period.present?
       @docs = @docs.paginate(page: params[:page], per_page: @content.feed_docs_number)
@@ -36,28 +36,17 @@ class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
       @docs = @docs.paginate(page: params[:page], per_page: @content.doc_list_number)
       return http_error(404) if @docs.current_page > @docs.total_pages
     else
-      @dates = if @content.monthly_pagination?
-        date = params[:date].present? ? "#{params[:date]}01".to_date : @content.published_first_day
-        @first_day = @content.published_first_day.beginning_of_month
-        [date.beginning_of_month, date.end_of_month]
-      else
-        date = params[:date].present? ? params[:date].to_date : @content.published_first_day
-        @first_day = @content.published_first_day.beginning_of_week
-        [date.beginning_of_week, date.end_of_week]
-      end
+      @page_info = DatePaginationQuery.new(@docs,
+                                           page_style: @content.doc_list_pagination,
+                                           column: @content.docs_order_column,
+                                           direction: @content.docs_order_direction,
+                                           current_date: current_date).page_info
 
-      @prev_doc = @content.public_docs_for_list.order(display_published_at: :asc, published_at: :asc)
-        .select([:display_published_at, :published_at])
-        .where(GpArticle::Doc.arel_table[:display_published_at].gteq(@dates.last + 1.day)).first
-      @next_doc = @content.public_docs_for_list.order(display_published_at: :desc, published_at: :desc)
-        .select([:display_published_at, :published_at])
-        .where(GpArticle::Doc.arel_table[:display_published_at].lt(@dates.first - 1.day)).first
-
-      @docs = @docs.search_date_column(:display_published_at, 'between', @dates)
+      @docs = @docs.search_date_column(@content.docs_order_column, 'between', @page_info[:current_dates])
       return http_error(404) if params[:date].present? && @docs.blank?
     end
 
-    @items = @docs.group_by { |doc| doc.display_published_at.try(:strftime, @content.date_style) }
+    @items = @docs.group_by { |doc| doc[@content.docs_order_column].try(:strftime, @content.date_style) }
     render :index_mobile if Page.mobile?
   end
 
@@ -110,6 +99,14 @@ class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
   end
 
   private
+
+  def current_date
+    if params[:date].present?
+      params[:date].size == 6 ? "#{params[:date]}01".to_time : params[:date].to_time
+    else
+      nil
+    end
+  end
 
   def public_or_preview_docs(id: nil, name: nil)
     unless Core.mode == 'preview'

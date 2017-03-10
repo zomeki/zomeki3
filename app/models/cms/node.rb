@@ -14,7 +14,6 @@ class Cms::Node < ApplicationRecord
   include Cms::Model::Auth::Concept
 
   include StateText
-  include Cms::Nodes::PublishQueue
   include Cms::Nodes::Preload
 
   SITEMAP_STATE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
@@ -45,6 +44,8 @@ class Cms::Node < ApplicationRecord
   after_initialize :set_defaults
   after_update :move_directory, if: :path_changed?
   after_destroy :remove_file
+
+  after_save Cms::Publisher::NodeCallbacks.new, if: :changed?
 
   scope :public_state, -> { where(state: 'public') }
   scope :sitemap_order, -> { order('sitemap_sort_no IS NULL, sitemap_sort_no, name') }
