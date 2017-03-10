@@ -5,7 +5,6 @@ class Map::Marker < ApplicationRecord
   include GpCategory::Model::Rel::Category
 
   include StateText
-  include Cms::Base::PublishQueue::Content
 
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
 
@@ -22,6 +21,9 @@ class Map::Marker < ApplicationRecord
 
   after_initialize :set_defaults
   before_save :set_name
+
+  after_save     Cms::Publisher::ContentCallbacks.new, if: :changed?
+  before_destroy Cms::Publisher::ContentCallbacks.new
 
   scope :public_state, -> { where(state: 'public') }
 

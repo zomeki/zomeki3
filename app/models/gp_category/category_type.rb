@@ -7,7 +7,6 @@ class GpCategory::CategoryType < ApplicationRecord
   include Cms::Model::Base::Page::TalkTask
 
   include StateText
-  include GpCategory::CategoryTypes::PublishQueue
   include GpCategory::CategoryTypes::Preload
 
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
@@ -45,6 +44,9 @@ class GpCategory::CategoryType < ApplicationRecord
   validates :state, presence: true
 
   after_initialize :set_defaults
+
+  after_save     GpCategory::Publisher::CategoryTypeCallbacks.new, if: :changed?
+  before_destroy GpCategory::Publisher::CategoryTypeCallbacks.new
 
   scope :public_state, -> { where(state: 'public') }
 

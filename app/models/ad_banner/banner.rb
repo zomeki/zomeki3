@@ -5,7 +5,6 @@ class AdBanner::Banner < ApplicationRecord
   include Cms::Model::Auth::Content
 
   include StateText
-  include Cms::Base::PublishQueue::Content
 
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
   TARGET_OPTIONS = [['同一ウィンドウ', '_self'], ['別ウィンドウ', '_blank']]
@@ -42,6 +41,9 @@ class AdBanner::Banner < ApplicationRecord
 
   after_initialize :set_defaults
   before_create :set_token
+
+  after_save     Cms::Publisher::ContentCallbacks.new, if: :changed?
+  before_destroy Cms::Publisher::ContentCallbacks.new
 
   def image_uri
     return '' unless content.public_node

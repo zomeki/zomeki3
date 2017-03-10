@@ -5,7 +5,6 @@ class Gnav::MenuItem < ApplicationRecord
   include Cms::Model::Base::Page
 
   include StateText
-  include Cms::Base::PublishQueue::Content
   include Gnav::MenuItems::Preload
 
   SITEMAP_STATE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
@@ -26,6 +25,9 @@ class Gnav::MenuItem < ApplicationRecord
   validates :title, :presence => true
 
   after_initialize :set_defaults
+
+  after_save     Cms::Publisher::ContentCallbacks.new, if: :changed?
+  before_destroy Cms::Publisher::ContentCallbacks.new
 
   def public_uri
     return '' unless node = content.public_node

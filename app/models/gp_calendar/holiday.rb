@@ -6,7 +6,6 @@ class GpCalendar::Holiday < ApplicationRecord
 
   include StateText
   include GpCalendar::EventSync
-  include GpCalendar::Holidays::PublishQueue
 
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
   KIND_OPTIONS = [['休日', 'holiday'], ['イベント', 'event']]
@@ -20,6 +19,9 @@ class GpCalendar::Holiday < ApplicationRecord
   validates :state, :presence => true
 
   after_initialize :set_defaults
+
+  after_save     GpCalendar::Publisher::HolidayCallbacks.new, if: :changed?
+  before_destroy GpCalendar::Publisher::HolidayCallbacks.new
 
   validates :title, :presence => true
 

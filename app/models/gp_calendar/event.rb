@@ -7,7 +7,6 @@ class GpCalendar::Event < ApplicationRecord
 
   include StateText
   include GpCalendar::EventSync
-  include GpCalendar::Events::PublishQueue
 
   STATE_OPTIONS = [['公開中', 'public'], ['非公開', 'closed']]
   TARGET_OPTIONS = [['同一ウィンドウ', '_self'], ['別ウィンドウ', '_blank']]
@@ -22,6 +21,9 @@ class GpCalendar::Event < ApplicationRecord
 
   after_initialize :set_defaults
   before_save :set_name
+
+  after_save     GpCalendar::Publisher::EventCallbacks.new, if: :changed?
+  before_destroy GpCalendar::Publisher::EventCallbacks.new
 
   validates :started_on, :presence => true
   validates :ended_on, :presence => true

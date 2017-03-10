@@ -5,7 +5,6 @@ class Reception::Open < ApplicationRecord
   include Cms::Model::Auth::Content
 
   include StateText
-  include Cms::Base::PublishQueue::Content
 
   STATE_OPTIONS = [['下書き','draft'],['公開','public']]
 
@@ -13,6 +12,9 @@ class Reception::Open < ApplicationRecord
   has_many :applicants, dependent: :destroy
 
   after_save :save_tasks
+
+  after_save     Cms::Publisher::ContentCallbacks.new, if: :changed?
+  before_destroy Cms::Publisher::ContentCallbacks.new
 
   validates :open_on, presence: true
   validates :start_at, presence: true

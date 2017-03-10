@@ -7,9 +7,10 @@ class Cms::Layout < ApplicationRecord
   include Cms::Model::Rel::Bracket
   include Cms::Model::Auth::Concept
 
-  include Cms::Layouts::PublishQueue
-
   belongs_to :status,  :foreign_key => :state, :class_name => 'Sys::Base::Status'
+
+  after_save     Cms::Publisher::LayoutCallbacks.new, if: :changed?
+  before_destroy Cms::Publisher::LayoutCallbacks.new
 
   validates :state, :title, presence: true
   validates :name, presence: true, uniqueness: { scope: :concept_id },

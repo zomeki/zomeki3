@@ -4,7 +4,6 @@ class Feed::Feed < ApplicationRecord
   include Cms::Model::Auth::Content
 
   include StateText
-  include Cms::Base::PublishQueue::Content
 
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
   TARGET_OPTIONS = [['同一ウィンドウ', '_self'], ['別ウィンドウ', '_blank']]
@@ -23,6 +22,9 @@ class Feed::Feed < ApplicationRecord
   validates :uri, presence: true
 
   after_initialize :set_defaults
+
+  after_save     Cms::Publisher::ContentCallbacks.new, if: :changed?
+  before_destroy Cms::Publisher::ContentCallbacks.new
 
   def safe(alt = nil, &block)
     begin

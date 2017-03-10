@@ -7,7 +7,6 @@ class Survey::Form < ApplicationRecord
   include Approval::Model::Rel::Approval
 
   include StateText
-  include Cms::Base::PublishQueue::Content
 
   STATE_OPTIONS = [['下書き保存', 'draft'], ['承認依頼', 'approvable'], ['即時公開', 'public']]
   CONFIRMATION_OPTIONS = [['あり', true], ['なし', false]]
@@ -31,6 +30,9 @@ class Survey::Form < ApplicationRecord
   validates :title, presence: true
 
   after_initialize :set_defaults
+
+  after_save     Cms::Publisher::ContentCallbacks.new, if: :changed?
+  before_destroy Cms::Publisher::ContentCallbacks.new
 
   scope :public_state, -> { where(state: 'public') }
 
