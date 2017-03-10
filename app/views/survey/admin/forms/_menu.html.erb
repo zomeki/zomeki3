@@ -1,3 +1,32 @@
 <h2><%= menu_header @content.name, Survey::Form.model_name.human %></h2>
 
-<%= render 'survey/admin/shared/menu' %>
+<div class="actionMenu">
+<%- case action_name -%>
+<%- when 'index' -%>
+  <%= link_to '新規作成', { action: :new } %>
+  <span class="separator"></span>
+  <%= link_to "#{Survey::Form.model_name.human}一覧", { target: nil }, (params[:target].blank? ? { class: 'current' } : {}) %>
+  <%= link_to "全#{Survey::Form.model_name.human}一覧", { target: 'all' }, (params[:target] == 'all' ? { class: 'current' } : {}) %>
+  <span class="separator"></span>
+  <%= link_to '下書き', { target: 'draft' }, (params[:target] == 'draft' ? { class: 'current' } : {}) %>
+  <%= link_to '承認待ち', { target: 'approvable' }, (params[:target] == 'approvable' ? { class: 'current' } : {}) %>
+  <%= link_to '公開待ち', { target: 'approved' }, (params[:target] == 'approved' ? { class: 'current' } : {}) %>
+  <%= link_to '公開中', { target: 'public' }, (params[:target] == 'public' ? { class: 'current' } : {}) %>
+  <%= link_to '非公開', { target: 'closed' }, (params[:target] == 'closed' ? { class: 'current' } : {}) %>
+<%- when 'show'-%>
+  <%= link_to '一覧', { action: :index } %>
+  <span class="separator"></span>
+  <%= link_to '編集', { action: :edit } if @item.editable? %>
+  <%= link_to '削除', { action: :destroy }, method: :delete, confirm: '削除してよろしいですか？' if @item.deletable? %>
+  <%= link_to '承認', { action: :approve }, method: :post, confirm: '承認してもよろしいですか？' if @item.state_approvable? && @item.approvers.include?(Core.user) %>
+  <%= link_to '公開', { action: :publish }, method: :post, confirm: '公開してもよろしいですか？' if @item.state_approved? && @item.approval_participators.include?(Core.user) %>
+  <%= link_to '非公開', { action: :close }, method: :post, confirm: '公開を終了してもよろしいですか？' if @item.state_public? && @item.approval_participators.include?(Core.user) %>
+  <%= link_to '複製', { do: :duplicate }, confirm: "複製してよろしいですか？" if Core.user.has_priv?(:create, item: Core.concept) %>
+<%- when 'new', 'create' -%>
+  <%= link_to '一覧', { action: :index } %>
+<%- when 'edit', 'update' -%>
+  <%= link_to '一覧', { action: :index } %>
+  <span class="separator"></span>
+  <%= link_to '詳細', { action: :show } %>
+<%- end -%>
+</div>

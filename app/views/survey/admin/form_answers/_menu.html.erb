@@ -1,12 +1,11 @@
 <h2><%= menu_header @content.name, @form.title, Survey::FormAnswer.model_name.human %></h2>
 
 <div class="actionMenu">
-  <%- if action_name == 'index' -%>
+<%- case action_name -%>
+<%- when 'index' -%>
   <%= link_to 'CSV出力', download_form_answers_survey_form_path(content: @content, id: @form.id) %>
-  <%- end -%>
-
-  <%- if action_name == 'show' -%>
-  <%= link_to '一覧', url_for(action: 'index') %>
-  <%= link_to '削除', url_for(action: 'destroy'), :method => :delete, :confirm => '削除してよろしいですか？' if @item.form.deletable? %>
-  <%- end -%>
+<%- when 'show' -%>
+  <%= link_to '一覧', { action: :index } %>
+  <%= link_to '削除', { action: :destroy }, method: :delete, confirm: '削除してよろしいですか？' if @item.form.deletable? %>
+<%- end -%>
 </div>
