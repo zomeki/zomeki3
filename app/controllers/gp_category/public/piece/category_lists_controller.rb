@@ -10,9 +10,11 @@ class GpCategory::Public::Piece::CategoryListsController < Sys::Controller::Publ
     if @piece.setting_state == 'enabled'
       if @piece.category_type_id && @piece.category_id
         @category = @piece.category_type.categories.find_by(id: @piece.category_id)
+        return render plain: '' unless @category
         render :category
       elsif @piece.category_type_id
         @category_type = @piece.category_type
+        return render plain: '' unless @category_type
         render :category_type
       else
         @category_types = @piece.public_category_types
