@@ -43,11 +43,12 @@
 <%- end -%>
 
 <%- unless Page.mobile? -%>
-<%- if (node = @item.content.tag_content_tag.try(:public_node)) && !@item.tags.empty? -%>
+<%- if (node = @item.content.tag_content_tag.try(:public_node)) &&
+       (tags = !Core.publish && Core.mode == 'preview' ? @item.tags_for_preview : @item.tags).present? -%>
 <div class="tags">
   <h2>関連ワード</h2>
   <ul>
-    <%- @item.tags.each do |tag| -%>
+    <%- tags.each do |tag| -%>
     <li><%= link_to tag.word, tag.public_uri %></li>
     <%- end -%>
   </ul>
