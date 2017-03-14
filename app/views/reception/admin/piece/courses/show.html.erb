@@ -23,5 +23,13 @@
     <th><%= @item.locale :docs_number %></th>
     <td><%= @item.setting_value(:docs_number) %></td>
   </tr>
+  <tr>
+    <th><%= @item.locale :more_link_body %></th>
+    <td><%= @item.setting_value(:more_link_body) %></td>
+  </tr>
+  <tr>
+    <th><%= @item.locale :more_link_url %></th>
+    <td><%= @item.setting_value(:more_link_url) %></td>
+  </tr>
 </table>
 <%- end -%>

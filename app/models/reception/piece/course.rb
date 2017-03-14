@@ -29,6 +29,14 @@ class Reception::Piece::Course < Cms::Piece
     (setting_value(:docs_number).presence || 1000).to_i
   end
 
+  def more_link_body
+    setting_value(:more_link_body).to_s
+  end
+
+  def more_link_url
+    setting_value(:more_link_url).to_s
+  end
+
   def apply_docs_criteria(courses)
     courses =
       case docs_filter

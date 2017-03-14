@@ -25,6 +25,14 @@
     <th><%= @item.locale :docs_number %></th>
     <td><%= f.array_text_field 'in_settings[docs_number]', class: 'number' %></td>
   </tr>
+  <tr>
+    <th><%= @item.locale :more_link_body %></th>
+    <td><%= f.array_text_field 'in_settings[more_link_body]', style: 'width: 500px;' %></td>
+  </tr>
+  <tr>
+    <th><%= @item.locale :more_link_url %></th>
+    <td><%= f.array_text_field 'in_settings[more_link_url]', style: 'width: 500px;' %></td>
+  </tr>
 </table>
 
 <%= render 'reception/admin/shared/doc_style_tags' %>
