@@ -240,6 +240,7 @@ class GpArticle::Doc < ApplicationRecord
     end
   }
   scope :search_date_column, ->(column, operation, dates = nil) {
+    dates = Array.wrap(dates)
     case operation
     when 'today'
       today = Date.today
