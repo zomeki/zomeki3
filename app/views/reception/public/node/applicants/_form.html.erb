@@ -1,4 +1,4 @@
-<div class"questions">
+<div class="questions">
   <div class="question open_on">
     <div class="question_content"><%= f.label :open_id, '参加日選択' %><span class="note">※必須</span></div>
     <div class="answer_content"><%= f.select :open_id, options_for_select(@course.applicable_opens.map { |open| [open.open_at_text, open.id] }, @applicant.open_id) %></div>

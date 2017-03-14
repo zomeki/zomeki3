@@ -15,7 +15,11 @@
                   <li>
                     <span><%= open.open_at_text %></span>
                     <span class="link">
-                      <%= link_to_if open.applicable?, open.link_state_text, "#{course.public_uri}/applicants/?open_id=#{open.id}" %>
+                      <%- if open.applicable? -%>
+                        <%= link_to open.link_state_text, "#{course.public_uri}/applicants/?open_id=#{open.id}" %>
+                      <%- else -%>
+                        <span><%= open.link_state_text %></span>
+                      <%- end -%>
                     </span>
                   </li>
                 <%- end -%>
