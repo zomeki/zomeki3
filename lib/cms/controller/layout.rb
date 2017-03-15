@@ -107,7 +107,8 @@ module Cms::Controller::Layout
           body.gsub!("[[piece/#{name}]]", piece_container_html(item, data))
         end
       rescue => e
-        error_log(e.message)
+        error_log e
+        error_log e.backtrace.join("\n")
       end
     end
 

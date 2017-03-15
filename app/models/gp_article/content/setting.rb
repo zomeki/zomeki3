@@ -75,8 +75,14 @@ class GpArticle::Content::Setting < Cms::ContentSetting
       doc_list_style: 'by_date',
       doc_list_number: 30,
       doc_publish_more_pages: 10,
-      doc_monthly_style: '%Y年%m月'
+      doc_weekly_style: '%Y年%m月%d日',
+      doc_monthly_style: '%Y年%m月',
     }
+  set_config :docs_order, menu: :index,
+    name: '記事一覧表示順',
+    options: [['公開日（降順）', 'published_at_desc'], ['公開日（昇順）', 'published_at_asc'],
+              ['更新日（降順）', 'updated_at_desc'], ['更新日（昇順）', 'updated_at_asc']],
+    default_value: 'published_at_desc'
   set_config :list_style, menu: :index,
     name: "#{GpArticle::Doc.model_name.human}タイトル表示形式",
     form_type: :text_area,
@@ -228,6 +234,7 @@ class GpArticle::Content::Setting < Cms::ContentSetting
     when 'doc_list_pagination'
       ex[:doc_list_style]    = params[:doc_list_style]
       ex[:doc_list_number]   = params[:doc_list_number]
+      ex[:doc_weekly_style] = params[:doc_weekly_style]
       ex[:doc_monthly_style] = params[:doc_monthly_style]
       ex[:doc_publish_more_pages] = params[:doc_publish_more_pages]
     when 'pagination_label'

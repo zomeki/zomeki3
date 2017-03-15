@@ -6,12 +6,13 @@ class Cms::DataFileNode < ApplicationRecord
   include Cms::Model::Rel::Concept
   include Cms::Model::Auth::Concept::Creator
 
-  include Cms::Base::PublishQueue::Bracketee
-
   has_many :files, :foreign_key => :node_id, :class_name => 'Cms::DataFile', :primary_key => :id
 
   validates :name, presence: true, uniqueness: { scope: :concept_id }
   validate :validate_name
+
+  after_save    Cms::Publisher::BracketeeCallbacks.new, if: :changed?
+  after_destroy Cms::Publisher::BracketeeCallbacks.new
 
   after_destroy :remove_files
 

@@ -7,6 +7,10 @@
     <td><%= f.array_text_field 'in_settings[list_count]', class: 'number' %></td>
   </tr>
   <tr>
+    <th><%= @item.locale :docs_order %></th>
+    <td><%= f.array_select 'in_settings[docs_order]', @item.class::DOCS_ORDER_OPTIONS %></td>
+  </tr>
+  <tr>
     <th><%= @item.locale :date_style %></th>
     <td colspan="3"><%= f.array_text_field 'in_settings[date_style]', size: 50 %> <%=raw t('comments.date_style') %></td>
   </tr>

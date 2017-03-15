@@ -4,7 +4,6 @@ class BizCalendar::Place < ApplicationRecord
   include Cms::Model::Auth::Content
 
   include StateText
-  include Cms::Base::PublishQueue::Content
 
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
   BUSINESS_HOURS_STATE_OPTIONS = [['表示する','visible'],['表示しない','hidden']]
@@ -22,6 +21,9 @@ class BizCalendar::Place < ApplicationRecord
   validate :url_validity
 
   after_initialize :set_defaults
+
+  after_save     Cms::Publisher::ContentCallbacks.new, if: :changed?
+  before_destroy Cms::Publisher::ContentCallbacks.new
 
   scope :public_state, -> { where(state: 'public') }
   scope :search_with_params, ->(params = {}) {

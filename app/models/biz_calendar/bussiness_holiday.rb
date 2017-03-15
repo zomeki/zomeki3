@@ -5,7 +5,6 @@ class BizCalendar::BussinessHoliday < ApplicationRecord
   include BizCalendar::Model::Base::Date
 
   include StateText
-  include BizCalendar::Place::PublishQueue
 
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
   REPEAT_OPTIONS = [['毎日', 'daily'], ['平日（月～金）', 'weekday'], ['土日祝日', 'saturdays'], ['祝日', 'holiday'],
@@ -23,6 +22,9 @@ class BizCalendar::BussinessHoliday < ApplicationRecord
   validate :ended_setting
 
   after_initialize :set_defaults
+
+  after_save     Cms::Publisher::ContentCallbacks.new, if: :changed?
+  before_destroy Cms::Publisher::ContentCallbacks.new
 
   attr_accessor :repeat_num
 

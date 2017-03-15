@@ -144,6 +144,14 @@ class Cms::ContentSetting < ApplicationRecord
     end
     if extra_value.nil?
       self.extra_values = config[:default_extra_values] if config[:default_extra_values]
+    else
+      if config[:default_extra_values].is_a?(Hash) && extra_values.is_a?(Hash)
+        ev = extra_values
+        config[:default_extra_values].each do |k, v|
+          ev[k] = v unless ev[k]
+        end
+        self.extra_values = ev
+      end
     end
   end
 end

@@ -8,10 +8,12 @@ class Cms::DataText < ApplicationRecord
   include Cms::Model::Auth::Concept::Creator
 
   include StateText
-  include Cms::Base::PublishQueue::Bracketee
 
   belongs_to :concept, :foreign_key => :concept_id, :class_name => 'Cms::Concept'
-  
+
+  after_save    Cms::Publisher::BracketeeCallbacks.new, if: :changed?
+  after_destroy Cms::Publisher::BracketeeCallbacks.new
+
   validates :state, :title, :body, presence: true
   validates :name, presence: true, uniqueness: { scope: :concept_id },
     format: { with: /\A[0-9a-zA-Z\-_]+\z/, if: "name.present?", message: :invalid_bracket_name }

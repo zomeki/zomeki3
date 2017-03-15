@@ -27,6 +27,11 @@ class GpCategory::Content::CategoryType < Cms::Content
     public_pieces.where(model: ['GpCategory::CategoryType', 'GpCategory::Doc', 'GpCategory::RecentTab'])
   end
 
+  def templates_with_name(names)
+    arel = templates.arel_table
+    templates.where(names.map { |name| arel[:body].matches("%[[module/#{name}]]%") }.reduce(:or))
+  end
+
   def list_style
     setting_value(:list_style).to_s
   end

@@ -1,8 +1,8 @@
-<div class="contentReceptionCourse">
+<div class="contentReceptionApplicant">
   <%= render 'reception/public/node/shared/show_courses', courses: [@course] %>
 
   <h3>お申込みフォーム</h3>
-  <div><%=raw @course.replace_file_path_for_public(@course.description) %></div>
+  <div class="body"><%=raw @course.replace_file_path_for_public(@course.description) %></div>
 
   <%= form_for @applicant, as: :item, url: "#{@course.public_uri}/applicants/" do |f| -%>
     <%= f.error_messages %>

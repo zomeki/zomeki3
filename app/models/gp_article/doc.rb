@@ -25,7 +25,6 @@ class GpArticle::Doc < ApplicationRecord
   include Cms::Model::Rel::Link
 
   include StateText
-  include GpArticle::Docs::PublishQueue
   include GpArticle::Docs::Preload
 
   STATE_OPTIONS = [['下書き保存', 'draft'], ['承認依頼', 'approvable'], ['即時公開', 'public']]
@@ -109,6 +108,9 @@ class GpArticle::Doc < ApplicationRecord
 
   after_initialize :set_defaults
   after_save :set_display_attributes
+
+  after_save     GpArticle::Publisher::DocCallbacks.new, if: :changed?
+  before_destroy GpArticle::Publisher::DocCallbacks.new
 
   scope :visible_in_list, -> { where(feature_1: true) }
   scope :event_scheduled_between, ->(start_date, end_date, category_ids) {
@@ -238,6 +240,7 @@ class GpArticle::Doc < ApplicationRecord
     end
   }
   scope :search_date_column, ->(column, operation, dates = nil) {
+    dates = Array.wrap(dates)
     case operation
     when 'today'
       today = Date.today

@@ -43,7 +43,7 @@ class GpTemplate::Admin::TemplatesController < Cms::Controller::Admin::Base
   end
 
   def duplicate(item)
-    if dupe_item = item.duplicate
+    if item.duplicate
       flash[:notice] = '複製処理が完了しました。'
       respond_to do |format|
         format.html { redirect_to gp_template_templates_path }
