@@ -11,7 +11,7 @@ class Reception::Public::Node::CategoriesController < Cms::Controller::Public::B
   end
 
   def index
-    @courses = @content.public_courses.categorized_into(@category)
+    @courses = @content.public_courses.categorized_into(@category.public_descendants)
                        .order(sort_no: :asc, id: :asc)
   end
 end

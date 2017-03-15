@@ -2,7 +2,7 @@
   <%- @category_types.each do |category_type| -%>
     <h2><%= category_type.title %></h2>
     <ul>
-      <%= render 'all_categories_categories', categories: category_type.public_root_categories %>
+      <%= render 'reception/public/node/shared/all_categories_categories', categories: category_type.public_root_categories %>
     </ul>
   <%- end -%>
 </div>
