@@ -521,6 +521,7 @@ class GpArticle::Doc < ApplicationRecord
     new_attributes[:state] = 'draft'
     new_attributes[:id] = nil
     new_attributes[:created_at] = nil
+    new_attributes[:updated_at] = nil
     new_attributes[:recognized_at] = nil
     new_attributes[:prev_edition_id] = nil
 
@@ -536,7 +537,6 @@ class GpArticle::Doc < ApplicationRecord
     else
       new_doc.name = nil
       new_doc.title = new_doc.title.gsub(/^(【複製】)*/, '【複製】')
-      new_doc.updated_at = nil
       new_doc.display_updated_at = nil
       new_doc.published_at = nil
       new_doc.display_published_at = nil
