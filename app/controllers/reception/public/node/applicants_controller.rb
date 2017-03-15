@@ -81,15 +81,18 @@ class Reception::Public::Node::ApplicantsController < Cms::Controller::Public::B
   def send_applied_mail(applicant)
     return if @content.mail_from.blank?
 
-    mail_tos = []
-    mail_tos << @content.mail_to if @content.mail_to.present?
-    mail_tos << applicant.email if @content.auto_reply? && applicant.email.present?
-
-    mail_tos.each do |mail_to|
+    if @content.auto_reply? && applicant.email.present?
       Reception::Public::Mailer.applicant_applied(
         applicant: applicant,
         from: @content.mail_from,
-        to: mail_to
+        to: applicant.email
+      ).deliver_now
+    end
+    if @content.mail_to.present?
+      Reception::Public::Mailer.applicant_applied_notification(
+        applicant: applicant,
+        from: @content.mail_from,
+        to: @content.mail_to
       ).deliver_now
     end
   end
@@ -97,15 +100,18 @@ class Reception::Public::Node::ApplicantsController < Cms::Controller::Public::B
   def send_canceled_mail(applicant)
     return if @content.mail_from.blank?
 
-    mail_tos = []
-    mail_tos << @content.mail_to if @content.mail_to.present?
-    mail_tos << applicant.email if @content.auto_reply? && applicant.email.present?
-
-    mail_tos.each do |mail_to|
+    if @content.auto_reply? && applicant.email.present?
       Reception::Public::Mailer.applicant_canceled(
         applicant: applicant,
         from: @content.mail_from,
-        to: mail_to
+        to: applicant.email
+      ).deliver_now
+    end
+    if @content.mail_to.present?
+      Reception::Public::Mailer.applicant_canceled_notification(
+        applicant: applicant,
+        from: @content.mail_from,
+        to: @content.mail_to
       ).deliver_now
     end
   end
