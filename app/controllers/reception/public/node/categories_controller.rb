@@ -8,6 +8,7 @@ class Reception::Public::Node::CategoriesController < Cms::Controller::Public::B
     return http_error(404) unless @category.try(:public?)
 
     Page.current_item = @category.becomes(Reception::Category) # becomes for bread crumbs
+    Page.title = @category.title
   end
 
   def index
