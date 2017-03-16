@@ -3,7 +3,7 @@ class GpArticle::Admin::Docs::FilesController < Cms::Controller::Admin::Base
 
   def pre_dispatch
     @content = GpArticle::Content::Doc.find(params[:content])
-    @doc = @content.all_docs.find(params[:doc_id])
+    @doc = @content.docs.find(params[:doc_id])
   end
 
   def content

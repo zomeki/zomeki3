@@ -86,7 +86,6 @@ class GpArticle::Doc < ApplicationRecord
   before_save :set_published_at
   before_save :replace_public
   before_save :set_serial_no
-  before_destroy :keep_edition_relation
   after_destroy :close_page
 
   attr_accessor :link_check_results, :in_ignore_link_check
@@ -99,7 +98,7 @@ class GpArticle::Doc < ApplicationRecord
   validates :state, :presence => true
   validates :filename_base, :presence => true
 
-  validate :name_validity
+  validate :name_validity, if: -> { name.present? }
   validate :node_existence
   validate :event_dates_range
   validate :body_limit_for_mobile
@@ -297,26 +296,6 @@ class GpArticle::Doc < ApplicationRecord
     comments.public_state
   end
 
-  def prev_edition
-    self.class.unscoped { super }
-  end
-
-  def prev_editions(docs=[])
-    docs << self
-    prev_edition.prev_editions(docs) if prev_edition
-    return docs
-  end
-
-  def next_edition
-    self.class.unscoped { super }
-  end
-
-  def next_editions(docs=[])
-    docs << self
-    next_edition.next_editions(docs) if next_edition
-    return docs
-  end
-
   def public_path
     return '' if public_uri.blank?
     "#{content.public_path}#{public_uri(without_filename: true)}#{filename_base}.html"
@@ -424,10 +403,6 @@ class GpArticle::Doc < ApplicationRecord
 
   def state_closed?
     state == 'finish'
-  end
-
-  def state_archived?
-    state == 'archived'
   end
 
   def close
@@ -681,10 +656,6 @@ class GpArticle::Doc < ApplicationRecord
     next_edition && state_public?
   end
 
-  def was_replaced?
-    prev_edition && (state_public? || state_closed?)
-  end
-
   def qrcode_visible?
     return false unless content && content.qrcode_related?
     return false unless self.qrcode_state == 'visible'
@@ -763,18 +734,11 @@ class GpArticle::Doc < ApplicationRecord
   private
 
   def name_validity
-    if prev_edition
-      self.name = prev_edition.name
-      return
-    end
+    errors.add(:name, :invalid) if name !~ /^[\-\w]*$/
 
-    errors.add(:name, :invalid) if self.name && self.name !~ /^[\-\w]*$/
-
-    if (doc = self.class.where(name: self.name, state: self.state, content_id: self.content.id).first)
-      unless doc.id == self.id || state_archived?
-        errors.add(:name, :taken) unless state_public? && prev_edition.try(:state_public?)
-      end
-    end
+    doc = self.class.where(content_id: content_id, name: name)
+    doc = doc.where.not(serial_no: serial_no) if serial_no
+    errors.add(:name, :taken) if doc.exists?
   end
 
   def set_name
@@ -929,10 +893,5 @@ class GpArticle::Doc < ApplicationRecord
 
   def replace_public
     prev_edition.destroy if state_public? && prev_edition
-  end
-
-  def keep_edition_relation
-    next_edition.update_column(:prev_edition_id, prev_edition_id) if next_edition
-    return true
   end
 end

@@ -122,7 +122,7 @@ class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
       else
         case
         when id
-          @content.all_docs.find_by(id: id)
+          @content.docs.find_by(id: id)
         when name
           @content.public_docs.find_by(name: name) || @content.preview_docs.find_by(name: name)
         end
