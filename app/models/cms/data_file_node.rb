@@ -11,8 +11,8 @@ class Cms::DataFileNode < ApplicationRecord
   validates :name, presence: true, uniqueness: { scope: :concept_id }
   validate :validate_name
 
-  after_save    Cms::Publisher::BracketeeCallbacks.new, if: :changed?
-  after_destroy Cms::Publisher::BracketeeCallbacks.new
+  after_save     Cms::Publisher::BracketeeCallbacks.new, if: :changed?
+  before_destroy Cms::Publisher::BracketeeCallbacks.new
 
   after_destroy :remove_files
 

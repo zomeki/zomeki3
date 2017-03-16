@@ -13,8 +13,8 @@ class Cms::DataFile < ApplicationRecord
   belongs_to :site   , :foreign_key => :site_id   , :class_name => 'Cms::Site'
   belongs_to :node   , :foreign_key => :node_id   , :class_name => 'Cms::DataFileNode'
 
-  after_save    Cms::Publisher::BracketeeCallbacks.new, if: :changed?
-  after_destroy Cms::Publisher::BracketeeCallbacks.new
+  after_save     Cms::Publisher::BracketeeCallbacks.new, if: :changed?
+  before_destroy Cms::Publisher::BracketeeCallbacks.new
 
   after_destroy :remove_public_file
 
