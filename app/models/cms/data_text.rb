@@ -11,8 +11,8 @@ class Cms::DataText < ApplicationRecord
 
   belongs_to :concept, :foreign_key => :concept_id, :class_name => 'Cms::Concept'
 
-  after_save    Cms::Publisher::BracketeeCallbacks.new, if: :changed?
-  after_destroy Cms::Publisher::BracketeeCallbacks.new
+  after_save     Cms::Publisher::BracketeeCallbacks.new, if: :changed?
+  before_destroy Cms::Publisher::BracketeeCallbacks.new
 
   validates :state, :title, :body, presence: true
   validates :name, presence: true, uniqueness: { scope: :concept_id },
