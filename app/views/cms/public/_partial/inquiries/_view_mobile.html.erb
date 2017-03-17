@@ -1,12 +1,11 @@
 <%-
-
 return if item.inquiries.size == 0
-return if !item.inquiries.any?(&:visible?)
-
--%><div class="inquiry">
+return unless item.inquiries.any? { |inquiry| inquiry.visible? && inquiry.group }
+-%>
+<div class="inquiry">
   <div class="h2">お問い合わせ</div>
   <%- item.inquiries.each do |inquiry| -%>
-    <%- next unless inquiry.visible? -%>
+    <%- next if !inquiry.visible? || inquiry.group.nil? -%>
         <div class="section"><%= inquiry.group.full_name %></div>
     <%- if item.inquiry_display_field?(:charge) && inquiry.charge.present?
      -%><div class="charge"><%= inquiry.charge %></div><%- end -%>

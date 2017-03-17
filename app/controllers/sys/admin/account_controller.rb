@@ -1,4 +1,6 @@
 class Sys::Admin::AccountController < Sys::Controller::Admin::Base
+  layout 'admin/login'
+
   def login
     admin_uri = "/#{ZomekiCMS::ADMIN_URL_PREFIX}"
 
