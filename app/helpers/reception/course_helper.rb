@@ -62,7 +62,7 @@ module Reception::CourseHelper
   end
 
   def course_replace_hold_date(course, datetime_style)
-    open = course.public_opens.select(&:applicable?).first
+    open = course.public_opens.select(&:applicable?).first || course.public_opens.last
     if open && open.open_on
       ds = localize_wday(datetime_style, open.open_on.wday)
       content_tag(:span, open.open_on_start_at.strftime(ds), class: 'hold_date')
