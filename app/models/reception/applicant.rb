@@ -24,7 +24,9 @@ class Reception::Applicant < ApplicationRecord
   validates :name, presence: true
   validates :kana, presence: true
   validates :tel, presence: true
-  validates :email, presence: true, confirmation: true, format: { with: /\A.+@.+\z/ }
+  validates :email, presence: { if: :in_register_from_public },
+                    format: { with: /\A.+@.+\z/, if: -> { email.present? } },
+                    confirmation: true 
   validate :validate_capacity_for_admin, if: :in_register_from_admin
   validate :validate_capacity_for_public, if: :in_register_from_public
 
