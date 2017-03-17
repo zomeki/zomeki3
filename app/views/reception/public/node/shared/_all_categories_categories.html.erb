@@ -3,7 +3,7 @@
   <%= link_to category.title, "#{@node.public_uri}categories/#{category.category_type.name}/#{category.path_from_root_category}/" %>
   <%- unless category.public_children.empty? -%>
   <ul>
-    <%= render 'all_categories_categories', categories: category.public_children %>
+    <%= render 'reception/public/node/shared/all_categories_categories', categories: category.public_children %>
   </ul>
   <%- end -%>
 </li>

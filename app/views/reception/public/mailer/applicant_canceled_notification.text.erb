@@ -1,0 +1,6 @@
+「<%= @course.title %>」のお申込みをキャンセルしました。
+
+<%= render 'reception/admin/mailer/applicant', applicant: @applicant %>
+
+次のURLから確認
+<%= @applicant_admin_uri %>

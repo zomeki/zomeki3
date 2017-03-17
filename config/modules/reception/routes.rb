@@ -47,6 +47,8 @@ ZomekiCMS::Application.routes.draw do
     get 'node_courses/:name/applicants/:token/cancel' => 'public/node/applicants#cancel'
     patch 'node_courses/:name/applicants/:token/cancel' => 'public/node/applicants#cancel'
     # categories
+    get 'node_courses/categories/:file.:format' => 'public/node/category_types#index'
+    get 'node_courses/categories/:category_type_name/:file.:format' => 'public/node/category_types#show'
     get 'node_courses/categories/:category_type_name/*category_names/:file.:format' => 'public/node/categories#index'
   end
 end

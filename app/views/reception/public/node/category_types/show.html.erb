@@ -1,0 +1,10 @@
+<div class="contentReceptionCourse">
+  <section class="categoryType">
+    <h2><%= @category_type.title %></h2>
+    <%- if @category_type.public_root_categories.present? -%>
+    <ul class="categories">
+      <%= render 'reception/public/node/shared/all_categories_categories', categories: @category_type.public_root_categories %>
+    </ul>
+    <%- end -%>
+  </section>
+</div>

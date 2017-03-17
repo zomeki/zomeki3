@@ -34,6 +34,10 @@ class Reception::Content::Course < Cms::Content
     category_types.map {|ct| [ct.title, ct.id] }
   end
 
+  def pubilc_category_types
+    category_types.where(state: 'public')
+  end
+
   def visible_category_types
     setting = Reception::Content::Setting.find_by(id: settings.find_by(name:  'gp_category_content_category_type_id').try(:id))
     if (cts = gp_category_content_category_type.try(:category_types))

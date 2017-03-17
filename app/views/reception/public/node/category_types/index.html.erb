@@ -1,8 +1,12 @@
 <div class="contentReceptionCourse">
   <%- @category_types.each do |category_type| -%>
+  <section class="categoryType categoryType<%= category_type.name.try(:camelize) %>">
     <h2><%= link_to category_type.title, "#{@node.public_uri}categories/#{category_type.name}/" %></h2>
-    <ul>
+    <%- if category_type.public_root_categories.present? -%>
+    <ul class="categories">
       <%= render 'reception/public/node/shared/all_categories_categories', categories: category_type.public_root_categories %>
     </ul>
+    <%- end -%>
+  </section>
   <%- end -%>
 </div>
