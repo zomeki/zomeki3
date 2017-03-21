@@ -13,3 +13,35 @@ $(function() {
 <%- if @item.name == 'gp_category_content_category_type_id' -%>
 <%= render 'gp_category/admin/_partial/content/settings/category_type_id', f: f, item: @item %>
 <%- end -%>
+
+<%- if @item.name == 'auto_reply' -%>
+<table class="show">
+  <tr>
+    <th>申込</th>
+    <td>
+      <p>上部</p>
+      <%= text_area_tag 'item[extra_values][applied_upper_reply_text]', @item.extra_values[:applied_upper_reply_text], size: '100x10' %>
+      <p>下部</p>
+      <%= text_area_tag 'item[extra_values][applied_lower_reply_text]', @item.extra_values[:applied_lower_reply_text], size: '100x10' %>
+    </td>
+  </tr>
+  <tr>
+    <th>受付</th>
+    <td>
+      <p>上部</p>
+      <%= text_area_tag 'item[extra_values][received_upper_reply_text]', @item.extra_values[:received_upper_reply_text], size: '100x10' %>
+      <p>下部</p>
+      <%= text_area_tag 'item[extra_values][received_lower_reply_text]', @item.extra_values[:received_lower_reply_text], size: '100x10' %>
+    </td>
+  </tr>
+  <tr>
+    <th>キャンセル</th>
+    <td>
+      <p>上部</p>
+      <%= text_area_tag 'item[extra_values][canceled_upper_reply_text]', @item.extra_values[:canceled_upper_reply_text], size: '100x10' %>
+      <p>下部</p>
+      <%= text_area_tag 'item[extra_values][canceled_lower_reply_text]', @item.extra_values[:canceled_lower_reply_text], size: '100x10' %>
+    </td>
+  </tr>
+</table>
+<%- end -%>
