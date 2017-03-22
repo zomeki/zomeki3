@@ -33,6 +33,7 @@ ja:
         updated_at: 更新日時
         applicants_count: 申込人数
       reception/applicant:
+        open_id: 参加日
         seq_no: 受付番号
         state: 状態
         name: 名前
