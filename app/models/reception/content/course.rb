@@ -34,6 +34,10 @@ class Reception::Content::Course < Cms::Content
     category_types.map {|ct| [ct.title, ct.id] }
   end
 
+  def pubilc_category_types
+    category_types.where(state: 'public')
+  end
+
   def visible_category_types
     setting = Reception::Content::Setting.find_by(id: settings.find_by(name:  'gp_category_content_category_type_id').try(:id))
     if (cts = gp_category_content_category_type.try(:category_types))
@@ -63,6 +67,30 @@ class Reception::Content::Course < Cms::Content
 
   def auto_reply?
     setting_value(:auto_reply) == 'send'
+  end
+
+  def applied_upper_reply_text
+    setting_extra_value(:auto_reply, :applied_upper_reply_text).to_s
+  end
+
+  def applied_lower_reply_text
+    setting_extra_value(:auto_reply, :applied_lower_reply_text).to_s
+  end
+
+  def received_upper_reply_text
+    setting_extra_value(:auto_reply, :received_upper_reply_text).to_s
+  end
+
+  def received_lower_reply_text
+    setting_extra_value(:auto_reply, :received_lower_reply_text).to_s
+  end
+
+  def canceled_upper_reply_text
+    setting_extra_value(:auto_reply, :canceled_upper_reply_text).to_s
+  end
+
+  def canceled_lower_reply_text
+    setting_extra_value(:auto_reply, :canceled_lower_reply_text).to_s
   end
 
   def doc_list_style

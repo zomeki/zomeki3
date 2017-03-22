@@ -2,6 +2,7 @@ class Reception::Piece::Course < Cms::Piece
   DOCS_FILTER_OPTIONS = [['公開中全て', 'public'], ['申し込み期間', 'available']]
   DOCS_ORDER_OPTIONS = [['登録順（降順）', 'id_desc'], ['登録順（昇順）', 'id_asc'],
                         ['開催日順（降順）', 'open_at_desc'], ['開催日順（昇順）', 'open_at_asc']]
+  LAYER_OPTIONS = [['下層のカテゴリすべて', 'descendants'], ['該当カテゴリのみ', 'self']]
 
   default_scope { where(model: 'Reception::Course') }
 
@@ -29,6 +30,47 @@ class Reception::Piece::Course < Cms::Piece
     (setting_value(:docs_number).presence || 1000).to_i
   end
 
+  def more_link_body
+    setting_value(:more_link_body).to_s
+  end
+
+  def more_link_url
+    setting_value(:more_link_url).to_s
+  end
+
+  def category_sets
+    value = YAML.load(setting_value(:category_sets).to_s)
+    return [] unless value.is_a?(Array)
+    value.map {|v|
+      next nil if (v[:category_type] = GpCategory::CategoryType.find_by(id: v[:category_type_id])).nil?
+      next nil if v[:category_id].nonzero? && (v[:category] = GpCategory::Category.find_by(id: v[:category_id])).nil?
+      next v
+    }.compact.sort do |a, b|
+      next a[:category_type].unique_sort_key <=> b[:category_type].unique_sort_key if a[:category].nil? && b[:category].nil?
+      next a[:category_type].unique_sort_key <=> b[:category].unique_sort_key if a[:category].nil?
+      next a[:category].unique_sort_key <=> b[:category_type].unique_sort_key if b[:category].nil?
+      a[:category].unique_sort_key <=> b[:category].unique_sort_key
+    end
+  end
+
+  def new_category_set
+    { category_type_id: nil, category_id: nil, layer: LAYER_OPTIONS.first.last }
+  end
+
+  def public_categories
+    category_sets.map { |cs|
+      if cs[:category_type] && !cs[:category]
+        cs[:category_type].public_categories
+      elsif cs[:category]
+        if cs[:layer] == 'descendants'
+          cs[:category].public_descendants
+        else
+          cs[:category]
+        end
+      end
+    }.flatten.uniq
+  end
+
   def apply_docs_criteria(courses)
     courses =
       case docs_filter
@@ -50,6 +92,8 @@ class Reception::Piece::Course < Cms::Piece
         Reception::Course.from('(' + courses.to_sql + ') as reception_courses').order_by_min_open_at('asc')
       end
 
+    categories = public_categories
+    courses = courses.categorized_into(categories) if categories.present?
     courses.limit(docs_number)
   end
 

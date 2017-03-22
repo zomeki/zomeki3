@@ -8,10 +8,11 @@ class Reception::Public::Node::CategoriesController < Cms::Controller::Public::B
     return http_error(404) unless @category.try(:public?)
 
     Page.current_item = @category.becomes(Reception::Category) # becomes for bread crumbs
+    Page.title = @category.title
   end
 
   def index
-    @courses = @content.public_courses.categorized_into(@category)
+    @courses = @content.public_courses.categorized_into(@category.public_descendants)
                        .order(sort_no: :asc, id: :asc)
   end
 end

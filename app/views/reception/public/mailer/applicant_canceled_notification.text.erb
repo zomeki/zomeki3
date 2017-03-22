@@ -3,3 +3,6 @@
 <%= render 'reception/admin/mailer/applicant', applicant: @applicant %>
 
 <%= @content.canceled_lower_reply_text if @content.canceled_lower_reply_text.present? %>
+
+次のURLから確認
+<%= @applicant_admin_uri %>

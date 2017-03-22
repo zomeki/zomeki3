@@ -99,15 +99,18 @@ class Reception::Admin::ApplicantsController < Cms::Controller::Admin::Base
   def send_received_mail(item)
     return if @content.mail_from.blank?
 
-    mail_tos = []
-    mail_tos << @content.mail_to if @content.mail_to.present?
-    mail_tos << item.email if item.email.present?
-
-    mail_tos.each do |mail_to|
+    if @content.auto_reply? && item.email.present?
       Reception::Admin::Mailer.applicant_received(
         applicant: item,
         from: @content.mail_from,
-        to: mail_to
+        to: item.email
+      ).deliver_now
+    end
+    if @content.mail_to.present?
+      Reception::Admin::Mailer.applicant_received_notification(
+        applicant: item,
+        from: @content.mail_from,
+        to: @content.mail_to
       ).deliver_now
     end
   end

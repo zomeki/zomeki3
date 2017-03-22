@@ -10,6 +10,12 @@ module GpArticle::Model::Rel::Tag
     super(@in_raw_tags)
   end
 
+  def tags_for_preview
+    return [] unless content.tag_content_tag
+    words = Tag::Tag.split_raw_string(raw_tags.to_s)
+    words.map { |word| Tag::Tag.new(content_id: content.tag_content_tag.id, word: word) }
+  end
+
   def save_tags
     return tags.clear unless content.tag_content_tag
 
