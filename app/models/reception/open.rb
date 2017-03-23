@@ -16,6 +16,7 @@ class Reception::Open < ApplicationRecord
   after_save     Cms::Publisher::ContentCallbacks.new, if: :changed?
   before_destroy Cms::Publisher::ContentCallbacks.new
 
+  validates :title, presence: true
   validates :open_on, presence: true
   validates :start_at, presence: true
   validates :end_at, presence: true

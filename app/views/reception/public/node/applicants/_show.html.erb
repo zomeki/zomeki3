@@ -1,7 +1,7 @@
 <div class="questions">
   <div class="question open_id">
     <div class="question_content">参加日</div>
-    <div class="answer_content"><%= applicant.open.open_at_text if applicant.open %></div>
+    <div class="answer_content"><%= applicant.open.title if applicant.open %></div>
   </div>
   <div class="question name">
     <div class="question_content">お名前</div>
@@ -21,6 +21,6 @@
   </div>
   <div class="question remark">
     <div class="question_content">備考</div>
-    <div class="answer_content"><%= applicant.remark %></div>
+    <div class="answer_content"><%=hbr applicant.remark %></div>
   </div>
 </div>

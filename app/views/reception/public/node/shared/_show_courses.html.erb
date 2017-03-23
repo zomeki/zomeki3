@@ -13,7 +13,7 @@
               <ul>
                 <%- course.public_opens.each do |open| -%>
                   <li>
-                    <span><%= open.open_at_text %></span>
+                    <span><%= open.title %></span>
                     <span class="link">
                       <%- if open.applicable? -%>
                         <%= link_to open.link_state_text, "#{course.public_uri}/applicants/?open_id=#{open.id}" %>
