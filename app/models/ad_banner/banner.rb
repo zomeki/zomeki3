@@ -42,8 +42,8 @@ class AdBanner::Banner < ApplicationRecord
   after_initialize :set_defaults
   before_create :set_token
 
-  after_save     Cms::Publisher::ContentCallbacks.new, if: :changed?
-  before_destroy Cms::Publisher::ContentCallbacks.new
+  after_save     Cms::Publisher::ContentRelatedCallbacks.new, if: :changed?
+  before_destroy Cms::Publisher::ContentRelatedCallbacks.new
 
   def image_uri
     return '' unless content.public_node

@@ -22,8 +22,8 @@ class Map::Marker < ApplicationRecord
   after_initialize :set_defaults
   before_save :set_name
 
-  after_save     Cms::Publisher::ContentCallbacks.new, if: :changed?
-  before_destroy Cms::Publisher::ContentCallbacks.new
+  after_save     Cms::Publisher::ContentRelatedCallbacks.new, if: :changed?
+  before_destroy Cms::Publisher::ContentRelatedCallbacks.new
 
   scope :public_state, -> { where(state: 'public') }
 

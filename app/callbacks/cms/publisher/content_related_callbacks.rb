@@ -1,4 +1,4 @@
-class Cms::Publisher::ContentCallbacks < PublisherCallbacks
+class Cms::Publisher::ContentRelatedCallbacks < PublisherCallbacks
   def after_save(item)
     @item = item
     enqueue if enqueue?
