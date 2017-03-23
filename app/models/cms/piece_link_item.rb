@@ -7,6 +7,9 @@ class Cms::PieceLinkItem < ApplicationRecord
 
   belongs_to :piece,  :foreign_key => :piece_id, :class_name => 'Cms::Piece'
 
+  after_save     Cms::Publisher::PieceRelatedCallbacks.new, if: :changed?
+  before_destroy Cms::Publisher::PieceRelatedCallbacks.new
+
   validates :state, :name, :uri, presence: true
   
   def concept(flag = nil)
