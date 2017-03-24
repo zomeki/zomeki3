@@ -1,4 +1,7 @@
 class Organization::Content::Group < Cms::Content
+  DOCS_ORDER_OPTIONS = [['公開日（降順）', 'published_at_desc'], ['公開日（昇順）', 'published_at_asc'],
+                        ['更新日（降順）', 'updated_at_desc'], ['更新日（昇順）', 'updated_at_asc']]
+
   default_scope { where(model: 'Organization::Group') }
 
   has_one :public_node, -> { public_state.where(model: 'Organization::Group').order(:id) },
@@ -95,7 +98,34 @@ class Organization::Content::Group < Cms::Content
     setting_value(:num_docs).to_i
   end
 
+  def docs_order
+    setting_value(:docs_order).to_s
+  end
+
+  def docs_order_as_hash
+    map = {
+      'published_at_desc' => { display_published_at: :desc, published_at: :desc },
+      'published_at_asc' => { display_published_at: :asc, published_at: :asc },
+      'updated_at_desc' => { display_updated_at: :desc, updated_at: :desc },
+      'updated_at_asc' => { display_updated_at: :asc, updated_at: :asc },
+    }
+    map[docs_order] || map['published_at_desc']
+  end
+
   def category_content
     GpCategory::Content::CategoryType.where(id: setting_value(:gp_category_content_category_type_id)).first
+  end
+
+  def article_contents
+    settings = GpArticle::Content::Setting.arel_table
+    GpArticle::Content::Doc.joins(:settings)
+                           .where(settings[:name].eq('organization_content_group_id'))
+                           .where(settings[:value].eq(id))
+                           .where(site_id: site_id)
+  end
+
+  def public_docs
+    GpArticle::Doc.mobile(::Page.mobile?).public_state
+                  .where(content_id: article_contents.pluck(:id))
   end
 end

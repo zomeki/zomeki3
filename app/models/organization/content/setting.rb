@@ -25,6 +25,10 @@ class Organization::Content::Setting < Cms::ContentSetting
   set_config :num_docs,
     name: "#{GpArticle::Doc.model_name.human}表示件数",
     default_value: '10'
+  set_config :docs_order,
+    name: '記事表示順',
+    options: Organization::Content::Group::DOCS_ORDER_OPTIONS,
+    default_value: 'published_at_desc'
   set_config :gp_category_content_category_type_id,
     name: 'カテゴリ種別',
     options: lambda { GpCategory::Content::CategoryType.where(site_id: Core.site.id).map { |ct| [ct.name, ct.id] } }
