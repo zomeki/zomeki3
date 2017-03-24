@@ -164,6 +164,7 @@ ja:
         name: "保存ファイル名"
         title: "表示ファイル名"
         size: "サイズ"
+        alt_text: "代替テキスト"
 
       cms/data_file_node:
         concept_id: "コンセプト"

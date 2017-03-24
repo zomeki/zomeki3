@@ -105,6 +105,7 @@ ja:
         file: "ファイル"
         name: "保存ファイル名"
         title: "表示ファイル名"
+        alt_text: "代替テキスト"
 
       sys/operation_log:
         id: "ID"

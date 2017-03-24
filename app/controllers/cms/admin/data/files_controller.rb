@@ -93,6 +93,6 @@ class Cms::Admin::Data::FilesController < Cms::Controller::Admin::Base
   private
 
   def data_file_params
-    params.require(:item).permit(:concept_id, :node_id, :file, :name, :title)
+    params.require(:item).permit(:concept_id, :node_id, :file, :name, :title, :alt_text)
   end
 end
