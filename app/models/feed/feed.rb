@@ -23,8 +23,8 @@ class Feed::Feed < ApplicationRecord
 
   after_initialize :set_defaults
 
-  after_save     Cms::Publisher::ContentCallbacks.new, if: :changed?
-  before_destroy Cms::Publisher::ContentCallbacks.new
+  after_save     Cms::Publisher::ContentRelatedCallbacks.new, if: :changed?
+  before_destroy Cms::Publisher::ContentRelatedCallbacks.new
 
   def safe(alt = nil, &block)
     begin

@@ -13,8 +13,8 @@ class Reception::Open < ApplicationRecord
 
   after_save :save_tasks
 
-  after_save     Cms::Publisher::ContentCallbacks.new, if: :changed?
-  before_destroy Cms::Publisher::ContentCallbacks.new
+  after_save     Cms::Publisher::ContentRelatedCallbacks.new, if: :changed?
+  before_destroy Cms::Publisher::ContentRelatedCallbacks.new
 
   validates :title, presence: true
   validates :open_on, presence: true
