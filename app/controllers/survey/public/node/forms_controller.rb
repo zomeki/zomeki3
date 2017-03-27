@@ -9,7 +9,6 @@ class Survey::Public::Node::FormsController < Cms::Controller::Public::Base
     @content = Survey::Content::Form.find_by(id: @node.content.id)
     return http_error(404) unless @content
 
-    @ssl_full_uri = Sys::Setting.use_common_ssl? && @content.use_common_ssl? ? "#{Page.site.full_ssl_uri.sub(/\/\z/, '')}" : ''
     @piece = Survey::Piece::Form.find_by(id: params[:piece])
 
     @current_url = (params[:u] || params[:current_url]).to_s

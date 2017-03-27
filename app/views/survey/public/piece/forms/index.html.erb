@@ -3,9 +3,9 @@
 <%- end -%>
 
 <%- unless Page.mobile? -%>
-<iframe src="<%= @target_form_public_uri %>?piece=<%= @piece.id %>&t=<%=CGI.escape Page.window_title %>&u=<%=CGI.escape Page.uri %>" style="width: 100%; height: 100%;" class="survey"></iframe>
+<iframe src="<%= "#{@piece.target_form.public_uri}" %>?piece=<%= @piece.id %>&t=<%=CGI.escape Page.window_title %>&u=<%=CGI.escape Page.uri %>" style="width: 100%; height: 100%;" class="survey"></iframe>
 <%- else -%>
-回答ページは<%= link_to 'こちら', @target_form_public_uri %>です。
+回答ページは<%= link_to 'こちら', "#{@piece.target_form.public_uri}" %>です。
 <%- end -%>
 
 <%- if @piece.lower_text.present? -%>
