@@ -17,11 +17,6 @@ class GpArticle::Content::Doc < Cms::Content
 
   has_many :docs, foreign_key: :content_id, class_name: 'GpArticle::Doc', dependent: :destroy
 
-  # draft, approvable, approved, public, finish, archived
-  def all_docs
-    docs.unscoped.where(content_id: id).mobile(::Page.mobile?)
-  end
-
   # draft, approvable, approved, public
   def preview_docs
     table = docs.arel_table
