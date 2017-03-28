@@ -32,8 +32,7 @@ module Cms::ApiGpCalendar
     when '20150201'
       target_content_id = params[:target_content_id].to_i
       target_host = params[:target_host].to_s
-      target_addr = Resolv.getaddress(target_host) rescue nil
-      return render(json: []) if target_content_id.zero? || target_addr != request.remote_ip
+      return render(json: []) if target_content_id.zero?
 
       content = GpCalendar::Content::Event.find_by_id(params[:content_id])
       return render(json: []) unless content.try(:public_node)
@@ -80,8 +79,7 @@ module Cms::ApiGpCalendar
       event_id = params[:event_id].to_i
       content_id = params[:content_id].to_i
       source_host = params[:source_host].to_s
-      source_addr = Resolv.getaddress(source_host) rescue nil
-      return render(json: {result: 'NG'}) if content_id.zero? || source_addr != request.remote_ip
+      return render(json: {result: 'NG'}) if content_id.zero?
 
       GpCalendar::Content::Event.find_each do |content|
         next unless content.event_sync_import?
@@ -165,6 +163,7 @@ module Cms::ApiGpCalendar
     destination_hosts.each do |host|
       begin
         conn = Faraday.new(url: "http://#{host}") do |builder|
+            builder.use :cookie_jar
             builder.request :url_encoded
             builder.adapter Faraday.default_adapter
           end

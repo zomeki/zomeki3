@@ -95,6 +95,8 @@ gem 'simple_captcha2', '~> 0.4.2', require: 'simple_captcha'
 gem 'will_paginate', '~> 3.1.5'
 gem 'get_process_mem', '~> 0.2.1'
 
+gem 'faraday', '~> 0.9.2'
+gem 'faraday-cookie_jar', '~> 0.0.6'
 gem 'octokit', '~> 4.6.2'
 
 gem 'whenever', require: false
