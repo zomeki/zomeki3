@@ -372,13 +372,12 @@ class Cms::Node < ApplicationRecord
   end
 
   def extract_links(html, all)
-    links = Nokogiri::HTML.fragment(html).css('a[@href]').map {|a| {body: a.text, url: a.attribute('href').value} }
+    links = Nokogiri::HTML.fragment(html).css('a[@href]')
+                          .map { |a| { body: a.text, url: a.attribute('href').value } }
     return links if all
     links.select do |link|
-      uri = URI.parse(link[:url]) rescue nil
-      next false if uri.blank?
-      next true unless uri.absolute?
-      [URI::HTTP, URI::HTTPS, URI::FTP].include?(uri.class)
+      uri = Addressable::URI.parse(link[:url])
+      !uri.absolute? || uri.scheme.to_s.downcase.in?(%w(http https))
     end
   rescue => evar
     warn_log evar.message

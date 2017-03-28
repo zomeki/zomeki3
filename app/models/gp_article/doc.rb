@@ -861,12 +861,12 @@ class GpArticle::Doc < ApplicationRecord
   end
 
   def extract_links(html, all)
-    links = Nokogiri::HTML.parse(html).css('a[@href]').map {|a| {body: a.text, url: a.attribute('href').value} }
+    links = Nokogiri::HTML.parse(html).css('a[@href]')
+                          .map { |a| { body: a.text, url: a.attribute('href').value } }
     return links if all
     links.select do |link|
-      uri = URI.parse(link[:url])
-      next true unless uri.absolute?
-      [URI::HTTP, URI::HTTPS, URI::FTP].include?(uri.class)
+      uri = Addressable::URI.parse(link[:url])
+      !uri.absolute? || uri.scheme.to_s.downcase.in?(%w(http https))
     end
   rescue => evar
     warn_log evar.message
@@ -875,14 +875,13 @@ class GpArticle::Doc < ApplicationRecord
 
   def check_links(links)
     links.map{|link|
-      uri = URI.parse(link[:url])
+      uri = Addressable::URI.parse(link[:url])
       url = unless uri.absolute?
               next unless uri.path =~ /^\//
               "#{content.site.full_uri.sub(/\/$/, '')}#{uri.path}"
             else
               uri.to_s
             end
-
       res = Util::LinkChecker.check_url(url)
       {body: link[:body], url: url, status: res[:status], reason: res[:reason], result: res[:result]}
     }.compact
