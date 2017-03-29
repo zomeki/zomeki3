@@ -180,8 +180,6 @@ end
 Core.user       = Sys::User.find_by(account: "#{@code_prefix}somu1")
 Core.user_group = Core.user.groups[0]
 
-GpArticle::Doc.skip_callback(:save, :after, :enqueue_publisher_callback)
-
 create oshirase, categories, '住民票のお知らせ', read_data('gp_article/oshirase/juminhyo/body'), {categories: ['juminhyo', 'chumoku']}
 create oshirase, categories, '入札のお知らせ', read_data('gp_article/oshirase/nyusatsu/body'), {categories: ['joho', 'chumoku'], tags: '入札'}
 
@@ -202,6 +200,3 @@ create tetsuduki, categories, 'パスポートの申請・交付', read_data('gp
 create tetsuduki, categories, '世帯主変更届', read_data('gp_article/oshirase/setainushi/body'), {categories: ['juminhyo']}
 
 create shitsumon, nil, 'ぞめき市外から転入したとき、住所変更の手続きはどうしたらよいですか', read_data('gp_article/shitsumon/body')
-
-GpArticle::Doc.set_callback(:save, :after, :enqueue_publisher_callback)
-

@@ -3,46 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <title><%= Page.window_title %></title>
-  <%= javascript_include_tag '/_common/js/jquery.min.js' %>
-  <%= javascript_include_tag '/_common/js/jquery-migrate.min.js' %>
-  <%= javascript_include_tag '/_common/js/jquery_ujs.js' %>
-
-  <%= javascript_include_tag '/_common/js/jquery.browser.js' %>
-  <%= javascript_include_tag '/_common/js/jquery.iframe-auto-height.js' %>
-
-  <%= stylesheet_link_tag '/_common/css/simple_tabs.css' %>
-  <%= javascript_include_tag '/_common/js/simple_tabs.js' %>
-
   <%- if Page.current_node.content.class.in?([Survey::Content::Form]) -%>
   <%= csrf_meta_tags %>
   <%- end -%>
-
-  <%- if Core.request_uri =~ /^\/_ssl/ && Page.site.use_common_ssl? && Page.current_node.model == 'Survey::Form'
-    if Survey::Content::Form.find_by_id(Page.current_node.content.id).use_common_ssl?
-      ssl_uri = Page.site.full_ssl_uri.sub(/\/\z/, '')
-      tag = "#{Page.layout.head_tag(request)}".gsub(/href=("|')\/_(layouts|themes)/) {
-        "href=#{$1}#{ssl_uri}/_#{$2}"
-      }
-      tag = tag.gsub(/src=("|')\/_(layouts|themes)/) {
-        "src=#{$1}#{ssl_uri}/_#{$2}"
-      }
-    else
-      tag = Page.layout.head_tag(request)
-    end
-    -%>
-  <%= tag.html_safe %>
-  <%- else -%>
   <%= Page.layout.head_tag(request) %>
-  <%- end -%>
-
   <%- if Page.current_item.try(:respond_to?, :meta_description) && (meta_description = Page.current_item.meta_description).present? -%>
   <meta name="description" content="<%= meta_description.gsub(/(\r\n|\r|\n)/, ' ') %>" />
   <%- end -%>
   <%- if Page.current_item.try(:respond_to?, :meta_keywords) && (meta_keywords = Page.current_item.meta_keywords).present? -%>
   <meta name="keywords" content="<%= meta_keywords %>" />
   <%- end -%>
-
   <%= og_tags(Page.current_item) %>
+
+  <%= javascript_include_tag '/_common/js/jquery.browser.js' %>
+  <%= javascript_include_tag '/_common/js/jquery.iframe-auto-height.js' %>
+  <%= stylesheet_link_tag '/_common/css/simple_tabs.css' %>
+  <%= javascript_include_tag '/_common/js/simple_tabs.js' %>
 </head>
 <body <%= Page.body_id %> <%= Page.body_class %>>
   <%= yield %>

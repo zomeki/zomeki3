@@ -22,8 +22,6 @@ ZomekiCMS::Application.routes.draw do
         post :publish
         get  :select
       end
-      resources :histories,
-        :controller => 'admin/docs/histories', :only => [:index, :show]
     end
     resources :related_docs,
       :controller => 'admin/related_docs', :only => [:show]

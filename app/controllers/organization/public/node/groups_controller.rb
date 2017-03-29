@@ -18,47 +18,21 @@ class Organization::Public::Node::GroupsController < Cms::Controller::Public::Ba
     Page.current_item = @group
     Page.title = @group.sys_group.name
 
-    per_page = (@more ? 30 : @content.num_docs)
+    sys_group_ids = @group.public_descendants.map { |g| g.sys_group.id }
 
-    settings = GpArticle::Content::Setting.arel_table
-    article_contents = GpArticle::Content::Doc.joins(:settings)
-                                              .where(settings[:name].eq('organization_content_group_id')
-                                                                        .and(settings[:value].eq(@content.id)))
-                                              .where(site_id: @content.site.id)
+    docs = @content.public_docs.organized_into(sys_group_ids)
+                   .order(@group.inherited_docs_order)
+                   .preload_assocs(:organization_groups_and_public_node_ancestors_assocs, :public_index_assocs)
+
     if params[:format].in?(['rss', 'atom'])
-      docs = if article_contents.empty?
-          GpArticle::Doc.none
-        else
-          sys_group_ids = @group.public_descendants.map{|g| g.sys_group.id }
-          docs = find_public_docs_with_group_id(sys_group_ids)
-          docs = docs.where(content_id: article_contents.pluck(:id))
-          docs = docs.order(@group.docs_order)
-          docs = docs.display_published_after(@content.feed_docs_period.to_i.days.ago) if @content.feed_docs_period.present?
-          docs = docs.paginate(page: params[:page], per_page: @content.feed_docs_number)
-          docs = docs.preload_assocs(:organization_groups_and_public_node_ancestors_assocs, :public_index_assocs)
-          docs
-        end
+      docs = docs.display_published_after(@content.feed_docs_period.to_i.days.ago) if @content.feed_docs_period.present?
+      docs = docs.paginate(page: params[:page], per_page: @content.feed_docs_number)
       return render_feed(docs)
     end
 
-    @docs = if article_contents.empty?
-              GpArticle::Doc.none
-            else
-              sys_group_ids = @group.public_descendants.map{|g| g.sys_group.id }
-              find_public_docs_with_group_id(sys_group_ids)
-                .where(content_id: article_contents.pluck(:id))
-                .order(@group.docs_order)
-                .preload_assocs(:organization_groups_and_public_node_ancestors_assocs, :public_index_assocs)
-            end
-    @docs = @docs.paginate(page: params[:page], per_page: per_page)
+    @docs = docs.paginate(page: params[:page], per_page: (@more ? 30 : @content.num_docs))
     return http_error(404) if @docs.current_page > @docs.total_pages
 
     render 'more' if @more
-  end
-
-  private
-
-  def find_public_docs_with_group_id(group_id)
-    GpArticle::Doc.organized_into(group_id).mobile(::Page.mobile?).public_state
   end
 end

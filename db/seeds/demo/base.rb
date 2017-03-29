@@ -502,7 +502,6 @@ create_data_file c_top, lifeevent_node.id, 'bt-shogaisha.gif', '障がい者', '
 ## ---------------------------------------------------------
 ## each modules
 
-GpCategory::Category.skip_callback(:save, :after, :enqueue_publisher_callback)
 load_demo "gp_category"
 load_demo "navi"
 load_demo "flow"
@@ -516,7 +515,6 @@ load_demo "survey"
 load_demo "feed"
 load_demo "biz_calendar"
 load_demo "gp_article"
-GpCategory::Category.set_callback(:save, :after, :enqueue_publisher_callback)
 
 ## ---------------------------------------------------------
 ## demo themes
