@@ -13,9 +13,9 @@ preload_app true
 worker_processes Integer(ENV["WEB_CONCURRENCY"] || 2)
 
 # listen 8080, backlog: 1024
-listen "/var/www/zomeki_pids/unicorn.sock", backlog: 1024
+listen "#{rails_root}/tmp/sockets/unicorn.sock", backlog: 1024
 
-pid "/var/www/zomeki_pids/unicorn.pid"
+pid "#{rails_root}/tmp/pids/unicorn.pid"
 
 stderr_path "#{rails_root}/log/#{rails_env}_unicorn_stderr.log"
 stdout_path "#{rails_root}/log/#{rails_env}_unicorn_stdout.log"
