@@ -159,10 +159,6 @@ ZOMEKIをインストールします。
 uri: http://zomeki.example.com/    # すべて変更
 ```
 
-設定ファイルのサンプルをコピーします。
-
-    # cp -p /var/www/zomeki/config/sns_apps.yml.sample /var/www/zomeki/config/sns_apps.yml
-
 シークレットキーを設定します。
 
     # su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle exec rake secret RAILS_ENV=production'

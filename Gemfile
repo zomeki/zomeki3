@@ -96,9 +96,6 @@ gem 'faraday-cookie_jar', '~> 0.0.6'
 gem 'garb', '~> 0.9.8'
 gem 'google-oauth2-installed', '0.0.3'
 gem 'octokit', '~> 4.6.2'
-gem 'omniauth-facebook', '~> 4.0.0'
-gem 'omniauth-twitter', '~> 1.2.1'
-gem 'rest-more', '~> 3.3.4'
 
 gem 'whenever', require: false
 gem 'postgres-copy', '~> 1.1.0', require: false

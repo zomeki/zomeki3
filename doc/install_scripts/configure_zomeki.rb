@@ -20,9 +20,6 @@ def centos
     db['production']['uri'] = "http://#{`hostname`.chomp}/"
   end
 
-  sns_apps_yml = '/var/www/zomeki/config/sns_apps.yml'
-  FileUtils.copy("#{sns_apps_yml}.sample", sns_apps_yml, preserve: true)
-
   system "su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle exec rake db:setup RAILS_ENV=production'"
   system "su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle exec rake db:seed:demo RAILS_ENV=production'"
 
