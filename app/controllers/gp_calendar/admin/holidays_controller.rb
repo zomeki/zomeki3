@@ -2,8 +2,6 @@ class GpCalendar::Admin::HolidaysController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
   include GpCalendar::Controller::Holiday
 
-  include Cms::ApiGpCalendar
-
   def pre_dispatch
     @content = GpCalendar::Content::Event.find(params[:content])
     return error_auth unless Core.user.has_priv?(:read, item: @content.concept)

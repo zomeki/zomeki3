@@ -1,23 +1,12 @@
-module Cms::ApiRank
-  extend ActiveSupport::Concern
-
+class Rank::Public::Api::Piece::RanksController < Cms::Controller::Public::Api
   include Rank::Controller::Rank
 
-  included do
+  def pre_dispatch
+    return http_error(405) unless request.get?
+    return http_error(404) unless params[:version] == '20150401'
   end
 
-  def rank(path:, version:)
-    case path.shift
-    when 'piece_ranks'; rank_piece_ranks(path: path, version: version)
-    else render_404
-    end
-  end
-
-  def rank_piece_ranks(path:, version:)
-    return render_404 if path.present?
-    return render_405 unless request.get?
-    return render_404 unless version == '20150401'
-
+  def index
     piece = Rank::Piece::Rank.where(id: params[:piece_id]).first
     return render(json: {}) unless piece
 

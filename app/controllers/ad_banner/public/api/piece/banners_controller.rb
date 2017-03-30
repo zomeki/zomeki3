@@ -1,21 +1,10 @@
-module Cms::ApiAdBanner
-  extend ActiveSupport::Concern
-
-  included do
+class AdBanner::Public::Api::Piece::BannersController < Cms::Controller::Public::Api
+  def pre_dispatch
+    return http_error(405) unless request.get?
+    return http_error(404) unless params[:version] == '20150401'
   end
 
-  def ad_banner(path:, version:)
-    case path.shift
-    when 'piece_banners'; ad_banner_piece_banners(path: path, version: version)
-    else render_404
-    end
-  end
-
-  def ad_banner_piece_banners(path:, version:)
-    return render_404 if path.present?
-    return render_405 unless request.get?
-    return render_404 unless version == '20150401'
-
+  def index
     piece = AdBanner::Piece::Banner.where(id: params[:piece_id]).first
     return render(json: {}) unless piece && piece.content.public_node
 
@@ -39,7 +28,6 @@ module Cms::ApiAdBanner
               end
 
     result = {}
-
     result[:upper_text] = piece.upper_text.presence
     result[:lower_text] = piece.lower_text.presence
     result[:banners] = banners.map do |banner|

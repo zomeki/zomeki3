@@ -1,8 +1,7 @@
 class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
   include Sys::Controller::Scaffold::Publication
-
-  include Cms::ApiGpCalendar
+  include GpCalendar::SyncEvent
 
   layout :select_layout
 
