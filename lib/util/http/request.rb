@@ -1,5 +1,6 @@
 class Util::Http::Request
-  def self.head(uri, options = {})
+  def self.head(url, options = {})
+    uri = Addressable::URI.parse(url).normalize
     rescue_timeout do
       Faraday.head(uri) do |req|
         set_request_from_options(req, options)
@@ -7,7 +8,8 @@ class Util::Http::Request
     end
   end
 
-  def self.get(uri, options = {})
+  def self.get(url, options = {})
+    uri = Addressable::URI.parse(url).normalize
     rescue_timeout do
       Faraday.get(uri) do |req|
         set_request_from_options(req, options)
@@ -15,7 +17,8 @@ class Util::Http::Request
     end
   end
 
-  def self.post(uri, body, options = {})
+  def self.post(url, body, options = {})
+    uri = Addressable::URI.parse(url).normalize
     rescue_timeout do
       Faraday.post(uri, body) do |req|
         set_request_from_options(req, options)
@@ -30,6 +33,7 @@ class Util::Http::Request
   rescue Faraday::TimeoutError => e
     Faraday::Response.new(status: 408)
   rescue => e
+    warn_log e
     Faraday::Response.new
   end
 
