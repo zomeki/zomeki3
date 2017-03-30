@@ -82,10 +82,12 @@ Rails.application.routes.draw do
   get "_files/*path"           => "cms/public/files#down"
 
   # Talking
-  get "_public/*path.html.mp3"         => "cms/public/talk#down_mp3"
-  get "_public/*path.html.m3u"         => "cms/public/talk#down_m3u"
-  get "_public/*path.html.r.mp3"       => "cms/public/talk#down_mp3"
-  get "_public/*path.html.r.m3u"       => "cms/public/talk#down_m3u"
+  %w(_public _preview).each do |mode|
+    get "#{mode}/*path.html.mp3"         => "cms/public/talk#down_mp3"
+    get "#{mode}/*path.html.m3u"         => "cms/public/talk#down_m3u"
+    get "#{mode}/*path.html.r.mp3"       => "cms/public/talk#down_mp3"
+    get "#{mode}/*path.html.r.m3u"       => "cms/public/talk#down_m3u"
+  end
 
   # Modules
   Dir.glob("#{Rails.root}/config/modules/**/routes.rb").each do |file|
