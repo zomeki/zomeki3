@@ -13,8 +13,8 @@ class Util::Config
 private
   def self.read(filename, section)
     unless @@cache[filename]
-      config = ::File.join(Rails.root, 'config', filename + '.yml')
-      @@cache[filename] = YAML.load_file(config)
+      config = Rails.root.join("config/#{filename}.yml").to_s
+      @@cache[filename] = YAML.load(ERB.new(IO.read(config)).result)
     end
 
     if section == false
