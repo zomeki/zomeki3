@@ -26,12 +26,9 @@
     <td style="text-align: center;"><%= safe{item.updated_at.strftime('%Y-%m-%d %H:%M')} %></td>
     <td style="text-align: center;"><%= safe{item.status.name} %></td>
     <td style="text-align: center;">
-      <%- preview_uri = item.preview_uri -%>
-      <%= link_to_if preview_uri.present? && item.terminal_pc_or_smart_phone, 'PC', preview_uri, target: 'preview' %>
-      <%- preview_uri = item.preview_uri(smart_phone: true) -%>
-      <%= link_to_if preview_uri.present? && item.terminal_pc_or_smart_phone, 'スマホ', preview_uri, target: 'preview' %>
-      <%- preview_uri = item.preview_uri(mobile: true) -%>
-      <%= link_to_if preview_uri.present? && item.terminal_mobile, '携帯', preview_uri, target: 'preview' %>
+      <%= link_to 'PC', item.preview_uri, target: '_blank' if item.name.present? %>
+      <%= link_to 'スマホ', item.preview_uri(smart_phone: true), target: '_blank' if item.name.present? %>
+      <%= link_to '携帯', item.preview_uri(mobile: true), target: '_blank' if item.name.present? %>
     </td>
   </tr>
   <% end %>
