@@ -85,7 +85,10 @@ class GpCalendar::Public::Api::SyncEventsController < Cms::Controller::Public::A
     return render(json: []) unless content.try(:public_node)
 
     limit = (params[:limit] || 10).to_i
-    events = content.public_events.where(will_sync: 'enabled', sync_source_host: nil).reorder(updated_at: :desc).limit(limit)
+    events = content.public_events
+                    .where(will_sync: 'enabled', sync_source_host: nil)
+                    .reorder(updated_at: :desc)
+                    .limit(limit).to_a
 
     settings = GpArticle::Content::Setting.where(name: 'calendar_relation', value: 'enabled')
     contents = settings.map{|s|

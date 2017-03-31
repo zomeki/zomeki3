@@ -170,4 +170,31 @@ class GpCalendar::Event < ApplicationRecord
     self.ended_on = self.started_on if self.ended_on.blank?
     errors.add(:ended_on, "が#{self.class.human_attribute_name :started_on}を過ぎています。") if self.ended_on < self.started_on
   end
+
+  class << self
+    def from_doc(doc, calendar_content = nil)
+      options = ApplicationController.helpers.link_to_doc_options(doc)
+      doc_uri = unless options.kind_of?(Array)
+                  doc.public_uri
+                else
+                  options[0].to_s
+                end
+
+      event = self.new(
+        title: doc.title,
+        href: doc_uri,
+        target: '_self',
+        started_on: doc.event_started_on,
+        ended_on: doc.event_ended_on,
+        description: doc.summary,
+        content: calendar_content,
+        will_sync: 'disabled'
+      )
+      event.categories = doc.event_categories
+      event.files = doc.files
+      event.doc = doc
+      event.readonly!
+      event
+    end
+  end
 end

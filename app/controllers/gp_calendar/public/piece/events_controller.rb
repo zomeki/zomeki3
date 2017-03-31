@@ -26,9 +26,9 @@ class GpCalendar::Public::Piece::EventsController < GpCalendar::Public::Piece::B
       @events.reject! {|c| c.categories && !c.categories.map{|ct| ct.id }.include?(category) }
     end
 
-    merge_docs_into_events(event_docs(start_date, end_date, @piece.category_ids), @events)
-
-    @events.sort! {|a, b| a.started_on <=> b.started_on}
+    docs = @piece.content.public_event_docs(start_date, end_date, @piece.category_ids)
+                 .preload_assocs(:public_node_ancestors_assocs, :event_categories, :files)
+    @events = merge_docs_into_events(docs, @events)
     @events = @events.slice(0, @piece.docs_number) if @piece.docs_number
   end
 end

@@ -41,33 +41,14 @@ module GpCalendar::SyncEvent
 
   def gp_calendar_doc_to_event(doc:, event_content:)
     return if (doc_id = doc.name.to_i).zero?
-    event_started_on = doc.event_started_on
-    event_started_on ||= doc.event_ended_on
-    event_started_on ||= doc.display_published_at.try(:to_date)
     return if doc.event_started_on.blank?
 
-    event_ended_on = doc.event_ended_on
-    event_ended_on ||= event_started_on
-
-    options = view_context.link_to_doc_options(doc)
-    doc_uri = unless options.kind_of?(Array)
-                doc.public_full_uri
-              else
-                if (uri = options[0].to_s)[0] == '/'
-                  "#{doc.content.site.full_uri}#{uri[1..-1]}"
-                else
-                  uri
-                end
-              end
-
-    event = GpCalendar::Event.new(title: doc.title, href: doc_uri, target: '_self',
-                                  started_on: event_started_on, ended_on: event_ended_on,
-                                  description: doc.summary, content_id: event_content.id)
+    event = GpCalendar::Event.from_doc(doc, event_content)
     event.id = doc_id
+    event.started_on = doc.event_started_on
+    event.ended_on = doc.event_ended_on || doc.event_started_on
     event.updated_at = doc.updated_at
-
     event.doc = doc
-
     event
   end
 end

@@ -27,14 +27,16 @@ class GpCalendar::Public::Piece::CategoryDailyLinksController < GpCalendar::Publ
 
     @calendar.day_uri   = "#{@node.public_uri}?start_date=:year-:month-:day&end_date=:year-:month-:day"
 
-    days = event_docs(start_date, end_date).inject([]) do |dates, doc|
+    events = @piece.content.events.public_state
+                   .scheduled_between(start_date, end_date)
+                   .content_and_criteria(@piece.content, {categories: @piece.category_ids}).to_a
+    docs = @piece.content.public_event_docs(start_date, end_date)
+                 .preload_assocs(:public_node_ancestors_assocs, :event_categories, :files)
+    events = merge_docs_into_events(docs, events)
+
+    days = docs.inject([]) do |dates, doc|
              dates | (doc.event_started_on..doc.event_ended_on).to_a
            end
-
-    events = @piece.content.events.public_state
-      .scheduled_between(start_date, end_date)
-      .content_and_criteria(@piece.content, {categories: @piece.category_ids}).to_a
-    events =  merge_docs_into_events(event_docs(start_date, end_date, nil), events)
 
     (start_date..end_date).each do |date|
       if events.detect {|e| e.started_on <= date && date <= e.ended_on }

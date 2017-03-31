@@ -9,7 +9,9 @@ class GpCalendar::Public::Node::CalendarStyledEventsController < GpCalendar::Pub
     start_date = @date.beginning_of_month.beginning_of_week(:sunday)
     end_date = @date.end_of_month.end_of_week(:sunday)
 
-    merge_docs_into_events(event_docs(start_date, end_date), @events)
+    docs = @content.public_event_docs(start_date, end_date)
+                   .preload_assocs(:public_node_ancestors_assocs, :event_categories, :files)
+    @events = merge_docs_into_events(docs, @events)
 
     filter_events_by_specified_category(@events)
 
