@@ -173,7 +173,7 @@ class GpCalendar::Event < ApplicationRecord
 
   class << self
     def from_doc(doc, calendar_content = nil)
-      options = ApplicationController.helpers.link_to_doc_options(doc)
+      options = doc.link_to_options
       doc_uri = unless options.kind_of?(Array)
                   doc.public_uri
                 else
