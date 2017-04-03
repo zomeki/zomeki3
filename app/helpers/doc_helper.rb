@@ -1,7 +1,7 @@
 module DocHelper
   def doc_replace(doc, doc_style, date_style, time_style='')
 
-    link_to_options = link_to_doc_options(doc)
+    link_to_options = doc.link_to_options
 
     contents = {
       title_link: -> { doc_replace_title_link(doc, link_to_options) },

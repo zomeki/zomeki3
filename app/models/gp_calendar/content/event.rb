@@ -114,4 +114,17 @@ class GpCalendar::Content::Event < Cms::Content
   def attachment_embed_link
     false
   end
+
+  def public_event_docs(start_date, end_date, categories = nil)
+    doc_content_ids = Cms::ContentSetting.where(name: 'calendar_relation', value: 'enabled')
+                                         .select { |cs| cs.extra_values[:calendar_content_id] == id }
+                                         .map(&:content_id)
+    if doc_content_ids.blank?
+      GpArticle::Doc.none
+    else
+      GpArticle::Doc.mobile(::Page.mobile?).public_state
+                    .where(content_id: doc_content_ids, event_state: 'visible')
+                    .event_scheduled_between(start_date, end_date, categories)
+    end
+  end
 end

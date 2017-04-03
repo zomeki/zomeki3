@@ -14,11 +14,13 @@ class GpCalendar::Public::Piece::NearFutureEventsController < GpCalendar::Public
     @todays_events = events.select {|ev| ev.started_on <= today && today <= ev.ended_on }
     @tomorrows_events = events.select {|ev| ev.started_on <= tomorrow && tomorrow <= ev.ended_on }
 
-    docs = event_docs(today, tomorrow)
+    docs = @piece.content.public_event_docs(today, tomorrow)
+                 .preload_assocs(:public_node_ancestors_assocs, :event_categories, :files)
+
     today_docs = docs.select {|doc| doc.event_started_on <= today && today <= doc.event_ended_on }
     tomorrow_docs = docs.select {|doc| doc.event_started_on <= tomorrow && tomorrow <= doc.event_ended_on } 
 
-    merge_docs_into_events(today_docs, @todays_events)
-    merge_docs_into_events(tomorrow_docs, @tomorrows_events)
+    @todays_events = merge_docs_into_events(today_docs, @todays_events)
+    @tomorrows_events = merge_docs_into_events(tomorrow_docs, @tomorrows_events)
   end
 end

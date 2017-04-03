@@ -71,9 +71,6 @@ Rails.application.routes.draw do
   get "#{admin_prefix}/password/edit" => 'sys/admin/account#edit_password', as: :edit_admin_password
   put "#{admin_prefix}/password" => 'sys/admin/account#update_password', as: :admin_password
 
-  # Api
-  match '_api/*api_path' => 'cms/public/api#receive', as: :api_receive, via: [:get, :post]
-
   # Tool
   get "/_tools/captcha/index"  => "simple_captcha#index"
   get "/_tools/captcha/talk"   => "simple_captcha#talk"

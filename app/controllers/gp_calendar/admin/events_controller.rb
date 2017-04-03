@@ -1,7 +1,6 @@
 class GpCalendar::Admin::EventsController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
-
-  include Cms::ApiGpCalendar
+  include GpCalendar::SyncEvent
 
   def pre_dispatch
     @content = GpCalendar::Content::Event.find(params[:content])

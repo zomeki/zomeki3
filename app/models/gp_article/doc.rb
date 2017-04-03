@@ -731,6 +731,26 @@ class GpArticle::Doc < ApplicationRecord
     content.lang_options.rassoc(lang).try(:first)
   end
 
+  def link_to_options
+    if target.present?
+      if href.present?
+        if target == 'attached_file'
+          if (file = files.find_by(name: href))
+            ["#{public_uri}file_contents/#{file.name}", target: '_blank']
+          else
+            nil
+          end
+        else
+          [href, target: target]
+        end
+      else
+        nil
+      end
+    else
+      [public_uri]
+    end
+  end
+
   private
 
   def name_validity
