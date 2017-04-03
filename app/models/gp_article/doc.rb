@@ -891,7 +891,7 @@ class GpArticle::Doc < ApplicationRecord
   end
 
   def validate_accessibility_check
-    return unless Zomeki.config.application['cms.enable_accessibility_check']
+    return if content.site.setting_site_accessibility_check != 'enabled'
 
     modify_accessibility if in_modify_accessibility_check == '1'
     results = check_accessibility
