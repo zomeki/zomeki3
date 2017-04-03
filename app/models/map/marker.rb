@@ -77,4 +77,27 @@ class Map::Marker < ApplicationRecord
     seq = Util::Sequencer.next_id('map_markers', version: date, site_id: content.site_id)
     self.name = Util::String::CheckDigit.check(date + format('%04d', seq))
   end
+
+  class << self
+    def from_doc(doc)
+      return [] unless doc.maps.first
+
+      doc.maps.first.markers.map do |m|
+        marker = self.new(
+          title: doc.title,
+          latitude: m.lat,
+          longitude: m.lng,
+          window_text: %Q(<p>#{m.name}</p><p><a href="#{doc.public_uri}">詳細</a></p>),
+          doc: doc,
+          created_at: doc.display_published_at,
+          updated_at: doc.display_published_at
+        )
+        marker.categories = doc.marker_categories
+        marker.files = doc.files
+        marker.icon_category = doc.marker_icon_category
+        marker.readonly!
+        marker
+      end
+    end
+  end
 end
