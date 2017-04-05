@@ -42,6 +42,9 @@ class Survey::FormAnswer < ApplicationRecord
         max = answer.question.form_text_max_length
         errors.add(:base, "#{answer.question.title}は#{max}文字以内で入力してください。") if max && max < answer.content.size
       end
+      if [ 'text_field_email' ].include?(answer.question.form_type)
+        errors.add(:base, "#{answer.question.title}を正しく入力してください。") if answer.content !~ /\A.+@.+\z/ && !answer.content.blank?
+      end
       errors.add(:base, "#{answer.question.title}を入力してください。") if answer.question.required? && answer.content.blank?
     end
   end
