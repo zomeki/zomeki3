@@ -5,14 +5,17 @@
     <th style="width: 25%; text-align: center;">コンセプト</th>
     <th style="width: 25%; text-align: center;">レイアウトID</th>
     <th style="width: ; text-align: center;">レイアウト名</th>
+    <th style="width: ; text-align: center;">プレビュー</th>
   </th>
   <%- @item.owner_layouts.each do |layout| -%>
   <tr class="<%= cycle '', 'cycle' %>">
     <td><%= layout.concept.try(:name) %></td>
     <td><%= layout.name %></td>
+    <td><%= layout.title %></td>
     <td><% query = "layout_id=#{layout.id}&piece_id=#{@item.id}" %>
-      <%= link_to h(layout.title), "#{Core.site.root_node.preview_uri}*.html?#{query}", target: "_blank" %>
-      （<%= link_to "携帯", "#{Core.site.root_node.preview_uri(mobile: true)}*.html?#{query}", target: "_blank" %>）</td>
+      <%= link_to "PC", "#{Core.site.root_node.preview_uri}*.html?#{query}", target: "_blank" %>
+      <%= link_to "スマホ", "#{Core.site.root_node.preview_uri(smart_phone: true)}*.html?#{query}", target: "_blank" %>
+      <%= link_to "携帯", "#{Core.site.root_node.preview_uri(mobile: true)}*.html?#{query}", target: "_blank" %></td>
   </tr>
   <%- end -%>
 </table>
