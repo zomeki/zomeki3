@@ -9,7 +9,7 @@ class GpArticle::Content::Setting < Cms::ContentSetting
     name: '添付ファイル/許可する種類',
     style: 'width: 500px;',
     comment: '例: gif,jpg,png,pdf,doc,docx,xls,xlsx,ppt,pptx,odt,ods,odp',
-    default_value: 'gif,jpg,png,pdf,doc,docx,xls,xlsx,ppt,pptx,odt,ods,odp'
+    default_value: ''
   set_config :attachment_thumbnail_size, menu: :form,
     name: "添付ファイル/サムネイルサイズ",
     style: 'width: 100px;',
