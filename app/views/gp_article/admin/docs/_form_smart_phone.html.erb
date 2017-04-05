@@ -69,7 +69,7 @@ $(document).ready(function () {
       </div>
       <div>
         <%= submit_tag 'リンクチェック', name: 'link_check_in_body' if @content.site.setting_site_link_check == 'enabled' %>
-        <%= submit_tag 'アクセシビリティチェック', name: 'accessibility_check' if Zomeki.config.application['cms.enable_accessibility_check'] %>
+        <%= submit_tag 'アクセシビリティチェック', name: 'accessibility_check' if @content.site.setting_site_accessibility_check == 'enabled' %>
       </div>
     </div>
 

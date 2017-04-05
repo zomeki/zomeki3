@@ -43,6 +43,7 @@ ja:
         setting_file_upload_max_size: "添付ファイル最大サイズ"
         setting_extension_upload_max_size: "拡張子別アップロードサイズ"
         setting_link_check: "リンクチェック機能"
+        setting_accessibility_check: "アクセシビリティチェック機能"
         setting_kana_talk: "ふりがな・音声"
         og_type: タイプ
         og_title: タイトル

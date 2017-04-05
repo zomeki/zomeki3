@@ -23,9 +23,6 @@ cms:
   #ページ数付きページ書き出し数
   publish_more_pages: 10
 
-  # Accessibility check setting
-  enable_accessibility_check: true
-
   # Kana settings
   mecab_index: "/usr/local/libexec/mecab/mecab-dict-index"
   mecab_dic: "/usr/local/lib/mecab/dic/ipadic"

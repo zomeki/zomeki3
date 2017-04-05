@@ -158,4 +158,7 @@ ZomekiCMS::Application.routes.draw do
     get "node_sitemaps/" => "public/node/sitemaps#index",
       :as => nil
   end
+
+  ## api
+  get "_api/authenticity_token" => "cms/public/api/authenticity_token#index"
 end

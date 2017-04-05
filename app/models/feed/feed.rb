@@ -37,7 +37,7 @@ class Feed::Feed < ApplicationRecord
   end
 
   def request_feed
-    res = Util::Http::Request.send(uri)
+    res = Util::Http::Request.get(uri)
     if res.status != 200
       errors.add :base, "RequestError: #{uri}"
       return nil

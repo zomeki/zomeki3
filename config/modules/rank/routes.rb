@@ -55,4 +55,9 @@ ZomekiCMS::Application.routes.draw do
     get 'node_last_months(/index.:format)' => 'public/node/last_months#index'
     get 'node_this_weeks(/index.:format)' => 'public/node/this_weeks#index'
   end
+
+  ## api
+  scope "_api/#{mod}", :module => mod, :as => '' do
+    get 'piece_ranks' => 'public/api/piece/ranks#index'
+  end
 end

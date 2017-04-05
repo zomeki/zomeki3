@@ -731,6 +731,26 @@ class GpArticle::Doc < ApplicationRecord
     content.lang_options.rassoc(lang).try(:first)
   end
 
+  def link_to_options
+    if target.present?
+      if href.present?
+        if target == 'attached_file'
+          if (file = files.find_by(name: href))
+            ["#{public_uri}file_contents/#{file.name}", target: '_blank']
+          else
+            nil
+          end
+        else
+          [href, target: target]
+        end
+      else
+        nil
+      end
+    else
+      [public_uri]
+    end
+  end
+
   private
 
   def name_validity
@@ -825,12 +845,12 @@ class GpArticle::Doc < ApplicationRecord
   end
 
   def extract_links(html, all)
-    links = Nokogiri::HTML.parse(html).css('a[@href]').map {|a| {body: a.text, url: a.attribute('href').value} }
+    links = Nokogiri::HTML.parse(html).css('a[@href]')
+                          .map { |a| { body: a.text, url: a.attribute('href').value } }
     return links if all
     links.select do |link|
-      uri = URI.parse(link[:url])
-      next true unless uri.absolute?
-      [URI::HTTP, URI::HTTPS, URI::FTP].include?(uri.class)
+      uri = Addressable::URI.parse(link[:url])
+      !uri.absolute? || uri.scheme.to_s.downcase.in?(%w(http https))
     end
   rescue => evar
     warn_log evar.message
@@ -839,14 +859,13 @@ class GpArticle::Doc < ApplicationRecord
 
   def check_links(links)
     links.map{|link|
-      uri = URI.parse(link[:url])
+      uri = Addressable::URI.parse(link[:url])
       url = unless uri.absolute?
               next unless uri.path =~ /^\//
               "#{content.site.full_uri.sub(/\/$/, '')}#{uri.path}"
             else
               uri.to_s
             end
-
       res = Util::LinkChecker.check_url(url)
       {body: link[:body], url: url, status: res[:status], reason: res[:reason], result: res[:result]}
     }.compact
@@ -872,7 +891,7 @@ class GpArticle::Doc < ApplicationRecord
   end
 
   def validate_accessibility_check
-    return unless Zomeki.config.application['cms.enable_accessibility_check']
+    return if content.site.setting_site_accessibility_check != 'enabled'
 
     modify_accessibility if in_modify_accessibility_check == '1'
     results = check_accessibility

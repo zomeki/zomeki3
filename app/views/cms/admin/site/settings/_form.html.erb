@@ -56,6 +56,15 @@
 </table>
 <%- end -%>
 
+<%- if @item.name == 'accessibility_check' -%>
+<table class="show">
+  <tr>
+    <th><%= @site.locale(:setting_accessibility_check) %></th>
+    <td><%= f.radio_buttons(:in_setting_site_accessibility_check, @item.class::ACCESSIBILITY_CHECK_OPTIONS) %></td>
+  </tr>
+</table>
+<%- end -%>
+
 <%- if @item.name == 'kana_talk' -%>
 <table class="show">
   <tr>

@@ -69,4 +69,10 @@ ZomekiCMS::Application.routes.draw do
     get 'node_search_events(/index)' => 'public/node/search_events#index'
     get 'node_search_events/:name/file_contents/:basename.:extname' => 'public/node/search_events#file_content', :format => false
   end
+
+  ## api
+  scope "_api/#{mod}", :module => mod, :as => '' do
+    post 'sync_events/invoke' => 'public/api/sync_events#invoke'
+    get 'sync_events/updated_events' => 'public/api/sync_events#updated_events'
+  end
 end
