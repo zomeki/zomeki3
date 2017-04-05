@@ -339,17 +339,6 @@ $(document).ready(function () {
         <td><%= f.text_area :event_note, :size => '100x3' %></td>
       </tr>
     </table>
-
-    <%- if @content.event_sync? -%>
-    <p class="form">カレンダー同期</p>
-
-    <table class="show">
-      <tr>
-        <th><%= f.label :event_will_sync %></th>
-        <td><%= f.radio_buttons :event_will_sync, @item.class::EVENT_WILL_SYNC_OPTIONS %></td>
-      </tr>
-    </table>
-    <%- end -%>
   </div>
   <div id="tab6">
     <table class="show">

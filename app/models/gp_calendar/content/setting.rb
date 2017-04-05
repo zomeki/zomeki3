@@ -31,14 +31,6 @@ class GpCalendar::Content::Setting < Cms::ContentSetting
   set_config :show_qreki,
     name: '旧暦表示',
     options: [["表示する", 1], ["表示しない", 0]]
-  set_config :event_sync_import,
-    name: 'イベント同期（インポート）',
-    options: [['有効', 'enabled'], ['無効', 'disabled']],
-    default_value: 'disabled'
-  set_config :event_sync_export,
-    name: 'イベント同期（エクスポート）',
-    options: [['有効', 'enabled'], ['無効', 'disabled']],
-    default_value: 'disabled'
 
   belongs_to :content, foreign_key: :content_id, class_name: 'GpCalendar::Content::Event'
 
@@ -47,11 +39,6 @@ class GpCalendar::Content::Setting < Cms::ContentSetting
     case name
     when 'gp_category_content_category_type_id'
       ex[:category_type_ids] = params[:category_types].map(&:to_i).uniq
-    when 'event_sync_import'
-      ex[:source_hosts] = params[:source_hosts].to_s
-    when 'event_sync_export'
-      ex[:destination_hosts] = params[:destination_hosts].to_s
-      ex[:default_will_sync] = params[:default_will_sync].to_s
     end
     super(ex)
   end

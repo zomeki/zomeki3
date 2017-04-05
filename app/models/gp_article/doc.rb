@@ -35,7 +35,6 @@ class GpArticle::Doc < ApplicationRecord
   FEATURE_1_OPTIONS = [['表示', true], ['非表示', false]]
   FEATURE_2_OPTIONS = [['表示', true], ['非表示', false]]
   QRCODE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
-  EVENT_WILL_SYNC_OPTIONS = [['同期する', 'enabled'], ['同期しない', 'disabled']]
 
   default_scope { where.not(state: 'archived') }
   scope :public_state, -> { where(state: 'public') }
@@ -709,14 +708,6 @@ class GpArticle::Doc < ApplicationRecord
     end
   end
 
-  def event_will_sync?
-    event_will_sync == 'enabled'
-  end
-
-  def event_will_sync_text
-    EVENT_WILL_SYNC_OPTIONS.detect{|o| o.last == event_will_sync }.try(:first).to_s
-  end
-
   def event_state_visible?
     event_state == 'visible'
   end
@@ -792,7 +783,6 @@ class GpArticle::Doc < ApplicationRecord
     return unless content
 
     self.qrcode_state = content.qrcode_default_state if self.has_attribute?(:qrcode_state) && self.qrcode_state.nil?
-    self.event_will_sync ||= content.event_sync_default_will_sync if self.has_attribute?(:event_will_sync)
     self.feature_1 = content.feature_settings[:feature_1] if self.has_attribute?(:feature_1) && self.feature_1.nil?
     self.feature_2 = content.feature_settings[:feature_2] if self.has_attribute?(:feature_2) && self.feature_2.nil?
 

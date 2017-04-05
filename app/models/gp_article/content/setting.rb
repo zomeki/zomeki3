@@ -167,10 +167,6 @@ class GpArticle::Content::Setting < Cms::ContentSetting
     name: 'カレンダー',
     form_type: :radio_buttons,
     options: [['使用する', 'enabled'], ['使用しない', 'disabled']],
-    extra_options: {
-      event_sync_settings_options: [['使用する', 'enabled'], ['使用しない', 'disabled']],
-      event_sync_default_will_sync_options: [['同期する', 'enabled'], ['同期しない', 'disabled']]
-    },
     default_value: 'enabled'
   set_config :organization_content_group_id, menu: :relation,
     name: '組織',
@@ -198,8 +194,6 @@ class GpArticle::Content::Setting < Cms::ContentSetting
       ex[:default_layout_id] = params[:default_layout_id].to_i
     when 'calendar_relation'
       ex[:calendar_content_id] = params[:calendar_content_id].to_i
-      ex[:event_sync_settings] = params[:event_sync_settings].to_s
-      ex[:event_sync_default_will_sync] = params[:event_sync_default_will_sync].to_s
     when 'map_relation'
       ex[:map_content_id] = params[:map_content_id].to_i
       ex[:lat_lng] = params[:lat_lng]

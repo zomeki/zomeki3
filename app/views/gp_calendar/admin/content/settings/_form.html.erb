@@ -53,35 +53,3 @@ $(document).ready(function () {
 });
 <%- end -%>
 <%- end -%>
-
-
-<%- if @item.name == 'event_sync_import' -%>
-<table class="show">
-  <tr>
-    <th>イベント同期元ホスト</th>
-    <td>
-      <%= text_field_tag 'item[extra_values][source_hosts]', @item.extra_values[:source_hosts], style: 'width: 400px;' %>
-      （例 example.com,example.net,example.org ）
-    </td>
-  </tr>
-</table>
-<%- end -%>
-
-<%- if @item.name == 'event_sync_export' -%>
-<table class="show">
-  <tr>
-    <th>イベント同期先ホスト</th>
-    <td>
-      <%= text_field_tag 'item[extra_values][destination_hosts]', @item.extra_values[:destination_hosts], style: 'width: 400px;' %>
-      （例 example.com,example.net,example.org ）
-    </td>
-  </tr>
-  <tr>
-    <th>イベント同期初期値</th>
-    <td><%= select_tag 'item[extra_values][default_will_sync]',
-                       options_for_select(GpCalendar::Event::WILL_SYNC_OPTIONS,
-                                          (@item.extra_values[:default_will_sync] || 'disabled')),
-                       include_blank: true %></td>
-  </tr>
-</table>
-<%- end -%>

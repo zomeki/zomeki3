@@ -198,21 +198,6 @@ $(document).ready(function () {
     <td><%= select_tag 'item[extra_values][calendar_content_id]',
                        options_from_collection_for_select(GpCalendar::Content::Event.where(site_id: Core.site.id), :id, :name, @item.extra_values[:calendar_content_id]), include_blank: true %></td>
   </tr>
-  <tr>
-    <th>イベント同期</th>
-    <td>
-      <%- @item.extra_options[:event_sync_settings_options].each do |option| name = :event_sync_settings -%>
-      <%= radio_button_tag "item[extra_values][#{name}]", option[1], (@item.extra_values[name] || 'disabled') == option[1] %><%= label_tag "item_extra_values_#{name}_#{option[1]}", option[0] %>
-      <%- end -%>
-    </td>
-  </tr>
-  <tr>
-    <th>イベント同期初期値</th>
-    <td><%= select_tag 'item[extra_values][event_sync_default_will_sync]',
-                       options_for_select(@item.extra_options[:event_sync_default_will_sync_options],
-                                          (@item.extra_values[:event_sync_default_will_sync] || 'disabled')),
-                       include_blank: true %></td>
-  </tr>
 </table>
 <%- end -%>
 
