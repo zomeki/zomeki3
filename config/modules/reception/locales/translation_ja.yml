@@ -49,6 +49,9 @@ ja:
       reception/piece/course:
         docs_filter: 表示対象
         docs_order: 表示順
+        category_sets: 表示カテゴリ
         doc_style: 表示形式
         date_style: 日付形式
         docs_number: 表示件数
+        more_link_body: 一覧リンク文字
+        more_link_url: 一覧リンクURL

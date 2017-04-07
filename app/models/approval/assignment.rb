@@ -32,7 +32,13 @@ class Approval::Assignment < ApplicationRecord
   def assigners
     case assign_type
     when 'group_users'
-      group_id == 0 ? Core.user_group.users : group.try(:users) || []
+      if group_id == 0
+        Core.user_group.users.where(state: 'enabled')
+      elsif group
+        group.users.where(state: 'enabled')
+      else
+        []
+      end
     else
       [user].compact
     end

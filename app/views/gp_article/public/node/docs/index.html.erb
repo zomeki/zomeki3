@@ -6,7 +6,7 @@
   </ul>
   <%- end -%>
   <div class="docs">
-    <%- if @docs.present? -%>
+    <%- if @docs.present? && !@content.simple_pagination? -%>
       <h2 class="date">
         <%= monthly_page_title(@page_info[:current_dates], @content.doc_monthly_title_style) if @content.monthly_pagination? %>
         <%= weekly_page_title(@page_info[:current_dates], @content.doc_weekly_title_style) if @content.weekly_pagination? %>

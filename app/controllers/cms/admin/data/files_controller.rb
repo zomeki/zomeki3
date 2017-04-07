@@ -26,7 +26,7 @@ class Cms::Admin::Data::FilesController < Cms::Controller::Admin::Base
     files = Cms::DataFile.arel_table
 
     rel = Cms::DataFile.order(params[:s_sort] == 'updated_at' ? {updated_at: :desc, id: :asc} : {name: :asc, id: :asc})
-    rel = rel.search_with_text(:name, params[:s_keyword]) if params[:s_keyword].present?
+    rel = rel.search_with_text(:name, :title, params[:s_keyword]) if params[:s_keyword].present?
     rel = rel.where(node_id: @parent.id) unless @parent.id.zero?
     rel = unless Core.user.has_auth?(:manager) || params[:s_target] == 'current'
             rel.readable

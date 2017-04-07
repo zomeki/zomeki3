@@ -1,0 +1,6 @@
+「<%= @course.title %>」へお申込みが届きました。
+
+<%= render 'reception/admin/mailer/applicant', applicant: @applicant %>
+
+次のURLから確認
+<%= @applicant_admin_uri %>
