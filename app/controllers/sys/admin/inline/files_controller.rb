@@ -133,7 +133,7 @@ class Sys::Admin::Inline::FilesController < Cms::Controller::Admin::Base
   private
 
   def file_params
-    params.require(:item).permit(:file, :name, :title)
+    params.require(:item).permit(:file, :name, :title, :alt_text)
   end
 
   def get_allowed_type

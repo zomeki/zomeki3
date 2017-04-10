@@ -28,7 +28,7 @@ $(document).ready(function () {
     '<td>_NO_</td>' +
     '<td><%= text_field_tag 'names[]', '_NAME_', class: 'string fileName', size: 55 %></td>' +
     '<td><%= text_field_tag 'titles[]', '_TITLE_', class: 'string fileTitle', size: 55 %></td>' +
-    '<td><%= text_field_tag 'alts[]', '_ALT_TEXT_', class: 'string fileAlt', size: 55 %></td>' +
+    '<td><%= text_field_tag 'alts[]', '', class: 'string fileAlt', size: 55 %></td>' +
   '</tr>';
 
   $('#files').on('change', function (event) {
@@ -51,8 +51,7 @@ $(document).ready(function () {
       <%- end -%>
       var title = filename.replace(/(.*)\.[a-z]+$/i, '$1');
       var html = row.replace(/_NO_/, i+1).replace(/_NAME_/, name)
-                    .replace(/_TITLE_/, title)
-                    .replace(/_ALT_TEXT_/, title);
+                    .replace(/_TITLE_/, title);
       $('#fileAttrs').append(html);
     }
   });
