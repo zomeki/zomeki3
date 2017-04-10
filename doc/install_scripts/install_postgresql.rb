@@ -14,7 +14,7 @@ def centos
   system 'yum -y install http://yum.postgresql.org/9.5/redhat/rhel-7-x86_64/pgdg-centos95-9.5-2.noarch.rpm'
   system 'yum -y install postgresql95-server postgresql95-contrib postgresql95-devel'
 
-  system '/usr/pgsql-9.5/bin/postgresql95-setup initdb'
+  system 'export PGSETUP_INITDB_OPTIONS="--encoding=UTF8 --locale=ja_JP.UTF-8"; /usr/pgsql-9.5/bin/postgresql95-setup initdb'
 
   pg_hba_conf = '/var/lib/pgsql/9.5/data/pg_hba.conf'
   FileUtils.copy pg_hba_conf, "#{pg_hba_conf}.#{Time.now.strftime('%Y%m%d%H%M')}", preserve: true

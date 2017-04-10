@@ -102,7 +102,7 @@ yumリポジトリに追加します。
 
 データベースを初期化します。
 
-    # /usr/pgsql-9.5/bin/postgresql95-setup initdb
+    # export PGSETUP_INITDB_OPTIONS="--encoding=UTF8 --locale=ja_JP.UTF-8"; /usr/pgsql-9.5/bin/postgresql95-setup initdb
 
 ユーザ認証方法を変更します。
 
