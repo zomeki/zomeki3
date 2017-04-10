@@ -1,5 +1,0 @@
-「<%= @doc.title %>」にコメントが投稿されました。
-
-  次のURLをクリックしてコメントを確認してください。
-
-  <%= "#{@core_uri.sub(/\/+$/, '')}#{gp_article_comments_path(content: @doc.content)}" %>

@@ -79,7 +79,6 @@ class GpArticle::Doc < ApplicationRecord
                             }, class_name: 'Tag::Tag', join_table: 'gp_article_docs_tag_tags'
 
   has_many :holds, :as => :holdable, :dependent => :destroy
-  has_many :comments, :dependent => :destroy
 
   before_save :set_name
   before_save :set_published_at
@@ -290,10 +289,6 @@ class GpArticle::Doc < ApplicationRecord
     groups = Sys::Group.arel_table
     joins(creator: :group).where(groups[:id].in(group_ids))
   }
-
-  def public_comments
-    comments.public_state
-  end
 
   def public_path
     return '' if public_uri.blank?
