@@ -3,20 +3,10 @@ module GpCategory::GpCategoryHelper
     GpArticle::Doc.categorized_into(category_id).except(:order).mobile(::Page.mobile?).public_state
   end
 
-  def more_link(*options, template_module: nil, ct_or_c: nil)
-    case template_module.module_type
-    when 'docs_2', 'docs_4', 'docs_6'
-      options << 'l1'
-    end
-
-    case template_module.module_type_feature
-    when 'feature_1'
-      options << 'f1'
-    when 'feature_2'
-      options << 'f2'
-    end
-
-    file = "more#{"_#{options.join('@')}" unless options.empty?}"
+  def category_module_more_link(template_module: nil, ct_or_c: nil, category_name: nil, group_code: nil)
+    file = "more@#{template_module.name}"
+    file << "@c_#{category_name}" if category_name.present?
+    file << "@g_#{group_code}" if group_code.present?
     "#{ct_or_c.public_uri}#{file}.html"
   end
 
@@ -108,7 +98,7 @@ module GpCategory::GpCategoryHelper
           }.html_safe
         html = content_tag(:ul, html) if template_module.wrapper_tag == 'li'
         if ct_or_c && docs.count < all_docs.count
-          html << content_tag(:div, link_to('一覧へ', more_link(template_module: template_module, ct_or_c: ct_or_c)), class: 'more')
+          html << content_tag(:div, link_to('一覧へ', category_module_more_link(template_module: template_module, ct_or_c: ct_or_c)), class: 'more')
         else
           html
         end
@@ -153,18 +143,18 @@ module GpCategory::GpCategoryHelper
             doc_tags = content_tag(:ul, doc_tags) if template_module.wrapper_tag == 'li'
             html << doc_tags
 
-            html << content_tag(:div, link_to('一覧へ', more_link("c_#{category.name}", template_module: template_module, ct_or_c: ct_or_c)), class: 'more')
+            html << content_tag(:div, link_to('一覧へ', category_module_more_link(template_module: template_module, ct_or_c: ct_or_c, category_name: category.name)), class: 'more')
           }.call
 
         if inner_content.present?
-          tags << content_tag(:section, "#{template_module.upper_text}#{inner_content}#{template_module.lower_text}", class: category.name)
+          tags << content_tag(:section, "#{template_module.upper_text}#{inner_content}#{template_module.lower_text}".html_safe, class: category.name)
         else
           tags
         end
       }
     return '' if content.blank?
 
-    content_tag(:section, content, class: template_module.name)
+    content_tag(:section, content.html_safe, class: template_module.name)
   end
 
   def docs_4(template_module: nil, ct_or_c: nil, categories: nil, categorizations: nil)
@@ -189,18 +179,18 @@ module GpCategory::GpCategoryHelper
 
     content = groups.inject(''){|tags, group|
         tags << content_tag(:section, class: group.code) do
-            docs = docs.where(Sys::Group.arel_table[:id].eq(group.id))
+            group_docs = docs.where(Sys::Group.arel_table[:id].eq(group.id))
                        .limit(template_module.num_docs).order(docs_order)
 
             html = content_tag(:h2, group.name)
-            doc_tags = docs.inject(''){|t, d|
+            doc_tags = group_docs.inject(''){|t, d|
                          t << content_tag(template_module.wrapper_tag,
                                           doc_replace(d, template_module.doc_style, @content.date_style, @content.time_style))
                        }.html_safe
             doc_tags = content_tag(:ul, doc_tags) if template_module.wrapper_tag == 'li'
             html << doc_tags
 
-            html << content_tag(:div, link_to('一覧へ', more_link("g_#{group.code}", template_module: template_module, ct_or_c: ct_or_c)), class: 'more')
+            html << content_tag(:div, link_to('一覧へ', category_module_more_link(template_module: template_module, ct_or_c: ct_or_c, group_code: group.code)), class: 'more')
           end
       }
     return '' if content.blank?
