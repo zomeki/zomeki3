@@ -1,0 +1,9 @@
+<%= form_for :item, url: "?do=update", html: { method: :post } do |f| %>
+  <%= error_messages_for :item  %>
+
+  <%- if @item.file_entry? -%>
+    <%= render 'form_file', f: f %>
+  <%- end -%>
+  
+  <%= submit :edit %>
+<% end %>

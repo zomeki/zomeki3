@@ -2,133 +2,111 @@ class Cms::Admin::StylesheetsController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 
   before_action :force_html_format
+  before_action :filter_by_do_param
 
   def pre_dispatch
     return error_auth unless Core.user.has_auth?(:designer)
 
-    @root      = "#{Core.site.public_path}/_themes"
-    @path      = params[:path].to_s
-    @full_path = "#{@root}/#{@path}"
-    @base_uri  = ["#{Core.site.public_path}/", "/"]
-    @item      = Cms::Stylesheet.new_by_path(Core.site.id, @path)
+    themes_path = Rails.root.join("sites/#{format('%04d', Core.site.id)}/public/_themes").to_s
+    params[:path] = '' if params[:path].blank?
+    @root_dir = params[:path].split('/').first
 
-    if @path == ''
-      root_dir = @item.upload_path
-      ::Storage.mkdir_p(root_dir) unless ::Storage.exists?(root_dir)
-    end
+    path = ::File.join(themes_path, params[:path].to_s)
 
-    unless ::Storage.exists?(@item.upload_path)
-      return http_error(404) if flash[:notice]
-      flash[:notice] = "指定されたパスは存在しません。（ #{@item.upload_path} ）"
-      redirect_to(cms_stylesheets_path(''))
-    end
+    @item = Cms::Storage::Stylesheet.from_path(path)
+    return http_error(404) unless @item.exists?
 
-    @stylesheets_path = lambda do |path, options = {}|
-      options = { path: path, concept: Core.concept.id }.merge(options)
-      cms_stylesheets_path(options).gsub('//', '/')
-    end
-
-    @stylesheet_path = lambda do |path, options = {}|
-      options = { path: path, concept: Core.concept.id, do: :show }.merge(options)
-      cms_stylesheets_path(options).gsub('//', '/')
-    end
+    @parent = @item.parent
+    return http_error(404) unless @parent.exists?
   end
 
   def index
-    return show    if params[:do] == 'show'
-    return edit    if params[:do] == 'edit'
-    return update  if params[:do] == 'update'
-    return rename  if params[:do] == 'rename'
-    return move    if params[:do] == 'move'
-    return destroy if params[:do] == 'destroy'
+    @current = @item
+    return http_error(404) unless @current.directory_entry?
 
-    if params[:do] == 'download'
-      return send_data(::Storage.read(@full_path), content_type: ::Storage.mime_type(@full_path), disposition: :attachment)
-    end
-
-    if params[:do].nil? && !@item.directory?
-      params[:do] = 'show'
-      return show
-    elsif request.post? && location = create
-      return error_auth unless @item.creatable?
-      return redirect_to(location)
-    end
-
-    @dirs  = @item.child_directories
-    @files = @item.child_files
+    @items = @current.children
+    _index @items
   end
 
   def show
-    @item.read_body
     render :show, formats: [:html]
+  end
+
+  def download
+    send_data(@item.body, content_type: @item.mime_type, disposition: :attachment)
+  end
+
+  def create
+    return error_auth unless @item.creatable?
+    @current = @item
+
+    if params[:create_directory]
+      @item = Cms::Storage::Stylesheet.new(base_dir: @current.path, name: params[:item][:new_directory],
+                                           entry_type: :directory)
+      if @item.save
+        flash[:notice] = 'ディレクトリを作成しました。'
+        return redirect_to(path: @current.path_from_themes_root)
+      else
+        flash.now[:notice] = 'ディレクトリの作成に失敗しました。'
+      end
+    elsif params[:create_file]
+      @item = Cms::Storage::Stylesheet.new(base_dir: @current.path, name: params[:item][:new_file],
+                                           entry_type: :file,  body: '')
+      if @item.save
+        flash[:notice] = 'ファイルを作成しました。'
+        return redirect_to(do: :show, path: @item.path_from_themes_root)
+      else
+        flash.now[:notice] = 'ファイルの作成に失敗しました。'
+      end
+    elsif params[:upload_file]
+      uploader = Sys::Storage::Uploader.new(@item)
+      @results, @unzip_results = uploader.upload_files(params[:item][:new_upload],
+                                                       overwrite: false,
+                                                       unzip: false)
+    end
+
+    @items = @current.children
+    render :index
   end
 
   def edit
     return error_auth unless @item.editable?
-
-    @item.read_body
     render :edit, formats: [:html]
-  end
-
-  def create
-    if params[:create_directory]
-      if @item.create_directory(params[:item][:new_directory])
-        flash[:notice] = 'ディレクトリを作成しました。'
-        return @stylesheets_path.call(@path)
-      end
-    elsif params[:create_file]
-      if @item.create_file(params[:item][:new_file])
-        flash[:notice] = 'ファイルを作成しました。'
-        return @stylesheets_path.call(::File.join(@path, params[:item][:new_file]), do: 'edit')
-      end
-    elsif params[:upload_file]
-      if @item.upload_file(params[:item][:new_upload])
-        flash[:notice] = 'アップロードが完了しました。'
-        return @stylesheets_path.call(@path)
-      end
-    end
-    false
   end
 
   def update
     return error_auth unless @item.editable?
 
-    old_path = @item.upload_path
-
-    if @item.directory?
+    if @item.file_entry?
+      @item.name = params[:item][:name]
+      @item.body = params[:item][:body]
+    elsif @item.directory_entry?
       @item.concept_id = params[:item][:concept_id]
-      @item.site_id    = Core.site.id if @item.concept_id
+      @item.name = params[:item][:name]
+    end
+
+    if @item.save
+      flash[:notice] = "更新処理が完了しました。"
+      redirect_to(path: @parent.path_from_themes_root)
     else
-      @item.body = params[:item][:body] if params[:item].key?(:body)
+      flash.now[:notice] = "更新処理に失敗しました。"
+      render :edit, formats: [:html]
     end
-
-    if !@item.valid? || !@item.update_item
-      flash[:notice] = '更新処理に失敗しました。'
-      return render(action: :edit)
-    end
-
-    if @item.name != params[:item][:name] && !@item.rename(params[:item][:name])
-      flash[:notice] = '更新処理に失敗しました。'
-      return render(action: :edit)
-    end
-
-    flash[:notice] = '更新処理が完了しました。'
-    location = @stylesheets_path.call(::File.dirname(@path))
-    redirect_to(location)
   end
 
   def move
     return error_auth unless @item.editable?
+    return render :move if request.get?
 
-    if request.put?
-      if @item.move(params[:item][:path])
-        flash[:notice] = '移動処理が完了しました。'
-        location = @stylesheets_path.call(::File.dirname(@path))
-        return redirect_to(location)
-      end
+    @item.base_dir = ::File.join(@item.themes_root_path, params[:item][:base_dir])
+    @item.name = params[:item][:name]
+    if @item.editable? && @item.save
+      flash[:notice] = "更新処理が完了しました。"
+      redirect_to(path: @parent.path_from_themes_root)
+    else
+      flash[:notice] = "更新処理に失敗しました。"
+      render :move, formats: [:html]
     end
-
-    render :move, formats: [:html]
   end
 
   def destroy
@@ -137,15 +115,35 @@ class Cms::Admin::StylesheetsController < Cms::Controller::Admin::Base
     if @item.destroy
       flash[:notice] = "削除処理が完了しました。"
     else
-      flash[:notice] = "削除処理に失敗しました。（#{@item.errors.full_messages.join(' ')}）"
+      flash[:notice] = "削除処理に失敗しました。"
     end
-    location = @stylesheets_path.call(::File.dirname(@path))
-    redirect_to(location)
+
+    redirect_to(path: @parent.path_from_themes_root)
   end
 
   private
 
   def force_html_format
     request.format = :html
+  end
+
+  def filter_by_do_param
+    @do = request.post? ? 'create' : params[:do].presence || 'index'
+    case @do
+    when 'show'
+      show
+    when 'create'
+      create
+    when 'edit'
+      edit
+    when 'update'
+      update
+    when 'destroy'
+      destroy
+    when 'move'
+      move
+    when 'download'
+      download
+    end
   end
 end

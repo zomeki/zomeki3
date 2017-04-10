@@ -1,0 +1,24 @@
+<table class="show">
+  <tr>
+    <th>ファイル名</th>
+    <td><%= @item.name %> （<%= link_to "ダウンロード", "?do=download" %>）</td>
+  </tr><tr>
+    <th>ファイル種別</th>
+    <td><%= @item.mime_type %></td>
+  </tr><tr>
+    <th>サイズ</th>
+    <td><%= number_format @item.kb_size %> KB</td>
+  </tr><tr>
+    <th>更新日時</th>
+    <td><%= @item.mtime.strftime('%Y-%m-%d %H:%M') if @item.mtime %></td>
+  </tr>
+</table>
+
+<%- if @item.text_file? -%>
+<p class="form">ファイル内容</p>
+<table class="show">
+  <tr>
+    <td class="pre monospace"><%= @item.body %></td>
+  </tr>
+</table>
+<%- end -%>

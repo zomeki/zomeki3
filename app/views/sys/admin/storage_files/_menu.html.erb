@@ -1,34 +1,40 @@
-<%= javascript_tag do %>
+<div class="navi">
+  <%= select_tag :directory, options_for_select(@root_dirs, selected: @root_dir), id: "naviPath" %>
+  <%-
+  dirs = (@current || @parent).path_from_site_root.split('/')
+  dirs = dirs.drop(1).map.with_index do |n, idx|
+    [n, dirs.slice(0, idx + 2).join("/")]
+  end
+  -%>
+  <%- dirs.each do |n, p| -%>
+  <span class="separator">&gt;</span> <%= link_to n, { path: p } %>
+  <%- end -%>
+</div>
 
+<%= javascript_tag do %>
 // change root directory
 $(function(){
   $('#naviPath').change(function(){
     location.href = '<%= sys_storage_files_path.gsub(/\?.*/, '') %>/' + $(this).val();
   });
 });
-
 <% end %>
 
-<div class="navi">
-  <%= select_tag :directory, options_for_select(@roots.map, :selected => @root), :id => "naviPath" %>
-  <%- @navi.each do |n, p| -%>
-  <span class="separator">&gt;</span> <%= link_to n, sys_storage_files_path(:path => p).gsub(/\?.*/, '') %>
-  <%- end -%>
-</div>
-
 <div class="actionMenu">
-<%= link_to "上へ", @parent_uri if @dir.index("/") && !@do && @is_dir %>
-<%= link_to :index, @parent_uri if @do || @is_file %>
-<%- if @do == "show" -%>
-  <%= link_to :edit   , "#{@current_uri}?do=edit" if @is_file && @is_text_file %>
-  <%#= link_to :rename , "#{@current_uri}?do=rename" %>
-  <%#= link_to :move   , "#{@current_uri}?do=move" %>
-  <%= link_to :destroy, "#{@current_uri}?do=destroy", :confirm => "削除してよろしいですか？" %>
-<%- elsif @do -%>
-  <%= link_to :show, "#{@current_uri}?do=show" %>
-<%- elsif !@do && @is_dir -%>
+<%- case @do -%>
+<%- when 'index' -%>
+  <%= link_to '上へ', { path: @parent.path_from_site_root } unless @parent.site_root_path? %>
+  <%- if @item.creatable? -%>
   <a href="#" id="newDir">新規ディレクトリ</a>
   <a href="#" id="newFile">新規ファイル</a>
   <a href="#" id="newUpload">アップロード</a>
+  <%- end -%>
+<%- when 'show' -%>
+  <%= link_to :index, { path: @parent.path_from_site_root } %>
+  <%= link_to :edit, { path: @item.path_from_site_root, do: :edit } if @item.editable? && @item.text_file? %>
+  <%= link_to :destroy, { path: @item.path_from_site_root, do: :destroy }, confirm: '削除してよろしいですか？' if @item.deletable? %>
+<%- when 'edit', 'update' -%>
+  <%= link_to :index, { path: @parent.path_from_site_root } %>
+  <%= link_to :show, { path: @item.path_from_site_root, do: :show } %>
 <%- end -%>
 </div>

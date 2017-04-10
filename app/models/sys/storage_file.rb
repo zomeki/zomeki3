@@ -38,7 +38,7 @@ class Sys::StorageFile < ApplicationRecord
         files_under_directory(src).replace_for_all(:path, src.chomp('/'), dst.chomp('/'))
       else
         find_by(path: dst).try!(:destroy!)
-        find_by(path: src).update!(path: dst)
+        find_by(path: src).try!(:update!, path: dst)
       end
     end
   end

@@ -144,3 +144,8 @@ ja:
         note: "備考"
         sort_no: "並び順"
         created_at: "作成日時"
+
+  activemodel:
+    attributes:
+      sys/storage/entry:
+        name: ""

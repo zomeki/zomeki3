@@ -71,7 +71,7 @@ ZomekiCMS::Application.routes.draw do
 
   scope "#{ZomekiCMS::ADMIN_URL_PREFIX}/#{mod}/c:concept", :module => mod, :as => mod do
     match "stylesheets/(*path)" => "admin/stylesheets#index",
-      :as => :stylesheets, :format => false, via: [:get, :post, :put]
+      :as => :stylesheets, :format => false, via: [:get, :post, :put, :patch]
     resources :contents,
       :controller  => "admin/contents"
     resources :nodes,

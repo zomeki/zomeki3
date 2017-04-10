@@ -1,0 +1,12 @@
+<table class="show">
+  <tr>
+    <th>コンセプト</th>
+    <td><%= @item.concept.name if @item.concept %></td>
+  </tr><tr>
+    <th>ディレクトリ名</th>
+    <td><%= @item.name %></td>
+  </tr><tr>
+    <th>更新日時</th>
+    <td><%= @item.mtime.strftime('%Y-%m-%d %H:%M') if @item.mtime %></td>
+  </tr>
+</table>
