@@ -62,7 +62,7 @@ module Cms::Model::Rel::SiteSetting
 
   def setting_site_allowed_attachment_type
     setting = Cms::SiteSetting.where(:site_id => id, :name => 'allowed_attachment_type').first
-    setting ? setting.value : 'gif,jpg,png,pdf,doc,docx,xls,xlsx,ppt,pptx,odt,ods,odp';
+    setting ? setting.value : '';
   end
 
   def setting_site_link_check

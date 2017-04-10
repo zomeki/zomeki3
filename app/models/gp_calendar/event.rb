@@ -6,7 +6,6 @@ class GpCalendar::Event < ApplicationRecord
   include GpCategory::Model::Rel::Category
 
   include StateText
-  include GpCalendar::EventSync
 
   STATE_OPTIONS = [['公開中', 'public'], ['非公開', 'closed']]
   TARGET_OPTIONS = [['同一ウィンドウ', '_self'], ['別ウィンドウ', '_blank']]
@@ -44,13 +43,6 @@ class GpCalendar::Event < ApplicationRecord
     events = self.arel_table
 
     rel = self.where(events[:content_id].eq(content.id))
-    if criteria[:imported]
-      rel = if criteria[:imported].in?(%w!true yes!)
-              rel.where(events[:sync_source_host].not_eq(nil))
-            else
-              rel.where(events[:sync_source_host].eq(nil))
-            end
-    end
     rel = rel.where(events[:name].matches("%#{criteria[:name]}%")) if criteria[:name].present?
     rel = rel.where(events[:title].matches("%#{criteria[:title]}%")) if criteria[:title].present?
     rel = rel.where(events[:started_on].lteq(criteria[:date])
@@ -89,14 +81,6 @@ class GpCalendar::Event < ApplicationRecord
 
     return rel
   }
-
-
-  def self.state_options(synced: nil)
-    so = []
-    so << ['同期済', 'synced'] if synced
-    so += STATE_OPTIONS.dup
-    so
-  end
 
   def kind
     'event'
@@ -150,7 +134,6 @@ class GpCalendar::Event < ApplicationRecord
 
   def set_defaults_from_content
     return unless content
-    self.will_sync ||= content.event_sync_default_will_sync if self.has_attribute?(:will_sync)
   end
 
   def set_name

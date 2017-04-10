@@ -1,6 +1,5 @@
 class GpCalendar::Admin::EventsController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
-  include GpCalendar::SyncEvent
 
   def pre_dispatch
     @content = GpCalendar::Content::Event.find(params[:content])
@@ -13,7 +12,6 @@ class GpCalendar::Admin::EventsController < Cms::Controller::Admin::Base
     require 'will_paginate/array'
 
     criteria = params[:criteria] || {}
-    criteria[:imported] = params[:imported] || 'no'
     @items = GpCalendar::Event.content_and_criteria(@content, criteria).to_a
 
     criteria[:date] = Date.parse(criteria[:date]) rescue nil
@@ -48,25 +46,18 @@ class GpCalendar::Admin::EventsController < Cms::Controller::Admin::Base
 
   def create
     @item = @content.events.build(event_params)
-    _create(@item) do
-      gp_calendar_sync_events_export(doc_or_event: @item) if @content.event_sync_export?
-    end
+    _create(@item)
   end
 
   def update
     @item = @content.events.find(params[:id])
     @item.attributes = event_params
-    location = @item.sync_source_host ? gp_calendar_events_path(imported: 'yes') : gp_calendar_events_path
-    _update(@item, location: location) do
-      gp_calendar_sync_events_export(doc_or_event: @item) if @content.event_sync_export?
-    end
+    _update(@item)
   end
 
   def destroy
     @item = @content.events.find(params[:id])
-    _destroy(@item) do
-      gp_calendar_sync_events_export(doc_or_event: @item) if @content.event_sync_export?
-    end
+    _destroy(@item)
   end
 
   private
