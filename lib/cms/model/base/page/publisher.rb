@@ -21,7 +21,7 @@ module Cms::Model::Base::Page::Publisher
   def preview_uri(options = {})
     return nil unless public_uri
     site   = options[:site] || Page.site
-    mobile = options[:mobile] ? 'm' : nil
+    mobile = options[:mobile] ? 'm' : options[:smart_phone] ? 's' : nil
     params = []
     options[:params].each {|k, v| params << "#{k}=#{v}" } if options[:params]
     params = params.size > 0 ? "?#{params.join('&')}" : ""
