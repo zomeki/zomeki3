@@ -19,7 +19,7 @@ $(document).ready(function () {
         $(banners).each(function (index, item) {
           var l = $('<li>', {'class': 'banner'});
           var a = $('<a>', {'href': item['url'], 'target': item['target']});
-          a.append($('<img>', {'src': item['image_url'], 'alt': item['title']}));
+          a.append($('<img>', {'src': item['image_url'], 'alt': item['alt_text'], 'title': item['title']}));
           l.append(a);
           u.append(l);
         });

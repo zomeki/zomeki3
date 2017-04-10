@@ -117,18 +117,17 @@ module Cms::Controller::Layout
 
     ## render the data/text
     Cms::Lib::Layout.find_data_texts(body, concepts).each do |name, item|
-      data = item.body
-      body.gsub!("[[text/#{name}]]", data)
+      body.gsub!("[[text/#{name}]]", item.body)
     end
 
     ## render the data/file
     Cms::Lib::Layout.find_data_files(body, concepts).each do |name, item|
-      data = ''
-      if item.image_file?
-        data = '<img src="' + item.public_uri + '" alt="' + item.title + '" title="' + item.title + '" />'
-      else
-        data = '<a href="' + item.public_uri + '" class="' + item.css_class + '" target="_blank">' + item.united_name + '</a>'
-      end
+      data =
+        if item.image_file?
+          %Q|<img src="#{item.public_uri}" alt="#{item.alt_text}" title="#{item.title}" />|
+        else
+          %Q|<a href="#{item.public_uri}" class="#{item.css_class}" target="_blank">#{item.united_name}</a>|
+        end
       body.gsub!("[[file/#{name}]]", data)
     end
 

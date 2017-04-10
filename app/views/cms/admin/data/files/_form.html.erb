@@ -30,12 +30,16 @@ $(function() {
     <td><%= select_tag :image_resize, options_for_select(Sys::Model::Base::File::IMAGE_RESIZE_OPTIONS), include_blank: true %></td>
   </tr>
   <tr>
-    <th style=""><%=@item.locale(:name) %><div class="note">※半角英数字のみ</div></th>
+    <th style=""><%= @item.locale(:name) %><div class="note">※半角英数字のみ</div></th>
     <td><%= f.text_field :name, :class => 'nameEn' %></td>
   </tr>
   <tr>
-    <th style=""><%=@item.locale(:title) %><div class="note">※日本語でわかりやすく</div></th>
+    <th style=""><%= @item.locale(:title) %><div class="note">※日本語でわかりやすく</div></th>
     <td><%= f.text_field :title, :class => 'name' %></td>
+  </tr>
+  <tr>
+    <th style=""><%= @item.locale(:alt_text) %><div class="note">※日本語でわかりやすく</div></th>
+    <td><%= f.text_field :alt_text, :class => 'name' %></td>
   </tr>
 
 </table>

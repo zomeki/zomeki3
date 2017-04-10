@@ -32,7 +32,7 @@ class AdBanner::Public::Api::Piece::BannersController < Cms::Controller::Public:
     result[:lower_text] = piece.lower_text.presence
     result[:banners] = banners.map do |banner|
                            url = piece.content.click_count_related? ? banner.link_uri : banner.url
-                           {title: banner.title, target: banner.target,
+                           {alt_text: banner.alt_text, title: banner.title, target: banner.target,
                             url: url, image_url: banner.image_uri}
                          end
 
