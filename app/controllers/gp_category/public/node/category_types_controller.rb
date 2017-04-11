@@ -88,14 +88,15 @@ class GpCategory::Public::Node::CategoryTypesController < GpCategory::Public::No
 
     if (template = @category_type.template)
       if @more
+        @template_module = template.containing_modules.detect { |m| m.name == @more_options.first }
+
         category_ids = @category_type.public_root_categories.inject([]){|ids, category|
           ids.concat(category.public_descendants.map(&:id))
         }
         @docs = find_public_docs_with_category_id(category_ids)
 
-        template_module = template.containing_modules.detect { |m| m.name == @more_options.first }
-        if template_module && template_module.gp_article_content_ids.present?
-          @docs.where!(content_id: template_module.gp_article_content_ids)
+        if @template_module && @template_module.gp_article_content_ids.present?
+          @docs.where!(content_id: @template_module.gp_article_content_ids)
         end
 
         if (filter = @more_options[1])

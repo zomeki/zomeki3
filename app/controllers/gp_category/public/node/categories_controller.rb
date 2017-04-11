@@ -18,15 +18,15 @@ class GpCategory::Public::Node::CategoriesController < GpCategory::Public::Node:
 
     if (template = @category.inherited_template)
       if @more
-        template_module = template.containing_modules.detect { |m| m.name == @more_options.first }
+        @template_module = template.containing_modules.detect { |m| m.name == @more_options.first }
         @docs = if template_module && template_module.module_type.in?(%w(docs_2 docs_4 docs_6))
                   find_public_docs_with_category_id(@category.id)
                 else
                   find_public_docs_with_category_id(@category.public_descendants.map(&:id))
                 end
 
-        if template_module && template_module.gp_article_content_ids.present?
-          @docs.where!(content_id: template_module.gp_article_content_ids)
+        if @template_module && @template_module.gp_article_content_ids.present?
+          @docs.where!(content_id: @template_module.gp_article_content_ids)
         end
 
         if (filter = @more_options[1])
