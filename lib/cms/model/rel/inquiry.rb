@@ -46,16 +46,20 @@ module Cms::Model::Rel::Inquiry
     end
   end
 
-  def inquiry_display_fields
+  def inquiry_title
     if content && content.inquiry_extra_values
-      content.inquiry_extra_values[:display_fields]
+      content.inquiry_extra_values[:inquiry_title].to_s
     else
-      ['group_id', 'charge', 'address', 'tel', 'fax', 'email', 'note']
+      'お問い合わせ'
     end
   end
 
-  def inquiry_display_field?(name)
-    inquiry_display_fields.include?(name.to_s)
+  def inquiry_style
+    if content && content.inquiry_extra_values
+      content.inquiry_extra_values[:inquiry_style].to_s
+    else
+      '@name@@address@@tel@@fax@@email_link@'
+    end
   end
 
   private

@@ -32,11 +32,11 @@ class GpArticle::Content::Setting < Cms::ContentSetting
     options: [['使用する', 'enabled'], ['使用しない', 'disabled']],
     extra_options: {
       default_state_options: [['表示', 'visible'], ['非表示', 'hidden']],
-      display_field_options: [['住所', 'address'], ['TEL', 'tel'], ['FAX', 'fax'], ['メールアドレス', 'email'], ['備考', 'note']] # ['課', 'group_id'], ['室・担当', 'charge'],
     },
     default_value: 'enabled',
     default_extra_values: {
-      display_fields: ['group_id', 'address', 'tel', 'fax', 'email', 'note']
+      inquiry_title: 'お問い合わせ',
+      inquiry_style: '@name@@address@@tel@@fax@@email_link@'
     }
   set_config :blog_functions, menu: :form,
     name: '追記入力',
@@ -198,6 +198,8 @@ class GpArticle::Content::Setting < Cms::ContentSetting
     when 'inquiry_setting'
       ex[:state] = params[:state]
       ex[:display_fields] = params[:display_fields] || []
+      ex[:inquiry_title] = params[:inquiry_title]
+      ex[:inquiry_style] = params[:inquiry_style]
     when 'approval_relation'
       ex[:approval_content_id] = params[:approval_content_id].to_i
     when 'gp_template_content_template_id'

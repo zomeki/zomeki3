@@ -229,14 +229,26 @@ $(document).ready(function () {
     <td><%= select_tag 'item[extra_values][state]', options_for_select(@item.extra_options[:default_state_options], @item.extra_values[:state]), include_blank: true %></td>
   </tr>
   <tr>
-    <th>表示項目</th>
+    <th>表示タイトル</th>
+    <td><%= text_field_tag 'item[extra_values][inquiry_title]', @item.extra_values[:inquiry_title], style: 'width: 400px;' %></td>
+  </tr>
+  <tr>
+    <th>表示形式</th>
     <td>
-      <%- @item.extra_options[:display_field_options].each do |name, id| -%>
-      <%= check_box_tag "vf_#{id}", id, @item.extra_values[:display_fields].include?(id), name: 'item[extra_values][[display_fields][]' -%><%= label_tag "vf_#{id}", name, style: 'padding-right: 20px;' -%>
-      <%- end -%>
+      <%= link_to '置き換えテキストを確認する', '#', id: 'show_inquiry_dialog' %><br />
+      <%= text_area_tag 'item[extra_values][inquiry_style]', @item.extra_values[:inquiry_style], size: '100x10' %>
     </td>
   </tr>
 </table>
+<%= render 'cms/admin/_partial/inquiries/style_tags' %>
+<%= javascript_tag do %>
+$(function() {
+  $('#show_inquiry_dialog').on('click', function() {
+    $('#inquiry_style_tags').dialog({width: 400});
+    return false;
+  });
+});
+<% end %>
 <%- end -%>
 
 <%- if @item.name == 'approval_relation' -%>
