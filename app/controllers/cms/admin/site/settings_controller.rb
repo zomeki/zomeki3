@@ -43,7 +43,8 @@ class Cms::Admin::Site::SettingsController < Cms::Controller::Admin::Base
       :in_setting_site_common_ssl,
       :in_setting_site_allowed_attachment_type,
       :in_setting_site_link_check,
-      :in_setting_site_kana_talk
+      :in_setting_site_kana_talk,
+      :in_setting_site_map_default_Coordinate
     )
   end
 end

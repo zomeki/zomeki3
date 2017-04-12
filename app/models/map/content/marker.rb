@@ -15,14 +15,22 @@ class Map::Content::Marker < Cms::Content
   end
 
   def latitude
+    map_default_Coordinate = Cms::SiteSetting.find_by(name: 'map_default_Coordinate').try(:value).to_s.split(',')
     lat_lng = setting_value(:lat_lng).to_s.split(',')
-    return '35.702708' unless lat_lng.size == 2 # Mitaka
+    return Zomeki.config.application["cms.default_map_latitude"] unless map_default_Coordinate.size == 2 || lat_lng.size == 2
+    return map_default_Coordinate.first.strip unless lat_lng.size == 2 # Mitaka
     lat_lng.first.strip
   end
 
   def longitude
+    map_default_Coordinate = Cms::SiteSetting.find_by(name: 'map_default_Coordinate').try(:value).to_s.split(',')
     lat_lng = setting_value(:lat_lng).to_s.split(',')
-    return '139.560831' unless lat_lng.size == 2 # Mitaka
+    debug_log lat_lng
+    debug_log map_default_Coordinate
+    debug_log Zomeki.config.application["cms.default_map_latitude"]
+    debug_log Zomeki.config.application["cms.default_map_longitude"]
+    return Zomeki.config.application["cms.default_map_longitude"] unless map_default_Coordinate.size == 2 || lat_lng.size == 2
+    return map_default_Coordinate.last.strip unless lat_lng.size == 2 # Mitaka
     lat_lng.last.strip
   end
 
