@@ -10,6 +10,10 @@
     <td><%= @item.title %></td>
   </tr>
   <tr>
+    <th>ファイル名（代替テキスト用）</th>
+    <td><%= @item.alt_text %></td>
+  </tr>
+  <tr>
     <th>アップロード日時</th>
     <td><%= @item.created_at.try(:strftime, '%Y-%m-%d %H:%M') %></td>
   </tr>

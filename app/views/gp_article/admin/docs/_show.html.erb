@@ -232,17 +232,6 @@ $(document).ready(function () {
         <td><%= hbr @item.event_note %></td>
       </tr>
     </table>
-
-    <%- if @content.gp_calendar_content_event -%>
-    <p class="form">カレンダー同期</p>
-
-    <table class="show">
-      <tr>
-        <th><%= @item.locale :event_will_sync %></th>
-        <td><%= @item.event_will_sync_text %></td>
-      </tr>
-    </table>
-    <%- end -%>
   </div>
   <div id="tab6">
     <table class="show">

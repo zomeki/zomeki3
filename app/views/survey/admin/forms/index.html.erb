@@ -21,6 +21,8 @@
     <td style="text-align: center;">
       <%- preview_uri = item.preview_uri -%>
       <%= link_to_if preview_uri.present?, 'PC', preview_uri, target: '_blank' %>
+      <%- preview_uri = item.preview_uri(smart_phone: true) -%>
+      <%= link_to_if preview_uri.present?, 'スマホ', preview_uri, target: '_blank' %>
       <%- preview_uri = item.preview_uri(mobile: true) -%>
       <%= link_to_if preview_uri.present?, '携帯', preview_uri, target: '_blank' %>
     </td>

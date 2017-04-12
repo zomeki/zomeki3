@@ -320,14 +320,6 @@ class GpArticle::Content::Doc < Cms::Content
     setting_extra_value(:qrcode_settings, :state) || 'hidden'
   end
 
-  def event_sync?
-    setting_extra_value(:calendar_relation, :event_sync_settings) == 'enabled'
-  end
-
-  def event_sync_default_will_sync
-    setting_extra_value(:calendar_relation, :event_sync_default_will_sync).to_s
-  end
-
   def serial_no_enabled?
     setting_value(:serial_no_settings) == 'enabled'
   end

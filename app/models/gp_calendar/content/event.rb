@@ -87,26 +87,6 @@ class GpCalendar::Content::Event < Cms::Content
     setting_extra_value(:show_images, :image_cnt).to_i
   end
 
-  def event_sync_import?
-    setting_value(:event_sync_import) == 'enabled'
-  end
-
-  def event_sync_export?
-    setting_value(:event_sync_export) == 'enabled'
-  end
-
-  def event_sync_source_hosts
-    setting_extra_value(:event_sync_import, :source_hosts).to_s
-  end
-
-  def event_sync_destination_hosts
-    setting_extra_value(:event_sync_export, :destination_hosts).to_s
-  end
-
-  def event_sync_default_will_sync
-    setting_extra_value(:event_sync_export, :default_will_sync).to_s
-  end
-
   def allowed_attachment_type
     'gif,jpg,png'
   end

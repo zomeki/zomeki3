@@ -36,10 +36,11 @@ class Sys::Admin::Inline::FilesController < Cms::Controller::Admin::Base
     files = params[:files].presence || []
     names = params[:names].presence || []
     titles = params[:titles].presence || []
+    alts = params[:alts].presence || []
     success = failure = 0
 
     files.each_with_index do |file, i|
-      item = Sys::File.new(file: files[i], name: names[i], title: titles[i])
+      item = Sys::File.new(file: files[i], name: names[i], title: titles[i], alt_text: alts[i])
       item.site_id = Core.site.id
       if @tmp_id
         item.tmp_id = @tmp_id
@@ -49,7 +50,7 @@ class Sys::Admin::Inline::FilesController < Cms::Controller::Admin::Base
 
       if (duplicated = item.duplicated)
         item = duplicated
-        item.attributes = { file: files[i], name: names[i], title: titles[i] }
+        item.attributes = { file: files[i], name: names[i], title: titles[i], alt_text: alts[i] }
       end
 
       item.image_resize = params[:image_resize] if params[:image_resize].present?
@@ -132,7 +133,7 @@ class Sys::Admin::Inline::FilesController < Cms::Controller::Admin::Base
   private
 
   def file_params
-    params.require(:item).permit(:file, :name, :title)
+    params.require(:item).permit(:file, :name, :title, :alt_text)
   end
 
   def get_allowed_type

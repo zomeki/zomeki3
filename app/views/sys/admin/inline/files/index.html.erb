@@ -46,12 +46,12 @@ display_embed_link = @content.respond_to?(:attachment_embed_link) ? @content.att
           <%- if item.image_file? -%>
             <div class="pasteLinks">
               <%= link_to "画像貼付 (#{item.image_width}x#{item.image_height})", "#",
-                  onclick: %Q|ckeInsertContent('<img src="#{embed_path}" alt="#{item.alt}" title="#{item.alt}" />'); return false;|,
+                  onclick: %Q|ckeInsertContent('<img src="#{embed_path}" alt="#{item.alt_text}" title="#{item.alt}" />'); return false;|,
                   id: "link_image#{item.id}" %>
               <% if item.has_thumbnail? %>
                 <span class="separator">|</span>
                 <%= link_to "画像貼付 (#{item.thumb_width}x#{item.thumb_height})", "#",
-                    onclick: %Q|ckeInsertContent('<img src="#{thumb_embed_path}" alt="#{item.alt}" title="#{item.alt}" />'); return false;|,
+                    onclick: %Q|ckeInsertContent('<img src="#{thumb_embed_path}" alt="#{item.alt_text}" title="#{item.alt}" />'); return false;|,
                     id: "link_image#{item.id}thumb" %>
                <%- end -%>
             </div>

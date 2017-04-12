@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170220065438) do
+ActiveRecord::Schema.define(version: 20170323105211) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -42,6 +42,7 @@ ActiveRecord::Schema.define(version: 20170220065438) do
     t.integer  "thumb_width"
     t.integer  "thumb_height"
     t.integer  "thumb_size"
+    t.text     "alt_text"
     t.index ["token"], name: "index_ad_banner_banners_on_token", unique: true, using: :btree
   end
 
@@ -271,6 +272,7 @@ ActiveRecord::Schema.define(version: 20170220065438) do
     t.integer  "thumb_height"
     t.integer  "thumb_size"
     t.text     "extracted_text"
+    t.text     "alt_text"
     t.index ["concept_id", "node_id", "name"], name: "index_cms_data_files_on_concept_id_and_node_id_and_name", using: :btree
   end
 
@@ -1276,6 +1278,7 @@ ActiveRecord::Schema.define(version: 20170220065438) do
     t.integer  "thumb_height"
     t.integer  "thumb_size"
     t.text     "extracted_text"
+    t.text     "alt_text"
     t.index ["file_attachable_type", "file_attachable_id"], name: "index_sys_files_on_file_attachable_type_and_file_attachable_id", using: :btree
   end
 

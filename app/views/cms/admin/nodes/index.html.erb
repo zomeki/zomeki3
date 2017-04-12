@@ -1,7 +1,7 @@
 <%= render 'search' %>
 
 <%#= link_to :up, url_for(:parent => @parent.parent_id) if @parent.parent_id > 0 %>
-  
+
 <table class="index directories">
   <tr>
     <th style="width: 60px; text-align: center;">詳細</th>
@@ -14,7 +14,7 @@
     <th style="width: 60px; text-align: center;">状態</th>
     <th style="width: 65px; text-align: center;">プレビュー</th>
   </tr>
-  
+
   <% @dirs.each do |item| %>
   <tr class="directory <%= cycle '', 'cycle' %>">
     <td style="text-align: center;"><%= link_to :show, item.admin_uri %></td>
@@ -27,11 +27,12 @@
     <td style="text-align: center;"><%= safe{item.status.name} %></td>
     <td style="text-align: center;">
       <%= link_to 'PC', item.preview_uri, target: '_blank' if item.name.present? %>
+      <%= link_to 'スマホ', item.preview_uri(smart_phone: true), target: '_blank' if item.name.present? %>
       <%= link_to '携帯', item.preview_uri(mobile: true), target: '_blank' if item.name.present? %>
     </td>
   </tr>
   <% end %>
-  
+
   <% @pages.each do |item| %>
   <tr class="file <%= cycle '', 'cycle' %>">
     <td style="text-align: center;"><%= link_to :show, item.admin_uri %></td>
@@ -44,6 +45,7 @@
     <td style="text-align: center;"><%= safe{item.status.name} %></td>
     <td style="text-align: center;">
       <%= link_to 'PC', item.preview_uri(params: {node_id: item.id}), target: '_blank' if item.name.present? %>
+      <%= link_to 'スマホ', item.preview_uri(smart_phone: true, params: {node_id: item.id}), target: '_blank' if item.name.present? %>
       <%= link_to '携帯', item.preview_uri(mobile: true, params: {node_id: item.id}), target: '_blank' if item.name.present? %>
     </td>
   </tr>
