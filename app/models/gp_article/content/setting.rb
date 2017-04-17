@@ -32,22 +32,19 @@ class GpArticle::Content::Setting < Cms::ContentSetting
     options: [['使用する', 'enabled'], ['使用しない', 'disabled']],
     extra_options: {
       default_state_options: [['表示', 'visible'], ['非表示', 'hidden']],
-      display_field_options: [['住所', 'address'], ['TEL', 'tel'], ['FAX', 'fax'], ['メールアドレス', 'email'], ['備考', 'note']] # ['課', 'group_id'], ['室・担当', 'charge'],
     },
     default_value: 'enabled',
     default_extra_values: {
-      display_fields: ['group_id', 'address', 'tel', 'fax', 'email', 'note']
+      inquiry_title: 'お問い合わせ',
+      inquiry_style: '@name@@address@@tel@@fax@@email_link@'
     }
   set_config :blog_functions, menu: :form,
-    name: 'ブログ',
+    name: '追記入力',
     form_type: :radio_buttons,
     options: [['使用する', 'enabled'], ['使用しない', 'disabled']],
     default_value: 'disabled',
     default_extra_values: {
-      footer_style: '投稿者：@user@ @publish_time@ コメント(@comment_count@) カテゴリ：@category_link@',
-      comment: 'disabled',
-      comment_open: 'immediate',
-      comment_notification_mail: 'disabled'
+      footer_style: '投稿者：@user@ @publish_time@ カテゴリ：@category_link@'
     }
   set_config :word_dictionary, menu: :form,
     name: "本文/単語変換辞書",
@@ -201,6 +198,8 @@ class GpArticle::Content::Setting < Cms::ContentSetting
     when 'inquiry_setting'
       ex[:state] = params[:state]
       ex[:display_fields] = params[:display_fields] || []
+      ex[:inquiry_title] = params[:inquiry_title]
+      ex[:inquiry_style] = params[:inquiry_style]
     when 'approval_relation'
       ex[:approval_content_id] = params[:approval_content_id].to_i
     when 'gp_template_content_template_id'
@@ -212,9 +211,6 @@ class GpArticle::Content::Setting < Cms::ContentSetting
     when 'tag_relation'
       ex[:tag_content_tag_id] = params[:tag_content_tag_id].to_i
     when 'blog_functions'
-      ex[:comment] = params[:comment]
-      ex[:comment_open] = params[:comment_open]
-      ex[:comment_notification_mail] = params[:comment_notification_mail]
       ex[:footer_style] = params[:footer_style]
     when 'feature_settings'
       ex[:feature_1] = params[:feature_1]

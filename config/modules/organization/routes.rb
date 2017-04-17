@@ -42,9 +42,6 @@ ZomekiCMS::Application.routes.draw do
     get 'node_groups(/(index))' => 'public/node/groups#index'
   end
   scope "_public/#{mod}", :module => 'gp_article' do
-    get 'node_groups/*group_names/docs/:name/comments/new' => 'public/node/comments#new', :format => false
-    post 'node_groups/*group_names/docs/:name/comments/confirm' => 'public/node/comments#confirm', :format => false
-    post 'node_groups/*group_names/docs/:name/comments' => 'public/node/comments#create', :format => false
     get 'node_groups/*group_names/docs/:name/preview/:id/file_contents/:basename.:extname' => 'public/node/docs#file_content'
     get 'node_groups/*group_names/docs/:name/preview/:id/:filename_base' => 'public/node/docs#show'
     get 'node_groups/*group_names/docs/:name/file_contents/:basename.:extname' => 'public/node/docs#file_content'
