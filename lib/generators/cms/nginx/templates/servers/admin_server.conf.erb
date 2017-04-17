@@ -9,10 +9,10 @@ server {
   access_log /var/log/nginx/<%= log_prefix %>access_site_<%= '%04d' % @site.id %>.log main;
   error_log /var/log/nginx/<%= log_prefix %>error_site_<%= '%04d' % @site.id %>.log warn;
 
+  include <%= zomeki_root %>/config/nginx/admin_servers/site_<%= '%04d' % @site.id %>.d/*.conf;
+  include <%= zomeki_root %>/config/nginx/admin_servers/site.d/*.conf;
   include <%= zomeki_root %>/config/nginx/rewrite.conf;
   include <%= zomeki_root %>/config/nginx/servers_common.conf;
-  include <%= zomeki_root %>/config/nginx/admin_servers/site.d/*.conf;
-  include <%= zomeki_root %>/config/nginx/admin_servers/site_<%= '%04d' % @site.id %>.d/*.conf;
 
   location ~ ^/(<%= ZomekiCMS::ADMIN_URL_PREFIX %>|_preview) {
     try_files $uri @proxy;

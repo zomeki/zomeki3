@@ -18,8 +18,12 @@
 /config/core.yml
 /config/mecab/sites
 /config/mecab/zomeki.dic
-/config/apache/*
-/config/nginx/*
+/config/apache/*.conf
+/config/apache/virtual_hosts
+/config/apache/admin_virtual_hosts
+/config/nginx/*.conf
+/config/nginx/servers
+/config/nginx/admin_servers
 /config/plugins
 
 /vendor/tika/**/*.jar
