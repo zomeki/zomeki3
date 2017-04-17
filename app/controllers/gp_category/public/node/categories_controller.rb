@@ -18,25 +18,18 @@ class GpCategory::Public::Node::CategoriesController < GpCategory::Public::Node:
 
     if (template = @category.inherited_template)
       if @more
-        @docs = case
-                when 'l1'.in?(@more_options)
+        @template_module = template.containing_modules.detect { |m| m.name == @more_options.first }
+        @docs = if template_module && template_module.module_type.in?(%w(docs_2 docs_4 docs_6))
                   find_public_docs_with_category_id(@category.id)
                 else
                   find_public_docs_with_category_id(@category.public_descendants.map(&:id))
                 end
 
-        feature = case
-                  when 'f1'.in?(@more_options)
-                    'feature_1'
-                  when 'f2'.in?(@more_options)
-                    'feature_2'
-                  else
-                    ''
-                  end
-        @docs = @docs.where(feature, true) if @docs.columns.any?{|c| c.name == feature }
+        if @template_module && @template_module.gp_article_content_ids.present?
+          @docs.where!(content_id: @template_module.gp_article_content_ids)
+        end
 
-        filter = @more_options.detect{|o| o =~ /^(c|g)_/i }
-        if filter
+        if (filter = @more_options[1])
           prefix, code_or_name = filter.split('_', 2)
 
           case prefix
@@ -51,7 +44,9 @@ class GpCategory::Public::Node::CategoriesController < GpCategory::Public::Node:
                                                                category_id: internal_category.public_descendants.map(&:id))
             @docs = GpArticle::Doc.where(id: categorizations.pluck(:categorizable_id))
           when 'g'
-            @docs = @docs.joins(:creator => :group).where(Sys::Group.arel_table[:code].eq(code_or_name))
+            group = Sys::Group.in_site(Page.site).where(code: code_or_name).first
+            return http_error(404) unless group
+            @docs = @docs.joins(creator: :group).where(Sys::Group.arel_table[:id].eq(group.id))
           end
         end
 
@@ -109,7 +104,7 @@ class GpCategory::Public::Node::CategoriesController < GpCategory::Public::Node:
                        when 'docs_2'
                          find_public_docs_with_category_id(@category.id)
                        end
-                docs = docs.where(tm.module_type_feature, true) if docs.columns.any?{|c| c.name == tm.module_type_feature }
+                docs = docs.where(content_id: tm.gp_article_content_ids) if tm.gp_article_content_ids.present?
 
                 all_docs = case @content.docs_order
                   when 'published_at_desc'
@@ -136,7 +131,7 @@ class GpCategory::Public::Node::CategoriesController < GpCategory::Public::Node:
                        when 'docs_4'
                          find_public_docs_with_category_id(@category.id)
                        end
-                docs = docs.where(tm.module_type_feature, true) if docs.columns.any?{|c| c.name == tm.module_type_feature }
+                docs = docs.where(content_id: tm.gp_article_content_ids) if tm.gp_article_content_ids.present?
 
                 categorizations = GpCategory::Categorization.where(categorizable_type: 'GpArticle::Doc', categorizable_id: docs.pluck(:id), categorized_as: 'GpArticle::Doc')
                 vc.send(tm.module_type, template_module: tm,
@@ -151,7 +146,7 @@ class GpCategory::Public::Node::CategoriesController < GpCategory::Public::Node:
                        when 'docs_6'
                          find_public_docs_with_category_id(@category.id)
                        end
-                docs = docs.where(tm.module_type_feature, true) if docs.columns.any?{|c| c.name == tm.module_type_feature }
+                docs = docs.where(content_id: tm.gp_article_content_ids) if tm.gp_article_content_ids.present?
 
                 docs = docs.joins(:creator => :group)
                 groups = Sys::Group.where(id: docs.select(Sys::Group.arel_table[:id]).distinct)
@@ -162,7 +157,7 @@ class GpCategory::Public::Node::CategoriesController < GpCategory::Public::Node:
             when 'docs_7', 'docs_8'
               if view_context.respond_to?(tm.module_type)
                 docs = find_public_docs_with_category_id(@category.public_descendants.map(&:id))
-                docs = docs.where(tm.module_type_feature, true) if docs.columns.any?{|c| c.name == tm.module_type_feature }
+                docs = docs.where(content_id: tm.gp_article_content_ids) if tm.gp_article_content_ids.present?
 
                 categorizations = GpCategory::Categorization.where(categorizable_type: 'GpArticle::Doc', categorizable_id: docs.pluck(:id), categorized_as: 'GpArticle::Doc')
                 vc.send(tm.module_type, template_module: tm,
