@@ -45,8 +45,7 @@ cms:
   talk_thread_num: 2
 
   # 三鷹市座標
-  default_map_latitude: "35.702708"
-  default_map_longitude: "139.560831"
+  default_map_coordinate: "35.702708,139.560831"
 
 gp_article:
   #携帯用内容制限[Bytes]

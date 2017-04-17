@@ -15,22 +15,20 @@ class Map::Content::Marker < Cms::Content
   end
 
   def latitude
-    map_default_Coordinate = Cms::SiteSetting.find_by(name: 'map_default_Coordinate').try(:value).to_s.split(',')
+    map_Coordinate = Cms::SiteSetting.find_by(name: 'map_Coordinate').try(:value).to_s.split(',')
     lat_lng = setting_value(:lat_lng).to_s.split(',')
-    return Zomeki.config.application["cms.default_map_latitude"] unless map_default_Coordinate.size == 2 || lat_lng.size == 2
-    return map_default_Coordinate.first.strip unless lat_lng.size == 2 # Mitaka
+    default_map_coordinate = Zomeki.config.application["cms.default_map_coordinate"].to_s.split(',')
+    return default_map_coordinate.first.strip unless map_Coordinate.size == 2 || lat_lng.size == 2
+    return map_Coordinate.first.strip unless lat_lng.size == 2 # Mitaka
     lat_lng.first.strip
   end
 
   def longitude
-    map_default_Coordinate = Cms::SiteSetting.find_by(name: 'map_default_Coordinate').try(:value).to_s.split(',')
+    map_Coordinate = Cms::SiteSetting.find_by(name: 'map_Coordinate').try(:value).to_s.split(',')
     lat_lng = setting_value(:lat_lng).to_s.split(',')
-    debug_log lat_lng
-    debug_log map_default_Coordinate
-    debug_log Zomeki.config.application["cms.default_map_latitude"]
-    debug_log Zomeki.config.application["cms.default_map_longitude"]
-    return Zomeki.config.application["cms.default_map_longitude"] unless map_default_Coordinate.size == 2 || lat_lng.size == 2
-    return map_default_Coordinate.last.strip unless lat_lng.size == 2 # Mitaka
+    default_map_coordinate = Zomeki.config.application["cms.default_map_coordinate"].to_s.split(',')
+    return default_map_coordinate.last.strip unless map_Coordinate.size == 2 || lat_lng.size == 2
+    return map_Coordinate.last.strip unless lat_lng.size == 2 # Mitaka
     lat_lng.last.strip
   end
 

@@ -65,11 +65,11 @@
 </table>
 <%- end -%>
 
-<%- if @item.name == 'map_default_Coordinate' -%>
+<%- if @item.name == 'map_Coordinate' -%>
 <table class="show">
   <tr>
-    <th><%= @site.locale(:setting_map_default_Coordinate) %></th>
-    <td><%= f.text_field(:in_setting_site_map_default_Coordinate, :size=>"60") %> （緯度,経度）</td>
+    <th><%= @site.locale(:setting_map_Coordinate) %></th>
+    <td><%= f.text_field(:in_setting_site_map_Coordinate, :size=>"60") %> （緯度,経度）</td>
   </tr>
 </table>
 <%- end -%>
