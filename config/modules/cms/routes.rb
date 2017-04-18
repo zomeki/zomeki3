@@ -2,7 +2,7 @@ ZomekiCMS::Application.routes.draw do
   mod = "cms"
 
   get "/_preview/:site/(*path)" => "cms/admin/preview#index",
-    :as => :cms_preview, :defaults => { :concept => nil }
+    :as => :cms_preview, :defaults => { :concept => nil }, :format => false
   match  "/_ssl/:site/(*path)" => "cms/public/common_ssl#index",
     :as => :cms_common_ssl, :defaults => { :concept => nil }, :via => [:get, :post]
 
