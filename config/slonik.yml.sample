@@ -1,0 +1,21 @@
+default: &default
+  command: slonik_execute_script -c "[[SQL]]" 1 | sed "s/set id = 1,//" | slonik
+
+development:
+  <<: *default
+  host: 
+  port:
+  user:
+  
+
+test:
+  <<: *default
+  host:
+  port:
+  user:
+
+production:
+  <<: *default
+  host:
+  port:
+  user:
