@@ -7,7 +7,7 @@ module Map::MapHelper
         [@markers.first.latitude, @markers.first.longitude]
       end
     else
-      [@content.latitude, @content.longitude]
+     [@content.latitude, @content.longitude]
     end
   end
 

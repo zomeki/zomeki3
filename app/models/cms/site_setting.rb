@@ -22,5 +22,7 @@ class Cms::SiteSetting < ApplicationRecord
       setting_name: :setting_site_link_check_label },
     { id: "kana_talk", name: "ふりがな・音声",
       setting_name: :setting_site_kana_talk_label },
+    { id: "map_coordinate", name: "地図/デフォルト座標",
+      setting_name: :setting_site_map_coordinate },
   ]
 end

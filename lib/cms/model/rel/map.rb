@@ -13,7 +13,9 @@ module Cms::Model::Rel::Map
   end
 
   def default_map_position
-    '35.702708,139.560831' # Mitaka
+    map_coordinate = Cms::SiteSetting.find_by(name: 'map_coordinate').try(:value)
+    return Zomeki.config.application["cms.default_map_coordinate"] unless map_coordinate != ""
+    map_coordinate
   end
 
   private
