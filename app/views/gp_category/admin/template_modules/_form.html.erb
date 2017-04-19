@@ -9,16 +9,41 @@
   </tr>
   <tr>
     <th><%= f.label :title %> <span class="note">※</span></th>
-    <td><%= f.text_field :title %></td>
+    <td><%= f.text_field :title, class: 'name' %></td>
   </tr>
   <tr>
     <th><%= f.label :module_type %></th>
+    <td><%= f.select :module_type, grouped_options_for_select(@item.class::MODULE_TYPE_OPTIONS, @item.module_type) %></td>
+  </tr>
+</table>
+
+<p class="form">表示対象記事コンテンツ</p>
+<span class="note">※記事のみに適用されます。</span>
+
+<table class="show">
+  <tr>
+    <th><%= f.label :gp_article_content_ids %></th>
     <td>
-      <%= f.select :module_type, grouped_options_for_select(@item.class::MODULE_TYPE_OPTIONS, @item.module_type) %>
-      <%= f.radio_buttons :module_type_feature, @item.class::MODULE_TYPE_FEATURE_OPTIONS %>
+      <span id="gp_article_contents">
+        <%- content_ids = @item.gp_article_content_ids.presence || [nil] -%>
+        <%- content_ids.each do |content_id| -%>
+          <%= select_tag 'item[gp_article_content_ids][]',
+                          options_from_collection_for_select(@content.gp_article_contents, :id, :name, content_id), include_blank: true %>
+        <%- end -%>
+      </span>
+      <span><%= button_tag '追加', type: 'button', id: 'add_gp_article_contents' %></span>
     </td>
   </tr>
 </table>
+
+<script type="text/javascript">
+  $('#add_gp_article_contents').on('click', function () {
+    var wrapper = $('#gp_article_contents');
+    var elm = wrapper.children(':first-child').clone(true);
+    elm.find('option').prop('selected', false);
+    wrapper.append(elm);
+  });
+</script>
 
 <p class="form">記事表示形式</p>
 <span class="note">※記事のみに適用されます。</span>

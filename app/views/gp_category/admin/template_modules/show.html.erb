@@ -11,8 +11,17 @@
   </tr>
   <tr>
     <th><%= @item.class.human_attribute_name :module_type %></th>
-    <td><%= @item.module_type_text %>（<%= @item.module_type_feature_text %>）
+    <td><%= @item.module_type_text %>
     </td>
+  </tr>
+</table>
+
+<p class="form">表示対象記事コンテンツ</p>
+
+<table class="show">
+  <tr>
+    <th><%= @item.class.human_attribute_name :gp_article_content_ids %></th>
+    <td><%= @item.gp_article_contents.map(&:name).join(', ') -%></td>
   </tr>
 </table>
 

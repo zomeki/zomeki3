@@ -25,9 +25,6 @@ ZomekiCMS::Application.routes.draw do
     end
     resources :related_docs,
       :controller => 'admin/related_docs', :only => [:show]
-    resources :comments, :only => [:index, :show, :edit, :update, :destroy],
-      :controller => 'admin/comments',
-      :path       => ':content/comments'
 
     ## nodes
     resources :node_docs,
@@ -50,8 +47,6 @@ ZomekiCMS::Application.routes.draw do
     end
     resources :piece_monthly_archives,
       :controller => 'admin/piece/monthly_archives'
-    resources :piece_comments,
-      :controller => 'admin/piece/comments'
     resources :piece_archives,
       :controller => 'admin/piece/archives'
     resources :piece_search_docs,
@@ -61,9 +56,6 @@ ZomekiCMS::Application.routes.draw do
   ## public
   scope "_public/#{mod}", :module => mod, :as => '' do
     get 'node_docs(/(index))' => 'public/node/docs#index'
-    get 'node_docs/:name/comments/new' => 'public/node/comments#new', :format => false
-    post 'node_docs/:name/comments/confirm' => 'public/node/comments#confirm', :format => false
-    post 'node_docs/:name/comments' => 'public/node/comments#create', :format => false
     get 'node_docs/:name/preview/:id/file_contents/(*path)' => 'public/node/docs#file_content'
     get 'node_docs/:name/preview/:id/qrcode.:extname' => 'public/node/docs#qrcode'
     get 'node_docs/:name/preview/:id(/(:filename_base.:format))' => 'public/node/docs#show'

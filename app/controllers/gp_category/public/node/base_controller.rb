@@ -4,8 +4,9 @@ class GpCategory::Public::Node::BaseController < Cms::Controller::Public::Base
   def pre_dispatch
     @content = GpCategory::Content::CategoryType.find_by(id: Page.current_node.content.id)
     return http_error(404) unless @content
-    @more = (params[:file] =~ /^more($|_)/i)
-    @more_options = params[:file].split('_', 2)[1].to_s.split('@') if @more
+
+    @more = (params[:file] =~ /^more($|@)/i)
+    @more_options = params[:file].split('@', 3).drop(1) if @more
   end
 
   private

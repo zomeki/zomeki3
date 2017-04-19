@@ -7,7 +7,7 @@
     <th style="text-align: center; width: 80px;"><%= Survey::Form.human_attribute_name :sort_no %></th>
     <th style="text-align: center; width: 120px;"><%= Survey::Form.human_attribute_name :created_at %></th>
     <th style="text-align: center; width: 60px;"><%= Survey::Form.human_attribute_name :state %></th>
-    <th style="text-align: center; width: 65px;">プレビュー</th>
+    <th style="text-align: center; width: 100px;">プレビュー</th>
   </tr>
   <%- @items.each do |item| -%>
   <tr class="<%= cycle '', 'cycle' %>">

@@ -11,6 +11,5 @@ Cms::Lib::Modules::ModuleSet.draw :gp_article, '記事', 10 do |mod|
   mod.piece :docs, '記事一覧'
   mod.piece :recent_tabs, '新着タブ'
   mod.piece :archives, 'アーカイブ'
-  mod.piece :comments, '最新コメント'
   mod.piece :search_docs, '検索フォーム'
 end

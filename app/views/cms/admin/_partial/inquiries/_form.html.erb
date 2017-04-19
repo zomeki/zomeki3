@@ -9,7 +9,7 @@ item.build_default_inquiry(group: group)
   <th>連絡先表示</th>
   <td>
     <%- item.inquiry_states.each do |(label, value)| -%>
-      <%= radio_button_tag :inquiry_state, value, item.inquiries[0].state == value, :class => 'status' %>
+      <%= radio_button_tag :inquiry_state, value, item.inquiries[0].state == value, class: 'status' %>
       <%= label_tag :"inquiry_state_#{value}", label -%>
     <%- end -%>
   </td>
@@ -20,72 +20,55 @@ item.build_default_inquiry(group: group)
 <%- item.inquiries.each_with_index do |inquiry, i| -%>
   <%= f.fields_for :inquiries, inquiry do |f2| -%>
     <div class="inquiryForm">
-    <p class="form">連絡先<%= i+1 if i != 0 %></p>
-    <%= f2.hidden_field :state, :class => "inquiryState" -%>
-    <%= f2.hidden_field :_destroy -%>
-    <span id="inquiryTableA<%= i %>" style="<%= (Core.user.root? || Core.user.has_auth?(:manager)) ? '' : 'display: none;' %>">
-    <table class="show">
-      <tr>
-        <th><%= f2.label :group_id -%></th>
-        <td><%= f2.select :group_id, groups_for_option, include_blank: true %></td>
-      </tr>
-    </table>
-    </span>
-    <span id="inquiryTableB<%= i %>" style="<%= (Core.user.root? || Core.user.has_auth?(:manager)) ? 'display: none;' : '' %>">
-    <table class="show">
-      <tr>
-        <th><%= f2.label :group_id -%></th>
-        <td>
-          <%- group = inquiry.group || Core.user_group -%>
-          <span id="inquiryGroupLabel<%= i %>"><%= safe{group.full_name} if i == 0 && !Core.user.has_auth?(:manager) or Core.user.has_auth?(:manager) or !inquiry.group_id.blank? %></span>
-        </td>
-      </tr>
-      <%- if item.inquiry_display_field?(:charge) -%>
-      <tr>
-        <th><%= f2.label :charge -%></th>
-        <td><%= inquiry.charge %></td>
-      </tr>
-      <%- end -%>
-      <%- if item.inquiry_display_field?(:address) -%>
-      <tr>
-        <th><%= f2.label :address -%></th>
-        <td><%= inquiry.address %></td>
-      </tr>
-      <%- end -%>
-      <%- if item.inquiry_display_field?(:tel) -%>
-      <tr>
-        <th><%= f2.label :tel -%></th>
-        <td><%= inquiry.tel %>
-            <%= inquiry.tel_attend %></td>
-      </tr>
-      <%- end -%>
-      <%- if item.inquiry_display_field?(:fax) -%>
-      <tr>
-        <th><%= f2.label :fax -%></th>
-        <td><%= inquiry.fax %></td>
-      </tr>
-      <%- end -%>
-      <%- if item.inquiry_display_field?(:email) -%>
-      <tr>
-        <th><%= f2.label :email -%></th>
-        <td><%= inquiry.email %></td>
-      </tr>
-      <%- end -%>
-      <%- if item.inquiry_display_field?(:note) -%>
-      <tr>
-        <th><%= f2.label :note -%></th>
-        <td><%= inquiry.note %></td>
-      </tr>
-      <%- end -%>
-    </table>
-    </span>
-    <%= button_tag '削除する', :type => :button, :class => 'deleteInquiry', :style => "margin: 10px 0; display: #{i == 0 ? 'none' : 'block'}" -%>
+      <p class="form">連絡先<%= i+1 if i != 0 %></p>
+      <%= f2.hidden_field :state, class: "inquiryState" -%>
+      <%= f2.hidden_field :_destroy -%>
+      <span id="inquiryTableA<%= i %>" style="<%= (Core.user.root? || Core.user.has_auth?(:manager)) ? '' : 'display: none;' %>">
+        <table class="show">
+          <tr>
+            <th><%= f2.label :group_id -%></th>
+            <td><%= f2.select :group_id, groups_for_option, include_blank: true %></td>
+          </tr>
+        </table>
+      </span>
+      <span id="inquiryTableB<%= i %>" style="<%= (Core.user.root? || Core.user.has_auth?(:manager)) ? 'display: none;' : '' %>">
+        <table class="show">
+          <tr>
+            <th><%= f2.label :group_id -%></th>
+            <td>
+              <%- group = inquiry.group || Core.user_group -%>
+              <span id="inquiryGroupLabel<%= i %>"><%= safe{group.full_name} if i == 0 && !Core.user.has_auth?(:manager) or Core.user.has_auth?(:manager) or !inquiry.group_id.blank? %></span>
+            </td>
+          </tr>
+          <tr>
+            <th><%= f2.label :address -%></th>
+            <td><%= inquiry.address %></td>
+          </tr>
+          <tr>
+            <th><%= f2.label :tel -%></th>
+            <td><%= inquiry.tel %><%= inquiry.tel_attend %></td>
+          </tr>
+          <tr>
+            <th><%= f2.label :fax -%></th>
+            <td><%= inquiry.fax %></td>
+          </tr>
+          <tr>
+            <th><%= f2.label :email -%></th>
+            <td><%= inquiry.email %></td>
+          </tr>
+          <tr>
+            <th><%= f2.label :note -%></th>
+            <td><%= inquiry.note %></td>
+          </tr>
+        </table>
+      </span>
+      <%= button_tag '削除する', type: :button, class: 'deleteInquiry', style: "margin: 10px 0; display: #{i == 0 ? 'none' : 'block'}" -%>
     </div>
   <%- end -%>
 <%- end -%>
 </div>
 
 <hr />
-<%= button_tag '連絡先を追加する', :type => :button, :id => 'addInquiryForm' -%>
+<%= button_tag '連絡先を追加する', type: :button, id: 'addInquiryForm' -%>
 
 <%= render 'cms/admin/_partial/inquiries/script', f: f, item: item %>
