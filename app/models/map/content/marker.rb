@@ -15,21 +15,21 @@ class Map::Content::Marker < Cms::Content
   end
 
   def latitude
+    map_coordinate = Cms::SiteSetting.find_by(name: 'map_coordinate').try(:value).to_s.split(',')
     lat_lng = setting_value(:lat_lng).to_s.split(',')
-    map_coordinate = Cms::SiteSetting.find_by(site_id: site.id, name: 'map_coordinate').try(:value).to_s.split(',')
     default_map_coordinate = Zomeki.config.application["cms.default_map_coordinate"].to_s.split(',')
-    return lat_lng.first.strip if lat_lng.size == 2
-    return map_coordinate.first.strip if map_coordinate.size == 2
-    default_map_coordinate.first.strip
+    return default_map_coordinate.first.strip unless map_coordinate.size == 2 || lat_lng.size == 2
+    return map_coordinate.first.strip unless lat_lng.size == 2
+    lat_lng.first.strip
   end
 
   def longitude
+    map_coordinate = Cms::SiteSetting.find_by(name: 'map_coordinate').try(:value).to_s.split(',')
     lat_lng = setting_value(:lat_lng).to_s.split(',')
-    map_coordinate = Cms::SiteSetting.find_by(site_id: site.id, name: 'map_coordinate').try(:value).to_s.split(',')
     default_map_coordinate = Zomeki.config.application["cms.default_map_coordinate"].to_s.split(',')
-    return lat_lng.last.strip if lat_lng.size == 2
-    return map_coordinate.last.strip if map_coordinate.size == 2
-    default_map_coordinate.last.strip
+    return default_map_coordinate.last.strip unless map_coordinate.size == 2 || lat_lng.size == 2
+    return map_coordinate.last.strip unless lat_lng.size == 2
+    lat_lng.last.strip
   end
 
   def categories
