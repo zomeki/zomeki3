@@ -47,12 +47,12 @@ module Cms::Model::Rel::SiteSetting
 
   def setting_site_admin_mail_sender
     setting = Cms::SiteSetting.where(:site_id => id, :name => 'admin_mail_sender').first
-    setting ? setting.value : 'noreply'
+    setting && setting.value.presence || 'noreply'
   end
 
   def setting_site_file_upload_max_size
     setting = Cms::SiteSetting.where(:site_id => id, :name => 'file_upload_max_size').first
-    setting ? setting.value.presence || 5 : 5;
+    setting && setting.value.presence || 5
   end
 
   def setting_site_extension_upload_max_size
