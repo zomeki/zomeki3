@@ -7,8 +7,8 @@
       <table class="approval noDesign">
         <%- approval_flows.each do |approval_flow| -%>
         <tr>
-          <%= hidden_field_tag 'item[in_approval_flow_ids][]', approval_flow.id, id: "item_in_approval_flow_ids_#{approval_flow.id}" %>
           <td>
+            <%= hidden_field_tag 'item[in_approval_flow_ids][]', approval_flow.id, id: "item_in_approval_flow_ids_#{approval_flow.id}" %>
             <%= approval_flow.approvals.map { |approval|
               if approval.approval_type_select?
                 render 'approval/admin/_partial/form_select', item: item, approval_flow: approval_flow, approval: approval
