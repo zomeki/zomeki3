@@ -86,7 +86,7 @@ module Cms::Model::Rel::SiteSetting
 
   def setting_site_map_coordinate
     setting = Cms::SiteSetting.where(:site_id => id, :name => 'map_coordinate').first
-    setting ? setting.value : "";
+    setting ? setting.value : nil;
   end
 
   def get_upload_max_size(ext)
