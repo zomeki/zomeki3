@@ -4,8 +4,7 @@ class Cms::Public::Node::PreviewController < Cms::Controller::Public::Base
     ## only preview
     return http_error(404) if Core.mode != 'preview'
     return http_error(404) unless params[:layout_id]
-    return http_error(404) if params[:path].to_s !~ /\*\Z/
-
+    return http_error(404) if params[:path].to_s !~ /\*\.html\Z/
     layout = Cms::Layout.find(params[:layout_id])
     return http_error(404) unless layout.concept
     return http_error(404) unless layout.readable?
