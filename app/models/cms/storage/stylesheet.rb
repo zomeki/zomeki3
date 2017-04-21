@@ -2,12 +2,10 @@ class Cms::Storage::Stylesheet < Sys::Storage::Entry
   include Cms::Model::Auth::Concept
 
   define_attribute_methods :concept_id
-  set_callback :save, :before, :save_stylesheet
-  set_callback :destroy, :before, :destroy_stylesheet
+  attr_reader :concept_id
 
-  def concept_id
-    @concept_id
-  end
+  before_save_files :save_stylesheet
+  before_remove_files :destroy_stylesheet
 
   def concept_id=(val)
     concept_id_will_change! unless val == @concept_id
@@ -16,8 +14,7 @@ class Cms::Storage::Stylesheet < Sys::Storage::Entry
 
   def concept
     return @concept if defined? @concept
-    cid = concept_id.presence || parent.try(:concept_id).presence
-    @concept = Cms::Concept.find_by(id: cid) if cid.present?
+    @concept = concept_id.present? ? Cms::Concept.find_by(id: concept_id) : parent.try(:concept)
   end
 
   def stylesheet
@@ -71,10 +68,12 @@ class Cms::Storage::Stylesheet < Sys::Storage::Entry
       item.path = path_from_themes_root
       item.save
     end
+    return true
   end
 
   def destroy_stylesheet
     stylesheet.destroy if directory_entry? && stylesheet
+    return true
   end
 
   def validate_mime_type

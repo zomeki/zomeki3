@@ -1,10 +1,11 @@
 class Sys::Storage::Entry
   include ActiveModel::Model
   include ActiveModel::Dirty
-  include ActiveSupport::Callbacks
+  include ActiveModel::Callbacks
 
-  define_callbacks :validation, :save, :destroy
+  define_model_callbacks :validation, :save_files, :remove_files
   define_attribute_methods :base_dir, :name, :body
+  attr_reader :base_dir, :name
   attr_accessor :entry_type, :site_id
   attr_accessor :allow_overwrite, :new_entry
 
@@ -46,17 +47,9 @@ class Sys::Storage::Entry
     public_send(attr)
   end
 
-  def base_dir
-    @base_dir
-  end
-
   def base_dir=(val)
     base_dir_will_change! unless val == @base_dir
     @base_dir = val
-  end
-
-  def name
-    @name
   end
 
   def name=(val)
@@ -116,7 +109,7 @@ class Sys::Storage::Entry
 
   def text_file?
     return false unless file_entry?
-    mime_type.blank? || mime_type =~ /(text|javascript)/i
+    mime_type.blank? || mime_type =~ /(text|javascript|application\/json)/i
   end
 
   def site
@@ -185,25 +178,8 @@ class Sys::Storage::Entry
     end
 
     ApplicationRecord.transaction do
-      run_callbacks :save do
-        if new_entry
-          # new file / new directory
-          case entry_type
-          when :directory
-            ::Storage.mkdir(path) unless ::Storage.exists?(path)
-          when :file
-            ::Storage.binwrite(path, body) unless ::Storage.exists?(path)
-          end
-        else
-          # move
-          if path_was != path
-            ::Storage.mv(path_was, path) if ::Storage.exists?(path_was) && !::Storage.exists?(path)
-          end
-          # edit file
-          if body_changed?
-            ::Storage.binwrite(path, body) if ::Storage.exists?(path)
-          end
-        end
+      run_callbacks :save_files do
+        save_in_transaction
       end
     end
 
@@ -216,7 +192,7 @@ class Sys::Storage::Entry
   end
 
   def destroy
-    run_callbacks :destroy do
+    run_callbacks :remove_files do
       ::Storage.rm_rf(path)
     end
     return true
@@ -227,6 +203,27 @@ class Sys::Storage::Entry
   end
 
   private
+
+  def save_in_transaction
+    if new_entry
+      # new file / new directory
+      case entry_type
+      when :directory
+        ::Storage.mkdir(path) unless ::Storage.exists?(path)
+      when :file
+        ::Storage.binwrite(path, body) unless ::Storage.exists?(path)
+      end
+    else
+      # move
+      if path_was != path
+        ::Storage.mv(path_was, path) if ::Storage.exists?(path_was) && !::Storage.exists?(path)
+      end
+      # edit file
+      if body_changed?
+        ::Storage.binwrite(path, body) if ::Storage.exists?(path)
+      end
+    end
+  end
 
   def validate_base_dir
     if base_dir =~ %r{\/\.\./|\/\./}

@@ -5,6 +5,7 @@ class Cms::Stylesheet < ApplicationRecord
   after_save :update_descendants, if: :path_changed?
   after_destroy :destroy_descendants, if: :path_changed?
 
+  validates :path, presence: true
   validates :concept_id, presence: true, on: :create
 
   private
