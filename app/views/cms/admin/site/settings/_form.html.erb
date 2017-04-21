@@ -73,3 +73,13 @@
   </tr>
 </table>
 <%- end -%>
+
+<%- if @item.name == 'map_coordinate' -%>
+<table class="show">
+  <tr>
+    <th><%= @site.locale(:setting_map_coordinate) %></th>
+    <td><%= f.text_field(:in_setting_site_map_coordinate, size: "60") %> （緯度,経度）</td>
+  </tr>
+</table>
+<%- end -%>
+
