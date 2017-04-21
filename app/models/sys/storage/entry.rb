@@ -10,6 +10,15 @@ class Sys::Storage::Entry
   attr_accessor :allow_overwrite, :new_entry
 
   with_options if: -> { file_entry? } do
+    after_save_files :save_storage_files_for_file
+    before_remove_files :destroy_storage_files_for_file
+  end
+  with_options if: -> { directory_entry? } do
+    after_save_files :save_storage_files_for_directory
+    before_remove_files :destroy_storage_files_for_directory
+  end
+
+  with_options if: -> { file_entry? } do
     validates :name, presence: { message: 'ファイル名を入力してください。' }
   end
   with_options if: -> { file_entry? && name.present? } do
@@ -259,6 +268,29 @@ class Sys::Storage::Entry
     if max_size && body && body.size > max_size.to_i * (1024**2)
       errors.add(:base, "容量制限を超えています。＜#{max_size}MB＞")
     end
+  end
+
+  def save_storage_files_for_file
+    if path_was != path && path_was.present?
+      Sys::StorageFile.where(path: path_was).destroy_all
+    end
+    Sys::StorageFile.find_or_initialize_by(path: path).update!(available: true)
+  end
+
+  def destroy_storage_files_for_file
+    Sys::StorageFile.where(path: path).destroy_all
+  end
+
+  def save_storage_files_for_directory
+    if path_was != path && path_was.present?
+      files = Sys::StorageFile.arel_table
+      Sys::StorageFile.where(files[:path].matches("#{path_was}/%"))
+                      .replace_for_all(:path, "#{path_was}/", "#{path}/")
+    end
+  end
+
+  def destroy_storage_files_for_directory
+    Sys::StorageFile.files_under_directory(path).destroy_all
   end
 
   class << self
