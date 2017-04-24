@@ -148,4 +148,8 @@ ja:
   activemodel:
     attributes:
       sys/storage/entry:
-        name: ""
+        name: "エントリ"
+      sys/storage/directory:
+        name: "ディレクトリ名"
+      sys/storage/file:
+        name: "ファイル名"

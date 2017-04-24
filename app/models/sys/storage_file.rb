@@ -28,7 +28,7 @@ class Sys::StorageFile < ApplicationRecord
   end
 
   class << self
-    def self.import(r = 'sites')
+    def import(r = 'sites')
       root = r.start_with?(Rails.root.to_s) ? Pathname.new(r) : Rails.root.join(r.sub(/\A\//, ''))
 
       if root.file?

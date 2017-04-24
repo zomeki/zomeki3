@@ -7,7 +7,7 @@ class Sys::Storage::Uploader
     results = []
     zip_results = []
     files.each do |file|
-      if options[:unzip] && file.original_filename =~ /^.+\.zip$/
+      if options[:unzip] && file.original_filename =~ /^.+\.zip$/i
         res = unzip_file(file, options)
         zip_results << { name: file.original_filename, results: res }
       else
@@ -20,8 +20,7 @@ class Sys::Storage::Uploader
   private
 
   def upload_file(file, options)
-    item = Sys::Storage::Entry.from_path(::File.join(@current.path, file.original_filename))
-    item.entry_type = :file
+    item = Sys::Storage::Entry.from_path(::File.join(@current.path, file.original_filename), new_as: :file)
     item.body = file.read
     item.allow_overwrite = options[:overwrite]
     if item.save
@@ -40,13 +39,12 @@ class Sys::Storage::Uploader
       while (entry = input.get_next_entry)
         name = entry.name.to_utf8
 
-        item = Sys::Storage::Entry.from_path(::File.join(@current.path, name))
-        if entry.name_is_directory?
-          item.entry_type = :directory
-        else
-          item.entry_type = :file
-          item.body = entry.get_input_stream { |stream| stream.read }
-        end
+        item = if entry.name_is_directory?
+                 Sys::Storage::Entry.from_path(::File.join(@current.path, name), new_as: :directory)
+               else
+                 Sys::Storage::Entry.from_path(::File.join(@current.path, name), new_as: :file)
+               end
+        item.body = entry.get_input_stream { |stream| stream.read } if item.file_entry?
         item.allow_overwrite = options[:overwrite]
 
         if item.save

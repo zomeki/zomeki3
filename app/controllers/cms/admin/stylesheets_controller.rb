@@ -9,11 +9,9 @@ class Cms::Admin::StylesheetsController < Cms::Controller::Admin::Base
 
     themes_path = Rails.root.join("sites/#{format('%04d', Core.site.id)}/public/_themes").to_s
     params[:path] = '' if params[:path].blank?
-    @root_dir = params[:path].split('/').first
-
     path = ::File.join(themes_path, params[:path].to_s)
 
-    @item = Cms::Storage::Stylesheet.from_path(path)
+    @item = Sys::Storage::Entry.from_path(path)
     return http_error(404) unless @item.exists?
 
     @parent = @item.parent
@@ -41,8 +39,7 @@ class Cms::Admin::StylesheetsController < Cms::Controller::Admin::Base
     @current = @item
 
     if params[:create_directory]
-      @item = Cms::Storage::Stylesheet.new(base_dir: @current.path, name: params[:item][:new_directory],
-                                           entry_type: :directory)
+      @item = Cms::Stylesheets::Directory.new(base_dir: @current.path, name: params[:item][:new_directory])
       if @item.save
         flash[:notice] = 'ディレクトリを作成しました。'
         return redirect_to(path: @current.path_from_themes_root)
@@ -50,8 +47,7 @@ class Cms::Admin::StylesheetsController < Cms::Controller::Admin::Base
         flash.now[:notice] = 'ディレクトリの作成に失敗しました。'
       end
     elsif params[:create_file]
-      @item = Cms::Storage::Stylesheet.new(base_dir: @current.path, name: params[:item][:new_file],
-                                           entry_type: :file,  body: '')
+      @item = Cms::Stylesheets::File.new(base_dir: @current.path, name: params[:item][:new_file], body: '')
       if @item.save
         flash[:notice] = 'ファイルを作成しました。'
         return redirect_to(do: :show, path: @item.path_from_themes_root)

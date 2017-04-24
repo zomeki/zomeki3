@@ -2,38 +2,15 @@ class Sys::Storage::Entry
   include ActiveModel::Model
   include ActiveModel::Dirty
   include ActiveModel::Callbacks
+  include Sys::Model::Auth::Storage
 
-  define_model_callbacks :validation, :save_files, :remove_files
-  define_attribute_methods :base_dir, :name, :body
+  define_model_callbacks :initialize, :validation, :save_files, :remove_files
+  define_attribute_methods :base_dir, :name
   attr_reader :base_dir, :name
   attr_accessor :entry_type, :site_id
   attr_accessor :allow_overwrite, :new_entry
 
-  with_options if: -> { file_entry? } do
-    after_save_files :save_storage_files_for_file
-    before_remove_files :destroy_storage_files_for_file
-  end
-  with_options if: -> { directory_entry? } do
-    after_save_files :save_storage_files_for_directory
-    before_remove_files :destroy_storage_files_for_directory
-  end
-
-  with_options if: -> { file_entry? } do
-    validates :name, presence: { message: 'ファイル名を入力してください。' }
-  end
-  with_options if: -> { file_entry? && name.present? } do
-    validates :name, format: { with: /\A[0-9A-Za-z@\.\-\_]+\z/, message: 'ファイル名は半角英数字で入力してください。' }
-    validate :validate_mime_type
-    validate :validate_file_size
-  end
-
-  with_options if: -> { directory_entry? } do
-    validates :name, presence: { message: 'ディレクトリ名を入力してください。' }
-  end
-  with_options if: -> { directory_entry? && name.present? } do
-    validates :name, format: { with: /\A[0-9A-Za-z@\.\-\_]+\z/, message: 'ディレクトリ名は半角英数字で入力してください。' }
-    validates :name, format: { with: /\A[^_]/, message: '先頭に「_」を含むディレクトリは作成できません。' }
-  end
+  after_initialize :set_defaults
 
   with_options if: -> { path.present? } do
     validate :validate_base_dir
@@ -41,15 +18,16 @@ class Sys::Storage::Entry
   end
 
   def initialize(attrs = {})
-    self.allow_overwrite = true
-    self.new_entry = true
-    super
-
-    if path.present? && site_id.blank? && (match = path.match(%r|^#{Rails.root}/sites/(\d+)|))
-      self.site_id = match[1].to_i
+    run_callbacks :initialize do
+      super
     end
-
     changes_applied
+  end
+
+  def attributes
+    [:base_dir, :name, :entry_type, :site_id, :allow_overwrite, :new_entry].each_with_object({}) do |attr, hash|
+      hash.merge!(attr => read_attribute(attr))
+    end
   end
 
   def read_attribute(attr)
@@ -66,20 +44,6 @@ class Sys::Storage::Entry
     @name = val
   end
 
-  def body
-    return @body if defined? @body
-    if ::Storage.file?(path)
-      @body = ::Storage.binread(path)
-      @body = NKF.nkf('-w', @body) if text_file?
-    end
-    @body
-  end
-
-  def body=(val)
-    body_will_change! unless val == @body
-    @body = val
-  end
-
   def path
     Pathname.new(::File.join(base_dir, name)).cleanpath.to_s
   end
@@ -88,20 +52,12 @@ class Sys::Storage::Entry
     Pathname.new(::File.join(base_dir_was || base_dir, name_was || name)).cleanpath.to_s
   end
 
+  def path_changed?
+    path != path_was && path_was.present?
+  end
+
   def mtime
     ::Storage.mtime(path)
-  end
-
-  def mime_type
-    ::Storage.mime_type(path)
-  end
-
-  def size
-    ::Storage.size(path)
-  end
-
-  def kb_size
-    ::Storage.kb_size(path)
   end
 
   def exists?
@@ -114,11 +70,6 @@ class Sys::Storage::Entry
 
   def file_entry?
     entry_type == :file
-  end
-
-  def text_file?
-    return false unless file_entry?
-    mime_type.blank? || mime_type =~ /(text|javascript|application\/json)/i
   end
 
   def site
@@ -137,23 +88,22 @@ class Sys::Storage::Entry
     path.sub(site_root_path, '').sub(%r|^/|, '')
   end
 
-  def readable?
-    return false unless site
-    return false unless Core.user.has_auth?(:designer)
-    public_path = ::File.join(site_root_path, "public")
-    Core.user.root? || (Core.user.sites.include?(site) && path =~ %r|^#{public_path}|)
+  def themes_root_path
+    ::File.join(site_root_path, "public/_themes").to_s
   end
 
-  def creatable?
-    readable?
+  def themes_root_path?
+    path == themes_root_path
   end
 
-  def editable?
-    readable?
+  def path_from_themes_root
+    return if path !~ /^#{themes_root_path}/
+    path.sub(/^#{themes_root_path}/, '').sub(%r|^/|, '')
   end
 
-  def deletable?
-    readable?
+  def public_themes_uri
+    return if path !~ /^#{themes_root_path}/
+    "/_themes/#{path_from_themes_root}"
   end
 
   def parent
@@ -173,22 +123,21 @@ class Sys::Storage::Entry
     items
   end
 
-  def descendants(items = [])
-    items << self
-    children.each { |child| child.descendants(items) }
-    items
+  def validate
+    run_callbacks :validation do
+      return false if invalid?
+    end
+    return true
   end
 
   def save(options = {})
     if options[:validate].nil? || options[:validate]
-      run_callbacks :validation do
-        return false if invalid?
-      end
+      return false unless validate
     end
 
     ApplicationRecord.transaction do
       run_callbacks :save_files do
-        save_in_transaction
+        yield
       end
     end
 
@@ -202,7 +151,7 @@ class Sys::Storage::Entry
 
   def destroy
     run_callbacks :remove_files do
-      ::Storage.rm_rf(path)
+      yield
     end
     return true
   rescue => e
@@ -213,24 +162,12 @@ class Sys::Storage::Entry
 
   private
 
-  def save_in_transaction
-    if new_entry
-      # new file / new directory
-      case entry_type
-      when :directory
-        ::Storage.mkdir(path) unless ::Storage.exists?(path)
-      when :file
-        ::Storage.binwrite(path, body) unless ::Storage.exists?(path)
-      end
-    else
-      # move
-      if path_was != path
-        ::Storage.mv(path_was, path) if ::Storage.exists?(path_was) && !::Storage.exists?(path)
-      end
-      # edit file
-      if body_changed?
-        ::Storage.binwrite(path, body) if ::Storage.exists?(path)
-      end
+  def set_defaults
+    self.allow_overwrite = true if allow_overwrite.nil?
+    self.new_entry = true if new_entry.nil?
+
+    if path.present? && site_id.nil? && (match = path.match(%r|^#{Rails.root}/sites/(\d+)|))
+      self.site_id = match[1].to_i
     end
   end
 
@@ -241,71 +178,44 @@ class Sys::Storage::Entry
   end
 
   def validate_existence
-    if new_entry || !allow_overwrite || path != path_was
+    if new_entry || !allow_overwrite || path_changed?
       if ::Storage.exists?(path)
         errors.add(:base, 'ファイルまたはディレクトリが既に存在します。')
       end
     end
   end
 
-  def validate_mime_type
-    return unless site
-
-    types = site.setting_site_allowed_attachment_type.to_s.split(/ *, */)
-    types = types.map { |t| ".#{t.gsub(/ /, '').downcase}" }.select(&:present?)
-
-    if types.present? && !types.include?(::File.extname(name).downcase)
-      errors.add(:base, "許可されていないファイルです。（#{types.join(', ')}）")
-    end
-  end
-
-  def validate_file_size
-    return unless site
-
-    ext = ::File.extname(name).downcase
-    max_size = site.get_upload_max_size(ext) || site.setting_site_file_upload_max_size
-
-    if max_size && body && body.size > max_size.to_i * (1024**2)
-      errors.add(:base, "容量制限を超えています。＜#{max_size}MB＞")
-    end
-  end
-
-  def save_storage_files_for_file
-    if path_was != path && path_was.present?
-      Sys::StorageFile.where(path: path_was).destroy_all
-    end
-    Sys::StorageFile.find_or_initialize_by(path: path).update!(available: true)
-  end
-
-  def destroy_storage_files_for_file
-    Sys::StorageFile.where(path: path).destroy_all
-  end
-
-  def save_storage_files_for_directory
-    if path_was != path && path_was.present?
-      files = Sys::StorageFile.arel_table
-      Sys::StorageFile.where(files[:path].matches("#{path_was}/%"))
-                      .replace_for_all(:path, "#{path_was}/", "#{path}/")
-    end
-  end
-
-  def destroy_storage_files_for_directory
-    Sys::StorageFile.files_under_directory(path).destroy_all
-  end
-
   class << self
-    def from_path(path)
-      item = self.new(base_dir: ::File.dirname(path), name: ::File.basename(path))
-      if ::Storage.directory?(path)
-        item.entry_type = :directory
-        item.new_entry = false
-      elsif ::Storage.file?(path)
-        item.entry_type = :file
-        item.new_entry = false
-      else
-        item.new_entry = true
+    def from_path(path, new_as: nil)
+      if (exist = ::Storage.directory?(path)) || new_as == :directory
+        model = directory_model_from_path(path)
+        model.new(base_dir: ::File.dirname(path), name: ::File.basename(path), new_entry: !exist)
+      elsif (exist = ::Storage.file?(path)) || new_as == :file
+        model = file_model_from_path(path)
+        model.new(base_dir: ::File.dirname(path), name: ::File.basename(path), new_entry: !exist)
       end
-      item
+    end
+
+    private
+
+    def themes_path?(path)
+      path =~ %r|^#{Rails.root}/sites/\d+/public/_themes|
+    end
+
+    def directory_model_from_path(path)
+      if themes_path?(path)
+        Cms::Stylesheets::Directory
+      else
+        Sys::Storage::Directory
+      end
+    end
+
+    def file_model_from_path(path)
+      if themes_path?(path)
+        Cms::Stylesheets::File
+      else
+        Sys::Storage::File
+      end
     end
   end
 end

@@ -48,8 +48,7 @@ class Sys::Admin::StorageFilesController < Cms::Controller::Admin::Base
     @current = @item
 
     if params[:create_directory]
-      @item = Sys::Storage::Entry.new(base_dir: @current.path, name: params[:item][:new_directory],
-                                      entry_type: :directory)
+      @item = Sys::Storage::Directory.new(base_dir: @current.path, name: params[:item][:new_directory])
       if @item.save
         flash[:notice] = 'ディレクトリを作成しました。'
         return redirect_to(path: @current.path_from_site_root)
@@ -57,8 +56,7 @@ class Sys::Admin::StorageFilesController < Cms::Controller::Admin::Base
         flash.now[:notice] = 'ディレクトリの作成に失敗しました。'
       end
     elsif params[:create_file]
-      @item = Sys::Storage::Entry.new(base_dir: @current.path, name: params[:item][:new_file],
-                                      entry_type: :file, body: '')
+      @item = Sys::Storage::File.new(base_dir: @current.path, name: params[:item][:new_file], body: '')
       if @item.save
         flash[:notice] = 'ファイルを作成しました。'
         return redirect_to(do: :show, path: @item.path_from_site_root)

@@ -31,7 +31,7 @@ $(function(){
   <%- end -%>
 <%- when 'show' -%>
   <%= link_to :index, { path: @parent.path_from_site_root } %>
-  <%= link_to :edit, { path: @item.path_from_site_root, do: :edit } if @item.editable? && @item.text_file? %>
+  <%= link_to :edit, { path: @item.path_from_site_root, do: :edit } if @item.editable? && @item.file_entry? && @item.text_file? %>
   <%= link_to :destroy, { path: @item.path_from_site_root, do: :destroy }, confirm: '削除してよろしいですか？' if @item.deletable? %>
 <%- when 'edit', 'update' -%>
   <%= link_to :index, { path: @parent.path_from_site_root } %>
