@@ -41,6 +41,9 @@ cms:
   talk_text_limit: 102400
   talk_thread_num: 2
 
+  # 地図デフォルト座標
+  default_map_coordinate: "35.702708,139.560831"
+
 gp_article:
   #携帯用内容制限[Bytes]
   body_limit_for_mobile: 163840

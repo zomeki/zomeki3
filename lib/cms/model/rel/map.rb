@@ -13,7 +13,7 @@ module Cms::Model::Rel::Map
   end
 
   def default_map_position
-    '35.702708,139.560831' # Mitaka
+    Zomeki.config.application["cms.default_map_coordinate"].to_s.split(',').map(&:strip)
   end
 
   private
