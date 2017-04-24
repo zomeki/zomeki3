@@ -19,9 +19,6 @@ class GpArticle::Tool::DocsScript < Cms::Script::Base
       end
     end
 
-    content.public_nodes.each do |node|
-      script_klass = node.script_klass
-      script_klass.new(node_id: node.id).publish if script_klass && script_klass.publishable?
-    end
+    Cms::NodesScript.new(target_node_id: content.public_nodes.pluck(:id)).publish if content.public_nodes.present?
   end
 end

@@ -31,9 +31,9 @@ class Cms::Admin::PreviewController < Cms::Controller::Admin::Base
       act  = "down"
 
     elsif path =~ /^\/_themes\//
-      stylesheet = Cms::Stylesheet.new_by_path(Core.site.id, "#{Core.site.public_path}#{path}")
-      return http_error(404) unless ::File.exist?(stylesheet.path)
-      return send_file(stylesheet.path, type: stylesheet.mime_type, filename: stylesheet.name, disposition: 'inline')
+      entry = Sys::Storage::Entry.from_path("#{Core.site.public_path}#{path}")
+      return http_error(404) unless entry.exists?
+      return send_file(entry.path, type: entry.mime_type, filename: entry.name, disposition: 'inline')
 
     else
       node = Core.search_node(path)

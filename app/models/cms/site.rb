@@ -102,12 +102,15 @@ class Cms::Site < ApplicationRecord
   end
 
   def root_path
-    dir = format('%04d', id)
-    Rails.root.join("sites/#{dir}")
+    Rails.root.join("sites/#{format('%04d', id)}").to_s
   end
 
   def public_path
     "#{root_path}/public"
+  end
+
+  def public_themes_path
+    "#{root_path}/public/_themes"
   end
 
   def public_smart_phone_path

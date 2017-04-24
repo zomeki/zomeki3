@@ -1,0 +1,7 @@
+<table class="show">
+  <%= concept_form(f) if @item.directory_entry? %>
+  <tr>
+    <th>ディレクトリ名</th>
+    <td><%= f.text_field :name, class: "nameEn" %></td>
+  </tr>
+</table>
