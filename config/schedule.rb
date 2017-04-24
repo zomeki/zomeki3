@@ -55,6 +55,11 @@ every :hour do
   rake 'zomeki:feed:feeds:read'
 end
 
+# リンクチェックを実行します。
+every :hour do
+  rake 'zomeki:cms:link_checks:exec'
+end
+
 # 今日のイベントページを静的ファイルとして書き出します。
 every :day, at: '0:30 am' do
   rake 'zomeki:gp_calendar:publish_todays_events'

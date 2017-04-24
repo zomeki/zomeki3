@@ -10,12 +10,20 @@ namespace :zomeki do
       Cms::Lib::FileCleaner.clean_directories
     end
 
-    namespace :link_check do
-      desc 'Check links.'
-      task :check => :environment do
+    namespace :link_checks do
+      desc 'Check links'
+      task :exec => :environment do
         Cms::Site.order(:id).each do |site|
-          Util::LinkChecker.check(site)
+          if site.link_check_hour?(Time.now.hour)
+            system("bundle exec rake zomeki:cms:link_checks:exec_site SITE_ID=#{site.id} RAILS_ENV=#{Rails.env} &")
+          end
         end
+      end
+
+      desc 'Check links in specified site'
+      task :exec_site => :environment do
+        site = Cms::Site.find_by(id: ENV['SITE_ID'])
+        Script.run('cms/link_checks/exec', site_id: site.id, lock_by: :site, kill: 12.hours.to_i) if site
       end
     end
 

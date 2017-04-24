@@ -1,6 +1,8 @@
 class Cms::LinkCheckLog < ApplicationRecord
   include Sys::Model::Base
 
+  RESULT_STATE_OPTIONS = [['○','success'],['×','failure'],['－','skip']]
+
   belongs_to :site
   belongs_to :link_checkable, polymorphic: true
 
@@ -8,9 +10,13 @@ class Cms::LinkCheckLog < ApplicationRecord
 
   scope :search_with_params, ->(criteria) {
     rel = all
-    rel.where!(result: criteria[:only] == 'succeeded') if criteria && criteria[:only].present?
+    rel.where!(result_state: criteria[:result_state]) if criteria && criteria[:result_state].present?
     rel
   }
+
+  def result_state_mark
+    RESULT_STATE_OPTIONS.rassoc(result_state).try(:first)
+  end
 
   private
 

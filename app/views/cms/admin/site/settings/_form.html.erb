@@ -53,6 +53,20 @@
     <th><%= @site.locale(:setting_link_check) %></th>
     <td><%= f.radio_buttons(:in_setting_site_link_check, @item.class::LINK_CHECK_OPTIONS) %></td>
   </tr>
+  <tr>
+    <th><%= @site.locale(:setting_link_check_hour) %></th>
+    <td>
+      <%= f.text_field(:in_setting_site_link_check_hour, class: 'number') %> 時
+      <span style="margin-left: 10px;">0-23時を指定。使用しない場合は空白</span>
+    </td>
+  </tr>
+  <tr>
+    <th><%= @site.locale(:setting_link_check_exclusion) %><br/ >（改行区切り）</th>
+    <td>
+      <%= f.text_area(:in_setting_site_link_check_exclusion, rows: 10) %>
+      <p>例：http://example.com/</p>
+    </td>
+  </tr>
 </table>
 <%- end -%>
 
