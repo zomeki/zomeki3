@@ -14,22 +14,12 @@ class Map::Content::Marker < Cms::Content
     markers.public_state
   end
 
-  def latitude
-    lat_lng = setting_value(:lat_lng).to_s.split(',')
-    map_coordinate = Cms::SiteSetting.find_by(site_id: site.id, name: 'map_coordinate').try(:value).to_s.split(',')
-    default_map_coordinate = Zomeki.config.application["cms.default_map_coordinate"].to_s.split(',')
-    return lat_lng.first.strip if lat_lng.size == 2
-    return map_coordinate.first.strip if map_coordinate.size == 2
-    default_map_coordinate.first.strip
-  end
-
-  def longitude
-    lat_lng = setting_value(:lat_lng).to_s.split(',')
-    map_coordinate = Cms::SiteSetting.find_by(site_id: site.id, name: 'map_coordinate').try(:value).to_s.split(',')
-    default_map_coordinate = Zomeki.config.application["cms.default_map_coordinate"].to_s.split(',')
-    return lat_lng.last.strip if lat_lng.size == 2
-    return map_coordinate.last.strip if map_coordinate.size == 2
-    default_map_coordinate.last.strip
+  def default_map_position
+    [setting_value(:lat_lng), site.setting_site_map_coordinate].lazy.each do |pos|
+      p = pos.to_s.split(',').map(&:strip)
+      return p if p.size == 2
+    end
+    Zomeki.config.application["cms.default_map_coordinate"].to_s.split(',').map(&:strip)
   end
 
   def categories

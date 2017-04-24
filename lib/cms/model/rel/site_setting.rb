@@ -14,7 +14,7 @@ module Cms::Model::Rel::SiteSetting
 
   SITE_SETTINGS = [
     :basic_auth_state, :common_ssl, :allowed_attachment_type,
-    :admin_mail_sender, :file_upload_max_size, :extension_upload_max_size, :link_check, :kana_talk,
+    :admin_mail_sender, :file_upload_max_size, :extension_upload_max_size, :link_check, :accessibility_check, :kana_talk,
     :map_coordinate
   ]
 

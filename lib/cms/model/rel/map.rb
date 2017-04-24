@@ -13,9 +13,7 @@ module Cms::Model::Rel::Map
   end
 
   def default_map_position
-    map_coordinate = Cms::SiteSetting.find_by(site_id: Core.site.id, name: 'map_coordinate').try(:value)
-    return map_coordinate if map_coordinate.to_s.split(',').size == 2
-    Zomeki.config.application["cms.default_map_coordinate"]
+    Zomeki.config.application["cms.default_map_coordinate"].to_s.split(',').map(&:strip)
   end
 
   private
