@@ -12,23 +12,6 @@ class Organization::Content::Group < Cms::Content
 
   has_many :groups, foreign_key: :content_id, class_name: 'Organization::Group', dependent: :destroy
 
-  def refresh_groups
-    sys_groups = top_layer_sys_groups.flat_map { |g| g.descendants_in_site(site) }
-    sys_groups.each do |sys_group|
-      group = groups.where(sys_group_code: sys_group.code).first_or_initialize
-      group.name = sys_group.name_en
-      unless group.valid?
-        group.name = "#{sys_group.name_en}_#{sys_group.code}"
-      end
-      group.save
-    end
-
-    groups.each do |group|
-      sys_group = group.sys_group
-      group.destroy if sys_group.nil? || !sys_group.sites.include?(site)
-    end
-  end
-
   def top_layer_sys_groups
     Sys::Group.in_site(site).where(level_no: 2)
   end
