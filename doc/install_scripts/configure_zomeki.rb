@@ -12,9 +12,9 @@ require 'yaml/store'
 def centos
   puts "It's CentOS!"
 
-  core_yml = '/var/www/zomeki/config/core.yml'
-  FileUtils.copy("#{core_yml}.sample", core_yml, preserve: true)
+  system "su - zomeki -c 'cp -p /var/www/zomeki/config/original/*.yml /var/www/zomeki/config/'"
 
+  core_yml = '/var/www/zomeki/config/core.yml'
   db = YAML::Store.new(core_yml)
   db.transaction do
     db['production']['uri'] = "http://#{`hostname`.chomp}/"

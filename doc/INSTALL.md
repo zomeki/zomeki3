@@ -153,7 +153,7 @@ ZOMEKIをインストールします。
 
 設定ファイルのサンプルをコピーして変更します。
 
-    # cp -p /var/www/zomeki/config/core.yml.sample /var/www/zomeki/config/core.yml
+    # su - zomeki -c 'cp -p /var/www/zomeki/config/original/*.yml /var/www/zomeki/config/'
     # vi /var/www/zomeki/config/core.yml
 ```
 uri: http://zomeki.example.com/    # すべて変更

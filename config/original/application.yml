@@ -1,8 +1,8 @@
 sys:
-  #暗号化パスワード
+  # 暗号化パスワード
   crypt_pass: pass
 
-  #承認者候補に他所属の管理者を表示
+  # 承認者候補に他所属の管理者を表示
   recognizers_include_admin: false
 
   # 静的ファイルの書き出しを無効化
@@ -20,7 +20,7 @@ sys:
   file_text_extraction: false
 
 cms:
-  #ページ数付きページ書き出し数
+  # ページ数付きページ書き出し数
   publish_more_pages: 10
 
   # Kana settings
@@ -45,9 +45,9 @@ cms:
   default_map_coordinate: "35.702708,139.560831"
 
 gp_article:
-  #携帯用内容制限[Bytes]
+  # 携帯用内容制限[Bytes]
   body_limit_for_mobile: 163840
 
 upload:
-  #アップロード時に日本語ファイル名を許可
+  # アップロード時に日本語ファイル名を許可
   allow_japanese_filename: false
