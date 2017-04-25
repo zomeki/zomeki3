@@ -13,9 +13,8 @@
 /sites
 /tmp
 /upload
-/wget_sites
 
-/config/core.yml
+/config/*.yml
 /config/mecab/sites
 /config/mecab/zomeki.dic
 /config/apache/*.conf
@@ -26,4 +25,4 @@
 /config/nginx/admin_servers
 /config/plugins
 
-/vendor/tika/**/*.jar
+/vendor/tika/*
