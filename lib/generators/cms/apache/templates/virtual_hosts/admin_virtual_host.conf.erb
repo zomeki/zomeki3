@@ -1,4 +1,3 @@
-<%- zomeki_root = Rails.root -%>
 <VirtualHost *:80>
     ServerName <%= @site.admin_domain %>
     <%- if @site.mobile_domain.present? -%>
@@ -6,8 +5,8 @@
     SetEnvIf Host <%=Regexp.quote @site.mobile_domain %> MOBILE_SITE
     <%- end -%>
     AddType text/x-component .htc
-    Alias /_common/ <%= zomeki_root %>/public/_common/
+    Alias /_common/ <%= Rails.root %>/public/_common/
     DocumentRoot <%= @site.public_path %>
-    Include <%= zomeki_root %>/config/apache/rewrite_base.conf
+    Include <%= Rails.root %>/config/apache/rewrite_base.conf
     Include <%= @site.config_path %>/rewrite.conf
 </VirtualHost>
