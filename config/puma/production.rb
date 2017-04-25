@@ -1,13 +1,13 @@
 #!/usr/bin/env puma
 
-zomeki_root = File.expand_path('../../../', __FILE__)
+app_root = File.expand_path('../../../', __FILE__)
 
 # The directory to operate out of.
 #
 # The default is the current directory.
 #
 # directory '/u/apps/lolcat'
-directory zomeki_root
+directory app_root
 
 # Use an object or block as the rack application. This allows the
 # config file to be the application itself.
@@ -25,7 +25,7 @@ directory zomeki_root
 # The default is "config.ru".
 #
 # rackup '/u/apps/lolcat/config.ru'
-rackup "#{zomeki_root}/config.ru"
+rackup "#{app_root}/config.ru"
 
 # Set the environment in which the rack's app will run. The value must be a string.
 #
@@ -46,13 +46,13 @@ daemonize true
 # Store the pid of the server in the file at "path".
 #
 # pidfile '/u/apps/lolcat/tmp/pids/puma.pid'
-pidfile "#{zomeki_root}/tmp/pids/puma.pid"
+pidfile "#{app_root}/tmp/pids/puma.pid"
 
 # Use "path" as the file to store the server info state. This is
 # used by "pumactl" to query and control the server.
 #
 # state_path '/u/apps/lolcat/tmp/pids/puma.state'
-state_path "#{zomeki_root}/tmp/pids/puma.state"
+state_path "#{app_root}/tmp/pids/puma.state"
 
 # Redirect STDOUT and STDERR to files specified. The 3rd parameter
 # ("append") specifies whether the output is appended, the default is
@@ -60,7 +60,7 @@ state_path "#{zomeki_root}/tmp/pids/puma.state"
 #
 # stdout_redirect '/u/apps/lolcat/log/stdout', '/u/apps/lolcat/log/stderr'
 # stdout_redirect '/u/apps/lolcat/log/stdout', '/u/apps/lolcat/log/stderr', true
-stdout_redirect "#{zomeki_root}/log/puma_access.log", "#{zomeki_root}/log/puma_error.log", true
+stdout_redirect "#{app_root}/log/puma_access.log", "#{app_root}/log/puma_error.log", true
 
 # Disable request logging.
 #
@@ -85,7 +85,7 @@ threads 1, 1
 # bind 'unix:///var/run/puma.sock'
 # bind 'unix:///var/run/puma.sock?umask=0111'
 # bind 'ssl://127.0.0.1:9292?key=path_to_key&cert=path_to_cert'
-bind "unix://#{zomeki_root}/tmp/sockets/puma.sock"
+bind "unix://#{app_root}/tmp/sockets/puma.sock"
 
 # Instead of "bind 'ssl://127.0.0.1:9292?key=path_to_key&cert=path_to_cert'" you
 # can also use the "ssl_bind" option.
