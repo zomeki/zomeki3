@@ -12,10 +12,10 @@ centos() {
   systemctl start postgresql-9.5 && systemctl enable postgresql-9.5
   systemctl start nginx && systemctl enable nginx
 
-  cp /var/www/zomeki/config/samples/zomeki_unicorn.service /usr/lib/systemd/system/.
+  cp /var/www/zomeki/config/samples/unicorn.service /usr/lib/systemd/system/zomeki_unicorn.service
   systemctl start zomeki_unicorn && systemctl enable zomeki_unicorn
 
-  cp /var/www/zomeki/config/samples/zomeki_delayed_job.service /usr/lib/systemd/system/.
+  cp /var/www/zomeki/config/samples/delayed_job.service /usr/lib/systemd/system/zomeki_delayed_job.service
   systemctl start zomeki_delayed_job && systemctl enable zomeki_delayed_job
 
 }
