@@ -390,7 +390,7 @@ class Cms::Site < ApplicationRecord
                         directory: 1, name: '/', title: name)
     top = nodes.create(concept: concepts.first, state: 'public', published_at: Time.current,
                        parent_id: node.id, route_id: node.id, model: 'Cms::Page',
-                       directory: 0, name: 'index.html', title: name, body: 'ZOMEKI')
+                       directory: 0, name: 'index.html', title: name, body: Core.title)
 
     update_column(:node_id, node.id)
   end

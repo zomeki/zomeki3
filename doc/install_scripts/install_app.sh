@@ -28,7 +28,7 @@ centos() {
   su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle config build.pg --with-pg-config=/usr/pgsql-9.5/bin/pg_config'
   su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle install --path vendor/bundle --without development test'
 
-  cp /var/www/zomeki/config/samples/zomeki_logrotate /etc/logrotate.d/.
+  cp /var/www/zomeki/config/samples/logrotate /etc/logrotate.d/zomeki_logrotate
 
   cp /var/www/zomeki/config/samples/reload_servers.sh /root/. && chmod 755 /root/reload_servers.sh
   ROOT_CRON_TXT='/var/www/zomeki/config/samples/root_cron.txt'
