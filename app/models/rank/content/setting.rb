@@ -29,9 +29,9 @@ class Rank::Content::Setting < Cms::ContentSetting
         credentials[:oauth2_scope] = 'https://www.googleapis.com/auth/analytics.readonly'
 
         setup = GoogleOauth2Installed::Setup.new(credentials)
-        ex[:auth_url] = setup.zomeki_get_auth_url if ex[:auth_url].blank?
+        ex[:auth_url] = setup.cms_get_auth_url if ex[:auth_url].blank?
         if ex[:auth_code].present?
-          token = setup.zomeki_get_access_token(ex[:auth_code])
+          token = setup.cms_get_access_token(ex[:auth_code])
           ex[:oauth2_token] = {access_token: token.token.to_s,
                                          refresh_token: token.refresh_token.to_s,
                                          expires_at: token.expires_at.to_i}
