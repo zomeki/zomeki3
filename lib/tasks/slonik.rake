@@ -25,6 +25,7 @@ namespace :slonik do
 
       def slonik_execute(sql, options = {})
         slonik = YAML.load_file(Rails.root.join('config/slonik.yml'))[Rails.env].with_indifferent_access
+        options.merge!(owner: slonik[:owner])
         command =
           if slonik[:host].present?
             ["ssh -p #{slonik[:port]} #{slonik[:user]}@#{slonik[:host]}", "'" + slonik_command(slonik[:command], sql, options) + "'"].join(' ')
@@ -35,9 +36,9 @@ namespace :slonik do
         system command
       end
 
-      def slonik_command(com, sql, object: nil, object_name: nil)
+      def slonik_command(com, sql, object: nil, object_name: nil, owner: nil)
         if object && object_name
-          com.gsub('[[SQL]]', %Q{#{slonik_escape_sql(sql)}; ALTER #{object} "#{object_name}" OWNER TO zomeki})
+          com.gsub('[[SQL]]', %Q|#{slonik_escape_sql(sql)}; ALTER #{object} "#{object_name}" OWNER TO #{owner}|)
         else
           com.gsub('[[SQL]]', slonik_escape_sql(sql))
         end
@@ -55,7 +56,7 @@ namespace :slonik do
       Rake::Task["db:migrate"].invoke
     end
     namespace :migrate do
-      task :up => [:environment, :check_slonik_command, :patch_migration] do
+      task :up => [:environment, :patch_migration] do
         Rake::Task["db:migrate:up"].invoke
       end
       task :down => [:environment, :patch_migration] do
