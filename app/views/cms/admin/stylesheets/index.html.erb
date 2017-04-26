@@ -9,24 +9,24 @@
     <th style="width: 120px; text-align: center;">更新日時</th>
   </tr>
   
-  <% @dirs.each do |item| %>
-  <tr class="directory <%= cycle '', 'cycle' %>">
-    <td style="text-align: center;"><%= link_to :show, @stylesheet_path.call(item.path) %> </td>
-    <td class="name"><%= link_to h(item.name), @stylesheets_path.call(item.path) %></td>
-    <td class="uri"><%= safe{item.concept.name} %></td>
-    <td> </td>
-    <td style="text-align: center;"><%= item.mtime.strftime('%Y-%m-%d %H:%M')%></td>
-  </tr>
-  <% end %>
-  
-  <% @files.each do |item| %>
-  <tr class="file <%= cycle '', 'cycle' %>">
-    <td style="text-align: center;"><br /></td>
-    <td class="name"><%= link_to h(item.name), @stylesheets_path.call(item.path, :do => :show) %></td>
-    <td class="uri"><%= link_to item.public_uri, item.public_uri, :target => '_blank' %> </td>
-    <td style="text-align: right;"><%= number_format item.size(:kb) %> KB</td>
-    <td style="text-align: center;"><%= safe{item.mtime.strftime('%Y-%m-%d %H:%M')} %></td>
-  </tr>
-  <% end %>
+  <%- @items.each do |item| -%>
+    <%- if item.directory_entry? -%>
+      <tr class="directory <%= cycle '', 'cycle' %>">
+        <td style="text-align: center;"><%= link_to :show, { path: "#{item.path_from_themes_root}/", do: :show } %></td>
+        <td class="name"><%= link_to item.name, { path: "#{item.path_from_themes_root}/" } %></td>
+        <td class="uri"><%= item.concept.try!(:name) %></td>
+        <td> </td>
+        <td style="text-align: center;"><%= item.mtime.strftime('%Y-%m-%d %H:%M') if item.mtime %></td>
+      </tr>
+    <%- else -%>
+      <tr class="file <%= cycle '', 'cycle' %>">
+        <td style="text-align: center;"><br /></td>
+        <td class="name"><%= link_to item.name, { path: item.path_from_themes_root, do: :show } %></td>
+        <td class="uri"><%= link_to item.public_themes_uri, item.public_themes_uri, target: '_blank' %> </td>
+        <td style="text-align: right;"><%= number_format item.kb_size %> KB</td>
+        <td style="text-align: center;"><%= item.mtime.strftime('%Y-%m-%d %H:%M') if item.mtime %></td>
+      </tr>
+    <%- end -%>
+  <%- end -%>
   
 </table>

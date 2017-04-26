@@ -14,16 +14,12 @@ class Map::Content::Marker < Cms::Content
     markers.public_state
   end
 
-  def latitude
-    lat_lng = setting_value(:lat_lng).to_s.split(',')
-    return '35.702708' unless lat_lng.size == 2 # Mitaka
-    lat_lng.first.strip
-  end
-
-  def longitude
-    lat_lng = setting_value(:lat_lng).to_s.split(',')
-    return '139.560831' unless lat_lng.size == 2 # Mitaka
-    lat_lng.last.strip
+  def default_map_position
+    [setting_value(:lat_lng), site.setting_site_map_coordinate].lazy.each do |pos|
+      p = pos.to_s.split(',').map(&:strip)
+      return p if p.size == 2
+    end
+    Zomeki.config.application["cms.default_map_coordinate"].to_s.split(',').map(&:strip)
   end
 
   def categories

@@ -1,17 +1,17 @@
-<%= form_for :item, :url => "?do=move", :html => {:method => :put} do |f| %>
-  
-<%= error_messages_for :item %>
+<%= form_for :item, url: "?do=move", html: { method: :patch } do |f| %>
+  <%= error_messages_for :item %>
+  <p class="form">移動</p>
 
-<p class="form">移動</p>
+  <table class="show">
+    <tr>
+      <th>パス</th>
+      <td>/_themes/<%= f.text_field :base_dir, value: File.dirname(@item.path_from_themes_root || '').to_s.sub(/^\./, ''), class: "nameEn", style: "width: 500px;" %></td>
+    </tr>
+    <tr>
+      <th>ファイル名</th>
+      <td><%= f.text_field :name, class: "nameEn", style: "width: 500px;" %></td>
+    </tr>
+  </table>
 
-<table class="show">
-  <tr>
-    <th><%= @item.locale :path %></th>
-    <td><%= @item.base_uri %>
-      <%= f.text_field :path, :class => "nameEn", :style => "width: 500px;" %></td>
-  </tr>
-</table>
-
-<%= submit :edit %>
-
-<% end %>
+  <%= submit :edit %>
+<%- end -%>

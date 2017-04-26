@@ -14,8 +14,8 @@ centos() {
 
   cd /usr/local/src
 
-  files=('install_ruby.sh' 'install_nginx.sh' 'install_postgresql.rb' 'install_zomeki.sh'
-         'configure_zomeki.rb' 'install_zomeki_kana_read.sh' 'start_servers.sh' 'install_cron.sh')
+  files=('install_ruby.sh' 'install_nginx.sh' 'install_postgresql.rb' 'install_app.sh'
+         'configure_app.rb' 'install_kana_read.sh' 'start_servers.sh' 'install_cron.sh')
 
   rm -f install_scripts.txt install_all.sh
   for file in ${files[@]}; do

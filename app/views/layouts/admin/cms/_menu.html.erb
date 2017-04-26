@@ -1,9 +1,8 @@
 <%
-@current = current
-def menu_link(auth, key, label, uri)
+def menu_link(auth, key, label, uri, current)
   return '' unless Core.user.has_auth?(auth)
   cls = [key.to_s]
-  cls << 'current' if @current == key
+  cls << 'current' if current == key
   content_tag 'li' do
     link_to(label, uri, :class => cls.join(' '))
   end
@@ -11,15 +10,15 @@ end
 %>
 
 <%- if Core.concept -%>
-<%= menu_link :creator, :content, 'コンテンツ', main_app.cms_contents_path -%>
-<%= menu_link :creator, :data, 'データ', main_app.cms_data_texts_path -%>
-<%= menu_link :designer, :design, 'デザイン', main_app.cms_pieces_path -%>
-<%= menu_link :designer, :directory, 'ディレクトリ', main_app.cms_nodes_path(parent: 0) -%>
+<%= menu_link :creator, :content, 'コンテンツ', main_app.cms_contents_path, current -%>
+<%= menu_link :creator, :data, 'データ', main_app.cms_data_texts_path, current -%>
+<%= menu_link :designer, :design, 'デザイン', main_app.cms_pieces_path, current -%>
+<%= menu_link :designer, :directory, 'ディレクトリ', main_app.cms_nodes_path(parent: 0), current -%>
 <%- end -%>
-<%= menu_link :manager, :site, 'サイト', main_app.cms_concepts_path(parent: 0) -%>
-<%= menu_link :manager, :user, 'ユーザー', main_app.sys_groups_path(parent: 0) -%>
-<%= menu_link :manager, :log, 'ログ', main_app.sys_operation_logs_path(parent: 0) -%>
+<%= menu_link :manager, :site, 'サイト', main_app.cms_concepts_path(parent: 0), current -%>
+<%= menu_link :manager, :user, 'ユーザー', main_app.sys_groups_path(parent: 0), current -%>
+<%= menu_link :manager, :log, 'ログ', main_app.sys_operation_logs_path(parent: 0), current -%>
 <%- if Core.user.root? -%>
-<%= menu_link :manager, :tool, 'ツール', main_app.sys_plugins_path -%>
-<%= menu_link :manager, :setting, 'システム', main_app.sys_maintenances_path -%>
+<%= menu_link :manager, :tool, 'ツール', main_app.sys_plugins_path, current -%>
+<%= menu_link :manager, :setting, 'システム', main_app.sys_maintenances_path, current -%>
 <%- end -%>

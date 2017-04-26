@@ -1,1 +1,13 @@
 <%= render 'shared/admin/content/settings/form', f: f, item: @item -%>
+
+<%- if @item.name == 'list_style' -%>
+<%= render 'gp_article/admin/shared/doc_style_tags' %>
+<%= javascript_tag do %>
+$(function() {
+  $('a.show_dialog').on('click', function() {
+    $('#doc_style_tags').dialog({width: 400});
+    return false;
+  });
+});
+<%- end -%>
+<%- end -%>
