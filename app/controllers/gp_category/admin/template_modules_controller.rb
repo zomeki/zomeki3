@@ -8,7 +8,8 @@ class GpCategory::Admin::TemplateModulesController < Cms::Controller::Admin::Bas
   end
 
   def index
-    @items = @content.template_modules.paginate(page: params[:page], per_page: 50)
+    @items = @content.template_modules.order(:name)
+                     .paginate(page: params[:page], per_page: 50)
     _index @items
   end
 
@@ -40,8 +41,9 @@ class GpCategory::Admin::TemplateModulesController < Cms::Controller::Admin::Bas
 
   def template_module_params
     params.require(:item).permit(
-      :doc_style, :module_type, :module_type_feature, :name, :num_docs, :title,
-      :wrapper_tag, :upper_text, :lower_text
+      :doc_style, :module_type, :name, :num_docs, :title,
+      :wrapper_tag, :upper_text, :lower_text,
+      :gp_article_content_ids => []
     )
   end
 end

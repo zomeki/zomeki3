@@ -69,6 +69,30 @@ class Reception::Content::Course < Cms::Content
     setting_value(:auto_reply) == 'send'
   end
 
+  def applied_upper_reply_text
+    setting_extra_value(:auto_reply, :applied_upper_reply_text).to_s
+  end
+
+  def applied_lower_reply_text
+    setting_extra_value(:auto_reply, :applied_lower_reply_text).to_s
+  end
+
+  def received_upper_reply_text
+    setting_extra_value(:auto_reply, :received_upper_reply_text).to_s
+  end
+
+  def received_lower_reply_text
+    setting_extra_value(:auto_reply, :received_lower_reply_text).to_s
+  end
+
+  def canceled_upper_reply_text
+    setting_extra_value(:auto_reply, :canceled_upper_reply_text).to_s
+  end
+
+  def canceled_lower_reply_text
+    setting_extra_value(:auto_reply, :canceled_lower_reply_text).to_s
+  end
+
   def doc_list_style
     setting_value(:doc_list_style).to_s
   end

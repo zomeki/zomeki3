@@ -1,6 +1,5 @@
-「<%= @course.title %>」へお申込み頂きありがとうございました。
-以下の内容で受け取りました。
+<%= @content.applied_upper_reply_text if @content.applied_upper_reply_text.present? %>
 
 <%= render 'reception/admin/mailer/applicant', applicant: @applicant %>
 
-受付が完了しましたら再度ご連絡差し上げます。
+<%= @content.applied_lower_reply_text if @content.applied_lower_reply_text.present? %>

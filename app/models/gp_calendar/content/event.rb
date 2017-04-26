@@ -87,31 +87,24 @@ class GpCalendar::Content::Event < Cms::Content
     setting_extra_value(:show_images, :image_cnt).to_i
   end
 
-  def event_sync_import?
-    setting_value(:event_sync_import) == 'enabled'
-  end
-
-  def event_sync_export?
-    setting_value(:event_sync_export) == 'enabled'
-  end
-
-  def event_sync_source_hosts
-    setting_extra_value(:event_sync_import, :source_hosts).to_s
-  end
-
-  def event_sync_destination_hosts
-    setting_extra_value(:event_sync_export, :destination_hosts).to_s
-  end
-
-  def event_sync_default_will_sync
-    setting_extra_value(:event_sync_export, :default_will_sync).to_s
-  end
-
   def allowed_attachment_type
     'gif,jpg,png'
   end
 
   def attachment_embed_link
     false
+  end
+
+  def public_event_docs(start_date, end_date, categories = nil)
+    doc_content_ids = Cms::ContentSetting.where(name: 'calendar_relation', value: 'enabled')
+                                         .select { |cs| cs.extra_values[:calendar_content_id] == id }
+                                         .map(&:content_id)
+    if doc_content_ids.blank?
+      GpArticle::Doc.none
+    else
+      GpArticle::Doc.mobile(::Page.mobile?).public_state
+                    .where(content_id: doc_content_ids, event_state: 'visible')
+                    .event_scheduled_between(start_date, end_date, categories)
+    end
   end
 end

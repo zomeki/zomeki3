@@ -13,11 +13,10 @@ class Cms::Public::TalkController < ApplicationController
 
     return http_error(404) if Core.script_uri.blank?
     uri = "#{Core.script_uri.gsub(/\A(.*?\/\/.*?)\/.*/, '\1')}#{uri}"
-    options = uri =~ /\Ahttps:/ ? {:ssl_verify_mode => OpenSSL::SSL::VERIFY_NONE} : {}
-    session_key = Rails.application.config.session_options[:key]
-    options.merge!("Cookie" => "#{session_key}=#{CGI.escape(cookies[session_key])}") if cookies[session_key].present?
-    res = Util::Http::Request.send(uri, options)
 
+    header = {}
+    header.merge!('Cookie' => request.headers['Cookie']) if request.headers['Cookie'].present?
+    res = Util::Http::Request.get(uri, header: header)
     return http_error(404) if res.status != 200
 
     site_id = Page.site.id rescue nil

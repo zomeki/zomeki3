@@ -4,29 +4,10 @@
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title><%= Page.window_title %></title>
-  <script src="/_common/js/jquery.min.js"></script>
-  <script src="/_common/js/jquery-migrate.min.js" async defer></script>
-  <script src="/_common/js/jquery_ujs.js" async defer></script>
   <%- if Page.current_node.content.class.in?([Survey::Content::Form]) -%>
   <%= csrf_meta_tags %>
   <%- end -%>
-  <%- if Core.request_uri =~ /^\/_ssl/ && Page.site.use_common_ssl? && Page.current_node.model == 'Survey::Form'
-    if Survey::Content::Form.find_by_id(Page.current_node.content.id).use_common_ssl?
-      ssl_uri = Page.site.full_ssl_uri.sub(/\/\z/, '')
-      tag = "#{Page.layout.head_tag(request)}".gsub(/href=("|')\/_(layouts|themes)/) {
-        "href=#{$1}#{ssl_uri}/_#{$2}"
-      }
-      tag = tag.gsub(/src=("|')\/_(layouts|themes)/) {
-        "src=#{$1}#{ssl_uri}/_#{$2}"
-      }
-    else
-      tag = Page.layout.head_tag(request)
-    end
-    -%>
-  <%= tag.html_safe %>
-  <%- else -%>
   <%= Page.layout.head_tag(request) %>
-  <%- end -%>
   <%- if Page.current_item.try(:respond_to?, :meta_description) && (meta_description = Page.current_item.meta_description).present? -%>
   <meta name="description" content="<%= meta_description.gsub(/(\r\n|\r|\n)/, ' ') %>" />
   <%- end -%>

@@ -103,7 +103,7 @@ $(document).ready(function () {
         <tr>
           <td>
             <%= submit_tag 'リンクチェック', name: 'link_check_in_body' if @content.site.setting_site_link_check == 'enabled' %>
-            <%= submit_tag 'アクセシビリティチェック', name: 'accessibility_check' if Zomeki.config.application['cms.enable_accessibility_check'] %>
+            <%= submit_tag 'アクセシビリティチェック', name: 'accessibility_check' if @content.site.setting_site_accessibility_check == 'enabled' %>
           </td>
         </tr>
       </table>
@@ -339,17 +339,6 @@ $(document).ready(function () {
         <td><%= f.text_area :event_note, :size => '100x3' %></td>
       </tr>
     </table>
-
-    <%- if @content.event_sync? -%>
-    <p class="form">カレンダー同期</p>
-
-    <table class="show">
-      <tr>
-        <th><%= f.label :event_will_sync %></th>
-        <td><%= f.radio_buttons :event_will_sync, @item.class::EVENT_WILL_SYNC_OPTIONS %></td>
-      </tr>
-    </table>
-    <%- end -%>
   </div>
   <div id="tab6">
     <table class="show">

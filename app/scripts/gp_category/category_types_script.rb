@@ -74,10 +74,10 @@ class GpCategory::CategoryTypesScript < Cms::Script::Publication
     tms.each do |tm|
       case tm.module_type
       when 'docs_1', 'docs_2'
-        publish_link cat, ApplicationController.helpers.more_link(template_module: tm, ct_or_c: cat)
+        publish_link cat, ApplicationController.helpers.category_module_more_link(template_module: tm, ct_or_c: cat)
       when 'docs_3', 'docs_4'
         cat.category_type.internal_category_type.public_root_categories.each do |c|
-          publish_link cat, ApplicationController.helpers.more_link("c_#{c.name}", template_module: tm, ct_or_c: cat)
+          publish_link cat, ApplicationController.helpers.category_module_more_link(template_module: tm, ct_or_c: cat, category_name: c.name)
         end
       when 'docs_5', 'docs_6'
         docs = case tm.module_type
@@ -92,7 +92,7 @@ class GpCategory::CategoryTypesScript < Cms::Script::Publication
         groups = Sys::Group.where(id: docs.select(Sys::Group.arel_table[:id]).distinct)
 
         groups.each do |group|
-          publish_link cat, ApplicationController.helpers.more_link("g_#{group.code}", template_module: tm, ct_or_c: cat)
+          publish_link cat, ApplicationController.helpers.category_module_more_link(template_module: tm, ct_or_c: cat, group_code: group.code)
         end
       end
     end

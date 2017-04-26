@@ -13,11 +13,7 @@ class Cms::RebuildJob < ApplicationJob
   private
 
   def perform_contents(site_id, target_content_ids)
-    contents = Cms::Content.where(id: target_content_ids)
-    contents.each do |content|
-      script_name = content.model.underscore.pluralize.gsub(/^(.*?)\//, '\1/tool/')
-      ::Script.run("#{script_name}/rebuild", site_id: site_id, content_id: content.id)
-    end
+    ::Script.run("cms/tool/contents/rebuild", site_id: site_id, content_id: target_content_ids)
   end
 
   def perform_nodes(site_id, target_node_ids)

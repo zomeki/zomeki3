@@ -23,6 +23,7 @@ module Organization::OrganizationHelper
       tel_attend: -> { group_replace_tel_attend(group) },
       fax: -> { group_replace_fax(group) },
       email: -> { group_replace_email(group) },
+      email_link: -> { group_replace_email_link(group) },
       note: -> { group_replace_note(group) },
     }
 
@@ -89,6 +90,16 @@ module Organization::OrganizationHelper
   def group_replace_email(group)
     if (sg = group.sys_group) && sg.email.present?
       content_tag :span, sg.email, class: 'email'
+    else
+      ''
+    end
+  end
+
+  def group_replace_email_link(group)
+    if (sg = group.sys_group) && sg.email.present?
+      content_tag :span, class: 'email' do
+        mail_to sg.email
+      end
     else
       ''
     end

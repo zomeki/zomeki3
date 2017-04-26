@@ -102,7 +102,7 @@ yumリポジトリに追加します。
 
 データベースを初期化します。
 
-    # /usr/pgsql-9.5/bin/postgresql95-setup initdb
+    # export PGSETUP_INITDB_OPTIONS="--encoding=UTF8 --locale=ja_JP.UTF-8"; /usr/pgsql-9.5/bin/postgresql95-setup initdb
 
 ユーザ認証方法を変更します。
 
@@ -141,7 +141,7 @@ ZOMEKIをインストールします。
     # su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle config build.pg --with-pg-config=/usr/pgsql-9.5/bin/pg_config'
     # su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle install --path vendor/bundle --without development test'
 
-    # cp /var/www/zomeki/config/samples/zomeki_logrotate /etc/logrotate.d/.
+    # cp /var/www/zomeki/config/samples/logrotate /etc/logrotate.d/zomeki_logrotate
 
     # cp /var/www/zomeki/config/samples/reload_servers.sh /root/. && chmod 755 /root/reload_servers.sh
     # ROOT_CRON_TXT='/var/www/zomeki/config/samples/root_cron.txt'
@@ -153,15 +153,11 @@ ZOMEKIをインストールします。
 
 設定ファイルのサンプルをコピーして変更します。
 
-    # cp -p /var/www/zomeki/config/core.yml.sample /var/www/zomeki/config/core.yml
+    # su - zomeki -c 'cp -p /var/www/zomeki/config/original/*.yml /var/www/zomeki/config/'
     # vi /var/www/zomeki/config/core.yml
 ```
 uri: http://zomeki.example.com/    # すべて変更
 ```
-
-設定ファイルのサンプルをコピーします。
-
-    # cp -p /var/www/zomeki/config/sns_apps.yml.sample /var/www/zomeki/config/sns_apps.yml
 
 シークレットキーを設定します。
 
@@ -259,12 +255,12 @@ nginxを起動します。
 
 unicornを起動します。
 
-    # cp /var/www/zomeki/config/samples/zomeki_unicorn.service /usr/lib/systemd/system/.
+    # cp /var/www/zomeki/config/samples/unicorn.service /usr/lib/systemd/system/zomeki_unicorn.service
     # systemctl start zomeki_unicorn && systemctl enable zomeki_unicorn
 
 delayed_jobを起動します。
 
-    # cp /var/www/zomeki/config/samples/zomeki_delayed_job.service /usr/lib/systemd/system/.
+    # cp /var/www/zomeki/config/samples/delayed_job.service /usr/lib/systemd/system/zomeki_delayed_job.service
     # systemctl start zomeki_delayed_job && systemctl enable zomeki_delayed_job
 
 

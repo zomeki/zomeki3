@@ -31,8 +31,8 @@ class Survey::Form < ApplicationRecord
 
   after_initialize :set_defaults
 
-  after_save     Cms::Publisher::ContentCallbacks.new, if: :changed?
-  before_destroy Cms::Publisher::ContentCallbacks.new
+  after_save     Cms::Publisher::ContentRelatedCallbacks.new, if: :changed?
+  before_destroy Cms::Publisher::ContentRelatedCallbacks.new
 
   scope :public_state, -> { where(state: 'public') }
 
@@ -154,11 +154,11 @@ class Survey::Form < ApplicationRecord
     "#{node.public_uri}#{name}"
   end
 
-  def preview_uri(site: nil, mobile: false, params: {})
+  def preview_uri(site: nil, mobile: false, smart_phone: false, params: {})
     return nil unless public_uri(with_closed_preview: true)
     site ||= ::Page.site
     params = params.map{|k, v| "#{k}=#{v}" }.join('&')
-    path = "_preview/#{format('%04d', site.id)}#{mobile ? 'm' : ''}#{public_uri(with_closed_preview: true)}#{params.present? ? "?#{params}" : ''}"
+    path = "_preview/#{format('%04d', site.id)}#{mobile ? 'm' : smart_phone ? 's' : ''}#{public_uri(with_closed_preview: true)}#{params.present? ? "?#{params}" : ''}"
     "#{site.main_admin_uri}#{path}"
   end
 

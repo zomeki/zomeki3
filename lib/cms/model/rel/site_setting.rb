@@ -8,11 +8,14 @@ module Cms::Model::Rel::SiteSetting
   attr_accessor :in_setting_site_extension_upload_max_size
   attr_accessor :in_setting_site_allowed_attachment_type
   attr_accessor :in_setting_site_link_check
+  attr_accessor :in_setting_site_accessibility_check
   attr_accessor :in_setting_site_kana_talk
+  attr_accessor :in_setting_site_map_coordinate
 
   SITE_SETTINGS = [
     :basic_auth_state, :common_ssl, :allowed_attachment_type,
-    :admin_mail_sender, :file_upload_max_size, :extension_upload_max_size, :link_check, :kana_talk
+    :admin_mail_sender, :file_upload_max_size, :extension_upload_max_size, :link_check, :accessibility_check, :kana_talk,
+    :map_coordinate
   ]
 
   included do
@@ -46,12 +49,12 @@ module Cms::Model::Rel::SiteSetting
 
   def setting_site_admin_mail_sender
     setting = Cms::SiteSetting.where(:site_id => id, :name => 'admin_mail_sender').first
-    setting ? setting.value : 'noreply'
+    setting && setting.value.presence || 'noreply'
   end
 
   def setting_site_file_upload_max_size
     setting = Cms::SiteSetting.where(:site_id => id, :name => 'file_upload_max_size').first
-    setting ? setting.value.presence || 5 : 5;
+    setting && setting.value.presence || 5
   end
 
   def setting_site_extension_upload_max_size
@@ -61,7 +64,7 @@ module Cms::Model::Rel::SiteSetting
 
   def setting_site_allowed_attachment_type
     setting = Cms::SiteSetting.where(:site_id => id, :name => 'allowed_attachment_type').first
-    setting ? setting.value : 'gif,jpg,png,pdf,doc,docx,xls,xlsx,ppt,pptx,odt,ods,odp';
+    setting ? setting.value : '';
   end
 
   def setting_site_link_check
@@ -73,6 +76,15 @@ module Cms::Model::Rel::SiteSetting
     Cms::SiteSetting::LINK_CHECK_OPTIONS.rassoc(setting_site_link_check).try(:first)
   end
 
+  def setting_site_accessibility_check
+    setting = Cms::SiteSetting.where(:site_id => id, :name => 'accessibility_check').first
+    setting ? setting.value : 'enabled';
+  end
+
+  def setting_site_accessibility_check_label
+    Cms::SiteSetting::ACCESSIBILITY_CHECK_OPTIONS.rassoc(setting_site_accessibility_check).try(:first)
+  end
+
   def setting_site_kana_talk
     setting = Cms::SiteSetting.where(:site_id => id, :name => 'kana_talk').first
     setting ? setting.value : 'enabled';
@@ -80,6 +92,11 @@ module Cms::Model::Rel::SiteSetting
 
   def setting_site_kana_talk_label
     Cms::SiteSetting::KANA_TALK_OPTIONS.rassoc(setting_site_kana_talk).try(:first)
+  end
+
+  def setting_site_map_coordinate
+    setting = Cms::SiteSetting.where(:site_id => id, :name => 'map_coordinate').first
+    setting ? setting.value : nil;
   end
 
   def get_upload_max_size(ext)
@@ -116,7 +133,9 @@ module Cms::Model::Rel::SiteSetting
     @in_setting_site_extension_upload_max_size   = setting_site_extension_upload_max_size
     @in_setting_site_allowed_attachment_type     = setting_site_allowed_attachment_type
     @in_setting_site_link_check                  = setting_site_link_check
+    @in_setting_site_accessibility_check         = setting_site_accessibility_check
     @in_setting_site_kana_talk                   = setting_site_kana_talk
+    @in_setting_site_map_coordinate              = setting_site_map_coordinate
   end
 
   private

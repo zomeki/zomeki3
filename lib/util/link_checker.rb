@@ -42,37 +42,20 @@ class Util::LinkChecker
   def self.check_url(url)
     info_log "Checking #{url}"
 
-    require 'httpclient'
-    client = HTTPClient.new
-
-    res = client.head(url)
-    if res.redirect?
-      3.times do
-        break unless res.redirect?
-
-        uri = URI.parse(res.headers['Location'] || res.headers['location'])
-        next_url = unless uri.absolute?
-                     path = uri.path
-
-                     u = URI.parse(url)
-                     if path =~ /^\//
-                       u.path = path
-                     else
-                       u.path = '/' if u.path.blank?
-                       u.path.sub!(/[^\/]+$/, '')
-                       u.path.concat(path)
-                     end
-                     u.to_s
-                   else
-                     uri.to_s
-                   end
-
-        res = client.head(next_url)
-      end
+    conn = Faraday.new do |b|
+      b.use FaradayMiddleware::FollowRedirects, limit: 3
+      b.adapter Faraday.default_adapter
     end
-    {status: res.status, reason: res.reason, result: res.ok?}
+
+    uri = Addressable::URI.parse(url)
+    res = conn.head(uri.normalize) do |req|
+      req.headers['User-Agent'] = "CMS/#{Zomeki.version}"
+      req.options.timeout = 5
+      req.options.open_timeout = 5
+    end
+    { status: res.status, reason: Rack::Utils::HTTP_STATUS_CODES[res.status], result: res.success? }
   rescue => evar
     warn_log evar.message
-    {status: nil, reason: evar.message, result: false}
+    { status: nil, reason: evar.message, result: false }
   end
 end

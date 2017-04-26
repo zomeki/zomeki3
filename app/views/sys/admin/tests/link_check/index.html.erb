@@ -1,27 +1,34 @@
 <h2>リンクチェック動作確認</h2>
 
-<% if @errors.size > 0 %>
-<div id="errorExplanation" class="errorExplanation">
-  <p>次の項目を確認してください。</p>
-  <ul><% @errors.each do |err| %><li><%= err %></li><% end %></ul>
+<%- if @links.present? -%>
+<div class="noticeExplanation" id="noticeExplanation">
+  <h2>リンクチェック結果</h2>
+  <p>次のURLを確認しました。</p>
+  <ul>
+    <%- @links.each do |link| -%>
+      <li>
+        <%= link[:url] %>　
+        <%- if link[:result] -%>
+          <span class="success">成功</span>
+        <%- else -%>
+          <span class="failed">失敗 <%= link[:status] %>: <%= link[:reason] %></span>
+        <%- end -%>
+      </li>
+    <%- end -%>
+  </ul>
 </div>
-<% end %>
-
-<%= @checker.notice_messages %>
+<%- end -%>
 
 <%= form_tag do %>
-
 <table class="show">
   <tr>
     <th>URL一覧</th>
   </tr><tr>
     <td>
-      <%= text_area_tag "item[body]", @item[:body], :class => "body", :style => "height: 200px;" %><br />
+      <%= text_area_tag "item[body]", params.dig(:item, :body), class: 'body', style: 'height: 200px;' %><br />
       Proxy: <%= Core.proxy.nil? ? "指定なし" : Core.proxy.to_s %>
     </td>
   </tr>
 </table>
-
 <%= submit [["確認する", :confirm]] %>
-
 <% end %>

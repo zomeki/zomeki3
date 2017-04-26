@@ -3,7 +3,7 @@
 ## load config
 
 begin
-  load "#{Rails.root}/db/seeds/reset/zomeki.rb"
+  load "#{Rails.root}/db/seeds/reset.rb"
   @create_base = true
   core_uri   = Util::Config.load :core, :uri
   core_title = Util::Config.load :core, :title

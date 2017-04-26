@@ -64,10 +64,6 @@
 
 <%= render 'cms/public/_partial/inquiries/view', item: @item %>
 
-<%- if @content.blog_functions[:comment] -%>
-<%= render 'comments', item: @item %>
-<%- end -%>
-
 <%- if @item.links_in_string(body, false).any?{|l| l[:url] =~ /\.pdf$/i } -%>
 <%= render 'cms/public/_partial/adobe_reader' %>
 <%- end -%>

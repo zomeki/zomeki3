@@ -35,7 +35,6 @@ class GpArticle::Doc < ApplicationRecord
   FEATURE_1_OPTIONS = [['表示', true], ['非表示', false]]
   FEATURE_2_OPTIONS = [['表示', true], ['非表示', false]]
   QRCODE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
-  EVENT_WILL_SYNC_OPTIONS = [['同期する', 'enabled'], ['同期しない', 'disabled']]
 
   default_scope { where.not(state: 'archived') }
   scope :public_state, -> { where(state: 'public') }
@@ -80,13 +79,11 @@ class GpArticle::Doc < ApplicationRecord
                             }, class_name: 'Tag::Tag', join_table: 'gp_article_docs_tag_tags'
 
   has_many :holds, :as => :holdable, :dependent => :destroy
-  has_many :comments, :dependent => :destroy
 
   before_save :set_name
   before_save :set_published_at
   before_save :replace_public
   before_save :set_serial_no
-  before_destroy :keep_edition_relation
   after_destroy :close_page
 
   attr_accessor :link_check_results, :in_ignore_link_check
@@ -99,7 +96,7 @@ class GpArticle::Doc < ApplicationRecord
   validates :state, :presence => true
   validates :filename_base, :presence => true
 
-  validate :name_validity
+  validate :name_validity, if: -> { name.present? }
   validate :node_existence
   validate :event_dates_range
   validate :body_limit_for_mobile
@@ -293,30 +290,6 @@ class GpArticle::Doc < ApplicationRecord
     joins(creator: :group).where(groups[:id].in(group_ids))
   }
 
-  def public_comments
-    comments.public_state
-  end
-
-  def prev_edition
-    self.class.unscoped { super }
-  end
-
-  def prev_editions(docs=[])
-    docs << self
-    prev_edition.prev_editions(docs) if prev_edition
-    return docs
-  end
-
-  def next_edition
-    self.class.unscoped { super }
-  end
-
-  def next_editions(docs=[])
-    docs << self
-    next_edition.next_editions(docs) if next_edition
-    return docs
-  end
-
   def public_path
     return '' if public_uri.blank?
     "#{content.public_path}#{public_uri(without_filename: true)}#{filename_base}.html"
@@ -424,10 +397,6 @@ class GpArticle::Doc < ApplicationRecord
 
   def state_closed?
     state == 'finish'
-  end
-
-  def state_archived?
-    state == 'archived'
   end
 
   def close
@@ -608,7 +577,11 @@ class GpArticle::Doc < ApplicationRecord
   end
 
   def default_map_position
-    content.setting_extra_value(:map_relation, :lat_lng).presence || super
+    [content.setting_extra_value(:map_relation, :lat_lng), content.site.setting_site_map_coordinate].lazy.each do |pos|
+      p = pos.to_s.split(',').map(&:strip)
+      return p if p.size == 2
+    end
+    super
   end
 
   def links_in_body(all=false)
@@ -681,10 +654,6 @@ class GpArticle::Doc < ApplicationRecord
     next_edition && state_public?
   end
 
-  def was_replaced?
-    prev_edition && (state_public? || state_closed?)
-  end
-
   def qrcode_visible?
     return false unless content && content.qrcode_related?
     return false unless self.qrcode_state == 'visible'
@@ -738,14 +707,6 @@ class GpArticle::Doc < ApplicationRecord
     end
   end
 
-  def event_will_sync?
-    event_will_sync == 'enabled'
-  end
-
-  def event_will_sync_text
-    EVENT_WILL_SYNC_OPTIONS.detect{|o| o.last == event_will_sync }.try(:first).to_s
-  end
-
   def event_state_visible?
     event_state == 'visible'
   end
@@ -760,21 +721,34 @@ class GpArticle::Doc < ApplicationRecord
     content.lang_options.rassoc(lang).try(:first)
   end
 
+  def link_to_options
+    if target.present?
+      if href.present?
+        if target == 'attached_file'
+          if (file = files.find_by(name: href))
+            ["#{public_uri}file_contents/#{file.name}", target: '_blank']
+          else
+            nil
+          end
+        else
+          [href, target: target]
+        end
+      else
+        nil
+      end
+    else
+      [public_uri]
+    end
+  end
+
   private
 
   def name_validity
-    if prev_edition
-      self.name = prev_edition.name
-      return
-    end
+    errors.add(:name, :invalid) if name !~ /^[\-\w]*$/
 
-    errors.add(:name, :invalid) if self.name && self.name !~ /^[\-\w]*$/
-
-    if (doc = self.class.where(name: self.name, state: self.state, content_id: self.content.id).first)
-      unless doc.id == self.id || state_archived?
-        errors.add(:name, :taken) unless state_public? && prev_edition.try(:state_public?)
-      end
-    end
+    doc = self.class.where(content_id: content_id, name: name)
+    doc = doc.where.not(serial_no: serial_no) if serial_no
+    errors.add(:name, :taken) if doc.exists?
   end
 
   def set_name
@@ -808,7 +782,6 @@ class GpArticle::Doc < ApplicationRecord
     return unless content
 
     self.qrcode_state = content.qrcode_default_state if self.has_attribute?(:qrcode_state) && self.qrcode_state.nil?
-    self.event_will_sync ||= content.event_sync_default_will_sync if self.has_attribute?(:event_will_sync)
     self.feature_1 = content.feature_settings[:feature_1] if self.has_attribute?(:feature_1) && self.feature_1.nil?
     self.feature_2 = content.feature_settings[:feature_2] if self.has_attribute?(:feature_2) && self.feature_2.nil?
 
@@ -861,12 +834,12 @@ class GpArticle::Doc < ApplicationRecord
   end
 
   def extract_links(html, all)
-    links = Nokogiri::HTML.parse(html).css('a[@href]').map {|a| {body: a.text, url: a.attribute('href').value} }
+    links = Nokogiri::HTML.parse(html).css('a[@href]')
+                          .map { |a| { body: a.text, url: a.attribute('href').value } }
     return links if all
     links.select do |link|
-      uri = URI.parse(link[:url])
-      next true unless uri.absolute?
-      [URI::HTTP, URI::HTTPS, URI::FTP].include?(uri.class)
+      uri = Addressable::URI.parse(link[:url])
+      !uri.absolute? || uri.scheme.to_s.downcase.in?(%w(http https))
     end
   rescue => evar
     warn_log evar.message
@@ -875,14 +848,13 @@ class GpArticle::Doc < ApplicationRecord
 
   def check_links(links)
     links.map{|link|
-      uri = URI.parse(link[:url])
+      uri = Addressable::URI.parse(link[:url])
       url = unless uri.absolute?
               next unless uri.path =~ /^\//
               "#{content.site.full_uri.sub(/\/$/, '')}#{uri.path}"
             else
               uri.to_s
             end
-
       res = Util::LinkChecker.check_url(url)
       {body: link[:body], url: url, status: res[:status], reason: res[:reason], result: res[:result]}
     }.compact
@@ -908,7 +880,7 @@ class GpArticle::Doc < ApplicationRecord
   end
 
   def validate_accessibility_check
-    return unless Zomeki.config.application['cms.enable_accessibility_check']
+    return if content.site.setting_site_accessibility_check != 'enabled'
 
     modify_accessibility if in_modify_accessibility_check == '1'
     results = check_accessibility
@@ -929,10 +901,5 @@ class GpArticle::Doc < ApplicationRecord
 
   def replace_public
     prev_edition.destroy if state_public? && prev_edition
-  end
-
-  def keep_edition_relation
-    next_edition.update_column(:prev_edition_id, prev_edition_id) if next_edition
-    return true
   end
 end

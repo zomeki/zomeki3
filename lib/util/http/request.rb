@@ -1,85 +1,46 @@
 class Util::Http::Request
-  require 'open-uri'
-  require "resolv-replace"
-  require 'timeout'
-
-  def self.send(uri, options = {})
-    limit    = options.delete(:timeout) || 30
-    status   = nil
-    body     = ''
-
-    settings = { :proxy => Core.proxy }.merge(options)
-
-    begin
-      Timeout.timeout(limit) do
-        open(uri, settings) do |f|
-          status = f.status[0].to_i
-          f.each_line {|line| body += line}
-        end
+  def self.head(url, options = {})
+    uri = Addressable::URI.parse(url).normalize
+    rescue_timeout do
+      Faraday.head(uri) do |req|
+        set_request_from_options(req, options)
       end
-    rescue Timeout::Error
-      status = 404
-      #TimeoutError
-    rescue
-      status = 404
     end
-
-    return Util::Http::Response.new({:status => status, :body => body})
   end
 
-  require 'uri'
-  require "net/http"
-
-  def self.head(uri, options = {})
-    uri = uri.gsub(/#.*/, '')
-
-    header = options[:header] || {}
-    header['User-Agent'] ||= "Mozilla/5.0 (CMS/#{Cms.version})"
-
-    parsed = URI.parse(uri)
-    host   = parsed.host
-    path   = parsed.path.to_s == '' ? '/' : parsed.path
-    port   = parsed.port || (parsed.scheme == 'https' ? 443 : 80)
-    path  += '?' + parsed.query if parsed.query
-
-    proxy = (Core.proxy.class == String) ? URI.parse(Core.proxy) : URI.parse("")
-    http  = Net::HTTP.new(host, port, proxy.host, proxy.port)
-    http.use_ssl = true if parsed.scheme == 'https'
-    http.open_timeout = 5
-    http.read_timeout = 5
-    http.start() do
-      return http.head(path, header)
+  def self.get(url, options = {})
+    uri = Addressable::URI.parse(url).normalize
+    rescue_timeout do
+      Faraday.get(uri) do |req|
+        set_request_from_options(req, options)
+      end
     end
-    nil
-  rescue => e
-    nil
   end
 
-  def self.post(uri, body, options = {})
-    uri = uri.gsub(/#.*/, '')
-
-    header = options[:header] || {}
-    header['User-Agent'] ||= "Mozilla/5.0 (CMS/#{Cms.version})"
-
-    parsed = URI.parse(uri)
-    host   = parsed.host
-    path   = parsed.path.to_s == '' ? '/' : parsed.path
-    port   = parsed.port || (parsed.scheme == 'https' ? 443 : 80)
-    path  += '?' + parsed.query if parsed.query
-
-    proxy = (Core.proxy.class == String) ? URI.parse(Core.proxy) : URI.parse("")
-    http  = Net::HTTP.new(host, port, proxy.host, proxy.port)
-    http.use_ssl = true if parsed.scheme == 'https'
-    http.open_timeout = 5
-    http.read_timeout = 5
-    http.start() do
-      if body.class == Hash
-        body = Util::Http::QueryString.build_query(body).gsub(/^\?/, '')
+  def self.post(url, body, options = {})
+    uri = Addressable::URI.parse(url).normalize
+    rescue_timeout do
+      Faraday.post(uri, body) do |req|
+        set_request_from_options(req, options)
       end
-      return http.post(path, body, header)
     end
-    nil
+  end
+
+  private
+
+  def self.rescue_timeout
+    yield
+  rescue Faraday::TimeoutError => e
+    Faraday::Response.new(status: 408)
   rescue => e
-    nil
+    warn_log e
+    Faraday::Response.new
+  end
+
+  def self.set_request_from_options(req, options)
+    req.headers = options[:header] if options[:header]
+    req.headers['User-Agent'] ||= "Mozilla/5.0 (CMS/#{Zomeki.version})"
+    req.options.timeout = options[:timeout] || 30
+    req.options.open_timeout = options[:timeout] || 30
   end
 end

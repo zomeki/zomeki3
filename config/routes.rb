@@ -71,9 +71,6 @@ Rails.application.routes.draw do
   get "#{admin_prefix}/password/edit" => 'sys/admin/account#edit_password', as: :edit_admin_password
   put "#{admin_prefix}/password" => 'sys/admin/account#update_password', as: :admin_password
 
-  # Api
-  match '_api/*api_path' => 'cms/public/api#receive', as: :api_receive, via: [:get, :post]
-
   # Tool
   get "/_tools/captcha/index"  => "simple_captcha#index"
   get "/_tools/captcha/talk"   => "simple_captcha#talk"
@@ -82,10 +79,12 @@ Rails.application.routes.draw do
   get "_files/*path"           => "cms/public/files#down"
 
   # Talking
-  get "_public/*path.html.mp3"         => "cms/public/talk#down_mp3"
-  get "_public/*path.html.m3u"         => "cms/public/talk#down_m3u"
-  get "_public/*path.html.r.mp3"       => "cms/public/talk#down_mp3"
-  get "_public/*path.html.r.m3u"       => "cms/public/talk#down_m3u"
+  %w(_public _preview).each do |mode|
+    get "#{mode}/*path.html.mp3"         => "cms/public/talk#down_mp3"
+    get "#{mode}/*path.html.m3u"         => "cms/public/talk#down_m3u"
+    get "#{mode}/*path.html.r.mp3"       => "cms/public/talk#down_mp3"
+    get "#{mode}/*path.html.r.m3u"       => "cms/public/talk#down_m3u"
+  end
 
   # Modules
   Dir.glob("#{Rails.root}/config/modules/**/routes.rb").each do |file|

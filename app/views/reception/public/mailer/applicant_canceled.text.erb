@@ -1,3 +1,5 @@
-「<%= @course.title %>」のお申込みをキャンセルしました。
+<%= @content.canceled_upper_reply_text if @content.canceled_upper_reply_text.present? %>
 
 <%= render 'reception/admin/mailer/applicant', applicant: @applicant %>
+
+<%= @content.canceled_lower_reply_text if @content.canceled_lower_reply_text.present? %>

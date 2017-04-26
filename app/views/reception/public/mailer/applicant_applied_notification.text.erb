@@ -1,6 +1,10 @@
 「<%= @course.title %>」へお申込みが届きました。
 
+<%= @content.applied_upper_reply_text if @content.applied_upper_reply_text.present? %>
+
 <%= render 'reception/admin/mailer/applicant', applicant: @applicant %>
+
+<%= @content.applied_lower_reply_text if @content.applied_lower_reply_text.present? %>
 
 次のURLから確認
 <%= @applicant_admin_uri %>

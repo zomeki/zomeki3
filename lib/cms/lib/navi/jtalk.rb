@@ -15,33 +15,16 @@ class Cms::Lib::Navi::Jtalk
     talk_text_limit = Zomeki.config.application['cms.talk_text_limit'].to_i
     talk_thread_num = Zomeki.config.application['cms.talk_thread_num'].to_i
 
-
-    text    = nil
-    options = {}
-
-    if args[0].class == String
-      text    = args[0]
-      options = args[1] || {}
-    elsif args[0].class == Hash
-      options = args[0]
-    end
-
-    if options[:uri]
-      options[:uri].sub!(/\/index\.html$/, '/')
-      res = Util::Http::Request.get(options[:uri])
-      text = res.status == 200 ? res.body : nil
-    end
+    text    = args[0]
+    options = args[1] || {}
     return false unless text
+
+    text = self.class.make_text(text, options[:site_id])
+    text = text.slice(0..talk_text_limit) if talk_text_limit < text.length
+    return false if text.blank?
 
     texts = []
     buf   = ""
-
-    site_id = options[:site_id] rescue nil
-
-    #
-    text = self.class.make_text(text, site_id)
-    text = text.slice(0..talk_text_limit) if talk_text_limit < text.length
-    return false if text.blank?
 
     text.split(/[ 。]/).each do |str|
       buf << " " if buf.present?

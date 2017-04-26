@@ -6,7 +6,6 @@ class GpCalendar::Event < ApplicationRecord
   include GpCategory::Model::Rel::Category
 
   include StateText
-  include GpCalendar::EventSync
 
   STATE_OPTIONS = [['公開中', 'public'], ['非公開', 'closed']]
   TARGET_OPTIONS = [['同一ウィンドウ', '_self'], ['別ウィンドウ', '_blank']]
@@ -44,13 +43,6 @@ class GpCalendar::Event < ApplicationRecord
     events = self.arel_table
 
     rel = self.where(events[:content_id].eq(content.id))
-    if criteria[:imported]
-      rel = if criteria[:imported].in?(%w!true yes!)
-              rel.where(events[:sync_source_host].not_eq(nil))
-            else
-              rel.where(events[:sync_source_host].eq(nil))
-            end
-    end
     rel = rel.where(events[:name].matches("%#{criteria[:name]}%")) if criteria[:name].present?
     rel = rel.where(events[:title].matches("%#{criteria[:title]}%")) if criteria[:title].present?
     rel = rel.where(events[:started_on].lteq(criteria[:date])
@@ -89,14 +81,6 @@ class GpCalendar::Event < ApplicationRecord
 
     return rel
   }
-
-
-  def self.state_options(synced: nil)
-    so = []
-    so << ['同期済', 'synced'] if synced
-    so += STATE_OPTIONS.dup
-    so
-  end
 
   def kind
     'event'
@@ -150,7 +134,6 @@ class GpCalendar::Event < ApplicationRecord
 
   def set_defaults_from_content
     return unless content
-    self.will_sync ||= content.event_sync_default_will_sync if self.has_attribute?(:will_sync)
   end
 
   def set_name
@@ -169,5 +152,32 @@ class GpCalendar::Event < ApplicationRecord
     self.started_on = self.ended_on if self.started_on.blank?
     self.ended_on = self.started_on if self.ended_on.blank?
     errors.add(:ended_on, "が#{self.class.human_attribute_name :started_on}を過ぎています。") if self.ended_on < self.started_on
+  end
+
+  class << self
+    def from_doc(doc, calendar_content = nil)
+      options = doc.link_to_options
+      doc_uri = unless options.kind_of?(Array)
+                  doc.public_uri
+                else
+                  options[0].to_s
+                end
+
+      event = self.new(
+        title: doc.title,
+        href: doc_uri,
+        target: '_self',
+        started_on: doc.event_started_on,
+        ended_on: doc.event_ended_on,
+        description: doc.summary,
+        content: calendar_content,
+        will_sync: 'disabled'
+      )
+      event.categories = doc.event_categories
+      event.files = doc.files
+      event.doc = doc
+      event.readonly!
+      event
+    end
   end
 end

@@ -17,7 +17,6 @@ class GpCategory::TemplateModule < ApplicationRecord
                                         ['自カテゴリのみ+組織（グループで分類）',                          'docs_6'],
                                         ['自カテゴリ直下のカテゴリ（カテゴリで分類）',                     'docs_7'],
                                         ['自カテゴリ直下のカテゴリ+1階層目カテゴリ表示（カテゴリで分類）', 'docs_8']]}
-  MODULE_TYPE_FEATURE_OPTIONS = [['全記事', ''], ['新着記事', 'feature_1'], ['記事', 'feature_2']]
 
   belongs_to :content, :foreign_key => :content_id, :class_name => 'GpCategory::Content::CategoryType'
   validates :content_id, presence: true
@@ -27,26 +26,38 @@ class GpCategory::TemplateModule < ApplicationRecord
   after_save     GpCategory::Publisher::TemplateModuleCallbacks.new, if: :changed?
   before_destroy GpCategory::Publisher::TemplateModuleCallbacks.new
 
-  validates :name, presence: true, uniqueness: { scope: :content_id }
+  validates :name, presence: true, uniqueness: { scope: :content_id },
+                   format: { with: /\A[0-9A-Za-z\-_]+\z/, if: -> { name.present? } }
   validates :title, presence: true
 
   def module_type_text
     MODULE_TYPE_OPTIONS.values.flatten(1).detect{|o| o.last == module_type }.try(:first).to_s
   end
 
-  def module_type_feature_text
-    MODULE_TYPE_FEATURE_OPTIONS.detect{|o| o.last == module_type_feature }.try(:first).to_s
-  end
-
   def wrapper_tag_text
     WRAPPER_TAG_OPTIONS.detect{|o| o.last == wrapper_tag }.try(:first).to_s
+  end
+
+  def gp_article_content_ids=(val)
+    self.module_type_feature = YAML.dump(val.select(&:present?).map(&:to_i))
+  end
+
+  def gp_article_content_ids
+    YAML.load(module_type_feature.presence || '[]')
+  end
+
+  def gp_article_contents
+    if gp_article_content_ids.present?
+      GpArticle::Content::Doc.where(id: gp_article_content_ids).order(:id)
+    else
+      GpArticle::Content::Doc.none
+    end
   end
 
   private
 
   def set_defaults
     self.module_type ||= MODULE_TYPE_OPTIONS.values.flatten(1).first.last if self.has_attribute?(:module_type)
-    self.module_type_feature ||= MODULE_TYPE_FEATURE_OPTIONS.first.last if self.has_attribute?(:module_type_feature)
     self.wrapper_tag ||= WRAPPER_TAG_OPTIONS.first.last if self.has_attribute?(:wrapper_tag)
     self.num_docs ||= 10 if self.has_attribute?(:num_docs)
   end

@@ -21,12 +21,15 @@ class Reception::Applicant < ApplicationRecord
     after_save :update_applicant_token
   end
 
+  validates :open_id, presence: true
+  validates :state, presence: true
   validates :name, presence: true
   validates :kana, presence: true
   validates :tel, presence: true
   validates :email, presence: { if: :in_register_from_public },
                     format: { with: /\A.+@.+\z/, if: -> { email.present? } },
                     confirmation: true 
+  validates :applied_from, presence: true
   validate :validate_capacity_for_admin, if: :in_register_from_admin
   validate :validate_capacity_for_public, if: :in_register_from_public
 

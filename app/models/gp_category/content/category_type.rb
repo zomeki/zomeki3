@@ -109,4 +109,10 @@ class GpCategory::Content::CategoryType < Cms::Content
   def index_template
     templates.find_by(id: setting_value(:index_template_id))
   end
+
+  def gp_article_contents
+    doc_content_ids = Cms::ContentSetting.where(name: 'gp_category_content_category_type_id', value: id)
+                                         .map(&:content_id)
+    GpArticle::Content::Doc.where(id: doc_content_ids).order(:id)
+  end
 end

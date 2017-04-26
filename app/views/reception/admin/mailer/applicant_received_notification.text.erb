@@ -1,10 +1,12 @@
-「<%= @course.title %>」の受付が完了しました。
+<%= @content.received_upper_reply_text if @content.received_upper_reply_text.present? %>
 
 <%= render 'applicant', applicant: @applicant %>
 
 以下のURLからお申込みをキャンセルできます。
 キャンセルには上記の受付番号が必要となります。
 <%= "#{@course.public_full_uri}/applicants/#{@applicant.token}/cancel" %>
+
+<%= @content.received_lower_reply_text if @content.received_lower_reply_text.present? %>
 
 次のURLから確認
 <%= @applicant_admin_uri %>

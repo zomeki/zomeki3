@@ -56,11 +56,29 @@
 </table>
 <%- end -%>
 
+<%- if @item.name == 'accessibility_check' -%>
+<table class="show">
+  <tr>
+    <th><%= @site.locale(:setting_accessibility_check) %></th>
+    <td><%= f.radio_buttons(:in_setting_site_accessibility_check, @item.class::ACCESSIBILITY_CHECK_OPTIONS) %></td>
+  </tr>
+</table>
+<%- end -%>
+
 <%- if @item.name == 'kana_talk' -%>
 <table class="show">
   <tr>
     <th><%= @site.locale(:setting_kana_talk) %></th>
     <td><%= f.radio_buttons(:in_setting_site_kana_talk, @item.class::KANA_TALK_OPTIONS) %></td>
+  </tr>
+</table>
+<%- end -%>
+
+<%- if @item.name == 'map_coordinate' -%>
+<table class="show">
+  <tr>
+    <th><%= @site.locale(:setting_map_coordinate) %></th>
+    <td><%= f.text_field(:in_setting_site_map_coordinate, size: "60") %> （緯度,経度）</td>
   </tr>
 </table>
 <%- end -%>

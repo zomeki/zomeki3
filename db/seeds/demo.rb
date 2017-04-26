@@ -1,9 +1,15 @@
 # encoding: utf-8
 
-# encoding: utf-8
+Rails.application.eager_load!
+
+# delete publisher callbacks
+ApplicationRecord.descendants.each do |model|
+  callbacks = model._save_callbacks.select { |c| c.filter.is_a?(PublisherCallbacks) }
+  callbacks.each { |c| model._save_callbacks.delete(c) }
+end
 
 begin
-  load "#{Rails.root}/db/seeds/reset/zomeki.rb"
+  load "#{Rails.root}/db/seeds/reset.rb"
   @create_base = true
   core_uri   = Util::Config.load :core, :uri
   core_title = Util::Config.load :core, :title

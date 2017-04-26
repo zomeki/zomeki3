@@ -20,6 +20,13 @@
       <span class="note">※日本語でわかりやすく</span></th>
     <td>
       <%= f.text_field :title, class: 'string', size: 55 %>
+    </td>
+  </tr>
+  <tr>
+    <th><%= f.label :alt_text %><br />
+      <span class="note">※日本語でわかりやすく</span></th>
+    <td>
+      <%= f.text_field :alt_text, class: 'string', size: 55 %>
       <%= f.submit(submit_label) %>
     </td>
   </tr>

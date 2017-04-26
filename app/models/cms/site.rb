@@ -102,12 +102,15 @@ class Cms::Site < ApplicationRecord
   end
 
   def root_path
-    dir = format('%04d', id)
-    Rails.root.join("sites/#{dir}")
+    Rails.root.join("sites/#{format('%04d', id)}").to_s
   end
 
   def public_path
     "#{root_path}/public"
+  end
+
+  def public_themes_path
+    "#{root_path}/public/_themes"
   end
 
   def public_smart_phone_path
@@ -387,7 +390,7 @@ class Cms::Site < ApplicationRecord
                         directory: 1, name: '/', title: name)
     top = nodes.create(concept: concepts.first, state: 'public', published_at: Time.current,
                        parent_id: node.id, route_id: node.id, model: 'Cms::Page',
-                       directory: 0, name: 'index.html', title: name, body: 'ZOMEKI')
+                       directory: 0, name: 'index.html', title: name, body: Core.title)
 
     update_column(:node_id, node.id)
   end

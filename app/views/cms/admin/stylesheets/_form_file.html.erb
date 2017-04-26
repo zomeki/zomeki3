@@ -1,0 +1,16 @@
+<table class="show">
+  <tr>
+    <th>ファイル名</th>
+    <td><%= f.text_field :name, class: "nameEn" %></td>
+  </tr>
+</table>
+<%- if @item.text_file? -%>
+<table class="show">
+  <tr>
+    <th>内容</th>
+  </tr>
+  <tr>
+    <td><%= f.text_area :body, class: 'body pre monospace', style: "height: 400px;" %></td>
+  </tr>
+</table>
+<%- end -%>

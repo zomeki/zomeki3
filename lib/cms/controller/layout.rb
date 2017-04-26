@@ -117,18 +117,17 @@ module Cms::Controller::Layout
 
     ## render the data/text
     Cms::Lib::Layout.find_data_texts(body, concepts).each do |name, item|
-      data = item.body
-      body.gsub!("[[text/#{name}]]", data)
+      body.gsub!("[[text/#{name}]]", item.body)
     end
 
     ## render the data/file
     Cms::Lib::Layout.find_data_files(body, concepts).each do |name, item|
-      data = ''
-      if item.image_file?
-        data = '<img src="' + item.public_uri + '" alt="' + item.title + '" title="' + item.title + '" />'
-      else
-        data = '<a href="' + item.public_uri + '" class="' + item.css_class + '" target="_blank">' + item.united_name + '</a>'
-      end
+      data =
+        if item.image_file?
+          %Q|<img src="#{item.public_uri}" alt="#{item.alt_text}" title="#{item.title}" />|
+        else
+          %Q|<a href="#{item.public_uri}" class="#{item.css_class}" target="_blank">#{item.united_name}</a>|
+        end
       body.gsub!("[[file/#{name}]]", data)
     end
 
@@ -181,64 +180,23 @@ module Cms::Controller::Layout
 #      end
 #    end
 
-#    dump body
-    body = convert_ssl_uri(body)
-
     body = last_convert_body(body)
 
     ## render the true layout
-    self.response_body = render_to_string(
+    body = render_to_string(
       html: body.to_s.force_encoding('UTF-8').html_safe,
       layout: 'layouts/public/base'
     )
+
+    self.response_body = convert_ssl_uri(body)
   end
 
   def convert_ssl_uri(body)
     return body if Core.request_uri =~ /^\/_preview\//
     return body unless Page.site.use_common_ssl?
 
-    # フォームへのリンクをhttpsに、その他はhttpに変換
-    form_nodes = Cms::Node.where(model: 'Survey::Form', site_id: Page.site.id)
-    form_nodes = form_nodes.select {|f| Survey::Content::Form.find_by(id: f.content.id).use_common_ssl? }
-    form_nodes = form_nodes.map{|f| f.public_uri }
-    unless form_nodes.blank?
-      body_doc = Nokogiri::HTML.fragment(body)
-      ssl_uri = Page.site.full_ssl_uri.sub(/\/\z/, '')
-      body_doc.css(*form_nodes.map{|n| %Q!a[href^="#{n}"]! }).each do |a_tag|
-        a_tag.set_attribute('href', "#{ssl_uri}#{a_tag.attribute('href')}")
-      end
-      body_doc.css(*form_nodes.map{|n| %Q!form[action^="#{n}"]! }).each do |form_tag|
-        form_tag.set_attribute('action', "#{ssl_uri}#{form_tag.attribute('action')}")
-      end
-
-      site_full_uri = Page.site.full_uri.sub(/\/\z/, '')
-      if Page.current_node.model == 'Survey::Form'
-        body_doc.css('a[href^="/"]').each do |a_tag|
-          href = a_tag.attribute('href').to_s
-          a_tag.set_attribute('href', "#{site_full_uri}#{href}") unless href =~ Regexp.new("\\A#{form_nodes.join('|')}")
-        end
-        body_doc.css('area[href^="/"]').each do |a_tag|
-          href = a_tag.attribute('href').to_s
-          a_tag.set_attribute('href', "#{site_full_uri}#{href}") unless href =~ Regexp.new("\\A#{form_nodes.join('|')}")
-        end
-        body_doc.css('link[href^="/"]').each do |link_tag|
-          href = link_tag.attribute('href').to_s
-          link_tag.set_attribute('href', "#{ssl_uri}#{href}") if href =~ /^\/_(layouts|themes|file|emfiles)/
-        end
-        body_doc.css('img[src^="/"]').each do |src_tag|
-          src = src_tag.attribute('src').to_s
-          src_tag.set_attribute('src', "#{ssl_uri}#{src}") if src =~ /^\/_(layouts|themes|file|emfiles)/
-        end
-        body_doc.css('script[src^="/"]').each do |src_tag|
-          src = src_tag.attribute('src').to_s
-          src_tag.set_attribute('src', "#{ssl_uri}#{src}") if src =~ /^\/_(layouts|themes|file|emfiles)/
-        end
-      end
-      body = body_doc.to_s
-    end
-
-
-    return body
+    replacer = Cms::Lib::SslLinkReplacer.new
+    replacer.run(body, site: Page.site, current_path: Page.current_node.public_uri)
   end
 
   def last_convert_body(body)

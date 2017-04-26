@@ -1,0 +1,53 @@
+sys:
+  # 暗号化パスワード
+  crypt_pass: pass
+
+  # 承認者候補に他所属の管理者を表示
+  recognizers_include_admin: false
+
+  # 静的ファイルの書き出しを無効化
+  clean_statics: false
+
+  # 書き出しファイル転送設定
+  log_closed_page: false
+  transfer_to_publish: false
+  transfer_opts: "-rlptvz --delete"
+  transfer_opt_exclude: "config/rsync/public_exclude.lst"
+  transfer_opt_include: "config/rsync/public_include.lst"
+  transfer_opt_remote_shell: "ssh -p 22"
+
+  # ファイルからのテキスト抽出
+  file_text_extraction: false
+
+cms:
+  # ページ数付きページ書き出し数
+  publish_more_pages: 10
+
+  # Kana settings
+  mecab_index: "/usr/local/libexec/mecab/mecab-dict-index"
+  mecab_dic: "/usr/local/lib/mecab/dic/ipadic"
+
+  # Talk settings
+  sox_bin: "/usr/bin/sox"
+  lame_bin: "/usr/local/bin/lame"
+  #lame_opts: "-q 5 -V 4 --silent" # HQ
+  lame_opts: "-q 7 -V 9 --silent" # LQ
+  talk_bin: "/usr/local/bin/open_jtalk"
+  talk_dic: "/usr/local/share/open_jtalk/dic"
+  talk_voice: "config/voices/mei_normal/mei_normal.htsvoice"
+  #talk_opts: "-s 48000 -p 240 -r 1.1" # HQ
+  talk_opts: "-s 40000 -p 200 -a 0.47 -r 1.1" # LQ
+  talk_strlen: 100
+  talk_text_limit: 102400
+  talk_thread_num: 2
+
+  # 地図デフォルト座標
+  default_map_coordinate: "35.702708,139.560831"
+
+gp_article:
+  # 携帯用内容制限[Bytes]
+  body_limit_for_mobile: 163840
+
+upload:
+  # アップロード時に日本語ファイル名を許可
+  allow_japanese_filename: false

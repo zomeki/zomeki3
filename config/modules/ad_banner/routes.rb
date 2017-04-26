@@ -40,4 +40,9 @@ ZomekiCMS::Application.routes.draw do
     get 'node_banners/:file_base.:file_ext' => 'public/node/banners#index'
     get 'node_banners/:token' => 'public/node/banners#index'
   end
+
+  ## api
+  scope "_api/#{mod}", :module => mod, :as => '' do
+    get 'piece_banners' => 'public/api/piece/banners#index'
+  end
 end

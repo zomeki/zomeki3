@@ -3,7 +3,7 @@ class Script
   cattr_reader :options
 
   def self.run_from_web(path, options = {})
-    unless proc = Sys::Process.lock(name: path, site_id: options.delete(:site_id), options: options, lock_by: :site)
+    unless proc = Sys::Process.lock(name: path, site_id: options[:site_id], options: options.except(:site_id), lock_by: :site)
       raise "プロセスが既に実行されています。"
     end
 

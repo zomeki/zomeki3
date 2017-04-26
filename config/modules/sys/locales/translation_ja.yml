@@ -105,6 +105,7 @@ ja:
         file: "ファイル"
         name: "保存ファイル名"
         title: "表示ファイル名"
+        alt_text: "代替テキスト"
 
       sys/operation_log:
         id: "ID"
@@ -143,3 +144,12 @@ ja:
         note: "備考"
         sort_no: "並び順"
         created_at: "作成日時"
+
+  activemodel:
+    attributes:
+      sys/storage/entry:
+        name: "エントリ"
+      sys/storage/directory:
+        name: "ディレクトリ名"
+      sys/storage/file:
+        name: "ファイル名"

@@ -2,7 +2,7 @@
 map = item.maps.first || item.maps.build(name: '1')
 (3 - map.markers.size).times { map.markers.build }
 
-default_position = item.default_map_position.split(/[ ]*,[ ]*/)
+default_position = item.default_map_position
 map_lat  = map.map_lat.presence || default_position[0]
 map_lng  = map.map_lng.presence || default_position[1]
 map_zoom = map.map_zoom.presence || 14

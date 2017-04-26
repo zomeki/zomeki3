@@ -1,0 +1,14 @@
+/var/www/zomeki/log/*.log {
+  compress
+  daily
+  dateext
+  delaycompress
+  missingok
+  notifempty
+  rotate 7
+
+  lastaction
+    pid=/var/www/zomeki/tmp/pids/unicorn.pid
+    test -s $pid && kill -USR1 "$(cat $pid)"
+  endscript
+  }

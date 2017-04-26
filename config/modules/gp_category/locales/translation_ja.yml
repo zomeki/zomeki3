@@ -38,6 +38,7 @@ ja:
         name: モジュールID
         title: モジュール名
         module_type: モジュール種別
+        gp_article_content_ids: 記事コンテンツ
         wrapper_tag: タグ
         doc_style: 記事表示形式
         num_docs: 表示件数

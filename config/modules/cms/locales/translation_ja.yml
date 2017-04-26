@@ -43,7 +43,9 @@ ja:
         setting_file_upload_max_size: "添付ファイル最大サイズ"
         setting_extension_upload_max_size: "拡張子別アップロードサイズ"
         setting_link_check: "リンクチェック機能"
+        setting_accessibility_check: "アクセシビリティチェック機能"
         setting_kana_talk: "ふりがな・音声"
+        setting_map_coordinate: "地図/デフォルト座標"
         og_type: タイプ
         og_title: タイトル
         og_description: 説明
@@ -164,6 +166,7 @@ ja:
         name: "保存ファイル名"
         title: "表示ファイル名"
         size: "サイズ"
+        alt_text: "代替テキスト"
 
       cms/data_file_node:
         concept_id: "コンセプト"

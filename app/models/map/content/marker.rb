@@ -14,16 +14,12 @@ class Map::Content::Marker < Cms::Content
     markers.public_state
   end
 
-  def latitude
-    lat_lng = setting_value(:lat_lng).to_s.split(',')
-    return '35.702708' unless lat_lng.size == 2 # Mitaka
-    lat_lng.first.strip
-  end
-
-  def longitude
-    lat_lng = setting_value(:lat_lng).to_s.split(',')
-    return '139.560831' unless lat_lng.size == 2 # Mitaka
-    lat_lng.last.strip
+  def default_map_position
+    [setting_value(:lat_lng), site.setting_site_map_coordinate].lazy.each do |pos|
+      p = pos.to_s.split(',').map(&:strip)
+      return p if p.size == 2
+    end
+    Zomeki.config.application["cms.default_map_coordinate"].to_s.split(',').map(&:strip)
   end
 
   def categories
@@ -102,6 +98,30 @@ class Map::Content::Marker < Cms::Content
       end
     else
       markers
+    end
+  end
+
+  def public_marker_docs(specified_category = nil)
+    contents = GpArticle::Content::Doc.arel_table
+    content_settings = Cms::ContentSetting.arel_table
+    doc_content_ids = GpArticle::Content::Doc.joins(:settings)
+                                             .where(contents[:site_id].eq(site_id))
+                                             .where(content_settings[:name].eq('map_relation'))
+                                             .where(content_settings[:value].eq('enabled'))
+                                             .select { |d| d.setting_extra_value(:map_relation, :map_content_id) == id }
+                                             .map(&:id)
+    if doc_content_ids.blank?
+      GpArticle::Doc.none
+    else
+      docs = GpArticle::Doc.joins(maps: :markers).mobile(::Page.mobile?).public_state
+                           .where(content_id: doc_content_ids, marker_state: 'visible')
+      if specified_category
+        cat_ids = GpCategory::Categorization.select(:categorizable_id)
+                                            .where(categorized_as: 'Map::Marker')
+                                            .where(category_id: specified_category.public_descendants.map(&:id))
+        docs = docs.where(id: cat_ids)
+      end
+      docs
     end
   end
 end

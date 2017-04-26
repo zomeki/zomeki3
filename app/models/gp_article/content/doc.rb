@@ -17,11 +17,6 @@ class GpArticle::Content::Doc < Cms::Content
 
   has_many :docs, foreign_key: :content_id, class_name: 'GpArticle::Doc', dependent: :destroy
 
-  # draft, approvable, approved, public, finish, archived
-  def all_docs
-    docs.unscoped.where(content_id: id).mobile(::Page.mobile?)
-  end
-
   # draft, approvable, approved, public
   def preview_docs
     table = docs.arel_table
@@ -209,24 +204,7 @@ class GpArticle::Content::Doc < Cms::Content
   end
 
   def blog_functions
-    {comment: setting_extra_value(:blog_functions, :comment) == 'enabled',
-     comment_open: setting_extra_value(:blog_functions, :comment_open) == 'immediate',
-     comment_notification_mail: setting_extra_value(:blog_functions, :comment_notification_mail) == 'enabled',
-     footer_style: setting_extra_value(:blog_functions, :footer_style).to_s}
-  end
-
-  def comments
-    rel = GpArticle::Comment.joins(:doc)
-
-    docs = GpArticle::Doc.arel_table
-    rel = rel.where(docs[:content_id].eq(self.id))
-
-    return rel
-  end
-
-  def public_comments
-    docs = GpArticle::Doc.arel_table
-    comments.where(docs[:state].eq('public')).public_state
+    { footer_style: setting_extra_value(:blog_functions, :footer_style).to_s }
   end
 
   def notify_broken_link?
@@ -323,14 +301,6 @@ class GpArticle::Content::Doc < Cms::Content
 
   def qrcode_default_state
     setting_extra_value(:qrcode_settings, :state) || 'hidden'
-  end
-
-  def event_sync?
-    setting_extra_value(:calendar_relation, :event_sync_settings) == 'enabled'
-  end
-
-  def event_sync_default_will_sync
-    setting_extra_value(:calendar_relation, :event_sync_default_will_sync).to_s
   end
 
   def serial_no_enabled?

@@ -2,8 +2,6 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
   include Sys::Controller::Scaffold::Publication
 
-  include Cms::ApiGpCalendar
-
   layout :select_layout
 
   before_action :hold_document, only: [:edit]
@@ -115,7 +113,6 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
       @item.send_approval_request_mail if @item.state_approvable?
 
       publish_by_update(@item) if @item.state_public?
-      sync_events_export
     end
   end
 
@@ -153,7 +150,6 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
       publish_by_update(@item) if @item.state_public?
 
       @item.close if !@item.public? && !@item.will_replace? # Never use "state_public?" here
-      sync_events_export
 
       release_document
     end
@@ -162,7 +158,6 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   def destroy
     _destroy(@item) do
       @item.send_broken_link_notification if @content.notify_broken_link? && @item.backlinks.present?
-      sync_events_export
     end
   end
 
@@ -180,7 +175,6 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
       publish_ruby(@item)
       @item.rebuild(render_public_as_string(@item.public_uri, site: @item.content.site, agent_type: :smart_phone),
                     path: @item.public_smart_phone_path, dependent: :smart_phone)
-      sync_events_export
     end
 
   end
@@ -200,7 +194,6 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   def close(item)
     _close(@item) do
       @item.send_broken_link_notification if @content.notify_broken_link? && @item.backlinks.present?
-      sync_events_export
     end
   end
 
@@ -274,12 +267,6 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
   def release_document
     @item.holds.destroy_all
-  end
-
-  def sync_events_export
-    if @content.calendar_related? && (calendar_content = @content.gp_calendar_content_event)
-      gp_calendar_sync_events_export(doc_or_event: @item, event_content: calendar_content) if calendar_content.event_sync_export?
-    end
   end
 
   private

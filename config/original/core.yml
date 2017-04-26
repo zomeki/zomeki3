@@ -1,0 +1,14 @@
+development:
+  title: ZOMEKI
+  uri: http://zomeki.example.com/
+  proxy: <%= ENV['http_proxy'] %>
+
+test:
+  title: ZOMEKI
+  uri: http://zomeki.example.com/
+  proxy: <%= ENV['http_proxy'] %>
+
+production:
+  title: ZOMEKI
+  uri: http://zomeki.example.com/
+  proxy: <%= ENV['http_proxy'] %>

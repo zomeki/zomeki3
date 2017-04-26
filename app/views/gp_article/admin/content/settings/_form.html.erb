@@ -198,21 +198,6 @@ $(document).ready(function () {
     <td><%= select_tag 'item[extra_values][calendar_content_id]',
                        options_from_collection_for_select(GpCalendar::Content::Event.where(site_id: Core.site.id), :id, :name, @item.extra_values[:calendar_content_id]), include_blank: true %></td>
   </tr>
-  <tr>
-    <th>イベント同期</th>
-    <td>
-      <%- @item.extra_options[:event_sync_settings_options].each do |option| name = :event_sync_settings -%>
-      <%= radio_button_tag "item[extra_values][#{name}]", option[1], (@item.extra_values[name] || 'disabled') == option[1] %><%= label_tag "item_extra_values_#{name}_#{option[1]}", option[0] %>
-      <%- end -%>
-    </td>
-  </tr>
-  <tr>
-    <th>イベント同期初期値</th>
-    <td><%= select_tag 'item[extra_values][event_sync_default_will_sync]',
-                       options_for_select(@item.extra_options[:event_sync_default_will_sync_options],
-                                          (@item.extra_values[:event_sync_default_will_sync] || 'disabled')),
-                       include_blank: true %></td>
-  </tr>
 </table>
 <%- end -%>
 
@@ -244,14 +229,26 @@ $(document).ready(function () {
     <td><%= select_tag 'item[extra_values][state]', options_for_select(@item.extra_options[:default_state_options], @item.extra_values[:state]), include_blank: true %></td>
   </tr>
   <tr>
-    <th>表示項目</th>
+    <th>表示タイトル</th>
+    <td><%= text_field_tag 'item[extra_values][inquiry_title]', @item.extra_values[:inquiry_title], style: 'width: 400px;' %></td>
+  </tr>
+  <tr>
+    <th>表示形式</th>
     <td>
-      <%- @item.extra_options[:display_field_options].each do |name, id| -%>
-      <%= check_box_tag "vf_#{id}", id, @item.extra_values[:display_fields].include?(id), name: 'item[extra_values][[display_fields][]' -%><%= label_tag "vf_#{id}", name, style: 'padding-right: 20px;' -%>
-      <%- end -%>
+      <%= link_to '置き換えテキストを確認する', '#', id: 'show_inquiry_dialog' %><br />
+      <%= text_area_tag 'item[extra_values][inquiry_style]', @item.extra_values[:inquiry_style], size: '100x10' %>
     </td>
   </tr>
 </table>
+<%= render 'cms/admin/_partial/inquiries/style_tags' %>
+<%= javascript_tag do %>
+$(function() {
+  $('#show_inquiry_dialog').on('click', function() {
+    $('#inquiry_style_tags').dialog({width: 400});
+    return false;
+  });
+});
+<% end %>
 <%- end -%>
 
 <%- if @item.name == 'approval_relation' -%>
@@ -294,27 +291,6 @@ $(document).ready(function () {
 
 <%- if @item.name == 'blog_functions' -%>
 <table class="show">
-  <tr>
-    <th>コメント</th>
-    <td>
-      <%= radio_button_tag 'item[extra_values][comment]', 'enabled', @item.extra_values[:comment] != 'disabled' %><%= label_tag 'item_extra_values_comment_enabled', '使用する' %>
-      <%= radio_button_tag 'item[extra_values][comment]', 'disabled', @item.extra_values[:comment] == 'disabled' %><%= label_tag 'item_extra_values_comment_disabled', '使用しない' %>
-    </td>
-  </tr>
-  <tr>
-    <th>コメント公開</th>
-    <td>
-      <%= radio_button_tag 'item[extra_values][comment_open]', 'immediate', @item.extra_values[:comment_open] != 'moderate' %><%= label_tag 'item_extra_values_comment_open_immediate', '即時公開する' %>
-      <%= radio_button_tag 'item[extra_values][comment_open]', 'moderate', @item.extra_values[:comment_open] == 'moderate' %><%= label_tag 'item_extra_values_comment_open_moderate', '承認後公開する' %>
-    </td>
-  </tr>
-  <tr>
-    <th>コメント通知メール</th>
-    <td>
-      <%= radio_button_tag 'item[extra_values][comment_notification_mail]', 'enabled', @item.extra_values[:comment_notification_mail] != 'disabled' %><%= label_tag 'item_extra_values_comment_notification_mail_enabled', '使用する' %>
-      <%= radio_button_tag 'item[extra_values][comment_notification_mail]', 'disabled', @item.extra_values[:comment_notification_mail] == 'disabled' %><%= label_tag 'item_extra_values_comment_notification_mail_disabled', '使用しない' %>
-    </td>
-  </tr>
   <tr>
     <th>フッター形式</th>
     <td>

@@ -1,7 +1,7 @@
 module DocHelper
   def doc_replace(doc, doc_style, date_style, time_style='')
 
-    link_to_options = link_to_doc_options(doc)
+    link_to_options = doc.link_to_options
 
     contents = {
       title_link: -> { doc_replace_title_link(doc, link_to_options) },
@@ -20,7 +20,6 @@ module DocHelper
       body_beginning: -> { doc_replace_body_beginning(doc) },
       body: -> { doc_replace_body(doc) },
       user: -> { doc_replace_user(doc) },
-      comment_count: -> { doc_replace_comment_count(doc) },
       doc_no: -> {doc_replace_doc_no(doc)}
     }
 
@@ -208,10 +207,6 @@ private
     else
       ''
     end
-  end
-
-  def doc_replace_comment_count(doc)
-    content_tag(:span, link_to(doc.comments.count, "#{doc.public_uri}#comments"), class: 'comment_count')
   end
 
   def doc_replace_doc_no(doc)

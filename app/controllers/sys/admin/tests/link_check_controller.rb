@@ -4,19 +4,11 @@ class Sys::Admin::Tests::LinkCheckController < Cms::Controller::Admin::Base
   end
   
   def index
-    @checker = Sys::Lib::Form::Checker.new
-    
-    @errors = []
-    
-    @item = params[:item] || {}
-    
-    if request.post?
-      body = ''
-      @item[:body].split(/\r\n|\n|\r/m).each do |uri|
-        next if uri.blank?
-        body += %Q(<a href="#{uri}">#{uri}</a>\n)
-      end
-      @checker.check_link body
+    return if request.get?
+
+    @links = params.dig(:item, :body).to_s.split(/\r\n|\n|\r/m).select(&:present?).map do |url|
+      link = { url: url }
+      link.merge(Util::LinkChecker.check_url(url))
     end
   end
 end

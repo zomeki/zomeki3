@@ -1,46 +1,13 @@
-<%= form_for :item, :url => "?do=update", :html => {:method => :put} do |f| %>
-
-<%= error_messages_for :item %>
-
 <p class="form">基本情報</p>
 
-<% if @item.directory? %>
+<%= form_for :item, url: "?do=update", html: { method: :patch } do |f| %>
+  <%= error_messages_for :item  %>
 
-  <table class="show">
-    <%= concept_form(f) if @item.directory? %>
-    <tr>
-      <th><%= @item.locale :name %></th>
-      <td><%= f.text_field :name, :class => "nameEn" %></td>
-    </tr>
-  </table>
-
-<% else %>
-
-  <table class="show">
-    <tr>
-      <th><%= @item.locale :name %></th>
-      <td><%= f.text_field :name, :class => "nameEn" %></td>
-    </tr>
-  </table>
-
-  <% if @item.textfile? %>
-  <table class="show">
-    <tr>
-      <th><%= @item.locale :body %></th>
-    </tr><tr>
-      <td>
-        <% begin %><!-- <%= @item[:body] %> -->
-        <%= f.text_area :body, :class => 'body pre monospace', :style => "height: 400px;" %>
-        <% rescue StandardError => e %>
-        --> 読み込みに失敗しました。
-        <% end %>
-      </td>
-    </tr>
-  </table>
-  <% end %>
-
-<% end %>
+  <%- if @item.file_entry? -%>
+    <%= render 'form_file', f: f %>
+  <%- elsif @item.directory_entry? -%>
+    <%= render 'form_dir', f: f %>
+  <%- end -%>
 
   <%= submit :edit %>
-
 <% end %>

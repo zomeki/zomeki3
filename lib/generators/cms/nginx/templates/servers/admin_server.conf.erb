@@ -1,18 +1,14 @@
-<%-
-zomeki_root = Rails.root
-log_prefix = "#{Rails.root.basename}_"
--%>
 server {
   listen 80;
   server_name <%= @site.admin_domains.join(' ') %>;
   root <%= @site.public_path %>;
-  access_log /var/log/nginx/<%= log_prefix %>access_site_<%= '%04d' % @site.id %>.log main;
-  error_log /var/log/nginx/<%= log_prefix %>error_site_<%= '%04d' % @site.id %>.log warn;
+  access_log /var/log/nginx/<%= "#{Rails.root.basename}_" %>access_site_<%= '%04d' % @site.id %>.log main;
+  error_log /var/log/nginx/<%= "#{Rails.root.basename}_" %>error_site_<%= '%04d' % @site.id %>.log warn;
 
-  include <%= zomeki_root %>/config/nginx/rewrite.conf;
-  include <%= zomeki_root %>/config/nginx/servers_common.conf;
-  include <%= zomeki_root %>/config/nginx/admin_servers/site.d/*.conf;
-  include <%= zomeki_root %>/config/nginx/admin_servers/site_<%= '%04d' % @site.id %>.d/*.conf;
+  include <%= Rails.root %>/config/nginx/admin_servers/site_<%= '%04d' % @site.id %>.d/*.conf;
+  include <%= Rails.root %>/config/nginx/admin_servers/site.d/*.conf;
+  include <%= Rails.root %>/config/nginx/rewrite.conf;
+  include <%= Rails.root %>/config/nginx/servers_common.conf;
 
   location ~ ^/(<%= ZomekiCMS::ADMIN_URL_PREFIX %>|_preview) {
     try_files $uri @proxy;

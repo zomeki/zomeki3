@@ -2,7 +2,7 @@ ZomekiCMS::Application.routes.draw do
   mod = "cms"
 
   get "/_preview/:site/(*path)" => "cms/admin/preview#index",
-    :as => :cms_preview, :defaults => { :concept => nil }
+    :as => :cms_preview, :defaults => { :concept => nil }, :format => false
   match  "/_ssl/:site/(*path)" => "cms/public/common_ssl#index",
     :as => :cms_common_ssl, :defaults => { :concept => nil }, :via => [:get, :post]
 
@@ -71,7 +71,7 @@ ZomekiCMS::Application.routes.draw do
 
   scope "#{ZomekiCMS::ADMIN_URL_PREFIX}/#{mod}/c:concept", :module => mod, :as => mod do
     match "stylesheets/(*path)" => "admin/stylesheets#index",
-      :as => :stylesheets, :format => false, via: [:get, :post, :put]
+      :as => :stylesheets, :format => false, via: [:get, :post, :put, :patch]
     resources :contents,
       :controller  => "admin/contents"
     resources :nodes,
@@ -158,4 +158,7 @@ ZomekiCMS::Application.routes.draw do
     get "node_sitemaps/" => "public/node/sitemaps#index",
       :as => nil
   end
+
+  ## api
+  get "_api/authenticity_token" => "cms/public/api/authenticity_token#index"
 end
