@@ -42,7 +42,6 @@ class Reception::Admin::CoursesController < Cms::Controller::Admin::Base
     if @tests[:fee].present?
       @tests[:fee].delete!(",")
     end
-    debug_log @tests
     @item.attributes = @tests
     @item.state = params[:commit_public].present? ? 'public' : 'draft'
     _update @item
