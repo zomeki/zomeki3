@@ -7,28 +7,37 @@
 
   <%- case node.model -%>
   <%- when 'GpCategory::CategoryType' -%>
-    <%-
-      category_types = node.content.public_category_types
-        .preload_assocs(
-          :public_node_ancestors_assocs, 
-          :public_root_categories_and_public_descendants_and_public_node_ancestors_assocs)
+    <%- category_types = node.content.public_category_types.where(sitemap_state: 'visible')
+                             .preload_assocs(
+                               :public_node_ancestors_assocs, 
+                               :public_root_categories_and_public_descendants_and_public_node_ancestors_assocs)
     -%>
-    <%- unless category_types.empty? -%>
+    <%- if category_types.present? -%>
     <ul class="level<%= level + 1 %> <%= css_class %>">
       <%= render partial: 'category_type', collection: category_types, locals: {level: level + 1, css_class: css_class} %>
     </ul>
     <%- end -%>
 
-  <%- when 'Survey::Form' -%>
-    <%- unless node.content.public_forms.empty? -%>
+  <%- when 'Organization::Group' -%>
+    <%- groups = node.content.public_top_layer_groups.where(sitemap_state: 'visible') -%>
+    <%- if groups.present? -%>
     <ul class="level<%= level + 1 %> <%= css_class %>">
-      <%= render partial: 'survey_form', collection: node.content.public_forms, locals: {level: level + 1, css_class: css_class} %>
+      <%= render partial: 'organization_group', collection: groups, locals: {level: level + 1, css_class: css_class} %>
+    </ul>
+    <%- end -%>
+
+  <%- when 'Survey::Form' -%>
+    <%- forms = node.content.public_forms.where(sitemap_state: 'visible') -%>
+    <%- if forms.present? -%>
+    <ul class="level<%= level + 1 %> <%= css_class %>">
+      <%= render partial: 'survey_form', collection: forms, locals: {level: level + 1, css_class: css_class} %>
     </ul>
     <%- end -%>
 
   <%- when 'Gnav::MenuItem' -%>
-    <%- menu_items = node.content.menu_items.preload_assocs(:public_node_ancestors_assocs) -%>
-    <%- unless menu_items.empty? -%>
+    <%- menu_items = node.content.menu_items.where(sitemap_state: 'visible')
+                         .preload_assocs(:public_node_ancestors_assocs) -%>
+    <%- if menu_items.present? -%>
     <ul class="level<%= level + 1 %> <%= css_class %>">
       <%= render partial: 'gnav_menu_item', collection: menu_items, locals: {level: level + 1, css_class: css_class} %>
     </ul>
@@ -36,9 +45,9 @@
 
   <%- end -%>
 
-  <%- unless node.public_children_in_route.empty? -%>
+  <%- if (children = node.public_children_in_route.where(sitemap_state: 'visible')).present? -%>
   <ul class="level<%= level + 1 %> <%= css_class %>">
-    <%= render partial: 'node', collection: node.public_children_in_route, locals: {level: level + 1, css_class: css_class} %>
+    <%= render partial: 'node', collection: children, locals: {level: level + 1, css_class: css_class} %>
   </ul>
   <%- end -%>
 </li>
