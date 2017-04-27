@@ -24,22 +24,22 @@ class Cms::Publisher::LayoutCallbacks < PublisherCallbacks
   end
 
   def enqueue_nodes
-    nodes = Cms::Node.public_state.where(layout_id: @layout.id).select(:id, :parent_id, :name)
+    nodes = Cms::Node.public_state.where(layout_id: @layout.id)
     Cms::Publisher.register(@layout.site_id, nodes)
   end
 
   def enqueue_categories
     cat_types = GpCategory::CategoryType.public_state.where(layout_id: @layout.id).all
     cat_types.each do |cat_type|
-      Cms::Publisher.register(@layout.site_id, cat_type.public_categories.select(:id))
+      Cms::Publisher.register(@layout.site_id, cat_type.public_categories)
     end
 
-    cats = GpCategory::Category.public_state.where(layout_id: @layout.id).select(:id)
+    cats = GpCategory::Category.public_state.where(layout_id: @layout.id)
     Cms::Publisher.register(@layout.site_id, cats)
   end
 
   def enqueue_organization_groups
-    ogs = Organization::Group.public_state.with_layout(@layout.id).select(:id)
+    ogs = Organization::Group.public_state.with_layout(@layout.id)
     Cms::Publisher.register(@layout.site_id, ogs)
   end
 

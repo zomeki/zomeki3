@@ -22,7 +22,7 @@ class GpCalendar::Publisher::HolidayCallbacks < PublisherCallbacks
   end
 
   def enqueue_nodes
-    Cms::Publisher.register(@holiday.content.site_id, @holiday.content.public_nodes.select(:id, :parent_id, :name))
+    Cms::Publisher.register(@holiday.content.site_id, @holiday.content.public_nodes)
   end
 
   def enqueue_pieces

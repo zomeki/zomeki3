@@ -49,7 +49,7 @@ class GpArticle::Publisher::DocCallbacks < PublisherCallbacks
           end
         { target_date: changed_dates.uniq.sort.map { |d| d.strftime('%Y-%m-%d') } }
       end
-    Cms::Publisher.register(@doc.content.site_id, @doc.content.public_nodes.select(:id, :parent_id, :name), extra_flag)
+    Cms::Publisher.register(@doc.content.site_id, @doc.content.public_nodes, extra_flag)
   end
 
   def enqueue_organizations
@@ -98,7 +98,7 @@ class GpArticle::Publisher::DocCallbacks < PublisherCallbacks
       min_date = changed_dates.min.beginning_of_month
       max_date = changed_dates.max.beginning_of_month
 
-      Cms::Publisher.register(@doc.content.site_id, calendar_content.public_nodes.select(:id, :parent_id, :name),
+      Cms::Publisher.register(@doc.content.site_id, calendar_content.public_nodes,
                               target_min_date: min_date.strftime('%Y-%m-%d'),
                               target_max_date: max_date.strftime('%Y-%m-%d'))
       calendar_content.public_pieces.each do |piece|
@@ -119,7 +119,7 @@ class GpArticle::Publisher::DocCallbacks < PublisherCallbacks
     changed_markers.uniq!
 
     if changed_markers.present?
-      Cms::Publisher.register(@doc.content.site_id, map_content.public_nodes.select(:id, :parent_id, :name))
+      Cms::Publisher.register(@doc.content.site_id, map_content.public_nodes)
       map_content.public_pieces.each do |piece|
         Cms::Publisher::PieceCallbacks.new.enqueue(piece)
       end
