@@ -32,12 +32,18 @@ class Reception::Admin::CoursesController < Cms::Controller::Admin::Base
   end
 
   def create
+    @params = course_params
+    @params[:fee].delete!(",") if @params[:fee].present?
+    @item = @content.courses.build(@params)
     @item = @content.courses.build(course_params)
     @item.state = params[:commit_public].present? ? 'public' : 'draft'
     _create @item
   end
 
   def update
+    @params = course_params
+    @params[:fee].delete!(",") if @params[:fee].present?
+    @item.attributes = @params
     @item.attributes = course_params
     @item.state = params[:commit_public].present? ? 'public' : 'draft'
     _update @item
