@@ -35,7 +35,7 @@
     <%- end -%>
 
   <%- when 'Gnav::MenuItem' -%>
-    <%- menu_items = node.content.menu_items.visible_in_sitemap
+    <%- menu_items = node.content.public_menu_items.visible_in_sitemap
                          .preload_assocs(:public_node_ancestors_assocs) -%>
     <%- if menu_items.present? -%>
     <ul class="level<%= level + 1 %> <%= css_class %>">
