@@ -4,7 +4,7 @@ css_class = "#{css_class + '-' if css_class.present?}#{File.basename(category_ty
 <li class="level<%= level %> <%= css_class %>">
   <%= link_to category_type.title, category_type.public_uri, class: "level#{level}" %>
 
-  <%- if (categories = category_type.public_root_categories.where(sitemap_state: 'visible')).present? -%>
+  <%- if (categories = category_type.public_root_categories.visible_in_sitemap).present? -%>
   <ul class="level<%= level + 1 %> <%= css_class %>">
     <%= render partial: 'category', collection: categories, locals: {level: level + 1, css_class: css_class} %>
   </ul>

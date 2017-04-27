@@ -7,7 +7,7 @@
 
   <%- case node.model -%>
   <%- when 'GpCategory::CategoryType' -%>
-    <%- category_types = node.content.public_category_types.where(sitemap_state: 'visible')
+    <%- category_types = node.content.public_category_types.visible_in_sitemap
                              .preload_assocs(
                                :public_node_ancestors_assocs, 
                                :public_root_categories_and_public_descendants_and_public_node_ancestors_assocs)
@@ -19,7 +19,7 @@
     <%- end -%>
 
   <%- when 'Organization::Group' -%>
-    <%- groups = node.content.public_top_layer_groups.where(sitemap_state: 'visible') -%>
+    <%- groups = node.content.public_top_layer_groups.visible_in_sitemap -%>
     <%- if groups.present? -%>
     <ul class="level<%= level + 1 %> <%= css_class %>">
       <%= render partial: 'organization_group', collection: groups, locals: {level: level + 1, css_class: css_class} %>
@@ -27,7 +27,7 @@
     <%- end -%>
 
   <%- when 'Survey::Form' -%>
-    <%- forms = node.content.public_forms.where(sitemap_state: 'visible') -%>
+    <%- forms = node.content.public_forms.visible_in_sitemap -%>
     <%- if forms.present? -%>
     <ul class="level<%= level + 1 %> <%= css_class %>">
       <%= render partial: 'survey_form', collection: forms, locals: {level: level + 1, css_class: css_class} %>
@@ -35,7 +35,7 @@
     <%- end -%>
 
   <%- when 'Gnav::MenuItem' -%>
-    <%- menu_items = node.content.menu_items.where(sitemap_state: 'visible')
+    <%- menu_items = node.content.menu_items.visible_in_sitemap
                          .preload_assocs(:public_node_ancestors_assocs) -%>
     <%- if menu_items.present? -%>
     <ul class="level<%= level + 1 %> <%= css_class %>">
@@ -45,7 +45,7 @@
 
   <%- end -%>
 
-  <%- if (children = node.public_children_in_route.where(sitemap_state: 'visible')).present? -%>
+  <%- if (children = node.public_children_in_route.visible_in_sitemap).present? -%>
   <ul class="level<%= level + 1 %> <%= css_class %>">
     <%= render partial: 'node', collection: children, locals: {level: level + 1, css_class: css_class} %>
   </ul>

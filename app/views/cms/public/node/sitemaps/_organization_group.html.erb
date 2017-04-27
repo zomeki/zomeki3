@@ -4,7 +4,7 @@ css_class = "#{css_class + '-' if css_class.present?}#{File.basename(organizatio
 <li class="level<%= level %> <%= css_class %>">
   <%= link_to organization_group.sys_group.try!(:name), organization_group.public_uri, class: "level#{level}" %>
 
-  <%- if (children = organization_group.public_children.where(sitemap_state: 'visible')).present? -%>
+  <%- if (children = organization_group.public_children.visible_in_sitemap).present? -%>
   <ul class="level<%= level + 1 %> <%= css_class %>">
     <%= render partial: 'organization_group', collection: children, locals: {level: level + 1, css_class: css_class} %>
   </ul>
