@@ -11,6 +11,8 @@ class GpArticle::Doc < ApplicationRecord
   include Cms::Model::Rel::Inquiry
   include Cms::Model::Rel::Map
   include Cms::Model::Rel::Bracket
+  include Cms::Model::Rel::PublishUrl
+  include Cms::Model::Rel::Link
 
   include Cms::Model::Auth::Concept
   include Sys::Model::Auth::EditableGroup
@@ -18,11 +20,9 @@ class GpArticle::Doc < ApplicationRecord
   include GpArticle::Model::Rel::Doc
   include GpArticle::Model::Rel::Category
   include GpArticle::Model::Rel::Tag
+  include GpArticle::Model::Rel::RelatedDoc
   include Approval::Model::Rel::Approval
   include GpTemplate::Model::Rel::Template
-  include GpArticle::Model::Rel::RelatedDoc
-  include Cms::Model::Rel::PublishUrl
-  include Cms::Model::Rel::Link
 
   include StateText
   include GpArticle::Docs::Preload
