@@ -115,8 +115,8 @@ class Sys::Storage::Entry
     items = []
     if directory_entry?
       ::Storage.entries(path).each do |entry_name|
-        entry_path = ::File.join(path, entry_name)
-        items << self.class.from_path(entry_path)
+        item = self.class.from_path(::File.join(path, entry_name))
+        items << item if item
       end
       items.sort_by! { |item| [item.entry_type, item.name] }
     end
