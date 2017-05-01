@@ -1,6 +1,5 @@
 class GpCalendar::Admin::HolidaysController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
-  include GpCalendar::Controller::Holiday
 
   def pre_dispatch
     @content = GpCalendar::Content::Event.find(params[:content])
@@ -8,8 +7,6 @@ class GpCalendar::Admin::HolidaysController < Cms::Controller::Admin::Base
   end
 
   def index
-    create_default_holidays(@content)
-
     @items = @content.holidays.order("repeat desc, COALESCE(TO_CHAR(date,'YYYYMMDD'), '00000000')")
       .paginate(page: params[:page], per_page: 50)
     _index @items
