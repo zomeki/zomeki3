@@ -24,6 +24,10 @@ class Organization::Content::Group < Cms::Content
     groups.where(sys_group_code: top_layer_sys_group_codes)
   end
 
+  def public_top_layer_groups
+    top_layer_groups.public_state
+  end
+
   def find_group_by_path_from_root(path_from_root)
     group_names = path_from_root.split('/')
     return nil if group_names.empty?

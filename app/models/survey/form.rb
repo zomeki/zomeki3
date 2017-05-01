@@ -1,5 +1,6 @@
 class Survey::Form < ApplicationRecord
   include Sys::Model::Base
+  include Cms::Model::Base::Sitemap
   include Sys::Model::Rel::Creator
   include Sys::Model::Rel::Task
   include Cms::Model::Auth::Content
@@ -10,7 +11,6 @@ class Survey::Form < ApplicationRecord
 
   STATE_OPTIONS = [['下書き保存', 'draft'], ['承認依頼', 'approvable'], ['即時公開', 'public']]
   CONFIRMATION_OPTIONS = [['あり', true], ['なし', false]]
-  SITEMAP_STATE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
   INDEX_LINK_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
 
   default_scope { order("#{self.table_name}.sort_no IS NULL, #{self.table_name}.sort_no") }
@@ -162,10 +162,6 @@ class Survey::Form < ApplicationRecord
     "#{site.main_admin_uri}#{path}"
   end
 
-  def sitemap_visible?
-    self.sitemap_state == 'visible'
-  end
-
   def index_visible?
     self.index_link != 'hidden'
   end
@@ -175,7 +171,6 @@ class Survey::Form < ApplicationRecord
   def set_defaults
     self.state        = STATE_OPTIONS.first.last        if self.has_attribute?(:state) && self.state.nil?
     self.confirmation = CONFIRMATION_OPTIONS.first.last if self.has_attribute?(:confirmation) && self.confirmation.nil?
-    self.sitemap_state = SITEMAP_STATE_OPTIONS.first.last if self.has_attribute?(:sitemap_state) && self.sitemap_state.nil?
     self.index_link   = INDEX_LINK_OPTIONS.first.last   if self.has_attribute?(:index_link) && self.index_link.nil?
     self.sort_no      = 10 if self.has_attribute?(:sort_no) && self.sort_no.nil?
   end

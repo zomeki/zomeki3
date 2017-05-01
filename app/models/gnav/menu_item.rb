@@ -3,11 +3,10 @@ class Gnav::MenuItem < ApplicationRecord
   include Sys::Model::Rel::Creator
   include Cms::Model::Auth::Content
   include Cms::Model::Base::Page
+  include Cms::Model::Base::Sitemap
 
   include StateText
   include Gnav::MenuItems::Preload
-
-  SITEMAP_STATE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
 
   default_scope { order(:sort_no) }
 
@@ -23,8 +22,6 @@ class Gnav::MenuItem < ApplicationRecord
 
   validates :name, :presence => true, :uniqueness => {:scope => :content_id}
   validates :title, :presence => true
-
-  after_initialize :set_defaults
 
   after_save     Cms::Publisher::ContentRelatedCallbacks.new, if: :changed?
   before_destroy Cms::Publisher::ContentRelatedCallbacks.new
@@ -91,15 +88,4 @@ class Gnav::MenuItem < ApplicationRecord
 
     Cms::Lib::BreadCrumbs.new(crumbs)
   end
-
-  def sitemap_visible?
-    self.sitemap_state == 'visible'
-  end
-
-  private
-
-  def set_defaults
-    self.sitemap_state = SITEMAP_STATE_OPTIONS.first.last if self.has_attribute?(:sitemap_state) && self.sitemap_state.nil?
-  end
-
 end

@@ -28,7 +28,7 @@ class GpCalendar::Publisher::EventCallbacks < PublisherCallbacks
     min_date = changed_dates.min.beginning_of_month
     max_date = changed_dates.max.beginning_of_month
 
-    Cms::Publisher.register(@event.content.site_id, @event.content.public_nodes.select(:id, :parent_id, :name),
+    Cms::Publisher.register(@event.content.site_id, @event.content.public_nodes,
                             target_min_date: min_date.strftime('%Y-%m-%d'),
                             target_max_date: max_date.strftime('%Y-%m-%d'))
   end

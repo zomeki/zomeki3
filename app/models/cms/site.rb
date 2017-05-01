@@ -41,6 +41,8 @@ class Cms::Site < ApplicationRecord
     class_name: 'Cms::Concept'
   has_many :public_root_concepts, -> { where(level_no: 1, state: 'public').order(:sort_no, :name, :id) },
     class_name: 'Cms::Concept'
+  has_many :public_sitemap_nodes, -> { where(state: 'public', model: 'Cms::Sitemap').order(:name) },
+    class_name: 'Cms::Node'
   has_many :emergency_layout_settings, class_name: 'Cms::SiteSetting::EmergencyLayout'
 
   validates :state, :name, presence: true

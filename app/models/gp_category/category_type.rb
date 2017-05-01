@@ -5,12 +5,12 @@ class GpCategory::CategoryType < ApplicationRecord
   include Cms::Model::Base::Page
   include Cms::Model::Base::Page::Publisher
   include Cms::Model::Base::Page::TalkTask
+  include Cms::Model::Base::Sitemap
 
   include StateText
   include GpCategory::CategoryTypes::Preload
 
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
-  SITEMAP_STATE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
   DOCS_ORDER_OPTIONS = [['コンテンツ設定を継承', ''],
                         ['公開日（降順）', 'display_published_at DESC, published_at DESC'], ['公開日（昇順）', 'display_published_at ASC, published_at ASC'],
                         ['更新日（降順）', 'display_updated_at DESC, updated_at DESC'], ['更新日（昇順）', 'display_updated_at ASC, updated_at ASC']]
@@ -110,10 +110,6 @@ class GpCategory::CategoryType < ApplicationRecord
     Cms::Lib::BreadCrumbs.new(crumbs)
   end
 
-  def sitemap_visible?
-    self.sitemap_state == 'visible'
-  end
-
   def unique_sort_key
     '__%032d_%32s' % [self.sort_no.to_i, self.name.to_s]
   end
@@ -122,7 +118,6 @@ class GpCategory::CategoryType < ApplicationRecord
 
   def set_defaults
     self.state         = STATE_OPTIONS.first.last         if self.has_attribute?(:state) && self.state.nil?
-    self.sitemap_state = SITEMAP_STATE_OPTIONS.first.last if self.has_attribute?(:sitemap_state) && self.sitemap_state.nil?
     self.docs_order    = DOCS_ORDER_OPTIONS.second.last   if self.has_attribute?(:docs_order) && self.docs_order.nil?
     self.sort_no = 10 if self.has_attribute?(:sort_no) && self.sort_no.nil?
   end

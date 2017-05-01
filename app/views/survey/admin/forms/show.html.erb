@@ -25,7 +25,7 @@
   </tr>
   <tr>
     <th><%= @item.locale(:sitemap_state) %></th>
-    <td><%= @item.class::SITEMAP_STATE_OPTIONS.detect{|o| o.last == @item.sitemap_state }.try(:first) %></td>
+    <td><%= @item.sitemap_state_text %></td>
   </tr>
   <tr>
     <th><%= @item.locale(:index_link) %></th>
