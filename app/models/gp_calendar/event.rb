@@ -27,7 +27,8 @@ class GpCalendar::Event < ApplicationRecord
   validates :started_on, :presence => true
   validates :ended_on, :presence => true
   validates :title, :presence => true
-  validates :name, :uniqueness => true, :format => {with: /\A[\-\w]*\z/ }
+  validates :name, :format => {with: /\A[\-\w]*\z/ }
+  validates :id, :uniqueness => true
 
   validate :dates_range
 

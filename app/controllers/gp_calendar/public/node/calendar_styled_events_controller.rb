@@ -23,5 +23,6 @@ class GpCalendar::Public::Node::CalendarStyledEventsController < GpCalendar::Pub
 
     @holidays = GpCalendar::Holiday.public_state.content_and_criteria(@content, criteria)
 
+    @values = Cms::ContentSetting.find_by(content_id: @content.id, name: "calendar_list_style")
   end
 end
