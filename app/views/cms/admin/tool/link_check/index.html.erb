@@ -5,26 +5,30 @@
 <table class="index">
   <tr>
     <th style="text-align: center;">ページタイトル</th>
-    <th style="text-align: center; width: 250px;">ステータス</th>
-    <th style="text-align: center; width: 300px;">リンクテキスト</th>
-    <th style="text-align: center; width: 400px;">リンクURL</th>
+    <th style="text-align: center; width: 150px;">作成者グループ</th>
+    <th style="text-align: center; width: 250px;">リンクテキスト</th>
+    <th style="text-align: center; width: 250px;">リンクURL</th>
     <th style="text-align: center; width: 40px;">結果</th>
+    <th style="text-align: center; width: 150px;">ステータス</th>
+    <th style="text-align: center; width: 120px;">確認日時</th>
   </tr>
   <%- @logs.each do |log| -%>
     <tr class="<%= cycle '', 'cycle' %>">
       <td>
-        <%- if (link_checkable = log.link_checkable).is_a?(GpArticle::Doc) -%>
-          <%= link_to log.title, gp_article_doc_path(content: link_checkable.content, id: link_checkable.id) %>
-        <%- elsif (link_checkable = log.link_checkable).is_a?(Cms::Node) && Core.user.has_auth?(:designer) -%>
-          <%= link_to log.title, link_checkable.admin_uri %>
+        <%- if log.link_checkable.is_a?(GpArticle::Doc) -%>
+          <%= link_to log.title, gp_article_doc_path(content: log.link_checkable.content, id: log.link_checkable.id) %>
+        <%- elsif log.link_checkable.is_a?(Cms::Node) && Core.user.has_auth?(:designer) -%>
+          <%= link_to log.title, log.link_checkable.admin_uri %>
         <%- else -%>
           <%= log.title %>
         <%- end -%>
       </td>
-      <td><%= log.status %> <%= log.reason %></td>
+      <td><%= log.link_checkable.try!(:creator).try!(:group).try!(:name) %></td>
       <td><%= log.body %></td>
       <td><%= link_to log.url, log.url, target: 'preview' %></td>
-      <td style="text-align: center;"><%= log.result ? '○' : '×' %></td>
+      <td style="text-align: center;"><%= log.result_state_mark %></td>
+      <td><%= log.status %> <%= log.reason %></td>
+      <td style="text-align: center;"><%=l log.checked_at if log.checked_at %></td>
     </tr>
   <%- end -%>
 </table>

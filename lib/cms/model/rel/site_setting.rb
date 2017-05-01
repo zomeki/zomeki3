@@ -8,13 +8,17 @@ module Cms::Model::Rel::SiteSetting
   attr_accessor :in_setting_site_extension_upload_max_size
   attr_accessor :in_setting_site_allowed_attachment_type
   attr_accessor :in_setting_site_link_check
+  attr_accessor :in_setting_site_link_check_hour
+  attr_accessor :in_setting_site_link_check_exclusion
   attr_accessor :in_setting_site_accessibility_check
   attr_accessor :in_setting_site_kana_talk
   attr_accessor :in_setting_site_map_coordinate
 
   SITE_SETTINGS = [
     :basic_auth_state, :common_ssl, :allowed_attachment_type,
-    :admin_mail_sender, :file_upload_max_size, :extension_upload_max_size, :link_check, :accessibility_check, :kana_talk,
+    :admin_mail_sender, :file_upload_max_size, :extension_upload_max_size,
+    :link_check, :link_check_hour, :link_check_exclusion,
+    :accessibility_check, :kana_talk,
     :map_coordinate
   ]
 
@@ -76,6 +80,25 @@ module Cms::Model::Rel::SiteSetting
     Cms::SiteSetting::LINK_CHECK_OPTIONS.rassoc(setting_site_link_check).try(:first)
   end
 
+  def setting_site_link_check_hour
+    setting = Cms::SiteSetting.where(:site_id => id, :name => 'link_check_hour').first
+    setting ? setting.value : nil;
+  end
+
+  def setting_site_link_check_exclusion
+    setting = Cms::SiteSetting.where(:site_id => id, :name => 'link_check_exclusion').first
+    setting ? setting.value : '';
+  end
+
+  def link_check_hour?(hour)
+    setting_site_link_check == 'enabled' && setting_site_link_check_hour == hour.to_s
+  end
+
+  def link_check_exclusion_regexp
+    regexps = setting_site_link_check_exclusion.to_s.split(/[\r\n]+/).map { |ex| /^#{Regexp.escape(ex)}/ }
+    regexps.present? ? Regexp.union(regexps) : nil
+  end
+
   def setting_site_accessibility_check
     setting = Cms::SiteSetting.where(:site_id => id, :name => 'accessibility_check').first
     setting ? setting.value : 'enabled';
@@ -133,6 +156,8 @@ module Cms::Model::Rel::SiteSetting
     @in_setting_site_extension_upload_max_size   = setting_site_extension_upload_max_size
     @in_setting_site_allowed_attachment_type     = setting_site_allowed_attachment_type
     @in_setting_site_link_check                  = setting_site_link_check
+    @in_setting_site_link_check_hour             = setting_site_link_check_hour
+    @in_setting_site_link_check_exclusion        = setting_site_link_check_exclusion
     @in_setting_site_accessibility_check         = setting_site_accessibility_check
     @in_setting_site_kana_talk                   = setting_site_kana_talk
     @in_setting_site_map_coordinate              = setting_site_map_coordinate

@@ -16,7 +16,7 @@ class Script
   end
 
   def self.run(path, options = {})
-    @@kill     = 3.hours.to_i
+    @@kill     = options.delete(:kill) || 3.hours.to_i
     @@path     = path
     @@proc     = nil
     @@time     = nil
