@@ -118,9 +118,9 @@ private
   def replace_cateogry(event, categories, category_type = nil)
     if categories.present?
       category_tag = "";
-        categories.each do |category|
-          category_tag += content_tag(:span, category.title, class: category.name)
-        end
+      categories.each do |category|
+        category_tag += content_tag(:span, category.title, class: category.name)
+      end
       category_tag
     else
       ''
