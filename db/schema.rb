@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170323105211) do
+ActiveRecord::Schema.define(version: 20170427050634) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -399,8 +399,10 @@ ActiveRecord::Schema.define(version: 20170323105211) do
     t.integer  "linkable_id"
     t.string   "body"
     t.string   "url"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.string   "linkable_column"
+    t.index ["linkable_id", "linkable_type"], name: "index_cms_links_on_linkable_id_and_linkable_type", using: :btree
   end
 
   create_table "cms_map_markers", force: :cascade do |t|

@@ -230,10 +230,6 @@ class Cms::Node < ApplicationRecord
     self.sitemap_state == 'visible'
   end
 
-  def pdf_in_body?(html)
-    extract_links(html, false).any?{|l| l[:url] =~ /\.pdf$/i }
-  end
-
   def top_page?
     parent.try(:parent_id) == 0 && name == 'index.html'
   end
@@ -270,6 +266,8 @@ class Cms::Node < ApplicationRecord
     include Sys::Model::Rel::Task
     include Cms::Model::Rel::PublishUrl
     include Cms::Model::Rel::Link
+
+    self.linkable_columns = [:body]
 
 #    validate :validate_inquiry,
 #      :if => %Q(state == 'public')
@@ -358,10 +356,6 @@ class Cms::Node < ApplicationRecord
 
       return item
     end
-
-    def links_in_body(all=false)
-      extract_links(self.body, all)
-    end
   end
 
   private
@@ -369,19 +363,6 @@ class Cms::Node < ApplicationRecord
   def set_defaults
     self.sitemap_state ||= SITEMAP_STATE_OPTIONS.first.last if self.has_attribute?(:sitemap_state)
     self.directory = (model_type == :directory) if self.has_attribute?(:directory) && directory.nil?
-  end
-
-  def extract_links(html, all)
-    links = Nokogiri::HTML.fragment(html).css('a[@href]')
-                          .map { |a| { body: a.text, url: a.attribute('href').value } }
-    return links if all
-    links.select do |link|
-      uri = Addressable::URI.parse(link[:url])
-      !uri.absolute? || uri.scheme.to_s.downcase.in?(%w(http https))
-    end
-  rescue => evar
-    warn_log evar.message
-    return []
   end
 
   def move_directory
