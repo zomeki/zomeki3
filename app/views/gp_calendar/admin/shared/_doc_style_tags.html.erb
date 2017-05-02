@@ -6,7 +6,6 @@
     <tr>
       <th>タイトル（リンクあり）</th><td>@title_link@</td>
     </tr>
-    <%- unless request.path_info.include?("calendar_list_style") -%>
     <tr>
       <th>サブタイトル</th><td>@subtitle@</td>
     </tr>
@@ -19,11 +18,9 @@
     <tr>
       <th>組織</th><td>@unit@</td>
     </tr>
-    <%- end -%>
     <tr>
       <th>カテゴリ</th><td>@category@</td>
     </tr>
-    <%- unless request.path_info.include?("calendar_list_style") -%>
     <tr>
       <th>カテゴリタイプ</th><td>@category_type_カテゴリタイプid@</td>
     </tr>
@@ -37,6 +34,5 @@
       <th>備考</th>
       <td>@note@</td>
     </tr>
-    <%- end -%>
   </table>
 </div>

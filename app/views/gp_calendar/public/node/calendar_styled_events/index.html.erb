@@ -36,24 +36,20 @@
           <%- end -%>
 
           <%- unless (events = @events.select{|e| day.between?(e.started_on, e.ended_on) }).empty? -%>
-          <%- if @values.value.include?("title") -%>
           <ul>
             <%- events.each do |event| -%>
             <li>
               <%= event_replace(event, @content.calendar_list_style) %>
               <%- unless event.categories.empty? -%>
-              <%- if @values.value.include?("@category@") -%>
               <p class="category">
                 <%- event.categories.each do |category| -%>
-                <span class="<%= category.name.capitalize %>"><%= category.title %></span>
+                <span class="category<%= category.name.capitalize %>"><%= category.title %></span>
                 <%- end -%>
               </p>
-              <%- end -%>
               <%- end -%>
             </li>
             <%- end -%>
           </ul>
-          <%- end -%>
           <%- end -%>
         </td>
         <%- end -%>

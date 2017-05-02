@@ -6,7 +6,6 @@ module GpCalendar::EventHelper
                         nil
                       end
 
-    list_style.gsub!(/[,、.]/," ")
     list_style.gsub(/@\w+@/, {
       '@title_link@' => event_replace_title_link(event, link_to_options),
       '@title@' => event_replace_title(event)
@@ -118,15 +117,10 @@ private
 
   def replace_cateogry(event, categories, category_type = nil)
     if categories.present?
-      p_class = "category"
-      p_class += " #{category_type.name}" if category_type
-      category_tag = content_tag("") do
+      category_tag = "";
         categories.each do |category|
-          concat content_tag(:span, category.title, class: category.name)
+          category_tag += content_tag(:span, category.title, class: category.name)
         end
-      end
-      category_tag.slice!("<>")
-      category_tag.slice!("</>")
       category_tag
     else
       ''
