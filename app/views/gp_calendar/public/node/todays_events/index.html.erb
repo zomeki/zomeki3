@@ -1,8 +1,6 @@
 <div class="calendarEvents calendarTodayEvents">
-  <h2 class="today"><span class="date"><%= @today.strftime("%Y年%-m月%-d日(#{localize_wday('%a', @today.wday)})") %></span>
-  <%- if @content.setting_value(:show_qreki) == "1" -%>
-  <span class="qreki"><%= qreki(@today) %></span>
-  <%- end -%>
+  <h2 class="today">
+    <span class="date"><%= @today.strftime("%Y年%-m月%-d日(#{localize_wday('%a', @today.wday)})") %></span>
   </h2>
 
   <%- @holidays.each do |holiday| -%>

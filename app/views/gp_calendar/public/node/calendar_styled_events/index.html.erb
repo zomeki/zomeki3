@@ -21,12 +21,6 @@
         <%- week.each do |day| -%>
         <td id="<%= 'day%02d' % day.day if day.month == @date.month %>" class="day <%= %w!sun mon tue wed thu fri sat![day.wday] %><%= ' prevMonth' if day < @date.beginning_of_month %><%= ' nextMonth' if day > @date.end_of_month %>">
           <p class="date"><%= day.day %></p>
-          <%- if @content.setting_value(:show_qreki) == "1" -%>
-          <div class="qreki">
-          <p class="date"><%= qreki(day) %></p>
-          </div>
-
-          <%- end -%>
           <%- unless (holidays = @holidays.select{|e| e.started_on = day.year; day == e.started_on }).empty? -%>
           <ul>
           <%- holidays.each do |holiday| -%>
