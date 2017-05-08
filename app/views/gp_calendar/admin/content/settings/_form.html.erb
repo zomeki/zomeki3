@@ -1,15 +1,22 @@
 <%= render 'shared/admin/content/settings/form', f: f, item: @item -%>
 
 <%= render 'gp_calendar/admin/shared/doc_style_tags' %>
+<%= render 'gp_calendar/admin/shared/doc_style_calendar_tags' %>
 <%= javascript_tag do %>
 $(function() {
-  $('a.show_dialog').on('click', function() {
-    $('#doc_style_tags').dialog({width: 450});
-    return false;
-  });
+  <%- if @item.name == "calendar_list_style" -%>
+     $('a.show_dialog').on('click', function() {
+       $('#doc_style_calendar_tags').dialog({width: 450});
+       return false;
+     });
+  <%- else -%>
+     $('a.show_dialog').on('click', function() {
+       $('#doc_style_tags').dialog({width: 450});
+       return false;
+     });
+  <%- end -%>
 });
 <% end %>
-
 
 <%- if @item.name == 'gp_category_content_category_type_id'
       content = GpCategory::Content::CategoryType.find_by_id(@item.value)
