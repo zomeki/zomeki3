@@ -46,7 +46,7 @@ module GpCalendar::EventHelper
           else
             concat content_tag(:td, t[:data].html_safe, class: class_str)
           end
-        elsif
+        else
           class_str = t[:data].delete("@")
           concat content_tag(:td, t[:data].html_safe, class: class_str)
         end
