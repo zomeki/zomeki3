@@ -40,13 +40,6 @@
             <%- events.each do |event| -%>
             <li>
               <%= event_replace(event, @content.calendar_list_style) %>
-              <%- unless event.categories.empty? -%>
-              <p class="category">
-                <%- event.categories.each do |category| -%>
-                <span class="category<%= category.name.capitalize %>"><%= category.title %></span>
-                <%- end -%>
-              </p>
-              <%- end -%>
             </li>
             <%- end -%>
           </ul>

@@ -8,7 +8,8 @@ module GpCalendar::EventHelper
 
     list_style.gsub(/@\w+@/, {
       '@title_link@' => event_replace_title_link(event, link_to_options),
-      '@title@' => event_replace_title(event)
+      '@title@' => event_replace_title(event),
+      '@category@' => event_replace_category(event)
     }).html_safe
   end
 
