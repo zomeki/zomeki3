@@ -26,7 +26,7 @@ class GpArticle::Public::Piece::RecentTabsController < Sys::Controller::Public::
         end
       docs = docs.order(@piece.docs_order_as_sql)
                  .limit(@piece.list_count)
-                 .preload_assocs(:public_node_ancestors_assocs, :public_index_assocs)
+      docs = GpArticle::DocPreloader.new(docs).preload(:public_node_ancestors)
 
       @tabs.push(name: tab.name,
                  title: tab.title,

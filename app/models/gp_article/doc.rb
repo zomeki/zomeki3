@@ -25,7 +25,6 @@ class GpArticle::Doc < ApplicationRecord
   include Cms::Model::Rel::Link
 
   include StateText
-  include GpArticle::Docs::Preload
 
   STATE_OPTIONS = [['下書き保存', 'draft'], ['承認依頼', 'approvable'], ['即時公開', 'public']]
   TARGET_OPTIONS = [['無効', ''], ['同一ウィンドウ', '_self'], ['別ウィンドウ', '_blank'], ['添付ファイル', 'attached_file']]
@@ -110,7 +109,7 @@ class GpArticle::Doc < ApplicationRecord
   before_destroy GpArticle::Publisher::DocCallbacks.new
 
   scope :visible_in_list, -> { where(feature_1: true) }
-  scope :event_scheduled_between, ->(start_date, end_date, category_ids) {
+  scope :event_scheduled_between, ->(start_date, end_date, category_ids = nil) {
     rel = all
     rel = rel.where(arel_table[:event_ended_on].gteq(start_date)) if start_date.present?
     rel = rel.where(arel_table[:event_started_on].lt(end_date + 1)) if end_date.present?

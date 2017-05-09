@@ -15,6 +15,7 @@ class GpCalendar::Public::Piece::CategoryTypesController < GpCalendar::Public::P
                                            GpCalendar::CalendarStyledEvent!.include?(@item.model)
     end
 
-    @top_categories = @piece.content.public_categories.preload_assocs(:public_descendants_assocs)
+    @top_categories = @piece.content.public_categories
+    @top_categories = GpCategory::CategoryPreloader.new(@top_categories).preload(:public_descendants)
   end
 end

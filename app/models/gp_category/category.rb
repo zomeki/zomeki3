@@ -9,7 +9,6 @@ class GpCategory::Category < ApplicationRecord
   include Cms::Model::Base::Sitemap
 
   include StateText
-  include GpCategory::Categories::Preload
 
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
   DOCS_ORDER_OPTIONS = [['上位設定を継承', ''],
@@ -76,12 +75,11 @@ class GpCategory::Category < ApplicationRecord
   end
 
   def descendants_ids
-    preload_assocs(:descendants_assocs)
-    descendants.map {|c| c.id }
+    descendants_with_preload.map(&:id)
   end
 
   def descendants_with_preload
-    preload_assocs(:descendants_assocs)
+    GpCategory::CategoryPreloader.new(self).preload(:descendants)
     descendants
   end
 
@@ -93,12 +91,11 @@ class GpCategory::Category < ApplicationRecord
   end
 
   def public_descendants_ids
-    preload_assocs(:public_descendants_assocs)
-    public_descendants.map {|c| c.id }
+    public_descendants_with_preload.map(&:id)
   end
 
   def public_descendants_with_preload
-    preload_assocs(:public_descendants_assocs)
+    GpCategory::CategoryPreloader.new(self).preload(:public_descendants)
     public_descendants
   end
 

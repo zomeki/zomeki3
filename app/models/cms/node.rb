@@ -15,7 +15,6 @@ class Cms::Node < ApplicationRecord
   include Cms::Model::Auth::Concept
 
   include StateText
-  include Cms::Nodes::Preload
 
   belongs_to :parent, :foreign_key => :parent_id, :class_name => 'Cms::Node'
   belongs_to :layout, :foreign_key => :layout_id, :class_name => 'Cms::Layout'
@@ -28,7 +27,7 @@ class Cms::Node < ApplicationRecord
   # conditional associations
   has_many :public_children, -> { public_state.sitemap_order },
     :foreign_key => :parent_id, :class_name => 'Cms::Node'
-  has_many :public_children_in_route, -> { public_state.sitemap_order },
+  has_many :public_children_for_sitemap, -> { public_state.visible_in_sitemap.sitemap_order },
     :foreign_key => :route_id, :class_name => 'Cms::Node'
 
   validates :parent_id, :state, :model, :title, presence: true
