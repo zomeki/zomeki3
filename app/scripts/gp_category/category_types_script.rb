@@ -76,6 +76,7 @@ class GpCategory::CategoryTypesScript < Cms::Script::Publication
       when 'docs_1', 'docs_2'
         publish_link cat, ApplicationController.helpers.category_module_more_link(template_module: tm, ct_or_c: cat)
       when 'docs_3', 'docs_4'
+        next unless cat.category_type.internal_category_type
         cat.category_type.internal_category_type.public_root_categories.each do |c|
           publish_link cat, ApplicationController.helpers.category_module_more_link(template_module: tm, ct_or_c: cat, category_name: c.name)
         end
