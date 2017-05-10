@@ -62,6 +62,17 @@ class Sys::Admin::GroupsController < Cms::Controller::Admin::Base
 
   def destroy
     @item = Sys::Group.find(params[:id])
+
+    unless @item.deletable_group?
+      flash[:notice] = [
+        "グループの削除に失敗しました。以下のいずれかの条件に該当しないか確認してください。",
+        "・下位に有効なグループが存在している",
+        "・グループ内または下位のグループ内にユーザーが存在している",
+        "・グループまたは下位グループの作成した記事が存在している",
+      ].join('<br />')
+      return redirect_to action: :show
+    end
+
     _destroy @item do
       Organization::GroupRefreshJob.perform_now(@item.sites)
     end
