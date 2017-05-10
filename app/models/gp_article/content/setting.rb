@@ -179,6 +179,15 @@ class GpArticle::Content::Setting < Cms::ContentSetting
 
   validate :validate_doc_list_pagination, if: -> { name == 'doc_list_pagination' }
 
+  def value_name
+    case name
+    when 'basic_setting'
+      Cms::Layout.find_by(id: default_layout_id).try!(:concept_name_and_title)
+    else
+      super
+    end
+  end
+
   def extra_values=(params)
     ex = extra_values
     case name
@@ -263,10 +272,6 @@ class GpArticle::Content::Setting < Cms::ContentSetting
 
   def default_template_id
     extra_values[:default_template_id] || 0
-  end
-
-  def default_layout_id
-    extra_values[:default_layout_id] || 0
   end
 
   private

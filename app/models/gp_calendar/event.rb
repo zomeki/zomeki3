@@ -24,10 +24,10 @@ class GpCalendar::Event < ApplicationRecord
   after_save     GpCalendar::Publisher::EventCallbacks.new, if: :changed?
   before_destroy GpCalendar::Publisher::EventCallbacks.new
 
-  validates :started_on, :presence => true
-  validates :ended_on, :presence => true
-  validates :title, :presence => true
-  validates :name, :uniqueness => true, :format => {with: /\A[\-\w]*\z/ }
+  validates :started_on, presence: true
+  validates :ended_on, presence: true
+  validates :title, presence: true
+  validates :name, uniqueness: { scope: :content_id }, format: { with: /\A[\-\w]*\z/ }
 
   validate :dates_range
 
