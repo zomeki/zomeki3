@@ -10,6 +10,8 @@ class GpCalendar::Content::Event < Cms::Content
   has_many :events, foreign_key: :content_id, class_name: 'GpCalendar::Event', dependent: :destroy
   has_many :holidays, foreign_key: :content_id, class_name: 'GpCalendar::Holiday', dependent: :destroy
 
+  after_create :create_default_holidays
+
   def public_events
     events.public_state
   end
@@ -106,5 +108,11 @@ class GpCalendar::Content::Event < Cms::Content
                     .where(content_id: doc_content_ids, event_state: 'visible')
                     .event_scheduled_between(start_date, end_date, categories)
     end
+  end
+
+  private
+
+  def create_default_holidays
+    GpCalendar::DefaultHolidayJob.perform_now(id)
   end
 end

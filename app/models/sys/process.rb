@@ -5,6 +5,7 @@ class Sys::Process < ApplicationRecord
   ALL_PROCESSES = [
     ["日時指定処理", "sys/tasks/exec"],
     ["音声書き出し", "cms/talk_tasks/exec"],
+    ["リンクチェック", "cms/link_checks/exec"],
     ["アクセスランキング取り込み", "rank/ranks/exec"],
     ["フィード取り込み", "feed/feeds/read"],
     ["問合せ取り込み", "survey/answers/pull"],
@@ -17,6 +18,7 @@ class Sys::Process < ApplicationRecord
   RUNNABLE_PROCESSE_NAMES = [
     "sys/tasks/exec",
     "cms/talk_tasks/exec",
+    "cms/link_checks/exec",
     "rank/ranks/exec",
     "feed/feeds/read"
   ]

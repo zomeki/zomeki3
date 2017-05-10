@@ -43,6 +43,8 @@ ja:
         setting_file_upload_max_size: "添付ファイル最大サイズ"
         setting_extension_upload_max_size: "拡張子別アップロードサイズ"
         setting_link_check: "リンクチェック機能"
+        setting_link_check_hour: "リンクチェック開始時刻"
+        setting_link_check_exclusion: "リンクチェック対象外URL"
         setting_accessibility_check: "アクセシビリティチェック機能"
         setting_kana_talk: "ふりがな・音声"
         setting_map_coordinate: "地図/デフォルト座標"

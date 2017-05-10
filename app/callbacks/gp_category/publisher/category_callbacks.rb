@@ -14,12 +14,13 @@ class GpCategory::Publisher::CategoryCallbacks < PublisherCallbacks
     enqueue_pieces
     enqueue_categories
     enqueue_docs
+    enqueue_sitemap_nodes
   end
 
   private
 
   def enqueue?
-    true
+    [@category.state, @category.state_was].include?('public')
   end
 
   def enqueue_pieces
@@ -36,5 +37,12 @@ class GpCategory::Publisher::CategoryCallbacks < PublisherCallbacks
   def enqueue_docs
     docs = @category.public_descendants.flat_map { |c| c.docs.public_state.select(:id) }
     Cms::Publisher.register(@category.content.site_id, docs)
+  end
+
+  def enqueue_sitemap_nodes
+    if [@category.sitemap_state, @category.sitemap_state_was].include?('visible')
+      site = @category.content.site
+      Cms::Publisher.register(site.id, site.public_sitemap_nodes)
+    end
   end
 end

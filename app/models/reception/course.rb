@@ -137,6 +137,11 @@ class Reception::Course < ApplicationRecord
     opens.any?(&:applicable?)
   end
 
+  def fee=(val)
+    val = val.delete(',') if val.is_a?(String)
+    super
+  end
+
   private
 
   def set_defaults

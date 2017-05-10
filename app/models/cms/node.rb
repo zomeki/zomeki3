@@ -4,6 +4,7 @@ class Cms::Node < ApplicationRecord
   include Cms::Model::Base::Page::Publisher
   include Cms::Model::Base::Page::TalkTask
   include Cms::Model::Base::Node
+  include Cms::Model::Base::Sitemap
   include Sys::Model::Tree
   include Sys::Model::Rel::Creator
   include Cms::Model::Rel::Site
@@ -15,8 +16,6 @@ class Cms::Node < ApplicationRecord
 
   include StateText
   include Cms::Nodes::Preload
-
-  SITEMAP_STATE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
 
   belongs_to :parent, :foreign_key => :parent_id, :class_name => 'Cms::Node'
   belongs_to :layout, :foreign_key => :layout_id, :class_name => 'Cms::Layout'
@@ -226,10 +225,6 @@ class Cms::Node < ApplicationRecord
     return label =~ /^translation missing:/ ? name.to_s.humanize : label
   end
 
-  def sitemap_visible?
-    self.sitemap_state == 'visible'
-  end
-
   def pdf_in_body?(html)
     extract_links(html, false).any?{|l| l[:url] =~ /\.pdf$/i }
   end
@@ -367,7 +362,6 @@ class Cms::Node < ApplicationRecord
   private
 
   def set_defaults
-    self.sitemap_state ||= SITEMAP_STATE_OPTIONS.first.last if self.has_attribute?(:sitemap_state)
     self.directory = (model_type == :directory) if self.has_attribute?(:directory) && directory.nil?
   end
 

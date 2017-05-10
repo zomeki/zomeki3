@@ -1,8 +1,6 @@
 class Sys::Admin::GroupsController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 
-  after_action :refresh_organization_groups, only: [:create, :update, :destroy]
-
   def pre_dispatch
     return error_auth unless Core.user.has_auth?(:manager)
 
@@ -47,7 +45,9 @@ class Sys::Admin::GroupsController < Cms::Controller::Admin::Base
     @item.ldap = 0
     @item.level_no = @item.parent.try!(:level_no).to_i + 1
     @item.sites << Core.site if @item.sites.empty?
-    _create(@item)
+    _create @item do
+      Organization::GroupRefreshJob.perform_now(@item.sites)
+    end
   end
 
   def update
@@ -55,12 +55,16 @@ class Sys::Admin::GroupsController < Cms::Controller::Admin::Base
     @item.attributes = group_params
     @item.level_no = @item.parent.try!(:level_no).to_i + 1
     @item.sites << Core.site if @item.sites.empty?
-    _update(@item)
+    _update @item do
+      Organization::GroupRefreshJob.perform_now(@item.sites)
+    end
   end
 
   def destroy
     @item = Sys::Group.find(params[:id])
-    _destroy @item
+    _destroy @item do
+      Organization::GroupRefreshJob.perform_now(@item.sites)
+    end
   end
 
   private
@@ -70,11 +74,5 @@ class Sys::Admin::GroupsController < Cms::Controller::Admin::Base
       :address, :code, :email, :fax, :ldap, :name, :name_en, :note,
       :parent_id, :sort_no, :state, :tel, :tel_attend, :site_ids => []
     )
-  end
-
-  def refresh_organization_groups
-    Organization::Content::Group.where(site_id: @item.site_ids).each do |content|
-      content.refresh_groups
-    end
   end
 end

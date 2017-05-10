@@ -8,7 +8,8 @@ module GpCalendar::EventHelper
 
     list_style.gsub(/@\w+@/, {
       '@title_link@' => event_replace_title_link(event, link_to_options),
-      '@title@' => event_replace_title(event)
+      '@title@' => event_replace_title(event),
+      '@category@' => event_replace_category(event)
     }).html_safe
   end
 
@@ -46,11 +47,9 @@ module GpCalendar::EventHelper
           else
             concat content_tag(:td, t[:data].html_safe, class: class_str)
           end
-        elsif t[:data] =~ %r|title|
-          class_str = event.kind
-          concat content_tag(:td, t[:data].html_safe, class: class_str)
         else
-          concat content_tag(:td, t[:data].html_safe)
+          class_str = t[:data].delete("@")
+          concat content_tag(:td, t[:data].html_safe, class: class_str)
         end
       end
     end
@@ -64,7 +63,7 @@ module GpCalendar::EventHelper
 private
 
   def event_replace_title(event)
-    content_tag(:p, event.title, class: 'title')
+    content_tag(:span, event.title)
   end
 
   def event_replace_title_link(event, link_to_options)
@@ -74,12 +73,12 @@ private
                   else
                     h event.title
                   end
-    content_tag(:p, event_title, class: 'title_link')
+    content_tag(:span, event_title)
   end
 
   def event_replace_subtitle(event)
     if doc = event.doc
-      content_tag(:p, doc.subtitle, class: 'subtitle')
+      content_tag(:span, doc.subtitle)
     else
       ''
     end
@@ -90,14 +89,14 @@ private
   end
 
   def event_replace_summary(event)
-    content_tag(:p, hbr(event.description), class: 'summary')
+    content_tag(:span, hbr(event.description))
   end
 
   def event_replace_unit(event)
     if doc = event.doc
-      content_tag(:p, doc.creator.group.try(:name), class: 'unit')
+      content_tag(:span, doc.creator.group.try(:name))
     else
-      content_tag(:p, event.creator.group.try(:name), class: 'unit')
+      content_tag(:span, event.creator.group.try(:name))
     end
   end
 
@@ -119,12 +118,9 @@ private
 
   def replace_cateogry(event, categories, category_type = nil)
     if categories.present?
-      p_class = "category"
-      p_class += " #{category_type.name}" if category_type
-      category_tag = content_tag(:p, class: p_class) do
-        categories.each do |category|
-          concat content_tag(:span, category.title, class: category.name)
-        end
+      category_tag = "";
+      categories.each do |category|
+        category_tag += content_tag(:span, category.title, class: category.name)
       end
       category_tag
     else
@@ -144,7 +140,7 @@ private
         image_tag
       end
     if image_link.present?
-      content_tag(:span, image_link, class: 'image')
+      content_tag(:span, image_link)
     else
       ''
     end
@@ -153,7 +149,7 @@ private
   def event_replace_image(event)
     image_tag = event_image_tag(event)
     if image_tag.present?
-      content_tag(:span, image_tag, class: 'image')
+      content_tag(:span, image_tag)
     else
       ''
     end
@@ -176,9 +172,9 @@ private
 
   def event_replace_note(event)
     if doc = event.doc
-      content_tag(:p, hbr(doc.event_note), class: 'note')
+      content_tag(:span, hbr(doc.event_note))
     else
-      content_tag(:p, hbr(event.note), class: 'note')
+      content_tag(:span, hbr(event.note))
     end
   end
 
