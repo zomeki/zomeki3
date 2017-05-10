@@ -28,7 +28,9 @@ class GpCalendar::BaseScript < Cms::Script::Publication
     path = @node.public_path.to_s
     smart_phone_path = @node.public_smart_phone_path.to_s
 
-    files = @node.content.public_categories.map{|c| "index_#{c.category_type.name}@#{c.path_from_root_category.gsub('/', '@')}" }
+    files = @node.content.public_category_types.map { |ct|
+      ct.public_categories.map { |c| "index_#{c.category_type.name}@#{c.path_from_root_category.gsub('/', '@')}" }
+    }.flatten
 
     publish_more(@node, uri: uri, path: path, smart_phone_path: smart_phone_path, dependent: uri)
     files.each do |file|
