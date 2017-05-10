@@ -8,7 +8,6 @@ class GpCategory::CategoryType < ApplicationRecord
   include Cms::Model::Base::Sitemap
 
   include StateText
-  include GpCategory::CategoryTypes::Preload
 
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
   DOCS_ORDER_OPTIONS = [['コンテンツ設定を継承', ''],

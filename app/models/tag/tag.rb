@@ -1,8 +1,6 @@
 class Tag::Tag < ApplicationRecord
   include Sys::Model::Base
 
-  include Tag::Tags::Preload
-
   # Content
   belongs_to :content, :foreign_key => :content_id, :class_name => 'Tag::Content::Tag'
   validates :content_id, presence: true

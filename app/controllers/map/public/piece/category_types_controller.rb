@@ -8,6 +8,6 @@ class Map::Public::Piece::CategoryTypesController < Sys::Controller::Public::Bas
 
   def index
     @top_categories = @piece.content.public_categories.where(category_type_id: @piece.visible_category_type_ids)
-      .preload_assocs(:public_descendants_assocs)
+    @top_categories = GpCategory::CategoryPreloader.new(@top_categories).preload(:public_descendants)
   end
 end

@@ -8,9 +8,7 @@
   <%- case node.model -%>
   <%- when 'GpCategory::CategoryType' -%>
     <%- category_types = node.content.public_category_types.visible_in_sitemap
-                             .preload_assocs(
-                               :public_node_ancestors_assocs, 
-                               :public_root_categories_and_public_descendants_and_public_node_ancestors_assocs)
+        category_types = GpCategory::CategoryTypePreloader.new(category_types).preload(:public_node_ancestors)
     -%>
     <%- if category_types.present? -%>
     <ul class="level<%= level + 1 %> <%= css_class %>">
@@ -36,7 +34,7 @@
 
   <%- when 'Gnav::MenuItem' -%>
     <%- menu_items = node.content.public_menu_items.visible_in_sitemap
-                         .preload_assocs(:public_node_ancestors_assocs) -%>
+        menu_items = Cms::ContentPreloader.new(menu_items).preload(:public_node_ancestors) -%>
     <%- if menu_items.present? -%>
     <ul class="level<%= level + 1 %> <%= css_class %>">
       <%= render partial: 'gnav_menu_item', collection: menu_items, locals: {level: level + 1, css_class: css_class} %>
@@ -45,7 +43,7 @@
 
   <%- end -%>
 
-  <%- if (children = node.public_children_in_route.visible_in_sitemap).present? -%>
+  <%- if (children = node.public_children_for_sitemap).present? -%>
   <ul class="level<%= level + 1 %> <%= css_class %>">
     <%= render partial: 'node', collection: children, locals: {level: level + 1, css_class: css_class} %>
   </ul>

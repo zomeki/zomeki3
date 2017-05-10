@@ -22,13 +22,13 @@
   </section>
   <%- end -%>
 
-  <%- @category.preload_assocs(:public_children_and_public_node_ancestors_assocs) -%>
+  <%- @category = GpCategory::CategoryPreloader.new(@category).preload(:public_children_and_public_node_ancestors) -%>
   <%- @category.public_children.each do |child| -%>
   <section class="category<%= child.name.try(:camelize) %> classification">
     <h2><%= link_to child.title, child.public_uri %></h2>
     <%-
       public_docs = child.public_docs.limit(@content.category_type_docs_number)
-        .preload_assocs(:public_node_ancestors_assocs, :public_index_assocs).to_a
+      public_docs = GpArticle::DocPreloader.new(public_docs).preload(:public_node_ancestors)
     -%>
     <%- unless public_docs.empty? -%>
     <div class="docs">
