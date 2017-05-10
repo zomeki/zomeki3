@@ -1,0 +1,5 @@
+<section class="<%= @template_module.name %>">
+  <%=raw @template_module.upper_text %>
+  <%= render 'gp_category/public/template_module/shared/_docs', content: @content, template_module: @template_module, docs: @docs %>
+  <%=raw @template_module.lower_text %>
+</section>
