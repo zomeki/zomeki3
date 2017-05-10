@@ -93,7 +93,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     @item.replace_words_with_dictionary
 
     if params[:link_check_in_body]
-      @item.link_check_results = @item.check_links_in_body
+      @item.link_check_results = @item.check_links
       return render :new
     end
 
@@ -129,7 +129,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     @item.replace_words_with_dictionary
 
     if params[:link_check_in_body]
-      @item.link_check_results = @item.check_links_in_body
+      @item.link_check_results = @item.check_links
       return render :edit
     end
 
