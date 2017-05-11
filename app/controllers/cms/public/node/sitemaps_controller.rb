@@ -9,6 +9,6 @@ class Cms::Public::Node::SitemapsController < Cms::Controller::Public::Base
                       .where.not(name: nil)
                       .order('directory DESC, sitemap_sort_no IS NULL, sitemap_sort_no, name')
 
-    @items = Cms::NodePreloader.new(@items).preload(:public_descendants_for_sitemap)
+    @items = Cms::NodesPreloader.new(@items).preload(:public_descendants_for_sitemap)
   end
 end

@@ -1,9 +1,9 @@
-class Cms::ContentPreloader < PreloaderQuery
+class GpArticle::DocsPreloader < PreloaderQuery
   DEPTH_LIMIT = 5
 
   class << self
     def public_node_ancestors
-      { content: { public_node: { site: nil, parent: parents } } }
+      { content: { public_node: { site: nil, parent: parents } }, creator: { group: nil } }
     end
 
     private

@@ -4,7 +4,7 @@
     <h2><%= link_to category.title, category.public_uri %></h2>
     <%-
       public_docs = category.public_docs.limit(@content.category_type_docs_number)
-      public_docs = GpArticle::DocPreloader.new(public_docs).preload(:public_node_ancestors)
+      public_docs = GpArticle::DocsPreloader.new(public_docs).preload(:public_node_ancestors)
     -%>
     <%- if public_docs.present? -%>
     <div class="docs">

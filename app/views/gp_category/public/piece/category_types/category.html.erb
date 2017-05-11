@@ -1,6 +1,6 @@
 <%-
 docs = @category.public_docs
-docs = GpArticle::DocPreloader.new(docs).preload(:public_node_ancestors)
+docs = GpArticle::DocsPreloader.new(docs).preload(:public_node_ancestors)
 categorize_docs = @piece.categorize_docs(docs)
 -%>
 <%- if categorize_docs.present? -%>
@@ -17,14 +17,14 @@ categorize_docs = @piece.categorize_docs(docs)
 
 <%- unless @category.public_children.empty? -%>
 <div class="level<%= @category.level_no + 1 -%>">
-  <%- @category = GpCategory::CategoryPreloader.new(@category).preload(:public_children_and_public_node_ancestors) -%>
+  <%- @category = GpCategory::CategoriesPreloader.new(@category).preload(:public_children_and_public_node_ancestors) -%>
   <%- @category.public_children.each do |child| -%>
   <section class="category <%= child.name -%><%= cycle '', ' cycle' %>">
     <h3><%= link_to child.title, child.public_uri %></h3>
 
     <%-
     docs = child.public_docs
-    docs = GpArticle::DocPreloader.new(docs).preload(:public_node_ancestors)
+    docs = GpArticle::DocsPreloader.new(docs).preload(:public_node_ancestors)
     categorize_docs = @piece.categorize_docs(docs)
     -%>
     <%- if categorize_docs.present? -%>

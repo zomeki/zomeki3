@@ -8,7 +8,7 @@ class Tag::Public::Node::TagsController < Cms::Controller::Public::Base
   def index
     @items = @content.tags
                      .paginate(page: params[:page], per_page: 50)
-    @items = Cms::ContentPreloader.new(@items).preload(:public_node_ancestors)
+    @items = Cms::ContentsPreloader.new(@items).preload(:public_node_ancestors)
     return http_error(404) if @items.current_page > @items.total_pages
   end
 
@@ -22,6 +22,6 @@ class Tag::Public::Node::TagsController < Cms::Controller::Public::Base
     Page.title = @node.title
 
     @docs = @item.public_docs
-    @docs = GpArticle::DocPreloader.new(@docs).preload(:public_node_ancestors)
+    @docs = GpArticle::DocsPreloader.new(@docs).preload(:public_node_ancestors)
   end
 end

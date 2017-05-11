@@ -9,7 +9,7 @@ class GpArticle::Public::Piece::DocsController < Sys::Controller::Public::Base
   def index
     @docs = @piece.content.public_docs_for_list.limit(@piece.docs_number)
                   .order(@piece.docs_order_as_sql)
-    @docs = GpArticle::DocPreloader.new(@docs).preload(:public_node_ancestors)
+    @docs = GpArticle::DocsPreloader.new(@docs).preload(:public_node_ancestors)
 
     render :index_mobile if Page.mobile?
   end

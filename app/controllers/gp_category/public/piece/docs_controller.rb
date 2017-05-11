@@ -53,7 +53,7 @@ class GpCategory::Public::Piece::DocsController < Sys::Controller::Public::Base
               @docs
             end
 
-    @docs = GpArticle::DocPreloader.new(@docs).preload(:public_node_ancestors)
+    @docs = GpArticle::DocsPreloader.new(@docs).preload(:public_node_ancestors)
 
     render :index_mobile if Page.mobile?
   end

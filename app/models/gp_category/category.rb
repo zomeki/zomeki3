@@ -79,7 +79,7 @@ class GpCategory::Category < ApplicationRecord
   end
 
   def descendants_with_preload
-    GpCategory::CategoryPreloader.new(self).preload(:descendants)
+    GpCategory::CategoriesPreloader.new(self).preload(:descendants)
     descendants
   end
 
@@ -95,7 +95,7 @@ class GpCategory::Category < ApplicationRecord
   end
 
   def public_descendants_with_preload
-    GpCategory::CategoryPreloader.new(self).preload(:public_descendants)
+    GpCategory::CategoriesPreloader.new(self).preload(:public_descendants)
     public_descendants
   end
 

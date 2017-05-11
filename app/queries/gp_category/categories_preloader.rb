@@ -1,4 +1,4 @@
-class GpCategory::CategoryPreloader < PreloaderQuery
+class GpCategory::CategoriesPreloader < PreloaderQuery
   DEPTH_LIMIT = 5
 
   class << self

@@ -16,6 +16,6 @@ class Organization::Public::Piece::CategorizedDocsController < Sys::Controller::
                   .categorized_into(@piece.category_ids)
                   .order(@item.inherited_docs_order)
 
-    @docs = GpArticle::DocPreloader.new(@docs).preload(:public_node_ancestors)
+    @docs = GpArticle::DocsPreloader.new(@docs).preload(:public_node_ancestors)
   end
 end

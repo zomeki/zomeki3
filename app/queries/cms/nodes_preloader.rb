@@ -1,4 +1,4 @@
-class Cms::NodePreloader < PreloaderQuery
+class Cms::NodesPreloader < PreloaderQuery
   DEPTH_LIMIT = 5
 
   class << self

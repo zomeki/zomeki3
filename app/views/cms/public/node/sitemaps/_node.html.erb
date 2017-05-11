@@ -8,7 +8,7 @@
   <%- case node.model -%>
   <%- when 'GpCategory::CategoryType' -%>
     <%- category_types = node.content.public_category_types.visible_in_sitemap
-        category_types = GpCategory::CategoryTypePreloader.new(category_types).preload(:public_node_ancestors)
+        category_types = GpCategory::CategoryTypesPreloader.new(category_types).preload(:public_node_ancestors)
     -%>
     <%- if category_types.present? -%>
     <ul class="level<%= level + 1 %> <%= css_class %>">
@@ -34,7 +34,7 @@
 
   <%- when 'Gnav::MenuItem' -%>
     <%- menu_items = node.content.public_menu_items.visible_in_sitemap
-        menu_items = Cms::ContentPreloader.new(menu_items).preload(:public_node_ancestors) -%>
+        menu_items = Cms::ContentsPreloader.new(menu_items).preload(:public_node_ancestors) -%>
     <%- if menu_items.present? -%>
     <ul class="level<%= level + 1 %> <%= css_class %>">
       <%= render partial: 'gnav_menu_item', collection: menu_items, locals: {level: level + 1, css_class: css_class} %>
