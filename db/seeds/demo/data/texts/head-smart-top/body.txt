@@ -1,4 +1,5 @@
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="format-detection" content="telephone=no" />
 <link rel="stylesheet" href="/_themes/base/reset.css" />
 <link rel="stylesheet" href="/_themes/base/style.css" />
 <link rel="stylesheet" href="/_themes/base/layouts/layout.css" />
@@ -6,7 +7,9 @@
 <link rel="stylesheet" href="/_themes/smart/style.css" />
 <link rel="stylesheet" href="/_themes/smart/piece/style.css" />
 <link rel="stylesheet" href="/_themes/smart/jquery.bxslider.css" />
-<script src="/_themes/js/jquery.naviRollover.js"></script>
+<script src="/_themes/js/jquery.min.js"></script>
+<script src="/_themes/js/jquery-migrate.min.js"></script>
+<script src="/_themes/js/rails.min.js" async defer></script>
 <script src="/_themes/js/jquery.bxslider.min.js"></script>
-<script src="/_themes/js/ios-orientationchange-fix.js"></script>
+<script src="/_themes/js/jquery.naviRollover.js"></script>
 <script src="/_themes/js/common.js"></script>
