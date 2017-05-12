@@ -1,0 +1,5 @@
+<%= render 'category_type_section', category_types: @category_types do |category_type| -%>
+  <%- if (categories = category_type.public_root_categories).present? -%>
+    <%= render 'gp_category/public/template_module/shared/_categories', categories: categories %>
+  <%- end -%>
+<%- end -%>

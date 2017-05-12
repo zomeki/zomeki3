@@ -11,6 +11,8 @@ class GpArticle::Doc < ApplicationRecord
   include Cms::Model::Rel::Inquiry
   include Cms::Model::Rel::Map
   include Cms::Model::Rel::Bracket
+  include Cms::Model::Rel::PublishUrl
+  include Cms::Model::Rel::Link
 
   include Cms::Model::Auth::Concept
   include Sys::Model::Auth::EditableGroup
@@ -18,14 +20,13 @@ class GpArticle::Doc < ApplicationRecord
   include GpArticle::Model::Rel::Doc
   include GpArticle::Model::Rel::Category
   include GpArticle::Model::Rel::Tag
+  include GpArticle::Model::Rel::RelatedDoc
   include Approval::Model::Rel::Approval
   include GpTemplate::Model::Rel::Template
-  include GpArticle::Model::Rel::RelatedDoc
-  include Cms::Model::Rel::PublishUrl
-  include Cms::Model::Rel::Link
 
   include StateText
-  include GpArticle::Docs::Preload
+
+  self.linkable_columns = [:body, :mobile_body, :body_more]
 
   STATE_OPTIONS = [['下書き保存', 'draft'], ['承認依頼', 'approvable'], ['即時公開', 'public']]
   TARGET_OPTIONS = [['無効', ''], ['同一ウィンドウ', '_self'], ['別ウィンドウ', '_blank'], ['添付ファイル', 'attached_file']]
@@ -110,7 +111,7 @@ class GpArticle::Doc < ApplicationRecord
   before_destroy GpArticle::Publisher::DocCallbacks.new
 
   scope :visible_in_list, -> { where(feature_1: true) }
-  scope :event_scheduled_between, ->(start_date, end_date, category_ids) {
+  scope :event_scheduled_between, ->(start_date, end_date, category_ids = nil) {
     rel = all
     rel = rel.where(arel_table[:event_ended_on].gteq(start_date)) if start_date.present?
     rel = rel.where(arel_table[:event_started_on].lt(end_date + 1)) if end_date.present?
@@ -584,22 +585,6 @@ class GpArticle::Doc < ApplicationRecord
     super
   end
 
-  def links_in_body(all=false)
-    extract_links(self.body, all)
-  end
-
-  def check_links_in_body
-    check_links(links_in_body)
-  end
-
-  def links_in_mobile_body(all=false)
-    extract_links(self.mobile_body, all)
-  end
-
-  def links_in_string(str, all=false)
-    extract_links(str, all)
-  end
-
   def backlinks
     return self.class.none unless state_public? || state_closed?
     return self.class.none if public_uri.blank?
@@ -612,12 +597,38 @@ class GpArticle::Doc < ApplicationRecord
     self.class.where(id: backlinks.pluck(:linkable_id))
   end
 
+  def extract_links
+    extracted_links = super
+    if template
+      rich_text_items = template.items.select { |item| item.item_type == 'rich_text' }
+      rich_text_items.each do |item|
+        links = Util::Link.extract_links(template_values[item.name])
+        links.each { |link| link[:column] = :template_values }
+        extracted_links += links
+      end
+    end
+    extracted_links
+  end
+
   def check_accessibility
-    Util::AccessibilityChecker.check(body)
+    results = Util::AccessibilityChecker.check(body)
+    if template
+      rich_text_items = template.items.select { |item| item.item_type == 'rich_text' }
+      rich_text_items.each do |item|
+        results += Util::AccessibilityChecker.check(template_values[item.name])
+      end
+    end
+    results
   end
 
   def modify_accessibility
     self.body = Util::AccessibilityChecker.modify(body)
+    if template
+      rich_text_items = template.items.select { |item| item.item_type == 'rich_text' }
+      rich_text_items.each do |item|
+        template_values[item.name] = Util::AccessibilityChecker.modify(template_values[item.name])
+      end
+    end
   end
 
   def replace_words_with_dictionary
@@ -833,38 +844,11 @@ class GpArticle::Doc < ApplicationRecord
     errors.add(:event_ended_on, "が#{self.class.human_attribute_name :event_started_on}を過ぎています。") if self.event_ended_on < self.event_started_on
   end
 
-  def extract_links(html, all)
-    links = Nokogiri::HTML.parse(html).css('a[@href]')
-                          .map { |a| { body: a.text, url: a.attribute('href').value } }
-    return links if all
-    links.select do |link|
-      uri = Addressable::URI.parse(link[:url])
-      !uri.absolute? || uri.scheme.to_s.downcase.in?(%w(http https))
-    end
-  rescue => evar
-    warn_log evar.message
-    return []
-  end
-
-  def check_links(links)
-    links.map{|link|
-      uri = Addressable::URI.parse(link[:url])
-      url = unless uri.absolute?
-              next unless uri.path =~ /^\//
-              "#{content.site.full_uri.sub(/\/$/, '')}#{uri.path}"
-            else
-              uri.to_s
-            end
-      res = Util::LinkChecker.check_url(url)
-      {body: link[:body], url: url, status: res[:status], reason: res[:reason], result: res[:result]}
-    }.compact
-  end
-
   def validate_broken_link_existence
     return if content.site.setting_site_link_check != 'enabled'
     return if in_ignore_link_check == '1'
 
-    results = check_links_in_body
+    results = check_links
     if results.any? {|r| !r[:result] }
       self.link_check_results = results
       errors.add(:base, 'リンクチェック結果を確認してください。')

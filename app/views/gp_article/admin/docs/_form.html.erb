@@ -100,18 +100,21 @@ $(document).ready(function () {
             <%= f.text_area :body, :class => 'body ckeditor' %>
           </td>
         </tr>
-        <tr>
-          <td>
-            <%= submit_tag 'リンクチェック', name: 'link_check_in_body' if @content.site.setting_site_link_check == 'enabled' %>
-            <%= submit_tag 'アクセシビリティチェック', name: 'accessibility_check' if @content.site.setting_site_accessibility_check == 'enabled' %>
-          </td>
-        </tr>
       </table>
     </div>
 
     <div id="template_body_form">
       <%= render 'gp_template/admin/shared/form', template: @item.template, template_values: @item.template_values if @item.template %>
     </div>
+
+    <table class="show">
+      <tr>
+        <td>
+          <%= submit_tag 'リンクチェック', name: 'link_check_in_body' if @content.site.setting_site_link_check == 'enabled' %>
+          <%= submit_tag 'アクセシビリティチェック', name: 'accessibility_check' if @content.site.setting_site_accessibility_check == 'enabled' %>
+        </td>
+      </tr>
+    </table>
 
     <%- if @content.blog_functions_available? -%>
     <p class="form">追記を入力する</p>

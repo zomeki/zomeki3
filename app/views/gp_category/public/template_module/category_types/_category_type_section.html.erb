@@ -1,0 +1,6 @@
+<%- category_types.each do |category_type| -%>
+  <section class="<%= category_type.name %>">
+    <h2><%= link_to category_type.title, category_type.public_uri %></h2>
+    <%= yield category_type %>
+  </section>
+<%- end -%>

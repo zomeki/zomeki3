@@ -97,7 +97,7 @@ gem 'garb', '~> 0.9.8'
 gem 'google-oauth2-installed', '0.0.3'
 gem 'octokit', '~> 4.6.2'
 
-gem 'whenever', require: false
+gem 'whenever', '~> 0.9.7', require: false
 gem 'postgres-copy', '~> 1.1.0', require: false
 
 gem 'logical_query_parser', '~> 0.1.0'

@@ -1,0 +1,5 @@
+<%= render 'gp_category/public/template_module/shared/_category_summary_section', categories: @categories do |category| -%>
+  <%- if (children = category.public_children).present? -%>
+    <%= render 'gp_category/public/template_module/shared/_categories_summary', categories: children, depth_limit: 1 %>
+  <%- end -%>
+<%- end -%>

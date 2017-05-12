@@ -1,0 +1,25 @@
+<section class="<%= @template_module.name %>">
+  <%=raw @template_module.upper_text %>
+  <%- @categories.each do |category| -%>
+    <%- next if @category_docs[category.id].blank? -%>
+    <section class="<%= category.name %>">
+      <h2><%= category.title %></h2>
+      <%= render 'gp_category/public/template_module/shared/_docs', content: @content, template_module: @template_module, docs: @category_docs[category.id] %>
+      <%- if action_name =~ /docs_8/ && category.public_children.present? -%>
+        <section>
+          <ul>
+            <%- category.public_children.each do |child| -%>
+              <li><%= link_to child.title, child.public_uri %></li>
+            <%- end -%>
+          </ul>
+        </section>
+      <%- end -%>
+      <%- if @category_docs[category.id].total_pages > 1 -%>
+        <div>
+          <%= link_to '一覧へ', category.public_uri, class: 'more' %>
+        </div>
+      <%- end -%>
+    </section>
+  <%- end -%>
+  <%=raw @template_module.lower_text %>
+</section>

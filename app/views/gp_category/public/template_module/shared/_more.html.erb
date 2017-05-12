@@ -1,0 +1,11 @@
+<section class="category">
+  <div class="docs">
+    <%- if @content.feed_display? -%>
+    <ul class="feed">
+      <li><%= link_to 'RSS' , "index.rss" , class: 'feedRss', title: 'RSSフィードを取得' %></li>
+      <li><%= link_to 'Atom', "index.atom", class: 'feedAtom', title: 'Atomフィードを取得' %></li>
+    </ul>
+    <%- end -%>
+    <%= render 'gp_category/public/template_module/shared/_docs', content: @content, template_module: @template_module, docs: @docs %>
+  </div>
+</section>

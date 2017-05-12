@@ -31,7 +31,6 @@ class GpCalendar::Public::Piece::CategoryDailyLinksController < GpCalendar::Publ
                    .scheduled_between(start_date, end_date)
                    .content_and_criteria(@piece.content, {categories: @piece.category_ids}).to_a
     docs = @piece.content.public_event_docs(start_date, end_date)
-                 .preload_assocs(:public_node_ancestors_assocs, :event_categories, :files)
     events = merge_docs_into_events(docs, events)
 
     days = docs.inject([]) do |dates, doc|

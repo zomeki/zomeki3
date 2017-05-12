@@ -24,29 +24,19 @@ class GpCalendar::Content::Event < Cms::Content
     setting_value(:gp_category_content_category_type_id).to_i
   end
 
-  def categories
-    setting = GpCalendar::Content::Setting.find_by(id: settings.find_by(name: 'gp_category_content_category_type_id').try(:id))
-    return GpCategory::Category.none unless setting
-    setting.categories
-  end
-
-  def categories_for_option
-    categories.map {|c| [c.title, c.id] }
-  end
-
-  def public_categories
-    categories.public_state
-  end
-
   def category_types
-    setting = GpCalendar::Content::Setting.find_by(id: settings.find_by(name: 'gp_category_content_category_type_id').try(:id))
-    return GpCategory::CategoryType.none unless setting
-    setting.category_types
+    category_type_ids = setting_extra_value(:gp_category_content_category_type_id, :category_type_ids).to_a
+    GpCategory::CategoryType.where(id: category_type_ids)
+  end
+
+  def public_category_types
+    category_types.public_state
   end
 
   def category_type_categories(category_type)
     category_type_id = (category_type.kind_of?(GpCategory::CategoryType) ? category_type.id : category_type.to_i )
-    categories.select {|c| c.category_type_id == category_type_id }
+    category_type = category_types.detect {|ct| ct.id == category_type_id }
+    category_type ? category_type.public_root_categories : GpCategory::Category.none
   end
 
   def category_type_categories_for_option(category_type, include_descendants: true)

@@ -6,7 +6,6 @@ class Gnav::MenuItem < ApplicationRecord
   include Cms::Model::Base::Sitemap
 
   include StateText
-  include Gnav::MenuItems::Preload
 
   default_scope { order(:sort_no) }
 

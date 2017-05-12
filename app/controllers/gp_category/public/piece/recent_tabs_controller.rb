@@ -27,9 +27,9 @@ class GpCategory::Public::Piece::RecentTabsController < Sys::Controller::Public:
           GpArticle::Doc
         end
       docs = docs.mobile(::Page.mobile?).public_state.where(content_id: content_ids)
-        .order(display_published_at: :desc, published_at: :desc)
-        .limit(@piece.list_count)
-        .preload_assocs(:public_node_ancestors_assocs, :public_index_assocs)
+                 .order(display_published_at: :desc, published_at: :desc)
+                 .limit(@piece.list_count)
+      docs = GpArticle::DocsPreloader.new(docs).preload(:public_node_ancestors)
 
       @tabs.push(name: tab.name,
                  title: tab.title,

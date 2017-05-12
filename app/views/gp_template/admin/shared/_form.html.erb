@@ -8,7 +8,7 @@
     </tr>
     <tr>
       <td class="cke_editor_wrapper">
-        <%= text_area_tag "item[template_values][#{item.name}]", template_values[item.name], style: item.style_attribute, class: 'body ckeditor' %>
+        <%= text_area_tag "item[template_values][#{item.name}]", template_values[item.name], style: item.style_attribute, class: 'body' %>
         <%= javascript_tag do %>
           CKEDITOR.replace('item_template_values_<%= item.name %>');
         <%- end -%>

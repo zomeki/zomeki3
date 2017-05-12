@@ -1,0 +1,16 @@
+<section class="<%= @template_module.name %>">
+  <%=raw @template_module.upper_text %>
+  <%- @groups.each do |group| -%>
+    <%- next if @group_docs[group.id].blank? -%>
+    <section class="<%= group.code %>">
+      <h2><%= group.name %></h2>
+      <%= render 'gp_category/public/template_module/shared/_docs', content: @content, template_module: @template_module, docs: @group_docs[group.id] %>
+      <%- if @group_docs[group.id].total_pages > 1 -%>
+        <div>
+          <%= link_to '一覧へ', category_module_more_link(template_module: @template_module, ct_or_c: @category || @category_type, group_code: group.code), class: 'more' %>
+        </div>
+      <%- end -%>
+    </section>
+  <%- end -%>
+  <%=raw @template_module.lower_text %>
+</section>
