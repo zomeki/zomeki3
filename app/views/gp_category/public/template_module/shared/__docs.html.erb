@@ -1,5 +1,7 @@
-<%- docs.each do |doc| -%>
-  <%= content_wrapper_tag template_module.wrapper_tag do %>
-    <%= doc_replace(doc, template_module.doc_style, content.date_style, content.time_style) %>
+<%= content_wrapper_tag template_module.wrapper_tag do %>
+  <%- docs.each do |doc| -%>
+    <%= content_tag template_module.wrapper_tag do %>
+      <%= doc_replace(doc, template_module.doc_style, content.date_style, content.time_style) %>
+    <%- end -%>
   <%- end -%>
 <%- end -%>
