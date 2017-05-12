@@ -111,7 +111,7 @@ class Survey::Admin::FormsController < Cms::Controller::Admin::Base
     if @item.state_approvable? && @item.approvers.include?(Core.user)
       @item.approve(Core.user) do
         @item.update_column(:state, 'approved')
-        @item.set_queues
+        @item.enqueue_tasks
         Sys::OperationLog.log(request, item: @item)
       end
     end

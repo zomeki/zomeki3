@@ -80,11 +80,13 @@ class Cms::NodesScript < Cms::Script::Publication
     info_log "Published node: #{node.model} #{node.name} #{node.title} in #{(Time.now - started_at).round(2)} [secs.]"
   end
 
-  def publish_by_task
-    item = params[:item]
-    if item.state == 'recognized' && item.model == 'Cms::Page'
+  def publish_by_task(item)
+    return if item.model != 'Cms::Page'
+
+    if item.state == 'recognized'
       ::Script.current
       info_log "-- Publish: #{item.class}##{item.id}"
+
       item = Cms::Node::Page.find(item.id)
       uri  = "#{item.public_uri}?node_id=#{item.id}"
       path = "#{item.public_path}"
@@ -92,7 +94,7 @@ class Cms::NodesScript < Cms::Script::Publication
       unless item.publish(render_public_as_string(uri, site: item.site))
         raise item.errors.full_messages
       else
-        Sys::OperationLog.script_log(:item => item, :site => item.site, :action => 'publish')
+        Sys::OperationLog.script_log(item: item, site: item.site, action: 'publish')
       end
 
       ruby_uri  = (uri =~ /\?/) ? uri.gsub(/(.*\.html)\?/, '\\1.r?') : "#{uri}.r"
@@ -103,32 +105,31 @@ class Cms::NodesScript < Cms::Script::Publication
       end
 
       info_log %Q!OK: Published to "#{path}"!
-      params[:task].destroy
-
       ::Script.success
+      return true
+    elsif item.state == 'public'
+      return true
     end
-  rescue => e
-    error_log e.message
   end
 
-  def close_by_task
-    item = params[:item]
-    if item.state == 'public' && item.model == 'Cms::Page'
+  def close_by_task(item)
+    return if item.model != 'Cms::Page'
+
+    if item.state == 'public'
       ::Script.current
 
       info_log "-- Close: #{item.class}##{item.id}"
       item = Cms::Node::Page.find(item.id)
 
       if item.close
-        Sys::OperationLog.script_log(:item => item, :site => item.site, :action => 'close')
+        Sys::OperationLog.script_log(item: item, site: item.site, action: 'close')
       end
 
       info_log 'OK: Closed'
-      params[:task].destroy
-
       ::Script.success
+      return true
+    elsif item.state == 'closed'
+      return true
     end
-  rescue => e
-    error_log e.message
   end
 end
