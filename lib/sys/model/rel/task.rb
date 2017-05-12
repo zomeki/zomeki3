@@ -5,10 +5,11 @@ module Sys::Model::Rel::Task
     has_many :tasks, class_name: 'Sys::Task', dependent: :destroy, as: :processable
     accepts_nested_attributes_for :tasks
 
-    with_options if: :save_tasks? do
+    with_options if: -> { @tasks_attributes_changed } do
       before_save :prepare_tasks
       validate :validate_tasks, if: -> { state != 'draft' }
     end
+    after_save :enqueue_tasks, if: -> { state.in?(%w(recognized approved prepared public)) }
 
     scope :with_task_name, ->(name) {
       tasks = Sys::Task.arel_table
@@ -16,20 +17,23 @@ module Sys::Model::Rel::Task
     }
   end
 
+  def queued_tasks
+    tasks.where(state: 'queued')
+  end
+
+  def task_for_form(name)
+    task = tasks.detect { |t| t.name == name } || tasks.build(name: name)
+    task.process_at = nil if task.state_performed?
+    task
+  end
+
   def tasks_attributes=(val)
-    @save_tasks = true
+    @tasks_attributes_changed = true
     super
   end
 
-  def save_tasks?
-    @save_tasks
-  end
-
-  def set_queues
-    return if tasks.blank?
-    if state == 'recognized' || state == 'approved' || state == 'prepared'
-      tasks.each{|t| t.set_queue if t.publish_task? }
-    end
+  def enqueue_tasks
+    queued_tasks.each(&:enqueue_job)
   end
 
   private
@@ -52,10 +56,11 @@ module Sys::Model::Rel::Task
   end
 
   def prepare_tasks
+    @tasks_attributes_changed = false
     tasks.each do |task|
+      task.state = 'queued'
       task.site_id = Core.site.id if Core.site
       task.mark_for_destruction if task.name.blank? || task.process_at.blank?
     end
   end
-
 end

@@ -34,7 +34,7 @@ class Cms::Admin::Node::PagesController < Cms::Admin::Node::BaseController
     _recognize(item, :location => cms_nodes_path) do
       if @item.state == 'recognized'
         send_recognition_success_mail(@item)
-        @item.set_queues
+        @item.enqueue_tasks
       end
     end
   end

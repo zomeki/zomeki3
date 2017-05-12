@@ -110,6 +110,10 @@ class Survey::Form < ApplicationRecord
     state == 'public'
   end
 
+  def state_closed?
+    state == 'closed'
+  end
+
   def duplicate
     item = self.class.new(self.attributes)
     item.id            = nil

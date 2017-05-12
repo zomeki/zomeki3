@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170427050634) do
+ActiveRecord::Schema.define(version: 20170510040466) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1511,7 +1511,12 @@ ActiveRecord::Schema.define(version: 20170427050634) do
     t.integer  "processable_id"
     t.string   "processable_type"
     t.integer  "site_id"
+    t.string   "state"
+    t.string   "job_id"
+    t.integer  "provider_job_id"
     t.index ["processable_type", "processable_id"], name: "index_sys_tasks_on_processable_type_and_processable_id", using: :btree
+    t.index ["site_id"], name: "index_sys_tasks_on_site_id", using: :btree
+    t.index ["state"], name: "index_sys_tasks_on_state", using: :btree
   end
 
   create_table "sys_temp_texts", force: :cascade do |t|

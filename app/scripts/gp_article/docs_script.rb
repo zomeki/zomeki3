@@ -59,8 +59,8 @@ class GpArticle::DocsScript < Cms::Script::Publication
     end
   end
 
-  def publish_by_task
-    if (item = params[:item]) && (item.state_approved? || item.state_prepared?)
+  def publish_by_task(item)
+    if (item.state_approved? || item.state_prepared?)
       ::Script.current
       info_log "-- Publish: #{item.class}##{item.id}"
 
@@ -71,7 +71,7 @@ class GpArticle::DocsScript < Cms::Script::Publication
       item.update_attribute(:state, 'public')
 
       if item.publish(render_public_as_string(uri, site: item.content.site))
-        Sys::OperationLog.script_log(:item => item, :site => item.content.site, :action => 'publish')
+        Sys::OperationLog.script_log(item: item, site: item.content.site, action: 'publish')
       else
         raise item.errors.full_messages
       end
@@ -84,23 +84,27 @@ class GpArticle::DocsScript < Cms::Script::Publication
       end
 
       info_log %Q!OK: Published to "#{path}"!
-      params[:task].destroy
       ::Script.success
+      return true
+    elsif item.state_public?
+      return true
     end
   end
 
-  def close_by_task
-    if (item = params[:item]) && item.state_public?
+  def close_by_task(item)
+    if item.state_public?
       ::Script.current
       info_log "-- Close: #{item.class}##{item.id}"
 
       item.close
 
-      Sys::OperationLog.script_log(:item => item, :site => item.content.site, :action => 'close')
+      Sys::OperationLog.script_log(item: item, site: item.content.site, action: 'close')
 
       info_log 'OK: Finished'
-      params[:task].destroy
       ::Script.success
+      return true
+    elsif item.state_closed?
+      return true
     end
   end
 end
