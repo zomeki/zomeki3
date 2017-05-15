@@ -1,6 +1,4 @@
 class Rank::Admin::Content::SettingsController < Cms::Admin::Content::SettingsController
-  include Rank::Controller::Rank
-
   def model
     Rank::Content::Setting
   end
@@ -17,12 +15,22 @@ class Rank::Admin::Content::SettingsController < Cms::Admin::Content::SettingsCo
   end
 
   def import
-    get_access(@content, nil)
-    redirect_to :action => :index
+    begin
+      result = Rank::RankFetchJob.perform_now(@content)
+      flash[:notice] = if result
+                         "一括取込が完了しました。"
+                       else
+                         "一括取込に失敗しました。トラッキングIDとOAuthの設定を確認してください。"
+                       end
+    rescue => e
+      flash[:notice] = "一括取込に失敗しました。（#{e}）"
+    end
+    redirect_to action: :index
   end
 
   def makeup
-    calc_access(@content)
-    redirect_to :action => :index
+    Rank::RankTotalJob.perform_now(@content)
+    flash[:notice] = "集計が完了しました。"
+    redirect_to action: :index
   end
 end
