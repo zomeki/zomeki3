@@ -233,6 +233,7 @@ class GpArticle::Content::Setting < Cms::ContentSetting
     when 'doc_list_pagination'
       ex[:doc_list_style]    = params[:doc_list_style]
       ex[:doc_list_number]   = params[:doc_list_number]
+      ex[:doc_list_period]   = params[:doc_list_period]
       ex[:doc_weekly_style] = params[:doc_weekly_style]
       ex[:doc_monthly_style] = params[:doc_monthly_style]
       ex[:doc_publish_more_pages] = params[:doc_publish_more_pages]

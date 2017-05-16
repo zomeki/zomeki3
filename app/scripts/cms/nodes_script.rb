@@ -7,7 +7,7 @@ class Cms::NodesScript < Cms::Script::Publication
     nodes = Cms::Node.public_state.order(:name, :id)
     nodes.where!(site_id: ::Script.site.id) if ::Script.site
 
-    if params[:target_node_id].present?
+    if params.key?(:target_node_id)
       nodes.where(id: params[:target_node_id]).each do |node|
         publish_node(node)
       end

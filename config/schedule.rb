@@ -61,13 +61,18 @@ every :hour do
 end
 
 # 今日のイベントページを静的ファイルとして書き出します。
-every :day, at: '0:30 am' do
+every :day, at: '0:10 am' do
   rake 'zomeki:gp_calendar:publish_todays_events'
 end
 
 # 今月の業務カレンダーを静的ファイルとして書き出します。
-every :month, at: 'start of the month at 3:00 am' do
+every :month, at: '3:00 am' do
   rake 'zomeki:biz_calendar:publish_this_month'
+end
+
+# 静的ファイルを書き出します。
+every :day, at: '0:30 am' do
+  rake 'zomeki:cms:nodes:publish'
 end
 
 # アクセスランキングデータを取り込みます。

@@ -252,6 +252,10 @@ class GpArticle::Content::Doc < Cms::Content
     setting_extra_value(:doc_list_pagination, :doc_list_number).to_i
   end
 
+  def doc_list_period
+    setting_extra_value(:doc_list_pagination, :doc_list_period)
+  end
+
   def doc_publish_more_pages
     setting_extra_value(:doc_list_pagination, :doc_publish_more_pages).to_i
   end
