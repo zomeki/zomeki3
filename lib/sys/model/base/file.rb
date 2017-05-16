@@ -111,7 +111,7 @@ module Sys::Model::Base::File
   def validate_upload_file
     return true if file.blank?
 
-    maxsize = @maxsize || Core.site.try(:setting_site_file_upload_max_size) || 5
+    maxsize = @maxsize || Core.site.try(:file_upload_max_size) || 5
 
     if Core.site
       ext = ::File.extname(name.to_s).downcase

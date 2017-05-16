@@ -180,6 +180,7 @@ module Cms::Controller::Layout
 #      end
 #    end
 
+    body = convert_adobe_reader_link(body)
     body = last_convert_body(body)
 
     ## render the true layout
@@ -197,6 +198,22 @@ module Cms::Controller::Layout
 
     replacer = Cms::Lib::SslLinkReplacer.new
     replacer.run(body, site: Page.site, current_path: Page.current_node.public_uri)
+  end
+
+  def convert_adobe_reader_link(body)
+    return body unless body.include?('@adobe-reader-link@')
+
+    if Page.mobile? || !Page.site.adobe_reader_link_enabled?
+      body.gsub('@adobe-reader-link@', '')
+    else
+      html = Nokogiri::HTML.fragment(body).xpath("descendant::div[@class='body']").inner_html
+      link = if Util::Link.include_pdf_link?(html)
+               render_to_string(partial: 'cms/public/_partial/adobe_reader')
+             else
+               ''
+             end
+      body.gsub('@adobe-reader-link@', link)
+    end
   end
 
   def last_convert_body(body)

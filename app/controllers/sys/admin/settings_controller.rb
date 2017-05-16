@@ -7,27 +7,25 @@ class Sys::Admin::SettingsController < Cms::Controller::Admin::Base
   end
 
   def index
-    @items = Sys::Setting.configs
+    @items = Sys::Setting.configs.values.map { |config| Sys::Setting.where(name: config[:id]).first }
     _index @items
   end
 
   def show
-    @item = Sys::Setting.config(params[:id])
+    @item = Sys::Setting.where(name: params[:id]).first_or_initialize
     _show @item
   end
 
   def update
-    @item = Sys::Setting.config(params[:id])
+    @item = Sys::Setting.where(name: params[:id]).first_or_initialize
     @item.value = params[:item][:value]
 
-    if @item.name =~ /^(common_ssl|file_upload_max_size|maintenance_mode)$/
+    if @item.name =~ /^(common_ssl|maintenance_mode)$/
       extra_values = @item.extra_values
 
       case @item.name
       when 'common_ssl'
         extra_values[:common_ssl_uri] = params[:common_ssl_uri]
-      when 'file_upload_max_size'
-        extra_values[:extension_upload_max_size] = params[:extension_upload_max_size]
       when 'maintenance_mode'
         extra_values[:maintenance_start_at] = params[:maintenance_start_at]
         extra_values[:maintenance_end_at] = params[:maintenance_end_at]

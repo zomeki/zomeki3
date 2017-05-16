@@ -1,125 +1,66 @@
 module Cms::Model::Rel::SiteSetting
   extend ActiveSupport::Concern
 
-  attr_accessor :in_setting_site_basic_auth_state
-  attr_accessor :in_setting_site_common_ssl
-  attr_accessor :in_setting_site_admin_mail_sender
-  attr_accessor :in_setting_site_file_upload_max_size
-  attr_accessor :in_setting_site_extension_upload_max_size
-  attr_accessor :in_setting_site_allowed_attachment_type
-  attr_accessor :in_setting_site_link_check
-  attr_accessor :in_setting_site_link_check_hour
-  attr_accessor :in_setting_site_link_check_exclusion
-  attr_accessor :in_setting_site_accessibility_check
-  attr_accessor :in_setting_site_kana_talk
-  attr_accessor :in_setting_site_map_coordinate
-
-  SITE_SETTINGS = [
-    :basic_auth_state, :common_ssl, :allowed_attachment_type,
-    :admin_mail_sender, :file_upload_max_size, :extension_upload_max_size,
-    :link_check, :link_check_hour, :link_check_exclusion,
-    :accessibility_check, :kana_talk,
-    :map_coordinate
-  ]
+  IN_SETTING_NAMES = Cms::SiteSetting.configs.keys.map { |name| :"in_setting_site_#{name}" }
+  IN_SETTING_NAMES.each do |in_name|
+    attr_accessor in_name
+  end
 
   included do
     after_save :save_site_settings
   end
 
-  def setting_site_basic_auth_state
-    setting = Cms::SiteSetting::BasicAuth.where(site_id: id).first
-    setting ? setting.value : nil;
-  end
-
   def use_basic_auth?
-    setting_site_basic_auth_state == 'enabled'
+    setting_value(:basic_auth_state) == 'enabled'
   end
 
   def use_common_ssl?
-    Sys::Setting.use_common_ssl? && setting_site_common_ssl == 'enabled'
+    Sys::Setting.use_common_ssl? && setting_value(:common_ssl) == 'enabled'
   end
 
-  def setting_site_common_ssl
-    setting = Cms::SiteSetting.where(:site_id => id, :name => 'common_ssl').first
-    setting ? setting.value : nil;
+  def admin_mail_sender
+    setting_value(:admin_mail_sender)
   end
 
-  def setting_site_common_ssl_label
-    setting = Cms::SiteSetting.where(:site_id => id, :name => 'common_ssl').first
-    state = setting ? setting.value : nil;
-    Cms::SiteSetting::SSL_OPTIONS.each{|a| return a[0] if a[1] == state}
-    return nil
+  def file_upload_max_size
+    (setting_value(:file_upload_max_size).presence || 5).to_i
   end
 
-  def setting_site_admin_mail_sender
-    setting = Cms::SiteSetting.where(:site_id => id, :name => 'admin_mail_sender').first
-    setting && setting.value.presence || 'noreply'
+  def allowed_attachment_type
+    setting_value(:allowed_attachment_type)
   end
 
-  def setting_site_file_upload_max_size
-    setting = Cms::SiteSetting.where(:site_id => id, :name => 'file_upload_max_size').first
-    setting && setting.value.presence || 5
-  end
-
-  def setting_site_extension_upload_max_size
-    setting = Cms::SiteSetting.where(:site_id => id, :name => 'extension_upload_max_size').first
-    setting ? setting.value : nil;
-  end
-
-  def setting_site_allowed_attachment_type
-    setting = Cms::SiteSetting.where(:site_id => id, :name => 'allowed_attachment_type').first
-    setting ? setting.value : '';
-  end
-
-  def setting_site_link_check
-    setting = Cms::SiteSetting.where(:site_id => id, :name => 'link_check').first
-    setting ? setting.value : 'enabled';
-  end
-
-  def setting_site_link_check_label
-    Cms::SiteSetting::LINK_CHECK_OPTIONS.rassoc(setting_site_link_check).try(:first)
-  end
-
-  def setting_site_link_check_hour
-    setting = Cms::SiteSetting.where(:site_id => id, :name => 'link_check_hour').first
-    setting ? setting.value : nil;
-  end
-
-  def setting_site_link_check_exclusion
-    setting = Cms::SiteSetting.where(:site_id => id, :name => 'link_check_exclusion').first
-    setting ? setting.value : '';
+  def link_check_enabled?
+    setting_value(:link_check) == 'enabled'
   end
 
   def link_check_hour?(hour)
-    setting_site_link_check == 'enabled' && setting_site_link_check_hour == hour.to_s
+    setting_value(:link_check) == 'enabled' && setting_value(:link_check_hour) == hour.to_s
   end
 
   def link_check_exclusion_regexp
-    regexps = setting_site_link_check_exclusion.to_s.split(/[\r\n]+/).map { |ex| /^#{Regexp.escape(ex)}/ }
+    regexps = setting_value(:link_check_exclusion).to_s.split(/[\r\n]+/).map { |ex| /^#{Regexp.escape(ex)}/ }
     regexps.present? ? Regexp.union(regexps) : nil
   end
 
-  def setting_site_accessibility_check
-    setting = Cms::SiteSetting.where(:site_id => id, :name => 'accessibility_check').first
-    setting ? setting.value : 'enabled';
+  def accessibility_check_enabled?
+    setting_value(:accessibility_check) == 'enabled'
   end
 
-  def setting_site_accessibility_check_label
-    Cms::SiteSetting::ACCESSIBILITY_CHECK_OPTIONS.rassoc(setting_site_accessibility_check).try(:first)
+  def adobe_reader_link_enabled?
+    setting_value(:adobe_reader_link) == 'enabled'
   end
 
-  def setting_site_kana_talk
-    setting = Cms::SiteSetting.where(:site_id => id, :name => 'kana_talk').first
-    setting ? setting.value : 'enabled';
+  def use_kana?
+    setting_value(:kana_talk).in?(%w(enabled kana_only))
   end
 
-  def setting_site_kana_talk_label
-    Cms::SiteSetting::KANA_TALK_OPTIONS.rassoc(setting_site_kana_talk).try(:first)
+  def use_talk?
+    setting_value(:kana_talk) == 'enabled'
   end
 
-  def setting_site_map_coordinate
-    setting = Cms::SiteSetting.where(:site_id => id, :name => 'map_coordinate').first
-    setting ? setting.value : nil;
+  def map_coordinate
+    setting_value(:map_coordinate)
   end
 
   def get_upload_max_size(ext)
@@ -131,7 +72,8 @@ module Cms::Model::Rel::SiteSetting
 
   def ext_upload_max_size_list
     return @ext_upload_max_size_list if @ext_upload_max_size_list
-    csv = setting_site_extension_upload_max_size.to_s
+
+    csv = setting_value(:extension_upload_max_size).to_s
     @ext_upload_max_size_list = {}
 
     csv.split(/(\r\n|\n)/u).each_with_index do |line, idx|
@@ -149,24 +91,20 @@ module Cms::Model::Rel::SiteSetting
   end
 
   def load_site_settings
-    @in_setting_site_basic_auth_state            = setting_site_basic_auth_state
-    @in_setting_site_common_ssl                  = setting_site_common_ssl
-    @in_setting_site_admin_mail_sender           = setting_site_admin_mail_sender
-    @in_setting_site_file_upload_max_size        = setting_site_file_upload_max_size
-    @in_setting_site_extension_upload_max_size   = setting_site_extension_upload_max_size
-    @in_setting_site_allowed_attachment_type     = setting_site_allowed_attachment_type
-    @in_setting_site_link_check                  = setting_site_link_check
-    @in_setting_site_link_check_hour             = setting_site_link_check_hour
-    @in_setting_site_link_check_exclusion        = setting_site_link_check_exclusion
-    @in_setting_site_accessibility_check         = setting_site_accessibility_check
-    @in_setting_site_kana_talk                   = setting_site_kana_talk
-    @in_setting_site_map_coordinate              = setting_site_map_coordinate
+    Cms::SiteSetting.configs.keys.each do |name|
+      instance_variable_set("@in_setting_site_#{name}", setting_value(name))
+    end
   end
 
   private
 
+  def setting_value(name)
+    setting = settings.detect { |st| st.name == name.to_s } || settings.build(name: name)
+    setting.value
+  end
+
   def save_site_settings
-    SITE_SETTINGS.each do |name|
+    Cms::SiteSetting.configs.keys.each do |name|
       v = instance_variable_get("@in_setting_site_#{name}")
       next unless v
       setting = Cms::SiteSetting.where(site_id: id, name: name).first_or_initialize

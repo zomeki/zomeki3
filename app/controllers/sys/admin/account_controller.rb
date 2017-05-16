@@ -67,7 +67,7 @@ class Sys::Admin::AccountController < Sys::Controller::Admin::Base
       return
     end
 
-    sender = Core.site.setting_site_admin_mail_sender
+    sender = Core.site.admin_mail_sender
     user   = Sys::User.where(account: params[:account], email: params[:email]).first
 
     if (email = user.try(:email))

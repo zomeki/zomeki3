@@ -158,7 +158,7 @@ class Cms::Site < ApplicationRecord
 
   def full_ssl_uri
     return nil unless use_common_ssl?
-    url  = Sys::Setting.setting_extra_value(:common_ssl, :common_ssl_uri)
+    url  = Sys::Setting.common_ssl_uri
     url += "_ssl/#{format('%04d', id)}/"
     return url
   end
@@ -318,14 +318,6 @@ class Cms::Site < ApplicationRecord
     self.load_site_settings
     self.in_setting_site_basic_auth_state = 'disabled'
     self.save
-  end
-
-  def use_kana?
-    setting_site_kana_talk.in?(%w(enabled kana_only))
-  end
-
-  def use_talk?
-    setting_site_kana_talk == 'enabled'
   end
 
   protected
