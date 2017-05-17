@@ -1,6 +1,4 @@
 class Rank::Public::Piece::RanksController < Sys::Controller::Public::Base
-  include Rank::Controller::Rank
-
   def pre_dispatch
     @piece = Rank::Piece::Rank.find_by(id: Page.current_piece.id)
     render plain: '' unless @piece
@@ -9,10 +7,9 @@ class Rank::Public::Piece::RanksController < Sys::Controller::Public::Base
   def index
     render plain: '' and return if @piece.ranking_target.blank? || @piece.ranking_term.blank?
 
-    @term   = @piece.ranking_term
-    @target = @piece.ranking_target
-    @ranks  = rank_datas(@piece.content, @term, @target, @piece.display_count, @piece.category_option)
-
+    @ranks = Rank::TotalsFinder.new(@piece.content.ranks)
+                               .search(@piece.content, @piece.ranking_term, @piece.ranking_target, category_option: @piece.category_option, current_item: Page.current_item)
+                               .paginate(page: params[:page], per_page: @piece.display_count)
     render plain: '' if @ranks.empty?
   end
 end

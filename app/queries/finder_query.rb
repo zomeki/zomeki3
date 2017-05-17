@@ -1,0 +1,2 @@
+class FinderQuery < ApplicationQuery
+end

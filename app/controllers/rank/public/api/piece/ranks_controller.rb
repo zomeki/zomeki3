@@ -1,6 +1,4 @@
 class Rank::Public::Api::Piece::RanksController < Cms::Controller::Public::Api
-  include Rank::Controller::Rank
-
   def pre_dispatch
     return http_error(405) unless request.get?
     return http_error(404) unless params[:version] == '20150401'
@@ -13,9 +11,9 @@ class Rank::Public::Api::Piece::RanksController < Cms::Controller::Public::Api
     current_item = rank_current_item(params[:current_item_class], params[:current_item_id])
     return render(json: {}) unless current_item
 
-    term = piece.ranking_term
-    target = piece.ranking_target
-    ranks = rank_datas(piece.content, term, target, piece.display_count, piece.category_option, nil, nil, nil, current_item)
+    ranks = Rank::TotalsFinder.new(piece.content.ranks)
+                              .search(piece.content, piece.ranking_term, piece.ranking_target, category_option: piece.category_option, current_item: current_item)
+                              .paginate(page: params[:page], per_page: piece.display_count)
 
     result = {}
     result[:ranks] = ranks.map do |rank|
