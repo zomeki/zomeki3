@@ -33,6 +33,7 @@ class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
     @docs = GpArticle::DocsPreloader.new(@docs).preload(:public_node_ancestors)
 
     if @content.simple_pagination?
+      @docs = @docs.search_date_column(@content.docs_order_column, 'after', @content.doc_list_period.to_i.months.ago) if @content.doc_list_period.present?
       @docs = @docs.paginate(page: params[:page], per_page: @content.doc_list_number)
       return http_error(404) if @docs.current_page > @docs.total_pages
     else
