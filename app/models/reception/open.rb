@@ -94,9 +94,7 @@ class Reception::Open < ApplicationRecord
   end
 
   def expire
-    # to publish piece
-    self.updated_at = Time.now
-    save
+    Cms::Publisher::ContentRelatedCallbacks.new.enqueue(self)
   end
 
   def update_received_applicants_count
