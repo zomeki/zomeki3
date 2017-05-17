@@ -5,11 +5,10 @@
     <th style="">設定値</th>
   </tr>
   <%- @items.each do |item| -%>
-  <%- value =  @site.public_send(item[:setting_name].to_s) || "未設定" %>
   <tr class="<%= cycle '', 'cycle' %>">
-    <td style="text-align: center;"><%= link_to :edit, url_for(:action => :edit, :id => item[:id]) %></td>
-    <td><%= item[:name] %></td>
-    <td><%= value %></td>
+    <td style="text-align: center;"><%= link_to :edit, { action: :edit, id: item.name } %></td>
+    <td><%= item.config[:name] %></td>
+    <td><%= item.value_name %></td>
   </tr>
   <%- end -%>
 </table>

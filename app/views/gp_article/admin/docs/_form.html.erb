@@ -110,8 +110,8 @@ $(document).ready(function () {
     <table class="show">
       <tr>
         <td>
-          <%= submit_tag 'リンクチェック', name: 'link_check_in_body' if @content.site.setting_site_link_check == 'enabled' %>
-          <%= submit_tag 'アクセシビリティチェック', name: 'accessibility_check' if @content.site.setting_site_accessibility_check == 'enabled' %>
+          <%= submit_tag 'リンクチェック', name: 'link_check_in_body' if @content.site.link_check_enabled? %>
+          <%= submit_tag 'アクセシビリティチェック', name: 'accessibility_check' if @content.site.accessibility_check_enabled? %>
         </td>
       </tr>
     </table>

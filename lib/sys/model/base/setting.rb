@@ -1,72 +1,51 @@
-class Sys::Model::Base::Setting < ApplicationRecord
-  self.table_name = "sys_settings"
-  
-  def self.set_config(id, params = {})
-    @@configs ||= {}
-    @@configs[self] ||= []
-    @@configs[self] << params.merge(:id => id)
-  end
-  
-  def self.configs
-    @@configs[self].collect {|c| config(c[:id])}
+module Sys::Model::Base::Setting
+  extend ActiveSupport::Concern
+
+  included do
+    class_attribute :configs
+    self.configs = {}
+
+    after_initialize :set_defaults
   end
 
-  def self.config(name)
-    find_or_initialize_by(name: name)
-  end
-
-  def self.value(name, default_value = nil)
-    st = config(name)
-    return nil unless st
-    return st.value.blank? ? default_value || st.default_value : st.value
-  end
-  
-  def editable?
-    true
-  end
-  
   def config
-    return @config if @config
-    @@configs[self.class].each {|c| return @config = c if c[:id].to_s == name.to_s}
-    nil
+    self.configs[name.to_sym] || {}
   end
-  
+
   def config_name
-    config ? config[:name] : nil
+    config[:name]
   end
-  
+
   def config_options
-    config[:options] ? config[:options].collect {|e| [e[0], e[1].to_s] } : nil
+    config[:options]
   end
-  
+
   def style
-    config[:style] ? config[:style] : nil
+    config[:style]
   end
-  
+
   def upper_text
-    config[:upper_text] ? config[:upper_text] : nil
+    config[:upper_text]
   end
-  
+
   def lower_text
-    config[:lower_text] ? config[:lower_text] : nil
+    config[:lower_text]
   end
-  
+
   def default_value
-    config[:default] ? config[:default] : nil
+    config[:default_value]
   end
-  
+
   def value_name
     if config[:options]
-      config[:options].each {|c| return c[0] if c[1].to_s == value.to_s}
+      config[:options].rassoc(value.to_s).try(:first)
     else
-      return value if !value.blank?
+      value
     end
-    nil
   end
   
   def form_type
-    return config[:form_type] if config[:form_type]
-    config_options ? :select : :string
+    config[:form_type]
   end
 
   def extra_values=(ev)
@@ -86,12 +65,25 @@ class Sys::Model::Base::Setting < ApplicationRecord
     return ev
   end
 
-  def self.setting_extra_values(name)
-    self.config(name).try(:extra_values) || {}.with_indifferent_access
+  private
+
+  def set_defaults
+    self.value ||= config[:default_value] if config[:default_value]
+    self.extra_values ||= config[:default_extra_values] if config[:default_extra_values]
   end
 
-  def self.setting_extra_value(name, extra_name)
-    self.setting_extra_values(name)[extra_name]
+  class_methods do
+    def set_config(id, params = {})
+      params[:id] ||= id
+      params[:name] ||= nil
+      params[:form_type] ||= params[:options] ? :select : :string
+      params[:default_value] ||= nil
+      params[:default_extra_values] ||= nil
+      params[:options] ||= nil
+      params[:style] ||= nil
+      params[:upper_text] ||= nil
+      params[:lower_text] ||= nil
+      self.configs[id.to_sym] = params
+    end
   end
-
 end
