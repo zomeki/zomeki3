@@ -50,13 +50,13 @@ class GpCategory::Piece::Doc < Cms::Piece
   def categories
     if category_sets.empty?
       content.category_types.inject([]) {|result, ct|
-        ct.preload_assocs(:root_categories_and_descendants_assocs)
+        ct = GpCategory::CategoryTypesPreloader.new(ct).preload(:root_categories_and_descendants)
         result | ct.root_categories.inject([]) {|r, c| r | c.descendants }
       }
     else
       category_sets.map {|cs|
         unless cs[:category]
-          cs[:category_type].preload_assocs(:root_categories_and_descendants_assocs)
+          cs[:category_type] = GpCategory::CategoryTypesPreloader.new(cs[:category_type]).preload(:root_categories_and_descendants)
           cs[:category_type].root_categories.inject([]) {|r, c| r | c.descendants }
         else
           if cs[:layer] == 'descendants'

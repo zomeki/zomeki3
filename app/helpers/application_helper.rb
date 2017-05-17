@@ -48,7 +48,7 @@ module ApplicationHelper
     end
     defaults[:previous_label] = options[:prev_label] if options[:prev_label].present?
     defaults[:next_label]     = options[:next_label] if options[:next_label].present?
-    links = will_paginate(items, defaults.merge!(options))
+    links = will_paginate(items, defaults.deep_merge!(options))
     return links if links.blank?
 
     if Core.request_uri != Core.internal_uri

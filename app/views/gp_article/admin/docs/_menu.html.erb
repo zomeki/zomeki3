@@ -29,7 +29,7 @@
   <%= link_to '承認', { action: :approve }, method: :post, confirm: '承認してよろしいですか？' if @item.state_approvable? &&
                                                                                            @item.approvers.include?(Core.user) %>
   <%-
-  task = @item.tasks.find_by(name: 'publish')
+  task = @item.queued_tasks.find_by(name: 'publish')
   pubmsg = task ? "公開日時が設定されています。\n（ #{task.process_at.strftime('%Y-%m-%d %H:%M')} ）\n直ちに公開してよろしいですか？" : '公開してよろしいですか？'
   -%>
   <%= link_to :publish, { action: :publish }, method: :post, confirm: pubmsg if (@item.state_approved? || @item.state_prepared?) &&

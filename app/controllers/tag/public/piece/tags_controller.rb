@@ -5,7 +5,8 @@ class Tag::Public::Piece::TagsController < Sys::Controller::Public::Base
   end
 
   def index
-    @tags = @piece.content.tags.preload_assocs(:public_node_ancestors_assocs)
+    @tags = @piece.content.tags
+    @tags = Cms::ContentsPreloader.new(@tags).preload(:public_node_ancestors)
     render plain: '' if @tags.empty?
   end
 end

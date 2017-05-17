@@ -1,0 +1,10 @@
+<section class="<%= @template_module.name %>">
+  <%=raw @template_module.upper_text %>
+  <%= render 'gp_category/public/template_module/shared/_docs', content: @content, template_module: @template_module, docs: @docs %>
+  <%- if @docs.total_pages > 1 -%>
+    <div>
+      <%= link_to '一覧へ', category_module_more_link(template_module: @template_module, ct_or_c: @category || @category_type), class: 'more' %>
+    </div>
+  <%- end -%>
+  <%=raw @template_module.lower_text %>
+</section>

@@ -28,9 +28,6 @@ class GpCalendar::Content::Setting < Cms::ContentSetting
   set_config :default_image,
     name: '初期画像',
     comment: '（例 /images/sample.jpg ）'
-  set_config :show_qreki,
-    name: '旧暦表示',
-    options: [["表示する", 1], ["表示しない", 0]]
 
   belongs_to :content, foreign_key: :content_id, class_name: 'GpCalendar::Content::Event'
 
@@ -43,21 +40,7 @@ class GpCalendar::Content::Setting < Cms::ContentSetting
     super(ex)
   end
 
-
-  def category_ids
-    extra_values[:category_ids] || []
-  end
-
   def category_type_ids
     extra_values[:category_type_ids] || []
   end
-
-  def categories
-    GpCategory::Category.where(id: category_ids)
-  end
-
-  def category_types
-    GpCategory::CategoryType.where(id: category_type_ids)
-  end
-
 end

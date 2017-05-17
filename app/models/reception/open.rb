@@ -11,7 +11,7 @@ class Reception::Open < ApplicationRecord
   belongs_to :course
   has_many :applicants, dependent: :destroy
 
-  after_save :save_tasks
+  before_save :prepare_expire_task
 
   after_save     Cms::Publisher::ContentRelatedCallbacks.new, if: :changed?
   before_destroy Cms::Publisher::ContentRelatedCallbacks.new
@@ -65,6 +65,10 @@ class Reception::Open < ApplicationRecord
     state == 'public'
   end
 
+  def state_closed?
+    state == 'closed'
+  end
+
   def available_period?(time = Time.now)
     expired_at.nil? || time <= expired_at
   end
@@ -90,9 +94,7 @@ class Reception::Open < ApplicationRecord
   end
 
   def expire
-    # to publish piece
-    self.updated_at = Time.now
-    save
+    Cms::Publisher::ContentRelatedCallbacks.new.enqueue(self)
   end
 
   def update_received_applicants_count
@@ -101,11 +103,13 @@ class Reception::Open < ApplicationRecord
 
   private
 
-  def save_tasks
+  def prepare_expire_task
     return if !state_public? || !expired_at
 
-    task = tasks.where(name: 'expire').first_or_initialize
+    task = Sys::Task.where(processable: self, name: 'expire').first_or_initialize
+    task.state = 'queued'
+    task.site_id = content.site_id
     task.process_at = expired_at
-    task.save
+    self.tasks_attributes = task.attributes
   end
 end

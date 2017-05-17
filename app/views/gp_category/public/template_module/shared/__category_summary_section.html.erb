@@ -1,0 +1,11 @@
+<%- categories.each do |category| -%>
+  <section class="<%= category.name %>">
+    <%= link_to category.public_uri do %>
+      <h2><%= category.title %></h2>
+      <%- if category.description.present? -%>
+      <span class="category_summary"><%= category.description %></span>
+      <%- end -%>
+    <%- end -%>
+    <%= yield category %>
+  </section>
+<%- end -%>

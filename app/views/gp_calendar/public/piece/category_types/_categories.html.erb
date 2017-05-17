@@ -1,6 +1,6 @@
 <%- categories.each do |category| -%>
 <li class="category <%= category.name %>">
-  <%- year_month = (date = params[:gp_calendar_event_date]) ? "#{date.year}/#{date.month}/" : '' %>
+  <%- year_month = (date = params[:gp_calendar_event_date]) ? "#{format('%04d', date.year)}/#{format('%02d', date.month)}/" : '' %>
   <%= link_to category.title, "#{@target_node_public_uri}#{year_month}index_#{category.category_type.name}@#{category.path_from_root_category.gsub('/', '@')}.html" %>
   <%- unless category.public_children.to_a.empty? -%>
   <ul>

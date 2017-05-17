@@ -63,8 +63,5 @@
 <%- end -%>
 
 <%= render 'cms/public/_partial/inquiries/view', item: @item %>
-
-<%- if @item.links_in_string(body, false).any?{|l| l[:url] =~ /\.pdf$/i } -%>
-<%= render 'cms/public/_partial/adobe_reader' %>
-<%- end -%>
+<%= render 'cms/public/_partial/adobe_reader' if !Page.mobile? && Util::Link.include_pdf_link?(body) %>
 <!-- end .contentGpArticleDoc --></article>

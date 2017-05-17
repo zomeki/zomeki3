@@ -30,7 +30,7 @@ class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
       @docs = @docs.paginate(page: params[:page], per_page: @content.feed_docs_number)
       return render_feed(@docs)
     end
-    @docs = @docs.preload_assocs(:public_node_ancestors_assocs, :public_index_assocs)
+    @docs = GpArticle::DocsPreloader.new(@docs).preload(:public_node_ancestors)
 
     if @content.simple_pagination?
       @docs = @docs.paginate(page: params[:page], per_page: @content.doc_list_number)

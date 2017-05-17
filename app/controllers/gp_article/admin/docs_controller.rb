@@ -93,7 +93,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     @item.replace_words_with_dictionary
 
     if params[:link_check_in_body]
-      @item.link_check_results = @item.check_links_in_body
+      @item.link_check_results = @item.check_links
       return render :new
     end
 
@@ -129,7 +129,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     @item.replace_words_with_dictionary
 
     if params[:link_check_in_body]
-      @item.link_check_results = @item.check_links_in_body
+      @item.link_check_results = @item.check_links
       return render :edit
     end
 
@@ -209,10 +209,10 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     if @item.approvers.include?(Core.user)
       @item.approve(Core.user) do
         @item.update_columns(
-          state: (@item.tasks.where(name: 'publish').exists? ? 'prepared' : 'approved'),
+          state: (@item.queued_tasks.where(name: 'publish').exists? ? 'prepared' : 'approved'),
           recognized_at: Time.now
         )
-        @item.set_queues
+        @item.enqueue_tasks
         Sys::OperationLog.log(request, item: @item)
       end
     end

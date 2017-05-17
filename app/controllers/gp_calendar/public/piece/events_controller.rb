@@ -27,7 +27,6 @@ class GpCalendar::Public::Piece::EventsController < GpCalendar::Public::Piece::B
     end
 
     docs = @piece.content.public_event_docs(start_date, end_date, @piece.category_ids)
-                 .preload_assocs(:public_node_ancestors_assocs, :event_categories, :files)
     @events = merge_docs_into_events(docs, @events)
     @events = @events.slice(0, @piece.docs_number) if @piece.docs_number
   end

@@ -1,0 +1,15 @@
+<%-
+depth_limit ||= 1000
+depth ||= 1
+-%>
+<ul>
+  <%- categories.each do |category| -%>
+    <li>
+      <%= link_to category.title, category.public_uri %>
+      <%- if (children = category.public_children).present? && depth < depth_limit -%>
+        <%= render 'gp_category/public/template_module/shared/_categories',
+                   categories: children, depth_limit: depth_limit, depth: depth + 1 %>
+      <%- end -%>
+    </li>
+  <%- end -%>
+</ul>

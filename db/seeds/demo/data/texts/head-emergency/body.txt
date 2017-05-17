@@ -1,4 +1,4 @@
-<meta name="viewport" content="initial-scale=1.0" />
+<meta name="viewport" content="width=1000" />
 <link rel="stylesheet" href="/_themes/base/reset.css" />
 <link rel="stylesheet" href="/_themes/base/style.css" />
 <link rel="stylesheet" href="/_themes/base/layouts/layout.css" />
@@ -8,7 +8,9 @@
 <link rel="alternate stylesheet" href="/_themes/base/colors/blue.css" title="blue" />
 <link rel="alternate stylesheet" href="/_themes/base/colors/black.css" title="black" />
 <link rel="stylesheet" href="/_themes/base/print/printlayout.css" media="print" />
+<script src="/_themes/js/jquery.min.js"></script>
+<script src="/_themes/js/jquery-migrate.min.js"></script>
+<script src="/_themes/js/rails.min.js" async defer></script>
 <script src="/_themes/js/jquery.heightLine.js"></script>
 <script src="/_themes/js/jquery.naviRollover.js"></script>
 <script src="/_themes/js/common.js"></script>
-<!--[if lt IE 9]><script src="/_themes/js/selectivizr.js"></script><![endif]-->

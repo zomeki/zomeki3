@@ -33,11 +33,11 @@ class Sys::Group < ApplicationRecord
   scope :in_site, ->(sites) { joins(:site_belongings).where(cms_site_belongings: {site_id: Array(sites).map(&:id)}) }
   scope :in_group, ->(group) { where(parent_id: group.id) }
 
-  def deletable?
-    super &&
-      children.size == 0 &&
-      !users.where(state: 'enabled').exists? &&
-      !Sys::Creator.where(group_id: id, creatable_type: 'GpArticle::Doc').exists?
+  def deletable_group?
+    group_ids = descendants.map(&:id)
+    !self.class.where(id: group_ids - [id], state: 'enabled').exists? &&
+      !Sys::User.joins(:groups).where(sys_groups: { id: group_ids }).exists? &&
+      !Sys::Creator.where(group_id: group_ids, creatable_type: 'GpArticle::Doc').exists?
   end
 
   def ldap_states

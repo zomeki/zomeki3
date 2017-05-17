@@ -8,7 +8,7 @@ class Organization::Public::Node::GroupsController < Cms::Controller::Public::Ba
 
   def index
     @groups = @content.top_layer_groups.public_state
-                      .preload_assocs(:public_node_ancestors_assocs)
+    @groups = Cms::ContentsPreloader.new(@groups).preload(:public_node_ancestors)
   end
 
   def show
@@ -22,7 +22,7 @@ class Organization::Public::Node::GroupsController < Cms::Controller::Public::Ba
 
     docs = @content.public_docs.organized_into(sys_group_ids)
                    .order(@group.inherited_docs_order)
-                   .preload_assocs(:organization_groups_and_public_node_ancestors_assocs, :public_index_assocs)
+    docs = GpArticle::DocsPreloader.new(docs).preload(:public_node_ancestors)
 
     if params[:format].in?(['rss', 'atom'])
       docs = docs.display_published_after(@content.feed_docs_period.to_i.days.ago) if @content.feed_docs_period.present?

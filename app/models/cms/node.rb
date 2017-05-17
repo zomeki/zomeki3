@@ -15,7 +15,6 @@ class Cms::Node < ApplicationRecord
   include Cms::Model::Auth::Concept
 
   include StateText
-  include Cms::Nodes::Preload
 
   belongs_to :parent, :foreign_key => :parent_id, :class_name => 'Cms::Node'
   belongs_to :layout, :foreign_key => :layout_id, :class_name => 'Cms::Layout'
@@ -28,7 +27,7 @@ class Cms::Node < ApplicationRecord
   # conditional associations
   has_many :public_children, -> { public_state.sitemap_order },
     :foreign_key => :parent_id, :class_name => 'Cms::Node'
-  has_many :public_children_in_route, -> { public_state.sitemap_order },
+  has_many :public_children_for_sitemap, -> { public_state.visible_in_sitemap.sitemap_order },
     :foreign_key => :route_id, :class_name => 'Cms::Node'
 
   validates :parent_id, :state, :model, :title, presence: true
@@ -225,10 +224,6 @@ class Cms::Node < ApplicationRecord
     return label =~ /^translation missing:/ ? name.to_s.humanize : label
   end
 
-  def pdf_in_body?(html)
-    extract_links(html, false).any?{|l| l[:url] =~ /\.pdf$/i }
-  end
-
   def top_page?
     parent.try(:parent_id) == 0 && name == 'index.html'
   end
@@ -265,6 +260,8 @@ class Cms::Node < ApplicationRecord
     include Sys::Model::Rel::Task
     include Cms::Model::Rel::PublishUrl
     include Cms::Model::Rel::Link
+
+    self.linkable_columns = [:body]
 
 #    validate :validate_inquiry,
 #      :if => %Q(state == 'public')
@@ -353,29 +350,12 @@ class Cms::Node < ApplicationRecord
 
       return item
     end
-
-    def links_in_body(all=false)
-      extract_links(self.body, all)
-    end
   end
 
   private
 
   def set_defaults
     self.directory = (model_type == :directory) if self.has_attribute?(:directory) && directory.nil?
-  end
-
-  def extract_links(html, all)
-    links = Nokogiri::HTML.fragment(html).css('a[@href]')
-                          .map { |a| { body: a.text, url: a.attribute('href').value } }
-    return links if all
-    links.select do |link|
-      uri = Addressable::URI.parse(link[:url])
-      !uri.absolute? || uri.scheme.to_s.downcase.in?(%w(http https))
-    end
-  rescue => evar
-    warn_log evar.message
-    return []
   end
 
   def move_directory

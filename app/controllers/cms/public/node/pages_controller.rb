@@ -35,7 +35,7 @@ protected
     end
 
     body = Nokogiri::HTML(response.body, nil, 'utf-8').xpath("//div[@class='contentPage']/div[@class='body']").inner_html
-    if @item.pdf_in_body?(body)
+    if Util::Link.include_pdf_link?(body)
       html = render_to_string(partial: 'cms/public/_partial/adobe_reader')
     else
       html = ''

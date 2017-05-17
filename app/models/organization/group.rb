@@ -7,7 +7,6 @@ class Organization::Group < ApplicationRecord
   include Cms::Model::Auth::Content
 
   include StateText
-  include Organization::Groups::Preload
 
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
   DOCS_ORDER_OPTIONS = [['上位設定を継承', ''],

@@ -8,6 +8,6 @@ class Organization::Public::Piece::AllGroupsController < Sys::Controller::Public
 
   def index
     @groups = @piece.content.top_layer_groups.public_state
-                    .preload_assocs(:public_node_ancestors_assocs)
+    @groups = Cms::ContentsPreloader.new(@groups).preload(:public_node_ancestors)
   end
 end

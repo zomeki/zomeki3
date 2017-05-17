@@ -33,6 +33,12 @@ $(document).ready(function () {
   </ul>
 
   <div id="tab1">
+    <%- if @content.template_available? -%>
+    <div>
+      <div class="label1"><%= f.label :template_id %></div>
+      <%= f.select :template_id, @content.templates.map {|t| [t.title, t.id] }, include_blank: true %>
+    </div>
+    <%- end -%>
     <div>
       <div class="label1"><%= f.label :title %> <span class="note">※</span></div>
       <%= f.text_field :title, :class => 'title', :style => 'width: 290px;' %>
@@ -67,14 +73,15 @@ $(document).ready(function () {
       <div class="cke_editor_wrapper">
         <%= f.text_area :body, :class => 'body ckeditor' %>
       </div>
-      <div>
-        <%= submit_tag 'リンクチェック', name: 'link_check_in_body' if @content.site.setting_site_link_check == 'enabled' %>
-        <%= submit_tag 'アクセシビリティチェック', name: 'accessibility_check' if @content.site.setting_site_accessibility_check == 'enabled' %>
-      </div>
     </div>
 
     <div id="template_body_form">
       <%= render 'gp_template/admin/shared/form', template: @item.template, template_values: @item.template_values if @item.template %>
+    </div>
+
+    <div>
+      <%= submit_tag 'リンクチェック', name: 'link_check_in_body' if @content.site.setting_site_link_check == 'enabled' %>
+      <%= submit_tag 'アクセシビリティチェック', name: 'accessibility_check' if @content.site.setting_site_accessibility_check == 'enabled' %>
     </div>
 
     <%- if @content.blog_functions_available? -%>
@@ -205,24 +212,20 @@ $(document).ready(function () {
     <%- end -%>
 
     <p class="form">公開予約設定</p>
-    <%-
-    publish_task = @item.tasks.detect(&:publish_task?) || @item.tasks.build(name: 'publish')
-    close_task = @item.tasks.detect(&:close_task?) || @item.tasks.build(name: 'close')
-    -%>
     <div>
-      <%= f.fields_for :tasks, publish_task do |f2| -%>
+      <%= f.fields_for :tasks, @item.task_for_form('publish') do |f2| -%>
         <div class="label1">公開開始日時</div>
         <%= f2.hidden_field :name %>
-        <%= f2.text_field :process_at, value: publish_task.process_at.try(:strftime, '%Y-%m-%d %H:%M'),
-              style: 'width: 150px;', class: 'datetimepicker' %>
+        <%= f2.text_field :process_at, value: f2.object.process_at.try(:strftime, '%Y-%m-%d %H:%M'),
+                                       style: 'width: 150px;', class: 'datetimepicker' %>
       <%- end -%>
     </div>
     <div>
-      <%= f.fields_for :tasks, close_task do |f2| -%>
+      <%= f.fields_for :tasks, @item.task_for_form('close') do |f2| -%>
         <div class="label1">公開終了日時</div>
         <%= f2.hidden_field :name %>
-        <%= f2.text_field :process_at, value: close_task.process_at.try(:strftime, '%Y-%m-%d %H:%M'),
-              style: 'width: 150px;', class: 'datetimepicker' %>
+         <%= f2.text_field :process_at, value: f2.object.process_at.try(:strftime, '%Y-%m-%d %H:%M'),
+                                        style: 'width: 150px;', class: 'datetimepicker' %>
       <%- end -%>
     </div>
   </div>
