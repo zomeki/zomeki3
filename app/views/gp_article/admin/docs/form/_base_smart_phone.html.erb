@@ -87,10 +87,6 @@
   <div class="label1"><%= f.label :feature_1 %></div>
   <%= f.radio_buttons :feature_1, @item.class::FEATURE_1_OPTIONS %>
 </div>
-<div>
-  <div class="label1"><%= f.label :feature_2 %></div>
-  <%= f.radio_buttons :feature_2, @item.class::FEATURE_2_OPTIONS %>
-</div>
 
 <%- if @content.tag_related? && @content.tag_content_tag.present? -%>
 <div>
