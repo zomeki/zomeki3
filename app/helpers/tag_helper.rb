@@ -6,6 +6,7 @@ module TagHelper
       end
     else
       yield
+      ''
     end
   end
 end
