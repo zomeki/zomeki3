@@ -7,6 +7,9 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   before_action :hold_document, only: [:edit]
   before_action :check_intercepted, only: [:update]
 
+  before_action :index_options, only: [:index], if: -> { params[:options] }
+  before_action :user_options, only: [:index], if: -> { params[:user_options] }
+
   def pre_dispatch
     @content = GpArticle::Content::Doc.find(params[:content])
     return error_auth unless Core.user.has_priv?(:read, item: @content.concept)
@@ -16,9 +19,6 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   end
 
   def index
-    return index_options if params[:options]
-    return user_options if params[:user_options]
-
     criteria = doc_criteria
     @items = GpArticle::DocsFinder.new(@content.docs, Core.user).search(criteria).distinct
                                   .order(updated_at: :desc)
@@ -65,12 +65,12 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
       @items = @items.where(users[:id].eq(params[:user_id])) if params[:user_id]
     end
 
-    render 'index_options', layout: false
+    render html: view_context.options_for_select([nil] + @items.map { |item| [item.title, item.id] }), layout: false
   end
 
   def user_options
-    @parent = Sys::Group.find(params[:group_id])
-    render 'user_options', layout: false
+    @group = Sys::Group.find(params[:group_id])
+    render html: view_context.options_from_collection_for_select(@group.users, :id, :name), layout: false
   end
 
   def show

@@ -1,0 +1,37 @@
+<%- if @content.display_dates(:published_at) || @content.display_dates(:updated_at) -%>
+<p class="form" style="margin-top: 0;">表示日時設定</p>
+
+<%- if @content.display_dates(:published_at) -%>
+<div>
+  <div class="label1"><%= f.label :display_published_at %></div>
+  <%= f.text_field :display_published_at, value: value_for_datetimepicker(f.object_name, :display_published_at),
+                   style: 'width: 150px;', class: 'datetimepicker' %>
+</div>
+<%- end -%>
+<%- if @content.display_dates(:updated_at) -%>
+<div>
+  <div class="label1"><%= f.label :display_updated_at %></div>
+  <%= f.text_field :display_updated_at, value: value_for_datetimepicker(f.object_name, :display_updated_at),
+                   style: 'width: 150px;', class: 'datetimepicker' %>
+</div>
+<%- end -%>
+<%- end -%>
+
+<p class="form">公開予約設定</p>
+
+<div>
+  <%= f.fields_for :tasks, @item.task_for_form('publish') do |f2| -%>
+    <div class="label1">公開開始日時</div>
+    <%= f2.hidden_field :name %>
+    <%= f2.text_field :process_at, value: f2.object.process_at.try(:strftime, '%Y-%m-%d %H:%M'),
+                                   style: 'width: 150px;', class: 'datetimepicker' %>
+  <%- end -%>
+</div>
+<div>
+  <%= f.fields_for :tasks, @item.task_for_form('close') do |f2| -%>
+    <div class="label1">公開終了日時</div>
+    <%= f2.hidden_field :name %>
+     <%= f2.text_field :process_at, value: f2.object.process_at.try(:strftime, '%Y-%m-%d %H:%M'),
+                                    style: 'width: 150px;', class: 'datetimepicker' %>
+  <%- end -%>
+</div>
