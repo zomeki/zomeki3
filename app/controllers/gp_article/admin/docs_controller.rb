@@ -20,9 +20,9 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     return user_options if params[:user_options]
 
     criteria = doc_criteria
-    @items = GpArticle::Doc.distinct.content_and_criteria(@content, criteria)
-                           .order(updated_at: :desc)
-                           .preload(:prev_edition, :content, creator: [:user, :group])
+    @items = GpArticle::DocsFinder.new(@content.docs, Core.user).search(criteria).distinct
+                                  .order(updated_at: :desc)
+                                  .preload(:prev_edition, :content, creator: [:user, :group])
 
     if params[:csv]
       return export_csv(@items, GpArticle::Model::Criteria.new(criteria))

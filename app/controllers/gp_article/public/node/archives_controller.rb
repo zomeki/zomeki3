@@ -7,15 +7,15 @@ class GpArticle::Public::Node::ArchivesController < Cms::Controller::Public::Bas
 
   def index
     if @month
-      started_at = Time.new(@year, @month, 1)
-      ended_at = started_at.end_of_month
+      started_at = Time.new(@year, @month, 1).beginning_of_day
+      ended_at = started_at.end_of_month.end_of_day
     else
-      started_at = Time.new(@year, 1, 1)
-      ended_at = started_at.end_of_year
+      started_at = Time.new(@year, 1, 1).beginning_of_day
+      ended_at = started_at.end_of_year.end_of_day
     end
 
     @docs = @content.public_docs_for_list
-                    .with_date_between(@content.docs_order_column, started_at, ended_at)
+                    .date_between(@content.docs_order_column, started_at, ended_at)
                     .order(@content.docs_order_as_hash)
 
     if @docs.empty?
