@@ -38,7 +38,11 @@ class Reception::Admin::CoursesController < Cms::Controller::Admin::Base
   end
 
   def update
-    @item.attributes = course_params
+    @tests = course_params
+    if @tests[:fee].present?
+      @tests[:fee].delete!(",")
+    end
+    @item.attributes = @tests
     @item.state = params[:commit_public].present? ? 'public' : 'draft'
     _update @item
   end
