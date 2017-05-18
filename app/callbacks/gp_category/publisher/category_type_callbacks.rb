@@ -35,8 +35,9 @@ class GpCategory::Publisher::CategoryTypeCallbacks < PublisherCallbacks
   end
 
   def enqueue_docs
-    docs = @category_type.public_categories.flat_map { |c| c.docs.public_state.select(:id) }
-    Cms::Publisher.register(@category_type.content.site_id, docs.uniq)
+    category_ids = @category_type.public_categories.pluck(:id)
+    docs = GpArticle::Doc.public_state.categorized_into(category_ids).select(:id)
+    Cms::Publisher.register(@category_type.content.site_id, docs)
   end
 
   def enqueue_sitemap_nodes
