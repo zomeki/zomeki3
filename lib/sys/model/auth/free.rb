@@ -25,5 +25,9 @@ module Sys::Model::Auth::Free
     def editable
       all
     end
+
+    def deletable
+      all
+    end
   end
 end
