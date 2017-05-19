@@ -174,8 +174,8 @@ class GpArticle::Doc < ApplicationRecord
     uri =
       if organization_content_related? && organization_group
         "#{organization_group.public_uri}docs/#{name}/"
-      elsif with_closed_preview && content.doc_node
-        "#{content.doc_node.public_uri}#{name}/"
+      elsif with_closed_preview && content.node
+        "#{content.node.public_uri}#{name}/"
       elsif !with_closed_preview && content.public_node
         "#{content.public_node.public_uri}#{name}/"
       end
