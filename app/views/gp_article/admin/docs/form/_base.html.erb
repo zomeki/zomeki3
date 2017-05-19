@@ -141,8 +141,10 @@
         </tr>
         <tr>
           <td><%= GpArticle::Doc.model_name.human %></td>
-          <td colspan="2"><%= select_tag 'rel_doc', '', include_blank: true %></td>
-          <td><%= button_tag '選択', type: 'button', id: 'add_rel_doc' %></td>
+          <td colspan="3">
+            <%= select_tag 'rel_doc', '', include_blank: true %>
+            <%= button_tag '選択', type: 'button', id: 'add_rel_doc' %>
+          </td>
         </tr>
       </table>
       <hr />
@@ -150,28 +152,14 @@
         <%- @item.related_docs.each_with_index do |rel_doc, i|
           next unless doc = rel_doc.target_doc -%>
           <%= f.fields_for :related_docs, rel_doc do |f2| -%>
-            <tr>
-              <td>
-                <%= f2.hidden_field :name -%>
-                <%= f2.hidden_field :content_id -%>
-                <%- if doc.state_public? %>
-                  <%= link_to doc.title, doc.public_full_uri, target: 'preview' %>
-                <%- else -%>
-                  <%= doc.title %>
-                <%- end -%>
-              </td>
-              <td><%= doc.creator.user.try(:name) %></td>
-              <td><%= doc.creator.group.try(:name) %></td>
-              <td><%= i18n_l doc.updated_at %></td>
-              <td><%= doc.status.name %></td>
-              <td>
-                <%= f2.hidden_field :_destroy -%>
-                <%= f2.hidden_field :id -%>
-                <%= link_to '削除', '#', class: 'remove_related_doc' %>
-              </td>
-            </tr>
+            <%= render 'gp_article/admin/docs/form/rel_doc', f: f2, disabled: false,
+                                                             doc_link: link_to_if(doc.state_public?, doc.title, doc.public_full_uri, target: 'preview'),
+                                                             doc_user_name: doc.creator.user.try(:name),
+                                                             doc_group_name: doc.creator.group.try(:name),
+                                                             doc_updated_at: i18n_l(doc.updated_at),
+                                                             doc_status: doc.status.name %>
           <%- end -%>
-        <%- end if @item.related_docs.present?-%>
+        <%- end -%>
        </table>
     </td>
   </tr>
@@ -180,6 +168,17 @@
     <th><%= f.label :qrcode_state %></th>
     <td><%= f.radio_buttons :qrcode_state, @item.class::QRCODE_OPTIONS %></td>
   </tr>
+  <%- end -%>
+</table>
+
+<table id="rel_docs_template" style="display: none;">
+  <%= f.fields_for :related_docs, @item.related_docs.klass.new, child_index: '__INDEX__' do |f2| -%>
+    <%= render 'gp_article/admin/docs/form/rel_doc', f: f2, disabled: true,
+                                                     doc_link: '',
+                                                     doc_user_name: '',
+                                                     doc_group_name: '',
+                                                     doc_updated_at: '',
+                                                     doc_status: '' %>
   <%- end -%>
 </table>
 
@@ -218,7 +217,7 @@ $(document).ready(function() {
       $('#rel_user_id').html('<option value=""></option>');
     } else {
       $('#rel_user_id').html('<option value="">更新中...</option>');
-      $.get('<%= gp_article_docs_path(content: @content) %>?user_options=true&group_id=' + group_id, function (data) {
+      $.get('<%= gp_article_docs_path(content: @content) %>', { user_options: true, group_id: group_id }, function (data) {
         $('#rel_user_id').html('<option value=""></option>' + data);
         searchRelatedDocs();
       });
@@ -238,7 +237,7 @@ $(document).ready(function() {
     } else {
       category_select.html('<option value="">更新中...</option>');
       doc_select.html('<option value=""></option>');
-      $.get('<%= gp_category_category_type_categories_path(content: @content.gp_category_content_category_type, category_type_id: 'CATEGORY_TYPE_ID') %>?options=true'.replace('CATEGORY_TYPE_ID', category_type_id), function (data) {
+      $.get('<%= gp_category_category_type_categories_path(content: @content.gp_category_content_category_type, category_type_id: 'CATEGORY_TYPE_ID') %>'.replace('CATEGORY_TYPE_ID', category_type_id), { options: true }, function (data) {
         category_select.html(data);
       });
     }
@@ -255,7 +254,12 @@ $(document).ready(function() {
     var user_id = $('#rel_user_id').val();
     var doc_select = $('#rel_doc');
     doc_select.html('<option value="">更新中...</option>');
-    $.get('<%= gp_article_docs_path(content: @content) %>?options=true&exclude=<%= @item.name %>&category_id=' + category_id + '&group_id=' + group_id + '&user_id=' + user_id, function (data) {
+    $.get('<%= gp_article_docs_path(content: @content) %>', {
+          options: true,
+          exclude: '<%= @item.name %>',
+          category_id: category_id,
+          group_id: group_id,
+          user_id: user_id }, function (data) {
       doc_select.html(data);
     });
   }
@@ -267,69 +271,31 @@ $(document).ready(function() {
       return;
     }
 
-    $.get('<%= gp_article_related_doc_path(content: @content, id: '_ID_') %>.xml'.replace(/_ID_/, rel_doc.val()), function (data) {
-      var newDoc = $('<tr>');
+    $.get('<%= gp_article_related_doc_path(content: @content, id: '_ID_') %>.json'.replace(/_ID_/, rel_doc.val()), function (data) {
       var next_index = $('#rel_docs').find('tr').length;
-      $(data).find('hash').each(function() {
-        var title_column = $('<td>');
-        var rel_doc_field = $('<input>', {
-          type: 'hidden',
-          name: 'item[related_docs_attributes][' + next_index + '][name]',
-          value: $(this).find('name').text()
-        });
-        title_column.append(rel_doc_field);
-        var content_id_field = $('<input>', {
-          type: 'hidden',
-          name: 'item[related_docs_attributes][' + next_index + '][content_id]',
-          value: $(this).find('content').text()
-        });
-        title_column.append(content_id_field);
-        var full_uri = $(this).find('full_uri').text();
-        if(full_uri != ''){
-          var title_link = $('<a>', {
-            href: $(data).find('full_uri').text(),
-            text: $(this).find('title').text(),
-            target: "preview"
-          });
-        }else{
-          var title_link = $('<span>').text($(this).find('title').text());
-        }
-        title_column.append(title_link);
-        newDoc.append(title_column);
-        var user_column = $('<td>').append($('<span>').text($(this).find('user').text()));
-        newDoc.append(user_column);
-        var group_column = $('<td>').append($('<span>').text($(this).find('group').text()));
-        newDoc.append(group_column);
-        var updated_column = $('<td>').append($('<span>').text($(this).find('updated').text()));
-        newDoc.append(updated_column);
-        var status_column = $('<td>').append($('<span>').text($(this).find('status').text()));
-        newDoc.append(status_column);
-      });
+      var template = $('#rel_docs_template').find('tbody').clone(true);
 
-      var remove_column = $('<td>');
-      var remove_btn = $("<a>", {
-        href: '#',
-        text: '削除',
-        class: 'remove_related_doc'
-      });
-      remove_column.append(remove_btn);
+      template.find('input').removeAttr('disabled');
+      template.find('.rel_doc_name').val(data.name);
+      template.find('.rel_doc_content_id').val(data.content_id);
+      template.find('.rel_doc_link').html(data.link);
+      template.find('.rel_doc_user_name').text(data.user_name);
+      template.find('.rel_doc_group_name').text(data.group_name);
+      template.find('.rel_doc_updated_at').text(data.updated_at);
+      template.find('.rel_doc_status').text(data.status);
 
-      newDoc.append(remove_column);
-      $('#rel_docs').append(newDoc);
-      rel_doc.val('');
+      $('#rel_docs').append( template.html().replace(/__INDEX__/g, next_index) );
     });
   });
 
   $('#rel_docs').on("click", "a.remove_related_doc", function (e) {
-    var removeFields = $(this).parent().parent().find('input');
-    if(removeFields.length != 0){
-      removeFields.each(function(){
-        if($(this).attr('id') && $(this).attr('id').match(/destroy/)){
-          $(this).val(true);
-        }
-      });
-    }
-    $(this).parent().parent().hide();
+    var wrapper = $(this).parent().parent();
+    wrapper.find('input').each(function() {
+      if ($(this).attr('id') && $(this).attr('id').match(/destroy/)) {
+        $(this).val(true);
+      }
+    });
+    wrapper.hide();
 
     return false;
   });

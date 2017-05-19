@@ -1,0 +1,16 @@
+<div style="margin-top: 10px;">
+  <span>
+    <%= f.hidden_field :name, class: 'rel_doc_name', disabled: disabled -%>
+    <%= f.hidden_field :content_id, class: 'rel_doc_content_id', disabled: disabled -%>
+    <span class="rel_doc_link"><%= doc_link %></span>
+  </span>
+  <span class="rel_doc_user_name"><%= doc_user_name %></span>
+  <span class="rel_doc_group_name"><%= doc_group_name %></span>
+  <span class="rel_doc_updated_at"><%= doc_updated_at %></span>
+  <span class="rel_doc_status"><%= doc_status %></span>
+  <span>
+    <%= f.hidden_field :_destroy, disabled: disabled -%>
+    <%= f.hidden_field :id if f.object.persisted? -%>
+    <%= link_to '削除', '#', class: 'remove_related_doc' %>
+  </span>
+</div>

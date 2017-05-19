@@ -65,7 +65,8 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
       @items = @items.where(users[:id].eq(params[:user_id])) if params[:user_id]
     end
 
-    render html: view_context.options_for_select([nil] + @items.map { |item| [item.title, item.id] }), layout: false
+    @items = @items.map { |item| [view_context.truncate(item.title, length: 50), item.id] }
+    render html: view_context.options_for_select([nil] + @items), layout: false
   end
 
   def user_options
