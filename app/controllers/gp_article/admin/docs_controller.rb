@@ -25,7 +25,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
                                   .preload(:prev_edition, :content, creator: [:user, :group])
 
     if params[:csv]
-      return export_csv(@items, GpArticle::Model::Criteria.new(criteria))
+      return export_csv(@items, GpArticle::Doc::Criteria.new(criteria))
     else
       @items = @items.paginate(page: params[:page], per_page: 30)
     end
