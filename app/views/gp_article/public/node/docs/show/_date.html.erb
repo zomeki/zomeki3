@@ -1,0 +1,13 @@
+<%- if content.serial_no_enabled? -%>
+<div class="docNo"><p><%= content.serial_no_title %>&nbsp;<%= item.serial_no %></p></div>
+<%- end -%>
+<%- if content.display_dates(:published_at) || content.display_dates(:updated_at) -%>
+<div class="date">
+  <%- if content.display_dates(:published_at) -%>
+  <p class="publishedAt">公開日 <%= item.formated_display_published_at %></p>
+  <%- end -%>
+  <%- if content.display_dates(:updated_at) -%>
+  <p class="updatedAt">最終更新日 <%= item.formated_display_updated_at %></p>
+  <%- end -%>
+</div>
+<%- end -%>

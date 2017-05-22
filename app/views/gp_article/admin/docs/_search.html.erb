@@ -84,12 +84,12 @@ category_ids = params.dig(:criteria, :category_ids) || []
     </tr>
     <tr>
       <td>
-        <%= select_tag 'criteria[date_column]', options_for_select(GpArticle::Model::Criteria::DATE_COLUMN_OPTIONS, params.dig(:criteria, :date_column)), include_blank: true %>
-        <%= select_tag 'criteria[date_operation]', options_for_select(GpArticle::Model::Criteria::DATE_OPERATION_OPTIONS, params.dig(:criteria, :date_operation)), include_blank: true %>
+        <%= select_tag 'criteria[date_column]', options_for_select(GpArticle::Doc::Criteria::DATE_COLUMN_OPTIONS, params.dig(:criteria, :date_column)), include_blank: true %>
+        <%= select_tag 'criteria[date_operation]', options_for_select(GpArticle::Doc::Criteria::DATE_OPERATION_OPTIONS, params.dig(:criteria, :date_operation)), include_blank: true %>
         <%= text_field_tag 'criteria[dates][]', params.dig(:criteria, :dates, 0), id: 'criteria_dates_0', class: 'datepicker', style: 'width: 120px;' %> ～
         <%= text_field_tag 'criteria[dates][]', params.dig(:criteria, :dates, 1), id: 'criteria_dates_1', class: 'datepicker', style: 'width: 120px;' %>
       </td>
-      <td><%= select_tag 'criteria[state]', options_for_select(GpArticle::Model::Criteria::STATE_OPTIONS, params.dig(:criteria, :state)), include_blank: true %></td>
+      <td><%= select_tag 'criteria[state]', options_for_select(GpArticle::Doc::Criteria::STATE_OPTIONS, params.dig(:criteria, :state)), include_blank: true %></td>
     </tr>
   </table>
   <table>
@@ -98,7 +98,7 @@ category_ids = params.dig(:criteria, :category_ids) || []
     </tr>
     <tr>
       <td>
-        <%= select_tag 'criteria[user_operation]', options_for_select(GpArticle::Model::Criteria::USER_OPERATION_OPTIONS, params.dig(:criteria, :user_operation)), include_blank: true %>
+        <%= select_tag 'criteria[user_operation]', options_for_select(GpArticle::Doc::Criteria::USER_OPERATION_OPTIONS, params.dig(:criteria, :user_operation)), include_blank: true %>
         <%= select_tag 'criteria[user_group_id]', options_for_select(Core.site.groups_for_option, params.dig(:criteria, :user_group_id)), include_blank: true %>
         <%= text_field_tag 'criteria[user_name]', params.dig(:criteria, :user_name), style: 'width: 200px;' %>
       </td>
@@ -106,7 +106,7 @@ category_ids = params.dig(:criteria, :category_ids) || []
   </table>
   
   <table style="margin-top: 20px;">
-    <%- GpArticle::Model::Criteria::CHECK_BOX_OPTIONS.each_slice(4) do |options| -%>
+    <%- GpArticle::Doc::Criteria::CHECK_BOX_OPTIONS.each_slice(4) do |options| -%>
       <tr>
         <%- options.each do |method, label, value| -%>
           <td>

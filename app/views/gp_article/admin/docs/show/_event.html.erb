@@ -1,0 +1,26 @@
+<table class="show">
+  <%- if @content.gp_calendar_content_event -%>
+  <tr>
+    <th><%= @item.locale :event_state %></th>
+    <td><%= @item.event_state_text %></td>
+  </tr>
+  <%- end -%>
+  <tr>
+    <th><%= @item.locale :event_started_on %></th>
+    <td><%= @item.event_started_on %></td>
+  </tr>
+  <tr>
+    <th><%= @item.locale :event_ended_on %></th>
+    <td><%= @item.event_ended_on %></td>
+  </tr>
+  <%- @content.event_category_types.each do |category_type| -%>
+  <tr>
+    <th><%= category_type.title %></th>
+    <td><%= @item.event_categories.where(category_type_id: category_type.id).map(&:title).join(', ') %></td>
+  </tr>
+  <%- end -%>
+  <tr>
+    <th><%= @item.locale :event_note %></th>
+    <td><%= hbr @item.event_note %></td>
+  </tr>
+</table>

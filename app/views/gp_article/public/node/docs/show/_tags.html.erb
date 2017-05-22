@@ -1,0 +1,8 @@
+<div class="tags">
+  <h2>関連ワード</h2>
+  <ul>
+    <%- tags.each do |tag| -%>
+    <li><%= link_to tag.word, tag.public_uri %></li>
+    <%- end -%>
+  </ul>
+</div>

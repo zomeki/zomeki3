@@ -1,0 +1,268 @@
+<%- if @content.template_available? -%>
+<div>
+  <div class="label1"><%= f.label :template_id %></div>
+  <%= f.select :template_id, @content.templates.map {|t| [t.title, t.id] }, include_blank: true %>
+</div>
+<%- end -%>
+<div>
+  <div class="label1"><%= f.label :title %> <span class="note">※</span></div>
+  <%= f.text_field :title, class: 'title', style: 'width: 290px;' %>
+</div>
+<div>
+  <div class="label1">タイトル設定</div>
+  <%= link_to '開く▼', "javascript:void(0);", { onclick: "toggle_form(this, '#title_settings')" } %>
+</div>
+
+<div id="title_settings" style="display: none;">
+  <div>
+    <div class="label1"><%= f.label :href %></div>
+    <%= f.text_field :href, style: 'width: 290px;' %><br />
+    <%= f.radio_buttons :target, GpArticle::Doc::TARGET_OPTIONS %>
+  </div>
+  <div>
+    <div class="label1"><%= f.label :subtitle %></div>
+    <%= f.text_area :subtitle, size: '100x2', style: 'width: 290px;' %>
+  </div>
+  <div>
+    <div class="label1"><%= f.label :summary %></div>
+    <%= f.text_area :summary, size: '100x5', style: 'width: 290px;' %>
+  </div>
+  <div>
+    <div class="label1"><%= f.label :list_image %></div>
+    <%= f.text_field :list_image, style: 'width: 200px;' %>
+  </div>
+</div>
+
+<div id="normal_body_form" style="<%= 'display:none;' if @item.template %>">
+  <div class="label1"><%= f.label :body %></div>
+  <div class="cke_editor_wrapper">
+    <%= f.text_area :body, class: 'body ckeditor' %>
+  </div>
+</div>
+
+<div id="template_body_form">
+  <%= render 'gp_template/admin/shared/form', template: @item.template, template_values: @item.template_values if @item.template %>
+</div>
+
+<div>
+  <%= submit_tag 'リンクチェック', name: 'link_check_in_body' if @content.site.link_check_enabled? %>
+  <%= submit_tag 'アクセシビリティチェック', name: 'accessibility_check' if @content.site.accessibility_check_enabled? %>
+</div>
+
+<%- if @content.blog_functions_available? -%>
+<p class="form">追記を入力する</p>
+
+<div><%= link_to '開く▼',"javascript:void(0);", { onclick: "toggle_form(this, '#body_more')" } %></div>
+
+<div id="body_more" style="display: none;">
+  <div>
+    <div class="label1"><%= f.label :body_more_link_text %></div>
+    <%= f.text_field :body_more_link_text, style: 'width: 200px;' %>
+  </div>
+  <div class="cke_editor_wrapper">
+    <%= f.text_area :body_more, class: 'body ckeditor' %>
+  </div>
+</div>
+<%- end -%>
+
+<%= render 'sys/admin/_partial/files/form', f: f, item: @item, content: @content %>
+
+<p class="form">記事設定</p>
+
+<%- @content.visible_category_types.each do |category_type| -%>
+<div class="label1"><%= category_type.title %></div>
+<div id="category_type_<%= category_type.id %>_categories">
+  <%- category_ids = @item.in_category_ids[category_type.id.to_s].to_a + [nil] -%>
+  <%- category_ids.each do |cid| -%>
+    <span>
+      <%= select_tag "item[in_category_ids][#{category_type.id}][]", 
+                     options_for_select(category_type.categories_for_option, cid), include_blank: true %>
+    </span>
+  <%- end -%>
+  <span><%= button_tag '追加', type: 'button', class: 'add_category' %></span>
+</div>
+<%- end -%>
+
+<div>
+  <div class="label1"><%= f.label :feature_1 %></div>
+  <%= f.radio_buttons :feature_1, @item.class::FEATURE_1_OPTIONS %>
+</div>
+
+<%- if @content.tag_related? && @content.tag_content_tag.present? -%>
+<div>
+  <div class="label1"><%= f.label :raw_tags %></div>
+  <%= f.text_field :raw_tags, style: 'width: 700px;' %>
+</div>
+<%- end -%>
+
+<div class="label1"><%= f.label :in_rel_doc_ids %></div>
+<div>
+  <div class="label2"><%= Sys::Creator.human_attribute_name(:group_id) %></div>
+  <%= select_tag 'rel_group_id', options_for_select(Core.site.groups_for_option, Core.user_group.id), include_blank: true %>
+</div>
+<div>
+  <div class="label2"><%= Sys::Creator.human_attribute_name(:user_id) %></div>
+  <%= select_tag 'rel_user_id',
+    options_from_collection_for_select(Core.site.users.in_group(Core.user_group).order(:account), :id, :name, Core.user.id), include_blank: true %>
+</div>
+<div>
+  <div class="label2"><%= GpCategory::CategoryType.model_name.human %></div>
+  <%= select_tag 'rel_category_type', options_for_select(@content.category_types_for_option), include_blank: true %>
+</div>
+<div>
+  <div class="label2"><%= GpCategory::Category.model_name.human %></div>
+  <%= select_tag 'rel_category', '', include_blank: true %>
+</div>
+<div>
+  <div class="label2"><%= GpArticle::Doc.model_name.human %></div>
+  <%= select_tag 'rel_doc', '', include_blank: true %><br />
+  <%= button_tag '選択', type: 'button', id: 'add_rel_doc' %>
+</div>
+
+<hr />
+
+<div id="rel_docs">
+  <%- @item.related_docs.each_with_index do |rel_doc, i|
+    next unless doc = rel_doc.target_doc -%>
+    <%= f.fields_for :related_docs, rel_doc do |f2| -%>
+      <%= render 'gp_article/admin/docs/form/rel_doc', f: f2, disabled: false,
+                                                       doc_link: link_to_if(doc.state_public?, doc.title, doc.public_full_uri, target: 'preview'),
+                                                       doc_user_name: doc.creator.user.try(:name),
+                                                       doc_group_name: doc.creator.group.try(:name),
+                                                       doc_updated_at: i18n_l(doc.updated_at),
+                                                       doc_status: doc.status.name %>
+    <%- end -%>
+  <%- end -%>
+</div>
+
+<div id="rel_docs_template" style="display: none;">
+  <%= f.fields_for :related_docs, @item.related_docs.klass.new, child_index: '__INDEX__' do |f2| -%>
+    <%= render 'gp_article/admin/docs/form/rel_doc', f: f2, disabled: true,
+                                                     doc_link: '',
+                                                     doc_user_name: '',
+                                                     doc_group_name: '',
+                                                     doc_updated_at: '',
+                                                     doc_status: '' %>
+  <%- end -%>
+</div>
+
+<%- if @content.template_available? -%>
+<script type="text/javascript">
+$(document).ready(function() {
+  var prevTemplateId;
+  $('#item_template_id').on('click', function() {
+    prevTemplateId = $(this).val();
+  }).on('change', function() {
+    if (!confirm('テンプレートを変更してよろしいですか？')) {
+      $(this).val(prevTemplateId);
+    }
+    if (this.value) {
+      $.post('<%= build_gp_template_template_forms_path(@content.gp_temlate_content_template, template_id: '_ID_') %>'.replace(/_ID_/, this.value), $('form').serialize(), function(data) {
+        $('#template_body_form').html(data);
+      });
+      $('#normal_body_form').hide();
+      $('#template_body_form').show();
+    } else {
+      $('#normal_body_form').show();
+      $('#template_body_form').hide().html('');
+    }
+  });
+});
+<%- end -%>
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+  searchRelatedDocs();
+
+  $('#rel_group_id').on('change', function (event) {
+    var group_id = parseInt(event.target.value);
+    if (isNaN(group_id)) {
+      $('#rel_user_id').html('<option value=""></option>');
+    } else {
+      $('#rel_user_id').html('<option value="">更新中...</option>');
+      $.get('<%= gp_article_docs_path(content: @content) %>', { user_options: true, group_id: group_id }, function (data) {
+        $('#rel_user_id').html('<option value=""></option>' + data);
+        searchRelatedDocs();
+      });
+    }
+  });
+  $('#rel_user_id').on('change', function (event) {
+    searchRelatedDocs();
+  });
+  <%- if @content.gp_category_content_category_type -%>
+  $('#rel_category_type').on('change', function (event) {
+    var category_type_id = parseInt(event.target.value);
+    var category_select = $('#rel_category');
+    var doc_select = $('#rel_doc');
+    if (isNaN(category_type_id)) {
+      category_select.html('<option value=""></option>');
+      doc_select.html('<option value=""></option>');
+    } else {
+      category_select.html('<option value="">更新中...</option>');
+      doc_select.html('<option value=""></option>');
+      $.get('<%= gp_category_category_type_categories_path(content: @content.gp_category_content_category_type, category_type_id: 'CATEGORY_TYPE_ID') %>'.replace('CATEGORY_TYPE_ID', category_type_id), { options: true }, function (data) {
+        category_select.html(data);
+      });
+    }
+  });
+
+  $('#rel_category').on('change', function (event) {
+    searchRelatedDocs();
+  });
+  <%- end -%>
+
+  function searchRelatedDocs(){
+    var category_id = $('#rel_category').val();
+    var group_id = $('#rel_group_id').val();
+    var user_id = $('#rel_user_id').val();
+    var doc_select = $('#rel_doc');
+    doc_select.html('<option value="">更新中...</option>');
+    $.get('<%= gp_article_docs_path(content: @content) %>', {
+          options: true,
+          exclude: '<%= @item.name %>',
+          category_id: category_id,
+          group_id: group_id,
+          user_id: user_id }, function (data) {
+      doc_select.html(data);
+    });
+  }
+
+  $('#add_rel_doc').on('click', function () {
+    var rel_doc = $('#rel_doc');
+    if (rel_doc.val() === '') {
+      alert('記事を選択してください。');
+      return;
+    }
+
+    $.get('<%= gp_article_related_doc_path(content: @content, id: '_ID_') %>.json'.replace(/_ID_/, rel_doc.val()), function (data) {
+      var next_index = $('#rel_docs').find('div').length;
+      var template = $('#rel_docs_template').clone(true);
+
+      template.find('input').removeAttr('disabled');
+      template.find('.rel_doc_name').val(data.name);
+      template.find('.rel_doc_content_id').val(data.content_id);
+      template.find('.rel_doc_link').html(data.link);
+      template.find('.rel_doc_user_name').text(data.user_name);
+      template.find('.rel_doc_group_name').text(data.group_name);
+      template.find('.rel_doc_updated_at').text(data.updated_at);
+      template.find('.rel_doc_status').text(data.status);
+
+      $('#rel_docs').append( template.html().replace(/__INDEX__/g, next_index) );
+    });
+  });
+
+  $('#rel_docs').on("click", "a.remove_related_doc", function (e) {
+    var wrapper = $(this).parent().parent();
+    wrapper.find('input').each(function() {
+      if ($(this).attr('id') && $(this).attr('id').match(/destroy/)) {
+        $(this).val(true);
+      }
+    });
+    wrapper.hide();
+
+    return false;
+  });
+});
+</script>

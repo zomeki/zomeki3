@@ -1,0 +1,131 @@
+<table class="show">
+  <tr>
+    <th><%= @item.locale :serial_no %></th>
+    <td colspan="3"><%= @item.serial_no %></td>
+  </tr>
+  <tr>
+    <th><%= @item.locale :public_full_uri %></th>
+    <td colspan="3"><%= link_to_if @item.public_full_uri.present?,
+                                   @item.public_full_uri, @item.public_full_uri, target: 'preview' %></td>
+  </tr>
+  <%- if @item.template -%>
+  <tr>
+    <th><%= @item.locale :template_id %></th>
+    <td colspan="3"><%= @item.template.title %></td>
+  </tr>
+  <%- end -%>
+  <tr>
+    <th><%= @item.locale :title %></th>
+    <td><%= @item.title %></td>
+    <th style="width: 110px;">タイトル設定</th>
+    <td style="width: 80px;"><%= link_to '開く▼', 'javascript:void(0);', 'data-toggle-form' => '#title_settings' %></td>
+  </tr>
+</table>
+
+<div id="title_settings" style="display: none;">
+  <table class="show">
+    <tr>
+      <th><%= @item.locale :href %></th>
+      <td>
+        <%= link_to_unless(@item.target == 'attached_file', @item.href, @item.href, target: '_blank') %>
+        <span style="<%= 'margin-left: 10px;' unless @item.href.blank? %>"><%= @item.target_text %></span>
+      </td>
+    </tr>
+    <tr>
+      <th><%= @item.locale :subtitle %></th>
+      <td><%=simple_format @item.subtitle %></td>
+    </tr>
+    <tr>
+      <th><%= @item.locale :summary %></th>
+      <td><%=simple_format @item.summary %></td>
+    </tr>
+    <tr>
+      <th><%= @item.locale :list_image %></th>
+      <td><%= @item.list_image %></td>
+    </tr>
+  </table>
+</div>
+
+<table class="show">
+  <tr>
+    <th><%= @item.locale :body %></th>
+  </tr>
+</table>
+
+<%- if @item.template -%>
+<%= render 'gp_template/admin/shared/show', template: @item.template, template_values: @item.template_values, file_uri: @item.file_content_uri %>
+<%- else -%>
+<table class="show">
+  <tr>
+    <td colspan="2">
+      <%=raw @item.body.gsub(/("|')file_contents\//, '\1' + %Q(#{@item.file_content_uri})) %>
+    </td>
+  </tr>
+</table>
+<%- end -%>
+
+<%- if (links = @item.links.where(linkable_column: %w(body template_values))).present? -%>
+<table class="show">
+  <tr>
+    <th><%= @item.locale :body %>に含まれるリンク</th>
+    <td>
+      <ul>
+        <%- links.each do |link|
+          link_url = link.url.gsub(/\Afile_contents\//, '\1' + %Q(#{@item.file_content_uri}))
+        -%>
+        <li><%= link.body %> (<%= link_to link.url, link_url, target: 'preview' %>)</li>
+        <%- end -%>
+      </ul>
+    </td>
+  </tr>
+</table>
+<%- end -%>
+
+<%- if @content.blog_functions_available? -%>
+<table class="show">
+  <tr>
+    <th colspan="2"><%= @item.locale :body_more %></th>
+  </tr>
+  <tr>
+    <td colspan="2"><%=raw @item.body_more %></td>
+  </tr>
+</table>
+<%- end -%>
+
+<p class="form">記事設定</p>
+
+<table class="show">
+  <%- @content.category_types.each do |category_type| -%>
+  <tr>
+    <th><%= category_type.title %></th>
+    <td><%= @item.categories.where(category_type_id: category_type.id).map(&:title).join(', ') %></td>
+  </tr>
+  <%- end -%>
+  <tr>
+    <th><%= @item.locale :feature_1 %></th>
+    <td><%= @item.feature_1_text %></td>
+  </tr>
+  <%- if @content.tag_related? && @content.tag_content_tag.present? -%>
+  <tr>
+    <th><%= @item.locale :raw_tags %></th>
+    <td><%= @item.raw_tags %></td>
+  </tr>
+  <%- end -%>
+  <tr>
+    <th><%= @item.locale :in_rel_doc_ids %></th>
+    <td>
+      <ul>
+        <%- @item.related_docs.each do |doc|
+          next unless rel_doc = doc.target_doc -%>
+        <li><%= rel_doc.title %></li>
+        <%- end -%>
+      </ul>
+    </td>
+  </tr>
+  <%- if @content.qrcode_related? -%>
+  <tr>
+    <th><%= @item.locale :qrcode_state %></th>
+    <td><%= @item.qrcode_state_text %></td>
+  </tr>
+  <%- end -%>
+</table>

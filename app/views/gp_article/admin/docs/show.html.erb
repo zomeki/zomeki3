@@ -1,1 +1,74 @@
-<%= render 'gp_article/admin/docs/show' %>
+<%= render 'gp_article/admin/docs/shared/replacement_notification' %>
+
+<script type="text/javascript">
+$(document).ready(function () {
+  var active_tab_index = $('#tabs > ul > li').length - 1;
+
+  <%- if (active_tab = params[:active_tab]) -%>
+  $('#tabs > ul > li').each(function (index, item) {
+    if ($(item).hasClass('<%= active_tab %>')) {
+      active_tab_index = index;
+      return false;
+    }
+  });
+  <%- end -%>
+
+  $('#tabs').tabs({
+    active: active_tab_index,
+    show: function (event, ui) {
+      if ((typeof map) !== 'undefined' && map) {
+        google.maps.event.trigger(map, 'resize');
+        var lat = $('#centerDispLat').val();
+        var lng = $('#centerDispLat').val();
+        if (lat && lng) {
+          map.setCenter(new google.maps.LatLng($('#centerDispLat').val(), $('#centerDispLng').val()));
+        }
+      }
+    }
+  });
+  $('#tabs .ui-tabs-nav > li').css('float', 'right');
+  $('#tabs').show();
+});
+</script>
+
+<div id="tabs" class="tabs" style="display: none;">
+  <ul>
+    <li class="options"><a href="#tab8">オプション</a></li>
+    <li class="mobile"><a href="#tab7">携帯</a></li>
+    <li class="map" style="<%= 'display: none;' unless @content.map_related? %>"><a href="#tab6">地図</a></li>
+    <li class="calendar" style="<%= 'display: none;' unless @content.calendar_related? %>"><a href="#tab5">イベント</a></li>
+    <li class="approval" style="<%= 'display: none;' unless @content.approval_related? %>"><a href="#tab4">承認</a></li>
+    <li class="inquiry" style="<%= 'display: none;' unless @content.inquiry_related? %>"><a href="#tab3">連絡先</a></li>
+    <li class="publish"><a href="#tab2">公開日</a></li>
+    <li class="doc"><a href="#tab1">記事</a></li>
+  </ul>
+
+  <div id="tab1">
+    <%= render 'gp_article/admin/docs/show/base' %>
+  </div>
+  <div id="tab2">
+    <%= render 'gp_article/admin/docs/show/date' %>
+  </div>
+  <div id="tab3">
+    <%= render 'cms/admin/_partial/inquiries/view', item: @item %>
+  </div>
+  <div id="tab4">
+    <%= render 'approval/admin/_partial/view', item: @item, content: @content %>
+  </div>
+  <div id="tab5">
+    <%= render 'gp_article/admin/docs/show/event' %>
+  </div>
+  <div id="tab6">
+    <%= render 'gp_article/admin/docs/show/map' %>
+  </div>
+  <div id="tab7">
+    <%= render 'gp_article/admin/docs/show/mobile' %>
+  </div>
+  <div id="tab8">
+    <%= render 'gp_article/admin/docs/show/option' %>
+  </div>
+</div>
+
+<%= javascript_tag do -%>
+<%= toggle_form_function %>
+<%- end -%>

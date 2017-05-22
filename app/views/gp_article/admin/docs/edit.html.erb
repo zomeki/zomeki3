@@ -1,9 +1,9 @@
-<%= render 'gp_article/admin/docs/replacement_notification' %>
+<%= render 'gp_article/admin/docs/shared/replacement_notification' %>
 
 <%= form_for @item, as: :item, url: { action: :update }, html: { method: :put } do |f| %>
   <%= error_messages_for :item %>
-  <%= render 'link_check_result', f: f, results: @item.link_check_results %>
-  <%= render 'accessibility_check_result', f: f, results: @item.accessibility_check_results %>
+  <%= render 'gp_article/admin/docs/shared/link_check_result', f: f, results: @item.link_check_results %>
+  <%= render 'gp_article/admin/docs/shared/accessibility_check_result', f: f, results: @item.accessibility_check_results %>
   <%= render 'form', f: f %>
   <%= submit @item.state_options %>
 <% end %>

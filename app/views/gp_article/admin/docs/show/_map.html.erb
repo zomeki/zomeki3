@@ -1,0 +1,18 @@
+<table class="show">
+  <tr>
+    <th><%= @item.locale :marker_state %></th>
+    <td><%= @item.marker_state_text %></td>
+  </tr>
+  <tr>
+    <th><%= @item.locale :marker_icon_category_id %></th>
+    <td><%= @item.marker_icon_category.try(:title) %></td>
+  </tr>
+  <%- @content.marker_category_types.each do |category_type| -%>
+  <tr>
+    <th><%= category_type.title %></th>
+    <td><%= @item.marker_categories.where(category_type_id: category_type.id).map(&:title).join(', ') %></td>
+  </tr>
+  <%- end -%>
+</table>
+
+<%= google_map_view @item %>

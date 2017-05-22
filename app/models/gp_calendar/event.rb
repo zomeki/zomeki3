@@ -24,19 +24,16 @@ class GpCalendar::Event < ApplicationRecord
   after_save     GpCalendar::Publisher::EventCallbacks.new, if: :changed?
   before_destroy GpCalendar::Publisher::EventCallbacks.new
 
-  validates :started_on, presence: true
-  validates :ended_on, presence: true
-  validates :title, presence: true
-  validates :name, uniqueness: { scope: :content_id }, format: { with: /\A[\-\w]*\z/ }
+  validates :started_on, :presence => true
+  validates :ended_on, :presence => true
+  validates :title, :presence => true
+  validates :name, :uniqueness => true, :format => {with: /\A[\-\w]*\z/ }
 
   validate :dates_range
 
   scope :public_state, -> { where(state: 'public') }
   scope :scheduled_between, ->(start_date, end_date) {
-    rel = all
-    rel = rel.where(arel_table[:ended_on].gteq(start_date))   if start_date
-    rel = rel.where(arel_table[:started_on].lt(end_date + 1)) if end_date
-    rel
+    dates_intersects(:started_on, :ended_on, start_date.beginning_of_day, end_date.end_of_day)
   }
 
   scope :content_and_criteria, ->(content, criteria){

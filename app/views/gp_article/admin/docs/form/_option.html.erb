@@ -1,0 +1,65 @@
+<p class="form" style="margin-top: 0;">基本設定</p>
+
+<table class="show">
+  <%= concept_and_layout_form f %>
+  <tr>
+    <th><%= f.label :filename_base %></th>
+    <td>
+      <%- if @item.prev_edition -%>
+      <%= @item.name %><%= f.hidden_field :name %>
+      <%- else -%>
+      <%= f.text_field :name, :style => 'width: 200px;' %>
+      <%- end -%>
+      /
+      <%= f.text_field :filename_base, :style => 'width: 200px;' %>.html
+    </td>
+  </tr>
+  <tr>
+    <th>表示端末</th>
+    <td>
+      <%= f.check_box :terminal_pc_or_smart_phone %> <%= f.label :terminal_pc_or_smart_phone %>
+      <%= f.check_box :terminal_mobile %> <%= f.label :terminal_mobile %>
+    </td>
+  </tr>
+  <tr>
+    <th><%= f.label :lang %></th>
+    <td><%= f.select :lang, options_for_select(@content.lang_options, @item.lang) %></td>
+  </tr>
+</table>
+
+<p class="form">metaタグ（検索エンジン用）</p>
+
+<table class="show">
+  <tr>
+    <th><%= f.label :meta_description %></th>
+    <td><%= f.text_area :meta_description, :size => '100x3' %></td>
+  </tr>
+  <tr>
+    <th><%= f.label :meta_keywords %></th>
+    <td><%= f.text_field :meta_keywords, :style => 'width: 700px;' %></td>
+  </tr>
+</table>
+
+<p class="form">OGP</p>
+
+<table class="show">
+  <tr>
+    <th><%= f.label :og_type %></th>
+    <td><%= f.select :og_type, @item.class::OGP_TYPE_OPTIONS, include_blank: true %></td>
+  </tr>
+  <tr>
+    <th><%= f.label :og_title %></th>
+    <td><%= f.text_field :og_title %></td>
+  </tr>
+  <tr>
+    <th><%= f.label :og_description %></th>
+    <td><%= f.text_area :og_description, :size => '100x3' %></td>
+  </tr>
+  <tr>
+    <th><%= f.label :og_image %></th>
+    <td><%= f.text_field :og_image, :style => 'width: 200px;' %></td>
+  </tr>
+</table>
+
+<%= editable_group_form f %>
+<%= creator_form f %>

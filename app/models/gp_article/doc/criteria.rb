@@ -1,4 +1,4 @@
-class GpArticle::Model::Criteria
+class GpArticle::Doc::Criteria
   include ActiveModel::Model
 
   TARGET_OPTIONS = [['作成記事','user'], ['所属記事','group'], ['全所属','all']]
