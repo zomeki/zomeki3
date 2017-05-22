@@ -22,8 +22,9 @@ class Cms::Public::Node::PagesController < Cms::Controller::Public::Base
       @body = @item.mobile_body if !@item.mobile_body.blank?
     end
   end
-  
-protected
+
+  protected
+
   def render_public_variables
     response.body.scan(/\{\$[a-z]+\}/i).uniq.each do |name|
       value = name
@@ -33,14 +34,5 @@ protected
       
       response.body.gsub!("#{name}", value) if name != value
     end
-
-    body = Nokogiri::HTML(response.body, nil, 'utf-8').xpath("//div[@class='contentPage']/div[@class='body']").inner_html
-    if Util::Link.include_pdf_link?(body)
-      html = render_to_string(partial: 'cms/public/_partial/adobe_reader')
-    else
-      html = ''
-    end
-
-    self.response_body = response.body.gsub("@adobe-reader-link@", html)
   end
 end

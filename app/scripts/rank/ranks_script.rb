@@ -1,6 +1,4 @@
 class Rank::RanksScript < Cms::Script::Base
-  include Rank::Controller::Rank
-
   def exec
     contents = Rank::Content::Rank.all
     contents = contents.where(site_id: ::Script.site.id) if ::Script.site
@@ -9,8 +7,8 @@ class Rank::RanksScript < Cms::Script::Base
 
     contents.each do |content|
       ::Script.progress(content) do
-        get_access(content, Time.now - 3.days)
-        calc_access(content)
+        Rank::RankFetchJob.perform_now(content, Time.now - 3.days)
+        Rank::RankTotalJob.perform_now(content)
       end
     end
   end

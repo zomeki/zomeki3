@@ -1,8 +1,8 @@
 <%- if @item.name == 'common_ssl' -%>
 <table class="show">
   <tr>
-    <th><%= @site.locale(:setting_common_ssl) %></th>
-    <td><%= f.radio_buttons(:in_setting_site_common_ssl, @item.class::SSL_OPTIONS) %></td>
+    <th><%= @site.locale :in_setting_site_common_ssl %></th>
+    <td><%= f.radio_buttons :in_setting_site_common_ssl, @item.class.configs[:common_ssl][:options] %></td>
   </tr>
 </table>
 <%- end -%>
@@ -10,8 +10,8 @@
 <%- if @item.name == 'admin_mail_sender' -%>
 <table class="show">
   <tr>
-    <th><%= @site.locale(:setting_admin_mail_sender) %></th>
-    <td><%= f.text_field(:in_setting_site_admin_mail_sender, class: 'name') %></td>
+    <th><%= @site.locale :in_setting_site_admin_mail_sender %></th>
+    <td><%= f.text_field :in_setting_site_admin_mail_sender, class: 'name' %></td>
   </tr>
 </table>
 <%- end -%>
@@ -19,10 +19,10 @@
 <%- if @item.name == 'allowed_attachment_type' -%>
 <table class="show">
   <tr>
-    <th><%= @site.locale(:setting_allowed_attachment_type) %></th>
+    <th><%= @site.locale :in_setting_site_allowed_attachment_type %></th>
     <td>
       <div>例: gif,jpg,png,pdf,doc,docx,xls,xlsx,ppt,pptx,odt,ods,odp</div>
-      <%= f.text_field(:in_setting_site_allowed_attachment_type, style: 'width: 500px; ime-mode:disabled;') %>
+      <%= f.text_field :in_setting_site_allowed_attachment_type, style: 'width: 500px; ime-mode:disabled;' %>
     </td>
   </tr>
 </table>
@@ -31,12 +31,13 @@
 <%- if @item.name == 'file_upload_max_size' -%>
 <table class="show">
   <tr>
-    <th><%= @site.locale(:setting_file_upload_max_size) %></th>
-    <td><%= f.text_field(:in_setting_site_file_upload_max_size) %></td>
-  </tr><tr>
-    <th><%= @site.locale(:setting_extension_upload_max_size) %></th>
+    <th><%= @site.locale :in_setting_site_file_upload_max_size %></th>
+    <td><%= f.text_field :in_setting_site_file_upload_max_size %> MB</td>
+  </tr>
+  <tr>
+    <th><%= @site.locale :in_setting_site_extension_upload_max_size %></th>
     <td>
-    <%= f.text_area :in_setting_site_extension_upload_max_size, :size => '100x10' %>
+      <%= f.text_area :in_setting_site_extension_upload_max_size, size: '100x10' %>
       <div>
         例：jpgファイルは1MB、gifファイルは5MBをアップロードサイズ上限として設定する。<br />
         jpg, 1<br />
@@ -50,20 +51,20 @@
 <%- if @item.name == 'link_check' -%>
 <table class="show">
   <tr>
-    <th><%= @site.locale(:setting_link_check) %></th>
-    <td><%= f.radio_buttons(:in_setting_site_link_check, @item.class::LINK_CHECK_OPTIONS) %></td>
+    <th><%= @site.locale :in_setting_site_link_check %></th>
+    <td><%= f.radio_buttons :in_setting_site_link_check, @item.class.configs[:link_check][:options] %></td>
   </tr>
   <tr>
-    <th><%= @site.locale(:setting_link_check_hour) %></th>
+    <th><%= @site.locale :in_setting_site_link_check_hour %></th>
     <td>
-      <%= f.text_field(:in_setting_site_link_check_hour, class: 'number') %> 時
+      <%= f.text_field :in_setting_site_link_check_hour, class: 'number' %> 時
       <span style="margin-left: 10px;">0-23時を指定。使用しない場合は空白</span>
     </td>
   </tr>
   <tr>
-    <th><%= @site.locale(:setting_link_check_exclusion) %><br/ >（改行区切り）</th>
+    <th><%= @site.locale :in_setting_site_link_check_exclusion %><br/ >（改行区切り）</th>
     <td>
-      <%= f.text_area(:in_setting_site_link_check_exclusion, rows: 10) %>
+      <%= f.text_area :in_setting_site_link_check_exclusion, rows: 10 %>
       <p>例：http://example.com/</p>
     </td>
   </tr>
@@ -73,8 +74,17 @@
 <%- if @item.name == 'accessibility_check' -%>
 <table class="show">
   <tr>
-    <th><%= @site.locale(:setting_accessibility_check) %></th>
-    <td><%= f.radio_buttons(:in_setting_site_accessibility_check, @item.class::ACCESSIBILITY_CHECK_OPTIONS) %></td>
+    <th><%= @site.locale :in_setting_site_accessibility_check %></th>
+    <td><%= f.radio_buttons :in_setting_site_accessibility_check, @item.class.configs[:accessibility_check][:options] %></td>
+  </tr>
+</table>
+<%- end -%>
+
+<%- if @item.name == 'adobe_reader_link' -%>
+<table class="show">
+  <tr>
+    <th><%= @site.locale :in_setting_site_adobe_reader_link %></th>
+    <td><%= f.radio_buttons :in_setting_site_adobe_reader_link, @item.class.configs[:adobe_reader_link][:options] %></td>
   </tr>
 </table>
 <%- end -%>
@@ -82,8 +92,8 @@
 <%- if @item.name == 'kana_talk' -%>
 <table class="show">
   <tr>
-    <th><%= @site.locale(:setting_kana_talk) %></th>
-    <td><%= f.radio_buttons(:in_setting_site_kana_talk, @item.class::KANA_TALK_OPTIONS) %></td>
+    <th><%= @site.locale :in_setting_site_kana_talk %></th>
+    <td><%= f.radio_buttons :in_setting_site_kana_talk, @item.class.configs[:kana_talk][:options] %></td>
   </tr>
 </table>
 <%- end -%>
@@ -91,8 +101,8 @@
 <%- if @item.name == 'map_coordinate' -%>
 <table class="show">
   <tr>
-    <th><%= @site.locale(:setting_map_coordinate) %></th>
-    <td><%= f.text_field(:in_setting_site_map_coordinate, size: "60") %> （緯度,経度）</td>
+    <th><%= @site.locale :in_setting_site_map_coordinate %></th>
+    <td><%= f.text_field :in_setting_site_map_coordinate, size: "60" %> （緯度,経度）</td>
   </tr>
 </table>
 <%- end -%>

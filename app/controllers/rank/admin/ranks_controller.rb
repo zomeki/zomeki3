@@ -1,6 +1,5 @@
 class Rank::Admin::RanksController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
-  include Rank::Controller::Rank
 
   def pre_dispatch
     @content = Rank::Content::Rank.find(params[:content])
@@ -8,14 +7,16 @@ class Rank::Admin::RanksController < Cms::Controller::Admin::Base
   end
 
   def index
-    @terms   = ranking_terms
-    @targets = ranking_targets
+    @terms   = [['すべて', 'all']] + Rank::Rank::TERMS
+    @targets = Rank::Rank::TARGETS
     @term    = param_check(@terms,   params[:term])
     @target  = param_check(@targets, params[:target])
 
     options
 
-    @ranks   = rank_datas(@content, @term, @target, 20, nil, @gp_category, @category_type, @category)
+    @ranks = Rank::TotalsFinder.new(@content.ranks)
+                               .search(@content, @term, @target, gp_category: @gp_category, category_type: @category_type, category: @category)
+                               .paginate(page: params[:page], per_page: 20)
 
     _index @ranks
   end
@@ -25,7 +26,13 @@ class Rank::Admin::RanksController < Cms::Controller::Admin::Base
     render :partial => 'remote'
   end
 
-private
+  private
+
+  def param_check(ary, str)
+    str = ary.first[1] if str.blank? || !ary.flatten.include?(str)
+    str
+  end
+
   def option_default
     [['すべて', '']]
   end
@@ -43,5 +50,17 @@ private
     @categories = @categories + categories(@category_type) if @category_type > 0
 
     @category_type != 0 ? @categories : @category_types
+  end
+
+  def gp_categories
+    GpCategory::Content::CategoryType.where(site_id: Core.site.id).map{|co| [co.name, co.id] }
+  end
+
+  def category_types(gp_category)
+    GpCategory::Content::CategoryType.find_by(id: gp_category).category_types_for_option
+  end
+
+  def categories(category_type)
+    GpCategory::CategoryType.find(category_type).categories_for_option
   end
 end

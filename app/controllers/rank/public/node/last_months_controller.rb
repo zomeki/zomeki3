@@ -1,6 +1,4 @@
 class Rank::Public::Node::LastMonthsController < Cms::Controller::Public::Base
-  include Rank::Controller::Rank
-
   def pre_dispatch
     @node = Page.current_node
     @content = Rank::Content::Rank.find_by(id: Page.current_node.content.id)
@@ -8,9 +6,9 @@ class Rank::Public::Node::LastMonthsController < Cms::Controller::Public::Base
   end
 
   def index
-    @term   = 'last_months'
-    @target = 'pageviews'
-    @ranks  = rank_datas(@content, @term, @target, 20)
-    return http_error(404) if @ranks.blank?
+    @ranks = Rank::TotalsFinder.new(@content.ranks)
+                               .search(@content, 'last_months', 'pageviews')
+                               .paginate(page: params[:page], per_page: 20)
+    return http_error(404) if @ranks.current_page > @ranks.total_pages
   end
 end
