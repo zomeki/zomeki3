@@ -53,7 +53,7 @@ ja:
         in_setting_site_link_check_hour: "リンクチェック開始時刻"
         in_setting_site_link_check_exclusion: "リンクチェック対象外URL"
         in_setting_site_accessibility_check: "アクセシビリティチェック機能"
-        in_setting_site_adobe_reader_link: "Adobe Reader リンク"
+        in_setting_site_adobe_reader_link: "Adobe Acrobat Reader リンク"
         in_setting_site_kana_talk: "ふりがな・音声"
         in_setting_site_map_coordinate: "地図/デフォルト座標"
 

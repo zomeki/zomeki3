@@ -38,10 +38,10 @@ CKEDITOR.addTemplates('cms', {
       html: '<table class="temp6"><caption>表題を入力</caption><tr><th>&nbsp;</th><th>テーブルヘッダ1</th><th>テーブルヘッダ2</th><th>テーブルヘッダ3</th></tr><tr><th>テーブルヘッダA</th><td>テーブルデータA-1</td><td>テーブルデータA-2</td><td>テーブルデータA-3</td></tr><tr><th>テーブルヘッダB</th><td>テーブルデータB-1</td><td>テーブルデータB-2</td><td>テーブルデータB-3</td></tr><tr><th>テーブルヘッダC</th><td>テーブルデータC-1</td><td>テーブルデータC-2</td><td>テーブルデータC-3</td></tr></table>'
     },
     {
-      title: 'Adobe Readerダウンロード',
+      title: 'Adobe Acrobat Readerダウンロード',
       image: 'cms_temp7.gif',
       description: 'ダウンロードリンクの挿入',
-      html: '<div class="temp7"><p>PDFの閲覧にはAdobe System社の無償のソフトウェア「Adobe Reader」が必要です。下記のAdobe Readerダウンロードページから入手してください。</p><a target="_blank" title="Adobe Readerダウンロード" href="http://get.adobe.com/jp/reader/">Adobe Readerダウンロード</a></div>'
+      html: '<div class="temp7"><p>PDFの閲覧にはAdobe System社の無償のソフトウェア「Adobe Acrobat Reader」が必要です。下記のAdobe Acrobat Readerダウンロードページから入手してください。</p><a target="_blank" title="Adobe Acrobat Readerダウンロード" href="http://get.adobe.com/jp/reader/">Adobe Acrobat Readerダウンロード</a></div>'
     }
   ]}
 );

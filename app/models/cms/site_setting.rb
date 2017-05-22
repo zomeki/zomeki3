@@ -44,7 +44,7 @@ class Cms::SiteSetting < ApplicationRecord
              options: [['使用する', 'enabled'], ['使用しない', 'disabled']],
              index: true
   set_config :adobe_reader_link,
-             name: 'Adobe Reader リンク',
+             name: 'Adobe Acrobat Reader リンク',
              default_value: 'enabled',
              options: [['使用する', 'enabled'], ['使用しない', 'disabled']],
              index: true
