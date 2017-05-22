@@ -58,5 +58,6 @@ class Cms::SiteSetting < ApplicationRecord
              default_value: nil,
              index: true
 
-  validates :site_id, :name, presence: true
+  validates :site_id, presence: true
+  validates :name, presence: true, uniqueness: { scope: :site_id }
 end
