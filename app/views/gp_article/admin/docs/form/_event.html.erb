@@ -20,7 +20,8 @@
     <th><%= category_type.title %></th>
     <td>
       <div id="event_category_type_<%= category_type.id %>_categories">
-        <%- category_ids = @item.in_event_category_ids[category_type.id.to_s].to_a + [nil] -%>
+        <%- category_ids = @item.in_event_category_ids[category_type.id.to_s].to_a
+            category_ids += [''] unless category_ids.include?('') -%>
         <%- category_ids.each do |cid| -%>
           <span>
             <%= select_tag "item[in_event_category_ids][#{category_type.id}][]", 
