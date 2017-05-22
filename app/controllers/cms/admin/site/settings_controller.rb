@@ -15,12 +15,12 @@ class Cms::Admin::Site::SettingsController < Cms::Controller::Admin::Base
   end
 
   def show
-    @item = @site.settings.where(name: params[:id]).first_or_initialize
+    @item = Cms::SiteSetting.where(site_id: @site.id, name: params[:id]).first_or_initialize
     _show @item
   end
 
   def update
-    @item = @site.settings.where(name: params[:id]).first_or_initialize
+    @item = Cms::SiteSetting.where(site_id: @site.id, name: params[:id]).first_or_initialize
     @site.attributes = site_setting_params
     _update @site
   end
