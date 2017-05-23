@@ -1,13 +1,4 @@
 <table class="show">
-  <%- if Core.user.root? -%>
-  <tr>
-    <th><%= @item.locale(:admin_creatable) %></th>
-    <td><%= f.radio_buttons :admin_creatable, {'許可する' => true, '許可しない' => false} %></td>
-  </tr><tr>
-    <th><%= @item.locale(:site_creatable) %></th>
-    <td><%= f.radio_buttons :site_creatable, {'許可する' => true, '許可しない' => false} %></td>
-  </tr>
-  <%- end -%>
   <tr>
     <th><%= @item.locale(:in_group_id) %></th>
     <td><%= f.select :in_group_id, Core.site.groups_for_option, include_blank: true %></td>
@@ -52,6 +43,18 @@
           <%- end -%>
         <%- end -%>
       <%- end -%>
+      <%- if Core.user.root? -%>
+      <table id="auth_extra_settings" class="noDesign" style="margin-top: 10px; <%= 'display: none;' if @item.auth_no != 5 %>">
+        <tr>
+          <td><%= @item.locale(:admin_creatable) %></td>
+          <td><%= f.radio_buttons :admin_creatable, @item.class::ADMIN_CREATABLE_OPTIONS %></td>
+        </tr>
+        <tr>
+          <td><%= @item.locale(:site_creatable) %></td>
+          <td><%= f.radio_buttons :site_creatable, @item.class::SITE_CREATABLE_OPTIONS %></td>
+        </tr>
+      </table>
+      <%- end -%>
     </td>
   </tr><tr>
     <th><%= @item.locale(:role_name) %></th>
@@ -65,3 +68,15 @@
     <td><%= f.text_field :password, :class => 'id' %></td>
   </tr>
 </table>
+
+<script type="text/javascript">
+$(document).ready(function() {
+  $('input[name="item[auth_no]"]').on('change', function() {
+    if ($(this).val() == '5') {
+      $('#auth_extra_settings').show();
+    } else {
+      $('#auth_extra_settings').hide();
+    }
+  });
+});
+</script>

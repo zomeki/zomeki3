@@ -19,7 +19,21 @@
     <td><%= @item.status.name %></td>
   </tr><tr>
     <th><%= @item.locale(:auth_no) %></th>
-    <td><%= @item.auth_name %></td>
+    <td>
+      <%= @item.auth_name %>
+      <%- if Core.user.root? && @item.auth_no == 5 -%>
+      <table class="noDesign" style="margin-top: 10px;">
+        <tr>
+          <td><%= @item.locale(:admin_creatable) %></td>
+          <td><%= @item.class::ADMIN_CREATABLE_OPTIONS.rassoc(@item.admin_creatable).try(:first) %></td>
+        </tr>
+        <tr>
+          <td><%= @item.locale(:site_creatable) %></td>
+          <td><%= @item.class::SITE_CREATABLE_OPTIONS.rassoc(@item.site_creatable).try(:first) %></td>
+        </tr>
+      </table>
+      <%- end -%>
+    </td>
   </tr><tr>
     <th><%= @item.locale(:role_name) %></th>
     <td><%= @item.role_names.map(&:title).join('，') %></td>
