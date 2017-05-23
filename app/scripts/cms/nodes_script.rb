@@ -8,18 +8,14 @@ class Cms::NodesScript < Cms::Script::Publication
     if params.key?(:target_node_id)
       nodes.where(id: params[:target_node_id]).each do |node|
         publish_node(node)
-        file_transfer_callbacks.after_publish_files(node)
+        file_transfer_callbacks(node)
       end
     else
       nodes.where(parent_id: 0).each do |node|
         publish_node(node)
-        file_transfer_callbacks.after_publish_files(node)
+        file_transfer_callbacks(node)
       end
     end
-  end
-
-  def file_transfer_callbacks
-    FileTransferCallbacks.new([:public_path, :public_smart_phone_path], recursive: true)
   end
 
   def publish_node(node)
@@ -79,6 +75,11 @@ class Cms::NodesScript < Cms::Script::Publication
     end
 
     info_log "Published node: #{node.model} #{node.name} #{node.title} in #{(Time.now - started_at).round(2)} [secs.]"
+  end
+
+  def file_transfer_callbacks(node)
+    FileTransferCallbacks.new([:public_path, :public_smart_phone_path], recursive: node.model != 'Cms::Page')
+                         .after_publish_files(node)
   end
 
   def publish_by_task(item)
