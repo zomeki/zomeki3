@@ -33,28 +33,6 @@ class Sys::User < ApplicationRecord
   scope :in_site, ->(site) { joins(users_groups: :site_belongings).where(cms_site_belongings: { site_id: Array(site).map(&:id) }) }
   scope :in_group, ->(group) { joins(:users_groups).where(sys_users_groups: { group_id: group.id }) }
 
-  scope :search_with_params, ->(params = {}) {
-    rel = all
-    params.each do |n, v|
-      next if v.to_s == ''
-      case n
-      when 's_id'
-        rel.where!(id: v)
-      when 's_state'
-        rel.where!(state: v)
-      when 's_account'
-        rel.where!(arel_table[:account].matches("%#{escape_like(v)}%"))
-      when 's_name'
-        rel.where!(arel_table[:name].matches("%#{escape_like(v)}%"))
-      when 's_email'
-        rel.where!(arel_table[:email].matches("%#{escape_like(v)}%"))
-      when 's_group_id'
-        rel.joins!(:groups).where!(sys_groups: {id: v == 'no_group' ? nil : v})
-      end
-    end
-    rel
-  }
-
   def creatable?
     Core.user.has_auth?(:manager)
   end

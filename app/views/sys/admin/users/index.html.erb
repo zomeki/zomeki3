@@ -3,9 +3,12 @@
 <table class="index">
   <tr>
     <th style="width: 60px; text-align: center;">詳細</th>
-    <th style="width: 20%;">ユーザーID</th>
-    <th style="width: 20%;">氏名</th>
+    <th style="width: 160px;">ユーザーID</th>
+    <th style="width: 160px;">氏名</th>
     <th style="width: ;">グループ</th>
+    <th style="width: 180px;">メールアドレス</th>
+    <th style="width: 100px;">ユーザー権限</th>
+    <th style="width: 120px;">ロール権限</th>
     <th style="width: 120px; text-align: center;">更新日時</th>
     <th style="width: 60px; text-align: center;">状態</th>
   </tr>
@@ -15,6 +18,9 @@
     <td><%= item.account %></td>
     <td><%= item.name %></td>
     <td><%= item.group.try!(:full_name) %></td>
+    <td><%= item.email %></td>
+    <td><%= item.auth_name %></td>
+    <td><%= item.role_names.map(&:title).join('，') %></td>
     <td style="text-align: center;"><%=l item.updated_at if item.updated_at %></td>
     <td style="text-align: center;"><%= item.status.name %></td>
   </tr>
