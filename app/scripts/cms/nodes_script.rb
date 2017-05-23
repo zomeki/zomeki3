@@ -1,6 +1,4 @@
 class Cms::NodesScript < Cms::Script::Publication
-  include Sys::Lib::File::Transfer
-
   def publish
     @ids = {}
 
@@ -18,9 +16,6 @@ class Cms::NodesScript < Cms::Script::Publication
         file_transfer_callbacks.after_publish_files(node)
       end
     end
-
-    # file transfer
-    transfer_files(logging: true) if Zomeki.config.application['sys.transfer_to_publish']
   end
 
   def file_transfer_callbacks

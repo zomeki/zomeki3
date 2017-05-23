@@ -8,14 +8,6 @@ sys:
   # 静的ファイルの書き出しを無効化
   clean_statics: false
 
-  # 書き出しファイル転送設定
-  log_closed_page: false
-  transfer_to_publish: false
-  transfer_opts: "-rlptvz --delete"
-  transfer_opt_exclude: "config/rsync/public_exclude.lst"
-  transfer_opt_include: "config/rsync/public_include.lst"
-  transfer_opt_remote_shell: "ssh -p 22"
-
   # ファイルからのテキスト抽出
   file_text_extraction: false
 
