@@ -10,15 +10,21 @@ class Cms::NodesScript < Cms::Script::Publication
     if params.key?(:target_node_id)
       nodes.where(id: params[:target_node_id]).each do |node|
         publish_node(node)
+        file_transfer_callbacks.after_publish_files(node)
       end
     else
       nodes.where(parent_id: 0).each do |node|
         publish_node(node)
+        file_transfer_callbacks.after_publish_files(node)
       end
     end
 
     # file transfer
     transfer_files(logging: true) if Zomeki.config.application['sys.transfer_to_publish']
+  end
+
+  def file_transfer_callbacks
+    FileTransferCallbacks.new([:public_path, :public_smart_phone_path], recursive: true)
   end
 
   def publish_node(node)

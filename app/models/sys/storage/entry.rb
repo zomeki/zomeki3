@@ -12,6 +12,9 @@ class Sys::Storage::Entry
 
   after_initialize :set_defaults
 
+  after_save_files FileTransferCallbacks.new([:path, :path_was])
+  after_remove_files FileTransferCallbacks.new([:path, :path_was])
+
   with_options if: -> { path.present? } do
     validate :validate_base_dir
     validate :validate_existence

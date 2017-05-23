@@ -20,6 +20,9 @@ sys:
   file_text_extraction: false
 
 cms:
+  # ファイル転送機能
+  file_transfer: false
+
   # ページ数付きページ書き出し数
   publish_more_pages: 10
 

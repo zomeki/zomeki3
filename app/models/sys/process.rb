@@ -12,7 +12,8 @@ class Sys::Process < ApplicationRecord
     ["広告クリック数取り込み", "ad_banner/clicks/pull"],
     ["関連ページ書き出し", "cms/nodes/publish"],
     ["記事ページ書き出し", "gp_article/docs/publish_doc"],
-    ["再構築", "/rebuild"]
+    ["再構築", "/rebuild"],
+    ["ファイル転送", "cms/file_transfers/exec"]
   ]
 
   RUNNABLE_PROCESSE_NAMES = [
@@ -20,7 +21,8 @@ class Sys::Process < ApplicationRecord
     "cms/talk_tasks/exec",
     "cms/link_checks/exec",
     "rank/ranks/exec",
-    "feed/feeds/read"
+    "feed/feeds/read",
+    "cms/file_transfers/exec"
   ]
   RUNNABLE_PROCESSES = ALL_PROCESSES.select { |p| p.last.in?(RUNNABLE_PROCESSE_NAMES) }
 
