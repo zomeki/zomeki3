@@ -10,7 +10,7 @@
 </div>
 
 <%- if @item.public_related_docs.present? -%>
-<%= render 'gp_article/public/node/docs/show/rel_docs', item: @item, rel_docs: @item.public_related_docs %>
+<%= render 'gp_article/public/node/docs/show/rel_docs', item: @item, content: @content, rel_docs: @item.public_related_docs %>
 <%- end -%>
 
 <%- if @item.qrcode_visible? -%>

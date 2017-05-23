@@ -120,7 +120,7 @@ class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
         when id
           nil
         when name
-          @content.preview_docs.find_by(name: name)
+          @content.preview_docs.where(name: name).order(:id).first
         end
       else
         case
