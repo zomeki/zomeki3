@@ -1,14 +1,14 @@
 development:
   bin: rsync
-  opts: "-lptzv --delete -e ssh"
+  opts: -lptzv --delete -e "ssh -p 22"
   dest_path: zomeki@192.168.0.0:/var/www/zomeki/
 
 test:
   bin: rsync
-  opts: "-lptzv --delete -e ssh"
+  opts: -lptzv --delete -e "ssh -p 22"
   dest_path: zomeki@192.168.0.0:/var/www/zomeki/
 
 production:
   bin: rsync
-  opts: "-lptzv --delete -e ssh"
+  opts: -lptzv --delete -e "ssh -p 22"
   dest_path: zomeki@192.168.0.0:/var/www/zomeki/
