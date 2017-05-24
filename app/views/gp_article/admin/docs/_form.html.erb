@@ -1,6 +1,4 @@
 <%= init_ckeditor baseHref: "#{gp_article_doc_path(@content, @item.id.to_i)}/" %>
-<script src="/_common/js/jquery.iframe-auto-height.js"></script>
-<script src="/_common/js/jquery.browser.js"></script>
 <script type="text/javascript">
 $(document).ready(function () {
   $('#tabs').tabs({
@@ -18,22 +16,6 @@ $(document).ready(function () {
   });
   $('#tabs .ui-tabs-nav > li').css('float', 'right');
   $('#tabs').show();
-
-  var fileFormLoaded = false;
-
-  $('#fileUploadForm').iframeAutoHeight({ heightOffset: 50, callback: firstCloseOnLoad});
-
-  /*$('#fileUploadForm').load(function(){
-    $('#fileUploadForm').iframeAutoHeight({ heightOffset: 50});
-  })*/
-
-  function firstCloseOnLoad(){
-    //alert("closeFileFornm");
-    if(fileFormLoaded!=true){
-      fileFormLoaded = true;
-      $('#inline_files').hide();
-    }
-  }
 });
 </script>
 
@@ -50,243 +32,10 @@ $(document).ready(function () {
   </ul>
 
   <div id="tab1">
-    <table class="show">
-      <%- if @content.template_available? -%>
-      <tr>
-        <th><%= f.label :template_id %></th>
-        <td colspan="3"><%= f.select :template_id, @content.templates.map {|t| [t.title, t.id] }, include_blank: true %></td>
-      </tr>
-      <%- end -%>
-      <tr>
-        <th><%= f.label :title %> <span class="note">（※入力必須）</span></th>
-        <td><%= f.text_field :title, class: 'title', style: 'width: 96%;' %></td>
-        <th style="width: 110px;">タイトル設定</th>
-        <td style="width: 80px;"><%= link_to '開く▼', 'javascript:void(0);', 'data-toggle-form' => '#title_settings' %></td>
-      </tr>
-    </table>
-
-    <div id="title_settings" style="display: none;">
-      <table class="show">
-        <tr>
-          <th><%= f.label :href %></th>
-          <td><%= f.text_field :href, :style => 'width: 500px;' %></td>
-          <td><%= f.radio_buttons :target, GpArticle::Doc::TARGET_OPTIONS %></td>
-        </tr>
-        <tr>
-          <th><%= f.label :subtitle %></th>
-          <td colspan="2"><%= f.text_area :subtitle, :size => '100x2' %></td>
-        </tr>
-        <tr>
-          <th><%= f.label :summary %></th>
-          <td colspan="2"><%= f.text_area :summary, :size => '100x5' %></td>
-        </tr>
-        <tr>
-          <th><%= f.label :list_image %></th>
-          <td colspan="2"><%= f.text_field :list_image, :style => 'width: 200px;' %></td>
-        </tr>
-      </table>
-    </div>
-
-    <table class="show">
-      <tr>
-        <th><%= f.label :body %></th>
-      </tr>
-    </table>
-
-    <div id="normal_body_form" style="<%= 'display:none;' if @item.template %>">
-      <table class="show">
-        <tr>
-          <td class="cke_editor_wrapper">
-            <%= f.text_area :body, :class => 'body ckeditor' %>
-          </td>
-        </tr>
-      </table>
-    </div>
-
-    <div id="template_body_form">
-      <%= render 'gp_template/admin/shared/form', template: @item.template, template_values: @item.template_values if @item.template %>
-    </div>
-
-    <table class="show">
-      <tr>
-        <td>
-          <%= submit_tag 'リンクチェック', name: 'link_check_in_body' if @content.site.setting_site_link_check == 'enabled' %>
-          <%= submit_tag 'アクセシビリティチェック', name: 'accessibility_check' if @content.site.setting_site_accessibility_check == 'enabled' %>
-        </td>
-      </tr>
-    </table>
-
-    <%- if @content.blog_functions_available? -%>
-    <p class="form">追記を入力する</p>
-
-    <table class="show">
-      <tr>
-        <td><%= link_to '開く▼', 'javascript:void(0);', 'data-toggle-form' => '#body_more' %></td>
-      </tr>
-    </table>
-
-    <div id="body_more" style="display: none;">
-      <table class="show">
-        <tr>
-          <th><%= f.label :body_more_link_text %></th>
-          <td><%= f.text_field :body_more_link_text, :style => 'width: 200px;' %></td>
-        </tr>
-        <tr>
-          <td colspan="2" class="cke_editor_wrapper">
-            <%= f.text_area :body_more, :class => 'body ckeditor' %>
-          </td>
-        </tr>
-      </table>
-    </div>
-    <%- end -%>
-
-    <%= render 'sys/admin/_partial/files/form', f: f, item: @item, content: @content %>
-
-    <p class="form">記事設定</p>
-
-    <table class="show">
-      <%- @content.visible_category_types.each do |category_type| -%>
-      <tr>
-        <th><%= category_type.title %></th>
-        <td>
-          <div id="category_type_<%= category_type.id %>_categories">
-            <%= render 'category', category_type: category_type, category: nil,
-                                   categories_for_option: category_type.categories_for_option %>
-            <%- if (pc = @item.in_category_ids[category_type.id.to_s]) -%>
-              <%- pc.each do |c| -%>
-                <%- next unless (category = category_type.categories.find_by(id: c)) -%>
-                <%= render 'category', category_type: category_type, category: category,
-                                       categories_for_option: category_type.categories_for_option %>
-              <%- end -%>
-            <%- end -%>
-            <span><%= button_tag '追加', type: 'button', class: 'add_category' %></span>
-          </div>
-        </td>
-      </tr>
-      <%- end -%>
-      <%- if @content.feature_settings_enabled? -%>
-      <tr>
-        <th><%= f.label :feature_1 %></th>
-        <td><%= f.radio_buttons :feature_1, @item.class::FEATURE_1_OPTIONS %></td>
-      </tr>
-      <%- end -%>
-      <%- if @content.tag_related? && @content.tag_content_tag.present? -%>
-      <tr>
-        <th><%= f.label :raw_tags %></th>
-        <td><%= f.text_field :raw_tags, :style => 'width: 700px;' %></td>
-      </tr>
-      <%- end -%>
-      <tr>
-        <th><%= f.label :in_rel_doc_ids %></th>
-        <td>
-          <table class="noDesign">
-            <tr>
-              <td style="width: 100px;"><%= Sys::Creator.human_attribute_name(:group_id) %></td>
-              <td style="width: 200px;"><%= select_tag 'rel_group_id', options_for_select(Core.site.groups_for_option, Core.user_group.id), include_blank: true %></td>
-              <td style="width: 100px;"><%= Sys::Creator.human_attribute_name(:user_id) %></td>
-              <td><%= select_tag 'rel_user_id',
-                options_from_collection_for_select(Core.site.users.in_group(Core.user_group).order(:account), :id, :name, Core.user.id), include_blank: true %></td>
-            </tr>
-            <tr>
-              <td style="width: 100px;"><%= GpCategory::CategoryType.model_name.human %></td>
-              <td style="width: 200px;"><%= select_tag 'rel_category_type', options_for_select(@content.category_types_for_option), include_blank: true %></td>
-              <td style="width: 100px;"><%= GpCategory::Category.model_name.human %></td>
-              <td><%= select_tag 'rel_category', '', include_blank: true %></td>
-            </tr>
-            <tr>
-              <td><%= GpArticle::Doc.model_name.human %></td>
-              <td colspan="2"><%= select_tag 'rel_doc', '', include_blank: true %></td>
-              <td><%= button_tag '選択', type: 'button', id: 'add_rel_doc' %></td>
-            </tr>
-          </table>
-          <hr />
-          <table id="rel_docs">
-            <%- @item.related_docs.each_with_index do |rel_doc, i|
-              next unless doc = rel_doc.target_doc -%>
-              <%= f.fields_for :related_docs, rel_doc do |f2| -%>
-                <tr>
-                  <td>
-                    <%= f2.hidden_field :name -%>
-                    <%= f2.hidden_field :content_id -%>
-                    <%- if doc.state_public? %>
-                      <%= link_to doc.title, doc.public_full_uri, target: 'preview' %>
-                    <%- else -%>
-                      <%= doc.title %>
-                    <%- end -%>
-                  </td>
-                  <td><%= doc.creator.user.try(:name) %></td>
-                  <td><%= doc.creator.group.try(:name) %></td>
-                  <td><%= i18n_l doc.updated_at %></td>
-                  <td><%= doc.status.name %></td>
-                  <td>
-                    <%= f2.hidden_field :_destroy -%>
-                    <%= f2.hidden_field :id -%>
-                    <%= link_to '削除', '#', class: 'remove_related_doc' %>
-                  </td>
-                </tr>
-              <%- end -%>
-            <%- end if @item.related_docs.present?-%>
-           </table>
-        </td>
-      </tr>
-      <%- if @content.qrcode_related? -%>
-      <tr>
-        <th><%= f.label :qrcode_state %></th>
-        <td><%= f.radio_buttons :qrcode_state, @item.class::QRCODE_OPTIONS %></td>
-      </tr>
-      <%- end -%>
-    </table>
+    <%= render 'gp_article/admin/docs/form/base', f: f %>
   </div>
   <div id="tab2">
-    <%- if @content.display_dates(:published_at) || @content.display_dates(:updated_at) -%>
-    <p class="form" style="margin-top: 0;">表示日時設定</p>
-
-    <table class="show">
-      <%- if @content.display_dates(:published_at) -%>
-      <tr>
-        <th><%= f.label :display_published_at %></th>
-        <td><%= f.text_field :display_published_at, :value => value_for_datetimepicker(f.object_name, :display_published_at),
-                             :style => 'width: 150px;', :class => 'datetimepicker' %></td>
-      </tr>
-      <%- end -%>
-      <%- if @content.display_dates(:updated_at) -%>
-      <tr>
-        <th><%= f.label :display_updated_at %></th>
-        <td>
-          <%= f.text_field :display_updated_at, :value => value_for_datetimepicker(f.object_name, :display_updated_at),
-                                                :style => 'width: 150px;', :class => 'datetimepicker' %>
-          <span style="margin-left: 12px;">
-          <%= f.check_box :keep_display_updated_at %> <%= f.label :keep_display_updated_at %>
-          </span>
-        </td>
-      </tr>
-      <%- end -%>
-    </table>
-    <%- end -%>
-
-    <p class="form">公開予約設定</p>
-    <table class="show">
-      <%= f.fields_for :tasks, @item.task_for_form('publish') do |f2| -%>
-      <tr>
-        <th>公開開始日時</th>
-        <td>
-          <%= f2.hidden_field :name %>
-          <%= f2.text_field :process_at, value: f2.object.process_at.try(:strftime, '%Y-%m-%d %H:%M'),
-                                         style: 'width: 150px;', class: 'datetimepicker' %>
-        </td>
-      </tr>
-      <%- end -%>
-      <%= f.fields_for :tasks, @item.task_for_form('close') do |f2| -%>
-      <tr>
-        <th>公開終了日時</th>
-        <td>
-          <%= f2.hidden_field :name %>
-          <%= f2.text_field :process_at, value: f2.object.process_at.try(:strftime, '%Y-%m-%d %H:%M'),
-                                         style: 'width: 150px;', class: 'datetimepicker' %>
-        </td>
-      </tr>
-      <%- end -%>
-    </table>
+    <%= render 'gp_article/admin/docs/form/date', f: f %>
   </div>
   <div id="tab3">
     <%= render 'cms/admin/_partial/inquiries/form', f: f, item: @item, content: @content %>
@@ -295,359 +44,65 @@ $(document).ready(function () {
     <%= render 'approval/admin/_partial/form', f: f, item: @item, content: @content %>
   </div>
   <div id="tab5">
-    <table class="show">
-      <%- if @content.gp_calendar_content_event -%>
-      <tr>
-        <th><%= f.label :event_state %></th>
-        <td><%= f.radio_buttons :event_state, @item.class::EVENT_STATE_OPTIONS %></td>
-      </tr>
-      <%- end -%>
-      <tr>
-        <th><%= f.label :event_started_on %></th>
-        <td><%= f.text_field :event_started_on, :value => value_for_datepicker(f.object_name, :event_started_on),
-                                                :style => 'width: 150px;', :class => 'datepicker' %></td>
-      </tr>
-      <tr>
-        <th><%= f.label :event_ended_on %></th>
-        <td><%= f.text_field :event_ended_on, :value => value_for_datepicker(f.object_name, :event_ended_on),
-                                              :style => 'width: 150px;', :class => 'datepicker' %></td>
-      </tr>
-      <%- @content.event_category_types.each do |category_type| -%>
-      <tr>
-        <th><%= category_type.title %></th>
-        <td>
-          <div id="event_category_type_<%= category_type.id %>_categories">
-            <%= render 'category', category_type: category_type, category: nil,
-                                   categories_for_option: category_type.categories_for_option,
-                                   prefix: 'event_' %>
-            <%- if (pec = @item.in_event_category_ids[category_type.id.to_s]) -%>
-              <%- pec.each do |c| -%>
-                <%- next unless (category = category_type.categories.find_by_id(c))  -%>
-                <%= render 'category', category_type: category_type, category: category,
-                                       categories_for_option: category_type.categories_for_option,
-                                       prefix: 'event_' %>
-              <%- end -%>
-            <%- end -%>
-            <span><%= button_tag '追加', type: 'button', class: 'add_category' %></span>
-          </div>
-        </td>
-      </tr>
-      <%- end -%>
-      <tr>
-        <th><%= f.label :event_note %></th>
-        <td><%= f.text_area :event_note, :size => '100x3' %></td>
-      </tr>
-    </table>
+    <%= render 'gp_article/admin/docs/form/event', f: f %>
   </div>
   <div id="tab6">
-    <table class="show">
-      <%- if @content.map_content_marker -%>
-      <tr>
-        <th><%= f.label :marker_state %></th>
-        <td><%= f.radio_buttons :marker_state, @item.class::MARKER_STATE_OPTIONS %></td>
-      </tr>
-        <%- if @content.marker_icon_category_enabled?-%>
-        <tr>
-          <th><%= f.label :marker_icon_category_id %></th>
-          <td><%= f.select :marker_icon_category_id, options_for_select(@content.map_content_marker.icon_categories_for_option,
-                                                                        @item.marker_icon_category_id),
-                                                     include_blank: true %></td>
-        </tr>
-        <%- end -%>
-      <%- end -%>
-      <%- @content.marker_category_types.each do |category_type| -%>
-      <tr>
-        <th><%= category_type.title %></th>
-        <td>
-          <div id="marker_category_type_<%= category_type.id %>_categories">
-            <%= render 'category', category_type: category_type, category: nil,
-                                   categories_for_option: @content.marker_category_type_categories_for_option(category_type),
-                                   prefix: 'marker_' %>
-            <%- if (pmc = @item.in_marker_category_ids[category_type.id.to_s]) -%>
-              <%- pmc.each do |c| -%>
-                <%- next unless (category = category_type.categories.find_by_id(c)) -%>
-                <%= render 'category', category_type: category_type, category: category,
-                                       categories_for_option: @content.marker_category_type_categories_for_option(category_type),
-                                       prefix: 'marker_' %>
-              <%- end -%>
-            <%- end -%>
-            <span><%= button_tag '追加', type: 'button', class: 'add_category' %></span>
-          </div>
-        </td>
-      </tr>
-      <%- end -%>
-    </table>
-    <%= google_map_form f %>
+    <%= render 'gp_article/admin/docs/form/map', f: f %>
   </div>
   <div id="tab7">
-    <table class="show">
-      <tr>
-        <th><%= f.label :mobile_title %></th>
-        <td><%= f.text_field :mobile_title, :class => 'title', :style => 'width: 500px;' %></td>
-      </tr>
-      <tr>
-        <th colspan="2"><%= f.label :mobile_body %></th>
-      </tr>
-      <tr>
-        <td colspan="2" class="cke_editor_wrapper">
-          <%= f.text_area :mobile_body, :class => 'body ckeditor' %>
-        </td>
-      </tr>
-    </table>
+    <%= render 'gp_article/admin/docs/form/mobile', f: f %>
   </div>
   <div id="tab8">
-    <p class="form" style="margin-top: 0;">基本設定</p>
-
-    <table class="show">
-      <%= concept_and_layout_form f %>
-      <tr>
-        <th><%= f.label :filename_base %></th>
-        <td>
-          <%- if @item.prev_edition -%>
-          <%= @item.name %><%= f.hidden_field :name %>
-          <%- else -%>
-          <%= f.text_field :name, :style => 'width: 200px;' %>
-          <%- end -%>
-          /
-          <%= f.text_field :filename_base, :style => 'width: 200px;' %>.html
-        </td>
-      </tr>
-      <tr>
-        <th>表示端末</th>
-        <td>
-          <%= f.check_box :terminal_pc_or_smart_phone %> <%= f.label :terminal_pc_or_smart_phone %>
-          <%= f.check_box :terminal_mobile %> <%= f.label :terminal_mobile %>
-        </td>
-      </tr>
-      <tr>
-        <th><%= f.label :lang %></th>
-        <td><%= f.select :lang, options_for_select(@content.lang_options, @item.lang) %></td>
-      </tr>
-    </table>
-
-    <p class="form">metaタグ（検索エンジン用）</p>
-
-    <table class="show">
-      <tr>
-        <th><%= f.label :meta_description %></th>
-        <td><%= f.text_area :meta_description, :size => '100x3' %></td>
-      </tr>
-      <tr>
-        <th><%= f.label :meta_keywords %></th>
-        <td><%= f.text_field :meta_keywords, :style => 'width: 700px;' %></td>
-      </tr>
-    </table>
-
-    <p class="form">OGP</p>
-    <table class="show">
-      <tr>
-        <th><%= f.label :og_type %></th>
-        <td><%= f.select :og_type, @item.class::OGP_TYPE_OPTIONS, include_blank: true %></td>
-      </tr>
-      <tr>
-        <th><%= f.label :og_title %></th>
-        <td><%= f.text_field :og_title %></td>
-      </tr>
-      <tr>
-        <th><%= f.label :og_description %></th>
-        <td><%= f.text_area :og_description, :size => '100x3' %></td>
-      </tr>
-      <tr>
-        <th><%= f.label :og_image %></th>
-        <td><%= f.text_field :og_image, :style => 'width: 200px;' %></td>
-      </tr>
-    </table>
-    <%= editable_group_form f %>
-    <%= creator_form f %>
+    <%= render 'gp_article/admin/docs/form/option', f: f %>
   </div>
 </div>
 
-<%= javascript_tag do -%>
+<script type="text/javascript">
 <%= toggle_form_function %>
-
-function set_click_event_handler(category_type_id, prefix) {
-  if (prefix === undefined) { prefix = ''; }
-  var categories_wrapper = $('#' + prefix + 'category_type_' + category_type_id + '_categories');
-  categories_wrapper.find('.add_category').on('click', function () {
-    var new_category = categories_wrapper.children(':first-child').clone(true);
-    new_category.find(':disabled').removeAttr('disabled');
-    new_category.insertBefore(categories_wrapper.children(':last-child')).show();
-  }).trigger('click');
-}
-
-function set_copy_date(from, to) {
-  $(from).on('change', function () {
-    if ($(to).val() === '') { $(to).val($(from).val()); }
-  });
-}
-
 $(document).ready(function () {
   <%= disable_enter_script -%>
   <%= enable_datepicker_script -%>
   <%= enable_datetimepicker_script -%>
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function () {
+  function set_click_event_handler(category_type_id, prefix) {
+    if (prefix === undefined) { prefix = ''; }
+    var wrapper = $('#' + prefix + 'category_type_' + category_type_id + '_categories');
+    wrapper.find('.add_category').on('click', function () {
+      var new_category = wrapper.children(':first-child').clone(true);
+      new_category.find('option').removeAttr('selected');
+      new_category.insertBefore(wrapper.children(':last-child'));
+    });
+  }
 
   <%- @content.visible_category_types.each do |category_type| -%>
   set_click_event_handler('<%= category_type.id %>');
   <%- end -%>
-
   <%- @content.event_category_types.each do |category_type| -%>
   set_click_event_handler('<%= category_type.id %>', 'event_');
   <%- end -%>
-
   <%- @content.marker_category_types.each do |category_type| -%>
   set_click_event_handler('<%= category_type.id %>', 'marker_');
   <%- end -%>
+});
+</script>
 
-  searchRelatedDocs();
+<script src="/_common/js/jquery.iframe-auto-height.js"></script>
+<script src="/_common/js/jquery.browser.js"></script>
+<script type="text/javascript">
+$(document).ready(function () {
+  var fileFormLoaded = false;
 
-  $('#rel_group_id').on('change', function (event) {
-    var group_id = parseInt(event.target.value);
-    if (isNaN(group_id)) {
-      $('#rel_user_id').html('<option value=""></option>');
-    } else {
-      $('#rel_user_id').html('<option value="">更新中...</option>');
-      $.get('<%= gp_article_docs_path(content: @content) %>?user_options=true&group_id=' + group_id, function (data) {
-        $('#rel_user_id').html('<option value=""></option>' + data);
-        searchRelatedDocs();
-      });
+  $('#fileUploadForm').iframeAutoHeight({ heightOffset: 50, callback: firstCloseOnLoad});
+
+  function firstCloseOnLoad() {
+    if (fileFormLoaded != true) {
+      fileFormLoaded = true;
+      $('#inline_files').hide();
     }
-  });
-  $('#rel_user_id').on('change', function (event) {
-    searchRelatedDocs();
-  });
-  <%- if @content.gp_category_content_category_type -%>
-  $('#rel_category_type').on('change', function (event) {
-    var category_type_id = parseInt(event.target.value);
-    var category_select = $('#rel_category');
-    var doc_select = $('#rel_doc');
-    if (isNaN(category_type_id)) {
-      category_select.html('<option value=""></option>');
-      doc_select.html('<option value=""></option>');
-    } else {
-      category_select.html('<option value="">更新中...</option>');
-      doc_select.html('<option value=""></option>');
-      $.get('<%= gp_category_category_type_categories_path(content: @content.gp_category_content_category_type, category_type_id: 'CATEGORY_TYPE_ID') %>?options=true'.replace('CATEGORY_TYPE_ID', category_type_id), function (data) {
-        category_select.html(data);
-      });
-    }
-  });
-
-  $('#rel_category').on('change', function (event) {
-    searchRelatedDocs();
-  });
-  <%- end -%>
-
-  function searchRelatedDocs(){
-    var category_id = $('#rel_category').val();
-    var group_id = $('#rel_group_id').val();
-    var user_id = $('#rel_user_id').val();
-    var doc_select = $('#rel_doc');
-    doc_select.html('<option value="">更新中...</option>');
-    $.get('<%= gp_article_docs_path(content: @content) %>?options=true&exclude=<%= @item.name %>&category_id=' + category_id + '&group_id=' + group_id + '&user_id=' + user_id, function (data) {
-      doc_select.html(data);
-    });
   }
-
-  $('#add_rel_doc').on('click', function () {
-    var rel_doc = $('#rel_doc');
-    if (rel_doc.val() === '') {
-      alert('記事を選択してください。');
-      return;
-    }
-
-    $.get('<%= gp_article_related_doc_path(content: @content, id: '_ID_') %>.xml'.replace(/_ID_/, rel_doc.val()), function (data) {
-      var newDoc = $('<tr>');
-      var next_index = $('#rel_docs').find('tr').length;
-      $(data).find('hash').each(function() {
-        var title_column = $('<td>');
-        var rel_doc_field = $('<input>', {
-          type: 'hidden',
-          name: 'item[related_docs_attributes][' + next_index + '][name]',
-          value: $(this).find('name').text()
-        });
-        title_column.append(rel_doc_field);
-        var content_id_field = $('<input>', {
-          type: 'hidden',
-          name: 'item[related_docs_attributes][' + next_index + '][content_id]',
-          value: $(this).find('content').text()
-        });
-        title_column.append(content_id_field);
-        var full_uri = $(this).find('full_uri').text();
-        if(full_uri != ''){
-          var title_link = $('<a>', {
-            href: $(data).find('full_uri').text(),
-            text: $(this).find('title').text(),
-            target: "preview"
-          });
-        }else{
-          var title_link = $('<span>').text($(this).find('title').text());
-        }
-        title_column.append(title_link);
-        newDoc.append(title_column);
-        var user_column = $('<td>').append($('<span>').text($(this).find('user').text()));
-        newDoc.append(user_column);
-        var group_column = $('<td>').append($('<span>').text($(this).find('group').text()));
-        newDoc.append(group_column);
-        var updated_column = $('<td>').append($('<span>').text($(this).find('updated').text()));
-        newDoc.append(updated_column);
-        var status_column = $('<td>').append($('<span>').text($(this).find('status').text()));
-        newDoc.append(status_column);
-      });
-
-      var remove_column = $('<td>');
-      var remove_btn = $("<a>", {
-        href: '#',
-        text: '削除',
-        class: 'remove_related_doc'
-      });
-      remove_column.append(remove_btn);
-
-      newDoc.append(remove_column);
-      $('#rel_docs').append(newDoc);
-      rel_doc.val('');
-    });
-  });
-
-  $('#rel_docs').on("click", "a.remove_related_doc", function (e) {
-    var removeFields = $(this).parent().parent().find('input');
-    if(removeFields.length != 0){
-      removeFields.each(function(){
-        if($(this).attr('id') && $(this).attr('id').match(/destroy/)){
-          $(this).val(true);
-        }
-      });
-    }
-    $(this).parent().parent().hide();
-
-    return false;
-  });
-
-  set_copy_date('#item_event_started_on', '#item_event_ended_on');
-  set_copy_date('#item_event_ended_on', '#item_event_started_on');
 });
-<%- end -%>
-
-<%- if @content.template_available? -%>
-<%= javascript_tag do -%>
-$(function() {
-  var prevTemplateId;
-  $('#item_template_id').on('click', function() {
-    prevTemplateId = $(this).val();
-  }).on('change', function() {
-    if (!confirm('テンプレートを変更してよろしいですか？')) {
-      $(this).val(prevTemplateId);
-    }
-    if (this.value) {
-      $.post('<%= build_gp_template_template_forms_path(@content.gp_temlate_content_template, template_id: '_ID_') %>'.replace(/_ID_/, this.value), $('form').serialize(), function(data) {
-        $('#template_body_form').html(data);
-      });
-      $('#normal_body_form').hide();
-      $('#template_body_form').show();
-    } else {
-      $('#normal_body_form').show();
-      $('#template_body_form').hide().html('');
-    }
-  });
-});
-<%- end -%>
-<%- end -%>
+</script>

@@ -32,22 +32,6 @@ ja:
         portal_group_business_ids: "業種"
         portal_group_attribute_ids: "属性"
         portal_group_area_ids: "地域"
-        setting_transfer_dest_user: "転送先ユーザー名"
-        setting_transfer_dest_host: "転送先サーバーホスト"
-        setting_transfer_dest_dir: "転送先サーバーディレクトリ"
-        setting_transfer_dest_domain: "転送先サイトURL"
-        setting_common_ssl: "共有SSL"
-        setting_admin_mail_sender: "管理者メール送信元アドレス"
-        setting_allowed_attachment_type: "添付ファイル/許可する種類"
-        setting_file_upload_max_size: "添付ファイル最大サイズ"
-        setting_file_upload_max_size: "添付ファイル最大サイズ"
-        setting_extension_upload_max_size: "拡張子別アップロードサイズ"
-        setting_link_check: "リンクチェック機能"
-        setting_link_check_hour: "リンクチェック開始時刻"
-        setting_link_check_exclusion: "リンクチェック対象外URL"
-        setting_accessibility_check: "アクセシビリティチェック機能"
-        setting_kana_talk: "ふりがな・音声"
-        setting_map_coordinate: "地図/デフォルト座標"
         og_type: タイプ
         og_title: タイトル
         og_description: 説明
@@ -56,6 +40,22 @@ ja:
         smart_phone_publication: スマートフォンを別に書き出す
         spp_target: 書き出し対象
         in_root_group_id: 最上位グループ
+        in_setting_site_transfer_dest_user: "転送先ユーザー名"
+        in_setting_site_transfer_dest_host: "転送先サーバーホスト"
+        in_setting_site_transfer_dest_dir: "転送先サーバーディレクトリ"
+        in_setting_site_transfer_dest_domain: "転送先サイトURL"
+        in_setting_site_common_ssl: "共有SSL"
+        in_setting_site_admin_mail_sender: "管理者メール送信元アドレス"
+        in_setting_site_allowed_attachment_type: "添付ファイル/許可する種類"
+        in_setting_site_file_upload_max_size: "添付ファイル最大サイズ"
+        in_setting_site_extension_upload_max_size: "拡張子別アップロードサイズ"
+        in_setting_site_link_check: "リンクチェック機能"
+        in_setting_site_link_check_hour: "リンクチェック開始時刻"
+        in_setting_site_link_check_exclusion: "リンクチェック対象外URL"
+        in_setting_site_accessibility_check: "アクセシビリティチェック機能"
+        in_setting_site_adobe_reader_link: "Adobe Acrobat Reader リンク"
+        in_setting_site_kana_talk: "ふりがな・音声"
+        in_setting_site_map_coordinate: "地図/デフォルト座標"
 
       cms/site_basic_auth_user:
         state: "状態"

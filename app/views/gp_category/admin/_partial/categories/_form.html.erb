@@ -1,18 +1,16 @@
 <table class="show">
   <%- category_types.each do |category_type| -%>
-    <%- categories_for_option = category_type.categories_for_option -%>
     <tr>
       <th><%= category_type.title %></th>
       <td>
         <div id="category_type_<%= category_type.id %>_categories">
-          <%= render 'gp_category/admin/_partial/categories/category',
-                category_type: category_type, category: nil, categories_for_option: categories_for_option %>
-          <%- if (pc = item.in_category_ids[category_type.id.to_s]) -%>
-            <%- pc.each do |c| -%>
-              <%- next unless (category = category_type.categories.find_by(id: c)) -%>
-              <%= render 'gp_category/admin/_partial/categories/category',
-                    category_type: category_type, category: category, categories_for_option: categories_for_option %>
-            <%- end -%>
+          <%- category_ids = @item.in_category_ids[category_type.id.to_s].to_a
+              category_ids += [''] unless category_ids.include?('') -%>
+          <%- category_ids.each do |cid| -%>
+            <span>
+              <%= select_tag "item[in_category_ids][#{category_type.id}][]", 
+                             options_for_select(category_type.categories_for_option, cid), include_blank: true %>
+            </span>
           <%- end -%>
           <span><%= button_tag '追加', type: 'button', class: 'gp_category_add_category' %></span>
         </div>
@@ -24,12 +22,12 @@
 <script type="text/javascript">
 $(function() {
   function set_click_event_handler(category_type_id) {
-    var categories_wrapper = $('#category_type_' + category_type_id + '_categories');
-    categories_wrapper.find('.gp_category_add_category').on('click', function () {
-      var new_category = categories_wrapper.children(':first-child').clone(true);
-      new_category.find(':disabled').removeAttr('disabled');
-      new_category.insertBefore(categories_wrapper.children(':last-child')).show();
-    }).trigger('click');
+    var wrapper = $('#category_type_' + category_type_id + '_categories');
+    wrapper.find('.gp_category_add_category').on('click', function () {
+      var new_category = wrapper.children(':first-child').clone(true);
+      new_category.find('option').removeAttr('selected');
+      new_category.insertBefore(wrapper.children(':last-child')).show();
+    });
   }
 
   <%- category_types.each do |category_type| -%>

@@ -1,67 +1,33 @@
 <article class="contentGpArticleDoc">
-<%- if @content.serial_no_enabled? -%>
-<div class="docNo"><p><%= @content.serial_no_title %>&nbsp;<%= @item.serial_no %></p></div>
-<%- end -%>
-<%- if @content.display_dates(:published_at) || @content.display_dates(:updated_at) -%>
-<div class="date">
-  <%- if @content.display_dates(:published_at) -%>
-  <p class="publishedAt">公開日 <%= @item.formated_display_published_at %></p>
-  <%- end -%>
-  <%- if @content.display_dates(:updated_at) -%>
-  <p class="updatedAt">最終更新日 <%= @item.formated_display_updated_at %></p>
-  <%- end -%>
-</div>
-<%- end -%>
+<%= render 'gp_article/public/node/docs/show/date', item: @item, content: @content %>
 
 <div class="body">
-  <div class="text-beginning"><%=raw (
-  unless Page.mobile?
-    body = @item.template ? template_body(@item.template, @item.template_values, @item.files) : @item.body.to_s
-    body.gsub(/("|')file_contents\//, '\1'+%Q(#{Core.publish || Core.mode != 'preview' ? @item.public_uri(without_filename: true) : @item.preview_uri(without_filename: true)}file_contents/))
-  else
-    @item.body_for_mobile
-  end) %></div>
+  <%-
+  body = @item.template ? template_body(@item.template, @item.template_values, @item.files) : @item.body.to_s
+  body.gsub(/("|')file_contents\//, '\1'+%Q(#{Core.publish || Core.mode != 'preview' ? @item.public_uri(without_filename: true) : @item.preview_uri(without_filename: true)}file_contents/))
+  -%>
+  <div class="text-beginning"><%=raw body %></div>
 
   <%- if @content.blog_functions_available? -%>
-    <%- if @item.body_more.present? -%>
-  <div class="text-continues"><%=raw @item.body_more %></div>
-    <%- end -%>
-    <%- if @content.blog_functions[:footer_style].present? -%>
-  <div class="footer"><%= doc_replace(@item, @content.blog_functions[:footer_style], @content.date_style, @content.time_style) %></div>
-    <%- end -%>
+  <%= render 'gp_article/public/node/docs/show/blog_function', item: @item, content: @content %>
   <%- end -%>
 </div>
 
-<%- unless Page.mobile? -%>
 <%= render 'cms/public/_partial/maps/view', item: @item %>
+
+<%- if @item.public_related_docs.present? -%>
+<%= render 'gp_article/public/node/docs/show/rel_docs', item: @item, content: @content, rel_docs: @item.public_related_docs %>
 <%- end -%>
 
-<%- unless Page.mobile? -%>
-<%= render 'rel_docs', item: @item %>
-<%- else -%>
-<%= render 'rel_docs_mobile', item: @item %>
-<%- end -%>
-
-<%- unless Page.mobile? -%>
 <%- if (node = @item.content.tag_content_tag.try(:public_node)) &&
        (tags = !Core.publish && Core.mode == 'preview' ? @item.tags_for_preview : @item.tags).present? -%>
-<div class="tags">
-  <h2>関連ワード</h2>
-  <ul>
-    <%- tags.each do |tag| -%>
-    <li><%= link_to tag.word, tag.public_uri %></li>
-    <%- end -%>
-  </ul>
-</div>
-<%- end -%>
+<%= render 'gp_article/public/node/docs/show/tags', tags: tags %>
 <%- end -%>
 
 <%- if @item.qrcode_visible? -%>
-<div class="qrcode">
-<img src="<%= @item.qrcode_uri(preview: (!Core.publish && Core.mode == 'preview')) %>" />
-</div>
+<%= render 'gp_article/public/node/docs/show/qrcode', item: @item, content: @content %>
 <%- end -%>
 
 <%= render 'cms/public/_partial/inquiries/view', item: @item %>
-<%= render 'cms/public/_partial/adobe_reader' if !Page.mobile? && Util::Link.include_pdf_link?(body) %>
+@adobe-reader-link@
 <!-- end .contentGpArticleDoc --></article>

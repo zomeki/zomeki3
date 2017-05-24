@@ -26,13 +26,14 @@ class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
   def index
     @docs = @content.public_docs_for_list.order(@content.docs_order_as_hash)
     if params[:format].in?(['rss', 'atom'])
-      @docs = @docs.search_date_column(@content.docs_order_column, 'after', @content.feed_docs_period.to_i.days.ago) if @content.feed_docs_period.present?
+      @docs = @docs.date_after(@content.docs_order_column, @content.feed_docs_period.to_i.days.ago.beginning_of_day) if @content.feed_docs_period.present?
       @docs = @docs.paginate(page: params[:page], per_page: @content.feed_docs_number)
       return render_feed(@docs)
     end
     @docs = GpArticle::DocsPreloader.new(@docs).preload(:public_node_ancestors)
 
     if @content.simple_pagination?
+      @docs = @docs.date_after(@content.docs_order_column, @content.doc_list_period.to_i.months.ago.beginning_of_day) if @content.doc_list_period.present?
       @docs = @docs.paginate(page: params[:page], per_page: @content.doc_list_number)
       return http_error(404) if @docs.current_page > @docs.total_pages
     else
@@ -42,7 +43,9 @@ class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
                                            direction: @content.docs_order_direction,
                                            current_date: current_date).page_info
 
-      @docs = @docs.search_date_column(@content.docs_order_column, 'between', @page_info[:current_dates])
+      @docs = @docs.date_between(@content.docs_order_column,
+                                 @page_info[:current_dates][0].beginning_of_day,
+                                 @page_info[:current_dates][1].end_of_day)
       return http_error(404) if params[:date].present? && @docs.blank?
     end
 
@@ -117,7 +120,7 @@ class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
         when id
           nil
         when name
-          @content.preview_docs.find_by(name: name)
+          @content.preview_docs.where(name: name).order(:id).first
         end
       else
         case

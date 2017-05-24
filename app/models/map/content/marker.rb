@@ -15,7 +15,7 @@ class Map::Content::Marker < Cms::Content
   end
 
   def default_map_position
-    [setting_value(:lat_lng), site.setting_site_map_coordinate].lazy.each do |pos|
+    [setting_value(:lat_lng), site.map_coordinate].lazy.each do |pos|
       p = pos.to_s.split(',').map(&:strip)
       return p if p.size == 2
     end

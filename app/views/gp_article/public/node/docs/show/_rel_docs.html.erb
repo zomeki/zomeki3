@@ -1,0 +1,8 @@
+<div class="rels">
+  <h2>関連記事</h2>
+  <ul>
+    <%- rel_docs.each do |doc| -%>
+    <li><%= doc_replace(doc, content.rel_docs_style, content.date_style, content.time_style) %></li>
+    <%- end -%>
+  </ul>
+</div>

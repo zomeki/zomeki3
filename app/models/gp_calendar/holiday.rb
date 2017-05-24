@@ -10,6 +10,11 @@ class GpCalendar::Holiday < ApplicationRecord
   KIND_OPTIONS = [['休日', 'holiday'], ['イベント', 'event']]
   ORDER_OPTIONS = [['作成日時（降順）', 'created_at_desc'], ['作成日時（昇順）', 'created_at_asc']]
 
+  # Pseudo event attributes
+  attr_accessor :href, :name, :categories, :note
+  # Not saved to database
+  belongs_to :doc, class_name: 'GpArticle::Doc'
+
   # Content
   belongs_to :content, :foreign_key => :content_id, :class_name => 'GpCalendar::Content::Event'
   validates :content_id, :presence => true
@@ -61,8 +66,6 @@ class GpCalendar::Holiday < ApplicationRecord
     return rel
   }
 
-  belongs_to :doc, :class_name => 'GpArticle::Doc' # Not saved to database
-
   def started_on=(year)
     @started_on = Date.new(year, self.date.month, self.date.day) if self.date.present?
   end
@@ -74,8 +77,6 @@ class GpCalendar::Holiday < ApplicationRecord
   def ended_on
     self.started_on
   end
-
-  attr_accessor :href, :name, :categories  # Similarly to event
 
   def holiday
     criteria = {date: started_on, kind: 'holiday'}

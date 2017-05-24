@@ -355,6 +355,10 @@ $(function() {
     <td><%= text_field_tag 'item[extra_values][doc_list_number]', @item.extra_values[:doc_list_number], class: 'number' %></td>
   </tr>
   <tr>
+    <th>一覧表示期間</th>
+    <td><%= text_field_tag 'item[extra_values][doc_list_period]', @item.extra_values[:doc_list_period], class: 'number' %> ヵ月　（空の場合：期間制限なし）</td>
+  </tr>
+  <tr>
     <th>日付毎</th>
     <td>
       <%- @item.extra_options[:doc_list_style_options].each do |option| name = :doc_list_style -%>

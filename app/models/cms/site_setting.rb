@@ -1,31 +1,63 @@
 class Cms::SiteSetting < ApplicationRecord
   include Sys::Model::Base
+  include Sys::Model::Base::Setting
   include Cms::Model::Rel::Site
   include Cms::Model::Auth::Site
 
-  validates :site_id, :name, presence: true
+  set_config :basic_auth_state,
+             name: 'ベーシック認証',
+             default_value: 'disabled'
+  set_config :common_ssl,
+             name: '共有SSL',
+             default_value: 'disabled',
+             options: [['使用する', 'enabled'], ['使用しない', 'disabled']],
+             index: true
+  set_config :admin_mail_sender,
+             name: '管理者メール送信元アドレス',
+             default_value: 'noreply',
+             index: true
+  set_config :allowed_attachment_type,
+             name: '添付ファイル/許可する種類',
+             default_value: '',
+             index: true
+  set_config :file_upload_max_size,
+             name:  '添付ファイル最大サイズ',
+             default_value: 5,
+             index: true
+  set_config :extension_upload_max_size,
+             name: '拡張子別アップロードサイズ',
+             default_value: ''
+  set_config :link_check,
+             name:  'リンクチェック機能',
+             default_value: 'enabled',
+             options: [['使用する', 'enabled'], ['使用しない', 'disabled']],
+             index: true
+  set_config :link_check_hour,
+             name: 'リンクチェック開始時刻',
+             default_value: nil
+  set_config :link_check_exclusion,
+             name: 'リンクチェック対象外URL',
+             default_value: ''
+  set_config :accessibility_check,
+             name: 'アクセシビリティチェック機能',
+             default_value: 'enabled',
+             options: [['使用する', 'enabled'], ['使用しない', 'disabled']],
+             index: true
+  set_config :adobe_reader_link,
+             name: 'Adobe Acrobat Reader リンク',
+             default_value: 'enabled',
+             options: [['使用する', 'enabled'], ['使用しない', 'disabled']],
+             index: true
+  set_config :kana_talk,
+             name: 'ふりがな・音声',
+             default_value: 'enabled',
+             options: [['ふりがなと音声を書き出し', 'enabled'], ['ふりがなのみ書き出し', 'kana_only'], ['書き出さない', 'disabled']],
+             index: true
+  set_config :map_coordinate,
+             name: '地図/デフォルト座標',
+             default_value: nil,
+             index: true
 
-  SSL_OPTIONS = [['使用する', 'enabled'], ['使用しない', 'disabled']]
-  LINK_CHECK_OPTIONS = [['使用する', 'enabled'], ['使用しない', 'disabled']]
-  ACCESSIBILITY_CHECK_OPTIONS = [['使用する', 'enabled'], ['使用しない', 'disabled']]
-  KANA_TALK_OPTIONS = [['ふりがなと音声を書き出し', 'enabled'], ['ふりがなのみ書き出し', 'kana_only'], ['書き出さない', 'disabled']]
-
-  SITE_CONFIGS = [
-    { id: "common_ssl", name: "共有SSL",
-      setting_name: :setting_site_common_ssl_label },
-    { id: "admin_mail_sender", name: "管理者メール送信元アドレス",
-      setting_name: :in_setting_site_admin_mail_sender },
-    { id: "allowed_attachment_type", name: "添付ファイル/許可する種類",
-      setting_name: :in_setting_site_allowed_attachment_type },
-    { id: "file_upload_max_size", name: "添付ファイル最大サイズ",
-      setting_name: :in_setting_site_file_upload_max_size },
-    { id: "link_check", name: "リンクチェック機能",
-      setting_name: :setting_site_link_check_label },
-    { id: "accessibility_check", name: "アクセシビリティチェック機能",
-      setting_name: :setting_site_accessibility_check_label },
-    { id: "kana_talk", name: "ふりがな・音声",
-      setting_name: :setting_site_kana_talk_label },
-    { id: "map_coordinate", name: "地図/デフォルト座標",
-      setting_name: :setting_site_map_coordinate },
-  ]
+  validates :site_id, presence: true
+  validates :name, presence: true, uniqueness: { scope: :site_id }
 end

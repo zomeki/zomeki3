@@ -75,7 +75,7 @@ class Sys::Storage::File < Sys::Storage::Entry
   def validate_mime_type
     return unless site
 
-    types = site.setting_site_allowed_attachment_type.to_s.split(/ *, */)
+    types = site.allowed_attachment_type.to_s.split(/ *, */)
     types = types.map { |t| ".#{t.gsub(/ /, '').downcase}" }.select(&:present?)
 
     if types.present? && !types.include?(::File.extname(name).downcase)
@@ -87,7 +87,7 @@ class Sys::Storage::File < Sys::Storage::Entry
     return unless site
 
     ext = ::File.extname(name).downcase
-    max_size = site.get_upload_max_size(ext) || site.setting_site_file_upload_max_size
+    max_size = site.get_upload_max_size(ext) || site.file_upload_max_size
 
     if max_size && body && body.size > max_size.to_i * (1024**2)
       errors.add(:base, "容量制限を超えています。＜#{max_size}MB＞")

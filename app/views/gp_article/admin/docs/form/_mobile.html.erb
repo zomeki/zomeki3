@@ -1,0 +1,14 @@
+<table class="show">
+  <tr>
+    <th><%= f.label :mobile_title %></th>
+    <td><%= f.text_field :mobile_title, class: 'title', style: 'width: 500px;' %></td>
+  </tr>
+  <tr>
+    <th colspan="2"><%= f.label :mobile_body %></th>
+  </tr>
+  <tr>
+    <td colspan="2" class="cke_editor_wrapper">
+      <%= f.text_area :mobile_body, class: 'body ckeditor' %>
+    </td>
+  </tr>
+</table>

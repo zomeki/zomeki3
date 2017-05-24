@@ -1,0 +1,21 @@
+<article class="contentGpArticleDoc">
+<%= render 'gp_article/public/node/docs/show/date', item: @item, content: @content %>
+
+<div class="body">
+  <div class="text-beginning"><%=raw @item.body_for_mobile %></div>
+
+  <%- if @content.blog_functions_available? -%>
+  <%= render 'gp_article/public/node/docs/show/blog_function', item: @item, content: @content %>
+  <%- end -%>
+</div>
+
+<%- if @item.public_related_docs.present? -%>
+<%= render 'gp_article/public/node/docs/show/rel_docs', item: @item, content: @content, rel_docs: @item.public_related_docs %>
+<%- end -%>
+
+<%- if @item.qrcode_visible? -%>
+<%= render 'gp_article/public/node/docs/show/qrcode', item: @item, content: @content %>
+<%- end -%>
+
+<%= render 'cms/public/_partial/inquiries/view', item: @item %>
+<!-- end .contentGpArticleDoc --></article>
