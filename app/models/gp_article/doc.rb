@@ -112,7 +112,7 @@ class GpArticle::Doc < ApplicationRecord
 
   scope :visible_in_list, -> { where(feature_1: true) }
   scope :event_scheduled_between, ->(start_date, end_date, category_ids = nil) {
-    rel = dates_intersects(:event_started_on, :event_ended_on, start_date.beginning_of_day, end_date.end_of_day)
+    rel = dates_intersects(:event_started_on, :event_ended_on, start_date.try(:beginning_of_day), end_date.try(:end_of_day))
     rel = rel.categorized_into_event(category_ids) if category_ids.present?
     rel
   }

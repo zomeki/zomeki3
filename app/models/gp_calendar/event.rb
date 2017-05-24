@@ -33,7 +33,7 @@ class GpCalendar::Event < ApplicationRecord
 
   scope :public_state, -> { where(state: 'public') }
   scope :scheduled_between, ->(start_date, end_date) {
-    dates_intersects(:started_on, :ended_on, start_date.beginning_of_day, end_date.end_of_day)
+    dates_intersects(:started_on, :ended_on, start_date.try(:beginning_of_day), end_date.try(:end_of_day))
   }
 
   scope :content_and_criteria, ->(content, criteria){
