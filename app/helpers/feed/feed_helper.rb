@@ -70,7 +70,7 @@ private
 
   def entry_replace_summary(entry)
     if entry.summary.present?
-      content_tag(:blockquote, entry.summary, class: 'summary')
+      content_tag(:blockquote, entry.summary.html_safe, class: 'summary')
     else
       ''
     end
@@ -90,10 +90,10 @@ private
   def entry_replace_image_link(entry)
     image_tag = entry_image_tag(entry)
     image_link = if image_tag.present?
-        link_to image_tag, :target => '_blank'
-      else
-        image_tag
-      end
+                   link_to image_tag, entry.public_uri, target: '_blank'
+                 else
+                   image_tag
+                 end
     if image_link.present?
       content_tag(:span, image_link, class: 'image')
     else
