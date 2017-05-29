@@ -33,7 +33,7 @@
           <ul>
             <%- events.each do |event| -%>
             <li>
-              <%= event_replace(event, @content.calendar_list_style) %>
+              <%= event_replace(event, @date, @content.calendar_list_style) %>
             </li>
             <%- end -%>
           </ul>

@@ -8,7 +8,7 @@
         <span class="<%= category.name -%>"><%= category.title %></span>
         <%- end -%>
       </span><%- end -%>
-      <%= marker.doc ? title_replace(marker.doc, @content.title_style) : marker.title %>
+      <%= marker.doc ? doc_replace(marker.doc, @content.title_style) : marker.title %>
     </div>
   <%- end -%>
   </div>

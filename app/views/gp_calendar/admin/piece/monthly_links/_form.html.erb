@@ -5,8 +5,11 @@
   <tr>
     <th>リンク先</th>
     <td>
-      <%= select_tag 'target_node', options_for_select(nodes_for_monthly_links(@item.content.public_nodes)
-                                                       .map {|n| ["#{n.title}（#{n.name}）", n.id]}, @item.target_node.try(:id)), include_blank: true %>
+      <%= select_tag 'target_node', options_for_select(
+                                      @item.content.piece_target_nodes.map { |n| ["#{n.title}（#{n.name}）", n.id] },
+                                      @item.target_node.try(:id)
+                                    ), include_blank: true %>
+    </td>
   </tr>
 </table>
 <%- end -%>
