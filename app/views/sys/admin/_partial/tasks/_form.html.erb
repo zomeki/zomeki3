@@ -30,6 +30,6 @@
 
 <%= javascript_tag do -%>
 $(document).ready(function () {
-  <%= enable_datetimepicker_script %>
+  $('input.datetimepicker').datetimepicker();
 });
 <%- end -%>

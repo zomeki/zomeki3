@@ -84,7 +84,7 @@ types = @content.visible_types.order(:id).collect{|c| [c.title, c.id]}
 <%= javascript_tag do -%>
 
 $(document).ready(function () {
-  <%= enable_datepicker_script -%>
+  $('input.datepicker').datepicker();
 
   $('#item_repeat_type').on('change', function (event) {
     var repeat_type = event.target.value;

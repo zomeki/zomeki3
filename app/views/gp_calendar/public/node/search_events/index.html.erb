@@ -8,7 +8,7 @@
     <%= javascript_include_tag '/_common/js/jquery-ui-timepicker-addon-ja.js' %>
     <%= javascript_tag do -%>
     $(document).ready(function () {
-      <%= enable_datepicker_script -%>
+      $('input.datepicker').datepicker();
     });
     <%- end -%>
 

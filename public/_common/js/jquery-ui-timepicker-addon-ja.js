@@ -11,6 +11,9 @@ $.timepicker.regional['ja'] = {
   timeFormat: 'HH:mm',
   amNames: ['AM', 'A'],
   pmNames: ['PM', 'P'],
-  isRTL: false
+  isRTL: false,
+  hourGrid: 4,
+  minuteGrid: 10,
+  secondGrid: 10
 };
 $.timepicker.setDefaults($.timepicker.regional['ja']);

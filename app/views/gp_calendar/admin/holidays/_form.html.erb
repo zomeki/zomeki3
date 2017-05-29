@@ -29,7 +29,7 @@
 
 <%= javascript_tag do %>
 $(document).ready(function () {
-  <%= enable_datepicker_script %>
+  $('input.datepicker').datepicker();
   datepicker('<%= 'yy年' unless @item.repeat %>');
 
   $('#item_repeat').change(function() {
@@ -43,7 +43,7 @@ $(document).ready(function () {
   });
 
   function datepicker(yy){
-    $('.datepicker').datepicker('option', 'dateFormat', yy + 'mm月dd日');
+    $('input.datepicker').datepicker('option', 'dateFormat', yy + 'mm月dd日');
   }
 });
 <% end %>

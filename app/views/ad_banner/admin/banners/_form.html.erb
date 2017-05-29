@@ -85,7 +85,7 @@
 
 <%= javascript_tag do -%>
 $(document).ready(function () {
-  <%= enable_datetimepicker_script -%>
+  $('input.datetimepicker').datetimepicker();
 
   $('#item_file').on('change', function (event) {
     var name = event.target.value.replace(/\\/g, '/').replace(/.*\//, '');
