@@ -10,7 +10,9 @@ class Sys::Admin::KanaDictionariesController < Cms::Controller::Admin::Base
     return test if params[:do] == 'test'
     return make_dictionary if params[:do] == 'make_dictionary'
 
-    @items = Cms::KanaDictionary.where(site_id: nil).order(:id).paginate(page: params[:page], per_page: params[:limit])
+    @items = Cms::KanaDictionary.where(site_id: nil)
+                                .order(:id)
+                                .paginate(page: params[:page], per_page: params[:limit])
     _index @items
   end
 
@@ -53,16 +55,16 @@ class Sys::Admin::KanaDictionariesController < Cms::Controller::Admin::Base
   end
 
   def make
-    res = false
-    Cms::Site.order(:id).each do |site|
-      Cms::KanaDictionary.make_dic_file(site.id)
-    end
-    res = Cms::KanaDictionary.make_dic_file
-    if res == true
-      flash[:notice] = '辞書を更新しました。'
-    else
-      flash[:notice] = res.join('<br />')
-    end
+    makers = [Cms::KanaDictionary::Maker.new]
+    makers += Cms::Site.order(:id).map { |site| Cms::KanaDictionary::Maker.new(site_id: site.id) }
+    makers.each(&:make_dic)
+
+    errors = makers.map(&:errors).flatten
+    flash[:notice] = if errors.blank?
+                       '辞書を更新しました。'
+                     else
+                       flash[:notice] = errors.join('<br />')
+                     end
 
     redirect_to sys_kana_dictionaries_url
   end

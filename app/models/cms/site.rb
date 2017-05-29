@@ -5,7 +5,6 @@ class Cms::Site < ApplicationRecord
   include Sys::Model::Rel::Creator
   include Sys::Model::Auth::Manager
   include Cms::Model::Rel::DataFile
-  include Sys::Model::Rel::FileTransfer
   include Cms::Model::Rel::SiteSetting
 
   include StateText
@@ -32,8 +31,6 @@ class Cms::Site < ApplicationRecord
   has_many :nodes, :dependent => :destroy
   has_many :messages, class_name: 'Sys::Message', dependent: :destroy
   has_many :operation_logs, class_name: 'Sys::OperationLog'
-  has_many :transferred_files, class_name: 'Sys::TransferredFile'
-  has_many :transferable_files, class_name: 'Sys::TransferableFile'
   belongs_to :root_node, foreign_key: :node_id, class_name: 'Cms::Node'
 
   # conditional relations

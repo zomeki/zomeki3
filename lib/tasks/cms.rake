@@ -45,6 +45,16 @@ namespace :zomeki do
       end
     end
 
+    namespace :file_transfers do
+      desc 'Exec file transfers'
+      task :exec => :environment do
+        next unless Zomeki.config.application['cms.file_transfer']
+        Cms::Site.order(:id).pluck(:id).each do |site_id|
+          Script.run('cms/file_transfers/exec', site_id: site_id, lock_by: :site)
+        end
+      end
+    end
+
     namespace :sites do
       desc 'Update server configs'
       task :update_server_configs => :environment do

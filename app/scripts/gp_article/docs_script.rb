@@ -57,6 +57,8 @@ class GpArticle::DocsScript < Cms::Script::Publication
         end
       end
     end
+
+    FileTransferCallbacks.new([:public_path, :public_smart_phone_path], recursive: true).after_publish_files(@node)
   end
 
   def publish_by_task(item)

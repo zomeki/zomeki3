@@ -23,6 +23,10 @@ module Sys::Model::Base::File
     validate :validate_upload_file
     after_save :upload_internal_file
     after_destroy :remove_internal_file
+
+    define_model_callbacks :save_files, :remove_files
+    after_save_files FileTransferCallbacks.new(:upload_path, recursive: true)
+    after_remove_files FileTransferCallbacks.new(:upload_path, recursive: true)
   end
 
   def skip_upload(skip=true)
@@ -332,20 +336,19 @@ module Sys::Model::Base::File
 
   ## filter/aftar_save
   def upload_internal_file
-    Util::File.put(upload_path, :data => @file_content, :mkdir => true) unless @file_content.nil?
-
-    if @thumbnail_image
-      thumb_path = ::File.dirname(upload_path) + "/thumb.dat"
-      Util::File.put(thumb_path, :data => @thumbnail_image.to_blob, :mkdir => true)
+    run_callbacks :save_files do
+      Util::File.put(upload_path, data: @file_content, mkdir: true) unless @file_content.nil?
+      Util::File.put(upload_path(type: :thumb), data: @thumbnail_image.to_blob, mkdir: true) if @thumbnail_image
+      true
     end
-
-    return true
   end
 
   ## filter/aftar_destroy
   def remove_internal_file
-    FileUtils.remove_entry_secure(upload_path) if ::File.exist?(upload_path)
-    FileUtils.remove_entry_secure(upload_path(type: :thumb)) if ::File.exist?(upload_path(type: :thumb))
-    return true
+    run_callbacks :remove_files do
+      FileUtils.remove_entry_secure(upload_path) if ::File.exist?(upload_path)
+      FileUtils.remove_entry_secure(upload_path(type: :thumb)) if ::File.exist?(upload_path(type: :thumb))
+      true
+    end
   end
 end

@@ -45,6 +45,10 @@ class Cms::Node < ApplicationRecord
 
   after_save Cms::Publisher::NodeCallbacks.new, if: :changed?
 
+  define_model_callbacks :publish_files, :close_files
+  after_publish_files FileTransferCallbacks.new([:public_path, :public_smart_phone_path])
+  after_close_files FileTransferCallbacks.new([:public_path, :public_smart_phone_path])
+
   scope :public_state, -> { where(state: 'public') }
   scope :sitemap_order, -> { order('sitemap_sort_no IS NULL, sitemap_sort_no, name') }
 
@@ -241,7 +245,9 @@ class Cms::Node < ApplicationRecord
   protected
 
   def remove_file
-    close_page# rescue nil
+    run_callbacks :close_files do
+      close_page# rescue nil
+    end
     return true
   end
 
@@ -284,7 +290,9 @@ class Cms::Node < ApplicationRecord
         rep.destroy if rep.directory == 0
       end
 
-      publish_page(content, :path => public_path, :uri => public_uri)
+      run_callbacks :publish_files do
+        publish_page(content, :path => public_path, :uri => public_uri)
+      end
     end
 
     def rebuild(content, options={})
@@ -303,7 +311,9 @@ class Cms::Node < ApplicationRecord
       options[:path] ||= public_path
       options[:uri] ||= public_uri
 
-      publish_page(content, options)
+      run_callbacks :publish_files do
+        publish_page(content, options)
+      end
     end
 
     def close
@@ -311,7 +321,10 @@ class Cms::Node < ApplicationRecord
       self.state = 'closed' if self.state == 'public'
       #self.published_at = nil
       return false unless save(:validate => false)
-      close_page
+
+      run_callbacks :close_files do
+        close_page
+      end
       return true
     end
 

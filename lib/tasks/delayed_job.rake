@@ -7,7 +7,8 @@ namespace :delayed_job do
     options = [
       "--pool=sys_tasks:#{task_workers}",
       "--pool=cms_rebuild:#{rebuild_workers}",
-      "--pool=cms_publisher:#{publisher_workers}"
+      "--pool=cms_publisher:#{publisher_workers}",
+      "--pool=cms_file_transfer:#{file_transfer_workers}",
     ]
     options.join(' ')
   end
@@ -22,6 +23,11 @@ namespace :delayed_job do
 
   def publisher_workers
     (ENV['PUBLISHER_WORKERS'] || 1).to_i
+  end
+
+  def file_transfer_workers
+    default = Zomeki.config.application['cms.file_transfer'] ? 1 : 0
+    (ENV['FILE_TRANSFER_WORKERS'] || default).to_i
   end
 
   def max_memory

@@ -247,7 +247,6 @@ GEM
       rspec-mocks (~> 3.5.0)
       rspec-support (~> 3.5.0)
     rspec-support (3.5.0)
-    rsync (1.0.9)
     rubocop (0.40.0)
       parser (>= 2.3.1.0, < 3.0)
       powerpack (~> 0.1)
@@ -360,7 +359,6 @@ DEPENDENCIES
   rmagick (~> 2.15.4)
   rqrcode_png (~> 0.1.5)
   rspec-rails (~> 3.5, >= 3.5.2)
-  rsync (~> 1.0.9)
   rubocop
   rubyzip (~> 1.2.1)
   sass-rails (~> 5.0)
