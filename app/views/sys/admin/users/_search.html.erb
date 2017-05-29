@@ -1,7 +1,4 @@
 <%= form_tag '', method: :get, class: 'search' do |f| %>
-<%
-group_options = [['** グループ未設定','no_group']] + Core.site.groups_for_option
-%>
 <table>
   <tr>
     <th>ユーザーID</th>
@@ -14,7 +11,7 @@ group_options = [['** グループ未設定','no_group']] + Core.site.groups_for
   <tr>
     <td><%= text_field_tag :account, params[:account], style: 'width: 150px; ime-mode: disabled;' %></td>
     <td><%= text_field_tag :name, params[:name], style: 'width: 150px;' %></td>
-    <td><%= select_tag :group_id, options_for_select(group_options, params[:group_id]), include_blank: true %></td>
+    <td><%= select_tag :group_id, options_for_select(Core.site.groups_for_option, params[:group_id]), include_blank: true %></td>
     <td><%= text_field_tag :email, params[:email], style: 'width: 150px;' %></td>
     <td><%= select_tag :auth_no, options_for_select(Sys::User.new.authes, params[:auth_no]), include_blank: true %></td>
     <td><%= select_tag :state, options_for_select([['有効','enabled'], ['無効','disabled']], params[:state]), include_blank: true %></td>
@@ -24,5 +21,4 @@ group_options = [['** グループ未設定','no_group']] + Core.site.groups_for
     </td>
   </tr>
 </table>
-
 <!-- end .search --><% end %>
