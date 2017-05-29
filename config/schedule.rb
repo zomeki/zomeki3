@@ -75,6 +75,11 @@ every :day, at: '0:30 am' do
   rake 'zomeki:cms:nodes:publish'
 end
 
+# 静的ファイルを転送します。
+every :day, at: '5:00 am' do
+  rake 'zomeki:cms:file_transfers:exec'
+end
+
 # アクセスランキングデータを取り込みます。
 every :day, at: '3:00 am' do
   rake 'zomeki:rank:ranks:exec'
