@@ -16,7 +16,7 @@ class Sys::Process < ApplicationRecord
     ["ファイル転送", "cms/file_transfers/exec"]
   ]
 
-  RUNNABLE_PROCESSE_NAMES = [
+  RUNNABLE_PROCESS_NAMES = [
     "sys/tasks/exec",
     "cms/talk_tasks/exec",
     "cms/link_checks/exec",
@@ -24,7 +24,7 @@ class Sys::Process < ApplicationRecord
     "feed/feeds/read",
     "cms/file_transfers/exec"
   ]
-  RUNNABLE_PROCESSES = ALL_PROCESSES.select { |p| p.last.in?(RUNNABLE_PROCESSE_NAMES) }
+  RUNNABLE_PROCESSES = ALL_PROCESSES.select { |p| p.last.in?(RUNNABLE_PROCESS_NAMES) }
 
   STATES = [["実行中", "running"], ["完了", "closed"], ["停止", "stop"]]
 
@@ -67,6 +67,11 @@ class Sys::Process < ApplicationRecord
     str = success.to_s
     str << "/#{total}" if total
     str
+  end
+
+  def processable?
+    return false if name == 'cms/file_transfers/exec' && !Zomeki.config.application['cms.file_transfer']
+    state != 'running'
   end
 
   def self.lock(attrs = {})
