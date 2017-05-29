@@ -4,6 +4,8 @@
     <script src="/_common/js/jquery-ui.min.js"></script>
     <link rel="stylesheet" media="screen" href="/_common/css/jquery-ui-timepicker-addon.css" />
     <script src="/_common/js/jquery-ui-timepicker-addon.js"></script>
+    <%= javascript_include_tag '/_common/js/jquery-ui-datepicker-ja.js' %>
+    <%= javascript_include_tag '/_common/js/jquery-ui-timepicker-addon-ja.js' %>
     <%= javascript_tag do -%>
     $(document).ready(function () {
       <%= enable_datepicker_script -%>

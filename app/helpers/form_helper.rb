@@ -1,5 +1,4 @@
 module FormHelper
-
   ## CKEditor
   def init_ckeditor(options = {})
     settings = []
@@ -82,5 +81,60 @@ module FormHelper
     h += "});"
     h += "\n//]]>\n</script>"
     h.html_safe
+  end
+
+  def value_for_datepicker(object_name, attribute)
+    if object = instance_variable_get("@#{object_name}")
+      object.send(attribute).try(:strftime, '%Y-%m-%d')
+    end
+  end
+
+  def enable_datepicker_script
+    s = <<-EOS
+$('.datepicker').datepicker();
+    EOS
+    s.html_safe
+  end
+
+  def value_for_datetimepicker(object_name, attribute)
+    if object = instance_variable_get("@#{object_name}")
+      object.send(attribute).try(:strftime, '%Y-%m-%d %H:%M')
+    end
+  end
+
+  def enable_datetimepicker_script
+    s = <<-EOS
+$('.datetimepicker').datetimepicker({
+  hourGrid: 4,
+  minuteGrid: 10,
+  secondGrid: 10
+});
+    EOS
+    s.html_safe
+  end
+
+  def value_for_timepicker(object_name, attribute)
+    if object = instance_variable_get("@#{object_name}")
+      object.send(attribute).try(:strftime, '%H:%M')
+    end
+  end
+
+  def enable_timepicker_script
+    s = <<-EOS
+$('.timepicker').timepicker({
+  hourGrid: 4,
+  minuteGrid: 10,
+  secondGrid: 10
+});
+    EOS
+    s.html_safe
+  end
+
+
+  def disable_enter_script
+    s = <<-EOS
+$('form').on('keypress', function (e) { if (e.target.type !== 'textarea' && e.which === 13) return false; });
+    EOS
+    s.html_safe
   end
 end
