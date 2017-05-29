@@ -14,7 +14,7 @@
     </thead>
     <tbody>
       <%- @events.each do |event| -%>
-        <%= event_table_replace(event, @content.list_style) %>
+        <%= event_table_replace(event, @date, @content.list_style, @content.date_style) %>
       <%- end -%>
     </tbody>
   </table>

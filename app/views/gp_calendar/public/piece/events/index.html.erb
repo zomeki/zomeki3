@@ -10,7 +10,7 @@
   </thead>
   <tbody>
     <%- @events.each do |event| -%>
-      <%= event_table_replace(event, @piece.table_style, {date_style: @piece.date_style}) %>
+      <%= event_table_replace(event, @date, @piece.table_style, @piece.date_style) %>
     <%- end -%>
   </tbody>
 </table>

@@ -1,4 +1,8 @@
 module GpArticle::GpArticleHelper
+  def doc_replace(doc, doc_style, date_style = '%Y年%m月%d日', time_style = '%H時%M分')
+    GpArticle::Public::DocFormatService.new(doc).format(doc_style, date_style, time_style, mobile: Page.mobile?)
+  end
+
   def og_tags(item)
     return '' if item.nil?
     %w!type title description image!.map{ |key|
