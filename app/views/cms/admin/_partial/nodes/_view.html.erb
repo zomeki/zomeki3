@@ -1,7 +1,11 @@
 <% if defined?(container) && container != :tr %>
 <table class="show">
 <% end %>
-<tr>
+  <tr>
+    <th>公開URL</th>
+    <td><%= link_to @item.public_full_uri, @item.public_full_uri, target: '_blank' %></td>
+  </tr>
+  <tr>
     <th><%= @item.locale(:state) %></th>
     <td><%= safe{@item.status.name} %></td>
   </tr><tr>

@@ -7,8 +7,10 @@ class Sys::Admin::UsersController < Cms::Controller::Admin::Base
   end
 
   def index
-    @items = Core.site.users.search_with_params(params).order("LPAD(account, 15, '0')")
-                            .paginate(page: params[:page], per_page: params[:limit])
+    @items = Sys::UsersFinder.new(Core.site.users).search(params)
+                             .order("LPAD(account, 15, '0')")
+                             .paginate(page: params[:page], per_page: params[:limit])
+                             .preload(:groups, :role_names)
 
     _index @items
   end
