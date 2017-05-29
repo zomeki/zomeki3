@@ -25,11 +25,24 @@
   </tr>
 </table>
 
-<%= observe_field :item_concept_id, :url => {:action => :content_options},
-  :update => :item_content_id, :with => 'concept_id' %>
-<%= observe_field :item_concept_id, :url => {:action => :model_options},
-  :update => :item_model %>
-<%= observe_field :item_content_id, :url => {:action => :model_options},
-  :update => :item_model, :with => 'content_id' %>
-
 <%= creator_form f %>
+
+<script type="text/javascript">
+//<![CDATA[
+$(function() {
+  $('#item_concept_id').on('change', function() {
+    $.get('<%= url_for(action: :content_options) %>', { concept_id: $(this).val() }, function(html) {
+      $('#item_content_id').html(html);
+    });
+    $.get('<%= url_for(action: :model_options) %>', function(html) {
+      $('#item_model').html(html);
+    });
+  });
+  $('#item_content_id').on('change', function() {
+    $.get('<%= url_for(action: :model_options) %>', { content_id: $(this).val() }, function(html) {
+      $('#item_model').html(html);
+    });
+  });
+});
+//]]>
+</script>

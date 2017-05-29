@@ -55,34 +55,6 @@ module FormHelper
     h.html_safe
   end
   
-  def observe_field(field, params)
-    on     = params[:on] ? params[:on].to_s : "change"
-    url    = url_for(params[:url])
-    method = params[:method] ? params[:method].to_s : 'get'
-    with   = params[:with]
-    update = params[:update]
-    before = params[:before]
-    
-    data  = []
-    data << "#{with}=' + encodeURIComponent($('##{field}').val()) + '" if with
-    data << "authenticity_token=' + encodeURIComponent('#{form_authenticity_token}') + '" if method == 'post'
-    data = data.join('&')
-    
-    h  = '<script type="text/javascript">' + "\n//<![CDATA[\n"
-    h += "$(function() {"
-    h += "$('##{field}').bind('#{on}', function() {"
-    h += "#{before};" if before
-    h += "jQuery.ajax({"
-    h += "data:'#{data}',"
-    h += "url:'#{url}',"
-    h += "success:function(response){ $('##{update}').html(response) }"
-    h += "})"
-    h += "})"
-    h += "});"
-    h += "\n//]]>\n</script>"
-    h.html_safe
-  end
-
   def value_for_datepicker(object_name, attribute)
     if object = instance_variable_get("@#{object_name}")
       object.send(attribute).try(:strftime, '%Y-%m-%d')
