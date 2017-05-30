@@ -60,6 +60,12 @@ class Cms::Concept < ApplicationRecord
     rel.order(:sort_no)
   end
 
+  def readable_descendants(site = Core.site, user = Core.user, concepts = [])
+    concepts << self
+    readable_children(site, user).each { |c| c.readable_descendants(site, user, concepts) }
+    concepts
+  end
+
   def self.find_by_path(path)
     return nil if path.to_s == ''
     parent_id = 0
