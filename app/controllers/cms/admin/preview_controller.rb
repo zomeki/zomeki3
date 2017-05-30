@@ -86,7 +86,8 @@ private
     %w(href src).each do |attr|
       doc.css(%Q![#{attr}]!).each do |node|
         next if node[attr].blank?
-        uri = Addressable::URI.parse(node[attr])
+        uri = Addressable::URI.parse(node[attr]) rescue nil
+        next if uri.nil?
         if uri.relative? && uri.path !~ %r|/_common/| && node[attr] !~ %r|\A#| && node[attr] !~ %r|\A\/\/| && node[attr] =~ %r|\A\/|
           node[attr] = "#{preview_uri}#{node[attr]}"
         end
