@@ -11,6 +11,9 @@ class GpCalendar::Event < ApplicationRecord
   TARGET_OPTIONS = [['同一ウィンドウ', '_self'], ['別ウィンドウ', '_blank']]
   ORDER_OPTIONS = [['作成日時（降順）', 'created_at_desc'], ['作成日時（昇順）', 'created_at_asc']]
 
+  # Not saved to database
+  attr_accessor :doc
+
   # Content
   belongs_to :content, :foreign_key => :content_id, :class_name => 'GpCalendar::Content::Event'
   validates :content_id, :presence => true
@@ -82,8 +85,6 @@ class GpCalendar::Event < ApplicationRecord
   def kind
     'event'
   end
-
-  attr_accessor :doc # Not saved to database
 
   def holiday
     criteria = {date: started_on, kind: 'holiday'}

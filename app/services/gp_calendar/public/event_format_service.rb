@@ -115,7 +115,7 @@ class GpCalendar::Public::EventFormatService < FormatService
   end
 
   def replace_category
-    replace_with_categories(@event.categories)
+    replace_with_categories(@event.categories.to_a)
   end
 
   def replace_category_type(category_type_name)
@@ -123,7 +123,7 @@ class GpCalendar::Public::EventFormatService < FormatService
       .where(content_id: @event.content.category_content_id, name: category_type_name).first
 
     if category_type
-      category_ids = @event.categories.map(&:id)
+      category_ids = @event.categories.to_a.map(&:id)
       categories = GpCategory::Category.where(category_type_id: category_type, id: category_ids)
       replace_with_categories(categories)
     end
