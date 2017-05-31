@@ -2,7 +2,7 @@
 
 <div class="actionMenu">
   <%= action_menu :index %>
-  <% if @item && @item.state != "running" %>
+  <% if @item && @item.processable? %>
   <%= link_to "プロセス実行", { do: :start_process }, confirm: "プロセスを実行してよろしいですか？" %>
   <% end %>
 </div>

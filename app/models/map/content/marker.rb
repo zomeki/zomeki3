@@ -113,7 +113,7 @@ class Map::Content::Marker < Cms::Content
     if doc_content_ids.blank?
       GpArticle::Doc.none
     else
-      docs = GpArticle::Doc.joins(maps: :markers).mobile(::Page.mobile?).public_state
+      docs = GpArticle::Doc.distinct.joins(maps: :markers).mobile(::Page.mobile?).public_state
                            .where(content_id: doc_content_ids, marker_state: 'visible')
       if specified_category
         cat_ids = GpCategory::Categorization.select(:categorizable_id)

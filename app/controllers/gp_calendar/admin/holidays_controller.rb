@@ -50,4 +50,10 @@ class GpCalendar::Admin::HolidaysController < Cms::Controller::Admin::Base
       :creator_attributes => [:id, :group_id, :user_id]
     )
   end
+
+  def parse_date(datestring, format='%m月%d日')
+    Date.strptime(datestring, format)
+  rescue
+    nil
+  end
 end

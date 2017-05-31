@@ -110,6 +110,7 @@ namespace :zomeki do
           Cms::DataFileNode,
           Cms::DataFile,
           Cms::DataText,
+          Cms::FileTransfer,
           Cms::Inquiry,
           Cms::KanaDictionary,
           Cms::Layout,
@@ -248,6 +249,7 @@ namespace :zomeki do
         id_map[:cms_data_files] = Cms::DataFile.where(site_id: site.id).pluck(:id)
         id_map[:cms_data_texts] = Cms::DataText.where(site_id: site.id).pluck(:id)
         id_map[:cms_kana_dictionaries] = Cms::KanaDictionary.where(site_id: site.id).pluck(:id)
+        id_map[:cms_file_transfers] = Cms::FileTransfer.where(site_id: site.id).pluck(:id)
         id_map[:cms_layouts] = Cms::Layout.where(site_id: site.id).pluck(:id)
         id_map[:cms_nodes] = Cms::Node.where(site_id: site.id).pluck(:id)
         id_map[:cms_pieces] = Cms::Piece.where(site_id: site.id).pluck(:id)

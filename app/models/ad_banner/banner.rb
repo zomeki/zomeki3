@@ -1,6 +1,7 @@
 class AdBanner::Banner < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Base::File
+  include Cms::Model::Base::ContentDelegation
   include Sys::Model::Rel::Creator
   include Cms::Model::Auth::Content
 
@@ -10,20 +11,6 @@ class AdBanner::Banner < ApplicationRecord
   TARGET_OPTIONS = [['同一ウィンドウ', '_self'], ['別ウィンドウ', '_blank']]
 
   default_scope { order(:sort_no) }
-
-  banners = self.arel_table
-  scope :published, -> {
-          now = Time.now
-          where(banners[:state].eq('public')
-                .and(banners[:published_at].eq(nil).or(banners[:published_at].lteq(now))
-                .and(banners[:closed_at].eq(nil).or(banners[:closed_at].gt(now)))))
-        }
-  scope :closed, -> {
-          now = Time.now
-          where(banners[:state].eq('closed')
-                .or(banners[:published_at].gt(now))
-                .or(banners[:closed_at].lteq(now)))
-        }
 
   # Content
   belongs_to :content, :foreign_key => :content_id, :class_name => 'AdBanner::Content::Banner'
@@ -44,6 +31,23 @@ class AdBanner::Banner < ApplicationRecord
 
   after_save     Cms::Publisher::ContentRelatedCallbacks.new, if: :changed?
   before_destroy Cms::Publisher::ContentRelatedCallbacks.new
+
+  define_model_callbacks :publish_files, :close_files
+  after_publish_files FileTransferCallbacks.new([:image_path, :image_mobile_path, :image_smart_phone_path])
+  after_close_files FileTransferCallbacks.new([:image_path, :image_mobile_path, :image_smart_phone_path])
+
+  scope :published, -> {
+    now = Time.now
+    where(arel_table[:state].eq('public')
+          .and(arel_table[:published_at].eq(nil).or(arel_table[:published_at].lteq(now))
+          .and(arel_table[:closed_at].eq(nil).or(arel_table[:closed_at].gt(now)))))
+  }
+  scope :closed, -> {
+    now = Time.now
+    where(arel_table[:state].eq('closed')
+          .or(arel_table[:published_at].gt(now))
+          .or(arel_table[:closed_at].lteq(now)))
+  }
 
   def image_uri
     return '' unless content.public_node
@@ -74,18 +78,11 @@ class AdBanner::Banner < ApplicationRecord
     TARGET_OPTIONS.detect{|o| o.last == self.target }.try(:first).to_s
   end
 
-  def publish_or_close_image
+  def publish_or_close_images
     if published?
-      [image_path, image_mobile_path, image_smart_phone_path].each do |path|
-        next if path == image_smart_phone_path && !self.content.site.publish_for_smart_phone?
-        FileUtils.mkdir_p ::File.dirname(path)
-        FileUtils.cp upload_path, path
-      end
+      publish_images
     else
-      [image_path, image_mobile_path, image_smart_phone_path].each do |path|
-        FileUtils.rm image_path if ::File.exist?(path)
-        FileUtils.rmdir ::File.dirname(path)
-      end
+      close_images
     end
   end
 
@@ -114,5 +111,27 @@ class AdBanner::Banner < ApplicationRecord
   def duplicated?
     banners = self.class.arel_table
     not self.class.where(content_id: self.content_id, name: self.name).where(banners[:id].not_eq(self.id)).empty?
+  end
+
+  def publish_images
+    run_callbacks :publish_files do
+      paths = [image_path, image_mobile_path, image_smart_phone_path]
+      paths.delete(image_smart_phone_path) unless content.site.publish_for_smart_phone?
+      paths.each do |path|
+        FileUtils.mkdir_p ::File.dirname(path)
+        FileUtils.cp upload_path, path
+      end
+    end
+  end
+
+  def close_images
+    run_callbacks :close_files do
+      paths = [image_path, image_mobile_path, image_smart_phone_path]
+      paths.delete(image_smart_phone_path) unless content.site.publish_for_smart_phone?
+      paths.each do |path|
+        FileUtils.rm path if ::File.exist?(path)
+        FileUtils.rmdir ::File.dirname(path)
+      end
+    end
   end
 end

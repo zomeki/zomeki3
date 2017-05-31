@@ -61,8 +61,8 @@ $(document).ready(function () {
 <%= toggle_form_function %>
 $(document).ready(function () {
   <%= disable_enter_script -%>
-  <%= enable_datepicker_script -%>
-  <%= enable_datetimepicker_script -%>
+  $('input.datepicker').datepicker();
+  $('input.datetimepicker').datetimepicker();
 });
 </script>
 

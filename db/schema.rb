@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170510040466) do
+ActiveRecord::Schema.define(version: 20170522020334) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -322,6 +322,17 @@ ActiveRecord::Schema.define(version: 20170510040466) do
     t.text     "feed_title"
     t.text     "link_alternate"
     t.integer  "entry_count"
+  end
+
+  create_table "cms_file_transfers", force: :cascade do |t|
+    t.integer  "site_id"
+    t.string   "state"
+    t.string   "path"
+    t.boolean  "recursive"
+    t.integer  "priority"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["site_id"], name: "index_cms_file_transfers_on_site_id", using: :btree
   end
 
   create_table "cms_inquiries", force: :cascade do |t|

@@ -36,8 +36,8 @@
 
 <%= javascript_tag do -%>
 $(document).ready(function () {
-  <%= enable_datetimepicker_script -%>
-  <%= enable_datepicker_script -%>
-  $('.timepicker').timepicker({stepMinute: 5});
+  $('input.datetimepicker').datetimepicker();
+  $('input.datepicker').datepicker();
+  $('input.timepicker').timepicker({stepMinute: 5});
 });
 <%- end -%>

@@ -52,7 +52,7 @@ function set_copy_date(from, to) {
 }
 
 $(document).ready(function () {
-  <%= enable_datepicker_script %>
+  $('input.datepicker').datepicker();
 
   set_copy_date('#item_started_on', '#item_ended_on');
   set_copy_date('#item_ended_on', '#item_started_on');

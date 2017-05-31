@@ -55,7 +55,7 @@ lower_text = @item.lower_text ? %Q(<div style="margin: 5px; line-height: 1.2;">#
 </table>
 <%= javascript_tag do -%>
 $(document).ready(function () {
-  <%= enable_datetimepicker_script -%>
+  $('input.datetimepicker').datetimepicker();
 });
 <%- end -%>
 

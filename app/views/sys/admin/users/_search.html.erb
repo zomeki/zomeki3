@@ -1,22 +1,24 @@
 <%= form_tag '', method: :get, class: 'search' do |f| %>
-<%
-group_options = [['** グループ未設定','no_group']] + Core.site.groups_for_option
-%>
 <table>
   <tr>
     <th>ユーザーID</th>
-    <td ><%= text_field_tag 's_account', params[:s_account], style: 'width: 120px; ime-mode: disabled;' %></td>
     <th>氏名</th>
-    <td ><%= text_field_tag 's_name', params[:s_name], style: 'width: 120px;' %></td>
     <th>グループ</th>
-    <td><%= select_tag 's_group_id', options_for_select(group_options, params[:s_group_id]), include_blank: true %></td>
+    <th>メールアドレス</th>
+    <th>ユーザー権限</th>
     <th>状態</th>
-    <td><%= select_tag 's_state', options_for_select([['有効','enabled'], ['無効','disabled']], params[:s_state]), include_blank: true %></td>
+  </tr>
+  <tr>
+    <td><%= text_field_tag :account, params[:account], style: 'width: 150px; ime-mode: disabled;' %></td>
+    <td><%= text_field_tag :name, params[:name], style: 'width: 150px;' %></td>
+    <td><%= select_tag :group_id, options_for_select(Core.site.groups_for_option, params[:group_id]), include_blank: true %></td>
+    <td><%= text_field_tag :email, params[:email], style: 'width: 150px;' %></td>
+    <td><%= select_tag :auth_no, options_for_select(Sys::User.new.authes, params[:auth_no]), include_blank: true %></td>
+    <td><%= select_tag :state, options_for_select([['有効','enabled'], ['無効','disabled']], params[:state]), include_blank: true %></td>
     <td class="submitters">
       <%= submit_tag '検索', name: :search %>
       <%= submit_tag 'リセット', name: :reset %>
     </td>
   </tr>
 </table>
-
 <!-- end .search --><% end %>

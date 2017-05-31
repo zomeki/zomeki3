@@ -16,7 +16,11 @@ class Cms::DataFile < ApplicationRecord
   after_save     Cms::Publisher::BracketeeCallbacks.new, if: :changed?
   before_destroy Cms::Publisher::BracketeeCallbacks.new
 
-  after_destroy :remove_public_file
+  before_destroy :close
+
+  define_model_callbacks :publish_files, :close_files
+  after_publish_files FileTransferCallbacks.new(:public_path, recursive: true)
+  after_close_files FileTransferCallbacks.new(:public_path, recursive: true)
 
   scope :public_state, -> { where(state: 'public') }
 
@@ -76,15 +80,21 @@ class Cms::DataFile < ApplicationRecord
     self.state        = 'public'
     self.published_at = Core.now
     return false unless save(:validate => false)
-    remove_public_file
-    return upload_public_file
+
+    run_callbacks :publish_files do
+      remove_public_file
+      upload_public_file
+    end
   end
 
   def close
     self.state        = 'closed'
     self.published_at = nil
     return false unless save(:validate => false)
-    return remove_public_file
+
+    run_callbacks :close_files do
+      remove_public_file
+    end
   end
 
   def duplicated?

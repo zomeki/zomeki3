@@ -145,7 +145,7 @@ category_ids = params.dig(:criteria, :category_ids) || []
 
 <script type="text/javascript">
 $(function() {
-  <%= enable_datepicker_script -%>
+  $('input.datepicker').datepicker();
 
   $('#toggleSearch').on('click', function() {
     $('#addCategory').toggle();

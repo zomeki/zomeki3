@@ -4,9 +4,11 @@
     <script src="/_common/js/jquery-ui.min.js"></script>
     <link rel="stylesheet" media="screen" href="/_common/css/jquery-ui-timepicker-addon.css" />
     <script src="/_common/js/jquery-ui-timepicker-addon.js"></script>
+    <%= javascript_include_tag '/_common/js/jquery-ui-datepicker-ja.js' %>
+    <%= javascript_include_tag '/_common/js/jquery-ui-timepicker-addon-ja.js' %>
     <%= javascript_tag do -%>
     $(document).ready(function () {
-      <%= enable_datepicker_script -%>
+      $('input.datepicker').datepicker();
     });
     <%- end -%>
 
@@ -49,7 +51,7 @@
       </thead>
       <tbody>
         <%- @events.each do |event| -%>
-          <%= event_table_replace(event, @content.search_list_style) %>
+          <%= event_table_replace(event, @date, @content.search_list_style, @content.date_style) %>
         <%- end -%>
       </tbody>
     </table>

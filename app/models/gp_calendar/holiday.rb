@@ -13,7 +13,7 @@ class GpCalendar::Holiday < ApplicationRecord
   # Pseudo event attributes
   attr_accessor :href, :name, :categories, :note
   # Not saved to database
-  belongs_to :doc, class_name: 'GpArticle::Doc'
+  attr_accessor :doc
 
   # Content
   belongs_to :content, :foreign_key => :content_id, :class_name => 'GpCalendar::Content::Event'

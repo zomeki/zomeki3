@@ -79,7 +79,7 @@
         <%- end -%>
       </td>
       <%- end -%>
-      <td class="markerTitle"><%= marker.doc ? title_replace(marker.doc, @content.title_style) : marker.title %></td>
+      <td class="markerTitle"><%= marker.doc ? doc_replace(marker.doc, @content.title_style) : marker.title %></td>
       <td class="marker"><%= link_to '表示', '#map_canvas', onclick: "map.move_to('#{marker.latitude}_#{marker.longitude}'); return false;" %></td>
     </tr>
     <%- end -%>

@@ -23,6 +23,6 @@
 
 <%= javascript_tag do -%>
 $(document).ready(function () {
-  <%= enable_datepicker_script -%>
+  $('input.datepicker').datepicker();
 });
 <%- end -%>
