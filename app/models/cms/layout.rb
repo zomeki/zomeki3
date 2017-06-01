@@ -13,8 +13,9 @@ class Cms::Layout < ApplicationRecord
   before_destroy Cms::Publisher::LayoutCallbacks.new
 
   validates :state, :title, presence: true
-  validates :name, presence: true, uniqueness: { scope: :concept_id },
-    format: { with: /\A[0-9a-zA-Z\-_]+\z/, if: "name.present?", message: :invalid_bracket_name }
+  validates :name, presence: true,
+                   uniqueness: { scope: :concept_id, case_sensitive: false },
+                   format: { with: /\A[0-9a-zA-Z\-_]+\z/, if: -> { name.present? }, message: :invalid_bracket_name }
 
   def states
     [['公開','public']]
@@ -40,13 +41,13 @@ class Cms::Layout < ApplicationRecord
     pieces = []
     piece_names.each do |name|
       if concept
-        piece = Cms::Piece.where(name: name, concept_id: concept).order(:id).first
+        piece = Cms::Piece.ci_match(name: name).where(concept_id: concept).order(:id).first
       end
       unless piece
-        piece = Cms::Piece.where(name: name, concept_id: self.concept).order(:id).first
+        piece = Cms::Piece.ci_match(name: name).where(concept_id: self.concept).order(:id).first
       end
       unless piece
-        piece = Cms::Piece.where(name: name, concept_id: nil).order(:id).first
+        piece = Cms::Piece.ci_match(name: name).where(concept_id: nil).order(:id).first
       end
       pieces << piece if piece
     end

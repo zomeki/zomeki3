@@ -48,10 +48,11 @@ class GpCategory::Public::Node::CategoriesController < GpCategory::Public::Node:
 
   def render_template(template)
     rendered = template.body.gsub(/\[\[module\/([\w-]+)\]\]/) do |matched|
-      if (tm = @content.template_modules.find_by(name: $1))
+      if (tm = @content.template_modules.ci_match(name: $1).first)
         Sys::Lib::Controller.render(
           'gp_category/public/template_module/categories', "#{action_name}_#{tm.module_type}",
-          params: params.merge(content: @content, category_type: @category_type, category: @category, template_module: tm))
+          params: params.merge(content: @content, category_type: @category_type, category: @category, template_module: tm)
+        )
       else
         ''
       end
@@ -62,7 +63,8 @@ class GpCategory::Public::Node::CategoriesController < GpCategory::Public::Node:
   def render_more_template(template, template_module)
     res = Sys::Lib::Controller.dispatch(
       'gp_category/public/template_module/categories', :more,
-      params: params.merge(content: @content, category_type: @category_type, category: @category, template_module: template_module))
+      params: params.merge(content: @content, category_type: @category_type, category: @category, template_module: template_module)
+    )
     if res.status == 200
       render html: view_context.content_tag(:div, res.body.html_safe, class: 'contentGpCategory contentGpCategoryCategory').html_safe
     else
