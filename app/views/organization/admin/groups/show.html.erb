@@ -1,3 +1,4 @@
+<%= init_ckeditor readOnly: true %>
 <p class="form">基本情報</p>
 
 <table class="show">
@@ -39,15 +40,15 @@
 <table class="show">
   <tr>
     <th><%= @item.locale(:outline) %></th>
-    <td><%=simple_format @item.outline %></td>
+    <td class="cke_editor_wrapper"><%= text_area_tag :outline, @item.outline, class: 'ckeditor' %></td>
   </tr>
   <tr>
     <th><%= @item.locale(:business_outline) %></th>
-    <td><%=simple_format @item.business_outline %></td>
+    <td class="cke_editor_wrapper"><%= text_area_tag :business_outline, @item.business_outline, class: 'ckeditor' %></td>
   </tr>
   <tr>
     <th><%= @item.locale(:contact_information) %></th>
-    <td><%=simple_format @item.contact_information %></td>
+    <td class="cke_editor_wrapper"><%= text_area_tag :contact_information, @item.contact_information, class: 'ckeditor' %></td>
   </tr>
 </table>
 
