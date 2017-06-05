@@ -4,9 +4,8 @@ ja:
       organization/group: 組織
     attributes:
       organization/group:
-        name: 組織ID
-        title: 組織名
-        title_en: 組織名（英語表記）
+        name: グループ名（英語表記）
+        title: グループ名
         sys_group_code: グループID
         sort_no: 並び順
         state: 状態

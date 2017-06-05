@@ -1,3 +1,4 @@
+<%= init_ckeditor readOnly: true %>
 <table class="show">
   <tr>
     <th><%= @item.class.human_attribute_name :state %></th>
@@ -13,15 +14,15 @@
   </tr>
   <tr>
     <th><%= @item.class.human_attribute_name :summary %></th>
-    <td><%=raw @item.summary %></td>
+    <td class="cke_editor_wrapper"><%= text_area_tag :summary, @item.summary, class: 'ckeditor' %></td>
   </tr>
   <tr>
     <th><%= @item.class.human_attribute_name :description %></th>
-    <td><%=raw @item.description %></td>
+    <td class="cke_editor_wrapper"><%= text_area_tag :description, @item.description, class: 'ckeditor' %></td>
   </tr>
   <tr>
     <th><%= @item.class.human_attribute_name :receipt %></th>
-    <td><%=raw @item.receipt %></td>
+    <td class="cke_editor_wrapper"><%= text_area_tag :receipt, @item.receipt, class: 'ckeditor' %></td>
   </tr>
   <tr>
     <th><%= @item.locale(:sitemap_state) %></th>
