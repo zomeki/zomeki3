@@ -43,7 +43,7 @@ class GpCalendar::Public::EventFormatService < FormatService
         if t[:data] =~ %r|hold_date|
           class_str = 'date'
           class_str += ' holiday' if @event.holiday.present?
-          if @date && @event.started_on.month == @date.month
+          if @date && @event.started_on && @event.started_on.month == @date.month
             concat content_tag(:td, t[:data].html_safe, class: class_str, id: 'day%02d' % @event.started_on.day)
           else
             concat content_tag(:td, t[:data].html_safe, class: class_str)
@@ -83,23 +83,37 @@ class GpCalendar::Public::EventFormatService < FormatService
   end
 
   def replace_hold_date(date_style)
-    s_style = localize_wday(date_style, @event.started_on.wday)
-    e_style = localize_wday(date_style, @event.ended_on.wday)
-    started_on = @event.started_on.strftime(s_style)
-    ended_on = @event.ended_on.strftime(e_style)
-
     html = ''
-    if @event.started_on == @event.ended_on
-      html << content_tag(:span, started_on, class: 'startDate closeDate')
-    else
-      html << content_tag(:span, started_on, class: 'startDate')
-      html << content_tag(:span, '～', class: 'from')
-      html << content_tag(:span, ended_on, class: 'closeDate')
+    if @event.started_on || @event.ended_on
+      started_on, ended_on = get_hold_date_text(date_style)
+      if @event.started_on && @event.ended_on && @event.started_on == @event.ended_on
+        html << content_tag(:span, started_on, class: 'startDate closeDate')
+      elsif @event.started_on && @event.ended_on
+        html << content_tag(:span, started_on, class: 'startDate')
+        html << content_tag(:span, '～', class: 'from')
+        html << content_tag(:span, ended_on, class: 'closeDate')
+      elsif @event.started_on
+        html << content_tag(:span, started_on, class: 'startDate')
+      elsif @event.ended_on
+        html << content_tag(:span, ended_on, class: 'closeDate')
+      end
     end
     if @event.holiday.present?
       html << content_tag(:span, @event.holiday, class: 'title')
     end
     html.html_safe
+  end
+
+  def get_hold_date_text(date_style)
+    if @event.started_on
+      s_style = localize_wday(date_style, @event.started_on.wday)
+      started_on = @event.started_on.strftime(s_style)
+    end
+    if @event.ended_on
+      e_style = localize_wday(date_style, @event.ended_on.wday)
+      ended_on = @event.ended_on.strftime(e_style)
+    end
+    return started_on, ended_on
   end
 
   def replace_summary

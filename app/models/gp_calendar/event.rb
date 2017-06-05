@@ -87,6 +87,7 @@ class GpCalendar::Event < ApplicationRecord
   end
 
   def holiday
+    return nil unless started_on
     criteria = {date: started_on, kind: 'holiday'}
     GpCalendar::Holiday.public_state.content_and_criteria(content, criteria).first.try(:title)
   end

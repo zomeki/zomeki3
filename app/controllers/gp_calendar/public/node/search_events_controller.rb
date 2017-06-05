@@ -29,7 +29,7 @@ class GpCalendar::Public::Node::SearchEventsController < GpCalendar::Public::Nod
       holiday.started_on = @date.year
       @events << holiday if holiday.started_on
     end
-    @events.sort! {|a, b| a.started_on <=> b.started_on}
+    @events.sort_by! { |e| e.started_on || Time.new(0) }
   end
 
   def file_content
