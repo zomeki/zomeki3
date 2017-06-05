@@ -15,8 +15,9 @@ class Cms::DataText < ApplicationRecord
   before_destroy Cms::Publisher::BracketeeCallbacks.new
 
   validates :state, :title, :body, presence: true
-  validates :name, presence: true, uniqueness: { scope: :concept_id },
-    format: { with: /\A[0-9a-zA-Z\-_]+\z/, if: "name.present?", message: :invalid_bracket_name }
+  validates :name, presence: true,
+                   uniqueness: { scope: :concept_id, case_sensitive: false },
+                   format: { with: /\A[0-9a-zA-Z\-_]+\z/, if: -> { name.present? }, message: :invalid_bracket_name }
 
   scope :public_state, -> { where(state: 'public') }
 end

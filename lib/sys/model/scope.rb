@@ -15,6 +15,17 @@ module Sys::Model::Scope
         search_with_text(*args)
       end
     }
+    scope :ci_match, ->(column_text) {
+      column_text.inject(all) do |rel, (column, text)|
+        column = connection.quote_table_name("#{table_name}.#{column}")
+        if text.is_a?(Array)
+          cond = text.map { |t| "LOWER(#{connection.quote(t)})" }.join(', ')
+          rel.where!("LOWER(#{column}) IN (#{cond})")
+        else
+          rel.where!("LOWER(#{column}) = LOWER(#{connection.quote(text)})")
+        end
+      end
+    }
     scope :date_before, ->(column, date) {
       where(arel_table[column].lteq(date))
     }

@@ -11,6 +11,6 @@ module Cms::Model::Rel::Bracketee
   end
 
   def bracketees_with_name(name)
-    Cms::Bracket.where(site_id: site_id, name: name)
+    Cms::Bracket.where(site_id: site_id).ci_match(name: name)
   end
 end
