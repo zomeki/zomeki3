@@ -86,7 +86,8 @@ gem 'rubyzip', '~> 1.2.1'
 gem 'simple_captcha2', '~> 0.4.2', require: 'simple_captcha'
 gem 'will_paginate', '~> 3.1.5'
 
-gem 'delayed_job_active_record', '~> 4.1.1'
+gem 'delayed_job', '~> 4.1.3'
+gem 'delayed_job_active_record', '~> 4.1.2'
 gem 'daemons', '~> 1.2.3'
 gem 'get_process_mem', '~> 0.2.1'
 
