@@ -28,6 +28,7 @@ class Survey::Form < ApplicationRecord
   validates :state, presence: true
   validates :name, presence: true, uniqueness: { scope: :content_id }, format: { with: /\A[-\w]*\z/ }
   validates :title, presence: true
+  validates :mail_to, format: { with: /\A.+@.+\z/ }, if: -> { mail_to.present? }
 
   after_initialize :set_defaults
 

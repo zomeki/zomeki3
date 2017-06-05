@@ -38,6 +38,10 @@
     <th><%= f.label :confirmation %></th>
     <td><%= f.radio_buttons :confirmation, @item.class::CONFIRMATION_OPTIONS %></td>
   </tr>
+  <tr>
+    <th><%= f.label :mail_to %></th>
+    <td><%= f.text_field :mail_to, class: 'title' %></td>
+  </tr>
 </table>
   
 <p class="form">公開予約設定</p>

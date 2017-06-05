@@ -40,6 +40,10 @@
     <th><%= @item.class.human_attribute_name :confirmation %></th>
     <td><%= @item.class::CONFIRMATION_OPTIONS.detect{|o| o.last == @item.confirmation }.try(:first) %></td>
   </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :mail_to %></th>
+    <td><%= @item.mail_to %></td>
+  </tr>
 </table>
 
 <%= task_view @item %>
