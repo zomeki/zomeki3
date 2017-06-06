@@ -28,7 +28,7 @@
     map = new Map('map_canvas', <%= bounds[:min][:lat] %>, <%= bounds[:min][:lon] %>,
                                 <%= bounds[:max][:lat] %>, <%= bounds[:max][:lon] %>);
     <%- else -%>
-    map = new Map('map_canvas', <%= default_latitude %>, <%= default_longitude %>);
+    map = new Map('map_canvas', <%= @content.default_map_position.first %>, <%= @content.default_map_position.last %>);
     <%- end -%>
 
     <%- @all_markers.each do |marker| -%>
