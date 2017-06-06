@@ -1,9 +1,11 @@
-class Cms::Lib::SslLinkReplacer
-  attr_reader :site, :current_path
-
-  def run(html, site:, current_path:, ssl_paths: nil)
+class Cms::Public::SslLinkReplaceService < ApplicationService
+  def initialize(site, current_node)
     @site = site
-    @current_path = current_path
+    @current_path = current_node.public_uri
+  end
+
+  def run(html, ssl_paths: nil)
+    return html unless @site.use_common_ssl?
 
     ssl_paths ||= load_common_ssl_paths
     return html if ssl_paths.blank?

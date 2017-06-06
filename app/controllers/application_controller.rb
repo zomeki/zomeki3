@@ -123,8 +123,7 @@ class ApplicationController < ActionController::Base
     end
 
     if Core.mode == 'ssl'
-      replacer = Cms::Lib::SslLinkReplacer.new
-      html = replacer.run(html, site: Page.site, current_path: Page.current_node.public_uri)
+      html = Cms::Public::SslLinkReplaceService.new(Page.site, Page.current_node).run(html)
     end
 
     render :status => status, :inline => html

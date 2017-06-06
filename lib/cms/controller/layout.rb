@@ -196,8 +196,7 @@ module Cms::Controller::Layout
     return body if Core.request_uri =~ /^\/_preview\//
     return body unless Page.site.use_common_ssl?
 
-    replacer = Cms::Lib::SslLinkReplacer.new
-    replacer.run(body, site: Page.site, current_path: Page.current_node.public_uri)
+    Cms::Public::SslLinkReplaceService.new(Page.site, Page.current_node).run(body)
   end
 
   def convert_adobe_reader_link(body)
