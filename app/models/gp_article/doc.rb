@@ -90,12 +90,13 @@ class GpArticle::Doc < ApplicationRecord
   attr_accessor :link_check_results, :in_ignore_link_check
   attr_accessor :accessibility_check_results, :in_ignore_accessibility_check, :in_modify_accessibility_check
 
-  validates :title, :presence => true, :length => {maximum: 200}
-  validates :mobile_title, :length => {maximum: 200}
-  validates :body, :length => {maximum: 300000}
-  validates :mobile_body, :length => {maximum: 300000}
-  validates :state, :presence => true
-  validates :filename_base, :presence => true
+  validates :title, presence: true, length: { maximum: 200 }
+  validates :mobile_title, length: { maximum: 200 }
+  validates :body, length: { maximum: Zomeki.config.application['gp_article.body_limit'].to_i }
+  validates :mobile_body, length: { maximum: Zomeki.config.application['gp_article.body_limit'].to_i }
+  validates :body_more, length: { maximum: Zomeki.config.application['gp_article.body_limit'].to_i }
+  validates :state, presence: true
+  validates :filename_base, presence: true
 
   validate :name_validity, if: -> { name.present? }
   validate :node_existence
