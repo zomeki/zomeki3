@@ -7,7 +7,9 @@
       <th><%= item.title %></th>
     </tr>
     <tr>
-      <td><%=simple_format template_values[item.name].to_s.gsub(/("|')file_contents\//, '\1' + file_uri) %></td>
+      <td class="cke_editor_wrapper">
+        <%= text_area_tag "template_values[#{item.name}]", template_values[item.name].to_s.gsub(/("|')file_contents\//, '\1' + file_uri), class: 'ckeditor' %>
+      </td>
     </tr>
   </table>
   <%- else -%>

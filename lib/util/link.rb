@@ -7,8 +7,8 @@ class Util::Link
       links = doc.css('a[@href]')
                  .map { |a| { body: a.text, url: a.attribute('href').value } }
       links.select do |link|
-        uri = Addressable::URI.parse(link[:url])
-        uri.relative? || uri.scheme.to_s.downcase.in?(%w(http https))
+        uri = Addressable::URI.parse(link[:url]) rescue nil
+        uri && (uri.relative? || uri.scheme.to_s.downcase.in?(%w(http https)))
       end
     rescue => evar
       warn_log evar.message

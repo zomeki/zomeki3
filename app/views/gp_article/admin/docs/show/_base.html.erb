@@ -57,8 +57,8 @@
 <%- else -%>
 <table class="show">
   <tr>
-    <td colspan="2">
-      <%=raw @item.body.gsub(/("|')file_contents\//, '\1' + %Q(#{@item.file_content_uri})) %>
+    <td colspan="2" class="cke_editor_wrapper">
+      <%= text_area_tag :body, @item.body.gsub(/("|')file_contents\//, '\1' + %Q(#{@item.file_content_uri})), class: 'ckeditor' %>
     </td>
   </tr>
 </table>
@@ -87,7 +87,9 @@
     <th colspan="2"><%= @item.locale :body_more %></th>
   </tr>
   <tr>
-    <td colspan="2"><%=raw @item.body_more %></td>
+    <td colspan="2" class="cke_editor_wrapper">
+      <%= text_area_tag :body_more, @item.body_more, class: 'ckeditor' %>
+    </td>
   </tr>
 </table>
 <%- end -%>

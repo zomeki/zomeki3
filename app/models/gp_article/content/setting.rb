@@ -116,7 +116,7 @@ class GpArticle::Content::Setting < Cms::ContentSetting
     default_value: 'disabled'
   set_config :display_dates, menu: :page,
     name: '記事日時表示',
-    options: [['公開日', 'published_at'], ['最終更新日', 'updated_at']],
+    options: [['公開日', 'published_at'], ['更新日', 'updated_at']],
     form_type: :check_boxes,
     default_value: ['published_at', 'updated_at']
   set_config :rel_docs_style, menu: :page,

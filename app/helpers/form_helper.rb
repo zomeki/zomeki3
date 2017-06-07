@@ -4,7 +4,9 @@ module FormHelper
     settings = []
 
     # リードオンリーではツールバーを表示しない・リンクを動作させる
-    unless (options[:toolbarStartupExpanded] = !options[:readOnly])
+    if options[:readOnly]
+      options[:toolbarCanCollapse] = true
+      options[:toolbarStartupExpanded] = false
       settings.push(<<-EOS)
         CKEDITOR.on('instanceReady', function (e) {
           $('#'+e.editor.id+'_top').hide();

@@ -8,6 +8,8 @@ CKEDITOR.editorConfig = function( config ) {
   // config.language = 'fr';
   // config.uiColor = '#AADC6E';
 
+  config.height = 300;
+
   // ツールバーの設定
   // http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.config.html#.toolbar_Full
   if (cms && cms.Page && cms.Page.smart_phone) {

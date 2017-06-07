@@ -19,8 +19,8 @@ class Cms::Piece < ApplicationRecord
   attr_accessor :setting_save_skip
 
   validates :state, :model, :name, :title, presence: true
-  validates :name, uniqueness: { scope: :concept_id, if: %Q(!replace_page?) },
-    format: { with: /\A[0-9a-zA-Z\-_]+\z/, if: "name.present?", message: :invalid_bracket_name }
+  validates :name, uniqueness: { scope: :concept_id, case_sensitive: false, if: -> { !replace_page? } },
+                   format: { with: /\A[0-9a-zA-Z\-_]+\z/, if: -> { name.present? }, message: :invalid_bracket_name }
 
   after_save :save_settings
   after_save :replace_new_piece

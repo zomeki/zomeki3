@@ -1,3 +1,4 @@
+<%= init_ckeditor readOnly: true %>
 <p class="form">基本情報</p>
 
 <table class="show">
@@ -11,7 +12,7 @@
   </tr>
   <tr>
     <th><%= @item.class.human_attribute_name :body %></th>
-    <td><%=raw @item.replace_file_path_for_admin(@item.body) %></td>
+    <td class="cke_editor_wrapper"><%= text_area_tag :body, @item.replace_file_path_for_admin(@item.body), class: 'ckeditor' %></td>
   </tr>
   <tr>
     <th><%= @item.class.human_attribute_name :capacity %></th>
@@ -23,7 +24,7 @@
   </tr>
   <tr>
     <th><%= @item.class.human_attribute_name :remark %></th>
-    <td><%=raw @item.replace_file_path_for_admin(@item.remark) %></td>
+    <td class="cke_editor_wrapper"><%= text_area_tag :remark, @item.replace_file_path_for_admin(@item.remark), class: 'ckeditor' %></td>
   </tr>
   <tr>
     <th><%= @item.class.human_attribute_name :sort_no %></th>
@@ -36,7 +37,7 @@
 <table class="show">
   <tr>
     <th><%= @item.class.human_attribute_name :description %></th>
-    <td><%=raw @item.replace_file_path_for_admin(@item.description) %></td>
+    <td class="cke_editor_wrapper"><%= text_area_tag :description, @item.replace_file_path_for_admin(@item.description), class: 'ckeditor' %></td>
   </tr>
 </table>
 

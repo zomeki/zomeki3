@@ -20,15 +20,10 @@ $(function() {
     <td><%= f.text_field :title, :class => 'title' %></td>
   </tr><tr>
     <th><%= @item.locale(:summary) %></th>
-    <td>
-      <%= init_ckeditor %>
-      <%= f.text_area :summary, :class => 'body ckeditor' %>
-    </td>
+    <td><%= f.text_area :summary, :class => 'body ckeditor' %></td>
   </tr><tr>
     <th><%= @item.locale(:description) %></th>
-    <td>
-      <%= f.text_area :description, :class => 'body ckeditor' %>
-    </td>
+    <td><%= f.text_area :description, :class => 'body ckeditor' %></td>
   </tr><tr>
     <th><%= @item.locale(:business_hours_state) %></th>
     <td><%= f.radio_buttons :business_hours_state, @item.class::BUSINESS_HOURS_STATE_OPTIONS, :class => 'states' %>

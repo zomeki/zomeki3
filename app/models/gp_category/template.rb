@@ -11,7 +11,7 @@ class GpCategory::Template < ApplicationRecord
   after_save     GpCategory::Publisher::TemplateCallbacks.new, if: :changed?
   before_destroy GpCategory::Publisher::TemplateCallbacks.new
 
-  validates :name, presence: true, uniqueness: { scope: :content_id }
+  validates :name, presence: true, uniqueness: { scope: :content_id, case_sensitive: false }
   validates :title, presence: true
 
   def public_category_types
@@ -23,6 +23,6 @@ class GpCategory::Template < ApplicationRecord
   end
 
   def containing_modules
-    body.scan(/\[\[module\/([\w-]+)\]\]/).map{|m| content.template_modules.find_by(name: m.first) }.compact
+    body.scan(/\[\[module\/([\w-]+)\]\]/).map{|m| content.template_modules.ci_match(name: m.first).first }.compact
   end
 end

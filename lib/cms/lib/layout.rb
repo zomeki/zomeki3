@@ -28,20 +28,18 @@ module Cms::Lib::Layout
     return {} if names.blank?
 
     relations = names.map do |name|
-      rel = Cms::Piece.where(state: 'public')
       name_array = name.split('#')
-      rel = if name_array.size > 1 # [[piece/name#id]]
-              rel.where(id: name_array[1], name: name_array[0])
-            else                   # [[piece/name]]
-              concept_ids = concepts.map(&:id)
-              concept_ids << nil
-              rel.where(name: name_array[0])
-                 .where(concept_id: concept_ids)
-            end
-      rel.select("*, #{Cms::DataFile.connection.quote(name)}::text as name_with_option")
-        .order(concepts_order(concepts)).limit(1)
+      rel = Cms::Piece.select(Cms::Piece.arel_table[Arel.star])
+                      .select("#{Cms::Piece.connection.quote(name)}::text as bracket_description")
+                      .public_state.ci_match(name: name_array[0])
+                      .order(concepts_order(concepts)).limit(1)
+      if name_array.size > 1 # [[piece/name#id]]
+        rel.where(id: name_array[1])
+      else                   # [[piece/name]]
+        rel.where(concept_id: [nil] + concepts.map(&:id))
+      end
     end
-    pieces = Cms::Piece.union(relations).index_by(&:name_with_option)
+    pieces = Cms::Piece.union(relations).index_by(&:bracket_description)
 
     if Core.mode == 'preview' && params[:piece_id]
       item = Cms::Piece.find_by(id: params[:piece_id])
@@ -56,11 +54,14 @@ module Cms::Lib::Layout
     return {} if names.blank?
 
     relations = names.map do |name|
-      Cms::DataText.public_state.where(name: name, concept_id: [nil] + concepts.to_a)
-        .order(concepts_order(concepts)).limit(1)
+      Cms::DataText.select(Cms::DataText.arel_table[Arel.star])
+                   .select("#{Cms::DataText.connection.quote(name)}::text as bracket_description")
+                   .public_state.ci_match(name: name)
+                   .where(concept_id: [nil] + concepts.to_a)
+                   .order(concepts_order(concepts)).limit(1)
     end
 
-    Cms::DataText.union(relations).index_by(&:name)
+    Cms::DataText.union(relations).index_by(&:bracket_description)
   end
 
   def self.find_data_files(html, concepts)
@@ -71,18 +72,18 @@ module Cms::Lib::Layout
       dirname  = ::File.dirname(name)
       basename = dirname == '.' ? name : ::File.basename(name)
 
-      item = Cms::DataFile.select(Cms::DataFile.arel_table[Arel.star])
-        .select("#{Cms::DataFile.connection.quote(name)} as name_with_option")
-        .public_state.where(name: basename, concept_id: [nil] + concepts.to_a)
-
+      rel = Cms::DataFile.select(Cms::DataFile.arel_table[Arel.star])
+                         .select("#{Cms::DataFile.connection.quote(name)}::text as bracket_description")
+                         .public_state.ci_match(name: basename)
+                         .where(concept_id: [nil] + concepts.to_a)
+                         .order(concepts_order(concepts, table_name: Cms::DataFile.table_name)).limit(1)
       if dirname == '.'
-        item = item.where(node_id: nil)
+        rel.where(node_id: nil)
       else
-        item = item.joins(:node).where(Cms::DataFileNode.arel_table[:name].eq(dirname))
+        rel.joins(:node).merge(Cms::DataFileNode.ci_match(name: dirname))
       end
-      item.order(concepts_order(concepts, :table_name => Cms::DataFile.table_name)).limit(1)
     end
 
-    Cms::DataFile.union(relations).index_by(&:name_with_option)
+    Cms::DataFile.union(relations).index_by(&:bracket_description)
   end
 end

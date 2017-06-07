@@ -16,7 +16,8 @@ class GpTemplate::Item < ApplicationRecord
   validates :state, presence: true
 
   validates :title, presence: true
-  validates :name, presence: true, uniqueness: { scope: :template_id }, format: { with: /\A[-\w]*\z/ }
+  validates :name, presence: true, uniqueness: { scope: :template_id, case_sensitive: false },
+                   format: { with: /\A[-\w]*\z/ }
   validates :item_type, presence: true
 
   after_initialize :set_defaults

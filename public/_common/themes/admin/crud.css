@@ -220,3 +220,12 @@ table.show td textarea.head {
   position: relative;
   clear: both;
 }
+
+/* Contents > Search
+--------------------------------------------------------- */
+#keyword {
+  margin-left: 10px;
+}
+#target_concept {
+  margin: 0 10px;
+}

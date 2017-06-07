@@ -7,7 +7,9 @@
     <th colspan="2"><%= @item.locale :mobile_body %></th>
   </tr>
   <tr>
-    <td colspan="2"><%=raw @item.mobile_body.gsub('"file_contents/', %Q("#{gp_article_doc_path(@content, id: @item.id)}/file_contents/)) %></td>
+    <td colspan="2" class="cke_editor_wrapper">
+      <%= text_area_tag :mobile_body, @item.mobile_body.gsub('"file_contents/', %Q("#{gp_article_doc_path(@content, id: @item.id)}/file_contents/)), class: 'ckeditor' %>
+    </td>
   </tr>
   <%- if (links = @item.links.where(linkable_column: 'mobile_body')).present? -%>
   <tr>
