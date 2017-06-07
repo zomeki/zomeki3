@@ -297,8 +297,7 @@ class Cms::Node < ApplicationRecord
 
     def rebuild(content, options={})
       if options[:dependent] == :smart_phone
-        return false unless self.site.publish_for_smart_phone?
-        return false unless self.site.spp_all? || (self.site.spp_only_top? && top_page?)
+        return false unless site.publish_for_smart_phone?(self)
       end
 
       return false unless self.state == 'public'

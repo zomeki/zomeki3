@@ -285,7 +285,6 @@ class GpArticle::Doc < ApplicationRecord
   def rebuild(content, options={})
     if options[:dependent] == :smart_phone
       return false unless self.content.site.publish_for_smart_phone?
-      return false unless self.content.site.spp_all?
     end
 
     return false unless self.state_public?
