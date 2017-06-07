@@ -1,7 +1,6 @@
 class GpCalendar::Holiday < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Rel::Creator
-  include Sys::Model::Rel::File
   include Cms::Model::Auth::Content
 
   include StateText
@@ -11,7 +10,7 @@ class GpCalendar::Holiday < ApplicationRecord
   ORDER_OPTIONS = [['作成日時（降順）', 'created_at_desc'], ['作成日時（昇順）', 'created_at_asc']]
 
   # Pseudo event attributes
-  attr_accessor :href, :name, :categories, :note
+  attr_accessor :href, :name, :note, :categories, :files, :image_files
   # Not saved to database
   attr_accessor :doc
 
@@ -95,6 +94,9 @@ class GpCalendar::Holiday < ApplicationRecord
 
   def set_defaults
     self.state ||= STATE_OPTIONS.first.last if self.has_attribute?(:state)
+    # event attributes
+    self.categories ||= []
+    self.files ||= []
+    self.image_files ||= []
   end
-
 end
