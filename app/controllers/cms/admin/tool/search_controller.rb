@@ -99,7 +99,7 @@ class Cms::Admin::Tool::SearchController < Cms::Controller::Admin::Base
         title: c.title,
         state: c.state,
         state_text: c.state_text,
-        concept: c.concept,
+        concept: content.concept,
         admin_uri: gp_article_doc_path(c.content, c.id),
         public_uri: c.public_full_uri
       }
