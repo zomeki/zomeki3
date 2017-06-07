@@ -25,7 +25,7 @@ module Sys::Model::Auth::EditableGroup
       else
         creators = Sys::Creator.arel_table
         editable_groups = Sys::EditableGroup.arel_table
-        distinct.joins(:creator).eager_load(:editable_groups).where([
+        distinct.joins(:creator).left_joins(:editable_groups).where([
           creators[:group_id].eq(Core.user_group.id),
           editable_groups[:group_id].in([Core.user_group.id, Sys::EditableGroup::ALL_GROUP])
         ].reduce(:or))

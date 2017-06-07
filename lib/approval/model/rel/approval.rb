@@ -10,6 +10,17 @@ module Approval::Model::Rel::Approval
       validate :validate_approval_assignments
       after_save :save_approval_requests
     end
+
+    scope :creator_or_approvables, ->(user = Core.user) {
+      creators = Sys::Creator.arel_table
+      approval_requests = Approval::ApprovalRequest.arel_table
+      assignments = Approval::Assignment.arel_table
+      all.joins(:creator)
+         .left_joins(:approval_requests => [:approval_flow => [:approvals => :assignments]])
+         .where([creators[:user_id].eq(user.id),
+                 approval_requests[:user_id].eq(user.id),
+                 assignments[:user_id].eq(user.id)].reduce(:or))
+    }
   end
 
   def approvers
