@@ -9,6 +9,7 @@ class GpArticle::Doc < ApplicationRecord
   include Cms::Model::Base::Page::Publisher
   include Cms::Model::Base::Page::TalkTask
   include Cms::Model::Base::ContentDelegation
+  include Cms::Model::Base::Qrcode
   include Cms::Model::Rel::Inquiry
   include Cms::Model::Rel::Map
   include Cms::Model::Rel::Bracket
@@ -36,7 +37,6 @@ class GpArticle::Doc < ApplicationRecord
   OGP_TYPE_OPTIONS = [['article', 'article']]
   FEATURE_1_OPTIONS = [['表示', true], ['非表示', false]]
   FEATURE_2_OPTIONS = [['表示', true], ['非表示', false]]
-  QRCODE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
 
   default_scope { where.not(state: 'archived') }
   scope :public_state, -> { where(state: 'public') }
@@ -199,7 +199,7 @@ class GpArticle::Doc < ApplicationRecord
     base_uri = public_uri(without_filename: true, with_closed_preview: true)
     return nil if base_uri.blank?
 
-    site ||= ::Page.site
+    site ||= content.site
     params = params.map{|k, v| "#{k}=#{v}" }.join('&')
     filename = without_filename || filename_base == 'index' ? '' : "#{filename_base}.html"
     page_flag = mobile ? 'm' : smart_phone ? 's' : ''
@@ -514,12 +514,6 @@ class GpArticle::Doc < ApplicationRecord
     next_edition && state_public?
   end
 
-  def qrcode_visible?
-    return false unless content && content.qrcode_related?
-    return false unless self.qrcode_state == 'visible'
-    return true
-  end
-
   def og_type_text
     OGP_TYPE_OPTIONS.detect{|o| o.last == self.og_type }.try(:first).to_s
   end
@@ -544,10 +538,6 @@ class GpArticle::Doc < ApplicationRecord
     FEATURE_2_OPTIONS.detect{|o| o.last == self.feature_2 }.try(:first).to_s
   end
 
-  def qrcode_state_text
-    QRCODE_OPTIONS.detect{|o| o.last == self.qrcode_state }.try(:first).to_s
-  end
-
   def public_files_path
     "#{::File.dirname(public_path)}/file_contents"
   end
@@ -556,20 +546,8 @@ class GpArticle::Doc < ApplicationRecord
     "#{::File.dirname(public_smart_phone_path)}/file_contents"
   end
 
-  def qrcode_path
-    "#{::File.dirname(public_path)}/qrcode.png"
-  end
-
-  def qrcode_smart_phone_path
-    "#{::File.dirname(public_smart_phone_path)}/qrcode.png"
-  end
-
-  def qrcode_uri(preview: false)
-    if preview
-      "#{preview_uri(without_filename: true)}qrcode.png"
-    else
-      "#{public_uri(without_filename: true)}qrcode.png"
-    end
+  def qrcode_visible?
+    super && content && content.qrcode_related?
   end
 
   def event_state_visible?
@@ -707,23 +685,6 @@ class GpArticle::Doc < ApplicationRecord
       self.link_check_results = results
       errors.add(:base, 'リンクチェック結果を確認してください。')
     end
-  end
-
-  def publish_qrcode
-    publish_qrcode_to(qrcode_path)
-    return true
-  end
-
-  def publish_smart_phone_qrcode
-    publish_qrcode_to(qrcode_smart_phone_path)
-    return true
-  end
-
-  def publish_qrcode_to(path)
-    return true if Zomeki.config.application['sys.clean_statics']
-    return true unless state_public?
-    return true unless qrcode_visible?
-    Util::Qrcode.create(public_full_uri, path)
   end
 
   def validate_accessibility_check
