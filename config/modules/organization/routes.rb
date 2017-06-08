@@ -39,7 +39,7 @@ ZomekiCMS::Application.routes.draw do
 
   ## public
   scope "_public/#{mod}", :module => mod do
-    get 'node_groups(/(index))' => 'public/node/groups#index'
+    get 'node_groups(/index)' => 'public/node/groups#index'
   end
   scope "_public/#{mod}", :module => 'gp_article' do
     get 'node_groups/*group_names/docs/:name/preview/:id/file_contents/:basename.:extname' => 'public/node/docs#file_content'
