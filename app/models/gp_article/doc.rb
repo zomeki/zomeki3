@@ -371,7 +371,6 @@ class GpArticle::Doc < ApplicationRecord
       new_doc.related_docs.build(name: rd.name, content_id: rd.content_id)
     end
 
-
     inquiries.each_with_index do |inquiry, i|
       attrs = inquiry.attributes
       attrs[:id] = nil
@@ -386,25 +385,27 @@ class GpArticle::Doc < ApplicationRecord
       end
     end
 
-    new_doc.save!
+    transaction do
+      new_doc.save!
 
-    files.each do |f|
-      new_attributes = f.attributes
-      new_attributes[:id] = nil
-      Sys::File.new(new_attributes).tap do |new_file|
-        new_file.file = Sys::Lib::File::NoUploadedFile.new(f.upload_path, :mime_type => new_file.mime_type)
+      files.each do |f|
+        new_attributes = f.attributes
+        new_attributes[:id] = nil
+        new_file = Sys::File.new(new_attributes)
+        new_file.file = Sys::Lib::File::NoUploadedFile.new(f.upload_path, mime_type: new_file.mime_type)
         new_file.file_attachable = new_doc
         new_file.save
       end
+
+      new_doc.categories = self.categories
+      new_doc.event_categories = self.event_categories
+      new_doc.marker_categories = self.marker_categories
+      new_doc.categorizations.each do |new_c|
+        self_c = self.categorizations.where(category_id: new_c.category_id, categorized_as: new_c.categorized_as).first
+        new_c.update_column(:sort_no, self_c.sort_no)
+      end
     end
 
-    new_doc.categories = self.categories
-    new_doc.event_categories = self.event_categories
-    new_doc.marker_categories = self.marker_categories
-    new_doc.categorizations.each do |new_c|
-      self_c = self.categorizations.where(category_id: new_c.category_id, categorized_as: new_c.categorized_as).first
-      new_c.update_column(:sort_no, self_c.sort_no)
-    end
     return new_doc
   end
 
