@@ -1,6 +1,7 @@
 class Map::Marker < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Rel::File
+  include Cms::Model::Base::ContentDelegation
   include Cms::Model::Auth::Content
   include GpCategory::Model::Rel::Category
 

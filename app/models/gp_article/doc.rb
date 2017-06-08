@@ -8,6 +8,7 @@ class GpArticle::Doc < ApplicationRecord
   include Cms::Model::Base::Page
   include Cms::Model::Base::Page::Publisher
   include Cms::Model::Base::Page::TalkTask
+  include Cms::Model::Base::ContentDelegation
   include Cms::Model::Rel::Inquiry
   include Cms::Model::Rel::Map
   include Cms::Model::Rel::Bracket
@@ -264,12 +265,9 @@ class GpArticle::Doc < ApplicationRecord
     return true if will_replace?
     return false unless super
     publishers.destroy_all unless publishers.empty?
-    if p = public_path
-      FileUtils.rm_rf(::File.dirname(public_path)) unless p.blank?
-    end
-    if p = public_smart_phone_path
-      FileUtils.rm_rf(::File.dirname(public_smart_phone_path)) unless p.blank?
-    end
+
+    paths = [public_path, public_smart_phone_path]
+    paths.each { |path| FileUtils.rm_rf(::File.dirname(path)) if path.present? }
     return true
   end
 
@@ -290,14 +288,14 @@ class GpArticle::Doc < ApplicationRecord
     return false unless self.state_public?
     @save_mode = :publish
     publish_page(content, options)
-    #TODO: スマートフォン向けファイル書き出し要再検討
-    @public_files_path = "#{::File.dirname(public_smart_phone_path)}/file_contents" if options[:dependent] == :smart_phone
-    @public_qrcode_path = "#{::File.dirname(public_smart_phone_path)}/qrcode.png" if options[:dependent] == :smart_phone
-    result = publish_files
-    publish_qrcode
-    @public_files_path = nil if options[:dependent] == :smart_phone
-    @public_qrcode_path = nil if options[:dependent] == :smart_phone
-    return result
+    if options[:dependent] == :smart_phone
+      publish_smart_phone_files
+      publish_smart_phone_qrcode
+    else
+      publish_files
+      publish_qrcode
+    end
+    return true
   end
 
   def external_link?
@@ -551,14 +549,19 @@ class GpArticle::Doc < ApplicationRecord
   end
 
   def public_files_path
-    return @public_files_path if @public_files_path
     "#{::File.dirname(public_path)}/file_contents"
   end
 
+  def public_smart_phone_files_path
+    "#{::File.dirname(public_smart_phone_path)}/file_contents"
+  end
 
   def qrcode_path
-    return @public_qrcode_path if @public_qrcode_path
     "#{::File.dirname(public_path)}/qrcode.png"
+  end
+
+  def qrcode_smart_phone_path
+    "#{::File.dirname(public_smart_phone_path)}/qrcode.png"
   end
 
   def qrcode_uri(preview: false)
@@ -707,11 +710,20 @@ class GpArticle::Doc < ApplicationRecord
   end
 
   def publish_qrcode
-    return true unless self.state_public?
-    return true unless self.qrcode_visible?
-    return true if Zomeki.config.application['sys.clean_statics']
-    Util::Qrcode.create(self.public_full_uri, self.qrcode_path)
+    publish_qrcode_to(qrcode_path)
     return true
+  end
+
+  def publish_smart_phone_qrcode
+    publish_qrcode_to(qrcode_smart_phone_path)
+    return true
+  end
+
+  def publish_qrcode_to(path)
+    return true if Zomeki.config.application['sys.clean_statics']
+    return true unless state_public?
+    return true unless qrcode_visible?
+    Util::Qrcode.create(public_full_uri, path)
   end
 
   def validate_accessibility_check

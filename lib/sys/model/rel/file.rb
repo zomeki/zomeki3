@@ -6,51 +6,13 @@ module Sys::Model::Rel::File
 
   included do
     has_many :files, class_name: 'Sys::File', dependent: :destroy, as: :file_attachable
-    before_save :make_file_path_relative
+    before_save :make_file_path_relative, if: -> { in_tmp_id.present? }
     before_save :fix_file_name, if: -> { in_file_names.present? }
-    before_save :publish_files
-    before_save :close_files
     after_create :fix_tmp_files, if: -> { in_tmp_id.present? }
   end
 
-  def public_files_path
-    "#{::File.dirname(public_path)}/files"
-  end
-
-  def publish_files
-    return true unless @save_mode == :publish
-    return true if Zomeki.config.application['sys.clean_statics']
-    return true if files.empty?
-
-    public_dir = public_files_path
-    FileUtils.mkdir_p(public_dir) unless FileTest.exist?(public_dir)
-
-    files.each do |file|
-      paths = {
-        file.upload_path               => "#{public_dir}/#{file.name}",
-        file.upload_path(type: :thumb) => "#{public_dir}/thumb/#{file.name}"
-      }
-      paths.each do |fr, to|
-        next unless FileTest.exists?(fr)
-        next if FileTest.exists?(to) && ( ::File.mtime(to) >= ::File.mtime(fr) )
-        FileUtils.mkdir_p(::File.dirname(to)) unless FileTest.exists?(::File.dirname(to))
-        FileUtils.cp(fr, to)
-      end
-    end
-
-    return true
-  end
-
-  def close_files
-    return true unless @save_mode == :close
-
-    dir = public_files_path
-    FileUtils.rm_r(dir) if FileTest.exist?(dir)
-    return true
-  end
-
   def image_files
-    files.select {|f| f.image_file? }
+    files.select(&:image_file?)
   end
 
   private
@@ -105,6 +67,60 @@ module Sys::Model::Rel::File
   class_methods do
     def columns_having_file_name
       columns.select { |c| c.type == :text }.map(&:name)
+    end
+  end
+
+  concerning :Publication do
+    included do
+      before_save :publish_files
+      before_save :close_files
+    end
+
+    def public_files_path
+      "#{::File.dirname(public_path)}/file_contents"
+    end
+
+    def public_smart_phone_files_path
+      "#{::File.dirname(public_smart_phone_path)}/file_contents"
+    end
+
+    def publish_files
+      publish_files_to(public_files_path)
+    end
+
+    def publish_smart_phone_files
+      publish_files_to(public_smart_phone_files_path)
+    end
+
+    def close_files
+      return true unless @save_mode == :close
+      paths = [public_files_path, public_smart_phone_files_path]
+      paths.each { |path| FileUtils.rm_r(path) if FileTest.exist?(path) }
+      return true
+    end
+
+    private
+
+    def publish_files_to(dir)
+      return true unless @save_mode == :publish
+      return true if Zomeki.config.application['sys.clean_statics']
+      return true if files.empty?
+
+      public_dir = dir
+      FileUtils.mkdir_p(public_dir) unless FileTest.exist?(public_dir)
+
+      files.each do |file|
+        paths = {
+          file.upload_path               => "#{public_dir}/#{file.name}",
+          file.upload_path(type: :thumb) => "#{public_dir}/thumb/#{file.name}"
+        }
+        paths.each do |fr, to|
+          next unless FileTest.exists?(fr)
+          next if FileTest.exists?(to) && ( ::File.mtime(to) >= ::File.mtime(fr) )
+          FileUtils.mkdir_p(::File.dirname(to)) unless FileTest.exists?(::File.dirname(to))
+          FileUtils.cp(fr, to)
+        end
+      end
     end
   end
 end

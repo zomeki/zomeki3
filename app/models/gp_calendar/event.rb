@@ -2,6 +2,7 @@ class GpCalendar::Event < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Rel::Creator
   include Sys::Model::Rel::File
+  include Cms::Model::Base::ContentDelegation
   include Cms::Model::Auth::Content
   include GpCategory::Model::Rel::Category
 
@@ -97,15 +98,26 @@ class GpCalendar::Event < ApplicationRecord
     "#{node.public_path}#{name}"
   end
 
+  def public_smart_phone_path
+    node = content.public_nodes.where(model: 'GpCalendar::Event').first
+    return '' unless node
+    "#{node.public_smart_phone_path}#{name}"
+  end
+
   def public_files_path
     return '' if public_path.blank?
     "#{public_path}/file_contents"
   end
 
+  def public_smart_phone_files_path
+    return '' if public_smart_phone_path.blank?
+    "#{public_smart_phone_path}/file_contents"
+  end
+
   def publish_files
-    return if public_files_path.blank?
     @save_mode = :publish
-    super
+    super if public_files_path.present?
+    publish_smart_phone_files if content.site.publish_for_smart_phone? && public_smart_phone_files_path.present?
   end
 
   def close_files
