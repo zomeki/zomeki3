@@ -71,48 +71,47 @@ module Sys::Model::Rel::File
   end
 
   concerning :Publication do
-    included do
-      before_save :publish_files
-      before_save :close_files
-    end
-
     def public_files_path
-      "#{::File.dirname(public_path)}/file_contents"
+      return '' if (path = public_path).blank?
+      ::File.join(path.end_with?('/') ? path : File.dirname(path), "file_contents")
     end
 
     def public_smart_phone_files_path
-      "#{::File.dirname(public_smart_phone_path)}/file_contents"
+      return '' if (path = public_smart_phone_path).blank?
+      ::File.join(path.end_with?('/') ? path : File.dirname(path), "file_contents")
     end
 
     def publish_files
-      publish_files_to(public_files_path)
+      path = public_files_path
+      publish_files_to(path) if path.present?
+      return true
     end
 
     def publish_smart_phone_files
-      publish_files_to(public_smart_phone_files_path)
+      path = public_smart_phone_files_path
+      publish_files_to(path) if path.present?
+      return true
     end
 
     def close_files
-      return true unless @save_mode == :close
-      paths = [public_files_path, public_smart_phone_files_path]
+      paths = [public_files_path, public_smart_phone_files_path].select(&:present?)
       paths.each { |path| FileUtils.rm_r(path) if FileTest.exist?(path) }
       return true
     end
 
     private
 
-    def publish_files_to(dir)
-      return true unless @save_mode == :publish
+    def publish_files_to(path)
       return true if Zomeki.config.application['sys.clean_statics']
       return true if files.empty?
 
-      public_dir = dir
+      public_dir = path
       FileUtils.mkdir_p(public_dir) unless FileTest.exist?(public_dir)
 
       files.each do |file|
         paths = {
-          file.upload_path               => "#{public_dir}/#{file.name}",
-          file.upload_path(type: :thumb) => "#{public_dir}/thumb/#{file.name}"
+          file.upload_path               => ::File.join(public_dir, file.name),
+          file.upload_path(type: :thumb) => ::File.join(public_dir, 'thumb', file.name)
         }
         paths.each do |fr, to|
           next unless FileTest.exists?(fr)

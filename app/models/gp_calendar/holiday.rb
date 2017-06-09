@@ -82,14 +82,6 @@ class GpCalendar::Holiday < ApplicationRecord
     GpCalendar::Holiday.public_state.content_and_criteria(content, criteria).first.try(:title)
   end
 
-  def publish!
-    update_attribute(:state, 'public')
-  end
-
-  def close!
-    update_attribute(:state, 'closed')
-  end
-
   private
 
   def set_defaults

@@ -97,10 +97,6 @@ class Reception::Course < ApplicationRecord
     "#{content.public_path}#{public_uri}/index.html"
   end
 
-  def public_files_path
-    "#{::File.dirname(public_path)}/file_contents"
-  end
-
   def bread_crumbs(node)
     crumbs = []
 

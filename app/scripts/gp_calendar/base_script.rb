@@ -45,10 +45,8 @@ class GpCalendar::BaseScript < Cms::Script::Publication
       end
     end
 
-    events_table = GpCalendar::Event.arel_table
-    events = @node.content.public_events.where(events_table[:started_on].lt(max_date)
-                                               .and(events_table[:ended_on].gteq(min_date)))
-    events.each(&:publish_files)
+    @node.content.public_events.scheduled_between(min_date, max_date).each(&:publish_files)
+    @node.content.events.where.not(state: 'public').each(&:close_files)
   end
 
   def publish_without_months

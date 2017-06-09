@@ -254,10 +254,10 @@ class GpArticle::Doc < ApplicationRecord
   end
 
   def close
-    @save_mode = :close
     self.state = 'finish' if self.state_public?
     return false unless save(:validate => false)
     close_page
+    close_files
     return true
   end
 
@@ -266,13 +266,12 @@ class GpArticle::Doc < ApplicationRecord
     return false unless super
     publishers.destroy_all unless publishers.empty?
 
-    paths = [public_path, public_smart_phone_path]
+    paths = [public_path, public_smart_phone_path].select(&:present?)
     paths.each { |path| FileUtils.rm_rf(::File.dirname(path)) if path.present? }
     return true
   end
 
   def publish(content)
-    @save_mode = :publish
     self.state = 'public' unless self.state_public?
     return false unless save(:validate => false)
     publish_page(content, path: public_path, uri: public_uri)
@@ -286,7 +285,6 @@ class GpArticle::Doc < ApplicationRecord
     end
 
     return false unless self.state_public?
-    @save_mode = :publish
     publish_page(content, options)
     if options[:dependent] == :smart_phone
       publish_smart_phone_files
@@ -537,14 +535,6 @@ class GpArticle::Doc < ApplicationRecord
 
   def feature_2_text
     FEATURE_2_OPTIONS.detect{|o| o.last == self.feature_2 }.try(:first).to_s
-  end
-
-  def public_files_path
-    "#{::File.dirname(public_path)}/file_contents"
-  end
-
-  def public_smart_phone_files_path
-    "#{::File.dirname(public_smart_phone_path)}/file_contents"
   end
 
   def qrcode_visible?
