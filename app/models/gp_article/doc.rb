@@ -97,11 +97,13 @@ class GpArticle::Doc < ApplicationRecord
   validates :mobile_body, :length => {maximum: 300000}
   validates :state, :presence => true
   validates :filename_base, :presence => true
+  validates :body_for_mobile, byte_length: { maximum: Zomeki.config.application['gp_article.body_limit_for_mobile'].to_i,
+                                             message: :too_long_byte_for_mobile,
+                                             attribute: -> { mobile_body.present? ? :mobile_body : :body } }
 
   validate :name_validity, if: -> { name.present? }
   validate :node_existence
   validate :event_dates_range
-  validate :body_limit_for_mobile
   validate :validate_accessibility_check, if: -> { !state_draft? && errors.blank? }
   validate :validate_broken_link_existence, if: -> { !state_draft? && errors.blank? }
 
@@ -686,15 +688,6 @@ class GpArticle::Doc < ApplicationRecord
     if (results.present? && in_ignore_accessibility_check != '1') || errors.present?
       self.accessibility_check_results = results
       errors.add(:base, 'アクセシビリティチェック結果を確認してください。')
-    end
-  end
-
-  def body_limit_for_mobile
-    limit = Zomeki.config.application['gp_article.body_limit_for_mobile'].to_i
-    current_size = self.body_for_mobile.bytesize
-    if current_size > limit
-      target = self.mobile_body.present? ? :mobile_body : :body
-      errors.add(target, "が携帯向け容量制限#{limit}バイトを超えています。（現在#{current_size}バイト）")
     end
   end
 
