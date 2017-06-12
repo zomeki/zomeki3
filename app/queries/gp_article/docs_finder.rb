@@ -63,14 +63,7 @@ class GpArticle::DocsFinder < FinderQuery
   def with_target(target)
     case target
     when 'user'
-      creators = Sys::Creator.arel_table
-      approval_requests = Approval::ApprovalRequest.arel_table
-      assignments = Approval::Assignment.arel_table
-      @docs.joins(:creator)
-               .eager_load(:approval_requests => [:approval_flow => [:approvals => :assignments]])
-               .where(creators[:user_id].eq(@user.id)
-                        .or(approval_requests[:user_id].eq(@user.id)
-                        .or(assignments[:user_id].eq(@user.id))))
+      @docs.creator_or_approvables
     when 'group'
       @docs.editable
     when 'all'
