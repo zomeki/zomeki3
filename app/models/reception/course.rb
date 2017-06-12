@@ -2,6 +2,7 @@ class Reception::Course < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Rel::Creator
   include Sys::Model::Rel::File
+  include Cms::Model::Base::ContentDelegation
   include Cms::Model::Auth::Content
   include GpCategory::Model::Rel::Category
 
@@ -94,10 +95,6 @@ class Reception::Course < ApplicationRecord
   def public_path
     return '' if public_uri.blank?
     "#{content.public_path}#{public_uri}/index.html"
-  end
-
-  def public_files_path
-    "#{::File.dirname(public_path)}/file_contents"
   end
 
   def bread_crumbs(node)

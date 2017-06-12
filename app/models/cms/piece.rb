@@ -1,7 +1,6 @@
 class Cms::Piece < ApplicationRecord
   include Sys::Model::Base
   include Cms::Model::Base::Piece
-  include Cms::Model::Base::Page::Publisher
   include Sys::Model::Rel::Creator
   include Cms::Model::Rel::Site
   include Cms::Model::Rel::Concept

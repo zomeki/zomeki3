@@ -281,7 +281,6 @@ class Cms::Node < ApplicationRecord
     end
 
     def publish(content)
-      @save_mode = :publish
       self.state = 'public'
       self.published_at ||= Core.now
       return false unless save(:validate => false)
@@ -297,12 +296,10 @@ class Cms::Node < ApplicationRecord
 
     def rebuild(content, options={})
       if options[:dependent] == :smart_phone
-        return false unless self.site.publish_for_smart_phone?
-        return false unless self.site.spp_all? || (self.site.spp_only_top? && top_page?)
+        return false unless site.publish_for_smart_phone?(self)
       end
 
       return false unless self.state == 'public'
-      @save_mode = :publish
 
       if rep = replace_page
         rep.destroy if rep.directory == 0
@@ -317,7 +314,6 @@ class Cms::Node < ApplicationRecord
     end
 
     def close
-      @save_mode = :close
       self.state = 'closed' if self.state == 'public'
       #self.published_at = nil
       return false unless save(:validate => false)

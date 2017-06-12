@@ -2,7 +2,7 @@ require 'digest/md5'
 module Cms::Model::Base::Page::TalkTask
   def self.included(mod)
     mod.has_many :talk_tasks, class_name: 'Cms::TalkTask', dependent: :destroy, as: :talk_processable
-    mod.after_save :delete_talk_tasks
+    #mod.after_save :delete_talk_tasks
   end
 
   def publish_page(content, options = {})

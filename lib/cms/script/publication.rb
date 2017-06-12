@@ -34,7 +34,7 @@ class Cms::Script::Publication < Cms::Script::Base
     return false unless res
     #return true if params[:path] !~ /(\/|\.html)$/
 
-    if params[:smart_phone_path].present? && publish_smart_phone_page?(site, item)
+    if params[:smart_phone_path].present? && site.publish_for_smart_phone?(item)
       rendered = render_public_as_string(params[:uri], site: site, agent_type: :smart_phone)
       res = item.publish_page(rendered, path: params[:smart_phone_path], dependent: "#{params[:dependent]}_smart_phone")
       return false unless res
@@ -76,7 +76,7 @@ class Cms::Script::Publication < Cms::Script::Base
           item.publish_page(rendered, path: path, dependent: dep)
 
           #smart_phone_path =
-          #  if params[:smart_phone_path].present? && publish_smart_phone_page?(site, item)
+          #  if params[:smart_phone_path].present? && site.publish_for_smart_phone?(item)
           #    params[:smart_phone_path] =~ /\.html$/ ? "#{params[:smart_phone_path]}.r" : "#{params[:smart_phone_path]}index.html.r"
           #  else
           #    nil
@@ -99,11 +99,6 @@ class Cms::Script::Publication < Cms::Script::Base
     error_log e
     error_log e.backtrace.join("\n")
     return false
-  end
-
-  def publish_smart_phone_page?(site, item)
-    site.publish_for_smart_phone? &&
-       (site.spp_all? || (site.spp_only_top? && item.respond_to?(:top_page?) && item.top_page?))
   end
 
   def simple_pages(first, limit)

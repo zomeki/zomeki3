@@ -8,6 +8,8 @@ class GpArticle::Doc < ApplicationRecord
   include Cms::Model::Base::Page
   include Cms::Model::Base::Page::Publisher
   include Cms::Model::Base::Page::TalkTask
+  include Cms::Model::Base::ContentDelegation
+  include Cms::Model::Base::Qrcode
   include Cms::Model::Rel::Inquiry
   include Cms::Model::Rel::Map
   include Cms::Model::Rel::Bracket
@@ -35,7 +37,6 @@ class GpArticle::Doc < ApplicationRecord
   OGP_TYPE_OPTIONS = [['article', 'article']]
   FEATURE_1_OPTIONS = [['表示', true], ['非表示', false]]
   FEATURE_2_OPTIONS = [['表示', true], ['非表示', false]]
-  QRCODE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
 
   default_scope { where.not(state: 'archived') }
   scope :public_state, -> { where(state: 'public') }
@@ -97,11 +98,13 @@ class GpArticle::Doc < ApplicationRecord
   validates :body_more, length: { maximum: Zomeki.config.application['gp_article.body_limit'].to_i }
   validates :state, presence: true
   validates :filename_base, presence: true
+  validates :body_for_mobile, byte_length: { maximum: Zomeki.config.application['gp_article.body_limit_for_mobile'].to_i,
+                                             message: :too_long_byte_for_mobile,
+                                             attribute: -> { mobile_body.present? ? :mobile_body : :body } }
 
   validate :name_validity, if: -> { name.present? }
   validate :node_existence
   validate :event_dates_range
-  validate :body_limit_for_mobile
   validate :validate_accessibility_check, if: -> { !state_draft? && errors.blank? }
   validate :validate_broken_link_existence, if: -> { !state_draft? && errors.blank? }
 
@@ -199,7 +202,7 @@ class GpArticle::Doc < ApplicationRecord
     base_uri = public_uri(without_filename: true, with_closed_preview: true)
     return nil if base_uri.blank?
 
-    site ||= ::Page.site
+    site ||= content.site
     params = params.map{|k, v| "#{k}=#{v}" }.join('&')
     filename = without_filename || filename_base == 'index' ? '' : "#{filename_base}.html"
     page_flag = mobile ? 'm' : smart_phone ? 's' : ''
@@ -254,10 +257,10 @@ class GpArticle::Doc < ApplicationRecord
   end
 
   def close
-    @save_mode = :close
     self.state = 'finish' if self.state_public?
     return false unless save(:validate => false)
     close_page
+    close_files
     return true
   end
 
@@ -265,17 +268,13 @@ class GpArticle::Doc < ApplicationRecord
     return true if will_replace?
     return false unless super
     publishers.destroy_all unless publishers.empty?
-    if p = public_path
-      FileUtils.rm_rf(::File.dirname(public_path)) unless p.blank?
-    end
-    if p = public_smart_phone_path
-      FileUtils.rm_rf(::File.dirname(public_smart_phone_path)) unless p.blank?
-    end
+
+    paths = [public_path, public_smart_phone_path].select(&:present?)
+    paths.each { |path| FileUtils.rm_rf(::File.dirname(path)) if path.present? }
     return true
   end
 
   def publish(content)
-    @save_mode = :publish
     self.state = 'public' unless self.state_public?
     return false unless save(:validate => false)
     publish_page(content, path: public_path, uri: public_uri)
@@ -286,20 +285,18 @@ class GpArticle::Doc < ApplicationRecord
   def rebuild(content, options={})
     if options[:dependent] == :smart_phone
       return false unless self.content.site.publish_for_smart_phone?
-      return false unless self.content.site.spp_all?
     end
 
     return false unless self.state_public?
-    @save_mode = :publish
     publish_page(content, options)
-    #TODO: スマートフォン向けファイル書き出し要再検討
-    @public_files_path = "#{::File.dirname(public_smart_phone_path)}/file_contents" if options[:dependent] == :smart_phone
-    @public_qrcode_path = "#{::File.dirname(public_smart_phone_path)}/qrcode.png" if options[:dependent] == :smart_phone
-    result = publish_files
-    publish_qrcode
-    @public_files_path = nil if options[:dependent] == :smart_phone
-    @public_qrcode_path = nil if options[:dependent] == :smart_phone
-    return result
+    if options[:dependent] == :smart_phone
+      publish_smart_phone_files
+      publish_smart_phone_qrcode
+    else
+      publish_files
+      publish_qrcode
+    end
+    return true
   end
 
   def external_link?
@@ -375,7 +372,6 @@ class GpArticle::Doc < ApplicationRecord
       new_doc.related_docs.build(name: rd.name, content_id: rd.content_id)
     end
 
-
     inquiries.each_with_index do |inquiry, i|
       attrs = inquiry.attributes
       attrs[:id] = nil
@@ -390,25 +386,27 @@ class GpArticle::Doc < ApplicationRecord
       end
     end
 
-    new_doc.save!
+    transaction do
+      new_doc.save!
 
-    files.each do |f|
-      new_attributes = f.attributes
-      new_attributes[:id] = nil
-      Sys::File.new(new_attributes).tap do |new_file|
-        new_file.file = Sys::Lib::File::NoUploadedFile.new(f.upload_path, :mime_type => new_file.mime_type)
+      files.each do |f|
+        new_attributes = f.attributes
+        new_attributes[:id] = nil
+        new_file = Sys::File.new(new_attributes)
+        new_file.file = Sys::Lib::File::NoUploadedFile.new(f.upload_path, mime_type: new_file.mime_type)
         new_file.file_attachable = new_doc
         new_file.save
       end
+
+      new_doc.categories = self.categories
+      new_doc.event_categories = self.event_categories
+      new_doc.marker_categories = self.marker_categories
+      new_doc.categorizations.each do |new_c|
+        self_c = self.categorizations.where(category_id: new_c.category_id, categorized_as: new_c.categorized_as).first
+        new_c.update_column(:sort_no, self_c.sort_no)
+      end
     end
 
-    new_doc.categories = self.categories
-    new_doc.event_categories = self.event_categories
-    new_doc.marker_categories = self.marker_categories
-    new_doc.categorizations.each do |new_c|
-      self_c = self.categorizations.where(category_id: new_c.category_id, categorized_as: new_c.categorized_as).first
-      new_c.update_column(:sort_no, self_c.sort_no)
-    end
     return new_doc
   end
 
@@ -518,12 +516,6 @@ class GpArticle::Doc < ApplicationRecord
     next_edition && state_public?
   end
 
-  def qrcode_visible?
-    return false unless content && content.qrcode_related?
-    return false unless self.qrcode_state == 'visible'
-    return true
-  end
-
   def og_type_text
     OGP_TYPE_OPTIONS.detect{|o| o.last == self.og_type }.try(:first).to_s
   end
@@ -548,27 +540,8 @@ class GpArticle::Doc < ApplicationRecord
     FEATURE_2_OPTIONS.detect{|o| o.last == self.feature_2 }.try(:first).to_s
   end
 
-  def qrcode_state_text
-    QRCODE_OPTIONS.detect{|o| o.last == self.qrcode_state }.try(:first).to_s
-  end
-
-  def public_files_path
-    return @public_files_path if @public_files_path
-    "#{::File.dirname(public_path)}/file_contents"
-  end
-
-
-  def qrcode_path
-    return @public_qrcode_path if @public_qrcode_path
-    "#{::File.dirname(public_path)}/qrcode.png"
-  end
-
-  def qrcode_uri(preview: false)
-    if preview
-      "#{preview_uri(without_filename: true)}qrcode.png"
-    else
-      "#{public_uri(without_filename: true)}qrcode.png"
-    end
+  def qrcode_visible?
+    super && content && content.qrcode_related?
   end
 
   def event_state_visible?
@@ -708,14 +681,6 @@ class GpArticle::Doc < ApplicationRecord
     end
   end
 
-  def publish_qrcode
-    return true unless self.state_public?
-    return true unless self.qrcode_visible?
-    return true if Zomeki.config.application['sys.clean_statics']
-    Util::Qrcode.create(self.public_full_uri, self.qrcode_path)
-    return true
-  end
-
   def validate_accessibility_check
     return unless content.site.accessibility_check_enabled?
 
@@ -724,15 +689,6 @@ class GpArticle::Doc < ApplicationRecord
     if (results.present? && in_ignore_accessibility_check != '1') || errors.present?
       self.accessibility_check_results = results
       errors.add(:base, 'アクセシビリティチェック結果を確認してください。')
-    end
-  end
-
-  def body_limit_for_mobile
-    limit = Zomeki.config.application['gp_article.body_limit_for_mobile'].to_i
-    current_size = self.body_for_mobile.bytesize
-    if current_size > limit
-      target = self.mobile_body.present? ? :mobile_body : :body
-      errors.add(target, "が携帯向け容量制限#{limit}バイトを超えています。（現在#{current_size}バイト）")
     end
   end
 

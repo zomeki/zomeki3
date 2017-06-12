@@ -1,6 +1,7 @@
 class Map::Marker < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Rel::File
+  include Cms::Model::Base::ContentDelegation
   include Cms::Model::Auth::Content
   include GpCategory::Model::Rel::Category
 
@@ -21,6 +22,7 @@ class Map::Marker < ApplicationRecord
 
   after_initialize :set_defaults
   before_save :set_name
+  before_destroy :close_files
 
   after_save     Cms::Publisher::ContentRelatedCallbacks.new, if: :changed?
   before_destroy Cms::Publisher::ContentRelatedCallbacks.new
@@ -45,19 +47,14 @@ class Map::Marker < ApplicationRecord
     "#{content.public_node.public_path}#{name}/"
   end
 
-  def public_file_path
-    return '' if public_path.blank? || files.empty?
-    "#{public_path}file_contents/#{files.first.name}"
-  end
-
   def public_smart_phone_path
     return '' unless content.public_node
     "#{content.public_node.public_smart_phone_path}#{name}/"
   end
 
-  def public_smart_phone_file_path
-    return '' if public_smart_phone_path.blank? || files.empty?
-    "#{public_smart_phone_path}file_contents/#{files.first.name}"
+  def publish_files
+    super
+    publish_smart_phone_files if content.site.publish_for_smart_phone?
   end
 
   private

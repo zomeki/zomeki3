@@ -41,7 +41,7 @@ class Cms::Admin::SitesController < Cms::Controller::Admin::Base
     @item.attributes = site_params
     _update @item do
       update_configs
-      FileUtils.rm_rf Pathname.new(@item.public_smart_phone_path).children if ::File.exist?(@item.public_smart_phone_path) && !@item.publish_for_smart_phone?
+      FileUtils.rm_rf Pathname.new(@item.public_smart_phone_path).children if ::File.exist?(@item.public_smart_phone_path) && !@item.smart_phone_publication?
     end
   end
 
