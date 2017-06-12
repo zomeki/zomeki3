@@ -34,6 +34,12 @@ module Cms::Model::Base::Page::TalkTask
     return true
   end
 
+  def close_page(options = {})
+    return false unless super
+    talk_tasks.destroy_all
+    return true
+  end
+
   def delete_talk_tasks
     talk_tasks.destroy_all
     return true
