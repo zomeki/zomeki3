@@ -154,10 +154,7 @@ class Cms::Site < ApplicationRecord
   end
 
   def full_ssl_uri
-    return nil unless use_common_ssl?
-    url  = Sys::Setting.common_ssl_uri
-    url += "_ssl/#{format('%04d', id)}/"
-    return url
+    "#{Sys::Setting.common_ssl_uri}_ssl/#{format('%04d', id)}/"
   end
 
   def main_admin_uri

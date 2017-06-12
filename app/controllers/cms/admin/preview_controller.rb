@@ -32,7 +32,7 @@ class Cms::Admin::PreviewController < Cms::Controller::Admin::Base
 
     elsif path =~ /^\/_themes\//
       entry = Sys::Storage::Entry.from_path("#{Core.site.public_path}#{path}")
-      return http_error(404) unless entry.exists?
+      return http_error(404) if entry.nil? || !entry.exists?
       return send_file(entry.path, type: entry.mime_type, filename: entry.name, disposition: 'inline')
 
     else
