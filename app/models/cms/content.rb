@@ -6,6 +6,11 @@ class Cms::Content < ApplicationRecord
   include Cms::Model::Rel::Concept
   include Cms::Model::Auth::Concept
 
+  REBUILDABLE_MODELS = ['GpArticle::Doc', 'GpCategory::CategoryType', 'Organization::Group',
+                        'AdBanner::Banner', 'Map::Marker', 'GpCalendar::Event',
+                        'Tag::Tag', 'Rank::Rank', 'Gnav::MenuItem',
+                        'Feed::Feed', 'BizCalendar::Place']
+
   has_many :settings, -> { order(:sort_no) },
     :foreign_key => :content_id, :class_name => 'Cms::ContentSetting', :dependent => :destroy
   has_many :pieces, :foreign_key => :content_id, :class_name => 'Cms::Piece',
@@ -24,6 +29,8 @@ class Cms::Content < ApplicationRecord
 
   before_create :set_default_settings_from_configs
   after_save :save_settings
+
+  scope :rebuildable_models, -> { where(model: REBUILDABLE_MODELS) }
 
   def readable?
     Core.user.has_priv?(:read, item: concept)

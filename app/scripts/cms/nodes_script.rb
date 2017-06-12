@@ -36,8 +36,10 @@ class Cms::NodesScript < Cms::Script::Publication
     if node.model == 'Cms::Page'
       begin
         uri = "#{node.public_uri}?node_id=#{node.id}"
-        publish_page(node, uri: uri, site: node.site, path: node.public_path,
-                                                      smart_phone_path: node.public_smart_phone_path)
+        publish_page(node, uri: uri,
+                           site: node.site,
+                           path: node.public_path,
+                           smart_phone_path: node.public_smart_phone_path)
       rescue ::Script::InterruptException => e
         raise e
       rescue => e
@@ -50,12 +52,7 @@ class Cms::NodesScript < Cms::Script::Publication
     unless node.model == 'Cms::Directory'
       begin
         script_klass = node.script_klass
-        return unless script_klass.publishable?
-
-        publish_page(node, uri: node.public_uri, site: node.site, path: node.public_path,
-                                                      smart_phone_path: node.public_smart_phone_path)
-        script_klass.new(params.merge(node: node)).publish
-
+        script_klass.new(params.merge(node: node)).publish if script_klass.publishable?
       rescue ::Script::InterruptException => e
         raise e
       rescue LoadError => e

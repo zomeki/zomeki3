@@ -12,7 +12,7 @@ class Cms::Script::Publication < Cms::Script::Base
   end
 
   def initialize_publication
-    if @node = params[:node] || Cms::Node.where(id: params[:node_id]).first
+    if (@node = (params[:node] || Cms::Node.where(id: params[:node_id]).first))
       @site = @node.site
     end
     @errors = []

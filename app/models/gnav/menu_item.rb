@@ -3,6 +3,7 @@ class Gnav::MenuItem < ApplicationRecord
   include Sys::Model::Rel::Creator
   include Cms::Model::Auth::Content
   include Cms::Model::Base::Page
+  include Cms::Model::Base::Page::Publisher
   include Cms::Model::Base::Sitemap
 
   include StateText

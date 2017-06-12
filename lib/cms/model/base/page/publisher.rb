@@ -83,15 +83,15 @@ if clean_statics
       File.delete(path)
       info_log "DELETED: #{path}"
     end
-    @published = true
 else
     if ::File.exist?(path) && ::File.new(path).read == content
       #FileUtils.touch([path])
     else
       Util::File.put(path, :data => content, :mkdir => true)
-      @published = true
     end
 end
+
+    @published = true
 
     pub ||= Sys::Publisher.new
     pub.publishable  = self

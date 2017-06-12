@@ -1,6 +1,7 @@
 class BizCalendar::Place < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Rel::Creator
+  include Cms::Model::Base::Page::Publisher
   include Cms::Model::Auth::Content
 
   include StateText

@@ -7,6 +7,8 @@ class Sys::Publisher < ApplicationRecord
   before_save :check_path
   before_destroy :remove_files
 
+  scope :in_site, ->(site) { where(arel_table[:path].matches("./sites/#{format('%04d', site.id)}%")) }
+
   def site_id
     path.scan(%r{^./sites/(\d+)}).dig(0, 0).try!(:to_i)
   end

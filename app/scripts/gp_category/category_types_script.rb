@@ -1,9 +1,9 @@
 class GpCategory::CategoryTypesScript < Cms::Script::Publication
   def publish
-    uri  = @node.public_uri
-    path = @node.public_path
-
-    publish_more(@node, uri: uri, path: path, dependent: :more)
+    uri = @node.public_uri.to_s
+    path = @node.public_path.to_s
+    smart_phone_path = @node.public_smart_phone_path.to_s
+    publish_more(@node, uri: uri, path: path, smart_phone_path: smart_phone_path)
 
     category_types = @node.content.public_category_types
     category_types.where!(id: params[:target_category_type_id]) if params[:target_category_type_id].present?
@@ -12,10 +12,10 @@ class GpCategory::CategoryTypesScript < Cms::Script::Publication
       path = "#{@node.public_path}#{category_type.name}/"
       smart_phone_path = "#{@node.public_smart_phone_path}#{category_type.name}/"
 
-      publish_page(category_type, uri: "#{uri}index.rss", path: "#{path}index.rss", dependent: "#{category_type.name}/rss")
-      publish_page(category_type, uri: "#{uri}index.atom", path: "#{path}index.atom", dependent: "#{category_type.name}/atom")
-      publish_more(category_type, uri: uri, path: path, smart_phone_path: smart_phone_path, dependent: "#{category_type.name}/more")
-      publish_more(category_type, uri: uri, path: path, smart_phone_path: smart_phone_path, file: 'more', dependent: "#{category_type.name}/more_docs")
+      publish_page(category_type, uri: "#{uri}index.rss", path: "#{path}index.rss", dependent: :rss)
+      publish_page(category_type, uri: "#{uri}index.atom", path: "#{path}index.atom", dependent: :atom)
+      publish_more(category_type, uri: uri, path: path, smart_phone_path: smart_phone_path)
+      publish_more(category_type, uri: uri, path: path, smart_phone_path: smart_phone_path, file: 'more', dependent: :more)
 
       categories = category_type.public_categories.reorder(:level_no, :sort_no)
       categories.where!(id: params[:target_category_id]) if params[:target_category_id].present?
@@ -36,32 +36,32 @@ class GpCategory::CategoryTypesScript < Cms::Script::Publication
   end
 
   def publish_category(cat)
-    publish_category_for_template_modules(cat)
-
     cat_path = "#{cat.category_type.name}/#{cat.path_from_root_category}/"
     uri = "#{@node.public_uri}#{cat_path}"
     path = "#{@node.public_path}#{cat_path}"
     smart_phone_path = "#{@node.public_smart_phone_path}#{cat_path}"
 
-    publish_page(cat.category_type, uri: "#{uri}index.rss", path: "#{path}index.rss", dependent: "#{cat_path}rss")
-    publish_page(cat.category_type, uri: "#{uri}index.atom", path: "#{path}index.atom", dependent: "#{cat_path}atom")
+    publish_page(cat, uri: "#{uri}index.rss", path: "#{path}index.rss", dependent: :rss)
+    publish_page(cat, uri: "#{uri}index.atom", path: "#{path}index.atom", dependent: :atom)
 
     if @node.content.category_style == 'categories_with_docs'
-      publish_page(cat.category_type, uri: uri, path: path, smart_phone_path: smart_phone_path, dependent: "#{cat_path}more")
+      publish_page(cat, uri: uri, path: path, smart_phone_path: smart_phone_path)
     else
-      publish_more(cat.category_type, uri: uri, path: path, smart_phone_path: smart_phone_path, dependent: "#{cat_path}more")
+      publish_more(cat, uri: uri, path: path, smart_phone_path: smart_phone_path)
     end
 
-    publish_more(cat.category_type, uri: uri, path: path, smart_phone_path: smart_phone_path, file: 'more', dependent: "#{cat_path}more_docs")
+    publish_more(cat, uri: uri, path: path, smart_phone_path: smart_phone_path, file: 'more', dependent: :more)
 
     if feed_pieces = category_feed_pieces(cat)
       feed_pieces.each do |piece|
         rss = piece.public_feed_uri('rss')
         atom = piece.public_feed_uri('atom')
-        publish_page(cat.category_type, uri: "#{uri}#{rss}", path: "#{path}#{rss}", dependent: "#{cat_path}#{rss}")
-        publish_page(cat.category_type, uri: "#{uri}#{atom}", path: "#{path}#{atom}", dependent: "#{cat_path}#{atom}")
+        publish_page(cat, uri: "#{uri}#{rss}", path: "#{path}#{rss}", dependent: rss)
+        publish_page(cat, uri: "#{uri}#{atom}", path: "#{path}#{atom}", dependent: atom)
       end
     end
+
+    publish_category_for_template_modules(cat)
 
     info_log %Q!OK: Published to "#{path}"!
   end
@@ -107,8 +107,7 @@ class GpCategory::CategoryTypesScript < Cms::Script::Publication
     smart_phone_path = "#{public_path}/_smartphone#{uri}"
     file = File.basename(link, '.html')
 
-    publish_more(cat.category_type, uri: uri, path: path, smart_phone_path: smart_phone_path,
-                                    dependent: "#{uri}#{file}", file: file)
+    publish_more(cat, uri: uri, path: path, smart_phone_path: smart_phone_path, file: file, dependent: file)
   end
 
   def find_public_docs_with_category_id(category_id)

@@ -16,6 +16,8 @@ class Cms::Node < ApplicationRecord
 
   include StateText
 
+  REBUILDABLE_MODELS = ['Cms::Page', 'Cms::Sitemap']
+
   belongs_to :parent, :foreign_key => :parent_id, :class_name => 'Cms::Node'
   belongs_to :layout, :foreign_key => :layout_id, :class_name => 'Cms::Layout'
 
@@ -51,6 +53,7 @@ class Cms::Node < ApplicationRecord
 
   scope :public_state, -> { where(state: 'public') }
   scope :sitemap_order, -> { order('sitemap_sort_no IS NULL, sitemap_sort_no, name') }
+  scope :rebuildable_models, -> { where(model: REBUILDABLE_MODELS) }
 
   scope :search_with_params, ->(params) {
     rel = all

@@ -32,16 +32,20 @@ class GpCalendar::BaseScript < Cms::Script::Publication
       ct.public_categories.map { |c| "index_#{c.category_type.name}@#{c.path_from_root_category.gsub('/', '@')}" }
     }.flatten
 
-    publish_more(@node, uri: uri, path: path, smart_phone_path: smart_phone_path, dependent: uri)
+    publish_more(@node, uri: uri, path: path, smart_phone_path: smart_phone_path)
     files.each do |file|
-      publish_more(@node, uri: uri, path: path, smart_phone_path: smart_phone_path, dependent: "#{uri}#{file}", file: file)
+      publish_more(@node, uri: uri, path: path, smart_phone_path: smart_phone_path, file: file, dependent: file)
     end
     prms.each do |prm|
-      publish_more(@node, uri: "#{uri}#{prm}", path: "#{path}#{prm}", smart_phone_path: "#{smart_phone_path}#{prm}",
-                          dependent: "#{uri}#{prm}")
+      publish_more(@node, uri: "#{uri}#{prm}",
+                          path: "#{path}#{prm}",
+                          smart_phone_path: "#{smart_phone_path}#{prm}",
+                          dependent: prm)
       files.each do |file|
-        publish_more(@node, uri: "#{uri}#{prm}", path: "#{path}#{prm}", smart_phone_path: "#{smart_phone_path}#{prm}",
-                            dependent: "#{uri}#{prm}#{file}", file: file)
+        publish_more(@node, uri: "#{uri}#{prm}",
+                            path: "#{path}#{prm}",
+                            smart_phone_path: "#{smart_phone_path}#{prm}",
+                            file: file, dependent: "#{prm}#{file}")
       end
     end
 
@@ -50,10 +54,8 @@ class GpCalendar::BaseScript < Cms::Script::Publication
   end
 
   def publish_without_months
-    uri = @node.public_uri.to_s
-    path = @node.public_path.to_s
-    smart_phone_path = @node.public_smart_phone_path.to_s
-
-    publish_more(@node, uri: uri, path: path, smart_phone_path: smart_phone_path, dependent: uri)
+    publish_more(@node, uri: @node.public_uri,
+                        path: @node.public_path,
+                        smart_phone_path: @node.public_smart_phone_path)
   end
 end
