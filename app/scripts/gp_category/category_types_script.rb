@@ -17,6 +17,8 @@ class GpCategory::CategoryTypesScript < Cms::Script::Publication
       publish_more(category_type, uri: uri, path: path, smart_phone_path: smart_phone_path)
       publish_more(category_type, uri: uri, path: path, smart_phone_path: smart_phone_path, file: 'more', dependent: :more)
 
+      publish_category_type_for_template_modules(category_type)
+
       categories = category_type.public_categories.reorder(:level_no, :sort_no)
       categories.where!(id: params[:target_category_id]) if params[:target_category_id].present?
       categories.each do |category|
@@ -66,6 +68,32 @@ class GpCategory::CategoryTypesScript < Cms::Script::Publication
     info_log %Q!OK: Published to "#{path}"!
   end
 
+  def publish_category_type_for_template_modules(cat_type)
+    t = cat_type.template
+    return unless t
+
+    tms = t.containing_modules
+    tms.each do |tm|
+      case tm.module_type
+      when 'docs_1', 'docs_2'
+        publish_link(cat_type, ApplicationController.helpers.category_module_more_link(template_module: tm, ct_or_c: cat_type))
+      when 'docs_3', 'docs_4'
+        next unless cat_type.internal_category_type
+        cat_type.internal_category_type.public_root_categories.each do |c|
+          publish_link(cat_type, ApplicationController.helpers.category_module_more_link(template_module: tm, ct_or_c: cat_type, category_name: c.name))
+        end
+      when 'docs_5', 'docs_6'
+        docs = GpCategory::CategoryType.public_docs_for_template_module(cat_type, tm)
+                                       .select(Sys::Group.arel_table[:id]).distinct
+                                       .joins(creator: :group)
+        groups = Sys::Group.where(id: docs)
+        groups.each do |group|
+          publish_link(cat_type, ApplicationController.helpers.category_module_more_link(template_module: tm, ct_or_c: cat_type, group_code: group.code))
+        end
+      end
+    end
+  end
+
   def publish_category_for_template_modules(cat)
     t = cat.inherited_template
     return unless t
@@ -74,26 +102,19 @@ class GpCategory::CategoryTypesScript < Cms::Script::Publication
     tms.each do |tm|
       case tm.module_type
       when 'docs_1', 'docs_2'
-        publish_link cat, ApplicationController.helpers.category_module_more_link(template_module: tm, ct_or_c: cat)
+        publish_link(cat, ApplicationController.helpers.category_module_more_link(template_module: tm, ct_or_c: cat))
       when 'docs_3', 'docs_4'
         next unless cat.category_type.internal_category_type
         cat.category_type.internal_category_type.public_root_categories.each do |c|
-          publish_link cat, ApplicationController.helpers.category_module_more_link(template_module: tm, ct_or_c: cat, category_name: c.name)
+          publish_link(cat, ApplicationController.helpers.category_module_more_link(template_module: tm, ct_or_c: cat, category_name: c.name))
         end
       when 'docs_5', 'docs_6'
-        docs = case tm.module_type
-               when 'docs_5'
-                 find_public_docs_with_category_id(cat.public_descendants.map(&:id))
-               when 'docs_6'
-                 find_public_docs_with_category_id(cat.id)
-               end
-        docs = docs.where(tm.module_type_feature, true) if docs.columns.any?{|c| c.name == tm.module_type_feature }
-
-        docs = docs.joins(:creator => :group)
-        groups = Sys::Group.where(id: docs.select(Sys::Group.arel_table[:id]).distinct)
-
+        docs = GpCategory::Category.public_docs_for_template_module(cat, tm)
+                                   .select(Sys::Group.arel_table[:id]).distinct
+                                   .joins(creator: :group)
+        groups = Sys::Group.where(id: docs)
         groups.each do |group|
-          publish_link cat, ApplicationController.helpers.category_module_more_link(template_module: tm, ct_or_c: cat, group_code: group.code)
+          publish_link(cat, ApplicationController.helpers.category_module_more_link(template_module: tm, ct_or_c: cat, group_code: group.code))
         end
       end
     end
@@ -108,9 +129,5 @@ class GpCategory::CategoryTypesScript < Cms::Script::Publication
     file = File.basename(link, '.html')
 
     publish_more(cat, uri: uri, path: path, smart_phone_path: smart_phone_path, file: file, dependent: file)
-  end
-
-  def find_public_docs_with_category_id(category_id)
-    GpArticle::Doc.categorized_into(category_id).except(:order).mobile(::Page.mobile?).public_state
   end
 end
