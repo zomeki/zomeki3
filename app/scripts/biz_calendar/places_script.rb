@@ -5,7 +5,7 @@ class BizCalendar::PlacesScript < Cms::Script::Publication
                         smart_phone_path: @node.public_smart_phone_path)
 
     @node.content.places.public_state.each do |place|
-      publish_page(@node, uri: place.public_uri,
+      publish_page(place, uri: place.public_uri,
                           path: place.public_path,
                           smart_phone_path: place.public_smart_phone_path)
     end
