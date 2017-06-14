@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170522020334) do
+ActiveRecord::Schema.define(version: 20170605100248) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1206,6 +1206,7 @@ ActiveRecord::Schema.define(version: 20170522020334) do
     t.boolean  "confirmation"
     t.string   "sitemap_state"
     t.string   "index_link"
+    t.string   "mail_to"
     t.index ["content_id"], name: "index_survey_forms_on_content_id", using: :btree
   end
 

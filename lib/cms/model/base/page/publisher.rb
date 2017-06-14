@@ -2,7 +2,7 @@ require 'digest/md5'
 module Cms::Model::Base::Page::Publisher
   def self.included(mod)
     mod.has_many :publishers, class_name: 'Sys::Publisher', dependent: :destroy, as: :publishable
-    mod.after_save :close_page
+    #mod.after_save :close_page
   end
 
   def public_status

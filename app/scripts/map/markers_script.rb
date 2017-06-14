@@ -13,14 +13,7 @@ class Map::MarkersScript < Cms::Script::Publication
       end
     end
 
-    @node.content.public_markers.each do |marker|
-      file = marker.files.first
-      next unless file && ::File.exist?(file.upload_path)
-
-      Util::File.put marker.public_file_path, src: file.upload_path, mkdir: true
-      if @node.content.site.publish_for_smart_phone?
-        Util::File.put marker.public_smart_phone_file_path, src: file.upload_path, mkdir: true
-      end
-    end
+    @node.content.public_markers.each(&:publish_files)
+    @node.content.markers.where.not(state: 'public').each(&:close_files)
   end
 end

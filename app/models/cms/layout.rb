@@ -1,6 +1,5 @@
 class Cms::Layout < ApplicationRecord
   include Sys::Model::Base
-  include Cms::Model::Base::Page::Publisher
   include Sys::Model::Rel::Creator
   include Cms::Model::Rel::Site
   include Cms::Model::Rel::Concept
@@ -91,22 +90,6 @@ class Cms::Layout < ApplicationRecord
     else
       body.html_safe
     end
-  end
-
-  def public_path
-    site.public_path + '/layout/' + name + '/style.css'
-  end
-
-  def public_uri # TODO dummy
-    '/layout/' + name + '/style.css'
-  end
-
-  def request_publish_data # TODO dummy
-    _res = {
-      :page_type => 'text/css',
-      :page_size => stylesheet.size,
-      :page_data => stylesheet,
-    }
   end
 
   def tamtam_css(request)

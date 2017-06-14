@@ -124,7 +124,6 @@ class Organization::Group < ApplicationRecord
 
   def rebuild(content, options={})
     return false unless self.public?
-    @save_mode = :publish
     publish_page(content, options)
   end
 

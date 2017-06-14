@@ -154,10 +154,7 @@ class Cms::Site < ApplicationRecord
   end
 
   def full_ssl_uri
-    return nil unless use_common_ssl?
-    url  = Sys::Setting.common_ssl_uri
-    url += "_ssl/#{format('%04d', id)}/"
-    return url
+    "#{Sys::Setting.common_ssl_uri}_ssl/#{format('%04d', id)}/"
   end
 
   def main_admin_uri
@@ -241,7 +238,11 @@ class Cms::Site < ApplicationRecord
     SPP_TARGET_OPTIONS.detect{|o| o.last == spp_target }.try(:first).to_s
   end
 
-  def publish_for_smart_phone?
+  def publish_for_smart_phone?(node = nil)
+    smart_phone_publication? && (spp_all? || (spp_only_top? && node && node.respond_to?(:top_page?) && node.top_page?))
+  end
+
+  def smart_phone_publication?
     smart_phone_publication == 'yes'
   end
 

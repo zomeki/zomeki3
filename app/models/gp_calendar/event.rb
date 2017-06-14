@@ -2,6 +2,7 @@ class GpCalendar::Event < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Rel::Creator
   include Sys::Model::Rel::File
+  include Cms::Model::Base::ContentDelegation
   include Cms::Model::Auth::Content
   include GpCategory::Model::Rel::Category
 
@@ -23,6 +24,7 @@ class GpCalendar::Event < ApplicationRecord
 
   after_initialize :set_defaults
   before_save :set_name
+  before_destroy :close_files
 
   after_save     GpCalendar::Publisher::EventCallbacks.new, if: :changed?
   before_destroy GpCalendar::Publisher::EventCallbacks.new
@@ -87,6 +89,7 @@ class GpCalendar::Event < ApplicationRecord
   end
 
   def holiday
+    return nil unless started_on
     criteria = {date: started_on, kind: 'holiday'}
     GpCalendar::Holiday.public_state.content_and_criteria(content, criteria).first.try(:title)
   end
@@ -94,31 +97,18 @@ class GpCalendar::Event < ApplicationRecord
   def public_path
     node = content.public_nodes.where(model: 'GpCalendar::Event').first
     return '' unless node
-    "#{node.public_path}#{name}"
+    "#{node.public_path}#{name}/"
   end
 
-  def public_files_path
-    return '' if public_path.blank?
-    "#{public_path}/file_contents"
+  def public_smart_phone_path
+    node = content.public_nodes.where(model: 'GpCalendar::Event').first
+    return '' unless node
+    "#{node.public_smart_phone_path}#{name}/"
   end
 
   def publish_files
-    return if public_files_path.blank?
-    @save_mode = :publish
     super
-  end
-
-  def close_files
-    @save_mode = :close
-    super
-  end
-
-  def publish!
-    update_attribute(:state, 'public')
-  end
-
-  def close!
-    update_attribute(:state, 'closed')
+    publish_smart_phone_files if content.site.publish_for_smart_phone?
   end
 
   private

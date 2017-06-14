@@ -40,6 +40,8 @@ cms:
   default_map_coordinate: "35.702708,139.560831"
 
 gp_article:
+  # 本文文字数制限
+  body_limit: 500000
   # 携帯用内容制限[Bytes]
   body_limit_for_mobile: 163840
 

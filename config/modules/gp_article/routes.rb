@@ -55,15 +55,15 @@ ZomekiCMS::Application.routes.draw do
 
   ## public
   scope "_public/#{mod}", :module => mod, :as => '' do
-    get 'node_docs(/(index))' => 'public/node/docs#index'
+    get 'node_docs(/index)' => 'public/node/docs#index'
     get 'node_docs/:name/preview/:id/file_contents/(*path)' => 'public/node/docs#file_content'
     get 'node_docs/:name/preview/:id/qrcode.:extname' => 'public/node/docs#qrcode'
-    get 'node_docs/:name/preview/:id(/(:filename_base.:format))' => 'public/node/docs#show'
+    get 'node_docs/:name/preview/:id(/:filename_base.:format)' => 'public/node/docs#show'
     get 'node_docs/:name/file_contents/(*path)' => 'public/node/docs#file_content'
     get 'node_docs/:name/qrcode.:extname' => 'public/node/docs#qrcode'
-    get 'node_docs/:name(/(:filename_base.:format))' => 'public/node/docs#show'
-    get 'node_archives/:year(/(index))' => 'public/node/archives#index'
-    get 'node_archives/:year/:month(/(index))' => 'public/node/archives#index'
-    get 'node_search_docs(/(index))' => 'public/node/search_docs#index'
+    get 'node_docs/:name(/:filename_base.:format)' => 'public/node/docs#show'
+    get 'node_archives/:year(/index)' => 'public/node/archives#index'
+    get 'node_archives/:year/:month(/index)' => 'public/node/archives#index'
+    get 'node_search_docs(/index)' => 'public/node/search_docs#index'
   end
 end
