@@ -67,8 +67,6 @@ module Cms::Model::Base::Page::Publisher
     @published = false
     return false if content.nil?
 
-    content = content.gsub(%r!zdel_.+?/!i, '')
-
     path = (options[:path] || public_path).gsub(/\/\z/, '/index.html')
     hash = Digest::MD5.new.update(content).to_s
 
