@@ -80,15 +80,15 @@ $(document).ready(function () {
     var content_id = parseInt(event.target.value);
     if (isNaN(content_id)) {
       $('#templates').html('');
-      $('#default_template_id').html('<option value=""></option>');
+      $('#item_extra_values_default_template_id').html('<option value=""></option>');
     } else {
       $('#templates').html('更新中...');
-      $('#default_template_id').html('<option value="">更新中...</option>');
+      $('#item_extra_values_default_template_id').html('<option value="">更新中...</option>');
       $.get('<%= gp_template_templates_path(content: 'CONTENT_ID') %>?check_boxes=true'.replace('CONTENT_ID', content_id), function (data) {
         $('#templates').html(data);
       });
       $.get('<%= gp_template_templates_path(content: 'CONTENT_ID') %>?options=true'.replace('CONTENT_ID', content_id), function (data) {
-        $('#default_template_id').html(data);
+        $('#item_extra_values_default_template_id').html(data);
       });
     }
   });
