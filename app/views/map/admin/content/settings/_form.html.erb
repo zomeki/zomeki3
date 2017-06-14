@@ -3,9 +3,20 @@
 <%- if @item.name == 'gp_category_content_category_type_id' -%>
 <table class="show" id="categories">
   <tbody>
-    <%= render 'category', category: nil, index: nil -%>
-    <%- @item.categories.each_with_index do |category, index| -%>
-    <%= render 'category', category: category, index: index -%>
+    <%- content = GpCategory::Content::CategoryType.find_by(id: @item.value) -%>
+    <%- (@item.categories.presence || [nil]).each_with_index do |category, index| -%>
+      <%-
+        category_types_for_option = content ? content.category_types_for_option : []
+        category_type_id = category.try(:category_type_id)
+        categories_for_option = category ? category.category_type.root_categories_for_option : []
+        category_id = category.try(:id)
+      -%>
+      <tr class="category">
+        <th><%= GpCategory::CategoryType.model_name.human %></th>
+        <td class="category_type"><%= select_tag nil, options_for_select(category_types_for_option, category_type_id), include_blank: true %></td>
+        <th><%= GpCategory::Category.model_name.human %></th>
+        <td class="category"><%= select_tag "item[extra_values][category_ids][#{index}]", options_for_select(categories_for_option, category_id), include_blank: true %></td>
+      </tr>
     <%- end -%>
     <tr>
       <td colspan="3">&nbsp;</td>
@@ -16,9 +27,39 @@
 
 <%= javascript_tag do -%>
 $(document).ready(function () {
+  function updateCategoryTypeSelection(category_tr) {
+    var category_type_select = category_tr.find('td.category_type > select');
+    var category_select = category_tr.find('td.category > select');
+    var content_id = parseInt($('#item_value').val());
+
+    if (isNaN(content_id)) {
+      category_type_select.html('<option value=""></option>');
+      category_select.html('<option value=""></option>');
+    } else {
+      category_type_select.html('<option value="">更新中...</option>');
+      category_select.html('<option value=""></option>');
+      $.get('<%= gp_category_category_types_path(content: 'CONTENT_ID') %>?options=true'.replace('CONTENT_ID', content_id),
+            function (data) { category_type_select.html(data); });
+    }
+  }
+
   $('#item_value').on('change', function (event) {
-    $('#categories > tbody > tr.category').remove();
-    $('#add_categories_line').trigger('click');
+    $('#categories > tbody > tr:not(:first-child):not(:last-child)').remove();
+    var category_tr = $('#categories > tbody > tr:first-child');
+    updateCategoryTypeSelection(category_tr);
+  });
+
+  $('#add_categories_line').on('click', function () {
+    var categories_tbody = $('#categories > tbody');
+    var next_index = categories_tbody.find('tr').length - 1; <%# 追加ボタン(1tr) = 1tr %>
+
+    var category_tr = categories_tbody.find('tr:first-child').clone(true).addClass('category');
+    var category_select = category_tr.find('td.category > select');
+    category_select.attr('id', category_select.attr('id').replace('0', next_index));
+    category_select.attr('name', category_select.attr('name').replace('0', next_index));
+    category_tr.insertBefore(categories_tbody.find('tr:last-child'));
+
+    updateCategoryTypeSelection(category_tr);
   });
 
   $('#categories > tbody > tr > td.category_type > select').on('change', function (event) {
@@ -41,30 +82,6 @@ $(document).ready(function () {
       }
     }
   });
-
-  $('#add_categories_line').on('click', function () {
-    var categories_tbody = $('#categories > tbody');
-    var next_index = categories_tbody.find('tr').length - 2; <%# コピー元(1tr) + 追加ボタン(1tr) = 2tr %>
-
-    var category_tr = categories_tbody.find('tr:first-child').clone(true).addClass('category');
-    var category_select = category_tr.find('td.category > select');
-    category_select.attr('name', category_select.attr('name').replace('N', next_index));
-    category_tr.find(':disabled').removeAttr('disabled');
-    category_tr.insertBefore(categories_tbody.find('tr:last-child')).show();
-
-    var content_id = parseInt($('#item_value').val());
-    var category_type_select = category_tr.find('td.category_type > select');
-    if (isNaN(content_id)) {
-      category_type_select.html('<option value=""></option>');
-      category_select.html('<option value=""></option>');
-    } else {
-      category_type_select.html('<option value="">更新中...</option>');
-      category_select.html('<option value=""></option>');
-      $.get('<%= gp_category_category_types_path(content: 'CONTENT_ID') %>?options=true'
-            .replace('CONTENT_ID', content_id),
-            function (data) { category_type_select.html(data); });
-    }
-  }).trigger('click');
 });
 <%- end -%>
 <%- end -%>

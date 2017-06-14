@@ -30,10 +30,10 @@ class Reception::Content::Setting < Cms::ContentSetting
     ex = extra_values
     case name
     when 'gp_category_content_category_type_id'
-      ex[:category_type_ids] = Array(params[:category_types]).map(&:to_i)
-      ex[:visible_category_type_ids] = Array(params[:visible_category_types]).map(&:to_i)
-      ex[:default_category_type_id] = params[:default_category_type].to_i
-      ex[:default_category_id] = params[:default_category].to_i
+      ex[:category_type_ids] = Array(params[:category_type_ids]).map(&:to_i)
+      ex[:visible_category_type_ids] = Array(params[:visible_category_type_ids]).map(&:to_i)
+      ex[:default_category_type_id] = params[:default_category_type_id].to_i
+      ex[:default_category_id] = params[:default_category_id].to_i
     when 'auto_reply'
       ex[:applied_upper_reply_text] = params[:applied_upper_reply_text]
       ex[:applied_lower_reply_text] = params[:applied_lower_reply_text]

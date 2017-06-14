@@ -35,7 +35,7 @@ class GpCalendar::Content::Setting < Cms::ContentSetting
     ex = extra_values
     case name
     when 'gp_category_content_category_type_id'
-      ex[:category_type_ids] = params[:category_types].map(&:to_i).uniq
+      ex[:category_type_ids] = params[:category_type_ids].to_a.map(&:to_i).uniq
     end
     super(ex)
   end

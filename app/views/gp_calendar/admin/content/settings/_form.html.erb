@@ -31,7 +31,8 @@ $(function() {
     <td id="category_types">
       <%- category_types.each do |ct| -%>
       <span class="category_type">
-        <%= check_box_tag "ct_#{ct.id}", ct.id, ct_ids.include?(ct.id), name: 'item[extra_values][category_types][]' -%> <%= label_tag "ct_#{ct.id}", "#{ct.title}(#{ct.name})" -%>
+        <%= check_box_tag "ct_#{ct.id}", ct.id, ct_ids.include?(ct.id), name: 'item[extra_values][category_type_ids][]' -%>
+        <%= label_tag "ct_#{ct.id}", "#{ct.title}(#{ct.name})" -%>
       </span>
       <%- end -%>
     </td>
@@ -48,14 +49,10 @@ $(document).ready(function () {
       $('#category_types').html('更新中...');
       $.get('<%= gp_category_category_types_path(content: 'CONTENT_ID') %>?check_boxes=true'.replace('CONTENT_ID', content_id), function (data) {
         $('#category_types').html(
-          data.replace(/category_types\[\]/g, 'item[extra_values][category_types][]')
+          data.replace(/category_types\[\]/g, 'item[extra_values][category_type_ids][]')
         );
       });
     }
-  });
-
-  $('#category_types input[type="checkbox"]').on('click', function (event) {
-    if (!event.target.checked) { $('#' + event.target.id.replace('ct_', 'vct_')).removeAttr('checked'); }
   });
 });
 <%- end -%>

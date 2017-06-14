@@ -192,10 +192,10 @@ class GpArticle::Content::Setting < Cms::ContentSetting
     ex = extra_values
     case name
     when 'gp_category_content_category_type_id'
-      ex[:category_type_ids] = (params[:category_types] || []).map {|ct| ct.to_i }
-      ex[:visible_category_type_ids] = (params[:visible_category_types] || []).map {|ct| ct.to_i }
-      ex[:default_category_type_id] = params[:default_category_type].to_i
-      ex[:default_category_id] = params[:default_category].to_i
+      ex[:category_type_ids] = params[:category_type_ids].to_a.map(&:to_i)
+      ex[:visible_category_type_ids] = params[:visible_category_type_ids].to_a.map(&:to_i)
+      ex[:default_category_type_id] = params[:default_category_type_id].to_i
+      ex[:default_category_id] = params[:default_category_id].to_i
     when 'basic_setting'
       ex[:default_layout_id] = params[:default_layout_id].to_i
     when 'calendar_relation'
