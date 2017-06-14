@@ -4,13 +4,20 @@ class Rank::Content::Setting < Cms::ContentSetting
     comment: '例：UA-33912981-1'
   set_config :show_count,
     name: 'アクセス数の表示',
-    options: [['表示する', 1], ['表示しない', 0]]
+    options: [['表示する', 1], ['表示しない', 0]],
+    default_value: '1'
   set_config :exclusion_url,
     name: '除外URL',
     form_type: :text,
     lower_text: 'スペースまたは改行で複数指定できます。'
   set_config :google_oauth,
-    name: 'Google OAuth'
+    name: 'Google OAuth',
+    default_extra_values: {
+      client_id: nil,
+      client_secret: nil,
+      auth_code: nil,
+      auth_url: nil
+    }
 
   belongs_to :content, foreign_key: :content_id, class_name: 'Rank::Content::Rank'
 
