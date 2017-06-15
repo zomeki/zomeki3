@@ -1,6 +1,7 @@
 class Tag::Tag < ApplicationRecord
   include Sys::Model::Base
   include Cms::Model::Base::Page::Publisher
+  include Cms::Model::Base::Page::TalkTask
 
   # Content
   belongs_to :content, :foreign_key => :content_id, :class_name => 'Tag::Content::Tag'

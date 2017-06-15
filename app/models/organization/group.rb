@@ -3,6 +3,7 @@ class Organization::Group < ApplicationRecord
   include Cms::Model::Base::Sitemap
   include Sys::Model::Rel::Creator
   include Cms::Model::Base::Page::Publisher
+  include Cms::Model::Base::Page::TalkTask
 
   include Cms::Model::Auth::Content
 
