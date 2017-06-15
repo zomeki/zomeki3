@@ -49,7 +49,6 @@ class GpCategory::CategoryType < ApplicationRecord
 
   scope :public_state, -> { where(state: 'public') }
 
-  after_save :clean_published_files
   after_destroy :clean_published_files
 
   def root_categories_for_option

@@ -61,7 +61,6 @@ class GpCategory::Category < ApplicationRecord
   scope :public_state, -> { where(state: 'public') }
 
   after_update :move_published_files
-  after_update :clean_published_files
   after_destroy :clean_published_files
 
   def content
