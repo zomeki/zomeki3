@@ -70,7 +70,7 @@ module Sys::Model::Rel::File
     end
   end
 
-  concerning :Publication do
+  module Publication
     def public_files_path
       return '' if (path = public_path).blank?
       ::File.join(path.end_with?('/') ? path : File.dirname(path), "file_contents")
@@ -89,11 +89,12 @@ module Sys::Model::Rel::File
 
     def publish_smart_phone_files
       path = public_smart_phone_files_path
-      publish_files_to(path) if path.present?
+      publish_files_to(path, dependent: :smart_phone) if path.present?
       return true
     end
 
     def close_files
+      files.each { |file| file.publishers.destroy_all }
       paths = [public_files_path, public_smart_phone_files_path].select(&:present?)
       paths.each { |path| FileUtils.rm_r(path) if FileTest.exist?(path) }
       return true
@@ -101,25 +102,28 @@ module Sys::Model::Rel::File
 
     private
 
-    def publish_files_to(path)
+    def publish_files_to(public_dir, options = {})
       return true if Zomeki.config.application['sys.clean_statics']
-      return true if files.empty?
-
-      public_dir = path
-      FileUtils.mkdir_p(public_dir) unless FileTest.exist?(public_dir)
 
       files.each do |file|
-        paths = {
-          file.upload_path               => ::File.join(public_dir, file.name),
-          file.upload_path(type: :thumb) => ::File.join(public_dir, 'thumb', file.name)
-        }
-        paths.each do |fr, to|
-          next unless FileTest.exists?(fr)
-          next if FileTest.exists?(to) && ( ::File.mtime(to) >= ::File.mtime(fr) )
-          FileUtils.mkdir_p(::File.dirname(to)) unless FileTest.exists?(::File.dirname(to))
-          FileUtils.cp(fr, to)
+        paths = [
+          [
+            file.upload_path,
+            ::File.join(public_dir, file.name),
+            options[:dependent]
+          ],[
+            file.upload_path(type: :thumb),
+            ::File.join(public_dir, 'thumb', file.name),
+            ['thumb', options[:dependent]].compact.join('_')
+          ]
+        ]
+        paths.each do |src, dst, dep|
+          next unless FileTest.exists?(src)
+          pub = file.publishers.where(dependent: dep).first_or_initialize
+          pub.publish_file_with_digest(src, dst)
         end
       end
     end
   end
+  include Publication
 end
