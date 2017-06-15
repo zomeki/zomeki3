@@ -53,6 +53,14 @@ class GpArticle::Content::Setting < Cms::ContentSetting
     name: "本文/単語変換辞書",
     form_type: :text,
     lower_text: "CSV形式（例　対象文字,変換後文字 ）"
+  set_config :map_setting, menu: :form,
+    name: '地図設定',
+    form_type: :radio_buttons,
+    options: [['使用する', 'enabled'], ['使用しない', 'disabled']],
+    default_value: 'enabled',
+    default_extra_values: {
+      lat_lng: ''
+    }
 
   # menu: :index
   set_config :pagination_label, menu: :index,
@@ -172,17 +180,16 @@ class GpArticle::Content::Setting < Cms::ContentSetting
     name: '地図',
     form_type: :radio_buttons,
     options: [['使用する', 'enabled'], ['使用しない', 'disabled']],
-    default_value: 'enabled',
+    default_value: 'disabled',
     default_extra_values: {
       map_content_id: nil,
-      lat_lng: '',
       marker_icon_category: 'disabled'
     }
   set_config :tag_relation, menu: :relation,
     name: '関連ワード',
     form_type: :radio_buttons,
     options: [['使用する', 'enabled'], ['使用しない', 'disabled']],
-    default_value: 'enabled',
+    default_value: 'disabled',
     default_extra_values: {
       tag_content_tag_id: nil
     }
@@ -190,7 +197,7 @@ class GpArticle::Content::Setting < Cms::ContentSetting
     name: '承認フロー',
     form_type: :radio_buttons,
     options: [['使用する', 'enabled'], ['使用しない', 'disabled']],
-    default_value: 'enabled',
+    default_value: 'disabled',
     default_extra_values: {
       approval_content_id: nil
     }
@@ -198,7 +205,7 @@ class GpArticle::Content::Setting < Cms::ContentSetting
     name: 'カレンダー',
     form_type: :radio_buttons,
     options: [['使用する', 'enabled'], ['使用しない', 'disabled']],
-    default_value: 'enabled',
+    default_value: 'disabled',
     default_extra_values: {
       calendar_content_id: nil
     }
@@ -243,8 +250,9 @@ class GpArticle::Content::Setting < Cms::ContentSetting
       ex[:calendar_content_id] = params[:calendar_content_id].to_i
     when 'map_relation'
       ex[:map_content_id] = params[:map_content_id].to_i
-      ex[:lat_lng] = params[:lat_lng]
       ex[:marker_icon_category] = params[:marker_icon_category]
+    when 'map_setting'
+      ex[:lat_lng] = params[:lat_lng]
     when 'inquiry_setting'
       ex[:state] = params[:state]
       ex[:display_fields] = params[:display_fields] || []

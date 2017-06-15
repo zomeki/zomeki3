@@ -114,15 +114,20 @@ $(document).ready(function () {
                        options_from_collection_for_select(Map::Content::Marker.where(site_id: Core.site.id), :id, :name, @item.extra_values[:map_content_id]), include_blank: true %></td>
   </tr>
   <tr>
-    <th>デフォルト座標</th>
-    <td><%= text_field_tag 'item[extra_values][lat_lng]', @item.extra_values[:lat_lng], style: 'width: 400px;' %>（緯度,経度）</td>
-  </tr>
-  <tr>
     <th>マーカーアイコン用カテゴリ</th>
     <td>
       <%= radio_button_tag 'item[extra_values][marker_icon_category]', 'enabled', @item.extra_values[:marker_icon_category] == 'enabled' %><%= label_tag 'item_extra_values_marker_icon_category_enabled', '使用する' %>
       <%= radio_button_tag 'item[extra_values][marker_icon_category]', 'disabled', @item.extra_values[:marker_icon_category] != 'enabled' %><%= label_tag 'item_extra_values_marker_icon_category_disabled', '使用しない' %>
     </td>
+  </tr>
+</table>
+<%- end -%>
+
+<%- if @item.name == 'map_setting' -%>
+<table class="show">
+  <tr>
+    <th>デフォルト座標</th>
+    <td><%= text_field_tag 'item[extra_values][lat_lng]', @item.extra_values[:lat_lng], style: 'width: 400px;' %>（緯度,経度）</td>
   </tr>
 </table>
 <%- end -%>
