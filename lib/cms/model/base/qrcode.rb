@@ -44,7 +44,6 @@ module Cms::Model::Base::Qrcode
     end
 
     def publish_qrcode_to(path, options = {})
-      return true if Zomeki.config.application['sys.clean_statics']
       return true unless qrcode_visible?
   
       qrcode = Util::Qrcode.create(public_full_uri)

@@ -5,13 +5,13 @@ sys:
   # 承認者候補に他所属の管理者を表示
   recognizers_include_admin: false
 
-  # 静的ファイルの書き出しを無効化
-  clean_statics: false
-
   # ファイルからのテキスト抽出
   file_text_extraction: false
 
 cms:
+  # 静的ファイルの書き出し
+  file_publisher: true
+
   # ファイル転送機能
   file_transfer: false
 

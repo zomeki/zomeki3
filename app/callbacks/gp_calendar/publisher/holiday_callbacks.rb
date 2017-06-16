@@ -1,25 +1,12 @@
 class GpCalendar::Publisher::HolidayCallbacks < PublisherCallbacks
-  def after_save(holiday)
+  def enqueue(holiday)
     @holiday = holiday
-    enqueue if enqueue?
-  end
-
-  def before_destroy(holiday)
-    @holiday = holiday
-    enqueue if enqueue?
-  end
-
-  def enqueue(holiday = nil)
-    @holiday = holiday if holiday
+    return unless enqueue?
     enqueue_nodes
     enqueue_pieces
   end
 
   private
-
-  def enqueue?
-    true
-  end
 
   def enqueue_nodes
     Cms::Publisher.register(@holiday.content.site_id, @holiday.content.public_nodes)

@@ -11,11 +11,7 @@ class Cms::TalkTask < ApplicationRecord
   validates :path, presence: true
 
   def exec
-    if Zomeki.config.application['sys.clean_statics']
-      close_talk_file
-    else
-      publish_talk_file
-    end
+    publish_talk_file
   end
 
   private

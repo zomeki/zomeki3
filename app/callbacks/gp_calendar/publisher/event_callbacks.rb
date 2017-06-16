@@ -1,25 +1,12 @@
 class GpCalendar::Publisher::EventCallbacks < PublisherCallbacks
-  def after_save(event)
-    @event = event
-    enqueue if enqueue?
-  end
-
-  def before_destroy(event)
-    @event = event
-    enqueue if enqueue?
-  end
-
-  def enqueue(event = nil)
+  def enqueue(event)
     @event = event if event
+    return unless enqueue?
     enqueue_nodes
     enqueue_pieces
   end
 
   private
-
-  def enqueue?
-    true
-  end
 
   def enqueue_nodes
     changed_dates = [@event.started_on, @event.started_on_was, @event.ended_on, @event.ended_on_was].compact.uniq

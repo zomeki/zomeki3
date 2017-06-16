@@ -1,24 +1,11 @@
 class GpCategory::Publisher::TemplateModuleCallbacks < PublisherCallbacks
-  def after_save(_module)
+  def enqueue(_module)
     @module = _module
-    enqueue if enqueue?
-  end
-
-  def before_destroy(_module)
-    @module = _module
-    enqueue if enqueue?
-  end
-
-  def enqueue(_module = nil)
-    @module = _module if _module
+    return unless enqueue?
     enqueue_templates
   end
 
   private
-
-  def enqueue?
-    true
-  end
 
   def enqueue_templates
     names = [@module.name, @module.name_was].uniq.select(&:present?)

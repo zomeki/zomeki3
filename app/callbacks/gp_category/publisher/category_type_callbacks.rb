@@ -1,16 +1,7 @@
 class GpCategory::Publisher::CategoryTypeCallbacks < PublisherCallbacks
-  def after_save(category_type)
+  def enqueue(category_type)
     @category_type = category_type
-    enqueue if enqueue?
-  end
-
-  def before_destroy(category_type)
-    @category_type = category_type
-    enqueue if enqueue?
-  end
-
-  def enqueue(category_type = nil)
-    @category_type = category_type if category_type
+    return unless enqueue?
     enqueue_pieces
     enqueue_categories
     enqueue_docs
@@ -20,6 +11,7 @@ class GpCategory::Publisher::CategoryTypeCallbacks < PublisherCallbacks
   private
 
   def enqueue?
+    return unless super
     [@category_type.state, @category_type.state_was].include?('public')
   end
 

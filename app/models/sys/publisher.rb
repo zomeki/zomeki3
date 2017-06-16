@@ -18,6 +18,7 @@ class Sys::Publisher < ApplicationRecord
   end
 
   def publish_with_digest(content, path)
+    return false if Zomeki.config.application['cms.file_publisher'] == false
     return false if content.nil?
     return false if path.blank?
 
@@ -29,25 +30,17 @@ class Sys::Publisher < ApplicationRecord
       self.content_hash = hash
       self.save if changed?
 
-clean_statics = Zomeki.config.application['sys.clean_statics']
-if clean_statics
-      if File.exist?(path)
-        File.delete(path)
-        info_log "DELETED: #{path}"
-      end
-else
       if ::File.exist?(path) && ::File.new(path).read == content
         #FileUtils.touch([path])
       else
         Util::File.put(path, data: content, mkdir: true)
       end
-end
     end
-
     return true
   end
 
   def publish_file_with_digest(src, dst)
+    return false if Zomeki.config.application['cms.file_publisher'] == false
     return false unless FileTest.exists?(src)
     return false if dst.blank?
 
@@ -67,7 +60,6 @@ end
         FileUtils.cp(src, dst)
       end
     end
-
     return true
   end
 

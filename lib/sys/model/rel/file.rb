@@ -103,8 +103,6 @@ module Sys::Model::Rel::File
     private
 
     def publish_files_to(public_dir, options = {})
-      return true if Zomeki.config.application['sys.clean_statics']
-
       files.each do |file|
         paths = [
           [

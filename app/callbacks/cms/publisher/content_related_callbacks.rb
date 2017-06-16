@@ -1,16 +1,7 @@
 class Cms::Publisher::ContentRelatedCallbacks < PublisherCallbacks
-  def after_save(item)
+  def enqueue(item)
     @item = item
-    enqueue if enqueue?
-  end
-
-  def before_destroy(item)
-    @item = item
-    enqueue if enqueue?
-  end
-
-  def enqueue(item = nil)
-    @item = item if item
+    return unless enqueue?
     enqueue_nodes
     enqueue_pieces
     enqueue_sitemap_nodes
@@ -19,6 +10,7 @@ class Cms::Publisher::ContentRelatedCallbacks < PublisherCallbacks
   private
 
   def enqueue?
+    return unless super
     !@item.respond_to?(:state) || [@item.state, @item.state_was].include?('public')
   end
 

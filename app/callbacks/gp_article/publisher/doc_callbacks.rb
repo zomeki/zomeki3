@@ -1,16 +1,7 @@
 class GpArticle::Publisher::DocCallbacks < PublisherCallbacks
-  def after_save(doc)
+  def enqueue(doc)
     @doc = doc
-    enqueue if enqueue?
-  end
-
-  def before_destroy(doc)
-    @doc = doc
-    enqueue if enqueue?
-  end
-
-  def enqueue(doc = nil)
-    @doc = doc if doc
+    return unless enqueue?
     enqueue_pieces
     enqueue_nodes
     enqueue_organizations
@@ -23,6 +14,7 @@ class GpArticle::Publisher::DocCallbacks < PublisherCallbacks
   private
 
   def enqueue?
+    return unless super
     @doc.name.present? && @doc.state.in?(%w(public finish))
   end
 

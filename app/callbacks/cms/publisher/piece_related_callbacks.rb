@@ -1,26 +1,18 @@
 class Cms::Publisher::PieceRelatedCallbacks < PublisherCallbacks
-  def after_save(item)
+  def enqueue(item)
     @item = item
-    enqueue if enqueue?
-  end
-
-  def before_destroy(item)
-    @item = item
-    enqueue if enqueue?
-  end
-
-  def enqueue(item = nil)
-    @item = item if item
+    return unless enqueue?
     enqueue_pieces
   end
 
   private
 
   def enqueue?
-    true
+    return unless super
+    @item.piece.state == 'public'
   end
 
   def enqueue_pieces
-    Cms::Publisher::PieceCallbacks.new.enqueue(@item.piece) if @item.piece.state == 'public'
+    Cms::Publisher::PieceCallbacks.new.enqueue(@item.piece)
   end
 end

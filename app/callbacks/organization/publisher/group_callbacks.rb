@@ -1,16 +1,7 @@
 class Organization::Publisher::GroupCallbacks < PublisherCallbacks
-  def after_save(group)
+  def enqueue(group)
     @group = group
-    enqueue if enqueue?
-  end
-
-  def before_destroy(group)
-    @group = group
-    enqueue if enqueue?
-  end
-
-  def enqueue(group = nil)
-    @group = group if group
+    return unless enqueue?
     enqueue_groups
     enqueue_sitemap_nodes
   end
@@ -18,6 +9,7 @@ class Organization::Publisher::GroupCallbacks < PublisherCallbacks
   private
 
   def enqueue?
+    return unless super
     [@group.state, @group.state_was].include?('public')
   end
 
