@@ -1,9 +1,10 @@
 class Organization::Group < ApplicationRecord
   include Sys::Model::Base
-  include Cms::Model::Base::Sitemap
   include Sys::Model::Rel::Creator
   include Cms::Model::Base::Page::Publisher
   include Cms::Model::Base::Page::TalkTask
+  include Cms::Model::Base::ContentDelegation
+  include Cms::Model::Base::Sitemap
 
   include Cms::Model::Auth::Content
 

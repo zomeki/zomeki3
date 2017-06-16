@@ -5,7 +5,6 @@ class GpCategory::Publisher::CategoryTypeCallbacks < PublisherCallbacks
     enqueue_pieces
     enqueue_categories
     enqueue_docs
-    enqueue_sitemap_nodes
   end
 
   private
@@ -30,12 +29,5 @@ class GpCategory::Publisher::CategoryTypeCallbacks < PublisherCallbacks
     category_ids = @category_type.public_categories.pluck(:id)
     docs = GpArticle::Doc.public_state.categorized_into(category_ids).select(:id)
     Cms::Publisher.register(@category_type.content.site_id, docs)
-  end
-
-  def enqueue_sitemap_nodes
-    if [@category_type.sitemap_state, @category_type.sitemap_state_was].include?('visible')
-      site = @category_type.content.site
-      Cms::Publisher.register(site.id, site.public_sitemap_nodes)
-    end
   end
 end

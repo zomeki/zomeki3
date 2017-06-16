@@ -67,6 +67,14 @@ class GpCategory::Category < ApplicationRecord
     category_type.content
   end
 
+  def site
+    content.site
+  end
+
+  def site_id
+    content.site_id
+  end
+
   def descendants(categories=[])
     categories << self
     children.each {|c| c.descendants(categories) }

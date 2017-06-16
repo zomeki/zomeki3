@@ -5,6 +5,7 @@ class GpCategory::CategoryType < ApplicationRecord
   include Cms::Model::Base::Page
   include Cms::Model::Base::Page::Publisher
   include Cms::Model::Base::Page::TalkTask
+  include Cms::Model::Base::ContentDelegation
   include Cms::Model::Base::Sitemap
 
   include StateText

@@ -4,7 +4,6 @@ class Cms::Publisher::ContentRelatedCallbacks < PublisherCallbacks
     return unless enqueue?
     enqueue_nodes
     enqueue_pieces
-    enqueue_sitemap_nodes
   end
 
   private
@@ -21,15 +20,6 @@ class Cms::Publisher::ContentRelatedCallbacks < PublisherCallbacks
   def enqueue_pieces
     @item.content.public_pieces.each do |piece|
       Cms::Publisher::PieceCallbacks.new.enqueue(piece)
-    end
-  end
-
-  def enqueue_sitemap_nodes
-    return unless @item.respond_to?(:sitemap_state)
-
-    if [@item.sitemap_state, @item.sitemap_state_was].include?('visible')
-      site = @item.content.site
-      Cms::Publisher.register(site.id, site.public_sitemap_nodes)
     end
   end
 end
