@@ -51,7 +51,7 @@ module Cms::Model::Base::Qrcode
       return true unless qrcode
   
       dep = ['qrcode', options[:dependent]].compact.join('_')
-      pub = publishers.where(dependent: dep).first_or_initialize
+      pub = Sys::Publisher.where(publishable: self, dependent: dep).first_or_initialize
       pub.publish_with_digest(qrcode, path)
     end
   end

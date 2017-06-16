@@ -119,7 +119,7 @@ module Sys::Model::Rel::File
         ]
         paths.each do |src, dst, dep|
           next unless FileTest.exists?(src)
-          pub = file.publishers.where(dependent: dep).first_or_initialize
+          pub = Sys::Publisher.where(publishable: file, dependent: dep).first_or_initialize
           pub.publish_file_with_digest(src, dst)
         end
       end

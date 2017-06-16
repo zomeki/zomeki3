@@ -33,7 +33,7 @@ class Cms::TalkTask < ApplicationRecord
     return false if ::File.stat(mp3[:path]).size == 0
 
     run_callbacks :publish_files do
-      pub = talk_processable.publishers.where(dependent: "#{publisher.dependent}/talk").first_or_initialize
+      pub = Sys::Publisher.where(publishable: talk_processable, dependent: "#{publisher.dependent}/talk").first_or_initialize
       pub.publish_file_with_digest(mp3[:path], public_talk_file_path)
       ::File.delete(mp3[:path])
     end
