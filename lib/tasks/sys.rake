@@ -30,6 +30,27 @@ namespace :zomeki do
     end
 
     namespace :publishers do
+      desc 'Clean publishers'
+      task :clean => :environment do
+        item = Sys::Publisher
+        item = item.in_site(Cms::Site.find(ENV['SITE_ID'])) if ENV['SITE_ID']
+        item.destroy_all
+      end
+
+      desc 'Clean ruby publishers'
+      task :clean_rubies => :environment do
+        item = Sys::Publisher
+        item = item.in_site(Cms::Site.find(ENV['SITE_ID'])) if ENV['SITE_ID']
+        item.with_ruby_dependent.destroy_all
+      end
+
+      desc 'Clean talk publishers'
+      task :clean_talks => :environment do
+        item = Sys::Publisher
+        item = item.in_site(Cms::Site.find(ENV['SITE_ID'])) if ENV['SITE_ID']
+        item.with_talk_dependent.destroy_all
+      end
+
       desc 'Rebuild publishers'
       task :rebuild => :environment do
         Cms::Site.order(:id).each do |site|

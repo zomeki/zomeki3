@@ -8,6 +8,15 @@ class Sys::Publisher < ApplicationRecord
   before_destroy :remove_files
 
   scope :in_site, ->(site) { where(arel_table[:path].matches("./sites/#{format('%04d', site.id)}%")) }
+  scope :with_ruby_dependent, -> {
+    where(arel_table[:dependent].matches('%ruby')).where(arel_table[:path].matches('%.html.r'))
+  }
+  scope :with_talk_dependent, -> {
+    where(arel_table[:dependent].matches('%talk')).where(arel_table[:path].matches('%.html.mp3'))
+  }
+  scope :with_smartphone_dependent, -> {
+    where(arel_table[:dependent].matches('%smart_phone')).where(arel_table[:path].matches('%/public/_smartphone/%'))
+  }
 
   def site_id
     path.scan(%r{^./sites/(\d+)}).dig(0, 0).try!(:to_i)
