@@ -49,7 +49,7 @@ class GpCalendar::Public::EventFormatService < FormatService
             concat content_tag(:td, t[:data].html_safe, class: class_str)
           end
         else
-          class_str = t[:data].delete("@")
+          class_str = t[:data].scan(/@(\w+)@/).flatten.join(' ')
           concat content_tag(:td, t[:data].html_safe, class: class_str)
         end
       end
