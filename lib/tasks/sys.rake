@@ -33,15 +33,18 @@ namespace :zomeki do
       desc 'Rebuild publishers'
       task :rebuild => :environment do
         Cms::Site.order(:id).each do |site|
+          Sys::Publisher.in_site(site).delete_all
+          node_ids = Cms::Node.public_state.rebuildable_models
+                              .where(site_id: site.id)
+                              .pluck(:id)
+          Cms::RebuildJob.perform_later(site_id: site.id, target_node_ids: node_ids)
           content_ids = Cms::Content.distinct.rebuildable_models.joins(:nodes)
                                     .where(site_id: site.id)
                                     .where(Cms::Node.arel_table[:state].eq('public'))
                                     .pluck(:id)
-          node_ids = Cms::Node.public_state.rebuildable_models
-                              .where(site_id: site.id)
-                              .pluck(:id)
-          Sys::Publisher.in_site(site).delete_all
-          Cms::RebuildJob.perform_now(site_id: site.id, target_content_ids: content_ids, target_node_ids: node_ids)
+          content_ids.each do |content_id|
+            Cms::RebuildJob.perform_later(site_id: site.id, target_content_ids: [content_id])
+          end 
         end
       end
     end
