@@ -19,8 +19,8 @@ class Reception::Course < ApplicationRecord
   before_save :set_defaults
   after_save :set_name
 
-  after_save     Cms::Publisher::ContentRelatedCallbacks.new, if: :changed?
-  before_destroy Cms::Publisher::ContentRelatedCallbacks.new
+  after_save     Cms::Publisher::ContentCallbacks.new(belonged: true), if: :changed?
+  before_destroy Cms::Publisher::ContentCallbacks.new(belonged: true)
 
   validates :title, presence: true
   validates :name, exclusion: { in: %w(categories) }
