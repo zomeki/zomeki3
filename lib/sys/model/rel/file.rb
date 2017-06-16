@@ -6,7 +6,7 @@ module Sys::Model::Rel::File
 
   included do
     has_many :files, class_name: 'Sys::File', dependent: :destroy, as: :file_attachable
-    before_save :make_file_path_relative, if: -> { in_tmp_id.present? }
+    before_save :make_file_path_relative
     before_save :fix_file_name, if: -> { in_file_names.present? }
     after_create :fix_tmp_files, if: -> { in_tmp_id.present? }
   end
