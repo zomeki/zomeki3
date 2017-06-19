@@ -21,7 +21,7 @@ class Sys::Admin::StorageFilesController < Cms::Controller::Admin::Base
     path = ::File.join(site_path, params[:path].to_s)
 
     @item = Sys::Storage::Entry.from_path(path)
-    return http_error(404) unless @item.exists?
+    return http_error(404) if @item.nil? || !@item.exists?
     return error_auth unless @item.readable?
 
     @parent = @item.parent
