@@ -89,16 +89,10 @@ class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
     return http_error(404) unless @doc
     return http_error(404) unless @doc.qrcode_visible?
 
-    if ::Storage.exists?(@doc.qrcode_path)
-      send_file @doc.qrcode_path, filename: 'qrcode.png'
-    else
-      qrcode = Util::Qrcode.create_date(@doc.public_full_uri, @doc.qrcode_path)
-      if qrcode
-        send_data qrcode, filename: 'qrcode.png'
-      else
-        http_error(404)
-      end
-    end
+    qrcode = Util::Qrcode.create(@doc.public_full_uri)
+    return http_error(404) unless qrcode
+
+    send_data qrcode, filename: 'qrcode.png'
   end
 
   private

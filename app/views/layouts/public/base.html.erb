@@ -4,9 +4,6 @@
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title><%= Page.window_title %></title>
-  <%- if Page.current_node.content.class.in?([Survey::Content::Form]) -%>
-  <%= csrf_meta_tags %>
-  <%- end -%>
   <%= Page.layout.head_tag(request) %>
   <%- if Page.current_item.try(:respond_to?, :meta_description) && (meta_description = Page.current_item.meta_description).present? -%>
   <meta name="description" content="<%= meta_description.gsub(/(\r\n|\r|\n)/, ' ') %>" />

@@ -30,6 +30,7 @@ namespace :zomeki do
     namespace :nodes do
       desc 'Publish nodes'
       task :publish => :environment do
+        next if Zomeki.config.application['cms.file_publisher'] == false
         Cms::Site.order(:id).pluck(:id).each do |site_id|
           Script.run('cms/nodes/publish', site_id: site_id, lock_by: :site)
         end
@@ -39,6 +40,7 @@ namespace :zomeki do
     namespace :talks do
       desc 'Exec talk tasks'
       task :exec => :environment do
+        next if Zomeki.config.application['cms.file_publisher'] == false
         Cms::Site.order(:id).pluck(:id).each do |site_id|
           Script.run('cms/talk_tasks/exec', site_id: site_id, lock_by: :global)
         end

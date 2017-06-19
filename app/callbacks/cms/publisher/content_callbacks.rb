@@ -1,16 +1,12 @@
 class Cms::Publisher::ContentCallbacks < PublisherCallbacks
-  def after_save(item)
-    @item = item
-    enqueue if enqueue?
+  def initialize(belonged: false)
+    @belonged = belonged
   end
 
-  def before_destroy(item)
+  def enqueue(item)
     @item = item
-    enqueue if enqueue?
-  end
-
-  def enqueue(item = nil)
-    @item = item if item
+    @content = @belonged ? @item.content : @item
+    return unless enqueue?
     enqueue_nodes
     enqueue_pieces
   end
@@ -18,15 +14,16 @@ class Cms::Publisher::ContentCallbacks < PublisherCallbacks
   private
 
   def enqueue?
-    true
+    return unless super
+    [@item.state, @item.state_was].include?('public')
   end
 
   def enqueue_nodes
-    Cms::Publisher.register(@item.site_id, @item.public_nodes)
+    Cms::Publisher.register(@content.site_id, @content.public_nodes)
   end
 
   def enqueue_pieces
-    @item.public_pieces.each do |piece|
+    @content.public_pieces.each do |piece|
       Cms::Publisher::PieceCallbacks.new.enqueue(piece)
     end
   end

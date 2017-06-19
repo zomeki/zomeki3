@@ -1,25 +1,12 @@
 class GpCategory::Publisher::TemplateCallbacks < PublisherCallbacks
-  def after_save(template)
+  def enqueue(template)
     @template = template
-    enqueue if enqueue?
-  end
-
-  def before_destroy(template)
-    @template = template
-    enqueue if enqueue?
-  end
-
-  def enqueue(template = nil)
-    @template = template if template
+    return unless enqueue?
     enqueue_category_types
     enqueue_categories
   end
 
   private
-
-  def enqueue?
-    true
-  end
 
   def enqueue_category_types
     categories = @template.public_category_types.flat_map(&:public_categories)

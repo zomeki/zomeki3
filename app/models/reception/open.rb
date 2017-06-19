@@ -13,8 +13,8 @@ class Reception::Open < ApplicationRecord
 
   before_save :prepare_expire_task
 
-  after_save     Cms::Publisher::ContentRelatedCallbacks.new, if: :changed?
-  before_destroy Cms::Publisher::ContentRelatedCallbacks.new
+  after_save     Cms::Publisher::ContentCallbacks.new(belonged: true), if: :changed?
+  before_destroy Cms::Publisher::ContentCallbacks.new(belonged: true)
 
   validates :title, presence: true
   validates :open_on, presence: true
@@ -94,7 +94,7 @@ class Reception::Open < ApplicationRecord
   end
 
   def expire
-    Cms::Publisher::ContentRelatedCallbacks.new.enqueue(self)
+    Cms::Publisher::ContentCallbacks.new(belonged: true).enqueue(self)
   end
 
   def update_received_applicants_count

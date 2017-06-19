@@ -5,7 +5,8 @@ class Cms::RebuildJob < ApplicationJob
   def perform(options)
     if options[:target_content_ids]
       perform_contents(options[:site_id], options[:target_content_ids])
-    elsif options[:target_node_ids]
+    end
+    if options[:target_node_ids]
       perform_nodes(options[:site_id], options[:target_node_ids])
     end
   end

@@ -4,27 +4,14 @@ class Cms::Admin::Tool::RebuildController < Cms::Controller::Admin::Base
   def pre_dispatch
     return error_auth unless Core.user.has_auth?(:designer)
   end
-  
+
   def index
-    content_models = [
-      'GpArticle::Doc',
-      'GpCategory::CategoryType',
-      'Organization::Group',
-      'AdBanner::Banner',
-      'Map::Marker',
-      'GpCalendar::Event',
-      'Tag::Tag',
-      'Rank::Rank',
-      'Gnav::MenuItem',
-      'Feed::Feed',
-      'BizCalendar::Place'
-    ]
-    @contents = Cms::Content.distinct.joins(:nodes)
-                            .where(site_id: Core.site.id, model: content_models)
+    @contents = Cms::Content.distinct.rebuildable_models.joins(:nodes)
+                            .where(site_id: Core.site.id)
                             .where(Cms::Node.arel_table[:state].eq('public'))
                             .order(:name)
-    @nodes = Cms::Node.public_state
-                      .where(site_id: Core.site.id, model: ['Cms::Page', 'Cms::Sitemap'])
+    @nodes = Cms::Node.public_state.rebuildable_models
+                      .where(site_id: Core.site.id)
                       .preload(:site, parent: { parent: { parent: nil } })
                       .sort_by { |n| n.public_uri }
   end

@@ -67,38 +67,10 @@ module Cms::Model::Base::Page::Publisher
     @published = false
     return false if content.nil?
 
-    content = content.gsub(%r!zdel_.+?/!i, '')
-
     path = (options[:path] || public_path).gsub(/\/\z/, '/index.html')
-    hash = Digest::MD5.new.update(content).to_s
+    pub = Sys::Publisher.where(publishable: self, dependent: options[:dependent].try(:to_s)).first_or_initialize
+    @published = pub.publish_with_digest(content, path)
 
-    pub = publishers.where(dependent: options[:dependent] ? options[:dependent].to_s : nil).first
-
-    return true if mobile_page?
-    return true if hash && pub && hash == pub.content_hash && ::File.exist?(path)
-
-clean_statics = Zomeki.config.application['sys.clean_statics']
-if clean_statics
-    if File.exist?(path)
-      File.delete(path)
-      info_log "DELETED: #{path}"
-    end
-    @published = true
-else
-    if ::File.exist?(path) && ::File.new(path).read == content
-      #FileUtils.touch([path])
-    else
-      Util::File.put(path, :data => content, :mkdir => true)
-      @published = true
-    end
-end
-
-    pub ||= Sys::Publisher.new
-    pub.publishable  = self
-    pub.dependent    = options[:dependent] ? options[:dependent].to_s : nil
-    pub.path         = path
-    pub.content_hash = hash
-    pub.save if pub.changed?
     return true
   end
 

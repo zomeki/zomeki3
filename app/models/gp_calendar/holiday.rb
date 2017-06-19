@@ -23,8 +23,8 @@ class GpCalendar::Holiday < ApplicationRecord
 
   after_initialize :set_defaults
 
-  after_save     GpCalendar::Publisher::HolidayCallbacks.new, if: :changed?
-  before_destroy GpCalendar::Publisher::HolidayCallbacks.new
+  after_save     Cms::Publisher::ContentCallbacks.new(belonged: true), if: :changed?
+  before_destroy Cms::Publisher::ContentCallbacks.new(belonged: true)
 
   validates :title, :presence => true
 

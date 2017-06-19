@@ -20,8 +20,8 @@ class AdBanner::Banner < ApplicationRecord
   validates :state, presence: true
 
   belongs_to :group, :foreign_key => :group_id, :class_name => 'AdBanner::Group'
-
   has_many :clicks, :foreign_key => :banner_id, :class_name => 'AdBanner::Click', :dependent => :destroy
+  has_many :publishers, class_name: 'Sys::Publisher', dependent: :destroy, as: :publishable
 
   validates :advertiser_name, :presence => true
   validates :url, :presence => true
@@ -29,12 +29,12 @@ class AdBanner::Banner < ApplicationRecord
   after_initialize :set_defaults
   before_create :set_token
 
-  after_save     Cms::Publisher::ContentRelatedCallbacks.new, if: :changed?
-  before_destroy Cms::Publisher::ContentRelatedCallbacks.new
+  after_save     Cms::Publisher::ContentCallbacks.new(belonged: true), if: :changed?
+  before_destroy Cms::Publisher::ContentCallbacks.new(belonged: true)
 
   define_model_callbacks :publish_files, :close_files
-  after_publish_files FileTransferCallbacks.new([:image_path, :image_mobile_path, :image_smart_phone_path])
-  after_close_files FileTransferCallbacks.new([:image_path, :image_mobile_path, :image_smart_phone_path])
+  after_publish_files FileTransferCallbacks.new([:image_path, :image_smart_phone_path])
+  after_close_files FileTransferCallbacks.new([:image_path, :image_smart_phone_path])
 
   scope :published, -> {
     now = Time.now
@@ -57,11 +57,6 @@ class AdBanner::Banner < ApplicationRecord
   def image_path
     return '' unless content.public_node
     "#{content.public_node.public_path}#{name}"
-  end
-
-  def image_mobile_path
-    return '' unless content.public_node
-    "#{content.public_node.public_mobile_path}#{name}"
   end
 
   def image_smart_phone_path
@@ -115,19 +110,20 @@ class AdBanner::Banner < ApplicationRecord
 
   def publish_images
     run_callbacks :publish_files do
-      paths = [image_path, image_mobile_path, image_smart_phone_path]
-      paths.delete(image_smart_phone_path) unless content.site.publish_for_smart_phone?
-      paths.each do |path|
-        FileUtils.mkdir_p ::File.dirname(path)
-        FileUtils.cp upload_path, path
+      paths = [[image_path, nil]]
+      paths << [image_smart_phone_path, :smart_phone] if content.site.publish_for_smart_phone?
+      paths.each do |path, dep|
+        pub = Sys::Publisher.where(publishable: self, dependent: dep).first_or_initialize
+        pub.publish_file_with_digest(upload_path, path)
       end
     end
   end
 
   def close_images
     run_callbacks :close_files do
-      paths = [image_path, image_mobile_path, image_smart_phone_path]
-      paths.delete(image_smart_phone_path) unless content.site.publish_for_smart_phone?
+      publishers.destroy_all
+      paths = [image_path]
+      paths << image_smart_phone_path if content.site.publish_for_smart_phone?
       paths.each do |path|
         FileUtils.rm path if ::File.exist?(path)
         FileUtils.rmdir ::File.dirname(path)

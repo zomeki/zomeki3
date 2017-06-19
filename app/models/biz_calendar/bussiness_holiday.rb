@@ -23,8 +23,8 @@ class BizCalendar::BussinessHoliday < ApplicationRecord
 
   after_initialize :set_defaults
 
-  after_save     Cms::Publisher::ContentRelatedCallbacks.new, if: :changed?
-  before_destroy Cms::Publisher::ContentRelatedCallbacks.new
+  after_save     Cms::Publisher::ContentCallbacks.new(belonged: true), if: :changed?
+  before_destroy Cms::Publisher::ContentCallbacks.new(belonged: true)
 
   attr_accessor :repeat_num
 

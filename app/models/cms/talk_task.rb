@@ -1,6 +1,9 @@
 class Cms::TalkTask < ApplicationRecord
   include Sys::Model::Base
 
+  belongs_to :talk_processable, polymorphic: true
+  has_one :publisher, primary_key: :path, foreign_key: :path, class_name: 'Sys::Publisher'
+
   define_model_callbacks :publish_files, :close_files
   after_publish_files FileTransferCallbacks.new(:path)
   after_close_files FileTransferCallbacks.new(:path)
@@ -8,33 +11,38 @@ class Cms::TalkTask < ApplicationRecord
   validates :path, presence: true
 
   def exec
-    if Zomeki.config.application['sys.clean_statics']
-      close_file
-    else
-      publish_file
-    end
+    publish_talk_file
   end
 
   private
 
-  def publish_file
+  def public_talk_file_path
+    "#{path}.mp3"
+  end
+
+  def publish_talk_file
     return false unless ::File.exist?(path)
+    return false if talk_processable.nil? || publisher.nil?
 
     mp3 = self.class.make_mp3(::File.read(path), site_id)
     return false unless mp3
     return false if ::File.stat(mp3[:path]).size == 0
 
+    ret = false
     run_callbacks :publish_files do
-      FileUtils.mv(mp3[:path], "#{path}.mp3")
-      ::File.chmod(0644, "#{path}.mp3")
+      pub = Sys::Publisher.where(publishable: talk_processable, dependent: "#{publisher.dependent}/talk").first_or_initialize
+      ret = pub.publish_file_with_digest(mp3[:path], public_talk_file_path)
     end
+
+    ::File.delete(mp3[:path])
+    return ret
   end
 
-  def close_file
-    return false unless ::File.exist?("#{path}.mp3")
+  def close_talk_file
+    return false unless ::File.exist?(public_talk_file_path)
 
     run_callbacks :close_files do
-      ::File.delete("#{path}.mp3")
+      ::File.delete(public_talk_file_path)
     end
     return true
   end

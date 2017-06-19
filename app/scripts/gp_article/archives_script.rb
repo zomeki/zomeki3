@@ -1,5 +1,9 @@
 class GpArticle::ArchivesScript < Cms::Script::Publication
   def publish
+    publish_page(@node, uri: @node.public_uri,
+                        path: @node.public_path,
+                        smart_phone_path: @node.public_smart_phone_path)
+
     all_days = []
     beginning_of_month = Date.new(2013, 1, 1)
     this_bom = Date.today.beginning_of_month

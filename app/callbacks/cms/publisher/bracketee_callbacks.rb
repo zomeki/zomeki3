@@ -1,24 +1,16 @@
 class Cms::Publisher::BracketeeCallbacks < PublisherCallbacks
   OWNER_KLASS_NAMES = %w(Cms::Layout Cms::Piece Cms::Node GpArticle::Doc)
   
-  def after_save(item)
+  def enqueue(item)
     @item = item
-    enqueue if enqueue?
-  end
-
-  def before_destroy(item)
-    @item = item
-    enqueue if enqueue?
-  end
-
-  def enqueue(item = nil)
-    @item = item if item
+    return unless enqueue?
     enqueue_bracketees
   end
 
   private
 
   def enqueue?
+    return unless super
     @item.name.present?
   end
 
