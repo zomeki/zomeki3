@@ -1,7 +1,6 @@
 class AdBanner::Banner < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Base::File
-  include Cms::Model::Base::Page::Publisher
   include Cms::Model::Base::ContentDelegation
   include Sys::Model::Rel::Creator
   include Cms::Model::Auth::Content
@@ -21,8 +20,8 @@ class AdBanner::Banner < ApplicationRecord
   validates :state, presence: true
 
   belongs_to :group, :foreign_key => :group_id, :class_name => 'AdBanner::Group'
-
   has_many :clicks, :foreign_key => :banner_id, :class_name => 'AdBanner::Click', :dependent => :destroy
+  has_many :publishers, class_name: 'Sys::Publisher', dependent: :destroy, as: :publishable
 
   validates :advertiser_name, :presence => true
   validates :url, :presence => true
