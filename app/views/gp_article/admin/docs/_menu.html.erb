@@ -43,6 +43,8 @@
   <span class="separator"></span>
   <%= link_to 'プレビュー(PC)', @item.preview_uri,
               target: 'preview' if @item.terminal_pc_or_smart_phone && @content.public_node && @item.preview_uri.present? %>
+  <%= link_to 'プレビュー(スマホ)', @item.preview_uri(smart_phone: true),
+              target: 'preview' if @item.terminal_pc_or_smart_phone && @content.public_node && @item.preview_uri.present? %>
   <%= link_to 'プレビュー(携帯)', @item.preview_uri(mobile: true),
               target: 'preview' if @item.terminal_mobile && @content.public_node && @item.preview_uri.present? %>
 <%- end -%>
