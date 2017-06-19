@@ -1,6 +1,8 @@
 class Sys::Publisher < ApplicationRecord
   include Sys::Model::Base
 
+  DIGEST_FILE_SIZE_LIMIT = 100 * 1024**2
+
   belongs_to :publishable, polymorphic: true
 
   before_validation :modify_path
@@ -53,12 +55,14 @@ class Sys::Publisher < ApplicationRecord
     return false unless FileTest.exists?(src)
     return false if dst.blank?
 
-    hash = Digest::MD5.file(src).to_s
-    return false if hash && content_hash && hash == content_hash && ::File.exist?(dst)
+    if ::File.stat(src).size < DIGEST_FILE_SIZE_LIMIT
+      hash = Digest::MD5.file(src).to_s
+      return false if hash && content_hash && hash == content_hash && ::File.exist?(dst)
+    end
 
     transaction do
       self.path = dst
-      self.content_hash = hash
+      self.content_hash = hash if hash
       self.save if changed?
 
       if FileTest.exists?(dst) && ::File.mtime(dst) >= ::File.mtime(src)
