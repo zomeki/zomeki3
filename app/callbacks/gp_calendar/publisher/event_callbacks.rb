@@ -1,6 +1,6 @@
 class GpCalendar::Publisher::EventCallbacks < PublisherCallbacks
   def enqueue(event)
-    @event = event if event
+    @event = event
     return unless enqueue?
     enqueue_nodes
     enqueue_pieces
