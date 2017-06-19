@@ -7,6 +7,9 @@ class Sys::ObjectPrivilege < ApplicationRecord
   belongs_to :concept, class_name: 'Cms::Concept'
   belongs_to :role_name, :foreign_key => 'role_id', :class_name => 'Sys::RoleName'
 
+  after_save :save_actions
+  after_destroy :destroy_actions
+
   validates :role_id, :concept_id, presence: true
   validates :action, presence: true, if: %Q(in_actions.blank?)
 
@@ -25,63 +28,39 @@ class Sys::ObjectPrivilege < ApplicationRecord
                   end
   end
 
-  def action_labels(format = nil)
-    list = [['閲覧','read'], ['作成','create'], ['編集','update'], ['削除','delete']]
-    if format == :hash
-      h = {}
-      list.each {|c| h[c[1]] = c[0]}
-      return h
-    end
-    list
+  def action_labels
+    [['閲覧','read'], ['作成','create'], ['編集','update'], ['削除','delete']]
   end
 
   def privileges
-    self.class.where(role_id: role_id, privilegable: privilegable).order(:action)
+    self.class.where(role_id: role_id, privilegable_id: privilegable_id, privilegable_type: privilegable_type).order(:action)
   end
   
   def actions
-    privileges.collect{|c| c.action}
+    privileges.map(&:action)
   end
   
   def action_names
-    names = []
     _actions = actions
-    action_labels.each do |label, key|
-      if actions.index(key)
-        names << label
-        _actions.delete(key)
-      end
-    end
-    names += _actions
-    names
-  end
-  
-  def save
-    return super unless @_in_actions_changed
-    return false unless valid?
-    save_actions
-  end
-  
-  def destroy_actions
-    privileges.each {|priv| priv.destroy }
-    return true
+    action_labels.map { |label, name| _actions.include?(name) ? label : nil }.compact
   end
 
-  protected
+  private
 
   def save_actions
+    return unless @_in_actions_changed
+
+    privileges.destroy_all
+
     actions = in_actions.map(&:to_s)
-
-    privileges.each do |priv|
-      if actions.index(priv.action)
-        actions.delete(priv.action)
-      else
-        priv.destroy
-      end
-    end
-
     actions.each do |action|
-      privileges.create(action: action, concept_id: concept_id)
+      priv = self.class.where(role_id: role_id, concept_id: concept_id, action: action).first_or_initialize
+      priv.privilegable = concept
+      priv.save
     end
+  end
+
+  def destroy_actions
+    privileges.destroy_all
   end
 end
