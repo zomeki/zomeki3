@@ -1,6 +1,5 @@
 class Sys::Admin::KanaDictionariesController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
-  include Sys::Controller::Scaffold::Publication
 
   def pre_dispatch
     return error_auth unless Core.user.root?
