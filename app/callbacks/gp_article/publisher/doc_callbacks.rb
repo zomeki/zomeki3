@@ -9,6 +9,7 @@ class GpArticle::Publisher::DocCallbacks < PublisherCallbacks
     enqueue_calendars
     enqueue_maps
     enqueue_tags
+    enqueue_relatee_docs
   end
 
   private
@@ -122,5 +123,9 @@ class GpArticle::Publisher::DocCallbacks < PublisherCallbacks
       Cms::Publisher.register(@doc.content.site_id, changed_tags)
       Cms::Publisher::PieceCallbacks.new.enqueue(tag_content.public_pieces)
     end
+  end
+
+  def enqueue_relatee_docs
+    Cms::Publisher.register(@doc.content.site_id, @doc.public_relatee_docs)
   end
 end
