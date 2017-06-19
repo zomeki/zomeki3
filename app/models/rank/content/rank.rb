@@ -10,6 +10,18 @@ class Rank::Content::Rank < Cms::Content
   has_many :pieces, foreign_key: :content_id, class_name: 'Rank::Piece::Rank', dependent: :destroy
   has_many :ranks, foreign_key: :content_id, class_name: 'Rank::Total', dependent: :destroy
 
+  def web_property_id
+    setting_value(:web_property_id)
+  end
+
+  def show_count?
+    setting_value(:show_count) != '0'
+  end
+
+  def exclusion_url
+    setting_value(:exclusion_url).to_s
+  end
+
   def access_token
     credentials = GoogleOauth2Installed.credentials
     credentials[:oauth2_client_id] = setting_extra_value(:google_oauth, :client_id)
