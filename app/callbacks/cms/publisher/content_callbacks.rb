@@ -23,8 +23,6 @@ class Cms::Publisher::ContentCallbacks < PublisherCallbacks
   end
 
   def enqueue_pieces
-    @content.public_pieces.each do |piece|
-      Cms::Publisher::PieceCallbacks.new.enqueue(piece)
-    end
+    Cms::Publisher::PieceCallbacks.new.enqueue(@content.public_pieces)
   end
 end

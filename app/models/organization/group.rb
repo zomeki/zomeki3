@@ -38,8 +38,8 @@ class Organization::Group < ApplicationRecord
   validate :name_uniqueness_in_siblings
 
   scope :public_state, -> { where(state: 'public') }
-  scope :with_layout, ->(layout_id) {
-    conds = [:layout_id, :more_layout_id].map { |c| arel_table[c].eq(layout_id) }
+  scope :with_layout, ->(layout_ids) {
+    conds = [:layout_id, :more_layout_id].map { |c| arel_table[c].in(layout_ids) }
     where(conds.reduce(:or))
   }
 
