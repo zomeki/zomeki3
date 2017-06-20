@@ -73,12 +73,12 @@ module Sys::Model::Rel::File
   module Publication
     def public_files_path
       return '' if (path = public_path).blank?
-      ::File.join(path.end_with?('/') ? path : File.dirname(path), "file_contents")
+      ::File.join(path.end_with?('/') ? path : ::File.dirname(path), "file_contents")
     end
 
     def public_smart_phone_files_path
       return '' if (path = public_smart_phone_path).blank?
-      ::File.join(path.end_with?('/') ? path : File.dirname(path), "file_contents")
+      ::File.join(path.end_with?('/') ? path : ::File.dirname(path), "file_contents")
     end
 
     def publish_files
