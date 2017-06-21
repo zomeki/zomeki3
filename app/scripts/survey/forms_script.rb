@@ -1,5 +1,8 @@
 class Survey::FormsScript < Cms::Script::Publication
   def publish
+    publish_page(@node, uri: @node.public_uri,
+                        path: @node.public_path,
+                        smart_phone_path: @node.public_smart_phone_path)
   end
 
   def publish_by_task(item)

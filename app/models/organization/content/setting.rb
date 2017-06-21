@@ -3,7 +3,10 @@ class Organization::Content::Setting < Cms::ContentSetting
     name: '記事URL保持許可',
     form_type: :radio_buttons,
     options: [['使用する', 'enabled'], ['使用しない', 'disabled']],
-    default_value: 'disabled'
+    default_value: 'disabled',
+    default_extra_values: {
+      gp_article_content_doc_id: nil
+    }
   set_config :list_style,
     name: "#{Organization::Group.model_name.human}一覧表示形式",
     form_type: :text_area,
@@ -37,7 +40,10 @@ class Organization::Content::Setting < Cms::ContentSetting
     form_type: :radio_buttons,
     options: [['表示する', 'enabled'], ['表示しない', 'disabled']],
     default_value: 'disabled',
-    default_extra_values: { feed_docs_number: '10' }
+    default_extra_values: {
+      feed_docs_number: '10',
+      feed_docs_period: nil
+    }
 
   belongs_to :content, foreign_key: :content_id, class_name: 'Organization::Content::Group'
 

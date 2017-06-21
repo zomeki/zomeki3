@@ -5,6 +5,7 @@ class GpCategory::CategoryType < ApplicationRecord
   include Cms::Model::Base::Page
   include Cms::Model::Base::Page::Publisher
   include Cms::Model::Base::Page::TalkTask
+  include Cms::Model::Base::ContentDelegation
   include Cms::Model::Base::Sitemap
 
   include StateText
@@ -49,7 +50,6 @@ class GpCategory::CategoryType < ApplicationRecord
 
   scope :public_state, -> { where(state: 'public') }
 
-  after_save :clean_published_files
   after_destroy :clean_published_files
 
   def root_categories_for_option
@@ -125,5 +125,19 @@ class GpCategory::CategoryType < ApplicationRecord
     return if !destroyed? && public?
     FileUtils.rm_r(public_path) if public_path.present? && ::File.exist?(public_path)
     FileUtils.rm_r(public_smart_phone_path) if public_smart_phone_path.present? && ::File.exist?(public_smart_phone_path)
+  end
+
+  class << self
+    def public_docs_for_template_module(categoty_type, template_module, mobile: false)
+      category_ids = case template_module.module_type
+                     when 'docs_1', 'docs_3', 'docs_5', 'docs_7', 'docs_8'
+                       categoty_type.public_categories.map(&:id)
+                     else
+                       []
+                     end
+      docs = GpArticle::Doc.categorized_into(category_ids).except(:order).mobile(mobile).public_state
+      docs = docs.where(content_id: template_module.gp_article_content_ids) if template_module.gp_article_content_ids.present?
+      docs
+    end
   end
 end

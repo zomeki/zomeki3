@@ -5,7 +5,7 @@ class Rank::TotalsFinder < FinderQuery
 
   def search(content, term, target, category_options = {})
     hostname   = URI.parse(content.site.full_uri).host
-    exclusion  = content.setting_value(:exclusion_url).strip.split(/[ |\t|\r|\n|\f]+/) rescue exclusion = ''
+    exclusion  = content.exclusion_url.strip.split(/[ |\t|\r|\n|\f]+/) rescue exclusion = ''
     rank_table = Rank::Total.arel_table
 
     ranks = @relation.select('*')

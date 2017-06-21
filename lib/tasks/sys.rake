@@ -28,5 +28,46 @@ namespace :zomeki do
         end
       end
     end
+
+    namespace :publishers do
+      desc 'Clean publishers'
+      task :clean => :environment do
+        item = Sys::Publisher
+        item = item.in_site(Cms::Site.find(ENV['SITE_ID'])) if ENV['SITE_ID']
+        item.destroy_all
+      end
+
+      desc 'Clean ruby publishers'
+      task :clean_rubies => :environment do
+        item = Sys::Publisher
+        item = item.in_site(Cms::Site.find(ENV['SITE_ID'])) if ENV['SITE_ID']
+        item.with_ruby_dependent.destroy_all
+      end
+
+      desc 'Clean talk publishers'
+      task :clean_talks => :environment do
+        item = Sys::Publisher
+        item = item.in_site(Cms::Site.find(ENV['SITE_ID'])) if ENV['SITE_ID']
+        item.with_talk_dependent.destroy_all
+      end
+
+      desc 'Rebuild publishers'
+      task :rebuild => :environment do
+        Cms::Site.order(:id).each do |site|
+          Sys::Publisher.in_site(site).delete_all
+          node_ids = Cms::Node.public_state.rebuildable_models
+                              .where(site_id: site.id)
+                              .pluck(:id)
+          Cms::RebuildJob.perform_later(site_id: site.id, target_node_ids: node_ids)
+          content_ids = Cms::Content.distinct.rebuildable_models.joins(:nodes)
+                                    .where(site_id: site.id)
+                                    .where(Cms::Node.arel_table[:state].eq('public'))
+                                    .pluck(:id)
+          content_ids.each do |content_id|
+            Cms::RebuildJob.perform_later(site_id: site.id, target_content_ids: [content_id])
+          end 
+        end
+      end
+    end
   end
 end

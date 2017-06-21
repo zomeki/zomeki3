@@ -327,4 +327,12 @@ class GpArticle::Content::Doc < Cms::Content
   def attachment_thumbnail_size
     setting_value(:attachment_thumbnail_size)
   end
+
+  def map_enabled?
+    setting_value(:map_setting) == 'enabled'
+  end
+
+  def map_coordinate
+    setting_extra_value(:map_setting, :lat_lng)
+  end
 end

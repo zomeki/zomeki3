@@ -1,8 +1,9 @@
 class Survey::Form < ApplicationRecord
   include Sys::Model::Base
-  include Cms::Model::Base::Sitemap
   include Sys::Model::Rel::Creator
   include Sys::Model::Rel::Task
+  include Cms::Model::Base::ContentDelegation
+  include Cms::Model::Base::Sitemap
   include Cms::Model::Auth::Content
 
   include Approval::Model::Rel::Approval
@@ -32,8 +33,8 @@ class Survey::Form < ApplicationRecord
 
   after_initialize :set_defaults
 
-  after_save     Cms::Publisher::ContentRelatedCallbacks.new, if: :changed?
-  before_destroy Cms::Publisher::ContentRelatedCallbacks.new
+  after_save     Cms::Publisher::ContentCallbacks.new(belonged: true), if: :changed?
+  before_destroy Cms::Publisher::ContentCallbacks.new(belonged: true)
 
   scope :public_state, -> { where(state: 'public') }
 

@@ -29,7 +29,6 @@ class Sys::Admin::ObjectPrivilegesController < Cms::Controller::Admin::Base
   def create
     @item = Sys::ObjectPrivilege.new(privilege_params)
     @item.role_id = @parent.id
-    @item.privilegable ||= @item.concept
     @item.in_actions = {} unless privilege_params[:in_actions]
     _create @item
   end
@@ -37,17 +36,16 @@ class Sys::Admin::ObjectPrivilegesController < Cms::Controller::Admin::Base
   def update
     @item = Sys::ObjectPrivilege.find(params[:id])
     @item.attributes = privilege_params
-    @item.privilegable ||= @item.concept
     @item.in_actions = {} unless privilege_params[:in_actions]
     _update @item
   end
 
   def destroy
     @item = Sys::ObjectPrivilege.find(params[:id])
-    _destroy @item do
-      @item.destroy_actions
-    end
+    _destroy @item
   end
+
+  private
 
   def privilege_params
     params.require(:item).permit(:concept_id, in_actions: [:read, :create, :update, :delete])

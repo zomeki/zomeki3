@@ -429,7 +429,7 @@ class GpArticle::Doc < ApplicationRecord
   end
 
   def default_map_position
-    [content.setting_extra_value(:map_relation, :lat_lng), content.site.map_coordinate].lazy.each do |pos|
+    [content.map_coordinate, content.site.map_coordinate].lazy.each do |pos|
       p = pos.to_s.split(',').map(&:strip)
       return p if p.size == 2
     end

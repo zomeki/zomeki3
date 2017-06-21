@@ -1,16 +1,7 @@
 class Cms::Publisher::LayoutCallbacks < PublisherCallbacks
-  def after_save(layout)
+  def enqueue(layout)
     @layout = layout
-    enqueue if enqueue?
-  end
-
-  def before_destroy(layout)
-    @layout = layout
-    enqueue if enqueue?
-  end
-
-  def enqueue(layout = nil)
-    @layout = layout if layout
+    return unless enqueue?
     enqueue_nodes
     enqueue_categories
     enqueue_organization_groups
@@ -20,6 +11,7 @@ class Cms::Publisher::LayoutCallbacks < PublisherCallbacks
   private
 
   def enqueue?
+    return unless super
     @layout.name.present?
   end
 

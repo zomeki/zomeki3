@@ -1,21 +1,20 @@
 <h2><%= menu_header @content.name, GpArticle::Doc.model_name.human %></h2>
 
 <div class="actionMenu">
-  <%- if action_name.in?(%w|index|) -%>
+<%- case action_name -%>
+<%- when 'index' -%>
   <%= link_to "新規作成", new_gp_article_doc_path %>
-  <%- end -%>
-  <%- if action_name.in?(%w|show new create|) -%>
+<%- when 'show' -%>
   <%= link_to "#{GpArticle::Doc.model_name.human}一覧", gp_article_docs_path %>
-  <%- end -%>
-  <%- if action_name.in?(%w|show|) -%>
   <span class="separator"></span>
-  <%= link_to "編集", edit_gp_article_doc_path %>
-  <%- end -%>
-
-  <%- if action_name.in?(%w|edit update|) -%>
+  <%- dupmsg = '編集用の記事を作成します。よろしいですか？' if @item.state_public? -%>
+  <%= link_to "編集", edit_gp_article_doc_path, confirm: dupmsg %>
+<%- when 'new', 'create' -%>
+  <%= link_to "#{GpArticle::Doc.model_name.human}一覧", gp_article_docs_path %>
+<%- when 'edit', 'update' -%>
   <%= link_to "#{GpArticle::Doc.model_name.human}一覧", gp_article_docs_path %>
   <span class="separator"></span>
   <%= link_to '詳細', gp_article_doc_path %>
   <%= link_to '更新をキャンセル', gp_article_doc_path, :method => :delete, :confirm => '更新をキャンセルしてよろしいですか？' if @item.try(:deletable?) && @item.will_replace? %>
-  <%- end -%>
+<%- end -%>
 </div>

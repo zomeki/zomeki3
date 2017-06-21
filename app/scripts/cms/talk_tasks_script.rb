@@ -12,6 +12,17 @@ class Cms::TalkTasksScript < Cms::Script::Publication
       next unless task
 
       ::Script.progress(task) do
+        unless task.talk_processable
+          task.destroy
+          ::Script.error "Processable Not Found"
+          next
+        end
+        unless task.publisher
+          task.destroy
+          ::Script.error "Publisher Not Found"
+          next
+        end
+
         result = task.exec
         task.destroy
         raise "MakeSoundError" unless result

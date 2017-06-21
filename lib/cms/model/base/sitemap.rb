@@ -6,6 +6,8 @@ module Cms::Model::Base::Sitemap
   included do
     scope :visible_in_sitemap, -> { where(sitemap_state: 'visible') }
     after_initialize :set_default_sitemap_state
+    after_save     Cms::Publisher::SitemapCallbacks.new, if: :changed?
+    before_destroy Cms::Publisher::SitemapCallbacks.new
   end
 
   def sitemap_visible?

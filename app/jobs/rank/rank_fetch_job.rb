@@ -1,7 +1,7 @@
 class Rank::RankFetchJob < ApplicationJob
   def perform(content, start_date = nil)
     @content = content
-    return false if @content.setting_value(:web_property_id).blank?
+    return false if @content.web_property_id.blank?
     return false if @content.access_token.blank?
 
     profile = fetch_profile
@@ -25,7 +25,7 @@ class Rank::RankFetchJob < ApplicationJob
 
   def fetch_profile
     Garb::Session.access_token = @content.access_token
-    Garb::Management::Profile.all.detect { |p| p.web_property_id == @content.setting_value(:web_property_id) }
+    Garb::Management::Profile.all.detect { |p| p.web_property_id == @content.web_property_id }
   end
 
   def fetch_google_analytics(profile, start_date = nil)

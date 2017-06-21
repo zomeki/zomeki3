@@ -61,11 +61,18 @@ class GpCategory::Category < ApplicationRecord
   scope :public_state, -> { where(state: 'public') }
 
   after_update :move_published_files
-  after_update :clean_published_files
   after_destroy :clean_published_files
 
   def content
     category_type.content
+  end
+
+  def site
+    content.site
+  end
+
+  def site_id
+    content.site_id
   end
 
   def descendants(categories=[])
@@ -235,6 +242,20 @@ class GpCategory::Category < ApplicationRecord
     order_text.split(',').each_with_object({}) do |order, hash|
       key, value = order.strip.split(' ')
       hash.merge!(key => value)
+    end
+  end
+
+  class << self
+    def public_docs_for_template_module(category, template_module, mobile: false)
+      category_ids = case template_module.module_type
+                     when 'docs_1', 'docs_3', 'docs_5', 'docs_7', 'docs_8'
+                       category.public_descendants_ids
+                     when 'docs_2', 'docs_4', 'docs_6'
+                       [category.id]
+                     end
+      docs = GpArticle::Doc.categorized_into(category_ids).except(:order).mobile(mobile).public_state
+      docs = docs.where(content_id: template_module.gp_article_content_ids) if template_module.gp_article_content_ids.present?
+      docs
     end
   end
 end

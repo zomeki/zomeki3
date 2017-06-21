@@ -3,7 +3,13 @@ class Reception::Content::Setting < Cms::ContentSetting
 
   set_config :gp_category_content_category_type_id,
     name: 'カテゴリ',
-    options: lambda { GpCategory::Content::CategoryType.where(site_id: Core.site.id).map { |ct| [ct.name, ct.id] } }
+    options: lambda { GpCategory::Content::CategoryType.where(site_id: Core.site.id).map { |ct| [ct.name, ct.id] } },
+    default_extra_values: {
+      category_type_ids: [],
+      visible_category_type_ids: [],
+      default_category_type_id: nil,
+      default_category_id: nil
+    }
   set_config :mail_from,
     name: '差出人メールアドレス'
   set_config :mail_to,
@@ -11,7 +17,15 @@ class Reception::Content::Setting < Cms::ContentSetting
   set_config :auto_reply,
     name: "自動返信メール",
     options: [['返信する','send'],['返信しない','none']],
-    default_value: 'send'
+    default_value: 'send',
+    default_extra_values: {
+      applied_upper_reply_text: '',
+      applied_lower_reply_text: '',
+      received_upper_reply_text: '',
+      received_lower_reply_text: '',
+      canceled_upper_reply_text: '',
+      canceled_lower_reply_text: ''
+    }
   set_config :doc_list_style,
     name: "講座一覧表示形式",
     options: [['全講座一覧','all_courses'],['カテゴリ一覧','all_categories']],
@@ -30,10 +44,10 @@ class Reception::Content::Setting < Cms::ContentSetting
     ex = extra_values
     case name
     when 'gp_category_content_category_type_id'
-      ex[:category_type_ids] = Array(params[:category_types]).map(&:to_i)
-      ex[:visible_category_type_ids] = Array(params[:visible_category_types]).map(&:to_i)
-      ex[:default_category_type_id] = params[:default_category_type].to_i
-      ex[:default_category_id] = params[:default_category].to_i
+      ex[:category_type_ids] = Array(params[:category_type_ids]).map(&:to_i)
+      ex[:visible_category_type_ids] = Array(params[:visible_category_type_ids]).map(&:to_i)
+      ex[:default_category_type_id] = params[:default_category_type_id].to_i
+      ex[:default_category_id] = params[:default_category_id].to_i
     when 'auto_reply'
       ex[:applied_upper_reply_text] = params[:applied_upper_reply_text]
       ex[:applied_lower_reply_text] = params[:applied_lower_reply_text]
