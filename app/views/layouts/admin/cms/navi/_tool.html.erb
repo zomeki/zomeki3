@@ -1,1 +1,2 @@
 <%= content_tag('li') { link_to 'プラグイン', main_app.sys_plugins_path, class: (current == :plugin ? 'current' : '') } -%>
+<%= content_tag('li') { link_to 'コンバート', cms_tool_convert_downloads_path, class: (current == :convert ? 'current' : '') } -%>
