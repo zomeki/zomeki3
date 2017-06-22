@@ -654,11 +654,20 @@ class GpArticle::Doc < ApplicationRecord
   end
 
   module Publication
+    extend ActiveSupport::Concern
+
+    included do
+      define_model_callbacks :publish_files
+      after_publish_files FileTransferCallbacks.new([:public_path, :public_smart_phone_path], recursive: true)
+    end
+
     def publish
       self.state = 'public' unless state_public?
       transaction do
         return false unless save(validate: false)
-        rebuild
+        run_callbacks :publish_files do
+          rebuild
+        end
       end
     end
 
