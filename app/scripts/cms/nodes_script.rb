@@ -51,13 +51,10 @@ class Cms::NodesScript < Cms::Script::Publication
     ## modules' page
     unless node.model == 'Cms::Directory'
       begin
-        script_klass = node.script_klass
-        script_klass.new(params.merge(node: node)).publish if script_klass.publishable?
+        script_klass = "#{node.model.pluralize}Script".safe_constantize
+        script_klass.new(params.merge(node: node)).publish if script_klass && script_klass.publishable?
       rescue ::Script::InterruptException => e
         raise e
-      rescue LoadError => e
-        ::Script.error "#{node.class}##{node.id} #{e}"
-        return
       rescue Exception => e
         ::Script.error "#{node.class}##{node.id} #{e}"
         return

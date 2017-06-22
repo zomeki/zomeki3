@@ -231,16 +231,6 @@ class Cms::Node < ApplicationRecord
     parent.try(:parent_id) == 0 && name == 'index.html'
   end
 
-  def script_model
-    "#{model.pluralize}Script"
-  end
-
-  def script_klass
-    script_model.constantize
-  rescue NameError => e
-    nil
-  end
-
   protected
 
   def remove_file
