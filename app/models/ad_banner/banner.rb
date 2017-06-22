@@ -113,7 +113,7 @@ class AdBanner::Banner < ApplicationRecord
       paths = [[image_path, nil]]
       paths << [image_smart_phone_path, :smart_phone] if content.site.publish_for_smart_phone?
       paths.each do |path, dep|
-        pub = Sys::Publisher.where(publishable: self, dependent: dep).first_or_initialize
+        pub = Sys::Publisher.where(publishable: self, dependent: dep.to_s).first_or_initialize
         pub.publish_file_with_digest(upload_path, path)
       end
     end
