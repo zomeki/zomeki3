@@ -114,10 +114,6 @@ class Cms::Node < ApplicationRecord
     "#{site.public_path}/_smartphone#{public_uri}".gsub(/\?.*/, '')
   end
 
-  def public_uri=(uri)
-    @public_uri = uri
-  end
-
   def public_uri
     return @public_uri if @public_uri
     return unless site
@@ -272,6 +268,8 @@ class Cms::Node < ApplicationRecord
 
     self.linkable_columns = [:body]
 
+    after_save :replace_public_page
+
 #    validate :validate_inquiry,
 #      :if => %Q(state == 'public')
     validate :validate_recognizers,
@@ -281,50 +279,6 @@ class Cms::Node < ApplicationRecord
       s = [['下書き保存','draft'],['承認待ち','recognize']]
       s << ['公開保存','public'] if Core.user.has_auth?(:manager)
       s
-    end
-
-    def publish(content)
-      self.state = 'public'
-      self.published_at ||= Core.now
-      return false unless save(:validate => false)
-
-      if rep = replace_page
-        rep.destroy if rep.directory == 0
-      end
-
-      run_callbacks :publish_files do
-        publish_page(content, :path => public_path, :uri => public_uri)
-      end
-    end
-
-    def rebuild(content, options={})
-      if options[:dependent] == :smart_phone
-        return false unless site.publish_for_smart_phone?(self)
-      end
-
-      return false unless self.state == 'public'
-
-      if rep = replace_page
-        rep.destroy if rep.directory == 0
-      end
-
-      options[:path] ||= public_path
-      options[:uri] ||= public_uri
-
-      run_callbacks :publish_files do
-        publish_page(content, options)
-      end
-    end
-
-    def close
-      self.state = 'closed' if self.state == 'public'
-      #self.published_at = nil
-      return false unless save(:validate => false)
-
-      run_callbacks :close_files do
-        close_page
-      end
-      return true
     end
 
     def duplicate(rel_type = nil)
@@ -362,6 +316,58 @@ class Cms::Node < ApplicationRecord
 
       return item
     end
+
+    private
+
+    def replace_public_page
+      return if state != 'public'
+      if (rep = replace_page) && rep.directory == 0
+        rep.destroy
+      end
+    end
+
+    module Publication
+      def publish
+        self.state = 'public'
+        self.published_at ||= Core.now
+        transaction do
+          return false unless save(validate: false)
+          rebuild
+        end
+      end
+
+      def rebuild
+        return false if state != 'public'
+
+        run_callbacks :publish_files do
+          rendered = Cms::Admin::RenderService.new(site).render_public(public_uri)
+          return true unless publish_page(rendered, path: public_path)
+
+          if site.use_kana?
+            rendered = Cms::Admin::RenderService.new(site).render_public("#{public_uri}.r")
+            publish_page(rendered, path: "#{public_path}.r", dependent: :ruby)
+          end
+
+          if site.publish_for_smart_phone?(self)
+            rendered = Cms::Admin::RenderService.new(site).render_public(public_uri, agent_type: :smart_phone)
+            publish_page(rendered, path: public_smart_phone_path, dependent: :smart_phone)
+          end
+        end
+        return true
+      end
+
+      def close
+        self.state = 'closed' if self.state == 'public'
+        transaction do
+          return false unless save(validate: false)
+          run_callbacks :close_files do
+            close_page
+          end
+        end
+        return true
+      end
+    end
+    include Publication
   end
 
   private

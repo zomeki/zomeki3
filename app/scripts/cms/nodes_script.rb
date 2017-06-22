@@ -87,23 +87,14 @@ class Cms::NodesScript < Cms::Script::Publication
       info_log "-- Publish: #{item.class}##{item.id}"
 
       item = Cms::Node::Page.find(item.id)
-      uri  = "#{item.public_uri}?node_id=#{item.id}"
-      path = "#{item.public_path}"
 
-      unless item.publish(render_public_as_string(uri, site: item.site))
-        raise item.errors.full_messages
-      else
+      if item.publish
         Sys::OperationLog.script_log(item: item, site: item.site, action: 'publish')
+      else
+        raise item.errors.full_messages
       end
 
-      ruby_uri  = (uri =~ /\?/) ? uri.gsub(/(.*\.html)\?/, '\\1.r?') : "#{uri}.r"
-      ruby_path = "#{path}.r"
-      if item.published? || !::File.exist?(ruby_uri)
-        item.publish_page(render_public_as_string(ruby_uri, site: item.site),
-                          path: ruby_path, dependent: :ruby)
-      end
-
-      info_log %Q!OK: Published to "#{path}"!
+      info_log 'OK: Published'
       ::Script.success
       return true
     elsif item.state == 'public'
@@ -116,8 +107,8 @@ class Cms::NodesScript < Cms::Script::Publication
 
     if item.state == 'public'
       ::Script.current
-
       info_log "-- Close: #{item.class}##{item.id}"
+
       item = Cms::Node::Page.find(item.id)
 
       if item.close

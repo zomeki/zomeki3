@@ -12,10 +12,6 @@ class Tag::Tag < ApplicationRecord
     :class_name => 'GpArticle::Doc', :join_table => 'gp_article_docs_tag_tags',
     :after_add => :update_last_tagged_at, :after_remove => :update_last_tagged_at
 
-  def public_uri=(uri)
-    @public_uri = uri
-  end
-
   def public_uri
     return @public_uri if @public_uri
     return '' unless node = content.public_node
