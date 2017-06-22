@@ -55,7 +55,7 @@ class Sys::Admin::KanaDictionariesController < Cms::Controller::Admin::Base
 
   def make
     makers = [Cms::KanaDictionary::Maker.new]
-    makers += Cms::Site.order(:id).map { |site| Cms::KanaDictionary::Maker.new(site_id: site.id) }
+    makers += Cms::Site.order(:id).map { |site| Cms::KanaDictionary::Maker.new(site) }
     makers.each(&:make_dic)
 
     errors = makers.map(&:errors).flatten

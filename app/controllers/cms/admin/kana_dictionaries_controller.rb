@@ -52,7 +52,7 @@ class Cms::Admin::KanaDictionariesController < Cms::Controller::Admin::Base
   end
 
   def make
-    maker = Cms::KanaDictionary::Maker.new(site_id: Core.site.id)
+    maker = Cms::KanaDictionary::Maker.new(Core.site)
     maker.make_dic
     flash[:notice] = if maker.errors.blank?
                        '辞書を更新しました。'

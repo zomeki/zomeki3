@@ -1,6 +1,7 @@
 class Cms::TalkTask < ApplicationRecord
   include Sys::Model::Base
 
+  belongs_to :site, class_name: 'Cms::Site'
   belongs_to :talk_processable, polymorphic: true
   has_one :publisher, primary_key: :path, foreign_key: :path, class_name: 'Sys::Publisher'
 

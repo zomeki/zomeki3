@@ -4,6 +4,7 @@ class Sys::File < ApplicationRecord
   include Sys::Model::Rel::Creator
 
   has_many :publishers, class_name: 'Sys::Publisher', dependent: :destroy, as: :publishable
+  belongs_to :site, class_name: 'Cms::Site'
   belongs_to :file_attachable, polymorphic: true
 
   ## Remove the temporary flag.
