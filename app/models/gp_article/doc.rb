@@ -30,7 +30,6 @@ class GpArticle::Doc < ApplicationRecord
 
   self.linkable_columns = [:body, :mobile_body, :body_more]
 
-  STATE_OPTIONS = [['下書き保存', 'draft'], ['承認依頼', 'approvable'], ['即時公開', 'public']]
   TARGET_OPTIONS = [['無効', ''], ['同一ウィンドウ', '_self'], ['別ウィンドウ', '_blank'], ['添付ファイル', 'attached_file']]
   EVENT_STATE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
   MARKER_STATE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
@@ -39,9 +38,6 @@ class GpArticle::Doc < ApplicationRecord
   FEATURE_2_OPTIONS = [['表示', true], ['非表示', false]]
 
   default_scope { where.not(state: 'archived') }
-  scope :public_state, -> { where(state: 'public') }
-  scope :mobile, ->(m) { m ? where(terminal_mobile: true) : where(terminal_pc_or_smart_phone: true) }
-  scope :display_published_after, ->(date) { where(arel_table[:display_published_at].gteq(date)) }
 
   # Content
   belongs_to :content, :foreign_key => :content_id, :class_name => 'GpArticle::Content::Doc'
@@ -112,6 +108,9 @@ class GpArticle::Doc < ApplicationRecord
   validate :validate_accessibility_check, if: -> { !state_draft? && errors.blank? }
   validate :validate_broken_link_existence, if: -> { !state_draft? && errors.blank? }
 
+  scope :public_state, -> { where(state: 'public') }
+  scope :mobile, ->(m) { m ? where(terminal_mobile: true) : where(terminal_pc_or_smart_phone: true) }
+  scope :display_published_after, ->(date) { where(arel_table[:display_published_at].gteq(date)) }
   scope :visible_in_list, -> { where(feature_1: true) }
   scope :event_scheduled_between, ->(start_date, end_date, category_ids = nil) {
     rel = dates_intersects(:event_started_on, :event_ended_on, start_date.try(:beginning_of_day), end_date.try(:end_of_day))
@@ -155,13 +154,6 @@ class GpArticle::Doc < ApplicationRecord
     "#{content.public_path}/_smartphone#{public_uri(without_filename: true)}#{filename_base}.html"
   end
 
-  def organization_content_related?
-    organization_content = content.organization_content_group
-    return organization_content &&
-      organization_content.article_related? &&
-      organization_content.related_article_content_id == content.id
-  end
-
   def organization_group
     return @organization_group if defined? @organization_group
     @organization_group =
@@ -174,7 +166,7 @@ class GpArticle::Doc < ApplicationRecord
 
   def public_uri(without_filename: false, with_closed_preview: false)
     uri =
-      if organization_content_related? && organization_group
+      if content.organization_content_related? && organization_group
         "#{organization_group.public_uri}docs/#{name}/"
       elsif with_closed_preview && content.node
         "#{content.node.public_uri}#{name}/"
@@ -187,7 +179,7 @@ class GpArticle::Doc < ApplicationRecord
 
   def public_full_uri(without_filename: false)
     uri =
-      if organization_content_related? && organization_group
+      if content.organization_content_related? && organization_group
         "#{organization_group.public_full_uri}docs/#{name}/"
       elsif content.public_node
         "#{content.public_node.public_full_uri}#{name}/"
@@ -214,19 +206,6 @@ class GpArticle::Doc < ApplicationRecord
       %Q(#{public_uri}file_contents/)
     else
       %Q(#{content.admin_uri}/#{id}/file_contents/)
-    end
-  end
-
-  def state_options
-    options = if Core.user.has_auth?(:manager) || content.save_button_states.include?('public')
-                STATE_OPTIONS
-              else
-                STATE_OPTIONS.reject{|so| so.last == 'public' }
-              end
-    if content.approval_related?
-      options
-    else
-      options.reject{|o| o.last == 'approvable' }
     end
   end
 
