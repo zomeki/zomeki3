@@ -391,18 +391,6 @@ class GpArticle::Doc < ApplicationRecord
     super
   end
 
-  def backlinks
-    return self.class.none unless state_public? || state_closed?
-    return self.class.none if public_uri.blank?
-    links.klass.where(links.table[:url].matches("%#{self.public_uri(without_filename: true).sub(/\/$/, '')}%"))
-      .where(linkable_type: self.class.name)
-  end
-
-  def backlinked_docs
-    return [] if backlinks.blank?
-    self.class.where(id: backlinks.pluck(:linkable_id))
-  end
-
   def extract_links
     extracted_links = super
     if template
@@ -501,12 +489,6 @@ class GpArticle::Doc < ApplicationRecord
 
   def event_state_visible?
     event_state == 'visible'
-  end
-
-  def send_broken_link_notification
-    backlinked_docs.each do |doc|
-      GpArticle::Admin::Mailer.broken_link_notification(self, doc).deliver_now
-    end
   end
 
   def lang_text
@@ -653,7 +635,7 @@ class GpArticle::Doc < ApplicationRecord
 
   concerning :Publication do
     included do
-      before_destroy :close
+      after_destroy :close_page
 
       define_model_callbacks :publish_files
       after_publish_files FileTransferCallbacks.new([:public_path, :public_smart_phone_path], recursive: true)

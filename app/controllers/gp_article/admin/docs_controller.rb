@@ -158,7 +158,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
   def destroy
     _destroy(@item) do
-      @item.send_broken_link_notification if @content.notify_broken_link? && @item.backlinks.present?
+      send_broken_link_notification
     end
   end
 
@@ -176,7 +176,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
   def close(item)
     _close(@item) do
-      @item.send_broken_link_notification if @content.notify_broken_link? && @item.backlinks.present?
+      send_broken_link_notification
     end
   end
 
@@ -250,6 +250,15 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
   def release_document
     @item.holds.destroy_all
+  end
+
+  def send_broken_link_notification
+    return unless @content.notify_broken_link?
+    if @item.state_public? || @item.state_closed?
+      @item.backlinked_items.each do |doc|
+        GpArticle::Admin::Mailer.broken_link_notification(@item, doc).deliver_now
+      end
+    end
   end
 
   private
