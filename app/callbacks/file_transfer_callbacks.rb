@@ -29,10 +29,9 @@ class FileTransferCallbacks < ApplicationCallbacks
   def enqueue(item)
     site = item.site
 
-    path_methods = @path_methods.dup
-    path_methods.reject! { |method| method.to_s =~ /smart_phone/ && !site.publish_for_smart_phone?(item) }
-
-    paths = path_methods.map { |method| item.public_send(method) }.select(&:present?).uniq
+    paths = @path_methods.reject { |method| method.to_s =~ /smart_phone/ && !site.publish_for_smart_phone?(item) }
+                         .map { |method| item.public_send(method) }
+                         .select(&:present?).uniq
     return if paths.blank?
 
     Cms::FileTransfer.register(site.id, paths, recursive: @recursive)
