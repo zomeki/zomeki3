@@ -103,10 +103,14 @@ class GpArticle::Doc < ApplicationRecord
                                              attribute: -> { mobile_body.present? ? :mobile_body : :body } }
 
   validate :name_validity, if: -> { name.present? }
-  validate :node_existence
   validate :event_dates_range
   validate :validate_accessibility_check, if: -> { !state_draft? && errors.blank? }
   validate :validate_broken_link_existence, if: -> { !state_draft? && errors.blank? }
+
+  validates_with Cms::ContentNodeValidator, if: -> { state_approvable? },
+                                           message: '記事コンテンツのディレクトリが作成されていないため、承認依頼が行えません。'
+  validates_with Cms::ContentNodeValidator, if: -> { state_public? },
+                                           message: '記事コンテンツのディレクトリが作成されていないため、即時公開が行えません。'
 
   scope :public_state, -> { where(state: 'public') }
   scope :mobile, ->(m) { m ? where(terminal_mobile: true) : where(terminal_pc_or_smart_phone: true) }
@@ -549,17 +553,6 @@ class GpArticle::Doc < ApplicationRecord
     return if self.serial_no.present?
     seq = Util::Sequencer.next_id('gp_article_doc_serial_no', version: self.content_id, site_id: content.site_id)
     self.serial_no = seq
-  end
-
-  def node_existence
-    unless content.public_node
-      case state
-      when 'public'
-        errors.add(:base, '記事コンテンツのディレクトリが作成されていないため、即時公開が行えません。')
-      when 'approvable'
-        errors.add(:base, '記事コンテンツのディレクトリが作成されていないため、承認依頼が行えません。')
-      end
-    end
   end
 
   def validate_platform_dependent_characters
