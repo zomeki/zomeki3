@@ -70,7 +70,7 @@ module Sys::Model::Rel::File
     end
   end
 
-  module Publication
+  concerning :Publication do
     def public_files_path
       return '' if (path = public_path).blank?
       ::File.join(path.end_with?('/') ? path : File.dirname(path), "file_contents")
@@ -123,5 +123,4 @@ module Sys::Model::Rel::File
       end
     end
   end
-  include Publication
 end

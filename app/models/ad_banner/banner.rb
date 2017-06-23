@@ -32,10 +32,6 @@ class AdBanner::Banner < ApplicationRecord
   after_save     Cms::Publisher::ContentCallbacks.new(belonged: true), if: :changed?
   before_destroy Cms::Publisher::ContentCallbacks.new(belonged: true)
 
-  define_model_callbacks :publish_files, :close_files
-  after_publish_files FileTransferCallbacks.new([:image_path, :image_smart_phone_path])
-  after_close_files FileTransferCallbacks.new([:image_path, :image_smart_phone_path])
-
   scope :published, -> {
     now = Time.now
     where(arel_table[:state].eq('public')
@@ -73,14 +69,6 @@ class AdBanner::Banner < ApplicationRecord
     TARGET_OPTIONS.detect{|o| o.last == self.target }.try(:first).to_s
   end
 
-  def publish_or_close_images
-    if published?
-      publish_images
-    else
-      close_images
-    end
-  end
-
   def published?
     now = Time.now
     (state == 'public') && (published_at.nil? || published_at <= now) && (closed_at.nil? || closed_at > now)
@@ -108,25 +96,33 @@ class AdBanner::Banner < ApplicationRecord
     not self.class.where(content_id: self.content_id, name: self.name).where(banners[:id].not_eq(self.id)).empty?
   end
 
-  def publish_images
-    run_callbacks :publish_files do
-      paths = [[image_path, nil]]
-      paths << [image_smart_phone_path, :smart_phone] if content.site.publish_for_smart_phone?
-      paths.each do |path, dep|
-        pub = Sys::Publisher.where(publishable: self, dependent: dep.to_s).first_or_initialize
-        pub.publish_file_with_digest(upload_path, path)
+  concerning :Publication do
+    included do
+      define_model_callbacks :publish_files, :close_files
+      after_publish_files FileTransferCallbacks.new([:image_path, :image_smart_phone_path])
+      after_close_files FileTransferCallbacks.new([:image_path, :image_smart_phone_path])
+    end
+
+    def publish_images
+      run_callbacks :publish_files do
+        paths = [[image_path, nil]]
+        paths << [image_smart_phone_path, :smart_phone] if content.site.publish_for_smart_phone?
+        paths.each do |path, dep|
+          pub = Sys::Publisher.where(publishable: self, dependent: dep.to_s).first_or_initialize
+          pub.publish_file_with_digest(upload_path, path)
+        end
       end
     end
-  end
 
-  def close_images
-    run_callbacks :close_files do
-      publishers.destroy_all
-      paths = [image_path]
-      paths << image_smart_phone_path if content.site.publish_for_smart_phone?
-      paths.each do |path|
-        FileUtils.rm path if ::File.exist?(path)
-        FileUtils.rmdir ::File.dirname(path)
+    def close_images
+      run_callbacks :close_files do
+        publishers.destroy_all
+        paths = [image_path]
+        paths << image_smart_phone_path if content.site.publish_for_smart_phone?
+        paths.each do |path|
+          FileUtils.rm path if ::File.exist?(path)
+          FileUtils.rmdir ::File.dirname(path)
+        end
       end
     end
   end

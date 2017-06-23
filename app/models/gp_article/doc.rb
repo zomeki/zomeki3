@@ -92,8 +92,6 @@ class GpArticle::Doc < ApplicationRecord
   after_save     GpArticle::Publisher::DocCallbacks.new, if: :changed?
   before_destroy GpArticle::Publisher::DocCallbacks.new
 
-  before_destroy :close
-
   attr_accessor :link_check_results, :in_ignore_link_check
   attr_accessor :accessibility_check_results, :in_ignore_accessibility_check, :in_modify_accessibility_check
 
@@ -653,10 +651,10 @@ class GpArticle::Doc < ApplicationRecord
     prev_edition.destroy if state_public? && prev_edition
   end
 
-  module Publication
-    extend ActiveSupport::Concern
-
+  concerning :Publication do
     included do
+      before_destroy :close
+
       define_model_callbacks :publish_files
       after_publish_files FileTransferCallbacks.new([:public_path, :public_smart_phone_path], recursive: true)
     end
@@ -717,5 +715,4 @@ class GpArticle::Doc < ApplicationRecord
       return true
     end
   end
-  include Publication
 end

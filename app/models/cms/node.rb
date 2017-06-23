@@ -240,6 +240,41 @@ class Cms::Node < ApplicationRecord
     return true
   end
 
+  private
+
+  def set_defaults
+    self.directory = (model_type == :directory) if self.has_attribute?(:directory) && directory.nil?
+  end
+
+  def move_directory
+    path_changes.each do |src, dest|
+      next unless Dir.exist?(src)
+
+      FileUtils.move(src, dest)
+      src = src.gsub(Rails.root.to_s, '.')
+      dest = dest.gsub(Rails.root.to_s, '.')
+      Sys::Publisher.where(Sys::Publisher.arel_table[:path].matches("#{src}%"))
+                    .replace_for_all(:path, src, dest)
+    end
+  end
+
+  def path_changed?
+    [:name, :parent_id].any? do |column|
+      changes[column].present? && changes[column][0].present? && changes[column][1].present?
+    end
+  end
+
+  def path_changes
+    return {} unless path_changed?
+    parent = self.class.find_by(id: parent_id)
+    parent_was = self.class.find_by(id: parent_id_was)
+    return {} if parent.nil? || parent_was.nil?
+    {
+      "#{parent_was.public_path}#{name_was}" => "#{parent.public_path}#{name}",
+      "#{parent_was.public_smart_phone_path}#{name_was}" => "#{parent.public_smart_phone_path}#{name}"
+    }
+  end
+
   class Directory < Cms::Node
     def close_page(options = {})
       return true
@@ -316,7 +351,7 @@ class Cms::Node < ApplicationRecord
       end
     end
 
-    module Publication
+    concerning :Publication do
       def publish
         self.state = 'public'
         self.published_at ||= Core.now
@@ -357,41 +392,5 @@ class Cms::Node < ApplicationRecord
         return true
       end
     end
-    include Publication
-  end
-
-  private
-
-  def set_defaults
-    self.directory = (model_type == :directory) if self.has_attribute?(:directory) && directory.nil?
-  end
-
-  def move_directory
-    path_changes.each do |src, dest|
-      next unless Dir.exist?(src)
-
-      FileUtils.move(src, dest)
-      src = src.gsub(Rails.root.to_s, '.')
-      dest = dest.gsub(Rails.root.to_s, '.')
-      Sys::Publisher.where(Sys::Publisher.arel_table[:path].matches("#{src}%"))
-                    .replace_for_all(:path, src, dest)
-    end
-  end
-
-  def path_changed?
-    [:name, :parent_id].any? do |column|
-      changes[column].present? && changes[column][0].present? && changes[column][1].present?
-    end
-  end
-
-  def path_changes
-    return {} unless path_changed?
-    parent = self.class.find_by(id: parent_id)
-    parent_was = self.class.find_by(id: parent_id_was)
-    return {} if parent.nil? || parent_was.nil?
-    {
-      "#{parent_was.public_path}#{name_was}" => "#{parent.public_path}#{name}",
-      "#{parent_was.public_smart_phone_path}#{name_was}" => "#{parent.public_smart_phone_path}#{name}"
-    }
   end
 end
