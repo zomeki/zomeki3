@@ -405,21 +405,12 @@ class GpArticle::Doc < ApplicationRecord
   end
 
   def replace_words_with_dictionary
-    dic = content.setting_value(:word_dictionary)
-    return if dic.blank?
+    return if content.word_dictionary.blank?
 
-    words = []
-    dic.split(/\r\n|\n/).each do |line|
-      next if line !~ /,/
-      data = line.split(/,/)
-      words << [data[0].strip, data[1].strip]
-    end
-
-    if body.present?
-      words.each {|src, dst| self.body = body.gsub(src, dst) }
-    end
-    if mobile_body.present?
-      words.each {|src, dst| self.mobile_body = mobile_body.gsub(src, dst) }
+    dic = Cms::Admin::WordDictionaryService.new(content.word_dictionary)
+    [:body, :mobile_body].each do |column|
+      text = read_attribute(column)
+      self[column] = dic.replace(text) if text.present?
     end
   end
 

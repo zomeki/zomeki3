@@ -357,4 +357,8 @@ class GpArticle::Content::Doc < Cms::Content
   def map_coordinate
     setting_extra_value(:map_setting, :lat_lng)
   end
+
+  def word_dictionary
+    setting_value(:word_dictionary)
+  end
 end
