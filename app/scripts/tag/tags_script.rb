@@ -1,4 +1,4 @@
-class Tag::TagsScript < Cms::Script::Publication
+class Tag::TagsScript < PublicationScript
   def publish
     publish_more(@node, uri: @node.public_uri,
                         path: @node.public_path,

@@ -1,4 +1,4 @@
-class Cms::Tool::PagesScript < Cms::Script::Base
+class Cms::Tool::PagesScript < ParametersScript
   include Cms::Controller::Layout
 
   def rebuild

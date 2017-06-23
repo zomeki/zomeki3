@@ -1,4 +1,4 @@
-class BizCalendar::PlacesScript < Cms::Script::Publication
+class BizCalendar::PlacesScript < PublicationScript
   def publish
     publish_page(@node, uri: @node.public_uri,
                         path: @node.public_path,

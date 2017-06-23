@@ -1,4 +1,4 @@
-class Cms::NodesScript < Cms::Script::Publication
+class Cms::NodesScript < PublicationScript
   def publish
     @ids = {}
 

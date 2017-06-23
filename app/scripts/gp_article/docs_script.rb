@@ -1,4 +1,4 @@
-class GpArticle::DocsScript < Cms::Script::Publication
+class GpArticle::DocsScript < PublicationScript
   def publish
     uri = @node.public_uri.to_s
     path = @node.public_path.to_s

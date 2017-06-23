@@ -1,4 +1,4 @@
-class Cms::SitemapsScript < Cms::Script::Publication
+class Cms::SitemapsScript < PublicationScript
   def publish
     publish_page(@node, uri: @node.public_uri,
                         path: @node.public_path,

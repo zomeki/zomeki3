@@ -1,4 +1,4 @@
-class Map::MarkersScript < Cms::Script::Publication
+class Map::MarkersScript < PublicationScript
   def publish
     publish_more(@node, uri: @node.public_uri,
                         path: @node.public_path,

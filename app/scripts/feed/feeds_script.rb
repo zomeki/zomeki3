@@ -1,4 +1,4 @@
-class Feed::FeedsScript < Cms::Script::Base
+class Feed::FeedsScript < ParametersScript
   def read
     success = 0
     error   = 0

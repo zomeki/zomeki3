@@ -1,4 +1,4 @@
-class AdBanner::BannersScript < Cms::Script::Publication
+class AdBanner::BannersScript < PublicationScript
   def publish
     banners = @node.content.banners
     banners.each do |banner|

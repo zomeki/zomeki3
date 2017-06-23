@@ -1,4 +1,4 @@
-class GpArticle::Tool::DocsScript < Cms::Script::Base
+class GpArticle::Tool::DocsScript < ParametersScript
   include Cms::Controller::Layout
 
   def rebuild
