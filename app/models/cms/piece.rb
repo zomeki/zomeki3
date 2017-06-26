@@ -24,8 +24,8 @@ class Cms::Piece < ApplicationRecord
   after_save :save_settings
   after_save :replace_new_piece
 
-  after_save     Cms::Publisher::BracketeeCallbacks.new, if: :changed?
-  before_destroy Cms::Publisher::BracketeeCallbacks.new
+  after_save     Cms::Publisher::PieceCallbacks.new, if: :changed?
+  before_destroy Cms::Publisher::PieceCallbacks.new
 
   scope :public_state, -> { where(state: 'public') }
 

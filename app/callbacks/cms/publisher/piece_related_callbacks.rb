@@ -13,6 +13,6 @@ class Cms::Publisher::PieceRelatedCallbacks < PublisherCallbacks
   end
 
   def enqueue_pieces
-    Cms::Publisher::PieceCallbacks.new.enqueue(@item.piece)
+    Cms::Publisher::PieceCallbacks.new.enqueue([@item.piece])
   end
 end

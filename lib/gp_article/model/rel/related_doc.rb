@@ -7,11 +7,19 @@ module GpArticle::Model::Rel::RelatedDoc
       reject_if: proc{|attrs| attrs['name'].blank?}
   end
 
-  def all_related_docs
+  def relate_docs
     related_docs.map(&:target_doc).compact
   end
 
-  def public_related_docs
-    @public_related_docs ||= all_related_docs.select(&:state_public?)
+  def public_relate_docs
+    @public_relate_docs ||= relate_docs.select(&:state_public?)
+  end
+
+  def relatee_docs
+   GpArticle::Doc.where(id: GpArticle::RelatedDoc.where(content_id: content_id, name: name).select(:relatable_id))
+  end
+
+  def public_relatee_docs
+    relatee_docs.where(state: 'public')
   end
 end
