@@ -1,4 +1,4 @@
-class Reception::ApplicantsScript < Cms::Script::Base
+class Reception::ApplicantsScript < ParametersScript
   def pull
     ApplicationRecordSlave.each_slaves do
       applicants = Reception::Slave::Applicant.all

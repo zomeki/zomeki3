@@ -1,6 +1,5 @@
 class Cms::Admin::KanaDictionariesController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
-  include Sys::Controller::Scaffold::Publication
 
   def pre_dispatch
     return error_auth unless Core.user.has_auth?(:manager)
@@ -53,7 +52,7 @@ class Cms::Admin::KanaDictionariesController < Cms::Controller::Admin::Base
   end
 
   def make
-    maker = Cms::KanaDictionary::Maker.new(site_id: Core.site.id)
+    maker = Cms::KanaDictionary::Maker.new(Core.site)
     maker.make_dic
     flash[:notice] = if maker.errors.blank?
                        '辞書を更新しました。'

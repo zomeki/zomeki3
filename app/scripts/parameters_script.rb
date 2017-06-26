@@ -1,4 +1,4 @@
-class Cms::Script::Base < ApplicationScript
+class ParametersScript < ApplicationScript
   attr_accessor :params
 
   def initialize(params = {})

@@ -68,7 +68,7 @@ module Cms::Model::Base::Page::Publisher
     return false if content.nil?
 
     path = (options[:path] || public_path).gsub(/\/\z/, '/index.html')
-    pub = Sys::Publisher.where(publishable: self, dependent: options[:dependent].try(:to_s)).first_or_initialize
+    pub = Sys::Publisher.where(publishable: self, dependent: options[:dependent].to_s).first_or_initialize
     @published = pub.publish_with_digest(content, path)
 
     return true

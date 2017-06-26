@@ -1,4 +1,4 @@
-class Cms::FileTransfersScript < Cms::Script::Base
+class Cms::FileTransfersScript < ParametersScript
   def exec
     if params[:file_transfer_id].present?
       transfers = Cms::FileTransfer.where(id: params[:file_transfer_id])

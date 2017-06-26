@@ -1,4 +1,4 @@
-class GpCalendar::BaseScript < Cms::Script::Publication
+class GpCalendar::BaseScript < PublicationScript
   private
 
   def get_min_date

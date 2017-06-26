@@ -1,4 +1,4 @@
-class Reception::OpensScript < Cms::Script::Publication
+class Reception::OpensScript < PublicationScript
   def expire_by_task(item)
     if item.state_public?
       ::Script.current

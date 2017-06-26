@@ -39,24 +39,12 @@ class Cms::Admin::Node::PagesController < Cms::Admin::Node::BaseController
     end
   end
 
-  def publish_ruby(item)
-    uri  = item.public_uri
-    uri  = (uri =~ /\?/) ? uri.gsub(/(.*\.html)\?/, '\\1.r?') : "#{uri}.r"
-    path = "#{item.public_path}.r"
-    item.publish_page(render_public_as_string(uri, site: item.site), path: path, dependent: :ruby)
-  end
-
   def publish(item)
-    item.public_uri = "#{item.public_uri}?node_id=#{item.id}"
-    _publish(item, :location => cms_nodes_path) { publish_ruby(item) }
+    _publish(item, :location => cms_nodes_path)
   end
 
   def publish_by_update(item)
-    item.public_uri = "#{item.public_uri}?node_id=#{item.id}"
-    if item.publish(render_public_as_string(item.public_uri, site: item.site))
-      publish_ruby(item)
-      item.rebuild(render_public_as_string(item.public_uri, site: item.site, agent_type: :smart_phone),
-                   path: item.public_smart_phone_path, dependent: :smart_phone)
+    if item.publish
       flash[:notice] = "公開処理が完了しました。"
     else
       flash[:notice] = "公開処理に失敗しました。"

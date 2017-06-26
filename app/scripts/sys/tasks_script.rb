@@ -1,4 +1,4 @@
-class Sys::TasksScript < Cms::Script::Base
+class Sys::TasksScript < ParametersScript
   def exec
     processable_task_ids do |task_ids|
       tasks = Sys::Task.where(id: task_ids).order(process_at: :desc)

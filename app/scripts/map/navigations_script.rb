@@ -1,4 +1,4 @@
-class Map::NavigationsScript < Cms::Script::Publication
+class Map::NavigationsScript < PublicationScript
   def publish
     publish_page(@node, uri: @node.public_uri,
                         path: @node.public_path,

@@ -1,4 +1,4 @@
-class Cms::LinkChecksScript < Cms::Script::Base
+class Cms::LinkChecksScript < ParametersScript
   def exec
     prepare(::Script.site)
     execute(::Script.site)

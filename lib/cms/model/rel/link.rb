@@ -18,8 +18,6 @@ module Cms::Model::Rel::Link
   end
 
   def check_links
-    site = respond_to?(:content) ? content.site : site
-
     ex_links = extract_links
     ex_links.map { |link|
       uri = Addressable::URI.parse(link[:url])
@@ -41,5 +39,15 @@ module Cms::Model::Rel::Link
     extracted_links.each do |ex_link|
       links.create(content_id: content_id, body: ex_link[:body], url: ex_link[:url], linkable_column: ex_link[:column])
     end
+  end
+
+  def backlinks
+    source_url = public_uri.sub(/index\.html$/, '').sub(/\/$/, '')
+    links.klass.where(linkable_type: self.class.name)
+         .where(links.table[:url].matches("%#{source_url}%"))
+  end
+
+  def backlinked_items
+    self.class.where(id: backlinks.pluck(:linkable_id))
   end
 end
