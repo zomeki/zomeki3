@@ -15,7 +15,9 @@ class Cms::Publisher::BracketeeCallbacks < PublisherCallbacks
   end
 
   def enqueue_bracketees
-    bracketees = Cms::Bracket.where(site_id: @item.site_id).ci_match(name: changed_bracket_names).preload(:owner).all
+    bracketees = Cms::Bracket.where(site_id: @item.site_id)
+                             .ci_match(name: @item.changed_bracket_names)
+                             .preload(:owner).all
     return if bracketees.blank?
 
     owner_map = bracketees.map(&:owner).group_by { |owner| owner.class.name }
@@ -27,11 +29,5 @@ class Cms::Publisher::BracketeeCallbacks < PublisherCallbacks
         end
       end
     end
-  end
-
-  def changed_bracket_names
-    type = Cms::Lib::Bracket.bracket_type(@item)
-    names = [@item.name, @item.name_was].select(&:present?).uniq
-    names.map { |name| "#{type}/#{name}" }
   end
 end

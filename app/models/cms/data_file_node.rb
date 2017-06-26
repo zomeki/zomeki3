@@ -33,14 +33,14 @@ class Cms::DataFileNode < ApplicationRecord
     end
   end
 
+  def changed_bracket_names
+    names = [name, name_was].select(&:present?).uniq
+    names.map { |name| files.map { |file| "file/#{name}/#{file.name}" } }.flatten
+  end
+
 private
   def remove_files
     files.each {|file| file.destroy }
     return true
-  end
-
-  def changed_bracket_names
-    names = [name, name_was].select(&:present?).uniq
-    names.map { |name| files.map { |file| "file/#{name}/#{file.name}" } }.flatten
   end
 end
