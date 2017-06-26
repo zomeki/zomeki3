@@ -7,6 +7,7 @@ class Cms::Publisher::LayoutCallbacks < PublisherCallbacks
     enqueue_nodes
     enqueue_categories
     enqueue_organization_groups
+    enqueue_gnav_menu_items
     enqueue_docs
   end
 
@@ -33,6 +34,12 @@ class Cms::Publisher::LayoutCallbacks < PublisherCallbacks
   def enqueue_organization_groups
     ogs = Organization::Group.public_state.with_layout(@layouts.map(&:id))
     Cms::Publisher.register(@site.id, ogs)
+  end
+
+  def enqueue_gnav_menu_items
+    contents = Gnav::Content::MenuItem.where(id: Gnav::MenuItem.select(:content_id).where(state: 'public', layout_id: @layouts.map(&:id)))
+    nodes = Cms::Node.public_state.where(content_id: contents)
+    Cms::Publisher.register(@site.id, nodes)
   end
 
   def enqueue_docs

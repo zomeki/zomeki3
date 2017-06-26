@@ -17,16 +17,11 @@ class Cms::Publisher::PieceCallbacks < PublisherCallbacks
 
   def enqueue_layouts
     layouts = Cms::Bracket.where(site_id: @site.id, owner_type: 'Cms::Layout')
-                          .ci_match(name: changed_piece_names)
+                          .ci_match(name: @pieces.flat_map(&:changed_bracket_names).uniq)
                           .preload(:owner)
                           .map(&:owner).uniq
     return if layouts.blank?
 
     Cms::Publisher::LayoutCallbacks.new.enqueue(layouts)
-  end
-
-  def changed_piece_names
-    @pieces.map { |piece| [piece.name, piece.name_was] }.flatten.select(&:present?).uniq
-           .map { |name| "piece/#{name}" }
   end
 end

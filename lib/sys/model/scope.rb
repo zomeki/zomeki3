@@ -19,8 +19,12 @@ module Sys::Model::Scope
       column_text.inject(all) do |rel, (column, text)|
         column = connection.quote_table_name("#{table_name}.#{column}")
         if text.is_a?(Array)
-          cond = text.map { |t| "LOWER(#{connection.quote(t)})" }.join(', ')
-          rel.where!("LOWER(#{column}) IN (#{cond})")
+          if text.empty?
+            rel.none!
+          else
+            cond = text.map { |t| "LOWER(#{connection.quote(t)})" }.join(', ')
+            rel.where!("LOWER(#{column}) IN (#{cond})")
+          end
         else
           rel.where!("LOWER(#{column}) = LOWER(#{connection.quote(text)})")
         end
