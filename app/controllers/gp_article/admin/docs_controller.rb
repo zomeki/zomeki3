@@ -105,7 +105,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     end
 
     new_state = params.keys.detect{|k| k =~ /^commit_/ }.try(:sub, /^commit_/, '')
-    @item.state = new_state if new_state.present? && @item.class::STATE_OPTIONS.any?{|v| v.last == new_state }
+    @item.state = new_state if new_state.present? && @content.state_options.any?{|v| v.last == new_state }
 
     location = ->(d){ edit_gp_article_doc_url(@content, d) } if @item.state_draft?
     _create(@item, location: location) do
@@ -141,7 +141,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     end
 
     new_state = params.keys.detect{|k| k =~ /^commit_/ }.try(:sub, /^commit_/, '')
-    @item.state = new_state if new_state.present? && @item.class::STATE_OPTIONS.any?{|v| v.last == new_state }
+    @item.state = new_state if new_state.present? && @content.state_options.any?{|v| v.last == new_state }
 
     location = url_for(action: 'edit') if @item.state_draft?
     _update(@item, location: location) do
