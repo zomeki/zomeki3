@@ -15,6 +15,7 @@ class GpArticle::Doc < ApplicationRecord
   include Cms::Model::Rel::Bracket
   include Cms::Model::Rel::PublishUrl
   include Cms::Model::Rel::Link
+  include Cms::Model::Rel::Importation
 
   include Cms::Model::Auth::Concept
   include Sys::Model::Auth::EditableGroup
@@ -384,6 +385,10 @@ class GpArticle::Doc < ApplicationRecord
       map.markers.each do |marker|
         new_map.markers.build(marker.attributes.slice('name', 'lat', 'lng'))
       end
+    end
+
+    importations.each do |importation|
+      new_doc.importations.build(importation.attributes.slice('source_url'))
     end
 
     transaction do

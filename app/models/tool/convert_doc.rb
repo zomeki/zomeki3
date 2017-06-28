@@ -5,6 +5,8 @@ class Tool::ConvertDoc < ActiveRecord::Base
   belongs_to :content, :class_name => 'Cms::Content'
   belongs_to :docable, polymorphic: true
 
+  after_create :create_cms_importation
+
   scope :search_with_criteria, ->(criteria = {}) {
     rel = all
     if criteria && criteria[:keyword].present?
@@ -25,5 +27,12 @@ class Tool::ConvertDoc < ActiveRecord::Base
 
   def source_uri
     "http://#{uri_path.to_s.gsub(/.htm.html$/, '.htm')}"
+  end
+
+  private
+
+  def create_cms_importation
+    return unless docable
+    Cms::Importation.where(importable: docable).first_or_create(source_url: "http://#{uri_path}")
   end
 end

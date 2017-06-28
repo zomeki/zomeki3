@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170614051345) do
+ActiveRecord::Schema.define(version: 20170626042635) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -333,6 +333,15 @@ ActiveRecord::Schema.define(version: 20170614051345) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["site_id"], name: "index_cms_file_transfers_on_site_id", using: :btree
+  end
+
+  create_table "cms_importations", force: :cascade do |t|
+    t.string   "importable_type"
+    t.integer  "importable_id"
+    t.string   "source_url"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.index ["importable_type", "importable_id"], name: "index_cms_importations_on_importable_type_and_importable_id", using: :btree
   end
 
   create_table "cms_inquiries", force: :cascade do |t|
@@ -1719,6 +1728,8 @@ ActiveRecord::Schema.define(version: 20170614051345) do
     t.text     "category_regexp"
     t.integer  "creator_group_relation_type"
     t.text     "creator_group_url_relations"
+    t.text     "published_at_tag"
+    t.text     "published_at_regexp"
     t.index ["site_url"], name: "index_tool_convert_settings_on_site_url", using: :btree
   end
 
