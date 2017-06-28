@@ -70,7 +70,7 @@ module Sys::Model::Rel::File
     end
   end
 
-  module Publication
+  concerning :Publication do
     def public_files_path
       return '' if (path = public_path).blank?
       ::File.join(path.end_with?('/') ? path : ::File.dirname(path), "file_contents")
@@ -117,11 +117,10 @@ module Sys::Model::Rel::File
         ]
         paths.each do |src, dst, dep|
           next unless FileTest.exists?(src)
-          pub = Sys::Publisher.where(publishable: file, dependent: dep).first_or_initialize
+          pub = Sys::Publisher.where(publishable: file, dependent: dep.to_s).first_or_initialize
           pub.publish_file_with_digest(src, dst)
         end
       end
     end
   end
-  include Publication
 end

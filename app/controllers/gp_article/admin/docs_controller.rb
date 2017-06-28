@@ -105,7 +105,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     end
 
     new_state = params.keys.detect{|k| k =~ /^commit_/ }.try(:sub, /^commit_/, '')
-    @item.state = new_state if new_state.present? && @item.class::STATE_OPTIONS.any?{|v| v.last == new_state }
+    @item.state = new_state if new_state.present? && @content.state_options.any?{|v| v.last == new_state }
 
     location = ->(d){ edit_gp_article_doc_url(@content, d) } if @item.state_draft?
     _create(@item, location: location) do
@@ -141,7 +141,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     end
 
     new_state = params.keys.detect{|k| k =~ /^commit_/ }.try(:sub, /^commit_/, '')
-    @item.state = new_state if new_state.present? && @item.class::STATE_OPTIONS.any?{|v| v.last == new_state }
+    @item.state = new_state if new_state.present? && @content.state_options.any?{|v| v.last == new_state }
 
     location = url_for(action: 'edit') if @item.state_draft?
     _update(@item, location: location) do
@@ -158,34 +158,16 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
   def destroy
     _destroy(@item) do
-      @item.send_broken_link_notification if @content.notify_broken_link? && @item.backlinks.present?
+      send_broken_link_notification
     end
-  end
-
-  def publish_ruby(item)
-    uri = item.public_uri
-    uri = (uri =~ /\?/) ? uri.gsub(/\?/, 'index.html.r?') : "#{uri}index.html.r"
-    path = "#{item.public_path}.r"
-    item.publish_page(render_public_as_string(uri, site: item.content.site), path: path, dependent: :ruby)
   end
 
   def publish
-    @item.update_attribute(:state, 'public')
-
-    _publish(@item) do
-      publish_ruby(@item)
-      @item.rebuild(render_public_as_string(@item.public_uri, site: @item.content.site, agent_type: :smart_phone),
-                    path: @item.public_smart_phone_path, dependent: :smart_phone)
-    end
-
+    _publish(@item)
   end
 
   def publish_by_update(item)
-    return unless item.terminal_pc_or_smart_phone
-    if item.publish(render_public_as_string(item.public_uri, site: item.content.site))
-      publish_ruby(item)
-      item.rebuild(render_public_as_string(item.public_uri, site: item.content.site, agent_type: :smart_phone),
-                   path: item.public_smart_phone_path, dependent: :smart_phone)
+    if item.publish
       flash[:notice] = '公開処理が完了しました。'
     else
       flash[:alert] = '公開処理に失敗しました。'
@@ -194,7 +176,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
   def close(item)
     _close(@item) do
-      @item.send_broken_link_notification if @content.notify_broken_link? && @item.backlinks.present?
+      send_broken_link_notification
     end
   end
 
@@ -268,6 +250,15 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
   def release_document
     @item.holds.destroy_all
+  end
+
+  def send_broken_link_notification
+    return unless @content.notify_broken_link?
+    if @item.state_public? || @item.state_closed?
+      @item.backlinked_items.each do |doc|
+        GpArticle::Admin::Mailer.broken_link_notification(@item, doc).deliver_now
+      end
+    end
   end
 
   private

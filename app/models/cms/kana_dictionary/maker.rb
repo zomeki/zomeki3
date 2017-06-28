@@ -2,14 +2,14 @@ class Cms::KanaDictionary::Maker
   include ActiveModel::Model
   include ActiveModel::Callbacks
 
-  attr_accessor :site_id, :dic_path, :errors
+  attr_accessor :site, :dic_path, :errors
 
   define_model_callbacks :save_files
-  after_save_files FileTransferCallbacks.new(:dic_path), if: -> { site_id }
+  after_save_files FileTransferCallbacks.new(:dic_path), if: -> { @site }
 
-  def initialize(site_id: nil)
-    @site_id = site_id
-    @dic_path = Cms::KanaDictionary.user_dic(@site_id)
+  def initialize(site = nil)
+    @site = site
+    @dic_path = Cms::KanaDictionary.user_dic(@site.try(:id))
     @errors = []
   end
 
@@ -43,7 +43,7 @@ class Cms::KanaDictionary::Maker
 
   def load_dic_csv
     data = []
-    items = Cms::KanaDictionary.where(site_id: @site_id ? [@site_id, nil] : [nil]).order(:id)
+    items = Cms::KanaDictionary.where(site_id: @site ? [@site.id, nil] : [nil]).order(:id)
     items.each do |item|
       item.convert_csv if item.mecab_csv == nil
       data << item.mecab_csv if item.mecab_csv.present?

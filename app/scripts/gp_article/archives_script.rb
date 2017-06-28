@@ -1,4 +1,4 @@
-class GpArticle::ArchivesScript < Cms::Script::Publication
+class GpArticle::ArchivesScript < PublicationScript
   def publish
     publish_page(@node, uri: @node.public_uri,
                         path: @node.public_path,

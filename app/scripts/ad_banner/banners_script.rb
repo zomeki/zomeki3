@@ -1,9 +1,13 @@
-class AdBanner::BannersScript < Cms::Script::Publication
+class AdBanner::BannersScript < PublicationScript
   def publish
     banners = @node.content.banners
     banners.each do |banner|
       ::Script.progress(banner) do
-        banner.publish_or_close_images
+        if banner.published?
+          banner.publish_images
+        else
+          banner.close_images
+        end
       end
     end
   end

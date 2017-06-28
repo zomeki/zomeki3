@@ -1,4 +1,4 @@
-class GpCategory::CategoryTypesScript < Cms::Script::Publication
+class GpCategory::CategoryTypesScript < PublicationScript
   def publish
     uri = @node.public_uri.to_s
     path = @node.public_path.to_s

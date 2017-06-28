@@ -1,4 +1,4 @@
-class Survey::FormsScript < Cms::Script::Publication
+class Survey::FormsScript < PublicationScript
   def publish
     publish_page(@node, uri: @node.public_uri,
                         path: @node.public_path,

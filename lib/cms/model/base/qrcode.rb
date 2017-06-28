@@ -12,7 +12,7 @@ module Cms::Model::Base::Qrcode
     QRCODE_OPTIONS.rassoc(qrcode_state).try(:first).to_s
   end
 
-  module Publication
+  concerning :Publication do
     def qrcode_public_uri
       uri = public_uri.end_with?('/') ? public_uri : ::File.dirname(public_uri)
       ::File.join(uri, QRCODE_FILENAME)
@@ -31,8 +31,6 @@ module Cms::Model::Base::Qrcode
       ::File.join(::File.dirname(public_smart_phone_path), QRCODE_FILENAME)
     end
 
-    private
-
     def publish_qrcode
       publish_qrcode_to(qrcode_path)
       return true
@@ -42,6 +40,8 @@ module Cms::Model::Base::Qrcode
       publish_qrcode_to(qrcode_smart_phone_path, dependent: :smart_phone)
       return true
     end
+
+    private
 
     def publish_qrcode_to(path, options = {})
       return true unless qrcode_visible?
@@ -54,5 +54,4 @@ module Cms::Model::Base::Qrcode
       pub.publish_with_digest(qrcode, path)
     end
   end
-  include Publication
 end

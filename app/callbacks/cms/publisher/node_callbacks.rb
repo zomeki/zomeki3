@@ -13,7 +13,7 @@ class Cms::Publisher::NodeCallbacks < PublisherCallbacks
   end
 
   def enqueue_nodes
-    return if @node.model.in?(%w(Cms::Page Cms::Directory Cms::Sitemap))
+    return if @node.model.in?(%w(Cms::Page Cms::Sitemap))
     Cms::Publisher.register(@node.site_id, @node)
   end
 end

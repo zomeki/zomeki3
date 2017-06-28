@@ -13,4 +13,10 @@ module Cms::Model::Rel::Bracketee
   def bracketees_with_name(name)
     Cms::Bracket.where(site_id: site_id).ci_match(name: name)
   end
+
+  def changed_bracket_names
+    type = Cms::Lib::Bracket.bracket_type(self)
+    names = [name, name_was].select(&:present?).uniq
+    names.map { |name| "#{type}/#{name}" }
+  end
 end

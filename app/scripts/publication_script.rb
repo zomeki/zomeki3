@@ -1,5 +1,5 @@
 require 'timeout'
-class Cms::Script::Publication < Cms::Script::Base
+class PublicationScript < ParametersScript
   include Cms::Controller::Layout
 
   def initialize(params = {})

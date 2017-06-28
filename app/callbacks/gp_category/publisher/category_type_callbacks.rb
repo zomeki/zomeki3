@@ -16,9 +16,7 @@ class GpCategory::Publisher::CategoryTypeCallbacks < PublisherCallbacks
 
   def enqueue_pieces
     pieces = @category_type.content.public_pieces.sort { |p| p.model == 'GpCategory::RecentTab' ? 1 : 9 }
-    pieces.each do |piece|
-      Cms::Publisher::PieceCallbacks.new.enqueue(piece)
-    end
+    Cms::Publisher::PieceCallbacks.new.enqueue(pieces)
   end
 
   def enqueue_categories

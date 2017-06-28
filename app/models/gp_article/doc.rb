@@ -30,7 +30,6 @@ class GpArticle::Doc < ApplicationRecord
 
   self.linkable_columns = [:body, :mobile_body, :body_more]
 
-  STATE_OPTIONS = [['下書き保存', 'draft'], ['承認依頼', 'approvable'], ['即時公開', 'public']]
   TARGET_OPTIONS = [['無効', ''], ['同一ウィンドウ', '_self'], ['別ウィンドウ', '_blank'], ['添付ファイル', 'attached_file']]
   EVENT_STATE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
   MARKER_STATE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
@@ -39,9 +38,6 @@ class GpArticle::Doc < ApplicationRecord
   FEATURE_2_OPTIONS = [['表示', true], ['非表示', false]]
 
   default_scope { where.not(state: 'archived') }
-  scope :public_state, -> { where(state: 'public') }
-  scope :mobile, ->(m) { m ? where(terminal_mobile: true) : where(terminal_pc_or_smart_phone: true) }
-  scope :display_published_after, ->(date) { where(arel_table[:display_published_at].gteq(date)) }
 
   # Content
   belongs_to :content, :foreign_key => :content_id, :class_name => 'GpArticle::Content::Doc'
@@ -82,11 +78,15 @@ class GpArticle::Doc < ApplicationRecord
 
   has_many :holds, :as => :holdable, :dependent => :destroy
 
+  after_initialize :set_defaults
   before_save :set_name
-  before_save :set_published_at
-  before_save :replace_public
   before_save :set_serial_no
-  after_destroy :close_page
+  before_save :set_published_at
+  before_save :set_display_attributes
+  before_save :replace_public
+
+  after_save     GpArticle::Publisher::DocCallbacks.new, if: :changed?
+  before_destroy GpArticle::Publisher::DocCallbacks.new
 
   attr_accessor :link_check_results, :in_ignore_link_check
   attr_accessor :accessibility_check_results, :in_ignore_accessibility_check, :in_modify_accessibility_check
@@ -103,17 +103,18 @@ class GpArticle::Doc < ApplicationRecord
                                              attribute: -> { mobile_body.present? ? :mobile_body : :body } }
 
   validate :name_validity, if: -> { name.present? }
-  validate :node_existence
   validate :event_dates_range
   validate :validate_accessibility_check, if: -> { !state_draft? && errors.blank? }
   validate :validate_broken_link_existence, if: -> { !state_draft? && errors.blank? }
 
-  after_initialize :set_defaults
-  after_save :set_display_attributes
+  validates_with Cms::ContentNodeValidator, if: -> { state_approvable? },
+                                           message: '記事コンテンツのディレクトリが作成されていないため、承認依頼が行えません。'
+  validates_with Cms::ContentNodeValidator, if: -> { state_public? },
+                                           message: '記事コンテンツのディレクトリが作成されていないため、即時公開が行えません。'
 
-  after_save     GpArticle::Publisher::DocCallbacks.new, if: :changed?
-  before_destroy GpArticle::Publisher::DocCallbacks.new
-
+  scope :public_state, -> { where(state: 'public') }
+  scope :mobile, ->(m) { m ? where(terminal_mobile: true) : where(terminal_pc_or_smart_phone: true) }
+  scope :display_published_after, ->(date) { where(arel_table[:display_published_at].gteq(date)) }
   scope :visible_in_list, -> { where(feature_1: true) }
   scope :event_scheduled_between, ->(start_date, end_date, category_ids = nil) {
     rel = dates_intersects(:event_started_on, :event_ended_on, start_date.try(:beginning_of_day), end_date.try(:end_of_day))
@@ -157,13 +158,6 @@ class GpArticle::Doc < ApplicationRecord
     "#{content.public_path}/_smartphone#{public_uri(without_filename: true)}#{filename_base}.html"
   end
 
-  def organization_content_related?
-    organization_content = content.organization_content_group
-    return organization_content &&
-      organization_content.article_related? &&
-      organization_content.related_article_content_id == content.id
-  end
-
   def organization_group
     return @organization_group if defined? @organization_group
     @organization_group =
@@ -176,7 +170,7 @@ class GpArticle::Doc < ApplicationRecord
 
   def public_uri(without_filename: false, with_closed_preview: false)
     uri =
-      if organization_content_related? && organization_group
+      if content.organization_content_related? && organization_group
         "#{organization_group.public_uri}docs/#{name}/"
       elsif with_closed_preview && content.node
         "#{content.node.public_uri}#{name}/"
@@ -189,7 +183,7 @@ class GpArticle::Doc < ApplicationRecord
 
   def public_full_uri(without_filename: false)
     uri =
-      if organization_content_related? && organization_group
+      if content.organization_content_related? && organization_group
         "#{organization_group.public_full_uri}docs/#{name}/"
       elsif content.public_node
         "#{content.public_node.public_full_uri}#{name}/"
@@ -219,19 +213,6 @@ class GpArticle::Doc < ApplicationRecord
     end
   end
 
-  def state_options
-    options = if Core.user.has_auth?(:manager) || content.save_button_states.include?('public')
-                STATE_OPTIONS
-              else
-                STATE_OPTIONS.reject{|so| so.last == 'public' }
-              end
-    if content.approval_related?
-      options
-    else
-      options.reject{|o| o.last == 'approvable' }
-    end
-  end
-
   def state_draft?
     state == 'draft'
   end
@@ -254,49 +235,6 @@ class GpArticle::Doc < ApplicationRecord
 
   def state_closed?
     state == 'finish'
-  end
-
-  def close
-    self.state = 'finish' if self.state_public?
-    return false unless save(:validate => false)
-    close_page
-    close_files
-    return true
-  end
-
-  def close_page(options={})
-    return true if will_replace?
-    return false unless super
-    publishers.destroy_all unless publishers.empty?
-
-    paths = [public_path, public_smart_phone_path].select(&:present?)
-    paths.each { |path| FileUtils.rm_rf(::File.dirname(path)) if path.present? }
-    return true
-  end
-
-  def publish(content)
-    self.state = 'public' unless self.state_public?
-    return false unless save(:validate => false)
-    publish_page(content, path: public_path, uri: public_uri)
-    publish_files
-    publish_qrcode
-  end
-
-  def rebuild(content, options={})
-    if options[:dependent] == :smart_phone
-      return false unless self.content.site.publish_for_smart_phone?
-    end
-
-    return false unless self.state_public?
-    publish_page(content, options)
-    if options[:dependent] == :smart_phone
-      publish_smart_phone_files
-      publish_smart_phone_qrcode
-    else
-      publish_files
-      publish_qrcode
-    end
-    return true
   end
 
   def external_link?
@@ -436,18 +374,6 @@ class GpArticle::Doc < ApplicationRecord
     super
   end
 
-  def backlinks
-    return self.class.none unless state_public? || state_closed?
-    return self.class.none if public_uri.blank?
-    links.klass.where(links.table[:url].matches("%#{self.public_uri(without_filename: true).sub(/\/$/, '')}%"))
-      .where(linkable_type: self.class.name)
-  end
-
-  def backlinked_docs
-    return [] if backlinks.blank?
-    self.class.where(id: backlinks.pluck(:linkable_id))
-  end
-
   def extract_links
     extracted_links = super
     if template
@@ -483,21 +409,12 @@ class GpArticle::Doc < ApplicationRecord
   end
 
   def replace_words_with_dictionary
-    dic = content.setting_value(:word_dictionary)
-    return if dic.blank?
+    return if content.word_dictionary.blank?
 
-    words = []
-    dic.split(/\r\n|\n/).each do |line|
-      next if line !~ /,/
-      data = line.split(/,/)
-      words << [data[0].strip, data[1].strip]
-    end
-
-    if body.present?
-      words.each {|src, dst| self.body = body.gsub(src, dst) }
-    end
-    if mobile_body.present?
-      words.each {|src, dst| self.mobile_body = mobile_body.gsub(src, dst) }
+    dic = Cms::Admin::WordDictionaryService.new(content.word_dictionary)
+    [:body, :mobile_body].each do |column|
+      text = read_attribute(column)
+      self[column] = dic.replace(text) if text.present?
     end
   end
 
@@ -546,12 +463,6 @@ class GpArticle::Doc < ApplicationRecord
 
   def event_state_visible?
     event_state == 'visible'
-  end
-
-  def send_broken_link_notification
-    backlinked_docs.each do |doc|
-      GpArticle::Admin::Mailer.broken_link_notification(self, doc).deliver_now
-    end
   end
 
   def lang_text
@@ -634,25 +545,14 @@ class GpArticle::Doc < ApplicationRecord
   end
 
   def set_display_attributes
-    self.update_column(:display_published_at, self.published_at) unless self.display_published_at
-    self.update_column(:display_updated_at, self.updated_at) if self.display_updated_at.blank? || !self.keep_display_updated_at
+    self.display_published_at = published_at if display_published_at.nil?
+    self.display_updated_at = updated_at if display_updated_at.nil? || !keep_display_updated_at
   end
 
   def set_serial_no
     return if self.serial_no.present?
     seq = Util::Sequencer.next_id('gp_article_doc_serial_no', version: self.content_id, site_id: content.site_id)
     self.serial_no = seq
-  end
-
-  def node_existence
-    unless content.public_node
-      case state
-      when 'public'
-        errors.add(:base, '記事コンテンツのディレクトリが作成されていないため、即時公開が行えません。')
-      when 'approvable'
-        errors.add(:base, '記事コンテンツのディレクトリが作成されていないため、承認依頼が行えません。')
-      end
-    end
   end
 
   def validate_platform_dependent_characters
@@ -694,5 +594,70 @@ class GpArticle::Doc < ApplicationRecord
 
   def replace_public
     prev_edition.destroy if state_public? && prev_edition
+  end
+
+  concerning :Publication do
+    included do
+      after_destroy :close_page
+
+      define_model_callbacks :publish_files
+      after_publish_files FileTransferCallbacks.new([:public_path, :public_smart_phone_path], recursive: true)
+    end
+
+    def publish
+      self.state = 'public' unless state_public?
+      transaction do
+        return false unless save(validate: false)
+        run_callbacks :publish_files do
+          rebuild
+        end
+      end
+    end
+
+    def rebuild
+      return false unless state_public?
+      return true unless terminal_pc_or_smart_phone
+
+      rendered = Cms::Admin::RenderService.new(content.site).render_public(public_uri)
+      return true unless publish_page(rendered, path: public_path)
+      publish_files
+      publish_qrcode
+
+      if content.site.use_kana?
+        uri = public_uri
+        uri = ::File.join(uri, 'index.html') if uri.end_with?('/')
+        uri = "#{uri}.r"
+        rendered = Cms::Admin::RenderService.new(content.site).render_public(uri)
+        publish_page(rendered, path: "#{public_path}.r", dependent: :ruby)
+      end
+
+      if content.site.publish_for_smart_phone?
+        rendered = Cms::Admin::RenderService.new(content.site).render_public(public_uri, agent_type: :smart_phone)
+        publish_page(rendered, path: public_smart_phone_path, dependent: :smart_phone)
+        publish_smart_phone_files
+        publish_smart_phone_qrcode
+      end
+
+      return true
+    end
+
+    def close
+      self.state = 'finish' if self.state_public?
+      transaction do
+        return false unless save(validate: false)
+        close_page
+        close_files
+      end
+      return true
+    end
+
+    def close_page(options={})
+      return true if will_replace?
+      return false unless super
+
+      paths = [public_path, public_smart_phone_path].select(&:present?)
+      paths.each { |path| FileUtils.rm_rf(::File.dirname(path)) if path.present? }
+      return true
+    end
   end
 end

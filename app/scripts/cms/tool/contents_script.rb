@@ -1,4 +1,4 @@
-class Cms::Tool::ContentsScript < Cms::Script::Base
+class Cms::Tool::ContentsScript < ParametersScript
   def rebuild
     Array(params[:content_id]).each do |content_id|
       content = Cms::Content.find_by(id: content_id)

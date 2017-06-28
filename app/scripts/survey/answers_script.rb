@@ -1,4 +1,4 @@
-class Survey::AnswersScript < Cms::Script::Base
+class Survey::AnswersScript < ParametersScript
   def pull
     ApplicationRecordSlave.each_slaves do
       form_answers = Survey::Slave::FormAnswer.where('created_at < ?', (Time.now - 5).strftime('%Y-%m-%d %H:%M:%S'))

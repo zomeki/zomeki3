@@ -26,7 +26,7 @@ class GpArticle::Content::Setting < Cms::ContentSetting
   set_config :save_button_states, menu: :form,
     name: '即時公開ボタン',
     form_type: :check_boxes,
-    options: GpArticle::Doc::STATE_OPTIONS.reject { |o| o.last != 'public' },
+    options: GpArticle::Content::Doc::STATE_OPTIONS.reject { |o| o.last != 'public' },
     default_value: ['public']
   set_config :inquiry_setting, menu: :form,
     name: '連絡先',

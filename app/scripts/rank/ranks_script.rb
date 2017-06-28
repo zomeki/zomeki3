@@ -1,4 +1,4 @@
-class Rank::RanksScript < Cms::Script::Base
+class Rank::RanksScript < ParametersScript
   def exec
     contents = Rank::Content::Rank.all
     contents = contents.where(site_id: ::Script.site.id) if ::Script.site

@@ -21,8 +21,6 @@ class GpCalendar::Publisher::EventCallbacks < PublisherCallbacks
   end
 
   def enqueue_pieces
-    @event.content.public_pieces.each do |piece|
-      Cms::Publisher::PieceCallbacks.new.enqueue(piece)
-    end
+    Cms::Publisher::PieceCallbacks.new.enqueue(@event.content.public_pieces)
   end
 end

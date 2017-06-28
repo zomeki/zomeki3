@@ -1,4 +1,4 @@
-class AdBanner::ClicksScript < Cms::Script::Base
+class AdBanner::ClicksScript < ParametersScript
   def pull
     ApplicationRecordSlave.each_slaves do
       clicks = AdBanner::Slave::Click.all

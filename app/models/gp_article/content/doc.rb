@@ -1,6 +1,8 @@
 class GpArticle::Content::Doc < Cms::Content
   default_scope { where(model: 'GpArticle::Doc') }
 
+  STATE_OPTIONS = [['下書き保存', 'draft'], ['承認依頼', 'approvable'], ['即時公開', 'public']]
+
   has_one :node, -> { where(model: 'GpArticle::Doc').order(:id) },
     foreign_key: :content_id, class_name: 'Cms::Node'
   has_one :public_node, -> { public_state.where(model: 'GpArticle::Doc').order(:id) },
@@ -36,6 +38,13 @@ class GpArticle::Content::Doc < Cms::Content
     if organization_content_group_setting
       @organization_content_group ||= organization_content_group_setting.organization_content_group
     end
+  end
+
+  def organization_content_related?
+    organization_content = organization_content_group
+    organization_content &&
+      organization_content.article_related? &&
+      organization_content.related_article_content_id == content.id
   end
 
   def gp_category_content_category_type
@@ -108,6 +117,19 @@ class GpArticle::Content::Doc < Cms::Content
 
   def save_button_states
     setting_value(:save_button_states) || []
+  end
+
+  def state_options(user = Core.user)
+    options = if user.has_auth?(:manager) || save_button_states.include?('public')
+                STATE_OPTIONS
+              else
+                STATE_OPTIONS.reject{|so| so.last == 'public' }
+              end
+    if approval_related?
+      options
+    else
+      options.reject{|o| o.last == 'approvable' }
+    end
   end
 
   def display_dates(key)
@@ -334,5 +356,9 @@ class GpArticle::Content::Doc < Cms::Content
 
   def map_coordinate
     setting_extra_value(:map_setting, :lat_lng)
+  end
+
+  def word_dictionary
+    setting_value(:word_dictionary)
   end
 end
