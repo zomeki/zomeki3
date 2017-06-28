@@ -17,7 +17,7 @@ class Cms::Admin::Data::FileNodesController < Cms::Controller::Admin::Base
   end
 
   def show
-    @item = Cms::DataFileNode.readable.find(params[:id])
+    @item = Cms::DataFileNode.find(params[:id])
     return error_auth unless @item.readable?
 
     _show @item
