@@ -240,6 +240,8 @@ ja:
         body_tag: 本文対象タグ
         updated_at_tag: 更新日対象タグ
         updated_at_regexp: 更新日正規表現
+        published_at_tag: 公開日対象タグ
+        published_at_regexp: 公開日正規表現
         creator_group_from_url_regexp: 作成者グループURL正規表現
         creator_group_relation_type: 作成者グループ照合方法
         creator_group_url_relations: 作成者グループ読み替え

@@ -36,10 +36,10 @@ class Tool::Convert::DbProcessor
     @doc.body = page.body
     @doc.created_at ||= page.updated_at || Time.now
     @doc.updated_at ||= page.updated_at || Time.now
-    @doc.published_at = page.updated_at || Time.now
-    @doc.display_published_at = page.updated_at || Time.now
-    @doc.display_updated_at   = page.updated_at || Time.now
-    @doc.recognized_at      = page.updated_at || Time.now
+    @doc.published_at = page.published_at || Time.now
+    @doc.display_updated_at = page.updated_at || Time.now
+    @doc.display_published_at = page.published_at || Time.now
+    @doc.recognized_at = page.updated_at || Time.now
     @doc.href ||= ''
     @doc.subtitle ||= ''
     @doc.summary ||= ''
@@ -58,14 +58,14 @@ class Tool::Convert::DbProcessor
       )
     end
 
-    @doc.in_ignore_accessibility_check = true
-    @doc.in_ignore_link_check = true
+    @doc.in_ignore_accessibility_check = '1'
+    @doc.in_ignore_link_check = '1'
 
     if @doc.save
-      if @doc.category_ids.blank? && page.category_name.present? && @doc.content_id.present?
+      if @doc.category_ids.blank? && page.category_names.present? && @doc.content_id.present?
         if @doc.content.visible_category_types.present? &&
           cates = GpCategory::Category.where(category_type_id: @doc.content.visible_category_types.map(&:id))
-                    .where(title: page.category_name)
+                                      .where(title: page.category_names)
           page.category_ids = page.category_ids.present? ? page.category_ids+cates.map(&:id) : cates.map(&:id)
           dump "設定カテゴリ：#{cates.map(&:title).join(', ')}"
         end

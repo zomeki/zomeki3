@@ -17,7 +17,7 @@ class Tool::Convert::LinkProcessor
       clink.url = e[clink.attr].to_s.dup
       clink.after_url = clink.url.dup
 
-      url = preprocess_url(clink.url)
+      url = clink.url
       next if url.blank?
 
       uri = normalize_url(url, cdoc.uri_path)
@@ -52,8 +52,9 @@ class Tool::Convert::LinkProcessor
     end
 
     doc.body = @after_body = html.inner_html
-    doc.in_ignore_accessibility_check = true
-    doc.in_ignore_link_check = true
+
+    doc.in_ignore_accessibility_check = '1'
+    doc.in_ignore_link_check = '1'
 
     unless doc.save
       dump "記事保存失敗"
@@ -64,13 +65,6 @@ class Tool::Convert::LinkProcessor
   end
 
 private
-
-  def preprocess_url(url)
-    url.gsub(%r{/file/open\.php\?f\=}, '')
-      .gsub(%r{/soshiki/index\.php\?type\=2$}, '/soshiki/')
-      .gsub(%r{/soshiki/kakubu\.php\?sec_sec2\=(\d+)$}, "/soshiki/#{$1}/")
-      .gsub(%r{/soshiki/kakuka\.php\?sec_sec1\=(\d+)$}, "/soshiki/#{$1}/")
-  end
 
   def normalize_url(url, uri_path)
     uri = URI.parse("http://#{uri_path}").merge(url)

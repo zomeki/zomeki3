@@ -27,6 +27,14 @@
       <td><%= f.text_field :updated_at_regexp, style: 'width: 500px;' %> (例：(\d+)年(\d+)月(\d+)日)</td>
     </tr>
     <tr>
+      <th><%= @item.locale(:published_at_tag) %></th>
+      <td><%= f.text_field :published_at_tag, style: 'width: 500px;' %></td>
+    </tr>
+    <tr>
+      <th><%= @item.locale(:published_at_regexp) %></th>
+      <td><%= f.text_field :published_at_regexp, style: 'width: 500px;' %> (例：(\d+)年(\d+)月(\d+)日)</td>
+    </tr>
+    <tr>
       <th><%= @item.locale(:creator_group_from_url_regexp) %></th>
       <td><%= f.text_field :creator_group_from_url_regexp, style: 'width: 500px;' %> (例：\/soshiki\/(\d+)\/)</td>
     </tr>

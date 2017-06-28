@@ -1,8 +1,8 @@
 class Tool::Convert::PageInfo
-  attr_accessor :file_path, :uri_path, :title, :body, :updated_at, :group_code, 
+  attr_accessor :file_path, :uri_path, :title, :body, :updated_at, :published_at, :group_code, 
                 :creator_group_id, :creator_user_id, 
                 :inquiry_group_id, :inquiry_group_tel, :inquiry_group_fax, :inquiry_group_email,
-                :category_ids, :category_name
+                :category_ids, :category_names
 
   def uri
     URI.parse("http://#{@uri_path}") rescue nil
