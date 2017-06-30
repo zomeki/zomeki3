@@ -295,6 +295,9 @@ class Cms::Node < ApplicationRecord
 
     after_save :replace_public_page
 
+    after_save     Cms::SearchIndexerCallbacks.new, if: :changed?
+    before_destroy Cms::SearchIndexerCallbacks.new
+
 #    validate :validate_inquiry,
 #      :if => %Q(state == 'public')
     validate :validate_recognizers,
