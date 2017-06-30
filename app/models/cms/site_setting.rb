@@ -59,5 +59,6 @@ class Cms::SiteSetting < ApplicationRecord
              index: true
 
   validates :site_id, presence: true
-  validates :name, presence: true, uniqueness: { scope: :site_id }
+  validates :name, presence: true,
+                   uniqueness: { scope: :site_id, if: -> { name && name.to_sym.in?(self.class.configs.keys) } }
 end
