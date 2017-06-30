@@ -16,6 +16,9 @@ class Cms::DataFile < ApplicationRecord
   after_save     Cms::Publisher::BracketeeCallbacks.new, if: :changed?
   before_destroy Cms::Publisher::BracketeeCallbacks.new
 
+  after_save     Cms::SearchIndexerCallbacks.new, if: :changed?
+  before_destroy Cms::SearchIndexerCallbacks.new
+
   scope :public_state, -> { where(state: 'public') }
 
   def self.find_by_public_path(path)

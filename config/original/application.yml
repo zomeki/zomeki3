@@ -15,6 +15,9 @@ cms:
   # ファイル転送機能
   file_transfer: false
 
+  # 検索インデックス機能
+  search_indexer: false
+
   # ページ数付きページ書き出し数
   publish_more_pages: 10
 
