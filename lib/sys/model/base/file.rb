@@ -25,8 +25,8 @@ module Sys::Model::Base::File
     after_destroy :remove_internal_file
 
     define_model_callbacks :save_files, :remove_files
-    after_save_files FileTransferCallbacks.new(:upload_path, recursive: true)
-    after_remove_files FileTransferCallbacks.new(:upload_path, recursive: true)
+    after_save_files Cms::FileTransferCallbacks.new(:upload_path, recursive: true)
+    after_remove_files Cms::FileTransferCallbacks.new(:upload_path, recursive: true)
   end
 
   def skip_upload(skip=true)

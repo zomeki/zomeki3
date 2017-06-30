@@ -50,7 +50,7 @@ class GpArticle::DocsScript < PublicationScript
       end
     end
 
-    FileTransferCallbacks.new([:public_path, :public_smart_phone_path], recursive: true).after_publish_files(@node)
+    Cms::FileTransferCallbacks.new([:public_path, :public_smart_phone_path], recursive: true).after_publish_files(@node)
   end
 
   def publish_by_task(item)

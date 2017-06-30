@@ -80,8 +80,8 @@ class Cms::DataFile < ApplicationRecord
       before_destroy :close
 
       define_model_callbacks :publish_files, :close_files
-      after_publish_files FileTransferCallbacks.new(:public_path, recursive: true)
-      after_close_files FileTransferCallbacks.new(:public_path, recursive: true)
+      after_publish_files Cms::FileTransferCallbacks.new(:public_path, recursive: true)
+      after_close_files Cms::FileTransferCallbacks.new(:public_path, recursive: true)
     end
 
     def publish(options = {})
