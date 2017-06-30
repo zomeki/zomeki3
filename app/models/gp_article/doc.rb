@@ -609,7 +609,7 @@ class GpArticle::Doc < ApplicationRecord
       after_destroy :close_page
 
       define_model_callbacks :publish_files
-      after_publish_files FileTransferCallbacks.new([:public_path, :public_smart_phone_path], recursive: true)
+      after_publish_files Cms::FileTransferCallbacks.new([:public_path, :public_smart_phone_path], recursive: true)
     end
 
     def publish

@@ -1,4 +1,4 @@
-class FileTransferCallbacks < ApplicationCallbacks
+class Cms::FileTransferCallbacks < ApplicationCallbacks
   def initialize(path_methods, recursive: false)
     @path_methods = Array(path_methods)
     @recursive = recursive

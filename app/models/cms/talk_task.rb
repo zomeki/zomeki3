@@ -6,8 +6,8 @@ class Cms::TalkTask < ApplicationRecord
   has_one :publisher, primary_key: :path, foreign_key: :path, class_name: 'Sys::Publisher'
 
   define_model_callbacks :publish_files, :close_files
-  after_publish_files FileTransferCallbacks.new(:path)
-  after_close_files FileTransferCallbacks.new(:path)
+  after_publish_files Cms::FileTransferCallbacks.new(:path)
+  after_close_files Cms::FileTransferCallbacks.new(:path)
 
   validates :path, presence: true
 

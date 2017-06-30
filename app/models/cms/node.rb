@@ -48,8 +48,8 @@ class Cms::Node < ApplicationRecord
   after_save Cms::Publisher::NodeCallbacks.new, if: :changed?
 
   define_model_callbacks :publish_files, :close_files
-  after_publish_files FileTransferCallbacks.new([:public_path, :public_smart_phone_path])
-  after_close_files FileTransferCallbacks.new([:public_path, :public_smart_phone_path])
+  after_publish_files Cms::FileTransferCallbacks.new([:public_path, :public_smart_phone_path])
+  after_close_files Cms::FileTransferCallbacks.new([:public_path, :public_smart_phone_path])
 
   scope :public_state, -> { where(state: 'public') }
   scope :sitemap_order, -> { order('sitemap_sort_no IS NULL, sitemap_sort_no, name') }
