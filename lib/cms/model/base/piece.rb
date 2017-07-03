@@ -1,8 +1,4 @@
 module Cms::Model::Base::Piece
-  def self.included(mod)
-    mod.belongs_to :status, :foreign_key => :state, :class_name => 'Sys::Base::Status'
-  end
-
   def states
     [['公開','public'],['非公開','closed']]
   end

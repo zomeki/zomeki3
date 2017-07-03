@@ -2,7 +2,8 @@ class GpCalendar::Event < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Rel::Creator
   include Sys::Model::Rel::File
-  include Cms::Model::Base::ContentDelegation
+  include Cms::Model::Site
+  include Cms::Model::Rel::Content
   include Cms::Model::Auth::Content
   include GpCategory::Model::Rel::Category
 

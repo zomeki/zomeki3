@@ -2,6 +2,7 @@ module Cms::Model::Rel::Site
   extend ActiveSupport::Concern
 
   included do
-    has_one :site, primary_key: :site_id, foreign_key: :id, class_name: 'Cms::Site'
+    belongs_to :site, class_name: 'Cms::Site'
+    scope :in_site, ->(site) { where(site_id: site) }
   end
 end

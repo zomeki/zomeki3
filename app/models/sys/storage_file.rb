@@ -1,6 +1,7 @@
 class Sys::StorageFile < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::TextExtraction
+  include Cms::Model::Site
 
   before_save :set_mime_type
 
@@ -11,6 +12,7 @@ class Sys::StorageFile < ApplicationRecord
   validates :available, presence: true
   validate :file_existence
 
+  scope :in_site, ->(site) { where(arel_table[:path].matches("#{Rails.root}/sites/#{format('%04d', site.id)}/%")) }
   scope :available, -> { where(available: true) }
   scope :unavailable, -> { where.not(available: true) }
   scope :files_under_directory, ->(dir) {

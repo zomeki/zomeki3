@@ -1,5 +1,6 @@
 class Feed::FeedEntry < ApplicationRecord
   include Sys::Model::Base
+  include Cms::Model::Site
   include Cms::Model::Auth::Content
 
   include StateText
@@ -14,6 +15,8 @@ class Feed::FeedEntry < ApplicationRecord
   validates :content_id, presence: true
 
   belongs_to :feed, :foreign_key => :feed_id, :class_name => 'Feed::Feed'
+
+  define_site_scope :feed
 
   def source_title
     return @source_title if @source_title

@@ -1,5 +1,6 @@
 class GpTemplate::Item < ApplicationRecord
   include Sys::Model::Base
+  include Cms::Model::Site
   include Cms::Model::Auth::Content
 
   include StateText
@@ -21,6 +22,8 @@ class GpTemplate::Item < ApplicationRecord
   validates :item_type, presence: true
 
   after_initialize :set_defaults
+
+  define_site_scope :template
 
   scope :public_state, -> { where(state: 'public') }
 

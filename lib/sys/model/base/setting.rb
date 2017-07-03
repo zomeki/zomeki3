@@ -9,7 +9,7 @@ module Sys::Model::Base::Setting
   end
 
   def config
-    self.configs[name.to_sym] || {}
+    self.configs[name.to_s.to_sym] || {}
   end
 
   def config_name

@@ -53,8 +53,12 @@ module Sys::Model::Scope
     end
 
     def union(relations)
-      sql = '((' + relations.map{|rel| rel.to_sql}.join(') UNION (') + ')) AS ' + self.table_name 
-      from(sql)
+      if relations.present?
+        sql = '((' + relations.map{|rel| rel.to_sql}.join(') UNION (') + ')) AS ' + self.table_name 
+        from(sql)
+      else
+        none
+      end
     end
 
     def replace_for_all(column, from, to)

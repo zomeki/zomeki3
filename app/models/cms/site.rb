@@ -4,6 +4,7 @@ class Cms::Site < ApplicationRecord
 
   include Sys::Model::Rel::Creator
   include Sys::Model::Auth::Manager
+  include Cms::Model::Site
   include Cms::Model::Rel::DataFile
   include Cms::Model::Rel::SiteSetting
 
@@ -14,8 +15,6 @@ class Cms::Site < ApplicationRecord
   SMART_PHONE_PUBLICATION_OPTIONS = [['書き出さない', 'no'], ['書き出す', 'yes']]
   SPP_TARGET_OPTIONS = [['トップページのみ書き出す', 'only_top'], ['すべて書き出す', 'all']]
 
-  belongs_to :status, :foreign_key => :state,
-    :class_name => 'Sys::Base::Status'
   has_many :concepts, -> { order(:sort_no, :name, :id) }, :foreign_key => :site_id,
     :class_name => 'Cms::Concept', :dependent => :destroy
   has_many :contents, -> { order(:sort_no, :name, :id) }, :foreign_key => :site_id,
@@ -53,8 +52,8 @@ class Cms::Site < ApplicationRecord
   attr_accessor :site_image, :del_site_image
   attr_accessor :in_root_group_id
 
-  after_save { save_cms_data_file(:site_image, :site_id => id) }
-  after_destroy { destroy_cms_data_file(:site_image) }
+  after_save :save_cms_data_file
+  after_destroy :destroy_cms_data_file
 
   before_validation :fix_full_uri
   before_destroy :block_last_deletion
@@ -67,6 +66,7 @@ class Cms::Site < ApplicationRecord
   after_save :make_node
   after_save :copy_common_directory
 
+  scope :in_site, ->(site) { where(id: site) }
   scope :matches_to_domain, ->(domain) {
     where([
       arel_table[:full_uri].matches("http://#{domain}%"),
@@ -395,6 +395,14 @@ class Cms::Site < ApplicationRecord
     else
       site_belongings.create(group_id: in_root_group_id)
     end
+  end
+
+  def save_cms_data_file(name = nil, params = nil)
+    super(:site_image, site_id: id)
+  end
+
+  def destroy_cms_data_file(name = nil, params = nil)
+    super(:site_image)
   end
 
   class << self

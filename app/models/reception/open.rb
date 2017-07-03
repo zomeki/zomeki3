@@ -2,6 +2,7 @@ class Reception::Open < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Rel::Creator
   include Sys::Model::Rel::Task
+  include Cms::Model::Site
   include Cms::Model::Auth::Content
 
   include StateText
@@ -20,6 +21,8 @@ class Reception::Open < ApplicationRecord
   validates :open_on, presence: true
   validates :start_at, presence: true
   validates :end_at, presence: true
+
+  define_site_scope :course
 
   scope :public_state, -> { where(state: 'public' ) }
   scope :order_by_open_at, -> { order(:open_on, :start_at, :end_at) }

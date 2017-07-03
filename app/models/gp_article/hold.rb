@@ -1,8 +1,11 @@
 class GpArticle::Hold < ApplicationRecord
   include Sys::Model::Base
+  include Cms::Model::Site
 
   belongs_to :holdable, polymorphic: true
   belongs_to :user, class_name: 'Sys::User'
+
+  define_site_scope :holdable
 
   def group_and_user_name
     return '' unless user

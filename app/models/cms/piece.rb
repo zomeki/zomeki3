@@ -2,9 +2,10 @@ class Cms::Piece < ApplicationRecord
   include Sys::Model::Base
   include Cms::Model::Base::Piece
   include Sys::Model::Rel::Creator
+  include Cms::Model::Site
   include Cms::Model::Rel::Site
   include Cms::Model::Rel::Concept
-  include Cms::Model::Rel::Content
+  include Cms::Model::Rel::ContentModel
   include Sys::Model::Rel::ObjectRelation
   include Cms::Model::Rel::Bracket
   include Cms::Model::Rel::Bracketee

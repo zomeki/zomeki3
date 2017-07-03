@@ -7,9 +7,10 @@ class Cms::Node < ApplicationRecord
   include Cms::Model::Base::Sitemap
   include Sys::Model::Tree
   include Sys::Model::Rel::Creator
+  include Cms::Model::Site
   include Cms::Model::Rel::Site
   include Cms::Model::Rel::Concept
-  include Cms::Model::Rel::Content
+  include Cms::Model::Rel::ContentModel
   include Sys::Model::Rel::ObjectRelation
   include Cms::Model::Rel::Bracket
   include Cms::Model::Auth::Concept
@@ -19,6 +20,7 @@ class Cms::Node < ApplicationRecord
   REBUILDABLE_MODELS = ['Cms::Page', 'Cms::Sitemap']
 
   belongs_to :parent, :foreign_key => :parent_id, :class_name => 'Cms::Node'
+  belongs_to :route, :foreign_key => :route_id, :class_name => 'Cms::Node'
   belongs_to :layout, :foreign_key => :layout_id, :class_name => 'Cms::Layout'
 
   has_many :children, -> { sitemap_order },

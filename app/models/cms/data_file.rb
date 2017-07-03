@@ -2,6 +2,7 @@ class Cms::DataFile < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Base::File
   include Sys::Model::Rel::Creator
+  include Cms::Model::Site
   include Cms::Model::Rel::Site
   include Cms::Model::Rel::Concept
   include Cms::Model::Rel::Bracketee
@@ -10,7 +11,6 @@ class Cms::DataFile < ApplicationRecord
   include StateText
 
   belongs_to :concept, :foreign_key => :concept_id, :class_name => 'Cms::Concept'
-  belongs_to :site   , :foreign_key => :site_id   , :class_name => 'Cms::Site'
   belongs_to :node   , :foreign_key => :node_id   , :class_name => 'Cms::DataFileNode'
 
   after_save     Cms::Publisher::BracketeeCallbacks.new, if: :changed?

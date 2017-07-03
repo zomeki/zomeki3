@@ -1,11 +1,14 @@
 class Approval::Assignment < ApplicationRecord
   include Sys::Model::Base
+  include Cms::Model::Site
 
   belongs_to :assignable, polymorphic: true
   belongs_to :user, class_name: 'Sys::User'
   belongs_to :group, class_name: 'Sys::Group'
 
   after_initialize :set_defaults
+
+  define_site_scope :assignable
 
   def assign_type_group_users?
     assign_type == 'group_users'
