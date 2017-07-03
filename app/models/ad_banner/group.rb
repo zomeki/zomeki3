@@ -1,6 +1,8 @@
 class AdBanner::Group < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Rel::Creator
+  include Cms::Model::Site
+  include Cms::Model::Rel::Content
   include Cms::Model::Auth::Content
 
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]

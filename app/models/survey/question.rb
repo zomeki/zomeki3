@@ -1,5 +1,6 @@
 class Survey::Question < ApplicationRecord
   include Sys::Model::Base
+  include Cms::Model::Site
   include Cms::Model::Auth::Content
 
   include StateText
@@ -20,6 +21,8 @@ class Survey::Question < ApplicationRecord
   validates :sort_no, presence: true
 
   after_initialize :set_defaults
+
+  define_site_scope :form
 
   scope :public_state, -> { where(state: 'public') }
 

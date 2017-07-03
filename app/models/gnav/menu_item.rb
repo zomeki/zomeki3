@@ -1,12 +1,13 @@
 class Gnav::MenuItem < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Rel::Creator
+  include Cms::Model::Site
   include Cms::Model::Auth::Content
   include Cms::Model::Base::Page
   include Cms::Model::Base::Page::Publisher
   include Cms::Model::Base::Page::TalkTask
-  include Cms::Model::Base::ContentDelegation
   include Cms::Model::Base::Sitemap
+  include Cms::Model::Rel::Content
 
   include StateText
 

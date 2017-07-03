@@ -1,24 +1,10 @@
 module Cms::Model::Rel::Content
-  def self.included(mod)
-    if !mod.method_defined?(:concept)
-      mod.class_eval do
-        def concept(reload = nil)
-          content ? content.concept(reload) : nil
-        end
-      end
-    end
-    mod.belongs_to :content, :foreign_key => :content_id, :class_name => 'Cms::Content'
-  end
+  extend ActiveSupport::Concern
 
-  def content_name
-    content ? content.name : Cms::Lib::Modules.module_name(:cms)
-  end
-
-  def content
-    s = super
-    content_class = s.model.split('::', 2).insert(1, 'Content').join('::').constantize
-    content_class.find(s.id)
-  rescue NameError
-    super
+  included do
+    belongs_to :content, class_name: 'Cms::Content'
+    delegate :site, to: :content
+    delegate :site_id, to: :content
+    scope :in_site, ->(site) { where(content_id: Cms::Content.where(site_id: site)) }
   end
 end

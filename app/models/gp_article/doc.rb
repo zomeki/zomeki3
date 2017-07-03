@@ -5,11 +5,12 @@ class GpArticle::Doc < ApplicationRecord
   include Sys::Model::Rel::EditableGroup
   include Sys::Model::Rel::File
   include Sys::Model::Rel::Task
+  include Cms::Model::Site
   include Cms::Model::Base::Page
   include Cms::Model::Base::Page::Publisher
   include Cms::Model::Base::Page::TalkTask
-  include Cms::Model::Base::ContentDelegation
   include Cms::Model::Base::Qrcode
+  include Cms::Model::Rel::Content
   include Cms::Model::Rel::Inquiry
   include Cms::Model::Rel::Map
   include Cms::Model::Rel::Bracket

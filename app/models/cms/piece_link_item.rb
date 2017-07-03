@@ -1,17 +1,17 @@
 class Cms::PieceLinkItem < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Base::Page
+  include Cms::Model::Site
+  include Cms::Model::Rel::Piece
   include Cms::Model::Auth::Concept
 
   include StateText
-
-  belongs_to :piece,  :foreign_key => :piece_id, :class_name => 'Cms::Piece'
 
   after_save     Cms::Publisher::PieceRelatedCallbacks.new, if: :changed?
   before_destroy Cms::Publisher::PieceRelatedCallbacks.new
 
   validates :state, :name, :uri, presence: true
-  
+
   def concept(flag = nil)
     piece.concept(flag)
   end

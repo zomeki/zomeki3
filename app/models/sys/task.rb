@@ -1,10 +1,13 @@
 class Sys::Task < ApplicationRecord
   include Sys::Model::Base
+  include Cms::Model::Site
 
   belongs_to :processable, polymorphic: true
   belongs_to :provider_job, class_name: '::Delayed::Job', dependent: :destroy
 
   after_initialize :set_defaults
+
+  define_site_scope :processable
 
   scope :queued_items, -> {
     where([

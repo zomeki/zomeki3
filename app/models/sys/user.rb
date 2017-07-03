@@ -3,6 +3,7 @@ class Sys::User < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Base::Config
   include Sys::Model::Auth::Manager
+  include Cms::Model::Site
 
   include StateText
 
@@ -32,7 +33,8 @@ class Sys::User < ApplicationRecord
 
   before_destroy :block_root_deletion
 
-  scope :in_site, ->(site) { joins(users_groups: :site_belongings).where(cms_site_belongings: { site_id: Array(site).map(&:id) }) }
+  define_site_scope :users_groups
+
   scope :in_group, ->(group) { joins(:users_groups).where(sys_users_groups: { group_id: group.id }) }
 
   def creatable?
