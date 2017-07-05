@@ -21,17 +21,6 @@ namespace :zomeki do
       end
     end
 
-    desc 'Clean invalid links'
-    task :clean_invalid_links => :environment do
-      count = 0
-      GpArticle::Link.find_each do |l|
-        next if l.doc && l.doc.state_public?
-        l.destroy
-        count += 1
-      end
-      puts count > 0 ? "#{count} invalid links removed." : 'No invalid links.'
-    end
-
     namespace :postgresql do
       desc 'Set valid value to sequences for id'
       task reset_id_sequences: :environment do
