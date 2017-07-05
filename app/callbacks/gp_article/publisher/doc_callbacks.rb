@@ -16,7 +16,7 @@ class GpArticle::Publisher::DocCallbacks < PublisherCallbacks
 
   def enqueue?
     return unless super
-    @doc.name.present? && @doc.state.in?(%w(public finish))
+    @doc.name.present? && @doc.state.in?(%w(public closed))
   end
 
   def enqueue_pieces
