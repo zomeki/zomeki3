@@ -9,7 +9,7 @@ class Cms::Admin::Tool::ConvertDocsController < Cms::Controller::Admin::Base
   end
 
   def index
-    @items = ::Tool::ConvertDoc.where(content_id: Cms::Content.select(:id).where(site_id: Core.site.id))
+    @items = ::Tool::ConvertDoc.in_site(Core.site)
                                .search_with_criteria(params[:criteria])
                                .order(updated_at: :desc)
                                .paginate(page: params[:page], per_page: 30)
@@ -25,12 +25,12 @@ class Cms::Admin::Tool::ConvertDocsController < Cms::Controller::Admin::Base
   end
 
   def destroy_all
-    ::Tool::ConvertDoc.delete_all
+    ::Tool::ConvertDoc.in_site(Core.site).delete_all
     redirect_to url_for(:action => :index)
   end
 
   def export
-    @items = ::Tool::ConvertDoc.order(created_at: :desc)
+    @items = ::Tool::ConvertDoc.in_site(Core.site).order(created_at: :desc)
     @org_node_name = Cms::Node.where(model: 'Organization::Group').first.try(:name)
 
     csv_string = CSV.generate do |csv|

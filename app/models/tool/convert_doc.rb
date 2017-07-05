@@ -5,8 +5,9 @@ class Tool::ConvertDoc < ActiveRecord::Base
   belongs_to :content, :class_name => 'Cms::Content'
   belongs_to :docable, polymorphic: true
 
-  after_create :create_cms_importation
+  after_save :save_cms_importation
 
+  scope :in_site, ->(site) { where(content_id: Cms::Content.select(:id).where(site_id: site)) }
   scope :search_with_criteria, ->(criteria = {}) {
     rel = all
     if criteria && criteria[:keyword].present?
@@ -22,7 +23,7 @@ class Tool::ConvertDoc < ActiveRecord::Base
   def latest_doc
     return nil unless docable_type
     return @latest_doc if @latest_doc
-    @latest_doc = docable_type.constantize.where(name: doc_name).order(updated_at: :desc).first
+    @latest_doc = docable_type.constantize.where(content_id: content_id, name: doc_name).order(updated_at: :desc).first
   end
 
   def source_uri
@@ -31,7 +32,7 @@ class Tool::ConvertDoc < ActiveRecord::Base
 
   private
 
-  def create_cms_importation
+  def save_cms_importation
     return unless docable
     Cms::Importation.where(importable: docable).first_or_create(source_url: "http://#{uri_path}")
   end

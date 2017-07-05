@@ -100,7 +100,7 @@ class Tool::Convert
   end
 
   def self.process_link(conf, updated_at = nil)
-    items = Tool::ConvertDoc
+    items = Tool::ConvertDoc.in_site(Core.site)
     items = items.where('updated_at >= ?', updated_at) if updated_at
     items = items.order('id')
 

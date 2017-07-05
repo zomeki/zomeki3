@@ -76,14 +76,14 @@ private
 
   def convert_doc_link(uri, clink)
     # 他記事へのリンク
-    linked_cdoc = Tool::ConvertDoc.where(uri_path: "#{uri.host}#{uri.path}").first
+    linked_cdoc = Tool::ConvertDoc.in_site(Core.site).where(uri_path: "#{uri.host}#{uri.path}").first
     # 他記事へのリンク(index.html補完)
     if !linked_cdoc && uri.path[-1] == '/'
-      linked_cdoc = Tool::ConvertDoc.where(uri_path: "#{uri.host}#{uri.path}index.html").first
+      linked_cdoc = Tool::ConvertDoc.in_site(Core.site).where(uri_path: "#{uri.host}#{uri.path}index.html").first
     end
     # 他記事へのリンク(.html補完)
     if !linked_cdoc && (!uri.path.include?('.') || uri.path[-4..-1] == '.htm' )
-      linked_cdoc = Tool::ConvertDoc.where(uri_path: "#{uri.host}#{uri.path}.html").first
+      linked_cdoc = Tool::ConvertDoc.in_site(Core.site).where(uri_path: "#{uri.host}#{uri.path}.html").first
     end
 
     if linked_cdoc

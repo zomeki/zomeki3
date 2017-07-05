@@ -8,7 +8,7 @@ class Tool::Convert::DbProcessor
 
   def process(page, conf)
     # 更新チェック
-    if @cdoc = Tool::ConvertDoc.where(uri_path: page.uri_path).first
+    if @cdoc = Tool::ConvertDoc.in_site(Core.site).where(uri_path: page.uri_path).first
       if @doc = @cdoc.latest_doc
         if conf.overwrite == 0 && !page.updated_from?(@cdoc.page_updated_at)
           @process_type = 'nonupdated'
