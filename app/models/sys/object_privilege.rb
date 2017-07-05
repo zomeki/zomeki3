@@ -1,6 +1,7 @@
 class Sys::ObjectPrivilege < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Base::Config
+  include Cms::Model::Site
   include Cms::Model::Auth::Site::Role
 
   belongs_to :privilegable, polymorphic: true
@@ -14,6 +15,8 @@ class Sys::ObjectPrivilege < ApplicationRecord
   validates :action, presence: true, if: %Q(in_actions.blank?)
 
   attr_accessor :in_actions
+
+  define_site_scope :role_name
 
   def in_actions
     @in_actions ||= actions

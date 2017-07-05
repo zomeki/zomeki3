@@ -1,7 +1,8 @@
 class Map::Marker < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Rel::File
-  include Cms::Model::Base::ContentDelegation
+  include Cms::Model::Site
+  include Cms::Model::Rel::Content
   include Cms::Model::Auth::Content
   include GpCategory::Model::Rel::Category
 
@@ -9,9 +10,13 @@ class Map::Marker < ApplicationRecord
 
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
 
+  attr_accessor :doc # Not saved to database
+
   # Content
   belongs_to :content, :foreign_key => :content_id, :class_name => 'Map::Content::Marker'
   validates :content_id, :presence => true
+
+  belongs_to :icon_category, :class_name => 'GpCategory::Category'
 
   # Proper
   validates_presence_of :state
@@ -28,9 +33,6 @@ class Map::Marker < ApplicationRecord
   before_destroy Cms::Publisher::ContentCallbacks.new(belonged: true)
 
   scope :public_state, -> { where(state: 'public') }
-
-  belongs_to :icon_category, :class_name => 'GpCategory::Category'
-  attr_accessor :doc # Not saved to database
 
   def public_uri
     return '' unless content.public_node

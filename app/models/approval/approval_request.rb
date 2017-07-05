@@ -1,5 +1,6 @@
 class Approval::ApprovalRequest < ApplicationRecord
   include Sys::Model::Base
+  include Cms::Model::Site
 
   belongs_to :requester, foreign_key: :user_id, class_name: 'Sys::User'
   validates :user_id, presence: true
@@ -17,6 +18,8 @@ class Approval::ApprovalRequest < ApplicationRecord
            foreign_key: :request_id, class_name: 'Approval::ApprovalRequestHistory', dependent: :destroy
 
   after_initialize :set_defaults
+
+  define_site_scope :approval_flow
 
   def current_approval
     approval_flow.approvals.find_by(index: current_index)

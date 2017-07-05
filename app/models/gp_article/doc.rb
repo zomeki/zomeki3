@@ -5,16 +5,18 @@ class GpArticle::Doc < ApplicationRecord
   include Sys::Model::Rel::EditableGroup
   include Sys::Model::Rel::File
   include Sys::Model::Rel::Task
+  include Cms::Model::Site
   include Cms::Model::Base::Page
   include Cms::Model::Base::Page::Publisher
   include Cms::Model::Base::Page::TalkTask
-  include Cms::Model::Base::ContentDelegation
   include Cms::Model::Base::Qrcode
+  include Cms::Model::Rel::Content
   include Cms::Model::Rel::Inquiry
   include Cms::Model::Rel::Map
   include Cms::Model::Rel::Bracket
   include Cms::Model::Rel::PublishUrl
   include Cms::Model::Rel::Link
+  include Cms::Model::Rel::Importation
 
   include Cms::Model::Auth::Concept
   include Sys::Model::Auth::EditableGroup
@@ -87,6 +89,9 @@ class GpArticle::Doc < ApplicationRecord
 
   after_save     GpArticle::Publisher::DocCallbacks.new, if: :changed?
   before_destroy GpArticle::Publisher::DocCallbacks.new
+
+  after_save     Cms::SearchIndexerCallbacks.new, if: :changed?
+  before_destroy Cms::SearchIndexerCallbacks.new
 
   attr_accessor :link_check_results, :in_ignore_link_check
   attr_accessor :accessibility_check_results, :in_ignore_accessibility_check, :in_modify_accessibility_check
@@ -322,6 +327,10 @@ class GpArticle::Doc < ApplicationRecord
       map.markers.each do |marker|
         new_map.markers.build(marker.attributes.slice('name', 'lat', 'lng'))
       end
+    end
+
+    importations.each do |importation|
+      new_doc.importations.build(importation.attributes.slice('source_url'))
     end
 
     transaction do
@@ -601,7 +610,7 @@ class GpArticle::Doc < ApplicationRecord
       after_destroy :close_page
 
       define_model_callbacks :publish_files
-      after_publish_files FileTransferCallbacks.new([:public_path, :public_smart_phone_path], recursive: true)
+      after_publish_files Cms::FileTransferCallbacks.new([:public_path, :public_smart_phone_path], recursive: true)
     end
 
     def publish

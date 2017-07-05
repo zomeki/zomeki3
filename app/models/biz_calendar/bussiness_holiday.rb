@@ -1,6 +1,7 @@
 class BizCalendar::BussinessHoliday < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Rel::Creator
+  include Cms::Model::Site
   include Cms::Model::Auth::Content
   include BizCalendar::Model::Base::Date
 
@@ -27,6 +28,8 @@ class BizCalendar::BussinessHoliday < ApplicationRecord
   before_destroy Cms::Publisher::ContentCallbacks.new(belonged: true)
 
   attr_accessor :repeat_num
+
+  define_site_scope :place
 
   scope :public_state, -> { where(state: 'public') }
   scope :search_with_params, ->(params = {}) {

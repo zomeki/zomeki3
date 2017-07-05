@@ -1,5 +1,6 @@
 class Sys::Publisher < ApplicationRecord
   include Sys::Model::Base
+  include Cms::Model::Site
 
   DIGEST_FILE_SIZE_LIMIT = 100 * 1024**2
 

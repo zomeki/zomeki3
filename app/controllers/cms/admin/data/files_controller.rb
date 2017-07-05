@@ -40,7 +40,7 @@ class Cms::Admin::Data::FilesController < Cms::Controller::Admin::Base
   end
 
   def show
-    @item = Cms::DataFile.readable.find(params[:id])
+    @item = Cms::DataFile.find(params[:id])
     return error_auth unless @item.readable?
     _show @item
   end
@@ -84,8 +84,8 @@ class Cms::Admin::Data::FilesController < Cms::Controller::Admin::Base
   end
 
   def download
-    @file = Cms::DataFile.readable.find(params[:id])
-    return error_auth unless @file
+    @file = Cms::DataFile.find(params[:id])
+    return error_auth unless @file.readable?
 
     send_file @file.upload_path, :type => @file.mime_type, :filename => @file.name, :disposition => 'inline'
   end

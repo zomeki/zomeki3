@@ -2,6 +2,7 @@ class Cms::DataFile < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Base::File
   include Sys::Model::Rel::Creator
+  include Cms::Model::Site
   include Cms::Model::Rel::Site
   include Cms::Model::Rel::Concept
   include Cms::Model::Rel::Bracketee
@@ -10,11 +11,13 @@ class Cms::DataFile < ApplicationRecord
   include StateText
 
   belongs_to :concept, :foreign_key => :concept_id, :class_name => 'Cms::Concept'
-  belongs_to :site   , :foreign_key => :site_id   , :class_name => 'Cms::Site'
   belongs_to :node   , :foreign_key => :node_id   , :class_name => 'Cms::DataFileNode'
 
   after_save     Cms::Publisher::BracketeeCallbacks.new, if: :changed?
   before_destroy Cms::Publisher::BracketeeCallbacks.new
+
+  after_save     Cms::SearchIndexerCallbacks.new, if: :changed?
+  before_destroy Cms::SearchIndexerCallbacks.new
 
   scope :public_state, -> { where(state: 'public') }
 
@@ -77,8 +80,8 @@ class Cms::DataFile < ApplicationRecord
       before_destroy :close
 
       define_model_callbacks :publish_files, :close_files
-      after_publish_files FileTransferCallbacks.new(:public_path, recursive: true)
-      after_close_files FileTransferCallbacks.new(:public_path, recursive: true)
+      after_publish_files Cms::FileTransferCallbacks.new(:public_path, recursive: true)
+      after_close_files Cms::FileTransferCallbacks.new(:public_path, recursive: true)
     end
 
     def publish(options = {})

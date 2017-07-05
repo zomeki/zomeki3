@@ -1,13 +1,14 @@
 class Cms::TalkTask < ApplicationRecord
   include Sys::Model::Base
+  include Cms::Model::Site
+  include Cms::Model::Rel::Site
 
-  belongs_to :site, class_name: 'Cms::Site'
   belongs_to :talk_processable, polymorphic: true
   has_one :publisher, primary_key: :path, foreign_key: :path, class_name: 'Sys::Publisher'
 
   define_model_callbacks :publish_files, :close_files
-  after_publish_files FileTransferCallbacks.new(:path)
-  after_close_files FileTransferCallbacks.new(:path)
+  after_publish_files Cms::FileTransferCallbacks.new(:path)
+  after_close_files Cms::FileTransferCallbacks.new(:path)
 
   validates :path, presence: true
 
@@ -29,14 +30,13 @@ class Cms::TalkTask < ApplicationRecord
     return false unless mp3
     return false if ::File.stat(mp3[:path]).size == 0
 
-    ret = false
     run_callbacks :publish_files do
       pub = Sys::Publisher.where(publishable: talk_processable, dependent: "#{publisher.dependent}/talk").first_or_initialize
-      ret = pub.publish_file_with_digest(mp3[:path], public_talk_file_path)
+      pub.publish_file_with_digest(mp3[:path], public_talk_file_path)
     end
 
     ::File.delete(mp3[:path])
-    return ret
+    return true
   end
 
   def close_talk_file

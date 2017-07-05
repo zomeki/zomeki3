@@ -7,9 +7,10 @@ class Cms::Node < ApplicationRecord
   include Cms::Model::Base::Sitemap
   include Sys::Model::Tree
   include Sys::Model::Rel::Creator
+  include Cms::Model::Site
   include Cms::Model::Rel::Site
   include Cms::Model::Rel::Concept
-  include Cms::Model::Rel::Content
+  include Cms::Model::Rel::ContentModel
   include Sys::Model::Rel::ObjectRelation
   include Cms::Model::Rel::Bracket
   include Cms::Model::Auth::Concept
@@ -19,6 +20,7 @@ class Cms::Node < ApplicationRecord
   REBUILDABLE_MODELS = ['Cms::Page', 'Cms::Sitemap']
 
   belongs_to :parent, :foreign_key => :parent_id, :class_name => 'Cms::Node'
+  belongs_to :route, :foreign_key => :route_id, :class_name => 'Cms::Node'
   belongs_to :layout, :foreign_key => :layout_id, :class_name => 'Cms::Layout'
 
   has_many :children, -> { sitemap_order },
@@ -48,8 +50,8 @@ class Cms::Node < ApplicationRecord
   after_save Cms::Publisher::NodeCallbacks.new, if: :changed?
 
   define_model_callbacks :publish_files, :close_files
-  after_publish_files FileTransferCallbacks.new([:public_path, :public_smart_phone_path])
-  after_close_files FileTransferCallbacks.new([:public_path, :public_smart_phone_path])
+  after_publish_files Cms::FileTransferCallbacks.new([:public_path, :public_smart_phone_path])
+  after_close_files Cms::FileTransferCallbacks.new([:public_path, :public_smart_phone_path])
 
   scope :public_state, -> { where(state: 'public') }
   scope :sitemap_order, -> { order('sitemap_sort_no IS NULL, sitemap_sort_no, name') }
@@ -294,6 +296,9 @@ class Cms::Node < ApplicationRecord
     self.linkable_columns = [:body]
 
     after_save :replace_public_page
+
+    after_save     Cms::SearchIndexerCallbacks.new, if: :changed?
+    before_destroy Cms::SearchIndexerCallbacks.new
 
 #    validate :validate_inquiry,
 #      :if => %Q(state == 'public')

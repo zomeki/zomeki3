@@ -1,5 +1,6 @@
 class Survey::FormAnswer < ApplicationRecord
   include Sys::Model::Base
+  include Cms::Model::Site
 
   apply_simple_captcha
 
@@ -11,6 +12,8 @@ class Survey::FormAnswer < ApplicationRecord
   has_many :answers, -> { order(:id) }, dependent: :destroy
 
   validate :validate_base
+
+  define_site_scope :form
 
   def question_answers=(qa)
     qa.each do |key, value|

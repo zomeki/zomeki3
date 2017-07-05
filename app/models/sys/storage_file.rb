@@ -1,18 +1,35 @@
 class Sys::StorageFile < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::TextExtraction
+  include Cms::Model::Site
 
   before_save :set_mime_type
+
+  after_save     Cms::SearchIndexerCallbacks.new, if: :changed?
+  before_destroy Cms::SearchIndexerCallbacks.new
 
   validates :path, presence: true, uniqueness: true
   validates :available, presence: true
   validate :file_existence
 
+  scope :in_site, ->(site) { where(arel_table[:path].matches("#{Rails.root}/sites/#{format('%04d', site.id)}/%")) }
   scope :available, -> { where(available: true) }
   scope :unavailable, -> { where.not(available: true) }
   scope :files_under_directory, ->(dir) {
     where(arel_table[:path].matches("#{dir.to_s.chomp('/')}/%"))
   }
+
+  def site_id
+    path.scan(%r|#{Rails.root.join('sites')}/(\d+)/|).flatten.first.try(:to_i)
+  end
+
+  def state
+    path =~ %r|#{Rails.root.join('sites')}/\d+/public/| ? 'public' : 'closed'
+  end
+
+  def state_was
+    nil
+  end
 
   private
 

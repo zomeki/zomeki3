@@ -11,7 +11,7 @@ class Cms::Admin::Data::TextsController < Cms::Controller::Admin::Base
   end
 
   def show
-    @item = Cms::DataText.readable.find(params[:id])
+    @item = Cms::DataText.find(params[:id])
     return error_auth unless @item.readable?
     _show @item
   end

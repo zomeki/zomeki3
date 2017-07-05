@@ -2,10 +2,13 @@ class Sys::File < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Base::File
   include Sys::Model::Rel::Creator
+  include Cms::Model::Site
 
   has_many :publishers, class_name: 'Sys::Publisher', dependent: :destroy, as: :publishable
   belongs_to :site, class_name: 'Cms::Site'
   belongs_to :file_attachable, polymorphic: true
+
+  define_site_scope :file_attachable
 
   ## Remove the temporary flag.
   def self.fix_tmp_files(tmp_id, file_attachable)

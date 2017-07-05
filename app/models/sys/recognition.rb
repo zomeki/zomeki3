@@ -1,10 +1,13 @@
 class Sys::Recognition < ApplicationRecord
   include Sys::Model::Base
+  include Cms::Model::Site
 
   belongs_to :user,  :foreign_key => :user_id,  :class_name => 'Sys::User'
   belongs_to :recognizable, polymorphic: true, required: true
 
   attr_accessor :type
+
+  define_site_scope :recognizable
 
   def change_type(type)
     case type.to_s

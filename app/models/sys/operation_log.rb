@@ -1,5 +1,7 @@
 class Sys::OperationLog < ApplicationRecord
   include Sys::Model::Base
+  include Cms::Model::Site
+  include Cms::Model::Rel::Site
 
   default_scope { order(updated_at: :desc) }
 

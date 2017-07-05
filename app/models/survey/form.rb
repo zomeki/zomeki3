@@ -2,8 +2,9 @@ class Survey::Form < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Rel::Creator
   include Sys::Model::Rel::Task
-  include Cms::Model::Base::ContentDelegation
+  include Cms::Model::Site
   include Cms::Model::Base::Sitemap
+  include Cms::Model::Rel::Content
   include Cms::Model::Auth::Content
 
   include Approval::Model::Rel::Approval

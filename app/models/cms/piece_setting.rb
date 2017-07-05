@@ -1,7 +1,7 @@
 class Cms::PieceSetting < ApplicationRecord
   include Sys::Model::Base
-
-  belongs_to :piece, :foreign_key => :piece_id, :class_name => 'Cms::Piece'
+  include Cms::Model::Site
+  include Cms::Model::Rel::Piece
 
   validates :piece_id, :name, presence: true
 

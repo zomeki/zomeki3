@@ -1,9 +1,10 @@
 class Cms::LinkCheckLog < ApplicationRecord
   include Sys::Model::Base
+  include Cms::Model::Site
+  include Cms::Model::Rel::Site
 
   RESULT_STATE_OPTIONS = [['○','success'],['×','failure'],['－','skip']]
 
-  belongs_to :site
   belongs_to :link_checkable, polymorphic: true
 
   after_initialize :set_defaults

@@ -72,7 +72,7 @@ class Cms::NodesScript < PublicationScript
   end
 
   def file_transfer_callbacks(node)
-    FileTransferCallbacks.new([:public_path, :public_smart_phone_path], recursive: !node.model.in?(%w(Cms::Page Cms::Sitemap)))
+    Cms::FileTransferCallbacks.new([:public_path, :public_smart_phone_path], recursive: !node.model.in?(%w(Cms::Page Cms::Sitemap)))
                          .after_publish_files(node)
   end
 

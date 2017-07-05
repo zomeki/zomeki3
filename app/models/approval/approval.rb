@@ -1,5 +1,6 @@
 class Approval::Approval < ApplicationRecord
   include Sys::Model::Base
+  include Cms::Model::Site
 
   TYPE_OPTIONS = [['固定', 'fix'], ['選択', 'select']]
 
@@ -14,6 +15,8 @@ class Approval::Approval < ApplicationRecord
   validates :index, presence: true, uniqueness: { scope: [:approval_flow_id] }
 
   after_initialize :set_defaults
+
+  define_site_scope :approval_flow
 
   def approval_type_select?
     approval_type == 'select'
@@ -73,6 +76,6 @@ class Approval::Approval < ApplicationRecord
 
   def set_defaults
     self.approval_type ||= TYPE_OPTIONS.first.last if self.has_attribute?(:approval_type)
-    self.index ||= approval_flow.approvals.count if self.has_attribute?(:index)
+    self.index ||= approval_flow.approvals.count if self.has_attribute?(:index) && approval_flow
   end
 end

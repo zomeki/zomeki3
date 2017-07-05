@@ -1,12 +1,11 @@
 class Cms::Layout < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Rel::Creator
+  include Cms::Model::Site
   include Cms::Model::Rel::Site
   include Cms::Model::Rel::Concept
   include Cms::Model::Rel::Bracket
   include Cms::Model::Auth::Concept
-
-  belongs_to :status,  :foreign_key => :state, :class_name => 'Sys::Base::Status'
 
   after_save     Cms::Publisher::LayoutCallbacks.new, if: :changed?
   before_destroy Cms::Publisher::LayoutCallbacks.new

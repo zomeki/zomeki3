@@ -1,9 +1,9 @@
 class Cms::ContentSetting < ApplicationRecord
   include Sys::Model::Base
+  include Cms::Model::Site
+  include Cms::Model::Rel::Content
 
   @@configs = {}
-
-  belongs_to :content, :foreign_key => :content_id, :class_name => 'Cms::Content'
 
   validates :content_id, :name, presence: true
 

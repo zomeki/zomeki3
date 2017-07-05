@@ -5,7 +5,7 @@ class Cms::KanaDictionary::Maker
   attr_accessor :site, :dic_path, :errors
 
   define_model_callbacks :save_files
-  after_save_files FileTransferCallbacks.new(:dic_path), if: -> { @site }
+  after_save_files Cms::FileTransferCallbacks.new(:dic_path), if: -> { @site }
 
   def initialize(site = nil)
     @site = site

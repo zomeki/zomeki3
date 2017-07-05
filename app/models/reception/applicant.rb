@@ -1,6 +1,7 @@
 class Reception::Applicant < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Rel::Creator
+  include Cms::Model::Site
   include Cms::Model::Auth::Content
 
   STATE_OPTIONS = [['申込','applied'],['受付','received'],['キャンセル','canceled']]
@@ -32,6 +33,8 @@ class Reception::Applicant < ApplicationRecord
   validates :applied_from, presence: true
   validate :validate_capacity_for_admin, if: :in_register_from_admin
   validate :validate_capacity_for_public, if: :in_register_from_public
+
+  define_site_scope :open
 
   scope :received_state, -> { where(state: 'received') }
   scope :canceled_state, -> { where(state: 'canceled') }

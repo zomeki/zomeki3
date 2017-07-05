@@ -57,6 +57,33 @@ ZomekiCMS::Application.routes.draw do
           get :change
         end
       end
+
+    # convert
+    resources :tool_convert_downloads,
+      :controller  => "admin/tool/convert_downloads",
+      :path        => "tool_convert_downloads"
+    match "tool_convert_files(/*path)" => "admin/tool/convert_files#index",
+      :format => false, :as => "tool_convert_files", via: [:get, :post]
+    resources :tool_convert_settings,
+      :controller  => "admin/tool/convert_settings",
+      :path        => "tool_convert_settings"
+    resources :tool_convert_imports,
+      :controller  => "admin/tool/convert_imports",
+      :path        => "tool_convert_imports" do
+        collection do
+          get :filename_options
+        end
+      end
+    resources :tool_convert_docs,
+      :controller  => "admin/tool/convert_docs",
+      :path        => "tool_convert_docs" do
+        collection do
+          get :export, :destroy_all
+        end
+      end
+    resources :tool_convert_links,
+      :controller  => "admin/tool/convert_links",
+      :path        => "tool_convert_links"
   end
 
   scope "#{ZomekiCMS::ADMIN_URL_PREFIX}/#{mod}", :module => mod do

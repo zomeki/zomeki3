@@ -1,6 +1,7 @@
 class Cms::SiteSetting < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Base::Setting
+  include Cms::Model::Site
   include Cms::Model::Rel::Site
   include Cms::Model::Auth::Site
 
@@ -59,5 +60,6 @@ class Cms::SiteSetting < ApplicationRecord
              index: true
 
   validates :site_id, presence: true
-  validates :name, presence: true, uniqueness: { scope: :site_id }
+  validates :name, presence: true,
+                   uniqueness: { scope: :site_id, if: -> { name && name.to_sym.in?(self.class.configs.keys) } }
 end
