@@ -53,7 +53,7 @@ class Survey::Admin::FormsController < Cms::Controller::Admin::Base
 
     @item = @content.forms.build(form_params)
 
-    @item.state = new_state if new_state.present? && @item.class::STATE_OPTIONS.any?{|v| v.last == new_state }
+    @item.state = new_state if new_state.present? && @content.form_state_options.any? { |v| v.last == new_state }
 
     location = ->(f){ edit_survey_form_url(@content, f) } if @item.state_draft?
     _create(@item, location: location) do
@@ -66,7 +66,7 @@ class Survey::Admin::FormsController < Cms::Controller::Admin::Base
 
     @item.attributes = form_params
 
-    @item.state = new_state if new_state.present? && @item.class::STATE_OPTIONS.any?{|v| v.last == new_state }
+    @item.state = new_state if new_state.present? && @content.form_state_options.any? { |v| v.last == new_state }
 
     location = url_for(action: 'edit') if @item.state_draft?
     _update(@item, location: location) do
