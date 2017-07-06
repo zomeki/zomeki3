@@ -1,7 +1,11 @@
 class Tool::Convert::LinkProcessor
   attr_reader :body, :after_body, :clinks
 
-  def sublink(cdoc, conf)
+  def initialize(conf)
+    @conf = conf
+  end
+
+  def sublink(cdoc)
     @body = cdoc.body.dup
     @after_body = cdoc.body.dup
     @clinks = []

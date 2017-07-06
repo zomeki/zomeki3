@@ -73,11 +73,11 @@ class Tool::Convert
     dump "書き込み処理開始: #{conf.total_num}件"
     htmlfiles(conf.site_url, options) do |file_path, uri_path, i|
       dump "[#{i}] #{uri_path}"
-      page = Tool::Convert::PageParser.new.parse(file_path, uri_path, conf.convert_setting)
+      page = Tool::Convert::PageParser.new(conf).parse(file_path, uri_path)
 
       if page.kiji_page?
         dump "#{page.title},#{page.updated_at},#{page.group_code}"
-        db = Tool::Convert::DbProcessor.new.process(page, conf)
+        db = Tool::Convert::DbProcessor.new(conf).process(page)
         case db.process_type
         when 'created'
           conf.created_num += 1
@@ -114,7 +114,7 @@ class Tool::Convert
         dump "[#{conf.link_processed_num}] #{cdoc.uri_path}"
 
         if doc = cdoc.latest_doc
-          link = Tool::Convert::LinkProcessor.new.sublink(cdoc, conf)
+          link = Tool::Convert::LinkProcessor.new(conf).sublink(cdoc)
           link.clinks.each do |clink|
             dump "#{clink.url} => #{clink.after_url}" if clink.url_changed?
           end
