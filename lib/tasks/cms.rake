@@ -103,5 +103,18 @@ namespace :zomeki do
         GpArticle::Doc.public_state.find_each(&:set_public_name)
       end
     end
+
+    namespace :search_texts do
+      desc 'Rebuild search texts'
+      task :rebuild => :environment do
+        [Cms::Node::Page, GpArticle::Doc].each do |model|
+          items = model
+          items = items.where(model: 'Cms::Page') if model == Cms::Node::Page
+          items.find_each do |item|
+            item.rebuild_search_texts
+          end
+        end
+      end
+    end
   end
 end
