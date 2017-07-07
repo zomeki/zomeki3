@@ -7,93 +7,43 @@ class PublicationScript < ParametersScript
     initialize_publication
   end
 
-  def self.publishable?
-    true
-  end
-
   def initialize_publication
-    if (@node = (params[:node] || Cms::Node.where(id: params[:node_id]).first))
-      @site = @node.site
-    end
-    @errors = []
+    @node = params[:node] || Cms::Node.where(id: params[:node_id]).first
+    @site = @node.site if @node
   end
 
-  def publish_page(item, params = {})
-    site = params[:site] || @site
+  def publish_page(item, options = {})
+    site = options[:site] || @site
 
     ::Script.current
 
-    if ::Script.options
-      path = params[:uri].to_s.sub(/\?.*/, '')
-      return false if ::Script.options.is_a?(Array) && !::Script.options.include?(path)
-      return false if ::Script.options.is_a?(Regexp) && ::Script.options !~ path
-    end
+    rendered = render_public_as_string(options[:uri], site: site)
+    return false unless item.publish_page(rendered, path: options[:path], dependent: options[:dependent])
 
-    rendered = render_public_as_string(params[:uri], site: site)
-    res = item.publish_page(rendered, path: params[:path], dependent: params[:dependent])
-    return false unless res
-    #return true if params[:path] !~ /(\/|\.html)$/
-
-    if params[:smart_phone_path].present? && site.publish_for_smart_phone?(item)
-      rendered = render_public_as_string(params[:uri], site: site, agent_type: :smart_phone)
-      res = item.publish_page(rendered, path: params[:smart_phone_path], dependent: "#{params[:dependent]}_smart_phone")
-      return false unless res
+    if options[:smart_phone_path].present? && site.publish_for_smart_phone?(item)
+      rendered_sp = render_public_as_string(options[:uri], site: site, agent_type: :smart_phone)
+      return false unless item.publish_page(rendered_sp, path: options[:smart_phone_path], dependent: "#{options[:dependent]}_smart_phone")
     end
 
     ::Script.success if item.published?
 
-    ## ruby html
-    uri = params[:uri]
-    if uri =~ /\.html$/
-      uri += ".r"
-    elsif uri =~ /\/$/
-      uri += "index.html.r"
-    elsif uri =~ /\/\?/
-      uri = uri.gsub(/(\/)(\?)/, '\\1index.html.r\\2')
-    elsif uri =~ /\.html\?/
-      uri = uri.gsub(/(\.html)(\?)/, '\\1.r\\2')
-    else
-      return true
-    end
+    if options[:path] =~ /(\.html|\/)$/ && site.use_kana?
+      path = (options[:path] =~ /\.html$/ ? "#{options[:path]}.r" : "#{options[:path]}index.html.r")
+      dep  = options[:dependent] ? "#{options[:dependent]}/ruby" : "ruby"
 
-    #uri  = (params[:uri] =~ /\.html$/ ? "#{params[:uri]}.r" : "#{params[:uri]}index.html.r")
-    path = (params[:path] =~ /\.html$/ ? "#{params[:path]}.r" : "#{params[:path]}index.html.r")
-    dep  = params[:dependent] ? "#{params[:dependent]}/ruby" : "ruby"
-
-    ruby = nil
-    if item.published?
-      ruby = true
-    elsif !::File.exist?(path)
-      ruby = true
-    elsif ::File.stat(path).mtime < Cms::KanaDictionary.dic_mtime
-      ruby = true
-    end
-
-    if ruby
-      begin
-        Timeout.timeout(600) do
-          rendered = render_public_as_string(uri, site: site)
-          item.publish_page(rendered, path: path, dependent: dep)
-
-          #smart_phone_path =
-          #  if params[:smart_phone_path].present? && site.publish_for_smart_phone?(item)
-          #    params[:smart_phone_path] =~ /\.html$/ ? "#{params[:smart_phone_path]}.r" : "#{params[:smart_phone_path]}index.html.r"
-          #  else
-          #    nil
-          #  end
-          #if smart_phone_path
-          #  rendered = render_public_as_string(uri, site: site, agent_type: :smart_phone)
-          #  item.publish_page(rendered, path: smart_phone_path, dependent: "#{dep}_smart_phone")
-          #end
+      if item.published? || !::File.exist?(path) || ::File.stat(path).mtime < Cms::KanaDictionary.dic_mtime(site.id)
+        begin
+          Timeout.timeout(600) do
+            rendered = Cms::Lib::Navi::Kana.convert(rendered, site.id)
+            item.publish_page(rendered, path: path, dependent: dep)
+          end
+        rescue => e
+          ::Script.error "#{path}\n#{e.message}"
         end
-      rescue Timeout::Error => e
-        ::Script.error "#{uri} Timeout"
-      rescue => e
-        ::Script.error "#{uri}\n#{e.message}"
       end
     end
 
-    return res
+    return true
   rescue => e
     ::Script.error "#{uri}\n#{e.message}"
     error_log e
@@ -207,30 +157,22 @@ class PublicationScript < ParametersScript
     published_deps = pages.select { |page| page[:published] }
                           .map { |page| "#{dependent}#{page[:pagination]}" }
 
-    overall_deps = overall_dependents(:simple, dependent) +
-                   overall_dependents(:weekly, dependent) +
-                   overall_dependents(:monthly, dependent)
-
+    overall_deps = overall_dependents(dependent)
     needless_deps = (overall_deps - published_deps).flat_map { |dep| related_dependents(dep) } 
     item.publishers.where(dependent: needless_deps).destroy_all
   end
 
   def related_dependents(dep)
-    [dep, "#{dep}/ruby", "#{dep}_smart_phone", "#{dep}/ruby_smart_phone"]
+    [dep, "#{dep}/ruby", "#{dep}/talk", "#{dep}_smart_phone"]
   end
 
-  def overall_dependents(page_style, dependent)
-    paginations =
-      case page_style.to_sym
-      when :simple
-        2.upto(200).map { |p| simple_pagination(p) }
-      when :weekly
-        dates = (Date.today - 5.years) .. (Date.today + 1.years)
-        dates.select { |d| d.wday == 1 }.map { |d| weekly_pagination(d) }
-      when :monthly
-        dates = (Date.today - 5.years) .. (Date.today + 1.years)
-        dates.select { |d| d.day == 1 }.map { |d| monthly_pagination(d) }
-      end
+  def overall_dependents(dependent)
+    page_range = 2..200
+    date_range = (Date.today - 5.years)..(Date.today + 1.years)
+
+    paginations = page_range.map { |p| simple_pagination(p) }
+    paginations += date_range.select { |d| d.wday == 1 }.map { |d| weekly_pagination(d) }
+    paginations += date_range.select { |d| d.day == 1 }.map { |d| monthly_pagination(d) }
     paginations.map { |p| "#{dependent}#{p}" }
   end
 end
