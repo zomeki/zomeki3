@@ -374,7 +374,7 @@ class Cms::Node < ApplicationRecord
           return true unless publish_page(rendered, path: public_path)
 
           if site.use_kana?
-            rendered = Cms::Admin::RenderService.new(site).render_public("#{public_uri}.r")
+            rendered = Cms::Lib::Navi::Kana.convert(rendered, site_id)
             publish_page(rendered, path: "#{public_path}.r", dependent: :ruby)
           end
 

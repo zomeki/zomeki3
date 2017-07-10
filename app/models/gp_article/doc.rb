@@ -633,10 +633,7 @@ class GpArticle::Doc < ApplicationRecord
       publish_qrcode
 
       if content.site.use_kana?
-        uri = public_uri
-        uri = ::File.join(uri, 'index.html') if uri.end_with?('/')
-        uri = "#{uri}.r"
-        rendered = Cms::Admin::RenderService.new(content.site).render_public(uri)
+        rendered = Cms::Lib::Navi::Kana.convert(rendered, content.site_id)
         publish_page(rendered, path: "#{public_path}.r", dependent: :ruby)
       end
 

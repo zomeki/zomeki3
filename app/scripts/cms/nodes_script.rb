@@ -52,7 +52,7 @@ class Cms::NodesScript < PublicationScript
     unless node.model == 'Cms::Directory'
       begin
         script_klass = "#{node.model.pluralize}Script".safe_constantize
-        script_klass.new(params.merge(node: node)).publish if script_klass && script_klass.publishable?
+        script_klass.new(params.merge(node: node)).publish if script_klass && script_klass.method_defined?(:publish)
       rescue ::Script::InterruptException => e
         raise e
       rescue Exception => e
