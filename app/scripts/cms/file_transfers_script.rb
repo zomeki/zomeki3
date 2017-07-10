@@ -17,11 +17,7 @@ class Cms::FileTransfersScript < ParametersScript
 
     transfers.each do |transfer|
       ::Script.progress(transfer) do
-        if ::File.exists?(transfer.path)
-          out, error = rsync(transfer.path, recursive: transfer.recursive)
-          ::Script.log out if out.present?
-          raise error if error.present?
-        end
+        rsync(transfer.path, recursive: transfer.recursive) if ::File.exists?(transfer.path)
         transfer.destroy
       end
     end
@@ -31,21 +27,28 @@ class Cms::FileTransfersScript < ParametersScript
 
   def rsync(path, options = {})
     require "open3"
-    com = rsync_command(path, options)
-    ::Script.log com
-    Open3.capture3(com)
+
+    commands = rsync_commands(path, options)
+    commands.each do |command|
+      ::Script.log command
+      out, error = Open3.capture3(command)
+      ::Script.log out if out.present?
+      ::Script.error error if error.present?
+    end
   end
 
-  def rsync_command(path, options)
+  def rsync_commands(path, options)
     conf = Util::Config.load(:rsync).with_indifferent_access
 
     src_path = path
     src_path += '/' if src_path[-1] != '/'
-    dest_path = conf[:dest_path]
-    dest_path += '/' if dest_path[-1] != '/'
 
-    com = "#{conf[:bin]} #{conf[:opts]} --relative #{src_path} #{dest_path}"
-    com << (options[:recursive] ? " --recursive" : " --dirs")
-    com
+    Array(conf[:dests]).map do |dest|
+      dest[:path] += '/' if dest[:path][-1] != '/'
+      opts = [conf[:opts], dest[:opts]].select(&:present?).join(' ')
+      com = "#{conf[:bin]} #{opts} --relative #{src_path} #{dest[:path]}"
+      com << (options[:recursive] ? " --recursive" : " --dirs")
+      com
+    end
   end
 end
