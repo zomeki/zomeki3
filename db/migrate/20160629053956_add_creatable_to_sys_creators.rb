@@ -12,7 +12,6 @@ class AddCreatableToSysCreators < ActiveRecord::Migration
     Cms::DataFile,
     Cms::DataFileNode,
     Cms::DataText,
-    Cms::Feed,
     Cms::KanaDictionary,
     Cms::Layout,
     Cms::Node,
