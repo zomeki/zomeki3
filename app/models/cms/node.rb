@@ -290,10 +290,12 @@ class Cms::Node < ApplicationRecord
     include Sys::Model::Rel::Recognition
     include Cms::Model::Rel::Inquiry
     include Sys::Model::Rel::Task
-    include Cms::Model::Rel::PublishUrl
     include Cms::Model::Rel::Link
+    include Cms::Model::Rel::PublishUrl
+    include Cms::Model::Rel::SearchText
 
     self.linkable_columns = [:body]
+    self.searchable_columns = [:body]
 
     after_save :replace_public_page
 
@@ -383,6 +385,9 @@ class Cms::Node < ApplicationRecord
             publish_page(rendered, path: public_smart_phone_path, dependent: :smart_phone)
           end
         end
+
+        rebuild_search_texts
+
         return true
       end
 

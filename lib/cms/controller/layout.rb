@@ -115,30 +115,9 @@ module Cms::Controller::Layout
     ## render the content
     body.gsub!("[[content]]", Page.content)
 
-    ## render the data/text
-    Cms::Lib::Layout.find_data_texts(body, concepts).each do |name, item|
-      body.gsub!("[[text/#{name}]]", item.body)
-    end
-
-    ## render the data/file
-    Cms::Lib::Layout.find_data_files(body, concepts).each do |name, item|
-      data =
-        if item.image_file?
-          %Q|<img src="#{item.public_uri}" alt="#{item.alt_text}" title="#{item.title}" />|
-        else
-          %Q|<a href="#{item.public_uri}" class="#{item.css_class}" target="_blank">#{item.united_name}</a>|
-        end
-      body.gsub!("[[file/#{name}]]", data)
-    end
-
-    ## render the emoji
-    body.gsub!(/\[\[emoji\/([0-9a-zA-Z\._-]+)\]\]/) do |m|
-      name = m.gsub(/\[\[emoji\/([0-9a-zA-Z\._-]+)\]\]/, '\1')
-      Cms::Lib::Mobile::Emoji.convert(name, request.mobile)
-    end
-
-    ## removes the unknown components
-    body.gsub!(/\[\[[a-z]+\/[^\]]+\]\]/, '') #if Core.mode.to_s != 'preview'
+    ## render other brackets
+    body = Cms::Public::BracketRenderService.new(Page.site, concepts, mobile: request.mobile)
+                                            .render_data_texts_and_files(body)
 
     ## mobile
     if request.mobile?
@@ -172,17 +151,6 @@ module Cms::Controller::Layout
       body = Cms::Lib::Navi::Kana.convert(body, Page.site.id)
     end
 
-#    ## for preview
-#    if Core.mode.to_s == 'preview'
-#      body.gsub!(/<a .*?href="\/[^_].*?>/i) do |m|
-#        prefix = "/_preview/#{format('%08d', Page.site.id)}"
-#        m.gsub(/(<a .*?href=")(\/[^_].*?>)/i, '\1' + prefix + '\2')
-#      end
-#    end
-
-    body = convert_adobe_reader_link(body)
-    body = last_convert_body(body)
-
     ## render the true layout
     body = render_to_string(
       html: body.to_s.force_encoding('UTF-8').html_safe,
@@ -197,26 +165,6 @@ module Cms::Controller::Layout
     return body unless Page.site.use_common_ssl?
 
     Cms::Public::SslLinkReplaceService.new(Page.site, Page.current_node).run(body)
-  end
-
-  def convert_adobe_reader_link(body)
-    return body unless body.include?('@adobe-reader-link@')
-
-    if Page.mobile? || !Page.site.adobe_reader_link_enabled?
-      body.gsub('@adobe-reader-link@', '')
-    else
-      html = Nokogiri::HTML.fragment(body).xpath("descendant::div[@class='body']").inner_html
-      link = if Util::Link.include_pdf_link?(html)
-               render_to_string(partial: 'cms/public/_partial/adobe_reader')
-             else
-               ''
-             end
-      body.gsub('@adobe-reader-link@', link)
-    end
-  end
-
-  def last_convert_body(body)
-    body
   end
 
   def piece_container_html(piece, body)

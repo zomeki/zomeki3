@@ -11,11 +11,13 @@ class GpArticle::Doc < ApplicationRecord
   include Cms::Model::Base::Page::TalkTask
   include Cms::Model::Base::Qrcode
   include Cms::Model::Rel::Content
+  include Cms::Model::Rel::Concept
   include Cms::Model::Rel::Inquiry
   include Cms::Model::Rel::Map
   include Cms::Model::Rel::Bracket
-  include Cms::Model::Rel::PublishUrl
   include Cms::Model::Rel::Link
+  include Cms::Model::Rel::PublishUrl
+  include Cms::Model::Rel::SearchText
   include Cms::Model::Rel::Importation
 
   include Cms::Model::Auth::Concept
@@ -31,6 +33,7 @@ class GpArticle::Doc < ApplicationRecord
   include StateText
 
   self.linkable_columns = [:body, :mobile_body, :body_more]
+  self.searchable_columns = [:body]
 
   TARGET_OPTIONS = [['無効', ''], ['同一ウィンドウ', '_self'], ['別ウィンドウ', '_blank'], ['添付ファイル', 'attached_file']]
   EVENT_STATE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
@@ -46,7 +49,6 @@ class GpArticle::Doc < ApplicationRecord
   validates :content_id, :presence => true
 
   # Page
-  belongs_to :concept, :foreign_key => :concept_id, :class_name => 'Cms::Concept'
   belongs_to :layout, :foreign_key => :layout_id, :class_name => 'Cms::Layout'
 
   has_many :operation_logs, -> { where(item_model: 'GpArticle::Doc') },
@@ -177,8 +179,8 @@ class GpArticle::Doc < ApplicationRecord
     uri =
       if content.organization_content_related? && organization_group
         "#{organization_group.public_uri}docs/#{name}/"
-      elsif with_closed_preview && content.node
-        "#{content.node.public_uri}#{name}/"
+      elsif with_closed_preview && content.main_node
+        "#{content.main_node.public_uri}#{name}/"
       elsif !with_closed_preview && content.public_node
         "#{content.public_node.public_uri}#{name}/"
       end
@@ -643,6 +645,8 @@ class GpArticle::Doc < ApplicationRecord
         publish_smart_phone_files
         publish_smart_phone_qrcode
       end
+
+      rebuild_search_texts
 
       return true
     end

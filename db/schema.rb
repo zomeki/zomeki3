@@ -589,6 +589,16 @@ ActiveRecord::Schema.define(version: 20170705065925) do
     t.index ["site_id"], name: "index_cms_search_indexers_on_site_id", using: :btree
   end
 
+  create_table "cms_search_texts", force: :cascade do |t|
+    t.string   "searchable_type"
+    t.integer  "searchable_id"
+    t.string   "searchable_column"
+    t.text     "body"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+    t.index ["searchable_type", "searchable_id"], name: "index_cms_search_texts_on_searchable_type_and_searchable_id", using: :btree
+  end
+
   create_table "cms_site_basic_auth_users", force: :cascade do |t|
     t.string   "state"
     t.integer  "site_id"
