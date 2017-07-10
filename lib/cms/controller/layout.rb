@@ -33,7 +33,6 @@ module Cms::Controller::Layout
       info_log("#{URI.join(Page.site.full_uri, path)}: #{Page.error}") if Page.error
     rescue => e
       error_log e
-      error_log e.backtrace.join("\n")
       Page.error = 404
     end
 
@@ -108,7 +107,6 @@ module Cms::Controller::Layout
         end
       rescue => e
         error_log e
-        error_log e.backtrace.join("\n")
       end
     end
 
@@ -128,7 +126,7 @@ module Cms::Controller::Layout
           :body => body
         )
       rescue => e #InvalidStyleException
-        error_log(e.message)
+        error_log e
       end
 
       case request.mobile

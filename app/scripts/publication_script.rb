@@ -47,7 +47,6 @@ class PublicationScript < ParametersScript
   rescue => e
     ::Script.error "#{uri}\n#{e.message}"
     error_log e
-    error_log e.backtrace.join("\n")
     return false
   end
 
