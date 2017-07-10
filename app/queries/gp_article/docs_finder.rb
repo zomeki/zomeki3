@@ -79,8 +79,8 @@ class GpArticle::DocsFinder < FinderQuery
       @docs.where(state: %w(draft approvable approved prepared))
     when 'public'
       @docs.where(state: 'public')
-    when 'finish'
-      @docs.where(state: 'finish')
+    when 'closed'
+      @docs.where(state: 'closed')
     when 'all'
       @docs.all
     else

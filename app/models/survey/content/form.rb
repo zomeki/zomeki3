@@ -1,6 +1,8 @@
 class Survey::Content::Form < Cms::Content
   default_scope { where(model: 'Survey::Form') }
 
+  FORM_STATE_OPTIONS = [['下書き保存', 'draft'], ['承認依頼', 'approvable'], ['即時公開', 'public']]
+
   has_one :public_node, -> { public_state.where(model: 'Survey::Form').order(:id) },
     foreign_key: :content_id, class_name: 'Cms::Node'
   has_one :form_node, -> { where(model: 'Survey::Form').order(:id) },
@@ -49,5 +51,12 @@ class Survey::Content::Form < Cms::Content
 
   def use_common_ssl?
     setting_value(:common_ssl) == 'enabled'
+  end
+
+  def form_state_options(user = Core.user)
+    options = FORM_STATE_OPTIONS.clone
+    options.reject! { |o| o.last == 'public' } unless user.has_auth?(:manager)
+    options.reject! { |o| o.last == 'approvable' } unless approval_related?
+    options
   end
 end

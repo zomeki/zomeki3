@@ -10,6 +10,8 @@ class BizCalendar::ExceptionHoliday < ApplicationRecord
 
   belongs_to :place,  :foreign_key => :place_id, :class_name => 'BizCalendar::Place'
 
+  delegate :content, to: :place
+
   validates :state, :start_date, :end_date, presence: true
   validate :dates_range
   
@@ -66,10 +68,6 @@ class BizCalendar::ExceptionHoliday < ApplicationRecord
           end
 
     return rel
-  end
-
-  def content
-    place.content
   end
 
   def state_public?

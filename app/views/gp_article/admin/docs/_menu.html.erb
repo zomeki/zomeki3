@@ -13,7 +13,7 @@
   <span class="separator"></span>
   <%= link_to '公開前', { target: params[:target], target_state: 'processing', target_public: nil }, (params[:target_state] == 'processing' ? {class: 'current'} : {}) %>
   <%= link_to '公開中', { target: params[:target], target_state: 'public', target_public: nil }, (params[:target_state] == 'public' ? {class: 'current'} : {}) %>
-  <%= link_to '公開終了', { target: params[:target], target_state: 'finish', target_public: nil }, (params[:target_state] == 'finish' ? {class: 'current'} : {}) %>
+  <%= link_to '公開終了', { target: params[:target], target_state: 'closed', target_public: nil }, (params[:target_state] == 'closed' ? {class: 'current'} : {}) %>
   <%= link_to '全記事', { target: params[:target], target_state: 'all', target_public: nil }, (params[:target_state] == 'all' ? {class: 'current'} : {}) %>
   <span class="separator"></span>
   <%= link_to '公開記事', { target: '', target_state: '', target_public: 1 }, (params[:target_public] == '1' ? {class: 'current'} : {}) %>
@@ -35,7 +35,7 @@
   -%>
   <%= link_to :publish, { action: :publish }, method: :post, confirm: pubmsg if (@item.state_approved? || @item.state_prepared?) &&
                                                                                  @item.approval_participators.include?(Core.user) %>
-  <%= link_to :finish, { do: :close }, confirm: '公開を終了してよろしいですか？' if @item.closable? %>
+  <%= link_to '公開終了', { do: :close }, confirm: '公開を終了してよろしいですか？' if @item.closable? %>
 <%- when 'edit', 'update' -%>
   <%= link_to "#{GpArticle::Doc.model_name.human}一覧", { action: :index } %>
   <span class="separator"></span>

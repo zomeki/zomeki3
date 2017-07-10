@@ -11,7 +11,6 @@ class Survey::Form < ApplicationRecord
 
   include StateText
 
-  STATE_OPTIONS = [['下書き保存', 'draft'], ['承認依頼', 'approvable'], ['即時公開', 'public']]
   CONFIRMATION_OPTIONS = [['あり', true], ['なし', false]]
   INDEX_LINK_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
 
@@ -88,13 +87,6 @@ class Survey::Form < ApplicationRecord
     return false if opened_at && opened_at > now
     return false if closed_at && closed_at < now
     return true
-  end
-
-  def state_options
-    options = STATE_OPTIONS.clone
-    options.reject!{|o| o.last == 'public' } unless Core.user.has_auth?(:manager)
-    options.reject!{|o| o.last == 'approvable' } unless content.approval_related?
-    return options
   end
 
   def state_draft?
@@ -176,7 +168,6 @@ class Survey::Form < ApplicationRecord
   private
 
   def set_defaults
-    self.state        = STATE_OPTIONS.first.last        if self.has_attribute?(:state) && self.state.nil?
     self.confirmation = CONFIRMATION_OPTIONS.first.last if self.has_attribute?(:confirmation) && self.confirmation.nil?
     self.index_link   = INDEX_LINK_OPTIONS.first.last   if self.has_attribute?(:index_link) && self.index_link.nil?
     self.sort_no      = 10 if self.has_attribute?(:sort_no) && self.sort_no.nil?

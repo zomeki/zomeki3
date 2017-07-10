@@ -44,7 +44,6 @@ module LinkHelper
       :set       => '設定',
       :open      => '公開',
       :close     => '非公開',
-      :finish    => '公開終了',
       :enabale   => '有効化',
       :disable   => '無効化',
       :recognize => '承認',

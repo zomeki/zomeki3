@@ -16,6 +16,8 @@ class Survey::Question < ApplicationRecord
   belongs_to :form
   validates :form_id, presence: true
 
+  delegate :content, to: :form
+
   validates :state, presence: true
   validates :title, presence: true
   validates :sort_no, presence: true
@@ -25,10 +27,6 @@ class Survey::Question < ApplicationRecord
   define_site_scope :form
 
   scope :public_state, -> { where(state: 'public') }
-
-  def content
-    form.content
-  end
 
   def form_options_for_select
     form_options.gsub("\r\n", "\n").gsub("\r", "\n").split("\n")

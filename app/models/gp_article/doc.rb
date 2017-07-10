@@ -239,7 +239,7 @@ class GpArticle::Doc < ApplicationRecord
   end
 
   def state_closed?
-    state == 'finish'
+    state == 'closed'
   end
 
   def external_link?
@@ -648,7 +648,7 @@ class GpArticle::Doc < ApplicationRecord
     end
 
     def close
-      self.state = 'finish' if self.state_public?
+      self.state = 'closed' if self.state_public?
       transaction do
         return false unless save(validate: false)
         close_page

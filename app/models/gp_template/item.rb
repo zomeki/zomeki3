@@ -14,6 +14,8 @@ class GpTemplate::Item < ApplicationRecord
   belongs_to :template
   validates :template_id, presence: true
 
+  delegate :content, to: :template
+
   validates :state, presence: true
 
   validates :title, presence: true
@@ -33,10 +35,6 @@ class GpTemplate::Item < ApplicationRecord
 
   def state_closed?
     state == 'closed'
-  end
-
-  def content
-    template.content
   end
 
   def item_options_for_select
