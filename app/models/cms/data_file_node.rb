@@ -1,6 +1,5 @@
 class Cms::DataFileNode < ApplicationRecord
   include Sys::Model::Base
-  include Cms::Model::Base::Page
   include Sys::Model::Rel::Creator
   include Cms::Model::Site
   include Cms::Model::Rel::Site
