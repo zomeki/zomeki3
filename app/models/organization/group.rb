@@ -124,11 +124,6 @@ class Organization::Group < ApplicationRecord
     Cms::Lib::BreadCrumbs.new(crumbs)
   end
 
-  def rebuild(content, options={})
-    return false unless self.public?
-    publish_page(content, options)
-  end
-
   def public_smart_phone_path
     return '' unless public_uri
     "#{content.site.public_path}/_smartphone#{public_uri}"

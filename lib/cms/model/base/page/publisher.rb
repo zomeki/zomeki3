@@ -1,12 +1,10 @@
 require 'digest/md5'
 module Cms::Model::Base::Page::Publisher
-  def self.included(mod)
-    mod.has_many :publishers, class_name: 'Sys::Publisher', dependent: :destroy, as: :publishable
-    #mod.after_save :close_page
-  end
+  extend ActiveSupport::Concern
 
-  def public_status
-    return published_at ? '公開中' : '非公開'
+  included do
+    has_many :publishers, class_name: 'Sys::Publisher', dependent: :destroy, as: :publishable
+    #after_save :close_page
   end
 
   def public_path
@@ -36,27 +34,11 @@ module Cms::Model::Base::Page::Publisher
   end
 
   def publishable?
-    return false unless editable?
-    if respond_to?(:state_approved?)
-      return false unless state_approved?
-    else
-      return false unless recognized?
-    end
-    return true
-  end
-
-  def rebuildable?
-    return false unless editable?
-    return state == 'public'# && published_at
+    editable? && state.in?(%w(approved recognized))
   end
 
   def closable?
-    return false unless editable?
-    return state == 'public'# && published_at
-  end
-
-  def mobile_page?
-    false
+    editable? && state == 'public'
   end
 
   def published?
