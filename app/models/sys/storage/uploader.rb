@@ -58,7 +58,7 @@ class Sys::Storage::Uploader
     end
     res
   rescue => e
-    error_log e
+    error_log e.to_s
     [{ name: file.original_filename, msg: "ZIPファイルの解凍に失敗しました。(#{e})", status: 'NG' }]
   end
 end

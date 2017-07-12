@@ -17,6 +17,8 @@ class BizCalendar::BussinessHoliday < ApplicationRecord
   belongs_to :place,  :foreign_key => :place_id, :class_name => 'BizCalendar::Place'
   belongs_to :type,   :foreign_key => :type_id,  :class_name => 'BizCalendar::HolidayType'
 
+  delegate :content, to: :place
+
   validates :state, :type_id, presence: true
   validate :dates_range
   validate :repeat_setting
@@ -112,10 +114,6 @@ class BizCalendar::BussinessHoliday < ApplicationRecord
           end
 
     return rel
-  end
-
-  def content
-    place.content
   end
 
   def state_public?

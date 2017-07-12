@@ -51,6 +51,10 @@ class GpCategory::Category < ApplicationRecord
   has_many :public_children, -> { public_state },
     :foreign_key => :parent_id, :class_name => self.name
 
+  delegate :content, to: :category_type
+  delegate :site, to: :content
+  delegate :site_id, to: :content
+
   after_initialize :set_defaults
 
   before_validation :set_attributes_from_parent
@@ -65,18 +69,6 @@ class GpCategory::Category < ApplicationRecord
   after_destroy :clean_published_files
 
   define_site_scope :category_type
-
-  def content
-    category_type.content
-  end
-
-  def site
-    content.site
-  end
-
-  def site_id
-    content.site_id
-  end
 
   def descendants(categories=[])
     categories << self

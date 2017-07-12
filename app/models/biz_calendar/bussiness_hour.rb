@@ -16,6 +16,8 @@ class BizCalendar::BussinessHour < ApplicationRecord
 
   belongs_to :place,  :foreign_key => :place_id, :class_name => 'BizCalendar::Place'
 
+  delegate :content, to: :place
+
   validates :state, :business_hours_start_time, :business_hours_end_time, :end_type, presence: true
   validate :dates_range
   validate :repeat_setting
@@ -195,10 +197,6 @@ class BizCalendar::BussinessHour < ApplicationRecord
     @repeat_dates = _dates.select {|d| d >= sdate } if sdate
 
     return sdate.blank? ? @all_repeat_dates : @repeat_dates
-  end
-
-  def content
-    place.content
   end
 
   def state_public?

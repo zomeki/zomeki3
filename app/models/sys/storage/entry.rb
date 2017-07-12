@@ -147,7 +147,7 @@ class Sys::Storage::Entry
     changes_applied
     return true
   rescue => e
-    error_log e
+    error_log e.to_s
     errors.add(:base, e)
     return false
   end
@@ -158,7 +158,7 @@ class Sys::Storage::Entry
     end
     return true
   rescue => e
-    error_log e
+    error_log e.to_s
     errors.add(:base, e)
     return false
   end

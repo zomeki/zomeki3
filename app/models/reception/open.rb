@@ -12,6 +12,8 @@ class Reception::Open < ApplicationRecord
   belongs_to :course
   has_many :applicants, dependent: :destroy
 
+  delegate :content, to: :course
+
   before_save :prepare_expire_task
 
   after_save     Cms::Publisher::ContentCallbacks.new(belonged: true), if: :changed?
@@ -39,10 +41,6 @@ class Reception::Open < ApplicationRecord
       courses[:capacity].gt(arel_table[:received_applicants_count]),
     ].reduce(:or))
   }
-
-  def content
-    course.content
-  end
 
   def open_at_text
     if open_on && start_at && end_at

@@ -14,6 +14,9 @@ class Reception::Applicant < ApplicationRecord
   belongs_to :open
   has_one :applicant_token, dependent: :destroy
 
+  delegate :course, to: :open
+  delegate :content, to: :course
+
   before_save :set_applied_at
 
   with_options unless: :temporary_state? do
@@ -46,14 +49,6 @@ class Reception::Applicant < ApplicationRecord
     end
     rel
   }
-
-  def content
-    course.content
-  end
-
-  def course
-    open.course
-  end
 
   def state_text
     STATE_OPTIONS.rassoc(state).try(:first)

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170628054940) do
+ActiveRecord::Schema.define(version: 20170705065925) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -587,6 +587,16 @@ ActiveRecord::Schema.define(version: 20170628054940) do
     t.datetime "updated_at",     null: false
     t.index ["indexable_type", "indexable_id"], name: "index_cms_search_indexers_on_indexable_type_and_indexable_id", using: :btree
     t.index ["site_id"], name: "index_cms_search_indexers_on_site_id", using: :btree
+  end
+
+  create_table "cms_search_texts", force: :cascade do |t|
+    t.string   "searchable_type"
+    t.integer  "searchable_id"
+    t.string   "searchable_column"
+    t.text     "body"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+    t.index ["searchable_type", "searchable_id"], name: "index_cms_search_texts_on_searchable_type_and_searchable_id", using: :btree
   end
 
   create_table "cms_site_basic_auth_users", force: :cascade do |t|

@@ -20,7 +20,6 @@ class Cms::Link < ApplicationRecord
     end
   rescue => e
     error_log e
-    error_log e.backtrace.join("\n")
     nil
   end
 end

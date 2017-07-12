@@ -20,6 +20,7 @@ class Cms::Content < ApplicationRecord
     :dependent => :destroy
 
   # conditional
+  has_one :main_node, -> { order(:id) }, foreign_key: :content_id, class_name: 'Cms::Node'
   has_many :public_nodes, -> { public_state }, foreign_key: :content_id, class_name: 'Cms::Node'
   has_many :public_pieces, -> { public_state }, foreign_key: :content_id, class_name: 'Cms::Piece'
 
@@ -32,6 +33,10 @@ class Cms::Content < ApplicationRecord
   after_save :save_settings
 
   scope :rebuildable_models, -> { where(model: REBUILDABLE_MODELS) }
+
+  def inherited_concept
+    main_node.try!(:inherited_concept) || concept
+  end
 
   def readable?
     Core.user.has_priv?(:read, item: concept)

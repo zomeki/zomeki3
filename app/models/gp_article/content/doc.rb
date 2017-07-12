@@ -3,7 +3,7 @@ class GpArticle::Content::Doc < Cms::Content
 
   STATE_OPTIONS = [['下書き保存', 'draft'], ['承認依頼', 'approvable'], ['即時公開', 'public']]
 
-  has_one :node, -> { where(model: 'GpArticle::Doc').order(:id) },
+  has_one :main_node, -> { where(model: 'GpArticle::Doc').order(:id) },
     foreign_key: :content_id, class_name: 'Cms::Node'
   has_one :public_node, -> { public_state.where(model: 'GpArticle::Doc').order(:id) },
     foreign_key: :content_id, class_name: 'Cms::Node'
@@ -22,7 +22,7 @@ class GpArticle::Content::Doc < Cms::Content
   # draft, approvable, approved, public
   def preview_docs
     table = docs.arel_table
-    docs.mobile(::Page.mobile?).where(table[:state].not_eq('finish'))
+    docs.mobile(::Page.mobile?).where(table[:state].not_eq('closed'))
   end
 
   # public
