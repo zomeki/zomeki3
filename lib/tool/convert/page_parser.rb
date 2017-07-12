@@ -18,17 +18,14 @@ class Tool::Convert::PageParser
     page.body = html.xpath(@setting.body_xpath).inner_html
 
     # updated_at, published_at
-    page.updated_at = parse_updated_at(html)
-    page.published_at = parse_published_at(html)
-    page.updated_at ||= ::File::stat(page.file_path).mtime.strftime("%Y-%m-%d")
-    page.published_at ||= ::File::stat(page.file_path).mtime.strftime("%Y-%m-%d")
+    page.updated_at = parse_updated_at(html) || ::File::stat(page.file_path).mtime.strftime("%Y-%m-%d %H:%M")
+    page.published_at = parse_published_at(html) || ::File::stat(page.file_path).mtime.strftime("%Y-%m-%d %H:%M")
 
     # group_code
-    page.group_code = parse_group_code(uri_path, html)
+    page.group_code = parse_group_code(html, uri_path)
 
     # category_names
     page.category_names = parse_category_names(html)
-    dump "抜き出しカテゴリ名：#{page.category_names}" if page.category_names.present?
 
     # find related objects
     page.creator_group, page.creator_user = find_group_and_user(page)
@@ -39,55 +36,56 @@ class Tool::Convert::PageParser
 
   private
 
-  def parse_updated_at(html)
-    if @setting.updated_at_xpath.present?
-      updated = html.xpath(@setting.updated_at_xpath).inner_html
-      if @setting.updated_at_regexp.present? && updated.to_s =~ Regexp.new(@setting.updated_at_regexp)
-        "#{$1}-#{$2}-#{$3}"
-      else
-        updated
-      end
+  def parse_as_array_text(html, xpath, regexp)
+    if xpath.present? && regexp.present?
+      html.xpath(xpath).inner_html.scan(Regexp.new(regexp)).flatten
+    elsif xpath.present?
+      html.xpath(xpath).to_a.map(&:inner_html)
+    elsif regexp.present?
+      html.inner_html.scan(Regexp.new(regexp)).flatten
     end
+  end
+
+  def parse_as_date(html, xpath, regexp)
+    strs = parse_as_array_text(html, @setting.updated_at_xpath, @setting.updated_at_regexp)
+    [strs[0..2].to_a.join('-'), strs[3..4].to_a.join(':')].select(&:present?).join(' ')
+  end
+
+  def parse_updated_at(html)
+    parse_as_date(html, @setting.updated_at_xpath, @setting.updated_at_regexp)
   end
 
   def parse_published_at(html)
-    if @setting.published_at_xpath.present?
-      published = html.xpath(@setting.published_at_xpath).inner_html
-      if @setting.published_at_regexp.present? && published.to_s =~ Regexp.new(@setting.published_at_regexp)
-        "#{$1}-#{$2}-#{$3}"
-      else
-        published
-      end
-    end
+    parse_as_date(html, @setting.published_at_xpath, @setting.published_at_regexp)
   end
 
-  def parse_group_code(uri_path, html)
-    if @setting.creator_group_from_url_regexp.present? && uri_path =~ Regexp.new(@setting.creator_group_from_url_regexp)
-      group_code = $1
-      @setting.creator_group_url_relations_map[group_code] || group_code
+  def parse_group_code(html, uri_path)
+    group_code = parse_as_array_text(html, @setting.creator_group_xpath, @setting.creator_group_regexp)
+    group_code = group_code.try(:first) 
+
+    if group_code.blank? && @setting.creator_group_from_url_regexp.present?
+      group_code = uri_path.scan(Regexp.new(@setting.creator_group_from_url_regexp)).flatten.first
     end
+
+    @setting.creator_group_relations_map[group_code] || group_code
   end
 
   def parse_category_names(html)
-    if @setting.category_xpath.present? && @setting.category_regexp.present?
-      html.xpath(@setting.category_xpath).inner_html.scan(Regexp.new(@setting.category_regexp)).flatten
-    elsif @setting.category_xpath.present?
-      html.xpath(@setting.category_xpath).to_a.map(&:inner_text)
-    elsif @setting.category_regexp.present?
-      html.inner_html.scan(Regexp.new(@setting.category_regexp)).flatten
-    else
-      []
+    category_names = parse_as_array_text(html, @setting.category_xpath, @setting.category_regexp) || []
+    category_names.map do |name|
+      @setting.category_relations_map[name] || name
     end
   end
 
   def find_group_and_user(page)
     group = Sys::Group.in_site(Core.site)
-    group = if @setting.relate_url_to_group_name_en?
-              group.find_by(name_en: page.group_code)
-            elsif @setting.relate_url_to_group_name?
-              group.find_by(name: page.group_code)
-            else
+    group = case @setting.creator_group_relation_type.to_i
+            when 0
               group.find_by(code: page.group_code)
+            when 1
+              group.find_by(name: page.group_code)
+            when 2
+              group.find_by(name_en: page.group_code)
             end
 
     user = if group
@@ -106,7 +104,7 @@ class Tool::Convert::PageParser
 
     if page.creator_group
       cats += GpCategory::Category.where(category_type_id: category_types)
-                                  .where(title: group.name)
+                                  .where(title: page.creator_group.name)
     end
 
     cats.uniq

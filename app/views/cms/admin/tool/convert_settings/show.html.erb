@@ -3,6 +3,11 @@
     <th><%= @item.class.human_attribute_name :site_url %></th>
     <td><%= @item.site_url %></td>
   </tr>
+</table>
+
+<p class="form">基本設定</p>
+
+<table class="show">
   <tr>
     <th><%= @item.class.human_attribute_name :title_tag %></th>
     <td><%= @item.title_tag %></td>
@@ -27,10 +32,32 @@
     <th><%= @item.class.human_attribute_name :published_at_regexp %></th>
     <td><%= @item.published_at_regexp %></td>
   </tr>
+</table>
+
+<p class="form">作成者グループ設定</p>
+
+<table class="show">
+  <tr>
+    <th><%= @item.class.human_attribute_name :creator_group_tag %></th>
+    <td><%= @item.creator_group_tag %></td>
+  </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :creator_group_regexp %></th>
+    <td><%= @item.creator_group_regexp %></td>
+  </tr>
   <tr>
     <th><%= @item.class.human_attribute_name :creator_group_from_url_regexp %></th>
     <td><%= @item.creator_group_from_url_regexp %></td>
   </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :creator_group_relations %></th>
+    <td><%=hbr @item.creator_group_relations %></td>
+  </tr>
+</table>
+
+<p class="form">カテゴリ設定</p>
+
+<table class="show">
   <tr>
     <th><%= @item.class.human_attribute_name :category_tag %></th>
     <td><%= @item.category_tag %></td>
@@ -39,6 +66,15 @@
     <th><%= @item.class.human_attribute_name :category_regexp %></th>
     <td><%= @item.category_regexp %></td>
   </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :category_relations %></th>
+    <td><%=hbr @item.category_relations %></td>
+  </tr>
+</table>
+
+<p class="form">その他</p>
+
+<table class="show">
   <tr>
     <th><%= @item.class.human_attribute_name :created_at %></th>
     <td><%=l @item.created_at if @item.created_at %></td>

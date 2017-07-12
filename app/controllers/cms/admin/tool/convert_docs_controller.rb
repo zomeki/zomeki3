@@ -30,19 +30,30 @@ class Cms::Admin::Tool::ConvertDocsController < Cms::Controller::Admin::Base
   end
 
   def export
-    @items = ::Tool::ConvertDoc.in_site(Core.site).order(created_at: :desc)
-    @org_node_name = Cms::Node.where(model: 'Organization::Group').first.try(:name)
-
     csv_string = CSV.generate do |csv|
       csv << [::Tool::ConvertDoc.human_attribute_name(:uri_path),
-             '移行先組織コンテンツURL',
-             ::Tool::ConvertDoc.human_attribute_name(:doc_public_uri),
-             ::Tool::ConvertDoc.human_attribute_name(:title),
-             ::Tool::ConvertDoc.human_attribute_name(:published_at),
-             ::Tool::ConvertDoc.human_attribute_name(:updated_at)]
+              ::Tool::ConvertDoc.human_attribute_name(:doc_public_uri),
+              ::Tool::ConvertDoc.human_attribute_name(:updated_at),
+              ::Tool::ConvertDoc.human_attribute_name(:title),
+              "ページ更新日",
+              "ページ公開日",
+              "ページ作成者グループ",
+              "ページカテゴリ",
+              "記事作成者グループ",
+              "記事カテゴリ"
+              ]
+      @items = ::Tool::ConvertDoc.in_site(Core.site).order(updated_at: :desc)
       @items.find_each do |item|
-        org_uri = "/#{@org_node_name}/#{item.page_group_code}/#{item.doc_name}/"
-        csv << [item.source_uri, org_uri, item.doc_public_uri, item.title, item.published_at.try(:strftime, '%Y/%m/%d %H:%M:%S'), item.updated_at.try(:strftime, '%Y/%m/%d %H:%M:%S')]
+        csv << [item.source_uri,
+                item.doc_public_uri,
+                item.updated_at.try(:strftime, '%Y/%m/%d %H:%M:%S'),
+                item.title,
+                item.page_updated_at,
+                item.page_published_at,
+                item.page_group_code,
+                item.page_category_names,
+                item.docable.creator.try(:group).try(:name),
+                item.docable.categories.map(&:title).join(',')]
       end
     end
 

@@ -30,8 +30,6 @@ class Tool::Convert::DbProcessor
       @process_type = 'created'
     end
 
-    dump @process_type
-
     @doc.state ||= @conf.doc_state
     @doc.filename_base = page.doc_filename_base if @doc.new_record? && @conf.keep_filename == 1
     @doc.content_id = @conf.content.id if @conf.content
@@ -52,7 +50,7 @@ class Tool::Convert::DbProcessor
 
     site_manager = @conf.content.site.managers.first
     @doc.build_creator unless @doc.creator
-    @doc.creator.group = page.creator_group || site_manager.try(:groups).try(:first) || Core.user_group
+    @doc.creator.group = page.creator_group || @conf.creator_group || site_manager.try(:groups).try(:first) || Core.user_group
     @doc.creator.user = page.creator_user || site_manager || Core.user
 
     if @doc.inquiries.blank? && page.creator_group.present?
@@ -69,11 +67,10 @@ class Tool::Convert::DbProcessor
     @doc.in_ignore_link_check = '1'
 
     if @doc.save
-      @doc.category_ids = (@doc.category_ids + page.category_ids).uniq
-      dump "設定カテゴリ：#{@doc.categories.map(&:title).join(', ')}"
+      @doc.category_ids = (@doc.category_ids + page.categories.map(&:id)).uniq
     else
-      dump "記事保存失敗"
-      dump @doc.errors.full_messages
+      @conf.dump "記事保存失敗"
+      @conf.dump @doc.errors.full_messages
       @process_type = 'error'
       return self
     end
@@ -89,12 +86,14 @@ class Tool::Convert::DbProcessor
     @cdoc.title = page.title
     @cdoc.body = page.body
     @cdoc.page_updated_at = page.updated_at
+    @cdoc.page_published_at = page.published_at
     @cdoc.page_group_code = page.group_code
+    @cdoc.page_category_names = page.category_names.join(', ')
     @cdoc.updated_at = Time.now
 
     unless @cdoc.save
-      dump "変換記事保存失敗"
-      dump @cdoc.errors.full_messages
+      @conf.dump "変換記事保存失敗"
+      @conf.dump @cdoc.errors.full_messages
       @process_type = 'error'
       return self
     end
