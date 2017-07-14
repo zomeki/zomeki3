@@ -8,6 +8,7 @@ module Cms
       def create_configs
         load_sites.each do |site|
           @site = site
+          @locations = Cms::Lib::Nginx::Location.make(@site)
           template 'servers/server.conf.erb', @site.nginx_config_path
 
           if @site.admin_full_uri.present?
