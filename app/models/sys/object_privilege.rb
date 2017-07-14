@@ -1,6 +1,5 @@
 class Sys::ObjectPrivilege < ApplicationRecord
   include Sys::Model::Base
-  include Sys::Model::Base::Config
   include Cms::Model::Site
   include Cms::Model::Auth::Site::Role
 
