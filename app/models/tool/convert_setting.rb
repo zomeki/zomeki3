@@ -23,33 +23,33 @@ class Tool::ConvertSetting < ActiveRecord::Base
     Tool::Convert::Common.convert_to_xpath(published_at_tag)
   end
 
+  def creator_group_xpath
+    Tool::Convert::Common.convert_to_xpath(creator_group_tag)
+  end
+
   def category_xpath
     Tool::Convert::Common.convert_to_xpath(category_tag)
   end
 
-  def relate_url_to_group_code?
-    creator_group_relation_type.to_i == 0
+  def creator_group_relations_map
+    @creator_group_relations_map ||= make_map(creator_group_relations)
   end
 
-  def relate_url_to_group_name?
-    creator_group_relation_type.to_i == 1
+  def category_relations_map
+    @category_lations_map ||= make_map(category_relations)
   end
 
-  def relate_url_to_group_name_en?
-    creator_group_relation_type.to_i == 2
-  end
+  private
 
-  def creator_group_url_relations_map
-    return @creator_group_url_relations_map if @creator_group_url_relations_map
-    @creator_group_url_relations_map = {}
-    creator_group_url_relations.to_s.split(/\r\n|\n|\r/).each do |l|
+  def make_map(text)
+    hash = {}
+    text.to_s.split(/\r\n|\n|\r/).each do |l|
       l =~ /^(.*?)>(.*?)$/
       break if $1 == nil || $2 == nil
       bef = $1
       aft = $2
-      @creator_group_url_relations_map[bef] = aft
+      hash[bef] = aft
     end
-    @creator_group_url_relations_map
+    hash
   end
-
 end

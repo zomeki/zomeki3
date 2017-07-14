@@ -6,7 +6,10 @@ class Tool::ConvertImport < ActiveRecord::Base
   OVERWRITE_OPTIONS = [['更新のみ上書きする', 0], ['全て上書きする', 1]]
   KEEP_FILENAME_OPTIONS = [['ファイル名を引き継がない', 0], ['ファイル名を引き継ぐ', 1]]
 
+  serialize :site_filename
+
   belongs_to :content, :class_name => 'Cms::Content'
+  belongs_to :creator_group, :class_name => 'Sys::Group'
 
   after_initialize :set_defaults
 
@@ -46,11 +49,15 @@ class Tool::ConvertImport < ActiveRecord::Base
     return [] if site_url.blank?
 
     filenames = []
-    Tool::Convert.htmlfiles(site_url, :include_child_dir => false) do |file_path, uri_path, i|
-      filename = ::File.basename(file_path)
+    Tool::Convert.htmlfiles(site_url, include_child_dir: true).each do |file_path|
+      filename = file_path.gsub(%r|^#{Tool::Convert::SITE_BASE_DIR}|, '')
       filenames << [filename, filename]
     end
     filenames
+  end
+
+  def dump(msg)
+    self.log = "#{log}#{msg}\n"
   end
 
 private

@@ -1,3 +1,5 @@
+<p class="form">基本情報</p>
+
 <table class="show">
   <tr>
     <th><%= @item.class.human_attribute_name :uri_path %></th>
@@ -19,7 +21,16 @@
     <th><%= @item.class.human_attribute_name :doc_public_uri %></th>
     <td><%= link_to @item.doc_public_uri, @item.doc_public_uri %></td>
   </tr>
-    <tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :updated_at %></th>
+    <td><%=l @item.updated_at %></td>
+  </tr>
+</table>
+
+<p class="form">ページ情報</p>
+
+<table class="show">
+  <tr>
     <th><%= @item.class.human_attribute_name :title %></th>
     <td><%= @item.title %></td>
   </tr>
@@ -28,15 +39,19 @@
     <td><%=raw @item.body %></td>
   </tr>
   <tr>
-    <th><%= @item.class.human_attribute_name :published_at %></th>
-    <td><%=l @item.published_at if @item.published_at %></td>
+    <th><%= @item.class.human_attribute_name :page_updated_at %></th>
+    <td><%= @item.page_updated_at %></td>
   </tr>
   <tr>
-    <th><%= @item.class.human_attribute_name :created_at %></th>
-    <td><%=l @item.created_at if @item.created_at %></td>
+    <th><%= @item.class.human_attribute_name :page_published_at %></th>
+    <td><%= @item.page_published_at %></td>
   </tr>
   <tr>
-    <th><%= @item.class.human_attribute_name :updated_at %></th>
-    <td><%=l @item.updated_at if @item.updated_at %></td>
+    <th><%= @item.class.human_attribute_name :page_group_code %></th>
+    <td><%= @item.page_group_code %></td>
+  </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :page_category_names %></th>
+    <td><%= @item.page_category_names %></td>
   </tr>
 </table>

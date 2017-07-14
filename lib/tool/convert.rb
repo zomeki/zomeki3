@@ -1,9 +1,10 @@
 class Tool::Convert
   SITE_BASE_DIR = "#{Rails.application.root.to_s}/wget_sites/"
+  HTML_FILE_EXTS = %w(htm html shtml php asp jsp)
 
   def self.download_site(conf)
     return if conf.site_url.blank?
-    com = "wget -rqNE --restrict-file-names=nocontrol -P #{SITE_BASE_DIR} #{conf.site_url}"
+    com = "wget -rqN --restrict-file-names=nocontrol -P #{SITE_BASE_DIR} #{conf.site_url}"
     com << " -I #{conf.include_dir}" if conf.include_dir.present?
     com << " -l #{conf.recursive_level}" if conf.recursive_level
     system com
@@ -27,57 +28,48 @@ class Tool::Convert
     dirs
   end
 
-  def self._htmlfiles(path, site_url, count, options, &block)
-    Dir.glob("#{path}/*.html").sort.each do |filename|
-      next if options[:only_filenames].present? && !options[:only_filenames].include?(::File.basename(filename))
-      file_path = File.expand_path(filename)
-      uri_path = (Pathname(site_url) + filename).to_s
-      count += 1
-      block.call file_path, uri_path, count
-    end
+  def self.htmlfiles(site_url, options = {})
+    root_dir = "#{SITE_BASE_DIR}#{site_url}"
+    return [] unless File.exist?(root_dir)
 
-    if options[:include_child_dir]
-      Dir.glob("#{path}/*/").each do |dir|
-        next if options[:ignore_dirnames].include?(dir) || options[:ignore_dirnames].include?(dir.sub(/\/$/, ""))
-        _htmlfiles(dir.sub(/\/$/, ""), site_url, count, options, &block)
+    dir = if options[:include_child_dir]
+            "#{root_dir}/**"
+          else
+            root_dir
+          end
+
+    file_paths = Dir["#{dir}/*.{#{HTML_FILE_EXTS.join(',')}}"].sort
+
+    if options[:only_filenames].present?
+      file_paths.select! do |file_path|
+        uri_path = file_path.gsub(/^#{SITE_BASE_DIR}/, '')
+        options[:only_filenames].include?(uri_path)
       end
     end
-  end
 
-  def self.htmlfiles(site_url, options={}, &block)
-    root_dir = "#{SITE_BASE_DIR}#{site_url}"
-    if !File.exist?(root_dir)
-      dump "ルートフォルダが見つからない"
-    end
-
-    options[:ignore_dirnames] ||= []
-    options[:only_filenames] ||= []
-    options[:include_child_dir] = true if options[:include_child_dir].nil?
-    Dir.chdir(root_dir) {
-      _htmlfiles(".", site_url, 0, options, &block)
-    }
+    file_paths
   end
 
   def self.import_site(conf)
-    if conf.site_filename.present?
-      conf.total_num = 1
-      conf.save
-    else
-      conf.total_num = `find #{SITE_BASE_DIR}#{conf.site_url} -type f | wc -l`.chomp
-      conf.save
-    end
+    file_paths = htmlfiles(conf.site_url, include_child_dir: true, only_filenames: conf.site_filename.presence || nil)
 
-    options = {}
-    options[:only_filenames] = [conf.site_filename] if conf.site_filename.present?
+    conf.total_num = file_paths.size
+    conf.save
 
-    dump "書き込み処理開始: #{conf.total_num}件"
-    htmlfiles(conf.site_url, options) do |file_path, uri_path, i|
-      dump "[#{i}] #{uri_path}"
-      page = Tool::Convert::PageParser.new.parse(file_path, uri_path, conf.convert_setting)
+    conf.dump "書き込み処理開始: #{conf.total_num}件"
+    file_paths.each_with_index do |file_path, i|
+      uri_path = file_path.gsub(/^#{SITE_BASE_DIR}/, '')
+      conf.dump "--- #{uri_path}"
+      page = Tool::Convert::PageParser.new(conf).parse(file_path, uri_path)
 
       if page.kiji_page?
-        dump "#{page.title},#{page.updated_at},#{page.group_code}"
-        db = Tool::Convert::DbProcessor.new.process(page, conf)
+        conf.dump ["タイトル: #{page.title}",
+                   "更新日: #{page.updated_at}",
+                   "公開日: #{page.published_at}",
+                   "作成者グループ: #{page.group_code}",
+                   "カテゴリ: #{page.category_names.join(', ')}"].join("\n")
+
+        db = Tool::Convert::DbProcessor.new(conf).process(page)
         case db.process_type
         when 'created'
           conf.created_num += 1
@@ -86,17 +78,25 @@ class Tool::Convert
         when 'nonupdated'
           conf.nonupdated_num += 1
         end
-        dump "#{db.process_type_label},#{db.cdoc.class.name},#{db.cdoc.id},#{db.cdoc.docable_type},#{db.cdoc.docable_id}"
+
+        conf.dump "更新区分: #{db.process_type_label}"
+        if db.process_type != 'nonupdated'
+          conf.dump ["記事ID: #{db.doc.id}",
+                     "記事ディレクトリ: #{db.doc.name}",
+                     "記事作成者グループ: #{db.doc.creator.try(:group).try(:name)}",
+                     "記事作成者ユーザー: #{db.doc.creator.try(:user).try(:name)}", 
+                     "記事カテゴリ: #{db.doc.categories.map(&:title).join(', ')}"].join("\n")
+        end
       else
         conf.skipped_num += 1
-        dump "非記事（#{'タイトル' if page.title.blank?}#{'本文' if page.body.blank?}無し）"
+        conf.dump "非記事: #{'タイトル' if page.title.blank?}#{'本文' if page.body.blank?}無し"
       end
 
       conf.save if i % 100 == 0
     end
 
+    conf.dump "書き込み処理終了\n"
     conf.save
-    dump "書き込み処理終了"
   end
 
   def self.process_link(conf, updated_at = nil)
@@ -107,26 +107,26 @@ class Tool::Convert
     conf.link_total_num = items.count
     conf.save
 
-    dump "リンク解析処理開始: #{conf.link_total_num}件"
+    conf.dump "リンク解析処理開始: #{conf.link_total_num}件"
     items.find_in_batches(batch_size: 10) do |cdocs|
       cdocs.each do |cdoc|
         conf.link_processed_num += 1
-        dump "[#{conf.link_processed_num}] #{cdoc.uri_path}"
+        conf.dump "--- #{cdoc.uri_path}"
 
         if doc = cdoc.latest_doc
-          link = Tool::Convert::LinkProcessor.new.sublink(cdoc, conf)
+          link = Tool::Convert::LinkProcessor.new(conf).sublink(cdoc)
           link.clinks.each do |clink|
-            dump "#{clink.url} => #{clink.after_url}" if clink.url_changed?
+            conf.dump "#{clink.url} => #{clink.after_url}" if clink.url_changed?
           end
         else
-          dump "記事検索失敗"
+          conf.dump "記事検索失敗"
         end
 
         conf.save if conf.link_processed_num % 100 == 0
       end
     end
 
+    conf.dump "リンク解析処理終了"
     conf.save
-    dump "リンク解析処理終了"
   end
 end

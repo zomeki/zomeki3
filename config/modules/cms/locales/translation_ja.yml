@@ -242,11 +242,14 @@ ja:
         updated_at_regexp: 更新日正規表現
         published_at_tag: 公開日対象タグ
         published_at_regexp: 公開日正規表現
+        creator_group_tag: 作成者グループタグ
+        creator_group_regexp: 作成者グループ正規表現
         creator_group_from_url_regexp: 作成者グループURL正規表現
         creator_group_relation_type: 作成者グループ照合方法
-        creator_group_url_relations: 作成者グループ読み替え
+        creator_group_relations: 作成者グループ読み替え
         category_tag: カテゴリ対象タグ
         category_regexp: カテゴリ正規表現
+        category_relations: カテゴリ読み替え
         created_at: 作成日時
         updated_at: 更新日時
 
@@ -255,6 +258,7 @@ ja:
         site_url: サイトURL
         site_filename: ファイル名
         content_id: コンテンツ
+        creator_group_id: 作成者グループ
         overwrite: 上書きオプション
         keep_filename: ファイル名オプション
         start_at: 開始日時
@@ -280,6 +284,10 @@ ja:
         site_url: サイトURL
         title: タイトル
         body: 本文
+        page_updated_at: 更新日
+        page_published_at: 公開日
+        page_group_code: 作成者グループ
+        page_category_names: カテゴリ
         created_at: 作成日時
         updated_at: 更新日時
         published_at: 公開日時
