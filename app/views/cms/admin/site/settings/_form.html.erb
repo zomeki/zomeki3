@@ -62,6 +62,10 @@
     </td>
   </tr>
   <tr>
+    <th><%= @site.locale :in_setting_site_link_check_domain_type %></th>
+    <td><%= f.radio_buttons :in_setting_site_link_check_domain_type, @item.class.configs[:link_check_domain_type][:options] %></td>
+  </tr>
+  <tr>
     <th><%= @site.locale :in_setting_site_link_check_exclusion %><br/ >（改行区切り）</th>
     <td>
       <%= f.text_area :in_setting_site_link_check_exclusion, rows: 10 %>

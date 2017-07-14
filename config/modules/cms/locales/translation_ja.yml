@@ -57,6 +57,7 @@ ja:
         in_setting_site_extension_upload_max_size: "拡張子別アップロードサイズ"
         in_setting_site_link_check: "リンクチェック機能"
         in_setting_site_link_check_hour: "リンクチェック開始時刻"
+        in_setting_site_link_check_domain_type: "リンクチェック対象ドメイン"
         in_setting_site_link_check_exclusion: "リンクチェック対象外URL"
         in_setting_site_accessibility_check: "アクセシビリティチェック機能"
         in_setting_site_adobe_reader_link: "Adobe Acrobat Reader リンク"
