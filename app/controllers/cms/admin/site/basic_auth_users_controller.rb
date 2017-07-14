@@ -61,12 +61,6 @@ class Cms::Admin::Site::BasicAuthUsersController < Cms::Controller::Admin::Base
     if @site.basic_auth_users.where(state: 'enabled').empty?
       @site.disable_basic_auth
       flash[:notice] = 'Basic認証を無効にしました。'
-    else
-      if @site.basic_auth_enabled?
-        @site.enable_basic_auth
-      else
-        @site.disable_basic_auth
-      end
     end
 
     update_configs
