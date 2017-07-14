@@ -3,7 +3,7 @@ class GpArticle::Doc::Criteria
 
   TARGET_OPTIONS = [['作成記事','user'], ['所属記事','group'], ['全所属','all']]
   TARGET_STATE_OPTIONS = [['公開前','processing'], ['公開中','public'], ['公開終了','closed'], ['全記事','all']]
-  DATE_COLUMN_OPTIONS = [['作成','created_at'], ['承認','recognized_at'], ['公開','published_at']]
+  DATE_COLUMN_OPTIONS = [['作成','created_at'], ['更新','updated_at'], ['承認','recognized_at'], ['公開','published_at']]
   DATE_OPERATION_OPTIONS = [['本日','today'],['今週','this_week'],['先週','last_week'],['指定日','equal'],['以前','before'],['以後','after'],['期間','between']]
   STATE_OPTIONS = [['下書き','draft'],['承認待ち','approvable'],['公開待ち','approved'],['公開日時待ち','prepared'],['公開中','public'],['公開終了','closed']]
   USER_OPERATION_OPTIONS = [['作成','create'], ['承認','approve'], ['公開','publish']]
