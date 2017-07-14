@@ -21,9 +21,9 @@ class GpArticle::Publisher::Doc < Cms::Publisher
     def make_node_map(publishers)
       node_map = {}
       publishers.each do |pub|
-        doc = pub.publishable
-        if doc && doc.content
-         doc.content.public_nodes.each do |node|
+        if (doc = pub.publishable) && doc.content
+          nodes = doc.content.public_nodes.select { |node| node.model == 'GpArticle::Doc' }
+          nodes.each do |node|
             node_map[node] ||= []
             node_map[node] << pub
           end
