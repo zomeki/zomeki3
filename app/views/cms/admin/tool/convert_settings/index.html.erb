@@ -4,7 +4,7 @@
     <tr>
       <th><%= @item.locale(:site_url) %> <span class="note">※</span></th>
       <td>
-        <%= f.select :site_url, Tool::Convert.all_site_urls.collect {|s| [ s, s ] }, { include_blank: true }, {id: "site_url", style: "width: 400px;"} %>
+        <%= f.select :site_url, Tool::Convert.all_site_urls, { include_blank: true }, {id: "site_url", style: "width: 400px;"} %>
       </td>
     </tr>
   </table>
