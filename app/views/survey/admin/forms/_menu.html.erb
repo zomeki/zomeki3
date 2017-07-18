@@ -5,14 +5,18 @@
 <%- when 'index' -%>
   <%= link_to '新規作成', { action: :new } %>
   <span class="separator"></span>
-  <%= link_to "#{Survey::Form.model_name.human}一覧", { target: nil }, (params[:target].blank? ? { class: 'current' } : {}) %>
-  <%= link_to "全#{Survey::Form.model_name.human}一覧", { target: 'all' }, (params[:target] == 'all' ? { class: 'current' } : {}) %>
+  <%= link_to '作成フォーム', { target: 'user', target_state: params[:target_state], target_public: nil }, (params[:target] == 'user' ? {class: 'current'} : {}) %>
+  <%= link_to '所属フォーム', { target: 'group', target_state: params[:target_state], target_public: nil }, (params[:target] == 'group' ? {class: 'current'} : {}) %>
+  <%- if Core.user.has_auth?(:manager) -%>
+  <%= link_to '全所属', { target: 'all', target_state: params[:target_state], target_public: nil }, (params[:target] == 'all' ? {class: 'current'} : {}) %>
+  <%- end -%>
   <span class="separator"></span>
-  <%= link_to '下書き', { target: 'draft' }, (params[:target] == 'draft' ? { class: 'current' } : {}) %>
-  <%= link_to '承認待ち', { target: 'approvable' }, (params[:target] == 'approvable' ? { class: 'current' } : {}) %>
-  <%= link_to '公開待ち', { target: 'approved' }, (params[:target] == 'approved' ? { class: 'current' } : {}) %>
-  <%= link_to '公開中', { target: 'public' }, (params[:target] == 'public' ? { class: 'current' } : {}) %>
-  <%= link_to '非公開', { target: 'closed' }, (params[:target] == 'closed' ? { class: 'current' } : {}) %>
+  <%= link_to '公開前', { target: params[:target], target_state: 'processing', target_public: nil }, (params[:target_state] == 'processing' ? {class: 'current'} : {}) %>
+  <%= link_to '公開中', { target: params[:target], target_state: 'public', target_public: nil }, (params[:target_state] == 'public' ? {class: 'current'} : {}) %>
+  <%= link_to '公開終了', { target: params[:target], target_state: 'closed', target_public: nil }, (params[:target_state] == 'closed' ? {class: 'current'} : {}) %>
+  <%= link_to '全フォーム', { target: params[:target], target_state: 'all', target_public: nil }, (params[:target_state] == 'all' ? {class: 'current'} : {}) %>
+  <span class="separator"></span>
+  <%= link_to '公開フォーム', { target: '', target_state: '', target_public: 1 }, (params[:target_public] == '1' ? {class: 'current'} : {}) %>
 <%- when 'show'-%>
   <%= link_to '一覧', { action: :index } %>
   <span class="separator"></span>
@@ -20,7 +24,7 @@
   <%= link_to '削除', { action: :destroy }, method: :delete, confirm: '削除してよろしいですか？' if @item.deletable? %>
   <%= link_to '承認', { action: :approve }, method: :post, confirm: '承認してもよろしいですか？' if @item.state_approvable? && @item.approvers.include?(Core.user) %>
   <%= link_to '公開', { action: :publish }, method: :post, confirm: '公開してもよろしいですか？' if @item.state_approved? && @item.approval_participators.include?(Core.user) %>
-  <%= link_to '非公開', { action: :close }, method: :post, confirm: '公開を終了してもよろしいですか？' if @item.state_public? && @item.approval_participators.include?(Core.user) %>
+  <%= link_to '公開終了', { action: :close }, method: :post, confirm: '公開を終了してもよろしいですか？' if @item.state_public? && @item.approval_participators.include?(Core.user) %>
   <%= link_to '複製', { do: :duplicate }, confirm: "複製してよろしいですか？" if Core.user.has_priv?(:create, item: Core.concept) %>
 <%- when 'new', 'create' -%>
   <%= link_to '一覧', { action: :index } %>

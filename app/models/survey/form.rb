@@ -38,34 +38,6 @@ class Survey::Form < ApplicationRecord
 
   scope :public_state, -> { where(state: 'public') }
 
-  def self.all_with_content_and_criteria(content, criteria)
-    forms = self.arel_table
-
-    rel = self.where(forms[:content_id].eq(content.id))
-    rel = rel.where(forms[:state].eq(criteria[:state])) if criteria[:state].present?
-
-    if criteria[:touched_user_id].present? || criteria[:editable].present?
-      creators = Sys::Creator.arel_table
-      rel = rel.joins(:creator)
-    end
-
-    if criteria[:touched_user_id].present?
-      operation_logs = Sys::OperationLog.arel_table
-      rel = rel.eager_load(:operation_logs).where(operation_logs[:user_id].eq(criteria[:touched_user_id])
-                                                .or(creators[:user_id].eq(criteria[:touched_user_id])))
-    end
-
-    if criteria[:approvable].present?
-      approval_requests = Approval::ApprovalRequest.arel_table
-      assignments = Approval::Assignment.arel_table
-      rel = rel.joins(:approval_requests => [:approval_flow => [:approvals => :assignments]])
-               .where(approval_requests[:user_id].eq(Core.user.id)
-                      .or(assignments[:user_id].eq(Core.user.id))).distinct
-    end
-
-    return rel
-  end
-
   def public_questions
     questions.public_state
   end

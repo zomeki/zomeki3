@@ -2,6 +2,7 @@
   <tr>
     <th style="text-align: center; width: 60px;">詳細</th>
     <th><%= Survey::Form.human_attribute_name :title %></th>
+    <th style="text-align: center; width: 150px">所属</th>
     <th style="text-align: center; width: 100px;"><%= Survey::Question.model_name.human %></th>
     <th style="text-align: center; width: 100px;"><%= Survey::FormAnswer.model_name.human %></th>
     <th style="text-align: center; width: 80px;"><%= Survey::Form.human_attribute_name :sort_no %></th>
@@ -13,6 +14,7 @@
   <tr class="<%= cycle '', 'cycle' %>">
     <td style="text-align: center;"><%= link_to :show, survey_form_path(content: @content, id: item.id) %></td>
     <td style="text-align: left;"><%= item.title %></td>
+    <td style="text-align: left;"><%= item.creator.try!(:group).try!(:name) %></td>
     <td style="text-align: center;"><%= link_to "#{Survey::Question.model_name.human}一覧", survey_form_questions_path(content: @content, form_id: item.id) %></td>
     <td style="text-align: center;"><%= link_to "#{Survey::FormAnswer.model_name.human}一覧", survey_form_form_answers_path(content: @content, form_id: item.id) %></td>
     <td style="text-align: right;"><%= item.sort_no %></td>
