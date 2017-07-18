@@ -10,7 +10,8 @@ class Cms::Lib::Nginx::Location
       locations += make_public_locations(site)
       locations += make_default_public_locations(site)
 
-      append_request_uri_for_smartphone(locations)
+      append_request_uri_for_smartphone(locations) if site.smart_phone_layout_same_as_pc?
+      locations
     end
 
     private
