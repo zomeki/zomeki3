@@ -54,13 +54,6 @@ class Survey::Form < ApplicationRecord
     return nil
   end
 
-  def open?
-    now = Time.now
-    return false if opened_at && opened_at > now
-    return false if closed_at && closed_at < now
-    return true
-  end
-
   def state_draft?
     state == 'draft'
   end
