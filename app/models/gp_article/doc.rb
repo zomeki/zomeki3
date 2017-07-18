@@ -359,14 +359,8 @@ class GpArticle::Doc < ApplicationRecord
     return new_doc
   end
 
-  def editable?
-    result = super
-    return result unless result.nil? # See "Sys::Model::Auth::EditableGroup"
-    return approval_participators.include?(Core.user)
-  end
-
   def publishable?
-    super || approval_participators.include?(Core.user)
+    state.in?(%w(approved prepared)) && (editable? || approval_participators.include?(Core.user))
   end
 
   def formated_display_published_at
