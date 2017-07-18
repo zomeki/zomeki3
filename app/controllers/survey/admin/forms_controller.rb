@@ -80,7 +80,8 @@ class Survey::Admin::FormsController < Cms::Controller::Admin::Base
 
   def download_form_answers
     csv_string = CSV.generate do |csv|
-      header = [Survey::FormAnswer.human_attribute_name(:created_at),
+      header = [Survey::FormAnswer.human_attribute_name(:id),
+                Survey::FormAnswer.human_attribute_name(:created_at),
                 "#{Survey::FormAnswer.human_attribute_name(:answered_url)}URL",
                 "#{Survey::FormAnswer.human_attribute_name(:answered_url)}タイトル",
                 Survey::FormAnswer.human_attribute_name(:remote_addr),
@@ -91,7 +92,8 @@ class Survey::Admin::FormsController < Cms::Controller::Admin::Base
       csv << header
 
       @item.form_answers.each do |form_answer|
-        line = [I18n.l(form_answer.created_at),
+        line = [form_answer.id,
+                I18n.l(form_answer.created_at),
                 form_answer.answered_url,
                 form_answer.answered_url_title,
                 form_answer.remote_addr,
