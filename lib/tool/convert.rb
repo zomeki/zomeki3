@@ -38,7 +38,7 @@ class Tool::Convert
             root_dir
           end
 
-    file_paths = Dir["#{dir}/*.{#{HTML_FILE_EXTS.join(',')}}"].sort
+    file_paths = Dir["#{dir}/*.{#{HTML_FILE_EXTS.join(',')}}*"].uniq.sort
 
     if options[:only_filenames].present?
       file_paths.select! do |file_path|
