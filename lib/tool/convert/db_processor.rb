@@ -2,36 +2,38 @@ class Tool::Convert::DbProcessor
   PROCESS_TYPES = [['作成', 'created'], ['更新', 'updated'], ['非更新', 'nonupdated']]
   attr_reader :doc, :cdoc, :process_type
 
+  def initialize(conf)
+    @conf = conf
+  end
+
   def process_type_label
     PROCESS_TYPES.rassoc(@process_type).try(:first)
   end
 
-  def process(page, conf)
+  def process(page)
     # 更新チェック
     if @cdoc = Tool::ConvertDoc.in_site(Core.site).where(uri_path: page.uri_path).first
       if @doc = @cdoc.latest_doc
-        if conf.overwrite == 0 && !page.updated_from?(@cdoc.page_updated_at)
+        if @conf.overwrite == 0 && !page.updated_from?(@cdoc.page_updated_at)
           @process_type = 'nonupdated'
           return self
         else
           @process_type = 'updated'
         end
       else
-        @doc = conf.content.model.constantize.new(content_id: conf.content_id)
+        @doc = @conf.content.model.constantize.new(content_id: @conf.content_id)
         @process_type = 'created'
       end
     else
       @cdoc = Tool::ConvertDoc.new
-      @doc = conf.content.model.constantize.new(content_id: conf.content_id)
+      @doc = @conf.content.model.constantize.new(content_id: @conf.content_id)
       @process_type = 'created'
     end
 
-    dump @process_type
-
-    @doc.state ||= conf.doc_state
-    @doc.filename_base = page.doc_filename_base if @doc.new_record? && conf.keep_filename == 1
-    @doc.content_id = conf.content.id if conf.content
-    @doc.concept_id = conf.content.concept_id if conf.content
+    @doc.state ||= @conf.doc_state
+    @doc.filename_base = page.doc_filename_base if @doc.new_record? && @conf.keep_filename == 1
+    @doc.content_id = @conf.content.id if @conf.content
+    @doc.concept_id = @conf.content.concept_id if @conf.content
     @doc.title = page.title
     @doc.body = page.body
     @doc.created_at ||= page.updated_at || Time.now
@@ -46,15 +48,18 @@ class Tool::Convert::DbProcessor
     @doc.mobile_title ||= ''
     @doc.mobile_body ||= ''
 
-    @doc.build_creator(group_id: page.creator_group_id || Core.user_group.id, user_id: page.creator_user_id || Core.user.id)
+    site_manager = @conf.content.site.managers.first
+    @doc.build_creator unless @doc.creator
+    @doc.creator.group = page.creator_group || @conf.creator_group || site_manager.try(:groups).try(:first) || Core.user_group
+    @doc.creator.user = page.creator_user || site_manager || Core.user
 
-    if @doc.inquiries.blank? && page.inquiry_group_id.present?
+    if @doc.inquiries.blank? && page.creator_group.present?
       @doc.inquiries.build(
         state: 'visible',
-        group_id: page.inquiry_group_id,
-        tel: page.inquiry_group_tel,
-        fax: page.inquiry_group_fax,
-        email: page.inquiry_group_email
+        group_id: page.creator_group.id,
+        tel: page.creator_group.tel,
+        fax: page.creator_group.fax,
+        email: page.creator_group.email
       )
     end
 
@@ -62,21 +67,10 @@ class Tool::Convert::DbProcessor
     @doc.in_ignore_link_check = '1'
 
     if @doc.save
-      if @doc.category_ids.blank? && page.category_names.present? && @doc.content_id.present?
-        if @doc.content.visible_category_types.present? &&
-          cates = GpCategory::Category.where(category_type_id: @doc.content.visible_category_types.map(&:id))
-                                      .where(title: page.category_names)
-          page.category_ids = page.category_ids.present? ? page.category_ids+cates.map(&:id) : cates.map(&:id)
-          dump "設定カテゴリ：#{cates.map(&:title).join(', ')}"
-        end
-      end
-
-      if @doc.category_ids.blank? && page.category_ids.present?
-        @doc.category_ids = page.category_ids
-      end
+      @doc.category_ids = (@doc.category_ids + page.categories.map(&:id)).uniq
     else
-      dump "記事保存失敗"
-      dump @doc.errors.full_messages
+      @conf.dump "記事保存失敗"
+      @conf.dump @doc.errors.full_messages
       @process_type = 'error'
       return self
     end
@@ -86,18 +80,20 @@ class Tool::Convert::DbProcessor
     @cdoc.doc_name = @doc.name
     @cdoc.doc_public_uri = @doc.public_uri
     @cdoc.published_at = @doc.published_at
-    @cdoc.site_url = conf.site_url
+    @cdoc.site_url = @conf.site_url
     @cdoc.uri_path = page.uri_path
     @cdoc.file_path = page.file_path
     @cdoc.title = page.title
     @cdoc.body = page.body
     @cdoc.page_updated_at = page.updated_at
+    @cdoc.page_published_at = page.published_at
     @cdoc.page_group_code = page.group_code
+    @cdoc.page_category_names = page.category_names.join(', ')
     @cdoc.updated_at = Time.now
 
     unless @cdoc.save
-      dump "変換記事保存失敗"
-      dump @cdoc.errors.full_messages
+      @conf.dump "変換記事保存失敗"
+      @conf.dump @cdoc.errors.full_messages
       @process_type = 'error'
       return self
     end

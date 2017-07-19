@@ -1,5 +1,10 @@
 class Tool::Convert::PageParser
-  def parse(file_path, uri_path, conf)
+  def initialize(conf)
+    @conf = conf
+    @setting = conf.convert_setting
+  end
+
+  def parse(file_path, uri_path)
     page = Tool::Convert::PageInfo.new
     page.file_path = file_path
     page.uri_path = uri_path
@@ -9,91 +14,99 @@ class Tool::Convert::PageParser
     html = Nokogiri::HTML(html.toutf8, nil, 'utf-8')
 
     # title, body
-    page.title = html.xpath(conf.title_xpath).inner_text.strip
-    page.body = html.xpath(conf.body_xpath).inner_html
+    page.title = html.xpath(@setting.title_xpath).inner_text.strip
+    page.body = html.xpath(@setting.body_xpath).inner_html
 
     # updated_at, published_at
-    page.updated_at = parse_updated_at(html, conf)
-    page.published_at = parse_published_at(html, conf)
-    page.updated_at ||= ::File::stat(page.file_path).mtime.strftime("%Y-%m-%d")
-    page.published_at ||= ::File::stat(page.file_path).mtime.strftime("%Y-%m-%d")
+    page.updated_at = parse_updated_at(html) || ::File::stat(page.file_path).mtime.strftime("%Y-%m-%d %H:%M")
+    page.published_at = parse_published_at(html) || ::File::stat(page.file_path).mtime.strftime("%Y-%m-%d %H:%M")
 
-    # group
-    page.group_code = parse_group_code(uri_path, html, conf)
-    set_page_group_info(page, conf, page.group_code) if page.group_code.present?
+    # group_code
+    page.group_code = parse_group_code(html, uri_path)
 
-    # category
-    page.category_names = parse_category_names(html, conf)
-    dump "抜き出しカテゴリ名：#{page.category_names}" if page.category_names.present?
+    # category_names
+    page.category_names = parse_category_names(html)
+
+    # find related objects
+    page.creator_group, page.creator_user = find_group_and_user(page)
+    page.categories = find_categories(page)
 
     page
   end
 
   private
 
-  def parse_updated_at(html, conf)
-    if conf.updated_at_xpath.present?
-      updated = html.xpath(conf.updated_at_xpath).inner_html
-      if conf.updated_at_regexp.present? && updated.to_s =~ Regexp.new(conf.updated_at_regexp)
-        "#{$1}-#{$2}-#{$3}"
-      else
-        updated
-      end
+  def parse_as_array_text(html, xpath, regexp)
+    if xpath.present? && regexp.present?
+      html.xpath(xpath).inner_html.scan(Regexp.new(regexp)).flatten
+    elsif xpath.present?
+      html.xpath(xpath).to_a.map(&:inner_html)
+    elsif regexp.present?
+      html.inner_html.scan(Regexp.new(regexp)).flatten
     end
   end
 
-  def parse_published_at(html, conf)
-    if conf.published_at_xpath.present?
-      published = html.xpath(conf.published_at_xpath).inner_html
-      if conf.published_at_regexp.present? && published.to_s =~ Regexp.new(conf.published_at_regexp)
-        "#{$1}-#{$2}-#{$3}"
-      else
-        published
-      end
+  def parse_as_date(html, xpath, regexp)
+    strs = parse_as_array_text(html, @setting.updated_at_xpath, @setting.updated_at_regexp)
+    [strs[0..2].to_a.join('-'), strs[3..4].to_a.join(':')].select(&:present?).join(' ')
+  end
+
+  def parse_updated_at(html)
+    parse_as_date(html, @setting.updated_at_xpath, @setting.updated_at_regexp)
+  end
+
+  def parse_published_at(html)
+    parse_as_date(html, @setting.published_at_xpath, @setting.published_at_regexp)
+  end
+
+  def parse_group_code(html, uri_path)
+    group_code = parse_as_array_text(html, @setting.creator_group_xpath, @setting.creator_group_regexp)
+    group_code = group_code.try(:first) 
+
+    if group_code.blank? && @setting.creator_group_from_url_regexp.present?
+      group_code = uri_path.scan(Regexp.new(@setting.creator_group_from_url_regexp)).flatten.first
+    end
+
+    @setting.creator_group_relations_map[group_code] || group_code
+  end
+
+  def parse_category_names(html)
+    category_names = parse_as_array_text(html, @setting.category_xpath, @setting.category_regexp) || []
+    category_names.map do |name|
+      @setting.category_relations_map[name] || name
     end
   end
 
-  def parse_group_code(uri_path, html, conf)
-    if conf.creator_group_from_url_regexp.present? && uri_path =~ Regexp.new(conf.creator_group_from_url_regexp)
-      group_code = $1
-      conf.creator_group_url_relations_map[group_code] || group_code
-    end
+  def find_group_and_user(page)
+    group = Sys::Group.in_site(Core.site)
+    group = case @setting.creator_group_relation_type.to_i
+            when 0
+              group.find_by(code: page.group_code)
+            when 1
+              group.find_by(name: page.group_code)
+            when 2
+              group.find_by(name_en: page.group_code)
+            end
+
+    user = if group
+             Sys::User.in_site(Core.site).where("name like '#{group.name}%'").first
+           else
+             nil
+           end
+    return group, user
   end
 
-  def set_page_group_info(page, conf, group_code)
-    group = 
-      if conf.relate_url_to_group_name_en?
-        Sys::Group.find_by(name_en: group_code)
-      elsif conf.relate_url_to_group_name?
-        Sys::Group.find_by(name: group_code)
-      else
-        Sys::Group.find_by(code: group_code)
-      end
+  def find_categories(page)
+    category_types = @conf.content.becomes(GpArticle::Content::Doc).visible_category_types
 
-    if group
-      page.creator_group_id = group.id
-      page.creator_user_id = Sys::User.where("name like '#{group.name}%'").first.try(:id)
+    cats = GpCategory::Category.where(category_type_id: category_types)
+                               .where(title: page.category_names)
 
-      page.inquiry_group_id = group.id
-      page.inquiry_group_tel = group.tel
-      page.inquiry_group_fax = group.fax
-      page.inquiry_group_email = group.email
-
-      if category = GpCategory::Category.where(title: group.name).first
-        page.category_ids = [category.id]
-      end
+    if page.creator_group
+      cats += GpCategory::Category.where(category_type_id: category_types)
+                                  .where(title: page.creator_group.name)
     end
-  end
 
-  def parse_category_names(html, conf)
-    if conf.category_xpath.present? && conf.category_regexp.present?
-      html.xpath(conf.category_xpath).inner_html.scan(Regexp.new(conf.category_regexp)).flatten
-    elsif conf.category_xpath.present?
-      html.xpath(conf.category_xpath).to_a.map(&:inner_text)
-    elsif conf.category_regexp.present?
-      html.inner_html.scan(Regexp.new(conf.category_regexp)).flatten
-    else
-      []
-    end
+    cats.uniq
   end
 end

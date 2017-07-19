@@ -26,7 +26,9 @@ class Cms::TalkTask < ApplicationRecord
     return false unless ::File.exist?(path)
     return false if talk_processable.nil? || publisher.nil?
 
-    mp3 = self.class.make_mp3(::File.read(path), site_id)
+    jtalk = Cms::Lib::Navi::Jtalk.new
+    jtalk.make(::File.read(path), site_id: site_id)
+    mp3 = jtalk.output
     return false unless mp3
     return false if ::File.stat(mp3[:path]).size == 0
 
@@ -35,7 +37,7 @@ class Cms::TalkTask < ApplicationRecord
       pub.publish_file_with_digest(mp3[:path], public_talk_file_path)
     end
 
-    ::File.delete(mp3[:path])
+    ::File.delete(mp3[:path]) if ::File.exist?(mp3[:path])
     return true
   end
 
@@ -46,13 +48,5 @@ class Cms::TalkTask < ApplicationRecord
       ::File.delete(public_talk_file_path)
     end
     return true
-  end
-
-  class << self
-    def make_mp3(body, site_id)
-      jtalk = Cms::Lib::Navi::Jtalk.new
-      jtalk.make(body, site_id: site_id)
-      jtalk.output
-    end
   end
 end

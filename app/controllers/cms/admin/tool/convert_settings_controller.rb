@@ -46,8 +46,9 @@ class Cms::Admin::Tool::ConvertSettingsController < Cms::Controller::Admin::Base
     return {} unless params[:item]
     params.require(:item).permit(
       :site_url, :title_tag, :body_tag, :updated_at_tag, :updated_at_regexp, :published_at_tag, :published_at_regexp,
-      :creator_group_from_url_regexp, :creator_group_relation_type, :creator_group_url_relations,
-      :category_tag, :category_regexp
+      :creator_group_tag, :creator_group_regexp, :creator_group_from_url_regexp,
+      :creator_group_relation_type, :creator_group_relations,
+      :category_tag, :category_regexp, :category_relations,
     )
   end
 end

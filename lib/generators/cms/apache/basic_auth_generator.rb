@@ -15,16 +15,19 @@ module Cms
             remove_file site.basic_auth_htaccess_path
           end
 
-          @basic_auth_users = @site.basic_auth_users.root_location.enabled
+          @basic_auth_users = @site.basic_auth_users.all_location.enabled
           template 'basic_auth/htpasswd.erb', site.basic_auth_htpasswd_path
 
           @basic_auth_users = @site.basic_auth_users.system_location.enabled
           template 'basic_auth/htpasswd.erb', "#{site.basic_auth_htpasswd_path}_system"
 
-          locations = @site.basic_auth_users.directory_location.reorder(:target_location).group(:target_location).pluck(:target_location)
+          locations = @site.basic_auth_users.directory_location
+                           .reorder(:target_location)
+                           .group(:target_location)
+                           .pluck(:target_location)
           locations.each do |location|
             @basic_auth_users = @site.basic_auth_users.directory_location.where(target_location: location).enabled
-            template 'basic_auth/htpasswd.erb', "#{@site.basic_auth_htpasswd_path}_#{location}"
+            template 'basic_auth/htpasswd.erb', "#{@site.basic_auth_htpasswd_path}_#{location.gsub('/', '_')}"
           end
         end
       end

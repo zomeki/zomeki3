@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170705065925) do
+ActiveRecord::Schema.define(version: 20170711074904) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1687,6 +1687,8 @@ ActiveRecord::Schema.define(version: 20170705065925) do
     t.text     "doc_public_uri"
     t.string   "page_updated_at"
     t.string   "page_group_code"
+    t.string   "page_published_at"
+    t.text     "page_category_names"
     t.index ["content_id"], name: "index_tool_convert_docs_on_content_id", using: :btree
     t.index ["docable_id", "docable_type"], name: "index_tool_convert_docs_on_docable_id_and_docable_type", using: :btree
     t.index ["uri_path"], name: "index_tool_convert_docs_on_uri_path", using: :btree
@@ -1724,6 +1726,8 @@ ActiveRecord::Schema.define(version: 20170705065925) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "keep_filename"
+    t.integer  "creator_group_id"
+    t.text     "log"
   end
 
   create_table "tool_convert_links", force: :cascade do |t|
@@ -1749,9 +1753,12 @@ ActiveRecord::Schema.define(version: 20170705065925) do
     t.text     "category_tag"
     t.text     "category_regexp"
     t.integer  "creator_group_relation_type"
-    t.text     "creator_group_url_relations"
+    t.text     "creator_group_relations"
     t.text     "published_at_tag"
     t.text     "published_at_regexp"
+    t.text     "creator_group_tag"
+    t.text     "creator_group_regexp"
+    t.text     "category_relations"
     t.index ["site_url"], name: "index_tool_convert_settings_on_site_url", using: :btree
   end
 

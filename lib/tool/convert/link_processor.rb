@@ -1,7 +1,11 @@
 class Tool::Convert::LinkProcessor
   attr_reader :body, :after_body, :clinks
 
-  def sublink(cdoc, conf)
+  def initialize(conf)
+    @conf = conf
+  end
+
+  def sublink(cdoc)
     @body = cdoc.body.dup
     @after_body = cdoc.body.dup
     @clinks = []
@@ -57,8 +61,8 @@ class Tool::Convert::LinkProcessor
     doc.in_ignore_link_check = '1'
 
     unless doc.save
-      dump "記事保存失敗"
-      dump doc.errors.full_messages
+      @conf.dump "記事保存失敗"
+      @conf.dump doc.errors.full_messages
     end
 
     return self
@@ -105,7 +109,7 @@ private
       clink.filename = "#{clink.cdoc.doc_name}_#{clink.filename}"
       clink.after_url = "file_contents/#{clink.filename}"
     else
-      dump "ファイル検索失敗:#{file_path}"
+      @conf.dump "ファイル検索失敗: #{file_path}"
     end
   end
 
@@ -119,8 +123,8 @@ private
     file.build_creator(doc.creator.attributes.except('id'))
 
     unless file.save
-      dump "ファイル保存失敗:#{clink.file_path}"
-      dump file.errors.full_messages
+      @conf.dump "ファイル保存失敗: #{clink.file_path}"
+      @conf.dump file.errors.full_messages
     end
   end
 end

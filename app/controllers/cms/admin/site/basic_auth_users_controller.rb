@@ -61,12 +61,6 @@ class Cms::Admin::Site::BasicAuthUsersController < Cms::Controller::Admin::Base
     if @site.basic_auth_users.where(state: 'enabled').empty?
       @site.disable_basic_auth
       flash[:notice] = 'Basic認証を無効にしました。'
-    else
-      if @site.basic_auth_enabled?
-        @site.enable_basic_auth
-      else
-        @site.disable_basic_auth
-      end
     end
 
     update_configs
@@ -76,6 +70,8 @@ class Cms::Admin::Site::BasicAuthUsersController < Cms::Controller::Admin::Base
     Rails::Generators.invoke('cms:apache:basic_auth', ['--force', "--site_id=#{@site.id}"])
     Rails::Generators.invoke('cms:nginx:site_config', ['--force', "--site_id=#{@site.id}"])
     Cms::Site.reload_servers
+
+    Cms::FileTransferCallbacks.new(:basic_auth_htpasswd_path).enqueue(@site)
   end
 
   def basic_auth_user_params

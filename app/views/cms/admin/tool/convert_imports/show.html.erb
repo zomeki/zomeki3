@@ -5,7 +5,15 @@
   </tr>
   <tr>
     <th><%= @item.class.human_attribute_name :site_filename %></th>
-    <td><%= @item.site_filename %></td>
+    <td><%=hbr Array(@item.site_filename).join("\n") %></td>
+  </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :content_id %></th>
+    <td><%= @item.content.try(:name) %></td>
+  </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :creator_group_id %></th>
+    <td><%= @item.creator_group.try(:name) %></td>
   </tr>
   <tr>
     <th><%= @item.class.human_attribute_name :overwrite %></th>
@@ -15,6 +23,11 @@
     <th><%= @item.class.human_attribute_name :keep_filename %></th>
     <td><%= @item.keep_filename_label %></td>
   </tr>
+</table>
+
+<p class="form">書き込みログ</p>
+
+<table class="show">
   <tr>
     <th><%= @item.class.human_attribute_name :state %></th>
     <td><%= @item.state_label %></td>
@@ -42,5 +55,11 @@
   <tr>
     <th><%= @item.class.human_attribute_name :updated_at %></th>
     <td><%=l @item.updated_at if @item.updated_at %></td>
+  </tr>
+</table>
+
+<table class="show">
+  <tr>
+    <td><%=hbr @item.log %></td>
   </tr>
 </table>

@@ -1,6 +1,5 @@
 class Sys::LdapSynchro < ApplicationRecord
   include Sys::Model::Base
-  include Sys::Model::Base::Config
   include Sys::Model::Tree
   include Sys::Model::Auth::Manager
   

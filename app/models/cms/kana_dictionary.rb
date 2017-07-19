@@ -1,6 +1,5 @@
 class Cms::KanaDictionary < ApplicationRecord
   include Sys::Model::Base
-  include Sys::Model::Base::Config
   include Sys::Model::Rel::Creator
   include Cms::Model::Site
   include Cms::Model::Rel::Site

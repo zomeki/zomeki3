@@ -278,30 +278,6 @@ class Cms::Site < ApplicationRecord
     "#{::File.dirname(public_path)}/.htpasswd"
   end
 
-  def basic_auth_user_enabled?
-    basic_auth_users.root_location.enabled.exists?
-  end
-
-  def system_basic_auth_user_enabled?
-    basic_auth_users.system_location.enabled.exists?
-  end
-
-  def directory_basic_auth_user_enabled?(directory)
-    basic_auth_users.directory_location.enabled.where(target_location: directory).exists?
-  end
-
-  def basic_auth_enabled?
-    ::File.exists?(basic_auth_htpasswd_path)
-  end
-
-  def system_basic_auth_enabled?
-    ::File.exists?("#{basic_auth_htpasswd_path}_system")
-  end
-
-  def directory_basic_auth_enabled?(directory)
-    ::File.exists?("#{basic_auth_htpasswd_path}_#{directory}")
-  end
-
   def basic_auth_state_enabled?
     settings.where(name: 'basic_auth_state', value: 'enabled').exists?
   end
