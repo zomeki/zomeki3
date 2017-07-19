@@ -3,11 +3,11 @@
     <th style="text-align: center; width: 60px;">詳細</th>
     <th><%= Survey::Form.human_attribute_name :title %></th>
     <th style="text-align: center; width: 150px">所属</th>
-    <th style="text-align: center; width: 100px;"><%= Survey::Question.model_name.human %></th>
-    <th style="text-align: center; width: 100px;"><%= Survey::FormAnswer.model_name.human %></th>
+    <th style="text-align: center; width: 90px;"><%= Survey::Question.model_name.human %></th>
+    <th style="text-align: center; width: 90px;"><%= Survey::FormAnswer.model_name.human %></th>
     <th style="text-align: center; width: 80px;"><%= Survey::Form.human_attribute_name :sort_no %></th>
     <th style="text-align: center; width: 120px;"><%= Survey::Form.human_attribute_name :created_at %></th>
-    <th style="text-align: center; width: 60px;"><%= Survey::Form.human_attribute_name :state %></th>
+    <th style="text-align: center; width: 100px;"><%= Survey::Form.human_attribute_name :state %></th>
     <th style="text-align: center; width: 100px;">プレビュー</th>
   </tr>
   <%- @items.each do |item| -%>

@@ -6,7 +6,7 @@ class Survey::FormsScript < PublicationScript
   end
 
   def publish_by_task(item)
-    if item.state_approved?
+    if item.state_approved? || item.state_prepared?
       ::Script.current
       info_log "-- Publish: #{item.class}##{item.id}"
 

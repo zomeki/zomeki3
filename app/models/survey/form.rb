@@ -1,11 +1,13 @@
 class Survey::Form < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Rel::Creator
+  include Sys::Model::Rel::EditableGroup
   include Sys::Model::Rel::Task
   include Cms::Model::Site
   include Cms::Model::Base::Sitemap
   include Cms::Model::Rel::Content
   include Cms::Model::Auth::Content
+  include Sys::Model::Auth::EditableGroup
 
   include Approval::Model::Rel::Approval
 
@@ -66,6 +68,10 @@ class Survey::Form < ApplicationRecord
     state == 'approved'
   end
 
+  def state_prepared?
+    state == 'prepared'
+  end
+
   def state_public?
     state == 'public'
   end
@@ -97,8 +103,16 @@ class Survey::Form < ApplicationRecord
     return item
   end
 
+  def publishable?
+    (state_approved? || state_prepared?) && (editable? || approval_participators.include?(Core.user))
+  end
+
+  def closable?
+    state_public? && editable?
+  end
+
   def publish
-    return unless state_approved?
+    return if !state_approved? && !state_prepared?
     approval_requests.destroy_all
     update_column(:state, 'public')
   end

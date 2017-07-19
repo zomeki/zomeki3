@@ -88,7 +88,7 @@ class Survey::Admin::FormsController < Cms::Controller::Admin::Base
   def approve
     if @item.state_approvable? && @item.approvers.include?(Core.user)
       @item.approve(Core.user) do
-        @item.update_column(:state, 'approved')
+        @item.update_columns(state: (@item.queued_tasks.where(name: 'publish').exists? ? 'prepared' : 'approved'))
         @item.enqueue_tasks
         Sys::OperationLog.log(request, item: @item)
       end
@@ -97,12 +97,12 @@ class Survey::Admin::FormsController < Cms::Controller::Admin::Base
   end
 
   def publish
-    @item.publish if @item.state_approved? && @item.approval_participators.include?(Core.user)
+    @item.publish if @item.publishable?
     redirect_to url_for(:action => :show), notice: '公開処理が完了しました。'
   end
 
   def close
-    @item.close if @item.state_public? && @item.approval_participators.include?(Core.user)
+    @item.close if @item.closable?
     redirect_to url_for(:action => :show), notice: '公開終了処理が完了しました。'
   end
 
