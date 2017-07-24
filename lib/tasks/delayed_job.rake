@@ -3,14 +3,29 @@ namespace :delayed_job do
     "RAILS_ENV=#{Rails.env} bin/delayed_job"
   end
 
+  def delayed_job_queue
+    queues = {
+      sys_tasks: task_workers,
+      cms_rebuild: rebuild_workers,
+      cms_publisher: publisher_workers,
+      cms_file_transfer: file_transfer_workers
+    }
+    queues.select { |queue, num| num > 0 }
+  end
+
+  def delayed_job_pool_option
+    delayed_job_queue.map { |queue, num| "--pool=#{queue}:#{num}" }.join(' ')
+  end
+
   def delayed_job_options
-    options = [
-      "--pool=sys_tasks:#{task_workers}",
-      "--pool=cms_rebuild:#{rebuild_workers}",
-      "--pool=cms_publisher:#{publisher_workers}",
-      "--pool=cms_file_transfer:#{file_transfer_workers}",
-    ]
-    options.join(' ')
+    delayed_job_queue.map { |queue, num| ["--queue=#{queue}"] * num }.flatten
+  end
+
+  def delayed_job_pids
+    delayed_job_options.map.with_index do |_, i|
+      file = "#{Rails.root}/tmp/pids/delayed_job.#{i}.pid"
+      File.read(file).to_i if File.exist?(file)
+    end
   end
 
   def task_workers
@@ -30,64 +45,37 @@ namespace :delayed_job do
     (ENV['FILE_TRANSFER_WORKERS'] || default).to_i
   end
 
-  def max_memory
-    (ENV['DELAYED_JOB_MAX_MEMORY'] || 1024*512).to_i
-  end
-
-  def start
-    sh "#{delayed_job} start #{delayed_job_options}"
-  end
-
-  def stop
-    sh "#{delayed_job} stop #{delayed_job_options}"
-  end
-
-  def restart
-    sh "#{delayed_job} restart #{delayed_job_options}"
-  end
-
-  def status
-    sh "#{delayed_job} status #{delayed_job_options}"
-  end
-
-  def delayed_job_pids
-    Dir["#{Rails.root}/tmp/pids/delayed_job*.pid"].map do |file|
-      File.read(file).to_i
-    end
-  end
-
-  def delayed_job_running?
-    Delayed::Job.where.not(locked_at: nil).exists?
-  end
-
   desc 'Start delayed job'
   task start: :environment do
-    start
+    sh "#{delayed_job} start #{delayed_job_pool_option}"
   end
 
   desc 'Stop delayed job'
   task stop: :environment do
-    stop
+    sh "#{delayed_job} stop #{delayed_job_pool_option}"
   end
 
   desc 'Restart delayed job'
   task restart: :environment do
-    restart
+    sh "#{delayed_job} restart #{delayed_job_pool_option}"
+  end
+
+  desc 'Check delayed job status'
+  task status: :environment do
+    sh "#{delayed_job} status #{delayed_job_pool_option}"
   end
 
   desc 'Monitor delayed job'
   task monitor: :environment do
     pids = delayed_job_pids
-    procs = `ps uh --pid #{pids.join(',')}`.split("\n").map(&:split)
-    if procs.size == 0
-      start
-    elsif procs.size < pids.size && !delayed_job_running?
-      restart
-    end
-  end
+    next Rake::Task['delayed_job:restart'].invoke if pids.compact.blank?
+    ps = `ps uh --pid #{pids.compact.join(',')}`.split("\n").map { |line| line.split[1].to_i }
+    next Rake::Task['delayed_job:restart'].invoke if ps.size == 0
 
-  desc 'Check delayed job status'
-  task status: :environment do
-    status
+    pids.each_with_index do |pid, i|
+      if pid.nil? || !ps.include?(pid)
+        sh "#{delayed_job} restart #{delayed_job_options[i]} --identifier=#{i}"
+      end
+    end
   end
 end
