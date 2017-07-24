@@ -9,33 +9,11 @@ class Survey::Admin::FormsController < Cms::Controller::Admin::Base
   end
 
   def index
-    criteria = params[:criteria] || {}
-
-    case params[:target]
-    when 'all'
-      # No criteria
-    when 'draft'
-      criteria[:state] = 'draft'
-      criteria[:touched_user_id] = Core.user.id
-    when 'public'
-      criteria[:state] = 'public'
-      criteria[:touched_user_id] = Core.user.id
-    when 'closed'
-      criteria[:state] = 'closed'
-      criteria[:touched_user_id] = Core.user.id
-    when 'approvable'
-      criteria[:approvable] = true
-      criteria[:state] = 'approvable'
-    when 'approved'
-      criteria[:approvable] = true
-      criteria[:state] = 'approved'
-    else
-      criteria[:editable] = true
-    end
-
-    @items = Survey::Form.all_with_content_and_criteria(@content, criteria).reorder(:sort_no)
-      .paginate(page: params[:page], per_page: 30)
-      .preload(content: { public_node: :site })
+    criteria = form_criteria
+    @items = Survey::FormsFinder.new(@content.forms, Core.user).search(criteria).distinct
+                                .reorder(:sort_no)
+                                .paginate(page: params[:page], per_page: 30)
+                                .preload(content: { public_node: :site })
 
     _index @items
   end
@@ -112,7 +90,7 @@ class Survey::Admin::FormsController < Cms::Controller::Admin::Base
   def approve
     if @item.state_approvable? && @item.approvers.include?(Core.user)
       @item.approve(Core.user) do
-        @item.update_column(:state, 'approved')
+        @item.update_columns(state: (@item.queued_tasks.where(name: 'publish').exists? ? 'prepared' : 'approved'))
         @item.enqueue_tasks
         Sys::OperationLog.log(request, item: @item)
       end
@@ -121,13 +99,13 @@ class Survey::Admin::FormsController < Cms::Controller::Admin::Base
   end
 
   def publish
-    @item.publish if @item.state_approved? && @item.approval_participators.include?(Core.user)
+    @item.publish if @item.publishable?
     redirect_to url_for(:action => :show), notice: '公開処理が完了しました。'
   end
 
   def close
-    @item.close if @item.state_public? && @item.approval_participators.include?(Core.user)
-    redirect_to url_for(:action => :show), notice: '非公開処理が完了しました。'
+    @item.close if @item.closable?
+    redirect_to url_for(:action => :show), notice: '公開終了処理が完了しました。'
   end
 
   def duplicate(item)
@@ -148,9 +126,33 @@ class Survey::Admin::FormsController < Cms::Controller::Admin::Base
 
   private
 
+  def form_criteria
+    criteria = params[:criteria] ? params[:criteria].to_unsafe_h : {}
+
+    if params[:target_public].blank?
+      if Core.user.has_auth?(:manager)
+        params[:target] = 'all' if params[:target].blank?
+        params[:target_state] = 'processing' if params[:target_state].blank?
+      else
+        params[:target] = 'user' if params[:target].blank? || params[:target] == 'all'
+        params[:target_state] = 'processing' if params[:target_state].blank?
+      end
+    end
+
+    if params[:target] == '' && params[:target_state] == ''
+      criteria[:target] = 'all'
+      criteria[:target_state] = 'public'
+    else
+      criteria[:target] = params[:target]
+      criteria[:target_state] = params[:target_state]
+    end
+
+    criteria
+  end
+
   def form_params
     params.require(:item).permit(
-      :closed_at, :confirmation, :description, :index_link, :name, :opened_at,
+      :confirmation, :description, :index_link, :name,
       :receipt, :sitemap_state, :sort_no, :summary, :title, :mail_to,
       :creator_attributes => [:id, :group_id, :user_id],
       :tasks_attributes => [:id, :name, :process_at],

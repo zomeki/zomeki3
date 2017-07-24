@@ -10,8 +10,6 @@ ja:
         state: 状態
         name: URL名
         title: フォーム名
-        opened_at: 開始日時
-        closed_at: 終了日時
         sitemap_state: サイトマップ
         index_link: indexリンク表示
         sort_no: 並び順
