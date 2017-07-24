@@ -36,6 +36,10 @@ class Cms::SiteSetting < ApplicationRecord
   set_config :link_check_hour,
              name: 'リンクチェック開始時刻',
              default_value: nil
+  set_config :link_check_domain_type,
+             name: 'リンクチェック対象ドメイン',
+             default_value: 'all',
+             options: [['すべて', 'all'], ['内部ドメインのみ', 'internal'], ['外部ドメインのみ', 'external']]
   set_config :link_check_exclusion,
              name: 'リンクチェック対象外URL',
              default_value: ''

@@ -1,7 +1,1 @@
 <h2>リンクチェック</h2>
-
-<div class="actionMenu">
-  <%= link_to 'すべて', { action: :index, result_state: nil }, class: "#{'current' if params[:result_state].blank?}" %>
-  <%= link_to '失敗のみ', { action: :index, result_state: 'failure' }, class: "#{'current' if params[:result_state] == 'failure'}" %>
-  <%= link_to '成功のみ', { action: :index, result_state: 'success' }, class: "#{'current' if params[:result_state] == 'success'}" %>
-</div>

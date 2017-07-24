@@ -38,6 +38,10 @@ module Cms::Model::Rel::SiteSetting
     setting_value(:link_check) == 'enabled' && setting_value(:link_check_hour) == hour.to_s
   end
 
+  def link_check_domain_type
+    setting_value(:link_check_domain_type)
+  end
+
   def link_check_exclusion_regexp
     regexps = setting_value(:link_check_exclusion).to_s.split(/[\r\n]+/).map { |ex| /^#{Regexp.escape(ex)}/ }
     regexps.present? ? Regexp.union(regexps) : nil

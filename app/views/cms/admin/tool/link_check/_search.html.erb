@@ -1,0 +1,22 @@
+<%= form_tag '', method: 'get', class: 'search' do -%>
+<table>
+  <tr>
+    <th>キーワード</th>
+    <th>作成者グループ</th>
+    <th>結果</th>
+    <td rowspan="2" class="submitters">
+      <%= submit_tag '検索', data: { disable_with: false } %>
+      <%= submit_tag 'リセット', name: 'reset', data: { disable_with: false } %>
+      <span class="separator">|</span>
+      <%= submit_tag 'CSV出力', name: 'csv', data: { disable_with: false } %>
+    </td>
+  </tr>
+  <tr>
+    <td><%= text_field_tag 'criteria[keyword]', params.dig(:criteria, :keyword), style: 'width: 300px;' %></td>
+    <td><%= select_tag 'criteria[group_id]',
+                       options_for_select(Core.site.groups_for_option, params.dig(:criteria, :group_id)), include_blank: true %></td>
+    <td><%= select_tag 'criteria[result_state]',
+                       options_for_select(Cms::LinkCheckLog::RESULT_STATE_OPTIONS, params.dig(:criteria, :result_state)), include_blank: true %></td>
+  </tr>
+</table>
+<%- end -%>

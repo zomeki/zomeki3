@@ -37,7 +37,9 @@ class Cms::LinkChecksScript < ParametersScript
   end
 
   def execute(site)
-    regexp = site.link_check_exclusion_regexp
+    exclusion = site.link_check_exclusion_regexp
+    domain_type = site.link_check_domain_type
+    site_domains = (site.public_domains + site.admin_domains).uniq
 
     logs = Cms::LinkCheckLog.where(site_id: site.id, checked: false)
 
@@ -45,20 +47,35 @@ class Cms::LinkChecksScript < ParametersScript
 
     logs.find_each do |log|
       ::Script.progress(log) do
-        if regexp && regexp.match(log.url)
-          log.reason = 'リンチェック対象外'
-          log.result_state = 'skip'
-        else
+        if link_check_domain?(log.url, domain_type, site_domains) && !link_check_excluded?(log.url, exclusion)
           res = Util::LinkChecker.check_url(log.url)
           log.status = res[:status]
           log.reason = res[:reason]
           log.result = res[:result]
           log.result_state = res[:result] ? 'success' : 'failure'
+        else
+          log.reason = 'リンチェック対象外'
+          log.result_state = 'skip'
         end
         log.checked = true
         log.checked_at = Time.now
         log.save
       end
     end
+  end
+
+  def link_check_domain?(url, domain_type, site_domains)
+    case domain_type
+    when 'internal'
+      site_domains.any? { |domain| url =~ %r|://#{Regexp.escape(domain)}/| }
+    when 'external'
+      site_domains.all? { |domain| url !~ %r|://#{Regexp.escape(domain)}/| }
+    else
+      true
+    end
+  end
+
+  def link_check_excluded?(url, exclusion)
+    exclusion && exclusion.match(url)
   end
 end
