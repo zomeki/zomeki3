@@ -34,7 +34,7 @@ module Cms::Model::Base::Page::Publisher
   end
 
   def publishable?
-    editable? && state.in?(%w(approved recognized))
+    editable? && state.in?(%w(approved prepared recognized))
   end
 
   def closable?

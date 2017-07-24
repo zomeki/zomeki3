@@ -33,8 +33,7 @@
   task = @item.queued_tasks.find_by(name: 'publish')
   pubmsg = task ? "公開日時が設定されています。\n（ #{task.process_at.strftime('%Y-%m-%d %H:%M')} ）\n直ちに公開してよろしいですか？" : '公開してよろしいですか？'
   -%>
-  <%= link_to :publish, { action: :publish }, method: :post, confirm: pubmsg if (@item.state_approved? || @item.state_prepared?) &&
-                                                                                 @item.approval_participators.include?(Core.user) %>
+  <%= link_to :publish, { action: :publish }, method: :post, confirm: pubmsg if @item.publishable? %>
   <%= link_to '公開終了', { do: :close }, confirm: '公開を終了してよろしいですか？' if @item.closable? %>
 <%- when 'edit', 'update' -%>
   <%= link_to "#{GpArticle::Doc.model_name.human}一覧", { action: :index } %>
