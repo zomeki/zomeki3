@@ -21,15 +21,16 @@ class PublicationScript < ParametersScript
     return false unless item.publish_page(rendered, path: options[:path], dependent: options[:dependent])
 
     if options[:smart_phone_path].present? && site.publish_for_smart_phone?(item)
+      dep = [options[:dependent].presence, "smart_phone"].compact.join('_')
       rendered_sp = render_public_as_string(options[:uri], site: site, agent_type: :smart_phone)
-      return false unless item.publish_page(rendered_sp, path: options[:smart_phone_path], dependent: "#{options[:dependent]}_smart_phone")
+      return false unless item.publish_page(rendered_sp, path: options[:smart_phone_path], dependent: dep)
     end
 
     ::Script.success if item.published?
 
     if options[:path] =~ /(\.html|\/)$/ && site.use_kana?
       path = (options[:path] =~ /\.html$/ ? "#{options[:path]}.r" : "#{options[:path]}index.html.r")
-      dep  = options[:dependent] ? "#{options[:dependent]}/ruby" : "ruby"
+      dep  = [options[:dependent].presence, "ruby"].compact.join('/')
 
       if item.published? || !::File.exist?(path) || ::File.stat(path).mtime < Cms::KanaDictionary.dic_mtime(site.id)
         begin
@@ -162,7 +163,11 @@ class PublicationScript < ParametersScript
   end
 
   def related_dependents(dep)
-    [dep, "#{dep}/ruby", "#{dep}/talk", "#{dep}_smart_phone"]
+    if dep.present?
+      [dep, "#{dep}/ruby", "#{dep}/talk", "#{dep}_smart_phone"]
+    else
+      [dep, "ruby", "talk", "smart_phone"]
+    end
   end
 
   def overall_dependents(dependent)

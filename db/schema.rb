@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170711074904) do
+ActiveRecord::Schema.define(version: 20170719063710) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -677,6 +677,7 @@ ActiveRecord::Schema.define(version: 20170711074904) do
     t.string   "talk_processable_type"
     t.integer  "talk_processable_id"
     t.integer  "site_id"
+    t.index ["site_id"], name: "index_cms_talk_tasks_on_site_id", using: :btree
     t.index ["talk_processable_type", "talk_processable_id"], name: "index_cms_talk_tasks_on_talk_processable", using: :btree
   end
 
@@ -1437,6 +1438,7 @@ ActiveRecord::Schema.define(version: 20170711074904) do
     t.integer  "item_id"
     t.string   "item_name"
     t.integer  "site_id"
+    t.index ["site_id"], name: "index_sys_operation_logs_on_site_id", using: :btree
   end
 
   create_table "sys_plugins", force: :cascade do |t|
@@ -1484,6 +1486,7 @@ ActiveRecord::Schema.define(version: 20170711074904) do
     t.text     "message"
     t.integer  "site_id"
     t.jsonb    "script_options", default: {}
+    t.index ["site_id"], name: "index_sys_processes_on_site_id", using: :btree
   end
 
   create_table "sys_publishers", force: :cascade do |t|
@@ -1494,6 +1497,7 @@ ActiveRecord::Schema.define(version: 20170711074904) do
     t.string   "content_hash"
     t.integer  "publishable_id"
     t.string   "publishable_type"
+    t.index ["path"], name: "index_sys_publishers_on_path", using: :btree
     t.index ["publishable_type", "publishable_id"], name: "index_sys_publishers_on_publishable_type_and_publishable_id", using: :btree
   end
 
