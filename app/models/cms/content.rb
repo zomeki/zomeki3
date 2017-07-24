@@ -7,10 +7,10 @@ class Cms::Content < ApplicationRecord
   include Cms::Model::Rel::Concept
   include Cms::Model::Auth::Concept
 
-  REBUILDABLE_MODELS = ['GpArticle::Doc', 'GpCategory::CategoryType', 'Organization::Group',
-                        'AdBanner::Banner', 'Map::Marker', 'GpCalendar::Event',
-                        'Tag::Tag', 'Rank::Rank', 'Gnav::MenuItem',
-                        'Feed::Feed', 'BizCalendar::Place']
+  REBUILDABLE_MODELS = ['AdBanner::Banner', 'BizCalendar::Place', 'Feed::Feed',
+                        'Gnav::MenuItem', 'GpArticle::Doc', 'GpCalendar::Event', 'GpCategory::CategoryType',
+                        'Map::Marker', 'Organization::Group', 'Rank::Rank',
+                        'Survey::Form', 'Tag::Tag']
 
   has_many :settings, -> { order(:sort_no) },
     :foreign_key => :content_id, :class_name => 'Cms::ContentSetting', :dependent => :destroy
