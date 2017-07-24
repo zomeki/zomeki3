@@ -46,7 +46,7 @@ module Approval::Model::Rel::Approval
         when 'progress'
           send_approval_request_mail
         when 'finish'
-          send_approved_notification_mail
+          #send_approved_notification_mail
         end
       end
     end
