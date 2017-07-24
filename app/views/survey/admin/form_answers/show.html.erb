@@ -1,4 +1,8 @@
 <table class="show">
+  <tr>
+    <th><%= @item.class.human_attribute_name :id %></th>
+    <td><%= @item.id %></td>
+  </tr>
   <%- @item.answers.each do |answer| -%>
   <tr>
     <th><%= safe{answer.question.title} %></th>

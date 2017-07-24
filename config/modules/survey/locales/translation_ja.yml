@@ -6,6 +6,7 @@ ja:
       survey/form_answer: 回答
     attributes:
       survey/form:
+        id: ID
         state: 状態
         name: URL名
         title: フォーム名
@@ -21,6 +22,7 @@ ja:
         confirmation: 確認画面
         mail_to: 通知先メールアドレス
       survey/question:
+        id: ID
         state: 状態
         title: 項目名
         sort_no: 並び順
@@ -31,6 +33,7 @@ ja:
         form_text_max_length: 最大文字数
         form_options: 選択候補
       survey/form_answer:
+        id: ID
         answered_url: 回答されたページ
         created_at: 回答日時
         remote_addr: IPアドレス
