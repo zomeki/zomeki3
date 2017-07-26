@@ -8,12 +8,10 @@ class Cms::NodesScript < PublicationScript
     if params.key?(:target_node_id)
       nodes.where(id: params[:target_node_id]).each do |node|
         publish_node(node)
-        file_transfer_callbacks(node)
       end
     else
       nodes.where(parent_id: 0).each do |node|
         publish_node(node)
-        file_transfer_callbacks(node)
       end
     end
   end
@@ -40,6 +38,7 @@ class Cms::NodesScript < PublicationScript
                            site: node.site,
                            path: node.public_path,
                            smart_phone_path: node.public_smart_phone_path)
+        file_transfer_callbacks(node)
       rescue ::Script::InterruptException => e
         raise e
       rescue => e
@@ -52,7 +51,10 @@ class Cms::NodesScript < PublicationScript
     unless node.model == 'Cms::Directory'
       begin
         script_klass = "#{node.model.pluralize}Script".safe_constantize
-        script_klass.new(params.merge(node: node)).publish if script_klass && script_klass.method_defined?(:publish)
+        if script_klass && script_klass.method_defined?(:publish)
+          script_klass.new(params.merge(node: node)).publish
+          file_transfer_callbacks(node)
+        end
       rescue ::Script::InterruptException => e
         raise e
       rescue Exception => e
@@ -73,7 +75,7 @@ class Cms::NodesScript < PublicationScript
 
   def file_transfer_callbacks(node)
     Cms::FileTransferCallbacks.new([:public_path, :public_smart_phone_path], recursive: !node.model.in?(%w(Cms::Page Cms::Sitemap)))
-                         .after_publish_files(node)
+                              .after_publish_files(node)
   end
 
   def publish_by_task(item)

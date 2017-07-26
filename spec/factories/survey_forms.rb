@@ -4,8 +4,6 @@ FactoryGirl.define do
     state 'public'
     sequence(:name) {|n| "form#{n}" }
     sequence(:title) {|n| "アンケートのフォームその#{n}" }
-    opened_at { Faker::Time.backward(1.week) }
-    closed_at { Faker::Time.forward(1.week) }
     sequence(:sort_no) {|n| n * 10 }
     summary { Faker::Lorem.sentence }
     description { Faker::Lorem.paragraph }

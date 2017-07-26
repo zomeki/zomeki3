@@ -15,11 +15,13 @@ module Approval::Model::Rel::Approval
       creators = Sys::Creator.arel_table
       approval_requests = Approval::ApprovalRequest.arel_table
       assignments = Approval::Assignment.arel_table
+      selected_assignments = Approval::Assignment.arel_table.alias('selected_assignments_approval_approval_requests')
       all.joins(:creator)
-         .left_joins(:approval_requests => [:approval_flow => [:approvals => :assignments]])
+         .left_joins(approval_requests: [approval_flow: [approvals: :assignments],  selected_assignments: []])
          .where([creators[:user_id].eq(user.id),
                  approval_requests[:user_id].eq(user.id),
-                 assignments[:user_id].eq(user.id)].reduce(:or))
+                 assignments[:user_id].eq(user.id),
+                 selected_assignments[:user_id].eq(user.id)].reduce(:or))
     }
   end
 

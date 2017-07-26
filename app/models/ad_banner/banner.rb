@@ -100,8 +100,8 @@ class AdBanner::Banner < ApplicationRecord
   concerning :Publication do
     included do
       define_model_callbacks :publish_files, :close_files
-      after_publish_files Cms::FileTransferCallbacks.new([:image_path, :image_smart_phone_path])
-      after_close_files Cms::FileTransferCallbacks.new([:image_path, :image_smart_phone_path])
+      after_publish_files Cms::FileTransferCallbacks.new([:image_path, :image_smart_phone_path], recursive: true)
+      after_close_files Cms::FileTransferCallbacks.new([:image_path, :image_smart_phone_path], recursive: true)
     end
 
     def publish_images

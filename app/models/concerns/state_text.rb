@@ -26,7 +26,7 @@ module StateText
 
     def name
       state = @stateable.public_send(@attribute_name)
-      return '公開終了' if @stateable.is_a?(GpArticle::Doc) && state == 'closed'
+      return '公開終了' if @stateable.class.in?([GpArticle::Doc, Survey::Form]) && state == 'closed'
       STATUS[state] || ''
     end
   end

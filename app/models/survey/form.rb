@@ -1,11 +1,13 @@
 class Survey::Form < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Rel::Creator
+  include Sys::Model::Rel::EditableGroup
   include Sys::Model::Rel::Task
   include Cms::Model::Site
   include Cms::Model::Base::Sitemap
   include Cms::Model::Rel::Content
   include Cms::Model::Auth::Content
+  include Sys::Model::Auth::EditableGroup
 
   include Approval::Model::Rel::Approval
 
@@ -38,34 +40,6 @@ class Survey::Form < ApplicationRecord
 
   scope :public_state, -> { where(state: 'public') }
 
-  def self.all_with_content_and_criteria(content, criteria)
-    forms = self.arel_table
-
-    rel = self.where(forms[:content_id].eq(content.id))
-    rel = rel.where(forms[:state].eq(criteria[:state])) if criteria[:state].present?
-
-    if criteria[:touched_user_id].present? || criteria[:editable].present?
-      creators = Sys::Creator.arel_table
-      rel = rel.joins(:creator)
-    end
-
-    if criteria[:touched_user_id].present?
-      operation_logs = Sys::OperationLog.arel_table
-      rel = rel.eager_load(:operation_logs).where(operation_logs[:user_id].eq(criteria[:touched_user_id])
-                                                .or(creators[:user_id].eq(criteria[:touched_user_id])))
-    end
-
-    if criteria[:approvable].present?
-      approval_requests = Approval::ApprovalRequest.arel_table
-      assignments = Approval::Assignment.arel_table
-      rel = rel.joins(:approval_requests => [:approval_flow => [:approvals => :assignments]])
-               .where(approval_requests[:user_id].eq(Core.user.id)
-                      .or(assignments[:user_id].eq(Core.user.id))).distinct
-    end
-
-    return rel
-  end
-
   def public_questions
     questions.public_state
   end
@@ -82,13 +56,6 @@ class Survey::Form < ApplicationRecord
     return nil
   end
 
-  def open?
-    now = Time.now
-    return false if opened_at && opened_at > now
-    return false if closed_at && closed_at < now
-    return true
-  end
-
   def state_draft?
     state == 'draft'
   end
@@ -99,6 +66,10 @@ class Survey::Form < ApplicationRecord
 
   def state_approved?
     state == 'approved'
+  end
+
+  def state_prepared?
+    state == 'prepared'
   end
 
   def state_public?
@@ -132,8 +103,16 @@ class Survey::Form < ApplicationRecord
     return item
   end
 
+  def publishable?
+    (state_approved? || state_prepared?) && (editable? || approval_participators.include?(Core.user))
+  end
+
+  def closable?
+    state_public? && editable?
+  end
+
   def publish
-    return unless state_approved?
+    return if !state_approved? && !state_prepared?
     approval_requests.destroy_all
     update_column(:state, 'public')
   end
