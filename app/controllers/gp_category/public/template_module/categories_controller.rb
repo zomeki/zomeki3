@@ -111,19 +111,19 @@ class GpCategory::Public::TemplateModule::CategoriesController < GpCategory::Pub
       prefix, code_or_name = filter.split('_', 2)
       case prefix
       when 'c'
-        return http_error(404) unless @category_type.internal_category_type
+        return render plain: '', status: 404 unless @category_type.internal_category_type
         internal_category = @category_type.internal_category_type.public_root_categories.find_by(name: code_or_name)
-        return http_error(404) unless internal_category
+        return render plain: '', status: 404 unless internal_category
         @docs = @docs.categorized_into(internal_category.public_descendants_ids)
       when 'g'
         group = Sys::Group.in_site(Page.site).where(code: code_or_name).first
-        return http_error(404) unless group
+        return render plain: '', status: 404 unless group
         @docs = @docs.organized_into(group.id)
       end
     end
 
     @docs = @docs.order(@content.translated_docs_order)
                  .paginate(page: params[:page], per_page: 30)
-    return http_error(404) if @docs.current_page > @docs.total_pages
+    return render plain: '', status: 404 if @docs.current_page > @docs.total_pages
   end
 end
