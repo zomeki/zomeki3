@@ -1,4 +1,4 @@
-class Cms::Public::LayoutsController < ApplicationController
+class Cms::Public::LayoutsController < Cms::Controller::Public::Data
   def index
     item = Cms::Layout.find_by(site_id: Page.site.id, id: params[:id])
     return http_error(404) unless item

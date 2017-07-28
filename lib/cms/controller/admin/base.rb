@@ -43,4 +43,20 @@ class Cms::Controller::Admin::Base < Sys::Controller::Admin::Base
     end
     return true
   end
+
+  private
+
+  def http_error(status, message = nil)
+    name = Rack::Utils::HTTP_STATUS_CODES[status]
+    message = "ページが見つかりません。" if !message && status == 404
+    message = "( #{message} )" if message
+    message = [status, name, message].compact.join(' ')
+
+    error_log("#{status} #{request.env['REQUEST_URI']}") if status != 404
+    render status: status, html: "<p>#{message}</p>".html_safe, layout: "admin/cms/error"
+    #return respond_to do |format|
+    #  format.html { render :status => status, :text => "<p>#{message}</p>", :layout => "admin/cms/error" }
+    #  format.xml  { render :status => status, :xml => "<errors><error>#{message}</error></errors>" }
+    #end
+  end
 end
