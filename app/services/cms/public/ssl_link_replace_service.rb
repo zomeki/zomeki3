@@ -1,12 +1,10 @@
 class Cms::Public::SslLinkReplaceService < ApplicationService
-  def initialize(site, current_node)
+  def initialize(site, current_path)
     @site = site
-    @current_path = current_node.public_uri
+    @current_path = current_path
   end
 
   def run(html, ssl_paths: nil)
-    return html unless @site.use_common_ssl?
-
     ssl_paths ||= load_common_ssl_paths
     return html if ssl_paths.blank?
 
@@ -30,7 +28,7 @@ class Cms::Public::SslLinkReplaceService < ApplicationService
   def replace_links(doc)
     full_ssl_uri = @site.full_ssl_uri.chomp('/')
     full_uri = @site.full_uri.chomp('/')
-    file_regexp = /^\/_(common|layouts|themes|file|emfiles)/
+    file_regexp = /^\/(_common|_themes|_files|simple_captcha)/
     replaced = false
 
     %w(href action src).each do |attr|

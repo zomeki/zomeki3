@@ -162,7 +162,7 @@ module Cms::Controller::Layout
     return body if Core.request_uri =~ /^\/_preview\//
     return body unless Page.site.use_common_ssl?
 
-    Cms::Public::SslLinkReplaceService.new(Page.site, Page.current_node).run(body)
+    Cms::Public::SslLinkReplaceService.new(Page.site, Page.current_node.public_uri).run(body)
   end
 
   def piece_container_html(piece, body)

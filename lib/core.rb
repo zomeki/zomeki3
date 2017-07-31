@@ -199,23 +199,12 @@ private
       @@internal_uri   = @@request_uri
       @@internal_uri  += "index.html" if @@internal_uri =~ /\/$/
     when 'ssl'
-      site_id         = @@request_uri.gsub(/^\/_[a-z]+\/([0-9]+).*/, '\1').to_i
-      site_mobile     = @@request_uri =~ /^\/_[a-z]+\/([0-9]+)m/
+      site_id         = @@request_uri.gsub(/^\/_ssl\/([0-9]+)/, '\1').to_i
       @@site          = Cms::Site.find_by(id: site_id)
       Page.site       = @@site
-      Page.mobile     = site_mobile
-      @@internal_uri  = @@request_uri
-      @@internal_uri += "index.html" if @@internal_uri =~ /\/$/
+      @@internal_uri  = search_node @@request_uri.sub(/^\/_ssl\/([0-9]+)/, '')
     when 'public'
       @@site          = find_site_by_script_uri(@@script_uri)
-      if @@site.blank? && Sys::Setting.use_common_ssl? && @@request_uri =~ /^\/simple_captcha/
-        if @@script_uri =~ Regexp.new(Sys::Setting.common_ssl_uri)
-          @@site          = nil
-          Page.site       = @@site
-          @@internal_uri  = @@request_uri
-          return
-        end
-      end
       Page.site       = @@site
       @@internal_uri  = search_node @@request_uri
     when 'layouts'

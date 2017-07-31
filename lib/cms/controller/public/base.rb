@@ -48,8 +48,8 @@ class Cms::Controller::Public::Base < Sys::Controller::Public::Base
              "<html>\n<head></head>\n<body>\n<p>#{message}</p>\n</body>\n</html>\n"
            end
 
-    if Core.mode == 'ssl'
-      html = Cms::Public::SslLinkReplaceService.new(Page.site, Page.current_node).run(html)
+    if Core.mode == 'ssl' && Page.site && Page.site.use_common_ssl?
+      html = Cms::Public::SslLinkReplaceService.new(Page.site, Core.request_uri.sub(/^\/_ssl\/([0-9]+)/, '')).run(html)
     end
 
     Page.error = status
