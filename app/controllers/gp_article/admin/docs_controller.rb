@@ -10,6 +10,8 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   before_action :index_options, only: [:index], if: -> { params[:options] }
   before_action :user_options, only: [:index], if: -> { params[:user_options] }
 
+  keep_params :target, :target_state, :target_public
+
   def pre_dispatch
     @content = GpArticle::Content::Doc.find(params[:content])
     return error_auth unless Core.user.has_priv?(:read, item: @content.concept)
