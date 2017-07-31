@@ -31,20 +31,13 @@
   <div id="container">
     <header id="header">
       <div id="headerContainer">
-        <h1><a href="/<%= ZomekiCMS::ADMIN_URL_PREFIX %>">CMS</a></h1>
-        <div class="menu">
-          <span class="loginGroup"><%= Core.user_group.try!(:name) %></span>
-          <span class="loginUser"><%= Core.user.try!(:name_with_account) %></span>
-          <a class="web" href="<%= Core.site.full_uri %>" target="_blank">公開画面</a>
-          <a class="logout" href="/<%= ZomekiCMS::ADMIN_URL_PREFIX %>/logout">ログアウト</a>
-        </div>
+        <%= render 'layouts/admin/cms/header' %>
       <!-- /#headerContainer --></div>
     <!-- /#header --></header>
     <nav id="navi">
       <div id="naviContainer">
         <ul class="selector">
-          <li><%= link_to Core.site.try!(:name), main_app.cms_navi_sites_path, :id => "currentNaviSite" %></li>
-          <li><%= link_to Core.concept.try!(:name), main_app.cms_navi_concepts_path, :id => "currentNaviConcept" %></li>
+          <%= render 'layouts/admin/cms/selector' %>
         </ul>
         <%- if lookup_context.exists?('header', controller.controller_path, true) -%>
         <%= render controller.controller_path + '/header' %>

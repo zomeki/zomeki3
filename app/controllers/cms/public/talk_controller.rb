@@ -1,4 +1,4 @@
-class Cms::Public::TalkController < ApplicationController
+class Cms::Public::TalkController < Cms::Controller::Public::Data
   def down_m3u
     uri  = sound_uri
     data = "#{uri}\n"

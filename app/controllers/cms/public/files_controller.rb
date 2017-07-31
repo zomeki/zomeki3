@@ -1,4 +1,4 @@
-class Cms::Public::FilesController < ApplicationController
+class Cms::Public::FilesController < Cms::Controller::Public::Data
   def down
     paths = params[:path].to_s.split('/')
     return http_error(404) if paths.size != 2 && paths.size != 3

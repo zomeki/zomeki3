@@ -1,4 +1,4 @@
-class Cms::Public::CommonSslController < ApplicationController
+class Cms::Public::CommonSslController < Cms::Controller::Public::Data
   def index
     path = Core.request_uri.gsub(/^#{Regexp.escape(cms_common_ssl_path)}/, "")
     render_ssl(path, :mobile => Page.mobile?, :smart_phone => request.smart_phone?, :preview => true)

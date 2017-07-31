@@ -97,6 +97,7 @@ Rails.application.routes.draw do
   end
 
   # Exception
-  get "404.:format" => "exception#index"
-  get "*path"       => "exception#index"
+  get "#{admin_prefix}/*path" => "cms/admin/exception#index"
+  get "404.:format" => "cms/public/exception#index"
+  get "*path"       => "cms/public/exception#index"
 end
