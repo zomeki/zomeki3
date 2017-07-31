@@ -197,21 +197,21 @@ class GpArticle::Content::Setting < Cms::ContentSetting
     name: '承認フロー',
     form_type: :radio_buttons,
     options: [['使用する', 'enabled'], ['使用しない', 'disabled']],
-    default_value: 'disabled',
-    default_extra_values: {
-      approval_content_id: nil
-    }
-  set_config :calendar_relation, menu: :relation,
-    name: 'カレンダー',
-    form_type: :radio_buttons,
-    options: [['使用する', 'enabled'], ['使用しない', 'disabled']],
     extra_options: {
       publish_after_approved_options: [['使用する', 'enabled'], ['使用しない', 'disabled']]
     },
     default_value: 'disabled',
     default_extra_values: {
-      calendar_content_id: nil,
+      approval_content_id: nil,
       publish_after_approved: 'disabled'
+    }
+  set_config :calendar_relation, menu: :relation,
+    name: 'カレンダー',
+    form_type: :radio_buttons,
+    options: [['使用する', 'enabled'], ['使用しない', 'disabled']],
+    default_value: 'disabled',
+    default_extra_values: {
+      calendar_content_id: nil
     }
   set_config :organization_content_group_id, menu: :relation,
     name: '組織',
