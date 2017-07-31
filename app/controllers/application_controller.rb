@@ -72,8 +72,14 @@ class ApplicationController < ActionController::Base
   end
 
   def http_error(status, message = nil)
-    message = [status, Rack::Utils::HTTP_STATUS_CODES[status], message].compact.join(' ')
+    message = default_http_error_message(status, message)
     render status: status, html: "<p>#{message}</p>".html_safe, layout: 'application'
+  end
+
+  def default_http_error_message(status, message)
+    message = "ページが見つかりません。" if !message && status == 404
+    message = "( #{message} )" if message
+    [status, Rack::Utils::HTTP_STATUS_CODES[status], message].compact.join(' ')
   end
 
 #  def rescue_exception(exception)

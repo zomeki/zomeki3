@@ -47,10 +47,7 @@ class Cms::Controller::Admin::Base < Sys::Controller::Admin::Base
   private
 
   def http_error(status, message = nil)
-    name = Rack::Utils::HTTP_STATUS_CODES[status]
-    message = "ページが見つかりません。" if !message && status == 404
-    message = "( #{message} )" if message
-    message = [status, name, message].compact.join(' ')
+    message = default_http_error_message(status, message)
 
     error_log("#{status} #{request.env['REQUEST_URI']}") if status != 404
     render status: status, html: "<p>#{message}</p>".html_safe, layout: "admin/cms/error"

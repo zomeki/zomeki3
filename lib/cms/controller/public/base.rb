@@ -26,6 +26,8 @@ class Cms::Controller::Public::Base < Sys::Controller::Public::Base
   private
 
   def http_error(status, message = nil)
+    message = default_http_error_message(status, message)
+
     if Page.mobile
       file_status = "#{status}_mobile.html"
       file_500 = "500_mobile.html"
