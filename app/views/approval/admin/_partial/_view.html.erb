@@ -52,7 +52,7 @@
     <%- end -%>
   <%- end -%>
   
-  <%- unless item.approval_requests.all?{|r| r.histories.empty? } -%>
+  <%- if item.approval_requests.any? { |r| r.histories.present? } && controller.respond_to?(:pullback) -%>
   <p class="form">履歴</p>
   
     <%- item.approval_requests.each do |approval_request| -%>

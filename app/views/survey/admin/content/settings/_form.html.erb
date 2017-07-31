@@ -8,6 +8,15 @@
                        options_from_collection_for_select(Approval::Content::ApprovalFlow.all, :id, :name, @item.extra_values[:approval_content_id]),
                        include_blank: true %></td>
   </tr>
+  <tr>
+    <th>承認後公開</th>
+    <td>
+      <%= radio_button_tag 'item[extra_values][publish_after_approved]', 'enabled', @item.extra_values[:publish_after_approved] == 'enabled' %>
+      <%= label_tag 'item_extra_values_publish_after_approved_enabled', '使用する' %>
+      <%= radio_button_tag 'item[extra_values][publish_after_approved]', 'disabled', @item.extra_values[:publish_after_approved] == 'disabled' %>
+      <%= label_tag 'item_extra_values_publish_after_approved_disabled', '使用しない' %>
+    </td>
+  </tr>
 </table>
 <%- end -%>
 

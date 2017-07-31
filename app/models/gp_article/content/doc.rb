@@ -190,6 +190,10 @@ class GpArticle::Content::Doc < Cms::Content
     setting_value(:approval_relation) == 'enabled'
   end
 
+  def publish_after_approved?
+    setting_extra_value(:approval_relation, :publish_after_approved) == 'enabled'
+  end
+
   def template_available?
     gp_temlate_content_template.present? && templates.present?
   end

@@ -205,9 +205,13 @@ class GpArticle::Content::Setting < Cms::ContentSetting
     name: 'カレンダー',
     form_type: :radio_buttons,
     options: [['使用する', 'enabled'], ['使用しない', 'disabled']],
+    extra_options: {
+      publish_after_approved_options: [['使用する', 'enabled'], ['使用しない', 'disabled']]
+    },
     default_value: 'disabled',
     default_extra_values: {
-      calendar_content_id: nil
+      calendar_content_id: nil,
+      publish_after_approved: 'disabled'
     }
   set_config :organization_content_group_id, menu: :relation,
     name: '組織',
@@ -260,6 +264,7 @@ class GpArticle::Content::Setting < Cms::ContentSetting
       ex[:inquiry_style] = params[:inquiry_style]
     when 'approval_relation'
       ex[:approval_content_id] = params[:approval_content_id].to_i
+      ex[:publish_after_approved] = params[:publish_after_approved]
     when 'gp_template_content_template_id'
       ex[:template_ids] = params[:template_ids].to_a.map(&:to_i)
       ex[:default_template_id] = params[:default_template_id].to_i

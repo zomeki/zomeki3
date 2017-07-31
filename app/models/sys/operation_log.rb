@@ -40,13 +40,21 @@ class Sys::OperationLog < ApplicationRecord
     ACTION_OPTIONS.detect{|o| o.last == action }.try(:first).to_s
   end
 
+  def set_item_info(item)
+    self.item_model  = item.class.to_s
+    self.item_id     = item.id if item.has_attribute?(:id)
+    self.item_name   = item.title if item.has_attribute?(:title)
+    self.item_name ||= item.name if item.has_attribute?(:name)
+    self.item_name ||= "##{item.id}" if item.has_attribute?(:id)
+    self.item_name   = item_name.to_s.split(//u).slice(0, 80).join if item_name.present?
+  end
+
   def self.log(request, options = {})
     params = request.params
 
     log = self.new
     log.uri       = Core.request_uri
-    log.action    = params[:do]
-    log.action    = params[:action] if params[:do].blank?
+    log.action    = options[:do].presence || params[:do].presence || params[:action]
     log.ipaddr    = request.remote_ip
     log.site_id   = Core.site.id rescue 0
 
@@ -58,16 +66,8 @@ class Sys::OperationLog < ApplicationRecord
       log.user_name = user.name
     end
 
-
-    if item = options[:item]
-      log.item_model  = item.class.to_s
-      log.item_id     = item.id rescue nil
-      log.item_name   = item.title rescue nil
-      log.item_name ||= item.name rescue nil
-      log.item_name ||= "##{item.id}" rescue nil
-      log.item_name   = log.item_name.to_s.split(//u).slice(0, 80).join if !log.item_name.blank?
-    end
-    log.save(:validate => false)
+    log.set_item_info(options[:item]) if options[:item]
+    log.save(validate: false)
   end
 
   def self.script_log(options = {})
@@ -80,18 +80,10 @@ class Sys::OperationLog < ApplicationRecord
     log.action    = options[:action]
     log.site_id   = options[:site].id rescue 0
 
-    user_name = options[:user_name] || 'CMS'
     log.user_id   = 0
-    log.user_name = user_name
+    log.user_name = options[:user_name] || 'CMS'
 
-    if item = options[:item]
-      log.item_model  = item.class.to_s
-      log.item_id     = item.id rescue nil
-      log.item_name   = item.title rescue nil
-      log.item_name ||= item.name rescue nil
-      log.item_name ||= "##{item.id}" rescue nil
-      log.item_name   = log.item_name.to_s.split(//u).slice(0, 80).join if !log.item_name.blank?
-    end
-    log.save(:validate => false)
+    log.set_item_info(options[:item]) if options[:item]
+    log.save(validate: false)
   end
 end

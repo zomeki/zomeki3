@@ -93,6 +93,13 @@ class Survey::Admin::FormsController < Cms::Controller::Admin::Base
         @item.update_columns(state: (@item.queued_tasks.where(name: 'publish').exists? ? 'prepared' : 'approved'))
         @item.enqueue_tasks
         Sys::OperationLog.log(request, item: @item)
+
+        if @item.state_approved? && @content.publish_after_approved?
+          @item.publish
+          Sys::OperationLog.log(request, item: @item, do: 'publish')
+        end
+
+        @item.send_approved_notification_mail
       end
     end
     redirect_to url_for(:action => :show), notice: '承認処理が完了しました。'
