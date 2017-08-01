@@ -1,13 +1,13 @@
-namespace :zomeki do
+namespace ZomekiCMS::NAME do
   task :init_core do
     Core.initialize
   end
 
-  desc 'Configure zomeki'
+  desc 'Configure'
   task configure: :environment do
-    Rake::Task['zomeki:configure:apache'].invoke
-    Rake::Task['zomeki:configure:nginx'].invoke
-    Rake::Task['zomeki:configure:tika'].invoke
+    Rake::Task["#{ZomekiCMS::NAME}:configure:apache"].invoke
+    Rake::Task["#{ZomekiCMS::NAME}:configure:nginx"].invoke
+    Rake::Task["#{ZomekiCMS::NAME}:configure:tika"].invoke
   end
 
   namespace :configure do

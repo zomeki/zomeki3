@@ -46,5 +46,6 @@ module ZomekiCMS
     config.action_view.sanitized_allowed_attributes = ActionView::Base.sanitized_allowed_attributes.to_a | %w(style class href src alt title colspan rowspan target id)
   end
 
+  NAME = 'zomeki'
   ADMIN_URL_PREFIX = '_system'
 end

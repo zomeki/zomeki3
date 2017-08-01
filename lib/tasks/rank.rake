@@ -1,4 +1,4 @@
-namespace :zomeki do
+namespace ZomekiCMS::NAME do
   namespace :rank do
     namespace :ranks do
       desc 'Fetch ranking'

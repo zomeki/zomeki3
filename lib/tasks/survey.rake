@@ -1,4 +1,4 @@
-namespace :zomeki do
+namespace ZomekiCMS::NAME do
   namespace :survey do
     namespace :answers do
       desc 'Fetch survey answers'
