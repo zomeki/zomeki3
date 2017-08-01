@@ -19,7 +19,7 @@
   </tr>
 </table>
 
-<% if !@item.mobile_title.blank? || !@item.mobile_body.blank? %>
+<%- if @item.site.use_mobile_feature? -%>
 <br /><p class="form">携帯向け</p>
 
 <table class="show">
@@ -31,7 +31,7 @@
     <td><%= hbr @item.mobile_body %></td>
   </tr>
 </table>
-<% end %>
+<%- end -%>
 
 <br /><p class="form">連絡先設定</p>
 <%= render 'cms/admin/_partial/inquiries/view', item: @item %>

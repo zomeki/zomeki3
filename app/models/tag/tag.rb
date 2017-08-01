@@ -30,13 +30,6 @@ class Tag::Tag < ApplicationRecord
     "#{content.public_path}/_smartphone#{public_uri}"
   end
 
-  def preview_uri(site: ::Page.site, mobile: ::Page.mobile?, params: {})
-    return nil unless public_uri
-    params = params.map{|k, v| "#{k}=#{v}" }.join('&')
-    path = "_preview/#{format('%04d', site.id)}#{mobile ? 'm' : ''}#{public_uri}#{params.present? ? "?#{params}" : ''}"
-    "#{site.main_admin_uri}#{path}"
-  end
-
   def bread_crumbs(tag_node)
     crumbs = []
 

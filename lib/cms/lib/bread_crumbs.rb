@@ -1,5 +1,8 @@
 class Cms::Lib::BreadCrumbs
+  include ActionView::Helpers
+
   @crumbs = []
+
   def initialize(crumbs = [])
     @crumbs = crumbs if crumbs
   end
@@ -9,10 +12,12 @@ class Cms::Lib::BreadCrumbs
   end
 
   def to_links(options = {})
+    top_label = if options[:top_label].present?
+                  options[:top_label]
+                else
+                  'TOP'
+                end
 
-    vc = ApplicationController.view_context_class.new
-    top_label = 'TOP'
-    top_label = options[:top_label] if !options[:top_label].blank?
     h = ''
     @crumbs.each do |r|
       links = ''
@@ -26,13 +31,13 @@ class Cms::Lib::BreadCrumbs
         if c[0].class == Array
           l = []
           c.each do |c2|
-            links << vc.content_tag(:li, vc.link_to(c2[0], c2[1]))
+            links << content_tag(:li, link_to(c2[0], c2[1]))
           end
         else
-          links << vc.content_tag(:li, vc.link_to(c[0], c[1]))
+          links << content_tag(:li, link_to(c[0], c[1]))
         end
       end
-      h << vc.content_tag(:ol, links.html_safe)
+      h << content_tag(:ol, links.html_safe)
     end
     h.html_safe
   end

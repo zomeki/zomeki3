@@ -21,12 +21,9 @@
     <td style="text-align: center;"><%=l item.updated_at %></td>
     <td style="text-align: center;" class="<%= 'approvable' if item.state_approvable? && item.approvers.include?(Core.user) %>"><%= item.status.name %></td>
     <td style="text-align: center;">
-      <%- preview_uri = item.preview_uri -%>
-      <%= link_to_if preview_uri.present?, 'PC', preview_uri, target: '_blank' %>
-      <%- preview_uri = item.preview_uri(smart_phone: true) -%>
-      <%= link_to_if preview_uri.present?, 'スマホ', preview_uri, target: '_blank' %>
-      <%- preview_uri = item.preview_uri(mobile: true) -%>
-      <%= link_to_if preview_uri.present?, '携帯', preview_uri, target: '_blank' %>
+      <%= preview_links(item.site, item.preview_uri,
+                                   item.preview_uri(terminal: :smart_phone),
+                                   item.preview_uri(terminal: :mobile)) %>
     </td>
   </tr>
   <%- end -%>

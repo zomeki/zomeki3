@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170719063710) do
+ActiveRecord::Schema.define(version: 20170731080652) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -656,6 +656,7 @@ ActiveRecord::Schema.define(version: 20170719063710) do
     t.string   "google_map_api_key"
     t.string   "admin_full_uri"
     t.string   "smart_phone_layout"
+    t.string   "mobile_feature"
   end
 
   create_table "cms_stylesheets", force: :cascade do |t|
