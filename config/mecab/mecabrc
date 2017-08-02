@@ -5,7 +5,7 @@
 ;
 dicdir =  /usr/local/lib/mecab/dic/ipadic
 
-userdic = config/mecab/zomeki.dic
+userdic = config/mecab/cms.dic
 
 ; output-format-type = wakati
 ; input-buffer-size = 8192
