@@ -27,3 +27,27 @@ class Delayed::Plugins::OomChecker < Delayed::Plugin
   end
 end
 Delayed::Worker.plugins << Delayed::Plugins::OomChecker
+
+class Delayed::Worker
+  module TrapUsr1SignalFix
+    def start
+      trap('USR1') do
+        Thread.new {
+          say 'reopening files...'
+          # copy from Delayed::Worker.after_fork
+          @files_to_reopen.each do |file|
+            begin
+              file.reopen file.path, 'a+'
+              file.sync = true
+            rescue ::Exception # rubocop:disable HandleExceptions, RescueException
+            end
+          end
+          # copy end
+          say 'reopened'
+        }
+      end
+      super
+    end
+  end
+  prepend TrapUsr1SignalFix
+end
