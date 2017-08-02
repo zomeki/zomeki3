@@ -16,7 +16,7 @@
 
 /config/*.yml
 /config/mecab/sites
-/config/mecab/zomeki.dic
+/config/mecab/cms.dic
 /config/apache/*.conf
 /config/apache/virtual_hosts
 /config/apache/admin_virtual_hosts
