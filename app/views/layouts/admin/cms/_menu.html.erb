@@ -1,4 +1,6 @@
 <%
+return '' unless Core.user
+
 def menu_link(auth, key, label, uri, current)
   return '' unless Core.user.has_auth?(auth)
   cls = [key.to_s]

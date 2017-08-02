@@ -10,6 +10,8 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   before_action :index_options, only: [:index], if: -> { params[:options] }
   before_action :user_options, only: [:index], if: -> { params[:user_options] }
 
+  keep_params :target, :target_state, :target_public
+
   def pre_dispatch
     @content = GpArticle::Content::Doc.find(params[:content])
     return error_auth unless Core.user.has_priv?(:read, item: @content.concept)
@@ -197,6 +199,13 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
         )
         @item.enqueue_tasks
         Sys::OperationLog.log(request, item: @item)
+
+        if @item.state_approved? && @content.publish_after_approved?
+          @item.publish
+          Sys::OperationLog.log(request, item: @item, do: 'publish')
+        end
+
+        @item.send_approved_notification_mail
       end
     end
     redirect_to url_for(:action => :show), notice: '承認処理が完了しました。'

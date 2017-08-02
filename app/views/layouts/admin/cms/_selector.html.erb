@@ -1,0 +1,3 @@
+<%- return '<br />'.html_safe unless Core.user -%>
+<li><%= link_to Core.site.try!(:name), main_app.cms_navi_sites_path, :id => "currentNaviSite" %></li>
+<li><%= link_to Core.concept.try!(:name), main_app.cms_navi_concepts_path, :id => "currentNaviConcept" %></li>

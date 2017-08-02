@@ -19,12 +19,7 @@
   <div id="container">
     <div id="header">
       <div id="headerContainer">
-        <h1><a href="/<%= ZomekiCMS::ADMIN_URL_PREFIX %>">CMS</a></h1>
-        <div class="menu">
-          <span class="loginGroup"><%= Core.user_group.try!(:name) %></span>
-          <span class="loginUser"><%= Core.user.try!(:name_with_account) %></span>
-          <a class="logout" href="/<%= ZomekiCMS::ADMIN_URL_PREFIX %>/logout">ログアウト</a>
-        </div>
+        <%= render 'layouts/admin/cms/header' %>
       <!-- /#headerContainer --></div>
     <!-- /#header --></div>
     <div id="banner">
@@ -33,7 +28,12 @@
     <!-- /#banner --></div>
     <div id="navi">
       <div id="naviContainer">
-        <ul class="selector"><br /></ul>
+        <ul class="selector">
+          <%= render 'layouts/admin/cms/selector' %>
+        </ul>
+        <ul class="mainMenu">
+          <%= render 'layouts/admin/cms/menu', current: nil %>
+        </ul>
       <!-- /#navigationContainer --></div>
     <!-- /#navi --></div>
     <div id="main">

@@ -43,4 +43,17 @@ class Cms::Controller::Admin::Base < Sys::Controller::Admin::Base
     end
     return true
   end
+
+  private
+
+  def http_error(status, message = nil)
+    message = default_http_error_message(status, message)
+
+    error_log("#{status} #{request.env['REQUEST_URI']}") if status != 404
+    render status: status, html: "<p>#{message}</p>".html_safe, layout: "admin/cms/error"
+    #return respond_to do |format|
+    #  format.html { render :status => status, :text => "<p>#{message}</p>", :layout => "admin/cms/error" }
+    #  format.xml  { render :status => status, :xml => "<errors><error>#{message}</error></errors>" }
+    #end
+  end
 end

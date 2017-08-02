@@ -1,5 +1,5 @@
 <div class="captchaForm" id="captchaForm">
-  <div class="image"><%= simple_captcha_options[:image] %></div>
+  <div class="image"><%= simple_captcha_options[:image].sub(Page.site.full_uri, '/').html_safe %></div>
   <div class="reload"><%= link_to '更新', '#', id: 'captchaReload' %></div>
   <div class="talk"><%= link_to 'よみあげる', '#', id: 'captchaTalk' %></div>
   <div class="player" id="captchaTalkPlayer"></div>

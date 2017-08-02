@@ -5,10 +5,12 @@ module Approval::Model::Rel::Approval
 
   included do
     has_many :approval_requests, class_name: 'Approval::ApprovalRequest', as: :approvable, dependent: :destroy
+
+    after_save :save_approval_requests
+
     with_options if: -> { state_approvable? } do
       validate :validate_approval_requests
       validate :validate_approval_assignments
-      after_save :save_approval_requests
     end
 
     scope :creator_or_approvables, ->(user = Core.user) {
@@ -46,7 +48,7 @@ module Approval::Model::Rel::Approval
         when 'progress'
           send_approval_request_mail
         when 'finish'
-          send_approved_notification_mail
+          #send_approved_notification_mail
         end
       end
     end

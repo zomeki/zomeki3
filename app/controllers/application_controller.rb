@@ -1,5 +1,7 @@
 class ApplicationController < ActionController::Base
   include Cms::Controller::Public
+  include ParamsKeeper::Controller
+  helper  ParamsKeeper::Helper
   helper  FormHelper
   helper  LinkHelper
   protect_from_forgery with: :exception
@@ -27,10 +29,6 @@ class ApplicationController < ActionController::Base
   def send_mail(fr_addr, to_addr, subject, body)
     return false if fr_addr.blank? || to_addr.blank?
     CommonMailer.plain(from: fr_addr, to: to_addr, subject: subject, body: body).deliver_now
-  end
-
-  def send_download
-    #
   end
 
   def send_data(data, options = {})
@@ -73,64 +71,15 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  ## Production && local
-  def rescue_action_in_public(exception)
-    http_error(500, nil)
+  def http_error(status, message = nil)
+    message = default_http_error_message(status, message)
+    render status: status, html: "<p>#{message}</p>".html_safe, layout: 'application'
   end
 
-  def http_error(status, message = nil)
-    self.response_body = nil
-    Page.error = status
-
-    if status == 404
-      message ||= "ページが見つかりません。"
-    end
-
-    name    = Rack::Utils::HTTP_STATUS_CODES[status]
-    name    = " #{name}" if name
-    message = " ( #{message} )" if message
-    message = "#{status}#{name}#{message}"
-
-    mode_regexp = Regexp.new("^(#{ZomekiCMS::ADMIN_URL_PREFIX.sub(/^_/, '')}|script)$")
-    if Core.mode =~ mode_regexp && status != 404
-      error_log("#{status} #{request.env['REQUEST_URI']}") if status != 404
-      return render status: status, html: "<p>#{message}</p>".html_safe, layout: "admin/cms/error"
-#      return respond_to do |format|
-#        format.html { render :status => status, :text => "<p>#{message}</p>", :layout => "admin/cms/error" }
-#        format.xml  { render :status => status, :xml => "<errors><error>#{message}</error></errors>" }
-#      end
-    end
-
-    ## Render
-    html = nil
-    if Page.mobile
-      file_status = "#{status}_mobile.html"
-      file_500 = "500_mobile.html"
-    else
-      file_status = "#{status}.html"
-      file_500 = "500.html"
-    end
-    if Page.site && FileTest.exist?("#{Page.site.public_path}/#{file_status}")
-      html = ::File.new("#{Page.site.public_path}/#{file_status}").read
-    elsif Core.site && FileTest.exist?("#{Core.site.public_path}/#{file_status}")
-      html = ::File.new("#{Core.site.public_path}/#{file_status}").read
-    elsif FileTest.exist?("#{Rails.public_path}/#{file_status}")
-      html = ::File.new("#{Rails.public_path}/#{file_status}").read
-    elsif FileTest.exist?("#{Rails.public_path}/#{file_500}")
-      html = ::File.new("#{Rails.public_path}/#{file_500}").read
-    else
-      html = "<html>\n<head></head>\n<body>\n<p>#{message}</p>\n</body>\n</html>\n"
-    end
-
-    if Core.mode == 'ssl'
-      html = Cms::Public::SslLinkReplaceService.new(Page.site, Page.current_node).run(html)
-    end
-
-    render :status => status, :inline => html
-#    return respond_to do |format|
-#      format.html { render :status => status, :inline => html }
-#      format.xml  { render :status => status, :xml => "<errors><error>#{message}</error></errors>" }
-#    end
+  def default_http_error_message(status, message)
+    message = "ページが見つかりません。" if !message && status == 404
+    message = "( #{message} )" if message
+    [status, Rack::Utils::HTTP_STATUS_CODES[status], message].compact.join(' ')
   end
 
 #  def rescue_exception(exception)

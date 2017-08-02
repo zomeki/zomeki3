@@ -80,4 +80,8 @@ class Page
   def self.preview_terminal
     mobile? ? 'm' : smart_phone? ? 's' : ''
   end
+
+  def self.agent_type
+    mobile? ? :mobile : smart_phone? ? :smart_phone : :pc
+  end
 end
