@@ -61,7 +61,7 @@ class Approval::Admin::Mailer < ApplicationMailer
   end
 
   def preview_uri
-    @item.preview_uri(site: @item.content.site)
+    @item.preview_uri
   end
 
   def approve_uri

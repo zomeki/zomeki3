@@ -26,9 +26,9 @@
     <td style="text-align: center;"><%= safe{item.updated_at.strftime('%Y-%m-%d %H:%M')} %></td>
     <td style="text-align: center;"><%= safe{item.status.name} %></td>
     <td style="text-align: center;">
-      <%= link_to 'PC', item.preview_uri, target: '_blank' if item.name.present? %>
-      <%= link_to 'スマホ', item.preview_uri(smart_phone: true), target: '_blank' if item.name.present? %>
-      <%= link_to '携帯', item.preview_uri(mobile: true), target: '_blank' if item.name.present? %>
+      <%= preview_links(item.site, item.preview_uri,
+                                   item.preview_uri(terminal: :smart_phone),
+                                   item.preview_uri(terminal: :mobile)) %>
     </td>
   </tr>
   <% end %>
@@ -44,9 +44,9 @@
     <td style="text-align: center;"><%= safe{item.updated_at.strftime('%Y-%m-%d %H:%M')} %></td>
     <td style="text-align: center;"><%= safe{item.status.name} %></td>
     <td style="text-align: center;">
-      <%= link_to 'PC', item.preview_uri(params: {node_id: item.id}), target: '_blank' if item.name.present? %>
-      <%= link_to 'スマホ', item.preview_uri(smart_phone: true, params: {node_id: item.id}), target: '_blank' if item.name.present? %>
-      <%= link_to '携帯', item.preview_uri(mobile: true, params: {node_id: item.id}), target: '_blank' if item.name.present? %>
+      <%= preview_links(item.site, item.preview_uri,
+                                   item.preview_uri(terminal: :smart_phone),
+                                   item.preview_uri(terminal: :mobile)) %>
     </td>
   </tr>
   <% end %>

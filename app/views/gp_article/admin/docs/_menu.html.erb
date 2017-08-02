@@ -42,10 +42,10 @@
   <%= link_to '更新をキャンセル', { action: :destroy }, method: :delete, confirm: '更新をキャンセルしてよろしいですか？' if @item.try(:deletable?) && @item.will_replace? %>
   <span class="separator"></span>
   <%= link_to 'プレビュー(PC)', @item.preview_uri,
-              target: 'preview' if @item.terminal_pc_or_smart_phone && @content.public_node && @item.preview_uri.present? %>
-  <%= link_to 'プレビュー(スマホ)', @item.preview_uri(smart_phone: true),
-              target: 'preview' if @item.terminal_pc_or_smart_phone && @content.public_node && @item.preview_uri.present? %>
-  <%= link_to 'プレビュー(携帯)', @item.preview_uri(mobile: true),
-              target: 'preview' if @item.terminal_mobile && @content.public_node && @item.preview_uri.present? %>
+              target: 'preview' if @item.preview_uri.present? %>
+  <%= link_to 'プレビュー(スマホ)', @item.preview_uri(terminal: :smart_phone),
+              target: 'preview' if @item.preview_uri(terminal: :smart_phone).present? && @content.site.use_smart_phone_feature? %>
+  <%= link_to 'プレビュー(携帯)', @item.preview_uri(terminal: :mobile),
+              target: 'preview' if @item.preview_uri(terminal: :mobile).present? && @content.site.use_mobile_feature? %>
 <%- end -%>
 </div>

@@ -3,7 +3,7 @@ namespace :zomeki do
     namespace :site do
       desc 'Dump site (options: SITE_ID=x, DIR=x)'
       task :dump => :environment do
-        site = Cms::Site.find(ENV['SITE_ID'])
+        site = Cms::Site.where(id: ENV['SITE_ID']).first_or_initialize
 
         puts "dumping site id: #{site.id}..."
         Cms::Tasks::Site::Backupper.new(site, dir: ENV['DIR'] || ENV['HOME'] || Rails.root).dump do |model, ids, path|

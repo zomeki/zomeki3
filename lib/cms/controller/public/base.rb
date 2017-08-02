@@ -2,6 +2,7 @@ class Cms::Controller::Public::Base < Sys::Controller::Public::Base
   include Cms::Controller::Layout
 
   before_action :initialize_params
+  before_action :check_mobile_access
   after_action :render_public_variables
   after_action :render_public_layout
 
@@ -24,6 +25,10 @@ class Cms::Controller::Public::Base < Sys::Controller::Public::Base
   end
 
   private
+
+  def check_mobile_access
+    http_error(404) if Page.mobile && !Page.site.use_mobile_feature?
+  end
 
   def http_error(status, message = nil)
     message = default_http_error_message(status, message)
