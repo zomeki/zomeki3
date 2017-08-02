@@ -1,4 +1,4 @@
-namespace :zomeki do
+namespace ZomekiCMS::NAME do
   namespace :sys do
     desc 'Delete duplicated values. (leave only latest values.)'
     task :clean_sequence => :environment do
