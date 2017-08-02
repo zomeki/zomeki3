@@ -42,10 +42,10 @@ class Sys::OperationLog < ApplicationRecord
 
   def set_item_info(item)
     self.item_model  = item.class.to_s
-    self.item_id     = item.id if item.has_attribute?(:id)
-    self.item_name   = item.title if item.has_attribute?(:title)
-    self.item_name ||= item.name if item.has_attribute?(:name)
-    self.item_name ||= "##{item.id}" if item.has_attribute?(:id)
+    self.item_id     = item.id if item.respond_to?(:id)
+    self.item_name   = item.title if item.respond_to?(:title)
+    self.item_name ||= item.name if item.respond_to?(:name)
+    self.item_name ||= "##{item.id}" if item.respond_to?(:id)
     self.item_name   = item_name.to_s.split(//u).slice(0, 80).join if item_name.present?
   end
 
