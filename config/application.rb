@@ -47,5 +47,6 @@ module ZomekiCMS
   end
 
   NAME = 'zomeki'
+  TITLE = 'ZOMEKI'
   ADMIN_URL_PREFIX = '_system'
 end
