@@ -303,6 +303,15 @@ class Cms::Site < ApplicationRecord
     self.save
   end
 
+  def copy_common_directory(force: false)
+    src_path = Rails.public_path.join("_common")
+    dst_path = Rails.root.join("#{public_path}/_common")
+    if ::File.exists?(src_path) && (force || !::File.exists?(dst_path))
+      FileUtils.mkdir_p(dst_path) unless FileTest.exist?(dst_path)
+      ::FileUtils.cp_r("#{src_path}/.", dst_path)
+    end
+  end
+
   protected
 
   def fix_full_uri
@@ -334,23 +343,6 @@ class Cms::Site < ApplicationRecord
 
   def destroy_files
     FileUtils.rm_rf root_path
-  end
-
-  def copy_common_directory
-    src_path = Rails.public_path.join("_common")
-    dst_path = Rails.root.join("#{public_path}/_common")
-    if ::File.exists?(src_path) && !::File.exists?(dst_path)
-      ::FileUtils.cp_r(src_path, dst_path)
-    end
-  end
-
-  def force_copy_common_directory
-    src_path = Rails.public_path.join("_common")
-    dst_path = Rails.root.join("#{public_path}/_common")
-    if ::File.exists?(src_path)
-      FileUtils.mkdir_p(dst_path) unless FileTest.exist?(dst_path)
-      ::FileUtils.cp_r(Dir.glob(%Q(#{src_path}/*)), dst_path)
-    end
   end
 
   def make_concept
