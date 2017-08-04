@@ -1,4 +1,4 @@
-namespace :zomeki do
+namespace ZomekiCMS::NAME do
   namespace :reception do
     namespace :applicants do
       desc 'Import applicants from csv'

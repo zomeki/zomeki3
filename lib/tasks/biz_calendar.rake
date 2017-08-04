@@ -1,4 +1,4 @@
-namespace :zomeki do
+namespace ZomekiCMS::NAME do
   namespace :biz_calendar do
     desc 'Publish this month'
     task :publish_this_month => :environment do

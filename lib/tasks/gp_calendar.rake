@@ -1,4 +1,4 @@
-namespace :zomeki do
+namespace ZomekiCMS::NAME do
   namespace :gp_calendar do
     desc 'Publish todays events'
     task :publish_todays_events => :environment do

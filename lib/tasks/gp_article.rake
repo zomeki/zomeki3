@@ -1,4 +1,4 @@
-namespace :zomeki do
+namespace ZomekiCMS::NAME do
   namespace :gp_article do
     task :set_user_and_group do
       Core.user       = Sys::User.first

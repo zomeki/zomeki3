@@ -20,9 +20,10 @@ class Cms::Admin::LayoutsController < Cms::Controller::Admin::Base
 
   def new
     @item = Cms::Layout.new(
-      :concept_id  => Core.concept(:id),
-      :state       => 'public',
-      :body        => '[[content]]'
+      site_id:    Core.site.id,
+      concept_id: Core.concept(:id),
+      state:      'public',
+      body:       '[[content]]'
     )
   end
 

@@ -9,28 +9,18 @@ module Cms::Model::Base::Page::Publisher
 
   def public_path
     return '' unless public_uri
-    Page.site.public_path + public_uri
+    site.public_path + public_uri
   end
 
   def public_uri
     '/'#TODO
   end
 
-  def preview_uri(options = {})
-    return nil unless public_uri
-    site   = options[:site] || Page.site
-    mobile = options[:mobile] ? 'm' : options[:smart_phone] ? 's' : nil
-    params = []
-    options[:params].each {|k, v| params << "#{k}=#{v}" } if options[:params]
-    params = params.size > 0 ? "?#{params.join('&')}" : ""
-
-    path = "_preview/#{format('%04d', site.id)}#{mobile}#{public_uri}#{params}"
-    "#{site.main_admin_uri}#{path}"
-  end
-
-  def publish_uri(options = {})
-    site = options[:site] || Page.site
-    "#{site.full_uri}_publish/#{format('%04d', site.id)}#{public_uri}"
+  def preview_uri(terminal: nil, params: {})
+    return nil if (path = public_uri).blank?
+    flag = { mobile: 'm', smart_phone: 's' }[terminal]
+    query = "?#{params.to_query}" if params.present?
+    "#{site.main_admin_uri}_preview/#{format('%04d', site.id)}#{flag}#{path}#{query}"
   end
 
   def publishable?

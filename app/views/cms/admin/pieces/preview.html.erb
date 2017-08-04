@@ -5,17 +5,22 @@
     <th style="width: 25%; text-align: center;">コンセプト</th>
     <th style="width: 25%; text-align: center;">レイアウトID</th>
     <th style="width: ; text-align: center;">レイアウト名</th>
-    <th style="width: ; text-align: center;">プレビュー</th>
+    <th style="width: 100px; text-align: center;">プレビュー</th>
   </th>
   <%- @item.owner_layouts.each do |layout| -%>
   <tr class="<%= cycle '', 'cycle' %>">
     <td><%= layout.concept.try(:name) %></td>
     <td><%= layout.name %></td>
     <td><%= layout.title %></td>
-    <td><% query = "layout_id=#{layout.id}&piece_id=#{@item.id}" %>
-      <%= link_to "PC", "#{Core.site.root_node.preview_uri}*.html?#{query}", target: "_blank" %>
-      <%= link_to "スマホ", "#{Core.site.root_node.preview_uri(smart_phone: true)}*.html?#{query}", target: "_blank" %>
-      <%= link_to "携帯", "#{Core.site.root_node.preview_uri(mobile: true)}*.html?#{query}", target: "_blank" %></td>
+    <td style="text-align: center;">
+      <%-
+      root_node = Core.site.root_node
+      query = { layout_id: layout.id, piece_id: @item.id }.to_query
+      -%>
+      <%= preview_links(root_node.site, "#{root_node.preview_uri}*.html?#{query}",
+                                        "#{root_node.preview_uri(terminal: :smart_phone)}*.html?#{query}",
+                                        "#{root_node.preview_uri(terminal: :mobile)}*.html?#{query}") %>
+    </td>
   </tr>
   <%- end -%>
 </table>

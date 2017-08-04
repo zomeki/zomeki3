@@ -107,7 +107,8 @@ class GpArticle::Doc < ApplicationRecord
   validates :filename_base, presence: true
   validates :body_for_mobile, byte_length: { maximum: Zomeki.config.application['gp_article.body_limit_for_mobile'].to_i,
                                              message: :too_long_byte_for_mobile,
-                                             attribute: -> { mobile_body.present? ? :mobile_body : :body } }
+                                             attribute: -> { mobile_body.present? ? :mobile_body : :body } },
+                              if: -> { site.use_mobile_feature? }
 
   validate :name_validity, if: -> { name.present? }
   validate :event_dates_range
@@ -179,7 +180,7 @@ class GpArticle::Doc < ApplicationRecord
     uri =
       if content.organization_content_related? && organization_group
         "#{organization_group.public_uri}docs/#{name}/"
-      elsif with_closed_preview && content.main_node
+      elsif with_closed_preview && content.main_node && content.main_node.public_uri.present?
         "#{content.main_node.public_uri}#{name}/"
       elsif !with_closed_preview && content.public_node
         "#{content.public_node.public_uri}#{name}/"
@@ -199,17 +200,15 @@ class GpArticle::Doc < ApplicationRecord
     without_filename || filename_base == 'index' ? uri : "#{uri}#{filename_base}.html"
   end
 
-  def preview_uri(site: nil, mobile: false, smart_phone: false, without_filename: false, **params)
-    base_uri = public_uri(without_filename: true, with_closed_preview: true)
-    return nil if base_uri.blank?
+  def preview_uri(terminal: nil, without_filename: false, params: {})
+    return if terminal == :mobile && !terminal_mobile
+    return if terminal.in?([nil, :pc, :smart_phone]) && !terminal_pc_or_smart_phone
+    return if (path = public_uri(without_filename: true, with_closed_preview: true)).blank?
 
-    site ||= content.site
-    params = params.map{|k, v| "#{k}=#{v}" }.join('&')
+    flag = { mobile: 'm', smart_phone: 's' }[terminal]
+    query = "?#{params.to_query}" if params.present?
     filename = without_filename || filename_base == 'index' ? '' : "#{filename_base}.html"
-    page_flag = mobile ? 'm' : smart_phone ? 's' : ''
-
-    path = "_preview/#{format('%04d', site.id)}#{page_flag}#{base_uri}preview/#{id}/#{filename}#{params.present? ? "?#{params}" : ''}"
-    "#{site.main_admin_uri}#{path}"
+    "#{site.main_admin_uri}_preview/#{format('%04d', site.id)}#{flag}#{path}preview/#{id}/#{filename}#{query}"
   end
 
   def file_content_uri

@@ -17,12 +17,17 @@
 <div id="container">
   <header id="header">
     <div id="headerContainer">
-      <h1><img src="/_common/themes/admin/images/header_logo.gif" alt="ZOMEKI"></h1>
+      <h1><img src="/_common/themes/admin/images/header_logo.gif" alt="<%= ZomekiCMS::TITLE %>"></h1>
     <!-- /#headerContainer --></div>
   <!-- /#header --></header>
   <div id="main">
     <%= yield %>
-    <div class="copyright"><small>Copyright &copy; 2012 ZOMEKI All Rights Reserved. <%= image_tag '/_common/themes/admin/images/poweredby.gif', alt: 'Powered By ZOMEKI' %></small></div>
+    <div class="copyright">
+      <small>
+        Copyright &copy; 2012 <%= ZomekiCMS::TITLE %> All Rights Reserved.
+        <%= image_tag '/_common/themes/admin/images/poweredby.gif', alt: "Powered By #{ZomekiCMS::TITLE}" %>
+      </small>
+    </div>
   </div>
 </div>
 

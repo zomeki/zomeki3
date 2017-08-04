@@ -1,4 +1,4 @@
-namespace :zomeki do
+namespace ZomekiCMS::NAME do
   namespace :cms do
     desc 'Clean static files'
     task :clean_statics => :environment do
@@ -15,7 +15,7 @@ namespace :zomeki do
       task :exec => :environment do
         Cms::Site.order(:id).each do |site|
           if site.link_check_hour?(Time.now.hour)
-            system("bundle exec rake zomeki:cms:link_checks:exec_site SITE_ID=#{site.id} RAILS_ENV=#{Rails.env} &")
+            system("bundle exec rake #{ZomekiCMS::NAME}:cms:link_checks:exec_site SITE_ID=#{site.id} RAILS_ENV=#{Rails.env} &")
           end
         end
       end

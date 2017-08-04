@@ -1,4 +1,4 @@
-namespace :zomeki do
+namespace ZomekiCMS::NAME do
   namespace :gp_category do
     namespace :load do
       desc 'Load categories.'

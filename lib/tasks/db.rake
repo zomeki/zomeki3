@@ -1,9 +1,9 @@
-namespace :zomeki do
+namespace ZomekiCMS::NAME do
   namespace :db do
     namespace :site do
       desc 'Dump site (options: SITE_ID=x, DIR=x)'
       task :dump => :environment do
-        site = Cms::Site.find(ENV['SITE_ID'])
+        site = Cms::Site.where(id: ENV['SITE_ID']).first_or_initialize
 
         puts "dumping site id: #{site.id}..."
         Cms::Tasks::Site::Backupper.new(site, dir: ENV['DIR'] || ENV['HOME'] || Rails.root).dump do |model, ids, path|
@@ -16,8 +16,8 @@ namespace :zomeki do
       task :dump_all => :environment do
         Cms::Site.order(:id).each do |site|
           ENV['SITE_ID'] = site.id.to_s
-          Rake::Task['zomeki:db:site:dump'].reenable
-          Rake::Task['zomeki:db:site:dump'].invoke
+          Rake::Task["#{ZomekiCMS::NAME}:db:site:dump"].reenable
+          Rake::Task["#{ZomekiCMS::NAME}:db:site:dump"].invoke
         end
       end
 

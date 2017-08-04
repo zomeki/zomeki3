@@ -35,7 +35,7 @@ $(document).ready(function () {
 <div id="tabs" class="tabs" style="display: none;">
   <ul>
     <li class="options"><a href="#tab8">オプション</a></li>
-    <li class="mobile"><a href="#tab7">携帯</a></li>
+    <li class="mobile" style="<%= 'display: none;' unless @content.site.use_mobile_feature? %>"><a href="#tab7">携帯</a></li>
     <li class="map" style="<%= 'display: none;' unless @content.map_enabled? %>"><a href="#tab6">地図</a></li>
     <li class="calendar" style="<%= 'display: none;' unless @content.calendar_related? %>"><a href="#tab5">イベント</a></li>
     <li class="approval" style="<%= 'display: none;' unless @content.approval_related? %>"><a href="#tab4">承認</a></li>
