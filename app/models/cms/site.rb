@@ -335,7 +335,6 @@ class Cms::Site < ApplicationRecord
 
   def generate_files
     FileUtils.mkdir_p public_path
-    FileUtils.mkdir_p "#{public_path}/_dynamic"
     FileUtils.mkdir_p "#{public_path}/_themes"
     FileUtils.mkdir_p config_path
     FileUtils.touch "#{config_path}/rewrite.conf"
