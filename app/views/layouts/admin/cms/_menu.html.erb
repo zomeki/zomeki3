@@ -21,6 +21,6 @@ end
 <%= menu_link :manager, :user, 'ユーザー', main_app.sys_groups_path(parent: 0), current -%>
 <%= menu_link :manager, :log, 'ログ', main_app.sys_operation_logs_path(parent: 0), current -%>
 <%- if Core.user.root? -%>
-<%= menu_link :manager, :tool, 'ツール', main_app.sys_plugins_path, current -%>
+<%= menu_link :manager, :tool, 'ツール', main_app.cms_tool_convert_downloads_path, current -%>
 <%= menu_link :manager, :setting, 'システム', main_app.sys_maintenances_path, current -%>
 <%- end -%>
