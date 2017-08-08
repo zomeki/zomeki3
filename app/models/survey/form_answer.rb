@@ -37,6 +37,8 @@ class Survey::FormAnswer < ApplicationRecord
 
   def answered_full_uri
     uri = Addressable::URI.parse(answered_url)
+    return answered_url unless uri
+
     if uri.absolute?
       answered_url
     else
