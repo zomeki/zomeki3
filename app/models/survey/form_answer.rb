@@ -35,6 +35,15 @@ class Survey::FormAnswer < ApplicationRecord
     nil
   end
 
+  def answered_full_uri
+    uri = Addressable::URI.parse(answered_url)
+    if uri.absolute?
+      answered_url
+    else
+      Addressable::URI.join(form.site.full_uri, answered_url).to_s
+    end
+  end
+
   private
 
   def validate_base
