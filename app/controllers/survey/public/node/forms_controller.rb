@@ -24,7 +24,7 @@ class Survey::Public::Node::FormsController < Cms::Controller::Public::Base
   def show
     @form_answer = @form.form_answers.build(
       answered_url: Page.uri,
-      answered_url_title: Page.window_title,
+      answered_url_title: Page.title,
       remote_addr: request.remote_ip,
       user_agent: request.user_agent
     )
