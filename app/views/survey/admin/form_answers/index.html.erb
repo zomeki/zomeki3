@@ -12,7 +12,7 @@
     <td style="text-align: center;"><%= link_to :show, survey_form_form_answer_path(content: @content, form_id: @form.id, id: item.id) %></td>
     <td style="text-align: right;"><%= item.id %></td>
     <td style="text-align: center;"><%=l item.created_at %></td>
-    <td style="text-align: left;"><%=link_to item.answered_url_title, item.answered_url, target: 'preview' %></td>
+    <td style="text-align: left;"><%= link_to item.answered_url_title, item.answered_full_uri, target: 'preview' %></td>
     <td style="text-align: left;"><%= item.remote_addr %></td>
     <td style="text-align: left;"><%= item.user_agent %></td>
   </tr>

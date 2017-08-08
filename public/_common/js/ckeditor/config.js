@@ -56,11 +56,11 @@ CKEDITOR.editorConfig = function( config ) {
   config.indentOffset = 1;
   config.indentUnit = 'em';
 
-  // カラーコード制限
-  config.colorButton_colors = '000000,333333,663333,420401,993333,660000,CC0000,A9180D,993300,663300,666633,424006,666600,336600,336633,003F04,00750E,336666,003333,006666,006699,336699,024577,0033FF,0033CC,003399,333366,000033,3333CC,333399,000066,3333FF,0000FF,0000CC,000099,3300FF,3300CC,330099,6633CC,663399,330066,6600FF,6600CC,660099,663366,330033,993399,660066,990099,990066,993366,660033,CC0066,CC0033,990033';
+  // カラーコード設定
+  config.colorButton_colors = 'ee0000,0000ff,008800,663399,D54300,000099,8F4D00,767676,e60066,0068ff,777c00,93008F,D13D6D,147AA3,000000,ffffff';
 
-  // その他のカラーコード選択を許可しない
-  config.colorButton_enableMore = false;
+  // その他のカラーコード選択を許可
+  config.colorButton_enableMore = true;
 
   // テンプレート内容の置き換えしない
   config.templates_replaceContent = false;
