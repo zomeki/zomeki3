@@ -6,10 +6,12 @@
   <tr>
     <th><%= @item.locale(:name) %> <span class="note">※</span></th>
     <td><%= f.text_field :name, :class => 'name' %></td>
-  </tr><tr>
+  </tr>
+  <tr>
     <th><%= @item.locale(:full_uri) %> <span class="note">※</span></th>
     <td><%= f.text_field :full_uri, :class => 'url' %></td>
-  </tr><tr>
+  </tr>
+  <tr>
     <th><%= @item.locale(:mobile_full_uri) %></th>
     <td><%= f.text_field :mobile_full_uri, :class => 'url' %></td>
   </tr>
@@ -17,13 +19,15 @@
     <th><%= @item.locale(:admin_full_uri) %></th>
     <td><%= f.text_field :admin_full_uri, :class => 'url' %></td>
   </tr>
-  <%- if @item.new_record? -%>
+  <%- if false && @item.new_record? -%>
   <tr>
     <th><%= @item.locale(:in_root_group_id) %></th>
     <td><%= f.select :in_root_group_id, options_for_select([['(新規作成)',0]] + Sys::Group.roots.pluck(:name, :id)) %></td>
   </tr>
   <%- end -%>
 </table>
+
+<%= f.hidden_field :in_root_group_id, value: 0 %>
 
 <br />
 <p class="form">サイト紹介</p>
@@ -47,7 +51,17 @@
 </table>
 
 <br />
-<p class="form">スマートフォン書き出し設定</p>
+<p class="form">携帯サイト</p>
+
+<table class="show">
+  <tr>
+    <th><%= @item.locale(:mobile_feature) %></th>
+    <td><%= f.radio_buttons :mobile_feature, @item.class::MOBILE_FEATURE_OPTIONS %></td>
+  </tr>
+</table>
+
+<br />
+<p class="form">スマートフォンサイト</p>
 
 <table class="show">
   <tr>

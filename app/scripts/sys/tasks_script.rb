@@ -18,8 +18,7 @@ class Sys::TasksScript < ParametersScript
           task.update_attributes(state: 'performed') if processed
         rescue => e
           ::Script.error e
-          info_log "Error: #{e}"
-          puts "Error: #{e}"
+          error_log e
         end
       end
     end

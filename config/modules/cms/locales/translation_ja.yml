@@ -45,6 +45,7 @@ ja:
         smart_phone_layout: スマートフォン表示設定
         smart_phone_publication: スマートフォンを別に書き出す
         spp_target: 書き出し対象
+        mobile_feature: 携帯サイト
         in_root_group_id: 最上位グループ
         in_setting_site_transfer_dest_user: "転送先ユーザー名"
         in_setting_site_transfer_dest_host: "転送先サーバーホスト"

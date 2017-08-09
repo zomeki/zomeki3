@@ -1,4 +1,4 @@
-namespace :zomeki do
+namespace ZomekiCMS::NAME do
   namespace :maintenance do
     desc 'Replace @title@ to @title_link@ in settings'
     task :replace_title_with_title_link => :environment do
@@ -78,7 +78,7 @@ namespace :zomeki do
       desc 'Copy _common directory for all sites'
       task copy: :environment do
         Cms::Site.all.each do |site|
-          site.send(:force_copy_common_directory)
+          site.copy_common_directory(force: true)
         end
       end
 
@@ -95,7 +95,7 @@ namespace :zomeki do
     namespace :publish_url do
       desc 'Set pulished Url'
       task :set => :environment do
-        Rake::Task['zomeki:cms:publish_urls:rebuild'].invoke
+        Rake::Task["#{ZomekiCMS::NAME}:cms:publish_urls:rebuild"].invoke
       end
     end
 

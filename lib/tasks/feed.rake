@@ -1,4 +1,4 @@
-namespace :zomeki do
+namespace ZomekiCMS::NAME do
   namespace :feed do
     namespace :feeds do
       desc 'Read feeds'

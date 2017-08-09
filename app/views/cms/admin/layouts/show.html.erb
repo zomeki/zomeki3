@@ -29,8 +29,8 @@ $(function() {
 <div class="layoutTabs">
   <ul>
     <li><a href="#layoutTabs1">標準レイアウト</a></li>
-    <li><a href="#layoutTabs2">携帯レイアウト</a></li>
-    <li><a href="#layoutTabs3">スマートフォンレイアウト</a></li>
+    <li style="<%= 'display: none;' unless @item.site.use_mobile_feature? %>"><a href="#layoutTabs2">携帯レイアウト</a></li>
+    <li style="<%= 'display: none;' unless @item.site.use_smart_phone_feature? %>"><a href="#layoutTabs3">スマートフォンレイアウト</a></li>
   </ul>
   
   <div id="layoutTabs1">

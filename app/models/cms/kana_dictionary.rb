@@ -81,11 +81,11 @@ class Cms::KanaDictionary < ApplicationRecord
     end
 
     def user_dic(site_id = nil)
-      dic = mecab_dir(site_id).join('zomeki.dic').to_s
+      dic = mecab_dir(site_id).join('cms.dic').to_s
       unless ::File.exists?(dic)
         dir = ::File.dirname(dic)
         ::FileUtils.mkdir_p(dir) unless ::Dir.exist?(dir)
-        FileUtils.cp(Rails.root.join("config/mecab/zomeki.dic.original").to_s, dic)
+        FileUtils.cp(Rails.root.join("config/mecab/cms.dic.original").to_s, dic)
       end
       dic
     end

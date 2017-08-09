@@ -113,30 +113,31 @@ class Survey::Form < ApplicationRecord
 
   def publish
     return if !state_approved? && !state_prepared?
-    update_attributes(state: 'public')
+    self.state = 'public'
+    save(validate: false)
   end
 
   def close
     return unless state_public?
-    update_attributes(state: 'closed')
+    self.state = 'closed'
+    save(validate: false)
   end
 
   def public_uri(with_closed_preview: false)
     node = if with_closed_preview
-      content.form_node
-    else
-      content.public_node
-    end
+             content.form_node
+           else
+             content.public_node
+           end
     return nil unless node
     "#{node.public_uri}#{name}"
   end
 
-  def preview_uri(site: nil, mobile: false, smart_phone: false, params: {})
-    return nil unless public_uri(with_closed_preview: true)
-    site ||= ::Page.site
-    params = params.map{|k, v| "#{k}=#{v}" }.join('&')
-    path = "_preview/#{format('%04d', site.id)}#{mobile ? 'm' : smart_phone ? 's' : ''}#{public_uri(with_closed_preview: true)}#{params.present? ? "?#{params}" : ''}"
-    "#{site.main_admin_uri}#{path}"
+  def preview_uri(terminal: nil, params: {})
+    return if (path = public_uri(with_closed_preview: true)).blank?
+    flag = { mobile: 'm', smart_phone: 's' }[terminal]
+    query = "?#{params.to_query}" if params.present?
+    "#{site.main_admin_uri}_preview/#{format('%04d', site.id)}#{flag}#{path}#{query}"
   end
 
   def index_visible?

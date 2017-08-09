@@ -14,6 +14,7 @@ class Cms::Site < ApplicationRecord
   SMART_PHONE_LAYOUT_OPTIONS = [['スマートフォンレイアウトを優先', 'smart_phone'], ['PCレイアウトで表示', 'pc']]
   SMART_PHONE_PUBLICATION_OPTIONS = [['書き出さない', 'no'], ['書き出す', 'yes']]
   SPP_TARGET_OPTIONS = [['トップページのみ書き出す', 'only_top'], ['すべて書き出す', 'all']]
+  MOBILE_FEATURE_OPTIONS = [['使用する', 'enabled'], ['使用しない', 'disabled']]
 
   has_many :concepts, -> { order(:sort_no, :name, :id) }, :foreign_key => :site_id,
     :class_name => 'Cms::Concept', :dependent => :destroy
@@ -149,10 +150,6 @@ class Cms::Site < ApplicationRecord
     [admin_domain].select(&:present?).uniq
   end
 
-  def publish_uri
-    "#{Core.full_uri}_publish/#{format('%04d', id)}/"
-  end
-
   def full_ssl_uri
     "#{Sys::Setting.common_ssl_uri}_ssl/#{format('%04d', id)}/"
   end
@@ -254,6 +251,18 @@ class Cms::Site < ApplicationRecord
     spp_target == 'only_top'
   end
 
+  def mobile_feature_text
+    MOBILE_FEATURE_OPTIONS.rassoc(mobile_feature).try(:first)
+  end
+
+  def use_mobile_feature?
+    mobile_feature == 'enabled'
+  end
+
+  def use_smart_phone_feature?
+    smart_phone_layout == 'smart_phone'
+  end
+
   def apache_config_path
     "config/apache/virtual_hosts/site_#{'%04d' % id}.conf"
   end
@@ -294,6 +303,15 @@ class Cms::Site < ApplicationRecord
     self.save
   end
 
+  def copy_common_directory(force: false)
+    src_path = Rails.public_path.join("_common")
+    dst_path = Rails.root.join("#{public_path}/_common")
+    if ::File.exists?(src_path) && (force || !::File.exists?(dst_path))
+      FileUtils.mkdir_p(dst_path) unless FileTest.exist?(dst_path)
+      ::FileUtils.cp_r("#{src_path}/.", dst_path)
+    end
+  end
+
   protected
 
   def fix_full_uri
@@ -312,11 +330,11 @@ class Cms::Site < ApplicationRecord
     self.smart_phone_layout ||= SMART_PHONE_LAYOUT_OPTIONS.first.last if self.has_attribute?(:smart_phone_layout)
     self.smart_phone_publication ||= SMART_PHONE_PUBLICATION_OPTIONS.first.last if self.has_attribute?(:smart_phone_publication)
     self.spp_target ||= SPP_TARGET_OPTIONS.first.last if self.has_attribute?(:spp_target)
+    self.mobile_feature ||= MOBILE_FEATURE_OPTIONS.first.last if self.has_attribute?(:mobile_feature)
   end
 
   def generate_files
     FileUtils.mkdir_p public_path
-    FileUtils.mkdir_p "#{public_path}/_dynamic"
     FileUtils.mkdir_p "#{public_path}/_themes"
     FileUtils.mkdir_p config_path
     FileUtils.touch "#{config_path}/rewrite.conf"
@@ -324,23 +342,6 @@ class Cms::Site < ApplicationRecord
 
   def destroy_files
     FileUtils.rm_rf root_path
-  end
-
-  def copy_common_directory
-    src_path = Rails.public_path.join("_common")
-    dst_path = Rails.root.join("#{public_path}/_common")
-    if ::File.exists?(src_path) && !::File.exists?(dst_path)
-      ::FileUtils.cp_r(src_path, dst_path)
-    end
-  end
-
-  def force_copy_common_directory
-    src_path = Rails.public_path.join("_common")
-    dst_path = Rails.root.join("#{public_path}/_common")
-    if ::File.exists?(src_path)
-      FileUtils.mkdir_p(dst_path) unless FileTest.exist?(dst_path)
-      ::FileUtils.cp_r(Dir.glob(%Q(#{src_path}/*)), dst_path)
-    end
   end
 
   def make_concept

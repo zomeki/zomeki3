@@ -74,7 +74,7 @@ class Survey::Admin::FormsController < Cms::Controller::Admin::Base
       @item.form_answers.each do |form_answer|
         line = [form_answer.id,
                 I18n.l(form_answer.created_at),
-                form_answer.answered_url,
+                form_answer.answered_full_uri,
                 form_answer.answered_url_title,
                 form_answer.remote_addr,
                 form_answer.user_agent]

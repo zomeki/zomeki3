@@ -24,7 +24,7 @@ module Cms::Model::Rel::SearchText
 
     searchable_columns.each do |column|
       st = search_texts.detect { |s| s.searchable_column == column.to_s } || search_texts.build(searchable_column: column)
-      st.body = renderer.render_data_texts_and_files(read_attribute(column))
+      st.body = renderer.render_data_texts_and_files(read_attribute(column).to_s)
       st.save
     end
 

@@ -1,4 +1,4 @@
-namespace :zomeki do
+namespace ZomekiCMS::NAME do
   namespace :ad_banner do
     namespace :clicks do
       desc 'Fetch ad_banner clicks'
