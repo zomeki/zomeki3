@@ -90,7 +90,7 @@ class Cms::NodesScript < PublicationScript
       if item.publish
         Sys::OperationLog.script_log(item: item, site: item.site, action: 'publish')
       else
-        raise item.errors.full_messages
+        raise "#{item.class}##{item.id}: failed to publish"
       end
 
       info_log 'OK: Published'

@@ -113,12 +113,14 @@ class Survey::Form < ApplicationRecord
 
   def publish
     return if !state_approved? && !state_prepared?
-    update_attributes(state: 'public')
+    self.state = 'public'
+    save(validate: false)
   end
 
   def close
     return unless state_public?
-    update_attributes(state: 'closed')
+    self.state = 'closed'
+    save(validate: false)
   end
 
   def public_uri(with_closed_preview: false)
