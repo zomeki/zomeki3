@@ -41,6 +41,8 @@ class Survey::FormAnswer < ApplicationRecord
 
     if uri.absolute?
       answered_url
+    elsif uri.path =~ %r{^/_ssl} && form.site.full_ssl_uri.present?
+      Addressable::URI.join(form.site.full_ssl_uri, answered_url).to_s
     else
       Addressable::URI.join(form.site.full_uri, answered_url).to_s
     end
