@@ -389,7 +389,7 @@ class Cms::Node < ApplicationRecord
           end
         end
 
-        rebuild_search_texts
+        rebuild_search_texts if model == 'Cms::Page'
 
         return true
       end
