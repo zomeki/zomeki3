@@ -4,6 +4,10 @@ class Tool::Convert
 
   def self.download_site(conf)
     return if conf.site_url.blank?
+
+    site_dir = ::File.join(SITE_BASE_DIR, conf.site_url_without_scheme)
+    FileUtils.rm_rf(site_dir) if File.exist?(site_dir)
+
     com = "wget -rqN --restrict-file-names=nocontrol -P #{SITE_BASE_DIR} #{conf.site_url}"
     com << " -I #{conf.include_dir}" if conf.include_dir.present?
     com << " -l #{conf.recursive_level}" if conf.recursive_level
@@ -39,6 +43,8 @@ class Tool::Convert
     conf.save
 
     conf.dump "書き込み処理開始: #{conf.total_num}件"
+
+    processed_doc_ids = []
     file_paths.each_with_index do |file_path, i|
       uri_path = Pathname(file_path).relative_path_from(Pathname(SITE_BASE_DIR)).to_s
       conf.dump "--- #{uri_path}"
@@ -52,6 +58,8 @@ class Tool::Convert
                    "カテゴリ: #{page.category_names.join(', ')}"].join("\n")
 
         db = Tool::Convert::DbProcessor.new(conf).process(page)
+        processed_doc_ids << db.doc.id if db.doc
+
         case db.process_type
         when 'created'
           conf.created_num += 1
@@ -75,6 +83,11 @@ class Tool::Convert
       end
 
       conf.save if i % 100 == 0
+    end
+
+    if conf.overwrite == 1
+      docs = GpArticle::Doc.where(content_id: conf.content_id).where.not(id: processed_doc_ids)
+      docs.each(&:close)
     end
 
     conf.dump "書き込み処理終了\n"

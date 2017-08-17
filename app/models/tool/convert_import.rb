@@ -22,10 +22,6 @@ class Tool::ConvertImport < ActiveRecord::Base
     @convert_setting = Tool::ConvertSetting.where(site_url: site_url).first
   end
 
-  def doc_state
-    'public'
-  end
-
   def state_label
     STATE_OPTIONS.rassoc(state).try(:first)
   end
