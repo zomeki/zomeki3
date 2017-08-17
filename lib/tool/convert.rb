@@ -1,5 +1,5 @@
 class Tool::Convert
-  SITE_BASE_DIR = "#{Rails.application.root.to_s}/wget_sites/"
+  SITE_BASE_DIR = "#{Rails.application.root.to_s}/wget_sites"
   HTML_FILE_EXTS = %w(htm html shtml php asp jsp)
 
   def self.download_site(conf)
@@ -10,26 +10,8 @@ class Tool::Convert
     system com
   end
 
-  def self.all_site_urls
-    child_dirs(SITE_BASE_DIR).map{|dir| dir.sub(SITE_BASE_DIR, '')}.select(&:present?)
-  end
-
-  def self.child_dirs(dir)
-    return [] if !::File.exist?(dir)
-    dirs = [dir]
-    Dir::entries(dir).sort.each do |name|
-      unless name.valid_encoding?
-        dump "#{name} :: directory name encode error.."
-        next
-      end
-      next if name =~ /^\.+/ || ::FileTest.file?(File.join(dir, name))
-      dirs += child_dirs(File.join(dir, name))
-    end
-    dirs
-  end
-
   def self.htmlfiles(site_url, options = {})
-    root_dir = "#{SITE_BASE_DIR}#{site_url}"
+    root_dir = ::File.join(SITE_BASE_DIR, site_url).to_s
     return [] unless File.exist?(root_dir)
 
     dir = if options[:include_child_dir]
@@ -42,7 +24,7 @@ class Tool::Convert
 
     if options[:only_filenames].present?
       file_paths.select! do |file_path|
-        uri_path = file_path.gsub(/^#{SITE_BASE_DIR}/, '')
+        uri_path = Pathname(file_path).relative_path_from(Pathname(SITE_BASE_DIR)).to_s
         options[:only_filenames].include?(uri_path)
       end
     end
@@ -58,7 +40,7 @@ class Tool::Convert
 
     conf.dump "書き込み処理開始: #{conf.total_num}件"
     file_paths.each_with_index do |file_path, i|
-      uri_path = file_path.gsub(/^#{SITE_BASE_DIR}/, '')
+      uri_path = Pathname(file_path).relative_path_from(Pathname(SITE_BASE_DIR)).to_s
       conf.dump "--- #{uri_path}"
       page = Tool::Convert::PageParser.new(conf).parse(file_path, uri_path)
 

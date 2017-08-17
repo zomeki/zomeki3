@@ -50,7 +50,7 @@ class Tool::ConvertImport < ActiveRecord::Base
 
     filenames = []
     Tool::Convert.htmlfiles(site_url, include_child_dir: true).each do |file_path|
-      filename = file_path.gsub(%r|^#{Tool::Convert::SITE_BASE_DIR}|, '')
+      filename = Pathname(file_path).relative_path_from(Pathname(Tool::Convert::SITE_BASE_DIR)).to_s
       filenames << [filename, filename]
     end
     filenames

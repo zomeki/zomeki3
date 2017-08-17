@@ -3,7 +3,8 @@
 <div class="actionMenu" style="margin-top: 10px;">
 <%- case params[:action] -%>
 <%- when 'show' -%>
-  <%= link_to '一覧', cms_tool_convert_downloads_path %>
-  <%= link_to '削除', cms_tool_convert_download_path(id: @item.id), method: 'delete', confirm: '削除してよろしいですか？' %>
+  <%= link_to '一覧', { action: :index } %>
+  <%= link_to '削除', { action: :destroy, id: @item.id }, method: 'delete', confirm: '削除してよろしいですか？' %>
+  <%= link_to '再実行', { action: :index }.merge(item: @item.attributes.slice('site_url', 'include_dir', 'recursive_level')) %>
 <%- end -%>
 </div>
