@@ -18,6 +18,8 @@ class Tool::Convert::LinkProcessor
       clink.cdoc = cdoc
       clink.tag = e.name
       clink.attr = ['a', 'area'].include?(e.name) ? 'href' : 'src'
+      clink.title = e.inner_text.presence || e['title']
+      clink.alt = e['alt']
       clink.url = e[clink.attr].to_s.dup
       clink.after_url = clink.url.dup
 
@@ -119,7 +121,8 @@ private
     file.site_id = doc.content.site_id if doc.content
     file.file_attachable = doc
     file.name = clink.filename
-    file.title = clink.filename
+    file.title = clink.title.presence || clink.filename
+    file.alt_text = clink.alt
     file.build_creator(doc.creator.attributes.except('id'))
 
     unless file.save
