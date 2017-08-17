@@ -59,6 +59,7 @@ class Tool::Convert::LinkProcessor
 
     doc.body = @after_body = html.inner_html
 
+    doc.keep_display_updated_at = true
     doc.in_ignore_accessibility_check = '1'
     doc.in_ignore_link_check = '1'
 
