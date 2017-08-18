@@ -2,6 +2,9 @@ module Sys::Model::Scope
   extend ActiveSupport::Concern
 
   included do
+    scope :select_without, ->(*columns) {
+      select(column_names - Array(columns).map(&:to_s))
+    }
     scope :search_with_text, ->(*args) {
       words = args.pop.to_s.split(/[ 　]+/)
       columns = args
@@ -30,6 +33,7 @@ module Sys::Model::Scope
         end
       end
     }
+
     scope :date_before, ->(column, date) {
       where(arel_table[column].lteq(date))
     }
@@ -64,6 +68,11 @@ module Sys::Model::Scope
     def replace_for_all(column, from, to)
       column = connection.quote_column_name(column)
       update_all(["#{column} = REPLACE(#{column}, ?, ?)", from, to])
+    end
+
+    def concat_text_for_all(column, text)
+      column = connection.quote_column_name(column)
+      update_all(["#{column} = CONCAT(#{column}, ?)", text])
     end
   end
 end

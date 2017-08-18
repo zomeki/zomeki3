@@ -13,8 +13,8 @@
     <%= link_to '上へ', { path: @item.parent.relative_path_from(::Tool::Convert::SITE_BASE_DIR) } %>
   <%- end -%>
 <%- when 'show' -%>
-  <%- parent = @item.directory_entry? ? @item : @item.parent -%>
-  <%= link_to :index, { path: parent.relative_path_from(::Tool::Convert::SITE_BASE_DIR) } %>
-  <%= link_to :destroy, { path: parent.relative_path_from(::Tool::Convert::SITE_BASE_DIR), do: :destroy }, method: :delete, confirm: '削除してよろしいですか？' %>
+  <%- parent_path = (@item.directory_entry? ? @item : @item.parent).relative_path_from(::Tool::Convert::SITE_BASE_DIR) -%>
+  <%= link_to :index, { path: parent_path } %>
+  <%= link_to :destroy, { path: parent_path, do: :destroy }, method: :delete, confirm: '削除してよろしいですか？' %>
 <%- end -%>
 </div>

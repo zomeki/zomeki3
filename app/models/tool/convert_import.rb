@@ -53,7 +53,7 @@ class Tool::ConvertImport < ActiveRecord::Base
   end
 
   def dump(msg)
-    self.log = "#{log}#{msg}\n"
+    self.class.where(id: id).concat_text_for_all(:log, "#{msg}\n")
   end
 
 private

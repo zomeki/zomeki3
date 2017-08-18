@@ -4,7 +4,8 @@ class Cms::Admin::Tool::ConvertImportsController < Cms::Controller::Admin::Base
   def pre_dispatch
     return error_auth unless Core.user.has_auth?(:manager)
     @item = ::Tool::ConvertImport.find(params[:id]) if params[:id].present?
-    @items = ::Tool::ConvertImport.where(content_id: Cms::Content.select(:id).where(site_id: Core.site.id))
+    @items = ::Tool::ConvertImport.select_without(:log)
+                                  .where(content_id: Cms::Content.select(:id).where(site_id: Core.site.id))
                                   .order(created_at: :desc)
                                   .paginate(page: params[:page], per_page: 10)
   end
@@ -30,6 +31,10 @@ class Cms::Admin::Tool::ConvertImportsController < Cms::Controller::Admin::Base
 
   def destroy
     _destroy @item
+  end
+
+  def download(item)
+    send_data item.log, type: 'text/plain', filename: "convert_imports_#{@item.id}.txt"
   end
 
   def filename_options
