@@ -11,7 +11,7 @@ class Cms::Admin::Tool::ConvertImportsController < Cms::Controller::Admin::Base
   end
 
   def index
-    @item = ::Tool::ConvertImport.new
+    @item = ::Tool::ConvertImport.new(import_params)
     _index @items
   end
 
