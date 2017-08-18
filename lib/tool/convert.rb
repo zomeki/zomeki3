@@ -86,8 +86,12 @@ class Tool::Convert
     end
 
     if conf.overwrite == 1
+      conf.dump "--- 記事非公開処理"
       docs = GpArticle::Doc.where(content_id: conf.content_id).where.not(id: processed_doc_ids)
-      docs.each(&:close)
+      docs.each do |doc|
+        doc.close
+        conf.dump "記事非公開: #{doc.id} #{doc.title}"
+      end
     end
 
     conf.dump "書き込み処理終了\n"
@@ -95,7 +99,7 @@ class Tool::Convert
   end
 
   def self.process_link(conf, updated_at = nil)
-    items = Tool::ConvertDoc.in_site(Core.site)
+    items = Tool::ConvertDoc.in_site(Core.site).where(content_id: conf.content_id)
     items = items.where('updated_at >= ?', updated_at) if updated_at
     items = items.order('id')
 
@@ -109,10 +113,7 @@ class Tool::Convert
         conf.dump "--- #{cdoc.uri_path}"
 
         if doc = cdoc.latest_doc
-          link = Tool::Convert::LinkProcessor.new(conf).sublink(cdoc)
-          link.clinks.each do |clink|
-            conf.dump "#{clink.url} => #{clink.after_url}" if clink.url_changed?
-          end
+          Tool::Convert::LinkProcessor.new(conf).sublink(cdoc)
         else
           conf.dump "記事検索失敗"
         end
