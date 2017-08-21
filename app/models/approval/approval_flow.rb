@@ -17,6 +17,10 @@ class Approval::ApprovalFlow < ApplicationRecord
 
   validates :title, :presence => true
 
+  scope :for_user, ->(user) {
+    where(group_id: [nil] + user.groups.map(&:id))
+  }
+
   private
 
   def set_defaults

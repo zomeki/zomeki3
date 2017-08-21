@@ -3,21 +3,18 @@
     <tr>
       <th><%= Approval::ApprovalFlow.model_name.human %></th>
       <td>
-        <%- unless item.approval_requests.empty? -%>
+        <%- if item.approval_requests.present? -%>
         <table class="approval noDesign">
           <%- item.approval_requests.each do |approval_request| -%>
           <tr>
             <td>
-              <%= approval_request.approval_flow.approvals.map { |approval|
-                approvers =
-                  if approval.approval_type_select?
-                    approval_request.selected_approvers_label(approval)
-                  else
-                    approval.approvers_label_for_fix
-                  end
-                approval == approval_request.current_approval ?
-                  content_tag(:span, approvers, class: 'current', style: 'background-color: #fce1de; padding: 4px;') :
-                  content_tag(:span, approvers, style: 'padding: 4px;')
+              <%= 0.upto(approval_request.max_index).map { |i|
+                approvers_label = approval_request.approvers_label_at(i)
+                if approval_request.current_index == i && !approval_request.finished?
+                  content_tag(:span, approvers_label, class: 'current', style: 'background-color: #fce1de; padding: 4px;')
+                else
+                  content_tag(:span, approvers_label, style: 'padding: 4px;')
+                end
                 }.join(' ＞ ').html_safe %>
             </td>
           </tr>
