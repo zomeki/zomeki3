@@ -3,26 +3,53 @@ class Approval::ApprovalRequest < ApplicationRecord
   include Cms::Model::Site
 
   belongs_to :requester, foreign_key: :user_id, class_name: 'Sys::User'
-  validates :user_id, presence: true
   belongs_to :approvable, polymorphic: true
-  validates :approvable_type, :approvable_id, presence: true
   belongs_to :approval_flow
-  validates :approval_flow_id, presence: true
 
-  has_many :current_assignments, -> { where(selected_index: nil).order(:or_group_id, :id) },
+  has_many :assignments, -> { where(selected_index: nil).order(:or_group_id, :id) },
     class_name: 'Approval::Assignment', as: :assignable, dependent: :destroy
   has_many :selected_assignments, -> { where.not(selected_index: nil).order(:or_group_id, :id) },
     class_name: 'Approval::Assignment', as: :assignable, dependent: :destroy
-  has_many :current_approvers, through: :current_assignments, source: :user
   has_many :histories, -> { order(updated_at: :desc, created_at: :desc) },
            foreign_key: :request_id, class_name: 'Approval::ApprovalRequestHistory', dependent: :destroy
 
   after_initialize :set_defaults
 
+  validates :user_id, presence: true
+  validates :approval_flow_id, presence: true
+
   define_site_scope :approval_flow
 
   def current_approval
     approval_flow.approvals.find_by(index: current_index)
+  end
+
+  def current_assignments
+    assignments
+  end
+
+  def current_selected_assignments
+    selected_assignments.where(selected_index: current_index)
+  end
+
+  def current_approvers
+    current_assignments.map(&:user)
+  end
+
+  def current_approvable_approvers
+    current_assignments.reject(&:approved_at).map(&:user).compact
+  end
+
+  def participators
+    users = [requester]
+    approval_flow.approvals.each do |approval|
+      users += if approval.approval_type_select?
+                 selected_assignments.where(selected_index: approval.index).map(&:user)
+               else
+                 approval.assignments.map(&:user)
+               end
+    end
+    users.compact.uniq
   end
 
   def min_index
@@ -31,6 +58,32 @@ class Approval::ApprovalRequest < ApplicationRecord
 
   def max_index
     approval_flow.approvals.map(&:index).max
+  end
+
+  def assignments_at(index)
+    if index == current_index
+      current_assignments
+    else
+      approval = approval_flow.approvals.detect { |a| a.index == index }
+      return [] unless approval
+      if approval.approval_type_select?
+        selected_assignments.select { |sa| sa.selected_index == index }
+      else
+        approval.assignments
+      end
+    end
+  end
+
+  def or_group_assignments_at(index)
+    assignments_at(index).group_by(&:or_group_id)
+  end
+
+  def approvers_label_at(index)
+    approvers = []
+    or_group_assignments_at(index).each do |ogid, asns|
+      approvers << '(' + asns.flat_map { |asn| asn.assigners(requester) }.uniq.map(&:name).join(' or ') + ')'
+    end
+    approvers.join(' and ')
   end
 
   def approve(user)
@@ -89,35 +142,6 @@ class Approval::ApprovalRequest < ApplicationRecord
     end
   end
 
-  def current_selected_assignments
-    selected_assignments.where(selected_index: current_index)
-  end
-
-  def selected_approvers_label(approval)
-    approvers = selected_assignments.where(selected_index: approval.index).group_by(&:or_group_id).map do |_, asns|
-      asns.map(&:assigner_label).join(' or ')
-    end
-    approvers.join(' and ')
-  end
-
-  def current_approvable_approvers
-    current_assignments.reject(&:approved_at).map(&:user).compact
-  end
-
-  def participators
-    users = [requester]
-    approval_flow.approvals.each do |approval|
-      users +=
-        if approval.approval_type_select?
-          assignments = selected_assignments.where(selected_index: approval.index).all
-          assignments.present? ? assignments.map(&:user) : approval.assignments.map(&:user)
-        else
-          approval.assignments.map(&:user)
-        end
-    end
-    users.compact.uniq
-  end
-
   private
 
   def set_defaults
@@ -133,7 +157,7 @@ class Approval::ApprovalRequest < ApplicationRecord
       end
     else
       current_approval.assignments.each do |asn|
-        asn.assigners.each do |assigner|
+        asn.assigners(requester).each do |assigner|
           current_assignments.create(user_id: assigner.id, or_group_id: asn.or_group_id)
         end
       end

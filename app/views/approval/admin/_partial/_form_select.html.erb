@@ -3,7 +3,7 @@ in_name = "item[in_approval_assignment_ids][#{approval_flow.id}][#{approval.id}]
 e1_name = "assignments1_#{approval.id}"
 e2_name = "assignments2_#{approval.id}"
 
-user_opts = approval.approvers_options_for_select
+user_opts = approval.approvers_options(Core.user)
 
 e2_list =
   if (assignments = params.dig(:item, :in_approval_assignment_ids, approval_flow.id.to_s, approval.id.to_s))
