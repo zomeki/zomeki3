@@ -32,13 +32,13 @@ class Approval::Assignment < ApplicationRecord
     end
   end
 
-  def assigners
+  def assigners(requester)
     case assign_type
     when 'group_users'
-      if group_id == 0
-        Core.user_group.users.where(state: 'enabled')
+      if group_id == 0 && requester && (requester_group = requester.groups.first)
+        requester_group.users.where(state: 'enabled') - [requester]
       elsif group
-        group.users.where(state: 'enabled')
+        group.users.where(state: 'enabled') - [requester]
       else
         []
       end

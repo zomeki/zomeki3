@@ -47,23 +47,19 @@ class Approval::Approval < ApplicationRecord
     end
   end
 
-  def approvers_label_for_fix
-    approvers = []
-    assignments.group_by(&:or_group_id).each do |_, asns|
-      approvers << asns.flat_map(&:assigners).map(&:name).join(' or ')
-    end
-    approvers.join(' and ')
+  def or_group_assignments
+    assignments.group_by(&:or_group_id)
   end
 
-  def approvers_options_for_select
+  def approvers_options(requester)
     opts = []
-    assignments.group_by(&:or_group_id).map do |_, asns|
+    or_group_assignments.map do |ogid, asns|
       if asns.size == 1 && asns.first.assign_type_group_users?
-        asns.flat_map(&:assigners).each do |user|
-          opts << [user.name, user.id.to_s] if user != Core.user
+        asns.flat_map {|asn| asn.assigners(requester) }.uniq.each do |user|
+          opts << [user.name, user.id.to_s]
         end
       else
-        assigners = asns.flat_map(&:assigners) - [Core.user]
+        assigners = asns.flat_map { |asn| asn.assigners(requester) }.uniq
         label = assigners.map(&:name).join(' or ')
         value = assigners.map(&:id).join(',')
         opts << [label, value]
