@@ -1,4 +1,4 @@
-var Map = function (id, latitude, longitude, latitude2, longitude2) {
+var MapViewer = function (id, latitude, longitude, latitude2, longitude2) {
   this._map_canvas = new google.maps.Map(document.getElementById(id), {
       zoom: 14,
       mapTypeId: google.maps.MapTypeId.ROADMAP,
@@ -18,7 +18,7 @@ var Map = function (id, latitude, longitude, latitude2, longitude2) {
   this._markers = {};
 }
 
-Map.prototype.create_marker = function (options) {
+MapViewer.prototype.create_marker = function (options) {
     var info_window = new google.maps.InfoWindow({
         content: options.window_text
       });
@@ -47,7 +47,7 @@ Map.prototype.create_marker = function (options) {
     return marker;
   }
 
-Map.prototype.set_marker = function (id, latitude, longitude, title, window_text, icon) {
+MapViewer.prototype.set_marker = function (id, latitude, longitude, title, window_text, icon) {
     options = {
         position: new google.maps.LatLng(latitude, longitude),
         title: title,
@@ -64,7 +64,7 @@ Map.prototype.set_marker = function (id, latitude, longitude, title, window_text
     this._markers[id] = this.create_marker(options);
   }
 
-Map.prototype.move_to = function (id) {
+MapViewer.prototype.move_to = function (id) {
     for (var m in this._markers) { this._markers[m].close_info_window(); }
 
     var destination = this._markers[id];
