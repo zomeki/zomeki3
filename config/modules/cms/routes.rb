@@ -61,7 +61,7 @@ ZomekiCMS::Application.routes.draw do
       :controller  => "admin/tool/convert_downloads",
       :path        => "tool_convert_downloads"
     match "tool_convert_files(/*path)" => "admin/tool/convert_files#index",
-      :format => false, :as => "tool_convert_files", via: [:get, :post]
+      :format => false, :as => "tool_convert_files", via: [:get, :post, :delete]
     resources :tool_convert_settings,
       :controller  => "admin/tool/convert_settings",
       :path        => "tool_convert_settings"

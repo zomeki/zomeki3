@@ -1,0 +1,85 @@
+<%= form_for :item, url: { action: :create } do |f| %>
+  <%= error_messages_for :item %>
+  <table class="show">
+    <tr>
+      <th><%= @item.locale(:site_url) %> <span class="note">※</span></th>
+      <td><%= f.text_field :site_url, style: 'width: 500px;' %></td>
+    </tr>
+  </table>
+
+  <p class="form">基本設定</p>
+
+  <table class="show">
+    <tr>
+      <th><%= @item.locale(:title_tag) %> <span class="note">※</span></th>
+      <td><%= f.text_field :title_tag, style: 'width: 500px;' %></td>
+    </tr>
+    <tr>
+      <th><%= @item.locale(:body_tag) %> <span class="note">※</span></th>
+      <td><%= f.text_field :body_tag, style: 'width: 500px;' %> </td>
+    </tr>
+    <tr>
+      <th><%= @item.locale(:updated_at_tag) %></th>
+      <td><%= f.text_field :updated_at_tag, style: 'width: 500px;' %></td>
+    </tr>
+    <tr>
+      <th><%= @item.locale(:updated_at_regexp) %></th>
+      <td><%= f.text_field :updated_at_regexp, style: 'width: 500px;' %> 例：(\d+)年(\d+)月(\d+)日</td>
+    </tr>
+    <tr>
+      <th><%= @item.locale(:published_at_tag) %></th>
+      <td><%= f.text_field :published_at_tag, style: 'width: 500px;' %></td>
+    </tr>
+    <tr>
+      <th><%= @item.locale(:published_at_regexp) %></th>
+      <td><%= f.text_field :published_at_regexp, style: 'width: 500px;' %> 例：(\d+)年(\d+)月(\d+)日</td>
+    </tr>
+  </table>
+
+  <p class="form">作成者グループ設定</p>
+
+  <table class="show">
+    <tr>
+      <th><%= @item.locale(:creator_group_tag) %></th>
+      <td><%= f.text_field :creator_group_tag, style: 'width: 500px;' %></td>
+    </tr>
+    <tr>
+      <th><%= @item.locale(:creator_group_regexp) %></th>
+      <td><%= f.text_field :creator_group_regexp, style: 'width: 500px;' %></td>
+    </tr>
+    <tr>
+      <th><%= @item.locale(:creator_group_from_url_regexp) %></th>
+      <td><%= f.text_field :creator_group_from_url_regexp, style: 'width: 500px;' %> 例：\/soshiki\/(\w+)\/</td>
+    </tr>
+    <tr>
+      <th><%= @item.locale(:creator_group_relation_type) %></th>
+      <td><%= f.radio_buttons :creator_group_relation_type, @item.class::GROUP_RELATION_OPTIONS %></td>
+    </tr>
+    <tr>
+      <th><%= @item.locale(:creator_group_relations) %></th>
+      <td><%= f.text_area :creator_group_relations, style: 'width: 500px; height: 200px;' %>
+        <br />例：<br />hisyo&gt;hisho<br />kikaku/hisyo&gt;101
+      </td>
+    </tr>
+  </table>
+
+  <p class="form">カテゴリ設定</p>
+
+  <table class="show">
+    <tr>
+      <th><%= @item.locale(:category_tag) %></th>
+      <td><%= f.text_field :category_tag, style: 'width: 500px;' %></td>
+    </tr>
+    <tr>
+      <th><%= @item.locale(:category_regexp) %></th>
+      <td><%= f.text_field :category_regexp, style: 'width: 500px;' %> 例：<%= '<div class="category[\d]+">([^<\/]+)<\/div>' %></td>
+    </tr>
+    <tr>
+      <th><%= @item.locale(:category_relations) %></th>
+      <td><%= f.text_area :category_relations, style: 'width: 500px; height: 200px;' %>
+        <br />例：<br />hisyo&gt;hisho<br />kikaku/hisyo&gt;101
+      </td>
+    </tr>
+  </table>
+  <%= submit :update %>
+<% end %>
