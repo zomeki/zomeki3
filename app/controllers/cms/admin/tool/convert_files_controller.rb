@@ -1,35 +1,41 @@
 class Cms::Admin::Tool::ConvertFilesController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 
+  before_action :filter_by_do_param
+
   def pre_dispatch
     return error_auth unless Core.user.has_auth?(:manager)
+
+    @path = ::File.join(::Tool::Convert::SITE_BASE_DIR, params[:path].to_s).to_s
+    @item = Sys::Storage::Entry.from_path(@path)
   end
 
   def index
-    paths = params[:path].to_s.split('/')
-    @site_url = paths.first || ''
-    @path = paths.drop(1).join('/')
-    @rel_path  = params[:path]
-
-    @root      = "#{::Tool::Convert::SITE_BASE_DIR}/#{@site_url}"
-    @full_path = "#{@root}/#{@path}"
-    @base_uri  = ["#{::Tool::Convert::SITE_BASE_DIR}/", "/"]
-
-    @item = Tool::SiteContent.new(@site_url, @full_path, :root => @root, :base_uri => @base_uri)
-
-    if @item.file?
-      @rel_path = @rel_path.sub(/\/[^\/]*$/, '')
-      params[:do] = "show"
-      return show
-    else
-      return show if params[:do] == 'show'
-    end
-
-    @dirs  = @item.child_directories
-    @files = @item.child_files
+    @items = @item.children
   end
 
   def show
     render :show
+  end
+
+  def destroy
+    flash[:notice] = if @item.destroy
+                       "削除処理が完了しました。"
+                     else
+                       "削除処理に失敗しました。"
+                     end
+    redirect_to path: @item.parent.relative_path_from(::Tool::Convert::SITE_BASE_DIR)
+  end
+
+  private
+
+  def filter_by_do_param
+    @do = params[:do].presence || 'index'
+    case @do
+    when 'show'
+      show
+    when 'destroy'
+      destroy
+    end
   end
 end

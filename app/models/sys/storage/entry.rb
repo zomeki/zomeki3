@@ -12,9 +12,10 @@ class Sys::Storage::Entry
 
   after_initialize :set_defaults
 
-  after_save_files Cms::FileTransferCallbacks.new([:path, :path_was])
-  after_remove_files Cms::FileTransferCallbacks.new([:path, :path_was])
-
+  with_options if: -> { site_id.present? } do
+    after_save_files Cms::FileTransferCallbacks.new([:path, :path_was])
+    after_remove_files Cms::FileTransferCallbacks.new([:path, :path_was])
+  end
   with_options if: -> { path.present? } do
     validate :validate_base_dir
     validate :validate_existence
@@ -48,15 +49,19 @@ class Sys::Storage::Entry
   end
 
   def path
-    Pathname.new(::File.join(base_dir, name)).cleanpath.to_s
+    Pathname(::File.join(base_dir, name)).cleanpath.to_s
   end
 
   def path_was
-    Pathname.new(::File.join(base_dir_was || base_dir, name_was || name)).cleanpath.to_s
+    Pathname(::File.join(base_dir_was || base_dir, name_was || name)).cleanpath.to_s
   end
 
   def path_changed?
     path != path_was && path_was.present?
+  end
+
+  def relative_path_from(base)
+    Pathname(path).relative_path_from(Pathname(base)).to_s
   end
 
   def mtime
@@ -110,7 +115,8 @@ class Sys::Storage::Entry
   end
 
   def parent
-    return if site_root_path?
+    return if path == Rails.root
+    return if site_id && site_root_path?
     @parent ||= self.class.from_path(File.dirname(path))
   end
 

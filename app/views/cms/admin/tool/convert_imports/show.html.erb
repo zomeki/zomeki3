@@ -56,10 +56,8 @@
     <th><%= @item.class.human_attribute_name :updated_at %></th>
     <td><%=l @item.updated_at if @item.updated_at %></td>
   </tr>
-</table>
-
-<table class="show">
   <tr>
-    <td><%=hbr @item.log %></td>
+    <th><%= @item.class.human_attribute_name :log %></th>
+    <td><%= link_to 'ダウンロード', { do: :download } %></td>
   </tr>
 </table>

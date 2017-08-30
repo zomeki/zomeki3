@@ -30,7 +30,7 @@ class Tool::Convert::DbProcessor
       @process_type = 'created'
     end
 
-    @doc.state ||= @conf.doc_state
+    @doc.state = 'public'
     @doc.filename_base = page.doc_filename_base if @doc.new_record? && @conf.keep_filename == 1
     @doc.content_id = @conf.content.id if @conf.content
     @doc.concept_id = @conf.content.concept_id if @conf.content
@@ -63,6 +63,7 @@ class Tool::Convert::DbProcessor
       )
     end
 
+    @doc.keep_display_updated_at = true
     @doc.in_ignore_accessibility_check = '1'
     @doc.in_ignore_link_check = '1'
 

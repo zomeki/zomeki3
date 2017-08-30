@@ -3,19 +3,23 @@ class Cms::Admin::Tool::ConvertSettingsController < Cms::Controller::Admin::Base
 
   def pre_dispatch
     return error_auth unless Core.user.has_auth?(:manager)
-    @item = ::Tool::ConvertSetting.new(setting_params)
-    if @item.site_url.present? && Tool::ConvertSetting.find_by(site_url: @item.site_url).present?
-      @item = ::Tool::ConvertSetting.find_by(site_url: @item.site_url)
+
+    if (site_url = params.dig(:item, :site_url))
+      @item = ::Tool::ConvertSetting.find_by(site_url: site_url) if site_url.present?
+      @item ||= ::Tool::ConvertSetting.new(setting_params)
     end
-    @items = ::Tool::ConvertSetting.order(created_at: :desc).paginate(page: params[:page], per_page: 10)
   end
 
   def index
-    @item.creator_group_relation_type = 0 if @item.creator_group_relation_type.blank?
+    @items = ::Tool::ConvertSetting.order(created_at: :desc).paginate(page: params[:page], per_page: 10)
   end
 
   def show
     @item = ::Tool::ConvertSetting.find(params[:id])
+  end
+
+  def new
+    @item.creator_group_relation_type = 0 if @item.creator_group_relation_type.blank?
   end
 
   def create

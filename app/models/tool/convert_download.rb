@@ -15,6 +15,10 @@ class Tool::ConvertDownload < ActiveRecord::Base
     RECURSIVE_LEVEL_OPTIONS.rassoc(recursive_level).try(:first)
   end
 
+  def site_url_without_scheme
+    site_url.sub(%r|\w+://|, '')
+  end
+
   def download
     update_attributes(state: 'process', start_at: Time.now)
     Tool::Convert.download_site(self)

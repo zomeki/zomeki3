@@ -1,35 +1,21 @@
 class Tool::Convert
-  SITE_BASE_DIR = "#{Rails.application.root.to_s}/wget_sites/"
+  SITE_BASE_DIR = "#{Rails.application.root.to_s}/wget_sites"
   HTML_FILE_EXTS = %w(htm html shtml php asp jsp)
 
   def self.download_site(conf)
     return if conf.site_url.blank?
+
+    site_dir = ::File.join(SITE_BASE_DIR, conf.site_url_without_scheme)
+    FileUtils.rm_rf(site_dir) if File.exist?(site_dir)
+
     com = "wget -rqN --restrict-file-names=nocontrol -P #{SITE_BASE_DIR} #{conf.site_url}"
     com << " -I #{conf.include_dir}" if conf.include_dir.present?
     com << " -l #{conf.recursive_level}" if conf.recursive_level
     system com
   end
 
-  def self.all_site_urls
-    child_dirs(SITE_BASE_DIR).map{|dir| dir.sub(SITE_BASE_DIR, '')}.select(&:present?)
-  end
-
-  def self.child_dirs(dir)
-    return [] if !::File.exist?(dir)
-    dirs = [dir]
-    Dir::entries(dir).sort.each do |name|
-      unless name.valid_encoding?
-        dump "#{name} :: directory name encode error.."
-        next
-      end
-      next if name =~ /^\.+/ || ::FileTest.file?(File.join(dir, name))
-      dirs += child_dirs(File.join(dir, name))
-    end
-    dirs
-  end
-
   def self.htmlfiles(site_url, options = {})
-    root_dir = "#{SITE_BASE_DIR}#{site_url}"
+    root_dir = ::File.join(SITE_BASE_DIR, site_url).to_s
     return [] unless File.exist?(root_dir)
 
     dir = if options[:include_child_dir]
@@ -42,7 +28,7 @@ class Tool::Convert
 
     if options[:only_filenames].present?
       file_paths.select! do |file_path|
-        uri_path = file_path.gsub(/^#{SITE_BASE_DIR}/, '')
+        uri_path = Pathname(file_path).relative_path_from(Pathname(SITE_BASE_DIR)).to_s
         options[:only_filenames].include?(uri_path)
       end
     end
@@ -57,8 +43,10 @@ class Tool::Convert
     conf.save
 
     conf.dump "書き込み処理開始: #{conf.total_num}件"
+
+    processed_doc_ids = []
     file_paths.each_with_index do |file_path, i|
-      uri_path = file_path.gsub(/^#{SITE_BASE_DIR}/, '')
+      uri_path = Pathname(file_path).relative_path_from(Pathname(SITE_BASE_DIR)).to_s
       conf.dump "--- #{uri_path}"
       page = Tool::Convert::PageParser.new(conf).parse(file_path, uri_path)
 
@@ -70,6 +58,8 @@ class Tool::Convert
                    "カテゴリ: #{page.category_names.join(', ')}"].join("\n")
 
         db = Tool::Convert::DbProcessor.new(conf).process(page)
+        processed_doc_ids << db.doc.id if db.doc
+
         case db.process_type
         when 'created'
           conf.created_num += 1
@@ -95,12 +85,21 @@ class Tool::Convert
       conf.save if i % 100 == 0
     end
 
+    if conf.overwrite == 1
+      conf.dump "--- 記事非公開処理"
+      docs = GpArticle::Doc.where(content_id: conf.content_id).where.not(id: processed_doc_ids)
+      docs.each do |doc|
+        doc.close
+        conf.dump "記事非公開: #{doc.id} #{doc.title}"
+      end
+    end
+
     conf.dump "書き込み処理終了\n"
     conf.save
   end
 
   def self.process_link(conf, updated_at = nil)
-    items = Tool::ConvertDoc.in_site(Core.site)
+    items = Tool::ConvertDoc.in_site(Core.site).where(content_id: conf.content_id)
     items = items.where('updated_at >= ?', updated_at) if updated_at
     items = items.order('id')
 
@@ -114,10 +113,7 @@ class Tool::Convert
         conf.dump "--- #{cdoc.uri_path}"
 
         if doc = cdoc.latest_doc
-          link = Tool::Convert::LinkProcessor.new(conf).sublink(cdoc)
-          link.clinks.each do |clink|
-            conf.dump "#{clink.url} => #{clink.after_url}" if clink.url_changed?
-          end
+          Tool::Convert::LinkProcessor.new(conf).sublink(cdoc)
         else
           conf.dump "記事検索失敗"
         end

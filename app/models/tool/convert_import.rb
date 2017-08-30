@@ -22,10 +22,6 @@ class Tool::ConvertImport < ActiveRecord::Base
     @convert_setting = Tool::ConvertSetting.where(site_url: site_url).first
   end
 
-  def doc_state
-    'public'
-  end
-
   def state_label
     STATE_OPTIONS.rassoc(state).try(:first)
   end
@@ -50,14 +46,14 @@ class Tool::ConvertImport < ActiveRecord::Base
 
     filenames = []
     Tool::Convert.htmlfiles(site_url, include_child_dir: true).each do |file_path|
-      filename = file_path.gsub(%r|^#{Tool::Convert::SITE_BASE_DIR}|, '')
+      filename = Pathname(file_path).relative_path_from(Pathname(Tool::Convert::SITE_BASE_DIR)).to_s
       filenames << [filename, filename]
     end
     filenames
   end
 
   def dump(msg)
-    self.log = "#{log}#{msg}\n"
+    self.class.where(id: id).concat_text_for_all(:log, "#{msg}\n")
   end
 
 private

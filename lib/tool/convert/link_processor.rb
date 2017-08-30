@@ -18,6 +18,8 @@ class Tool::Convert::LinkProcessor
       clink.cdoc = cdoc
       clink.tag = e.name
       clink.attr = ['a', 'area'].include?(e.name) ? 'href' : 'src'
+      clink.title = e.inner_text.presence || e['title']
+      clink.alt = e['alt']
       clink.url = e[clink.attr].to_s.dup
       clink.after_url = clink.url.dup
 
@@ -29,10 +31,10 @@ class Tool::Convert::LinkProcessor
       next if uri.scheme != 'http' && uri.scheme != 'https'
       next if uri.host != host
 
-      case File.extname(uri.path).downcase
-      when '.html', '.htm', '.php', '.asp', ''
+      extname = File.extname(uri.path).downcase.sub(/^\./, '')
+      if extname.in?(::Tool::Convert::HTML_FILE_EXTS)
         convert_doc_link(uri, clink)
-      else
+      elsif extname.present?
         convert_file_link(uri, clink)
       end
 
@@ -47,16 +49,28 @@ class Tool::Convert::LinkProcessor
     doc = cdoc.latest_doc
     return self unless doc
 
+    processed_file_ids = []
     @clinks.each do |clink|
-      if clink.filename.present? && !doc.files.find_by(name: clink.filename)
-        if file = create_file(doc, clink)
-          doc.files.push(file)
+      if clink.filename.present?
+        file = save_file(doc, clink)
+        if file && file.id
+          processed_file_ids << file.id
+          @conf.dump "ファイル保存: #{file.id} #{clink.url} => #{clink.after_url}"
         end
+      end
+    end
+
+    if @conf.overwrite == 1
+      files = doc.files.where.not(id: processed_file_ids)
+      files.each do |file|
+        file.destroy
+        @conf.dump "ファイル削除: #{file.id} #{file.title}"
       end
     end
 
     doc.body = @after_body = html.inner_html
 
+    doc.keep_display_updated_at = true
     doc.in_ignore_accessibility_check = '1'
     doc.in_ignore_link_check = '1'
 
@@ -100,7 +114,7 @@ private
   end
 
   def convert_file_link(uri, clink)
-    file_path = "#{Tool::Convert::SITE_BASE_DIR}#{URI.unescape(uri.to_s).gsub(%r{^\w+://}, '')}"
+    file_path = ::File.join(Tool::Convert::SITE_BASE_DIR, URI.unescape(uri.to_s).gsub(%r{^\w+://}, '')).to_s
 
     if File.file?(file_path)
       clink.file_path = file_path
@@ -113,18 +127,22 @@ private
     end
   end
 
-  def create_file(doc, clink)
-    file = Sys::File.new
-    file.file = Sys::Lib::File::NoUploadedFile.new(clink.file_path, :skip_image => true)
+  def save_file(doc, clink)
+    file = doc.files.find_by(name: clink.filename) || doc.files.build(name: clink.filename)
+    file.file = Sys::Lib::File::NoUploadedFile.new(clink.file_path, skip_image: true)
     file.site_id = doc.content.site_id if doc.content
-    file.file_attachable = doc
     file.name = clink.filename
-    file.title = clink.filename
-    file.build_creator(doc.creator.attributes.except('id'))
+    file.title = clink.title.presence || clink.filename
+    file.alt_text = clink.alt
+
+    file.build_creator if file.creator.blank?
+    file.creator_attributes = doc.creator.attributes.slice('user_id', 'group_id')
 
     unless file.save
       @conf.dump "ファイル保存失敗: #{clink.file_path}"
       @conf.dump file.errors.full_messages
     end
+
+    file
   end
 end
