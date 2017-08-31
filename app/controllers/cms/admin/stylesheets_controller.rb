@@ -47,7 +47,7 @@ class Cms::Admin::StylesheetsController < Cms::Controller::Admin::Base
         flash.now[:notice] = 'ディレクトリの作成に失敗しました。'
       end
     elsif params[:create_file]
-      @item = Cms::Stylesheets::File.new(base_dir: @current.path, name: params[:item][:new_file], body: '')
+      @item = Cms::Stylesheets::File.new(base_dir: @current.path, name: params[:item][:new_file])
       if @item.save
         flash[:notice] = 'ファイルを作成しました。'
         return redirect_to(do: :show, path: @item.path_from_themes_root)
