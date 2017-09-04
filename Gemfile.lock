@@ -156,6 +156,8 @@ GEM
     octokit (4.6.2)
       sawyer (~> 0.8.0, >= 0.5.3)
     parallel (1.6.2)
+    params_keeper_rails (1.0.0)
+      rails (>= 5.0)
     parser (2.3.1.0)
       ast (~> 2.2)
     pg (0.18.4)
@@ -350,6 +352,7 @@ DEPENDENCIES
   nokogiri (~> 1.6.8.1)
   octokit (~> 4.6.2)
   parallel (~> 1.6.1)
+  params_keeper_rails (~> 1.0.0)
   pg (~> 0.15)
   postgres-copy (~> 1.1.0)
   pry-byebug
