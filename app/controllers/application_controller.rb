@@ -1,7 +1,6 @@
 class ApplicationController < ActionController::Base
   include Cms::Controller::Public
   include ParamsKeeper::Controller
-  helper  ParamsKeeper::Helper
   helper  FormHelper
   helper  LinkHelper
   protect_from_forgery with: :exception
