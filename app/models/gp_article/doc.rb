@@ -527,6 +527,10 @@ class GpArticle::Doc < ApplicationRecord
     self.body_more_link_text ||= '続きを読む' if self.has_attribute?(:body_more_link_text)
     self.filename_base ||= 'index' if self.has_attribute?(:filename_base)
 
+    [:href, :subtitle, :summary, :title, :mobile_title, :body, :mobile_body, :body_more].each do |column|
+      self[column] ||= '' if has_attribute?(column)
+    end
+
     set_defaults_from_content if new_record?
   end
 

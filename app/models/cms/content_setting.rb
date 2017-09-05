@@ -25,7 +25,11 @@ class Cms::ContentSetting < ApplicationRecord
   end
 
   def self.all_configs
-    @@configs[self] || []
+    configs = @@configs[self] || []
+  end
+
+  def self.all_config(name)
+    all_configs.detect { |c| c[:id] == name }
   end
 
   def editable?

@@ -50,5 +50,12 @@
   <%= f.text_field :og_image, :style => 'width: 200px;' %>
 </div>
 
+<p class="form">その他</p>
+
+<div>
+  <div class="label1"><%= f.label :remark %></div>
+  <%= f.text_area :remark, size: '100x3' %>
+</div>
+
 <%= editable_group_form f %>
 <%= creator_form f %>

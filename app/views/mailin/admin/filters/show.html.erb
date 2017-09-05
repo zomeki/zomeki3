@@ -1,0 +1,24 @@
+<table class="show">
+  <tr>
+    <th><%= @item.class.human_attribute_name :state %></th>
+    <td><%= @item.status.name %></td>
+  </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :to %></th>
+    <td><%= @item.to %></td>
+  </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :subject %></th>
+    <td><%= @item.subject %></td>
+  </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :dest_content_id %></th>
+    <td><%= link_to @item.dest_content.name, @item.dest_content.admin_uri if @item.dest_content %></td>
+  </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :sort_no %></th>
+    <td><%= @item.sort_no %></td>
+  </tr>
+</table>
+
+<%= creator_view @item %>
