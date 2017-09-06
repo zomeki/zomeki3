@@ -72,9 +72,12 @@ class Cms::Admin::KanaDictionariesController < Cms::Controller::Admin::Base
       render :inline => Cms::Lib::Navi::Jtalk.make_text(params[:body], Core.site.id)
     elsif params[:talk_file]
       jtalk = Cms::Lib::Navi::Jtalk.new
-      jtalk.make params[:body], {:site_id => Core.site.id}
-      file = jtalk.output
-      send_file(file[:path], :type => file[:path], :filename => 'sound.mp3', :disposition => 'inline')
+      jtalk.make(params[:body], site_id: Core.site.id)
+      if (file = jtalk.output)
+        send_file file[:path], type: file[:path], filename: 'sound.mp3', disposition: 'inline'
+      else
+        redirect_to action: :test
+      end
     end
   end
 
