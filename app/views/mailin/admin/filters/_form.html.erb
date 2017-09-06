@@ -18,6 +18,10 @@
     <td><%= f.select :dest_content_id, options_from_collection_for_select(@content.gp_article_contents, :id, :name, @item.dest_content_id), include_blank: true %></td>
   </tr>
   <tr>
+    <th><%= f.label :default_user_id %></th>
+    <td><%= f.select :default_user_id, options_for_select(Core.site.users_for_option, @item.default_user_id), include_blank: true %></td>
+  </tr>
+  <tr>
     <th><%= f.label :sort_no %></th>
     <td><%= f.text_field :sort_no, class: 'number' %></td>
   </tr>

@@ -16,6 +16,10 @@
     <td><%= link_to @item.dest_content.name, @item.dest_content.admin_uri if @item.dest_content %></td>
   </tr>
   <tr>
+    <th><%= @item.class.human_attribute_name :default_user_id %></th>
+    <td><%= @item.default_user.name_with_account if @item.default_user %></td>
+  </tr>
+  <tr>
     <th><%= @item.class.human_attribute_name :sort_no %></th>
     <td><%= @item.sort_no %></td>
   </tr>

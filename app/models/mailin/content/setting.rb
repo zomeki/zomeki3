@@ -14,9 +14,6 @@ class Mailin::Content::Setting < Cms::ContentSetting
       protocol: 'pop',
       pop_cycle: '5'
     }
-  set_config :default_user,
-    name: '送信元未登録ユーザー',
-    options: lambda { Core.site.users_for_option }
 
   belongs_to :content, foreign_key: :content_id, class_name: 'Mailin::Content::Filter'
 

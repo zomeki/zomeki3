@@ -11,6 +11,7 @@ class Mailin::Filter < ApplicationRecord
 
   belongs_to :content, foreign_key: :content_id, class_name: 'Mailin::Content::Filter'
   belongs_to :dest_content, foreign_key: :dest_content_id, class_name: 'GpArticle::Content::Doc'
+  belongs_to :default_user, foreign_key: :default_user_id, class_name: 'Sys::User'
 
   validates :content_id, presence: true
   validates :dest_content_id, presence: true

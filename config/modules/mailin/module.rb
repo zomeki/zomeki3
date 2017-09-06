@@ -1,4 +1,4 @@
-Cms::Lib::Modules::ModuleSet.draw :mailin, 'メール取り込み', 160 do |mod|
+Cms::Lib::Modules::ModuleSet.draw :mailin, 'メール投稿', 160 do |mod|
   ## contents
-  mod.content :filters, 'メール取り込み'
+  mod.content :filters, 'メール投稿'
 end

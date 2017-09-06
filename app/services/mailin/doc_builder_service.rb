@@ -52,8 +52,11 @@ class Mailin::DocBuilderService < ApplicationService
   private
 
   def find_or_create_mail_sender(mail)
-    sender = @site.users.find_by(email: mail.from.first) if mail.from.first
-    sender ||= create_mail_user(mail.from.first)
+    sender = nil
+    if (from = mail.from.first)
+      sender = @site.users.find_by(email: from)
+      sender ||= create_mail_user(from) if @filter.default_user_id.blank?
+    end
     sender ||= @content.default_user || @site.managers.first || Sys::User.root
     sender
   end
@@ -77,12 +80,10 @@ class Mailin::DocBuilderService < ApplicationService
     group = Sys::Group.new(state: 'enabled',
                            parent_id: @site.groups.root.id,
                            code: "mail_group",
-                           name: "mail_group",
                            ldap: 0,
                            level_no: 2)
     group.save(validate: false)
-    group.code = "mail_group_#{group.id}"
-    group.name = "mail_group_#{group.id}"
+    group.code = group.name = group.name_en = "mail_group_#{group.id}"
     group.save(validate: false)
     group.sites << @site
     group

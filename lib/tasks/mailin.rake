@@ -7,7 +7,11 @@ namespace ZomekiCMS::NAME do
         sites = Cms::Site.order(:id)
         sites.where!(id: ENV['SITE_ID']) if ENV['SITE_ID']
         sites.each do |site|
-          Script.run('mailin/filters/exec', site_id: site.id, lock_by: :site, startup: startup)
+          contents = Mailin::Content::Filter.in_site(site).to_a
+          contents.select! { |c| c.execution_time?(startup) }
+          next if contents.blank?
+
+          Script.run('mailin/filters/exec', site_id: site.id, lock_by: :site, target_content_id: contents.map(&:id))
         end
       end
     end

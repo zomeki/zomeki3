@@ -9,6 +9,7 @@ ja:
         to: 宛先アドレス
         subject: タイトル
         dest_content_id: 取り込み先記事コンテンツ
+        default_user_id: 送信元未登録ユーザー
         sort_no: 並び順
         filtered_at: 取り込み日時
         created_at: 作成日時

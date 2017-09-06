@@ -38,6 +38,6 @@ class Mailin::Admin::FiltersController < Cms::Controller::Admin::Base
   private
 
   def item_params
-    params.require(:item).permit(:state, :from, :to, :subject, :dest_content_id, :sort_no)
+    params.require(:item).permit(:state, :from, :to, :subject, :dest_content_id, :default_user_id, :sort_no)
   end
 end

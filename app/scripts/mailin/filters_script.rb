@@ -2,7 +2,7 @@ class Mailin::FiltersScript < ParametersScript
   def exec
     contents = Mailin::Content::Filter.all
     contents = contents.in_site(::Script.site) if ::Script.site
-    contents = contents.to_a.select { |c| c.execution_time?(::Script.options[:startup]) }
+    contents = contents.where(id: params[:target_content_id]) if params[:target_content_id]
     return if contents.blank?
 
     contents.each do |content|
@@ -37,7 +37,7 @@ class Mailin::FiltersScript < ParametersScript
            end
     return false unless mail
 
-    content.filters.each do |filter|
+    content.enabled_filters.each do |filter|
       if filter.match?(mail)
         return import(filter, mail)
       end
