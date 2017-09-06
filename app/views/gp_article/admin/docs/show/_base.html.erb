@@ -115,6 +115,7 @@
     <td><%= @item.raw_tags %></td>
   </tr>
   <%- end -%>
+  <%- if @content.related_doc_enabled? -%>
   <tr>
     <th><%= @item.locale :in_rel_doc_ids %></th>
     <td>
@@ -126,6 +127,7 @@
       </ul>
     </td>
   </tr>
+  <%- end -%>
   <%- if @content.qrcode_related? -%>
   <tr>
     <th><%= @item.locale :qrcode_state %></th>

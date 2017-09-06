@@ -365,4 +365,8 @@ class GpArticle::Content::Doc < Cms::Content
   def word_dictionary
     setting_value(:word_dictionary)
   end
+
+  def related_doc_enabled?
+    setting_value(:related_doc) == 'enabled'
+  end
 end

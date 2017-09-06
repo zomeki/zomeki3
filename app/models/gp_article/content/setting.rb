@@ -61,6 +61,11 @@ class GpArticle::Content::Setting < Cms::ContentSetting
     default_extra_values: {
       lat_lng: ''
     }
+  set_config :related_doc, menu: :form,
+    name: '関連記事',
+    form_type: :radio_buttons,
+    options: [['使用する', 'enabled'], ['使用しない', 'disabled']],
+    default_value: 'enabled'
 
   # menu: :index
   set_config :pagination_label, menu: :index,

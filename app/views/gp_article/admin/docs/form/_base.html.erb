@@ -123,6 +123,7 @@
     <td><%= f.text_field :raw_tags, style: 'width: 700px;' %></td>
   </tr>
   <%- end -%>
+  <%- if @content.related_doc_enabled? -%>
   <tr>
     <th><%= f.label :in_rel_doc_ids %></th>
     <td>
@@ -164,22 +165,12 @@
        </table>
     </td>
   </tr>
+  <%- end -%>
   <%- if @content.qrcode_related? -%>
   <tr>
     <th><%= f.label :qrcode_state %></th>
     <td><%= f.radio_buttons :qrcode_state, @item.class::QRCODE_OPTIONS %></td>
   </tr>
-  <%- end -%>
-</table>
-
-<table id="rel_docs_template" style="display: none;">
-  <%= f.fields_for :related_docs, @item.related_docs.klass.new, child_index: '__INDEX__' do |f2| -%>
-    <%= render 'gp_article/admin/docs/form/rel_doc', f: f2, disabled: true,
-                                                     doc_link: '',
-                                                     doc_user_name: '',
-                                                     doc_group_name: '',
-                                                     doc_updated_at: '',
-                                                     doc_status: '' %>
   <%- end -%>
 </table>
 
@@ -207,6 +198,18 @@ $(document).ready(function() {
 });
 </script>
 <%- end -%>
+
+<%- if @content.related_doc_enabled? -%>
+<table id="rel_docs_template" style="display: none;">
+  <%= f.fields_for :related_docs, @item.related_docs.klass.new, child_index: '__INDEX__' do |f2| -%>
+    <%= render 'gp_article/admin/docs/form/rel_doc', f: f2, disabled: true,
+                                                     doc_link: '',
+                                                     doc_user_name: '',
+                                                     doc_group_name: '',
+                                                     doc_updated_at: '',
+                                                     doc_status: '' %>
+  <%- end -%>
+</table>
 
 <script type="text/javascript">
 $(document).ready(function() {
@@ -302,3 +305,4 @@ $(document).ready(function() {
   });
 });
 </script>
+<%- end -%>
