@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170731080652) do
+ActiveRecord::Schema.define(version: 20170908053837) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -738,9 +738,11 @@ ActiveRecord::Schema.define(version: 20170731080652) do
   end
 
   create_table "gnav_category_sets", force: :cascade do |t|
-    t.integer "menu_item_id"
-    t.integer "category_id"
-    t.string  "layer"
+    t.integer  "menu_item_id"
+    t.integer  "category_id"
+    t.string   "layer"
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.index ["category_id"], name: "index_gnav_category_sets_on_category_id", using: :btree
     t.index ["menu_item_id"], name: "index_gnav_category_sets_on_menu_item_id", using: :btree
   end
@@ -836,8 +838,10 @@ ActiveRecord::Schema.define(version: 20170731080652) do
   end
 
   create_table "gp_article_docs_tag_tags", force: :cascade do |t|
-    t.integer "doc_id"
-    t.integer "tag_id"
+    t.integer  "doc_id"
+    t.integer  "tag_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "gp_article_holds", force: :cascade do |t|
@@ -1415,11 +1419,13 @@ ActiveRecord::Schema.define(version: 20170731080652) do
   end
 
   create_table "sys_object_relations", force: :cascade do |t|
-    t.integer "source_id"
-    t.string  "source_type"
-    t.integer "related_id"
-    t.string  "related_type"
-    t.string  "relation_type"
+    t.integer  "source_id"
+    t.string   "source_type"
+    t.integer  "related_id"
+    t.string   "related_type"
+    t.string   "relation_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.index ["related_type", "related_id"], name: "index_sys_object_relations_on_related_type_and_related_id", using: :btree
     t.index ["source_type", "source_id"], name: "index_sys_object_relations_on_source_type_and_source_id", using: :btree
   end
@@ -1662,8 +1668,10 @@ ActiveRecord::Schema.define(version: 20170731080652) do
   end
 
   create_table "sys_users_roles", force: :cascade do |t|
-    t.integer "user_id"
-    t.integer "role_id"
+    t.integer  "user_id"
+    t.integer  "role_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.index ["user_id", "role_id"], name: "index_sys_users_roles_on_user_id_and_role_id", using: :btree
   end
 
