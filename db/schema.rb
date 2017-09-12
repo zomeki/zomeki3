@@ -43,7 +43,7 @@ ActiveRecord::Schema.define(version: 20170908053837) do
     t.integer  "thumb_height"
     t.integer  "thumb_size"
     t.text     "alt_text"
-    t.index ["token"], name: "index_ad_banner_banners_on_token", unique: true, using: :btree
+    t.index ["token"], name: "index_ad_banner_banners_on_token", using: :btree
   end
 
   create_table "ad_banner_clicks", force: :cascade do |t|
