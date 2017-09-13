@@ -24,11 +24,12 @@ class AdBanner::Banner < ApplicationRecord
   has_many :clicks, :foreign_key => :banner_id, :class_name => 'AdBanner::Click', :dependent => :destroy
   has_many :publishers, class_name: 'Sys::Publisher', dependent: :destroy, as: :publishable
 
-  validates :advertiser_name, :presence => true
-  validates :url, :presence => true
+  validates :advertiser_name, presence: true
+  validates :url, presence: true
+  validates :token, uniqueness: { scope: :content_id } 
 
   after_initialize :set_defaults
-  before_create :set_token
+  before_validation :set_token
 
   after_save     Cms::Publisher::ContentCallbacks.new(belonged: true), if: :changed?
   before_destroy Cms::Publisher::ContentCallbacks.new(belonged: true)
@@ -88,7 +89,7 @@ class AdBanner::Banner < ApplicationRecord
   end
 
   def set_token
-    self.token = Util::String::Token.generate_unique_token(self.class, :token)
+    self.token ||= Util::String::Token.generate_unique_token(self.class, :token)
   end
 
   # Override Sys::Model::Base::File#duplicated?
