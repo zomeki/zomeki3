@@ -6,6 +6,7 @@ class Cms::Admin::Tool::ConvertFilesController < Cms::Controller::Admin::Base
   def pre_dispatch
     return error_auth unless Core.user.has_auth?(:manager)
 
+    FileUtils.mkdir(::Tool::Convert::SITE_BASE_DIR) unless ::File.exist?(::Tool::Convert::SITE_BASE_DIR)
     @path = ::File.join(::Tool::Convert::SITE_BASE_DIR, params[:path].to_s).to_s
     @item = Sys::Storage::Entry.from_path(@path)
   end
