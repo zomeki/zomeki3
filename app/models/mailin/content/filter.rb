@@ -4,7 +4,7 @@ class Mailin::Content::Filter < Cms::Content
   has_many :filters, foreign_key: :content_id, class_name: 'Mailin::Filter', dependent: :destroy
 
   def enabled_filters
-    filters.where(state: 'enabled')
+    filters.where(state: 'enabled').order(:sort_no, :id)
   end
 
   def gp_article_contents

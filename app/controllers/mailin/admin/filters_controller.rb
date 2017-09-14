@@ -9,7 +9,8 @@ class Mailin::Admin::FiltersController < Cms::Controller::Admin::Base
   end
 
   def index
-    @items = @content.filters.order(:id).paginate(page: params[:page], per_page: 30)
+    @items = @content.filters.order(:sort_no, :id)
+                             .paginate(page: params[:page], per_page: 30)
     _index @items
   end
 
