@@ -829,6 +829,7 @@ ActiveRecord::Schema.define(version: 20170908053837) do
     t.integer  "serial_no"
     t.string   "lang"
     t.text     "event_note"
+    t.text     "remark"
     t.index ["concept_id"], name: "index_gp_article_docs_on_concept_id", using: :btree
     t.index ["content_id"], name: "index_gp_article_docs_on_content_id", using: :btree
     t.index ["event_started_on", "event_ended_on"], name: "index_gp_article_docs_on_event_started_on_and_event_ended_on", using: :btree
@@ -1026,6 +1027,21 @@ ActiveRecord::Schema.define(version: 20170908053837) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.index ["content_id"], name: "index_gp_template_templates_on_content_id", using: :btree
+  end
+
+  create_table "mailin_filters", force: :cascade do |t|
+    t.integer  "content_id"
+    t.string   "state"
+    t.string   "to"
+    t.string   "subject"
+    t.integer  "dest_content_id"
+    t.integer  "sort_no"
+    t.datetime "filtered_at"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.integer  "default_user_id"
+    t.index ["content_id"], name: "index_mailin_filters_on_content_id", using: :btree
+    t.index ["dest_content_id"], name: "index_mailin_filters_on_dest_content_id", using: :btree
   end
 
   create_table "map_marker_icons", force: :cascade do |t|

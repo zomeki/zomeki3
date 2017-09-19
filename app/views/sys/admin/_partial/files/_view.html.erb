@@ -1,7 +1,4 @@
-<%
-return if item.new_record?
-inline_id = "#{item.class}-#{item.id}"
-%>
+<%- return if item.new_record? -%>
 
 <p class="form">添付ファイル</p>
 
@@ -12,5 +9,5 @@ inline_id = "#{item.class}-#{item.id}"
 </table>
 
 <div id="inlineFiles" style="display: none;">
-<iframe src="<%= view_sys_inline_files_path(inline_id, content: content) %>" style="width: 100%;" frameborder="0"></iframe>
+<iframe src="<%= view_sys_inline_files_path(parent: "#{item.class}-#{item.id}", content: content) %>" style="width: 100%;" frameborder="0"></iframe>
 </div>

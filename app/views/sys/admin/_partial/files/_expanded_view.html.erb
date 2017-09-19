@@ -1,0 +1,5 @@
+<%- return if item.files.blank? -%>
+
+<p class="form">添付ファイル</p>
+
+<%= render 'sys/admin/inline/files/view', parent: "#{item.class}-#{item.id}", items: item.files, content: content %>

@@ -7,6 +7,7 @@ class Sys::Lib::File::NoUploadedFile
     when Hash
       options = path
       @data = options[:data]
+      @mime_type = options[:mime_type]
       check_image = true
     when String
       @data = ::File.read(path)

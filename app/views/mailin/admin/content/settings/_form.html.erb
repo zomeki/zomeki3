@@ -1,0 +1,29 @@
+<%= render 'shared/admin/content/settings/form', f: f, item: @item -%>
+
+<%- if @item.name == 'mail' -%>
+<table class="show">
+  <tr>
+    <th>ホスト名</th>
+    <td><%= text_field_tag 'item[extra_values][host]', @item.extra_values[:host], style: 'width: 400px;' %></td>
+  </tr>
+  <tr>
+    <th>ポート番号</th>
+    <td>
+      <%= text_field_tag 'item[extra_values][port]', @item.extra_values[:port], class: 'number' %>
+      <%= select_tag 'item[extra_values][protocol]', options_for_select(@item.extra_options[:protocol_options], @item.extra_values[:protocol]) %>
+    </td>
+  </tr>
+  <tr>
+    <th>ユーザー名</th>
+    <td><%= text_field_tag 'item[extra_values][username]', @item.extra_values[:username], style: 'width: 400px;' %></td>
+  </tr>
+  <tr>
+    <th>パスワード</th>
+    <td><%= text_field_tag 'item[extra_values][password]', @item.extra_values[:password], style: 'width: 400px;' %></td>
+  </tr>
+  <tr>
+    <th>新着メッセージ確認</th>
+    <td><%= select_tag 'item[extra_values][pop_cycle]', options_for_select(@item.extra_options[:pop_cycle_options], @item.extra_values[:pop_cycle]) %> 毎に確認</td>
+  </tr>
+</table>
+<%- end -%>

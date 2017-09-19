@@ -58,5 +58,14 @@
   </tr>
 </table>
 
+<p class="form">その他</p>
+
+<table class="show">
+  <tr>
+    <th><%= @item.locale :remark %></th>
+    <td><%=hbr @item.remark %></td>
+  </tr>
+</table>
+
 <%= editable_group_view @item %>
 <%= creator_view @item %>

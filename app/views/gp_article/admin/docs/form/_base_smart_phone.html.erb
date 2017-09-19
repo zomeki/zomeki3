@@ -122,6 +122,7 @@
 
 <hr />
 
+<%- if @content.related_doc_enabled? -%>
 <div id="rel_docs">
   <%- @item.related_docs.each_with_index do |rel_doc, i|
     next unless doc = rel_doc.target_doc -%>
@@ -135,17 +136,7 @@
     <%- end -%>
   <%- end -%>
 </div>
-
-<div id="rel_docs_template" style="display: none;">
-  <%= f.fields_for :related_docs, @item.related_docs.klass.new, child_index: '__INDEX__' do |f2| -%>
-    <%= render 'gp_article/admin/docs/form/rel_doc', f: f2, disabled: true,
-                                                     doc_link: '',
-                                                     doc_user_name: '',
-                                                     doc_group_name: '',
-                                                     doc_updated_at: '',
-                                                     doc_status: '' %>
-  <%- end -%>
-</div>
+<%- end -%>
 
 <%- if @content.template_available? -%>
 <script type="text/javascript">
@@ -172,6 +163,17 @@ $(document).ready(function() {
 <%- end -%>
 </script>
 
+<%- if @content.related_doc_enabled? -%>
+<div id="rel_docs_template" style="display: none;">
+  <%= f.fields_for :related_docs, @item.related_docs.klass.new, child_index: '__INDEX__' do |f2| -%>
+    <%= render 'gp_article/admin/docs/form/rel_doc', f: f2, disabled: true,
+                                                     doc_link: '',
+                                                     doc_user_name: '',
+                                                     doc_group_name: '',
+                                                     doc_updated_at: '',
+                                                     doc_status: '' %>
+  <%- end -%>
+</div>
 
 <script type="text/javascript">
 $(document).ready(function() {
@@ -267,3 +269,4 @@ $(document).ready(function() {
   });
 });
 </script>
+<%- end -%>

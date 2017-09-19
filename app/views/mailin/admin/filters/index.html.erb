@@ -1,0 +1,26 @@
+<table class="index">
+  <tr>
+    <th style="text-align: center; width: 60px;">詳細</th>
+    <th style="text-align: left; width: 250px;"><%= Mailin::Filter.human_attribute_name :to %></th>
+    <th style="text-align: left;"><%= Mailin::Filter.human_attribute_name :subject %></th>
+    <th style="text-align: left; width: 180px;"><%= Mailin::Filter.human_attribute_name :dest_content_id %></th>
+    <th style="text-align: center; width: 80px;"><%= Mailin::Filter.human_attribute_name :sort_no %></th>
+    <th style="text-align: center; width: 120px;"><%= Mailin::Filter.human_attribute_name :updated_at %></th>
+    <th style="text-align: center; width: 120px;"><%= Mailin::Filter.human_attribute_name :filtered_at %></th>
+    <th style="text-align: center; width: 80px;"><%= Mailin::Filter.human_attribute_name :state %></th>
+  </tr>
+  <%- @items.each do |item| -%>
+  <tr class="<%= cycle '', 'cycle' %>">
+    <td style="text-align: center;"><%= link_to :show, { action: :show, id: item.id } %></td>
+    <td style="text-align: left;"><%= item.to %></td>
+    <td style="text-align: left;"><%= item.subject %></td>
+    <td style="text-align: left;"><%= link_to item.dest_content.name, item.dest_content.admin_uri if item.dest_content %></td>
+    <td style="text-align: center;"><%= item.sort_no %></td>
+    <td style="text-align: center;"><%=l item.updated_at if item.updated_at %></td>
+    <td style="text-align: center;"><%=l item.filtered_at if item.filtered_at %></td>
+    <td style="text-align: center;"><%= item.status.name %></td>
+  </tr>
+  <%- end -%>
+</table>
+
+<%= paginate @items -%>
