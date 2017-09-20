@@ -94,6 +94,8 @@
 </table>
 <%- end -%>
 
+<%= render 'sys/admin/_partial/files/expanded_view', item: @item, content: @content %>
+
 <p class="form">記事設定</p>
 
 <table class="show">
@@ -113,6 +115,7 @@
     <td><%= @item.raw_tags %></td>
   </tr>
   <%- end -%>
+  <%- if @content.related_doc_enabled? -%>
   <tr>
     <th><%= @item.locale :in_rel_doc_ids %></th>
     <td>
@@ -124,6 +127,7 @@
       </ul>
     </td>
   </tr>
+  <%- end -%>
   <%- if @content.qrcode_related? -%>
   <tr>
     <th><%= @item.locale :qrcode_state %></th>

@@ -1,0 +1,8 @@
+<ul class="mainMenu">
+<%= render 'layouts/admin/cms/menu', current: :content %>
+</ul>
+
+<ul class="contentMenu">
+<%= content_tag('li') { link_to "#{Mailin::Filter.model_name.human}一覧", mailin_filters_path(content: @content), class: 'fixed' } -%>
+<%= content_tag('li') { link_to "#{Mailin::Filter.model_name.human}設定", mailin_content_settings_path, class: 'fixed' } if @content.editable? -%>
+</ul>

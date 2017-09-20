@@ -26,6 +26,11 @@ set :output, nil
 
 env :PATH, ENV['PATH']
 
+# メールを取り込みます。
+every '1-56/5 * * * *' do
+  rake "#{ZomekiCMS::NAME}:mailin:filters:exec"
+end
+
 # 音声ファイルを静的ファイルとして書き出します。
 every '6-51/15 * * * *' do
   rake "#{ZomekiCMS::NAME}:cms:talks:exec"

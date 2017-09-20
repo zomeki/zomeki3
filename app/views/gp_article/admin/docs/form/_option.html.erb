@@ -61,5 +61,14 @@
   </tr>
 </table>
 
+<p class="form">その他</p>
+
+<table class="show">
+  <tr>
+    <th><%= f.label :remark %></th>
+    <td><%= f.text_area :remark, size: '100x3' %></td>
+  </tr>
+</table>
+
 <%= editable_group_form f %>
 <%= creator_form f %>
