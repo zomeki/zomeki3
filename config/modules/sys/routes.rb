@@ -89,7 +89,11 @@ ZomekiCMS::Application.routes.draw do
     resources :process_logs,
       :controller => "admin/process_logs"
     resources :plugins,
-      :controller => "admin/plugins"
+      :controller => "admin/plugins" do
+        collection do
+          get :restart
+        end
+      end
   end
 
   get "#{ZomekiCMS::ADMIN_URL_PREFIX}/#{mod}/:parent/inline_files/files/:name.:format" => 'sys/admin/inline/files#download'
