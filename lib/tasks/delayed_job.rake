@@ -5,10 +5,10 @@ namespace :delayed_job do
 
   def delayed_job_queue
     queues = {
-      sys_tasks: task_workers,
-      cms_rebuild: rebuild_workers,
-      cms_publisher: publisher_workers,
-      cms_file_transfer: file_transfer_workers
+      'sys_tasks' => task_worker_num,
+      'default,cms_rebuild' => rebuild_worker_num,
+      'cms_publisher' => publisher_worker_num,
+      'cms_file_transfer' => file_transfer_worker_num
     }
     queues.select { |queue, num| num > 0 }
   end
@@ -28,19 +28,19 @@ namespace :delayed_job do
     end
   end
 
-  def task_workers
+  def task_worker_num
     (ENV['TASK_WORKERS'] || 1).to_i
   end
 
-  def rebuild_workers
+  def rebuild_worker_num
     (ENV['REBUILD_WORKERS'] || 1).to_i
   end
 
-  def publisher_workers
+  def publisher_worker_num
     (ENV['PUBLISHER_WORKERS'] || 1).to_i
   end
 
-  def file_transfer_workers
+  def file_transfer_worker_num
     default = Zomeki.config.application['cms.file_transfer'] ? 1 : 0
     (ENV['FILE_TRANSFER_WORKERS'] || default).to_i
   end
