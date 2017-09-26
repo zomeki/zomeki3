@@ -1,14 +1,14 @@
 rails_root = File.expand_path('../../../', __FILE__)
 
-rails_env = ENV['RAILS_ENV'] || "production"
+rails_env = ENV['RAILS_ENV'] || "development"
 
 ENV['BUNDLE_GEMFILE'] = rails_root + "/Gemfile"
 
 working_directory rails_root
 
-timeout 300
+timeout Integer(ENV["UNICORN_TIMEOUT"] || 300)
 
-preload_app false
+preload_app String(ENV["UNICORN_PRELOAD_APP"] || false) == 'true'
 
 worker_processes Integer(ENV["WEB_CONCURRENCY"] || 2)
 
@@ -22,7 +22,7 @@ stdout_path "#{rails_root}/log/#{rails_env}_unicorn_stdout.log"
 
 before_fork do |server, worker|
   defined?(ActiveRecord::Base) and
-      ActiveRecord::Base.connection.disconnect!
+    ActiveRecord::Base.connection.disconnect!
 
   old_pid = "#{server.config[:pid]}.oldbin"
   if old_pid != server.pid
@@ -35,5 +35,6 @@ before_fork do |server, worker|
 end
 
 after_fork do |server, worker|
-  defined?(ActiveRecord::Base) and ActiveRecord::Base.establish_connection
+  defined?(ActiveRecord::Base) and
+    ActiveRecord::Base.establish_connection
 end
