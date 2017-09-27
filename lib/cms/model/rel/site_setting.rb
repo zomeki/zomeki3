@@ -67,6 +67,10 @@ module Cms::Model::Rel::SiteSetting
     setting_value(:map_coordinate)
   end
 
+  def zip_download_max_size
+    setting_value(:zip_download_max_size).to_i * (1024**2)
+  end
+
   def get_upload_max_size(ext)
     ext.gsub!(/^\./, '')
     list = ext_upload_max_size_list
