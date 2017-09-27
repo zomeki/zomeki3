@@ -4,4 +4,9 @@
 <%= action_menu :new %>
 <%= action_menu :edit %>
 <%= action_menu :destroy %>
+<%- case params[:action] -%>
+<%- when 'index' -%>
+  <span class="separator"></span>
+  <%= link_to 'アプリ再起動', { action: :restart }, data: { confirm: 'アプリケーションの再起動には30秒程度の時間がかかります。再起動してよろしいですか？' } %>
+<%- end -%>
 </div>
