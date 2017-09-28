@@ -47,9 +47,10 @@ class Sys::Admin::StorageFilesController < Cms::Controller::Admin::Base
         redirect_to url_for(path: @item.path_from_site_root, do: :show),
                     notice: "ファイル合計容量（#{helpers.number_to_human_size(du_size)}）が制限値（#{helpers.number_to_human_size(max_size)}）を超えています。"
       else
-        send_data(@item.compress, filename: "#{@item.name}.zip",
-                                  content_type: Rack::Mime.mime_type('.zip'),
-                                  disposition: :attachment)
+        tmppath = @item.compress_to_tmpfile
+        send_file(tmppath, filename: "#{@item.name}.zip",
+                           content_type: Rack::Mime.mime_type('.zip'),
+                           disposition: :attachment)
       end
     else
       send_data(@item.body, content_type: @item.mime_type,

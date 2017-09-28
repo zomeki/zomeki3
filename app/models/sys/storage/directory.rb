@@ -39,12 +39,10 @@ class Sys::Storage::Directory < Sys::Storage::Entry
     size.split(/\s/).first.to_i if size
   end
 
-  def compress
+  def compress_to_tmpfile
     tmpname = '/tmp/' + Dir::Tmpname.make_tmpname([name, '.zip'], nil)
     `#{Shellwords.join(['cd', ::File.dirname(path)])} && #{Shellwords.join(['zip', '-r', tmpname, name])}`
-    data = ::File.binread(tmpname)
-    FileUtils.rm(tmpname) if ::File.exist?(tmpname)
-    data
+    tmpname
   end
 
   private
