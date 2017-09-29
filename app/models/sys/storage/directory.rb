@@ -34,6 +34,17 @@ class Sys::Storage::Directory < Sys::Storage::Entry
     end
   end
 
+  def du_size
+    size = `#{Shellwords.join(['du', '-sb', ::File.dirname(path)])}`
+    size.split(/\s/).first.to_i if size
+  end
+
+  def compress_to_tmpfile
+    tmpname = '/tmp/' + Dir::Tmpname.make_tmpname([name, '.zip'], nil)
+    `#{Shellwords.join(['cd', ::File.dirname(path)])} && #{Shellwords.join(['zip', '-r', tmpname, name])}`
+    tmpname
+  end
+
   private
 
   def set_defaults

@@ -3,6 +3,7 @@ class Sys::Plugin < ApplicationRecord
   include Sys::Model::Auth::Manager
 
   GITHUB_USER = 'zomeki'
+  GITHUB_TOPIC = 'zomeki3-plugin'
   STATE_OPTIONS = [['有効','enabled'], ['無効','disabled']]
 
   validates :name, presence: true, uniqueness: true,
@@ -46,20 +47,25 @@ class Sys::Plugin < ApplicationRecord
 
   class << self
     def search_repos
-      #repos = Octokit.repositories(GITHUB_USER)
-      #repos = repos.map { |repo| repo.to_h.slice(:full_name, :description) }
-
-      result = Octokit.search_repositories('topic:zomeki-plugin')
+      result = Octokit.search_repositories("user:#{GITHUB_USER} topic:#{GITHUB_TOPIC}")
       repos = result[:items].map { |item| item.to_h.slice(:full_name, :description) }
       repos.uniq
     end
 
-     def version_options(name)
-      return [] if name.blank?
-
+    def version_options(name)
       tags = Octokit.tags(name)
       branches = Octokit.branches(name)
       tags.map { |tag| "tag/#{tag[:name]}" } + branches.map { |branch| "branch/#{branch[:name]}" }
+    rescue => e
+      error_log e
+      []
+    end
+
+    def title_options(name)
+      Octokit.repository(name)[:description]
+    rescue => e
+      error_log e
+      ''
     end
   end
 end

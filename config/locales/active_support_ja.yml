@@ -104,11 +104,11 @@ ja:
       storage_units:
         format: "%n%u"
         units:
-          byte: バイト
-          gb: ギガバイト
-          kb: キロバイト
-          mb: メガバイト
-          tb: テラバイト
+          byte: Byte
+          gb: GB
+          kb: KB
+          mb: MB
+          tb: TB
     percentage:
       format:
         delimiter: ''

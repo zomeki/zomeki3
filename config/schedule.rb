@@ -46,11 +46,6 @@ every '12-57/15 * * * *' do
   rake "#{ZomekiCMS::NAME}:ad_banner:clicks:pull"
 end
 
-# サイトの設定を定期的に更新します。
-every '25,55 * * * *' do
-  rake "#{ZomekiCMS::NAME}:cms:sites:update_server_configs"
-end
-
 # delayed_jobプロセスを監視します。
 every '26,56 * * * *' do
   rake 'delayed_job:monitor'
