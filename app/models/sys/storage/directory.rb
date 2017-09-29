@@ -35,7 +35,7 @@ class Sys::Storage::Directory < Sys::Storage::Entry
   end
 
   def du_size
-    size = `#{Shellwords.join(['du', '-sb', ::File.dirname(path)])}`
+    size = `#{Shellwords.join(['du', '-sb', path])}`
     size.split(/\s/).first.to_i if size
   end
 
