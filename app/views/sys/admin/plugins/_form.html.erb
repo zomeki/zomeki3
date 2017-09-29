@@ -3,7 +3,12 @@
 <table class="show">
   <tr>
     <th><%= f.label :name %></th>
-    <td><%= f.select :name, Sys::Plugin.search_repos.map { |repo| [repo[:full_name], title: repo[:description]] }, include_blank: true %></td>
+    <td>
+      <%= f.text_field :name, class: 'name' %>
+      <span style="margin: 0 10px 0 20px;">&lt;&lt;</span>
+      <span>一覧から選択：</span>
+      <%= select_tag :plugins, options_for_select(Sys::Plugin.search_repos.map { |repo| [repo[:full_name], title: repo[:description]] }, @item.name), include_blank: true %>
+    </td>
   </tr>
   <tr>
     <th><%= f.label :title %></th>
@@ -11,7 +16,12 @@
   </tr>
   <tr>
     <th><%= f.label :version %></th>
-    <td><%= f.select :version, @item.class.version_options(@item.name) %></td>
+    <td>
+      <%= f.text_field :version, class: 'name' %>
+      <span style="margin: 0 10px 0 20px;">&lt;&lt;</span>
+      <span>一覧から選択：</span>
+      <%= select_tag :versions, options_for_select(@item.class.version_options(@item.name), @item.version), include_blank: true %>
+    </td>
   </tr>
   <tr>
     <th><%= f.label :state %></th>
@@ -25,12 +35,23 @@
 
 <script type="text/javascript">
 $(function() {
+  $('#plugins').on('change', function () {
+    var selected = $(this).find('option:selected')
+    $('#item_name').val(selected.val());
+    $('#item_title').val(selected.attr('title'));
+  });
   $('#item_name').on('change', function () {
-    $('#item_title').val($(this).find('option:selected').attr('title'));
-    $('#item_version').html('<option>検索中...</option>');
-    $.get('<%= url_for(action: :index, version_options: true) %>', { name: $('#item_name').val() }, function(data) {
-      $('#item_version').html(data);
+    $('#versions').html('<option>検索中...</option>');
+    $.get('<%= url_for(action: :index, version_options: true) %>', { name: $(this).val() }, function(data) {
+      $('#versions').html(data);
     });
+    $('#item_title').val('検索中...');
+    $.get('<%= url_for(action: :index, title_options: true) %>', { name: $(this).val() }, function(data) {
+      $('#item_title').val(data);
+    });
+  });
+  $('#versions').on('change', function () {
+    $('#item_version').val($(this).find('option:selected').val());
   });
 });
 </script>
