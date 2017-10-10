@@ -1,15 +1,5 @@
 namespace ZomekiCMS::NAME do
   namespace :cms do
-    desc 'Clean static files'
-    task :clean_statics => :environment do
-      Cms::Lib::FileCleaner.clean_files
-    end
-
-    desc 'Clean empty directories'
-    task :clean_directories => :environment do
-      Cms::Lib::FileCleaner.clean_directories
-    end
-
     namespace :link_checks do
       desc 'Check links'
       task :exec => :environment do
@@ -31,8 +21,25 @@ namespace ZomekiCMS::NAME do
       desc 'Publish nodes'
       task :publish => :environment do
         next if Zomeki.config.application['cms.file_publisher'] == false
+        Rake::Task["#{ZomekiCMS::NAME}:cms:nodes:publish_daily"].invoke
+        Rake::Task["#{ZomekiCMS::NAME}:cms:nodes:publish_monthly"].invoke
         Cms::Site.order(:id).pluck(:id).each do |site_id|
           Script.run('cms/nodes/publish', site_id: site_id, lock_by: :site)
+        end
+      end
+
+      task :publish_daily => :environment do
+        Cms::Site.order(:id).pluck(:id).each do |site_id|
+          node_ids = Cms::Node.public_state.where(site_id: site_id, model: 'GpCalendar::TodaysEvent').pluck(:id)
+          Script.run("cms/nodes/publish", site_id: site_id, target_node_id: node_ids, lock_by: :site) if node_ids.present?
+        end
+      end
+
+      task :publish_monthly => :environment do
+        next if Date.today.day != 1
+        Cms::Site.order(:id).pluck(:id).each do |site_id|
+          node_ids = Cms::Node.public_state.where(site_id: site_id, model: 'BizCalendar::Place').pluck(:id)
+          Script.run("cms/nodes/publish", site_id: site_id, target_node_id: node_ids, lock_by: :site) if node_ids.present?
         end
       end
     end

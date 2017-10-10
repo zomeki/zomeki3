@@ -36,14 +36,9 @@ every '6-51/15 * * * *' do
   rake "#{ZomekiCMS::NAME}:cms:talks:exec"
 end
 
-# アンケートの回答データを取り込みます。
+# WEBサーバーからアンケート等のデータを取り込みます。
 every '9-54/15 * * * *' do
-  rake "#{ZomekiCMS::NAME}:survey:answers:pull"
-end
-
-# 広告バナーのクリック数を取り込みます。
-every '12-57/15 * * * *' do
-  rake "#{ZomekiCMS::NAME}:ad_banner:clicks:pull"
+  rake "#{ZomekiCMS::NAME}:web:data:pull"
 end
 
 # delayed_jobプロセスを監視します。
@@ -64,16 +59,6 @@ end
 # 不要データを削除します。
 every :day, at: '0:00 am' do
   rake "#{ZomekiCMS::NAME}:sys:cleanup"
-end
-
-# 今日のイベントページを静的ファイルとして書き出します。
-every :day, at: '0:10 am' do
-  rake "#{ZomekiCMS::NAME}:gp_calendar:publish_todays_events"
-end
-
-# 今月の業務カレンダーを静的ファイルとして書き出します。
-every :month, at: '0:15 am' do
-  rake "#{ZomekiCMS::NAME}:biz_calendar:publish_this_month"
 end
 
 # アクセスランキングデータを取り込みます。
