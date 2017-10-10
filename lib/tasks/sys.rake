@@ -27,6 +27,17 @@ namespace ZomekiCMS::NAME do
           Script.run('sys/tasks/exec', site_id: site_id, lock_by: :site)
         end
       end
+
+      desc 'Rebuild jobs for task (SITE_ID=int)'
+      task :rebuild_jobs => :environment do
+        tasks = Sys::Task.where(state: 'queued').order(process_at: :asc)
+        tasks = tasks.in_site(ENV['SITE_ID']) if ENV['SITE_ID']
+        tasks.preload(:processable).each do |task|
+          if task.processable && task.processable.state.in?(%w(recognized approved prepared public))
+            task.enqueue_job
+          end
+        end
+      end
     end
 
     namespace :publishers do
