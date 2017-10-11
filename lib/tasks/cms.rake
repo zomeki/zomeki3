@@ -60,8 +60,13 @@ namespace ZomekiCMS::NAME do
     namespace :sites do
       desc 'Update server configs'
       task :update_server_configs => :environment do
-        Rails::Generators.invoke('cms:nginx:site_config', ['--force'])
-        Rails::Generators.invoke('cms:apache:site_config', ['--force'])
+        out1 = `bundle exec rails g cms:nginx:site_config --force`
+        puts out1
+        out2 = `bundle exec rails g cms:apache:site_config --force`
+        puts out2
+        if (out1 + out2) =~ /^\s*(force|create|remove)/
+          Cms::Site.reload_servers
+        end
       end
     end
 

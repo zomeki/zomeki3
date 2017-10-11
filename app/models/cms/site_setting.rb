@@ -22,7 +22,7 @@ class Cms::SiteSetting < ApplicationRecord
              default_value: '',
              index: true
   set_config :file_upload_max_size,
-             name:  '添付ファイル最大サイズ',
+             name: '添付ファイル最大サイズ',
              default_value: 5,
              index: true
   set_config :extension_upload_max_size,
@@ -61,6 +61,10 @@ class Cms::SiteSetting < ApplicationRecord
   set_config :map_coordinate,
              name: '地図/デフォルト座標',
              default_value: nil,
+             index: true
+  set_config :zip_download_max_size,
+             name: 'ZIPダウンロード最大サイズ',
+             default_value: 100,
              index: true
 
   validates :site_id, presence: true

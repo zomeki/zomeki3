@@ -110,3 +110,12 @@
   </tr>
 </table>
 <%- end -%>
+
+<%- if @item.name == 'zip_download_max_size' -%>
+<table class="show">
+  <tr>
+    <th><%= @site.locale :in_setting_site_zip_download_max_size %></th>
+    <td><%= f.text_field :in_setting_site_zip_download_max_size %> MB</td>
+  </tr>
+</table>
+<%- end -%>

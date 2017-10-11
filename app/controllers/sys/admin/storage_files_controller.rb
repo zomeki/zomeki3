@@ -41,7 +41,21 @@ class Sys::Admin::StorageFilesController < Cms::Controller::Admin::Base
   end
 
   def download
-    send_data(@item.body, content_type: @item.mime_type, disposition: :attachment)
+    if @item.directory_entry?
+      if (du_size = @item.du_size.to_i) > (max_size = Core.site.zip_download_max_size)
+        helpers = ApplicationController.helpers
+        redirect_to url_for(path: @item.path_from_site_root, do: :show),
+                    notice: "ファイル合計容量（#{helpers.number_to_human_size(du_size)}）が制限値（#{helpers.number_to_human_size(max_size)}）を超えています。"
+      else
+        tmppath = @item.compress_to_tmpfile
+        send_file(tmppath, filename: "#{@item.name}.zip",
+                           content_type: Rack::Mime.mime_type('.zip'),
+                           disposition: :attachment)
+      end
+    else
+      send_data(@item.body, content_type: @item.mime_type,
+                            disposition: :attachment)
+    end
   end
 
   def create

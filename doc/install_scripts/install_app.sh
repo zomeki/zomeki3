@@ -19,7 +19,7 @@ centos() {
 
   rpm -ivh https://kojipkgs.fedoraproject.org/packages/http-parser/2.7.1/3.el7/x86_64/http-parser-2.7.1-3.el7.x86_64.rpm
   curl --silent --location https://rpm.nodesource.com/setup_4.x | bash -
-  yum -y install libxml2-devel libxslt-devel openldap-devel nodejs patch
+  yum -y install libxml2-devel libxslt-devel openldap-devel nodejs patch zip
 
   rpm -ivh http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
   yum -y install --enablerepo=remi ImageMagick6-devel

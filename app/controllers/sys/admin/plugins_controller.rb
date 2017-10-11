@@ -7,6 +7,7 @@ class Sys::Admin::PluginsController < Cms::Controller::Admin::Base
 
   def index
     return version_options if params[:version_options]
+    return title_options if params[:title_options]
 
     @items = Sys::Plugin.search_with_params(params).order(:name)
                         .paginate(page: params[:page], per_page: params[:limit])
@@ -58,7 +59,12 @@ class Sys::Admin::PluginsController < Cms::Controller::Admin::Base
 
   def version_options
     opts = Sys::Plugin.version_options(params[:name])
-    render plain: view_context.options_for_select(opts), layout: false
+    render plain: view_context.options_for_select([['','']] + opts), layout: false
+  end
+
+  def title_options
+    title = Sys::Plugin.title_options(params[:name])
+    render plain: title, layout: false
   end
 
   def plugin_params
