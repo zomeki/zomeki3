@@ -10,10 +10,10 @@ module Cms::Model::Site::Scope
         define_polymorphic_site_scope(ref)
       else
         case ref.class.to_s
+        when 'ActiveRecord::Reflection::HasManyReflection', 'ActiveRecord::Reflection::HasOneReflection'
+          define_has_many_or_has_one_site_scope(ref)
         when 'ActiveRecord::Reflection::BelongsToReflection'
           define_belongs_to_site_scope(ref)
-        when 'ActiveRecord::Reflection::HasManyReflection'
-          define_has_many_site_scope(ref)
         else
           raise StandardError.new("unexpected reflection #{ref} from #{caller[0]}")
         end
@@ -22,7 +22,7 @@ module Cms::Model::Site::Scope
 
     private
 
-    def define_has_many_site_scope(ref)
+    def define_has_many_or_has_one_site_scope(ref)
       class_eval do
         scope :in_site, ->(site) { where(primary_key => ref.klass.select(ref.foreign_key).in_site(site)) }
       end
