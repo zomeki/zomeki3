@@ -7,11 +7,18 @@
   </tr>
   <tr>
     <th><%= f.label :to %></th>
-    <td><%= f.text_field :to, class: 'title' %></td>
+    <td>
+      <%= f.text_field :to, class: 'title' %>
+      <%= f.check_box :include_cc %><%= f.label :include_cc, 'CCを含む' %>
+    </td>
   </tr>
   <tr>
     <th><%= f.label :subject %></th>
     <td><%= f.text_field :subject, class: 'title' %></td>
+  </tr>
+  <tr>
+    <th><%= f.label :logic %></th>
+    <td><%= f.radio_buttons :logic, @item.class::LOGIC_OPTIONS %></td>
   </tr>
   <tr>
     <th><%= f.label :dest_content_id %> <span class="note">※</span></th>
