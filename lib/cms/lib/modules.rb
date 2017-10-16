@@ -45,7 +45,16 @@ module Cms::Lib::Modules
     end
     list
   end
-  
+
+  def self.available_contents
+    mods = Zomeki.config.application['cms.available_modules'].to_a
+    if mods.present?
+      contents.select { |arr| arr.last =~ /^#{mods.join('|')}/ }
+    else
+      contents
+    end
+  end
+
   def self.directories(model = nil)
     model = model.to_s.underscore.pluralize.split('/')[0] if model
     list = []
