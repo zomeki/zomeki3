@@ -3,7 +3,7 @@ class Sys::Task < ApplicationRecord
   include Cms::Model::Site
 
   belongs_to :processable, polymorphic: true
-  belongs_to :provider_job, class_name: '::Delayed::Job', dependent: :destroy
+  belongs_to :provider_job, class_name: 'Delayed::JobExtension', dependent: :destroy
 
   after_initialize :set_defaults
 
