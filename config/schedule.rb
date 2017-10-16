@@ -36,9 +36,9 @@ every '6-51/15 * * * *' do
   rake "#{ZomekiCMS::NAME}:cms:talks:exec"
 end
 
-# WEBサーバーからアンケート等のデータを取り込みます。
+# アンケート等のデータを取り込みます。
 every '9-54/15 * * * *' do
-  rake "#{ZomekiCMS::NAME}:web:data:pull"
+  rake "#{ZomekiCMS::NAME}:remote:data:pull"
 end
 
 # delayed_jobプロセスを監視します。

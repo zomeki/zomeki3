@@ -1,7 +1,7 @@
 namespace ZomekiCMS::NAME do
-  namespace :web do
+  namespace :remote do
     namespace :data do
-      desc 'Pull data from web database'
+      desc 'Pull data from remote database'
       task :pull => :environment do
         next if ApplicationRecordSlave.slave_configs.blank?
         Cms::Site.order(:id).pluck(:id).each do |site_id|
