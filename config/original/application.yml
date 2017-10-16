@@ -8,6 +8,9 @@ sys:
   # ファイルからのテキスト抽出
   file_text_extraction: false
 
+  # ツールメニュー表示
+  show_tool_menu: true
+
 cms:
   # 静的ファイルの書き出し
   file_publisher: true
@@ -41,6 +44,25 @@ cms:
 
   # 地図デフォルト座標
   default_map_coordinate: "35.702708,139.560831"
+
+  # 使用可能モジュール
+  available_modules:
+    - AdBanner
+    - Approval
+    - Feed
+    - Gnav
+    - GpArticle
+    - GpCalendar
+    - GpCategory
+    - GpTemplate
+    - Map
+    - Organization
+    - Rank
+    - Survey
+    - Tag
+    #- BizCalendar
+    #- Mailin
+    #- Reception
 
 gp_article:
   # 本文文字数制限

@@ -10,7 +10,7 @@
       <%- if @item.persisted? -%>
         <%= @item.model_name %>
       <%- else -%>
-        <%= f.select :model, Cms::Lib::Modules.contents, :include_blank => :true %>
+        <%= f.select :model, Cms::Lib::Modules.available_contents, :include_blank => :true %>
       <%- end -%>
     </td>
   </tr>
