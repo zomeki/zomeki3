@@ -1,15 +1,5 @@
 namespace ZomekiCMS::NAME do
   namespace :cms do
-    desc 'Clean static files'
-    task :clean_statics => :environment do
-      Cms::Lib::FileCleaner.clean_files
-    end
-
-    desc 'Clean empty directories'
-    task :clean_directories => :environment do
-      Cms::Lib::FileCleaner.clean_directories
-    end
-
     namespace :link_checks do
       desc 'Check links'
       task :exec => :environment do
@@ -31,8 +21,24 @@ namespace ZomekiCMS::NAME do
       desc 'Publish nodes'
       task :publish => :environment do
         next if Zomeki.config.application['cms.file_publisher'] == false
+        Rake::Task["#{ZomekiCMS::NAME}:cms:nodes:publish_daily"].invoke
+        Rake::Task["#{ZomekiCMS::NAME}:cms:nodes:publish_monthly"].invoke if Date.today.day == 1
         Cms::Site.order(:id).pluck(:id).each do |site_id|
           Script.run('cms/nodes/publish', site_id: site_id, lock_by: :site)
+        end
+      end
+
+      task :publish_daily => :environment do
+        Cms::Site.order(:id).pluck(:id).each do |site_id|
+          node_ids = Cms::Node.public_state.where(site_id: site_id, model: 'GpCalendar::TodaysEvent').pluck(:id)
+          Script.run("cms/nodes/publish", site_id: site_id, target_node_id: node_ids, lock_by: :site) if node_ids.present?
+        end
+      end
+
+      task :publish_monthly => :environment do
+        Cms::Site.order(:id).pluck(:id).each do |site_id|
+          node_ids = Cms::Node.public_state.where(site_id: site_id, model: 'BizCalendar::Place').pluck(:id)
+          Script.run("cms/nodes/publish", site_id: site_id, target_node_id: node_ids, lock_by: :site) if node_ids.present?
         end
       end
     end
@@ -71,53 +77,65 @@ namespace ZomekiCMS::NAME do
     end
 
     namespace :data_files do
-      desc 'Rebuild data files'
+      desc 'Rebuild data files (SITE_ID=int)'
       task :rebuild => :environment do
-        Cms::DataFile.where(state: 'public').find_each do |item|
-          item.upload_public_file
-        end
+        items = Cms::DataFile.where(state: 'public')
+        items = items.in_site(ENV['SITE_ID']) if ENV['SITE_ID']
+        items.find_each(&:upload_public_file)
       end
     end
 
     namespace :brackets do
-      desc 'Rebuild brackets'
+      desc 'Rebuild brackets (SITE_ID=int)'
       task :rebuild => :environment do
-        [Cms::Layout, Cms::Node, Cms::Piece, GpArticle::Doc].each do |model|
-          model.find_each do |item|
-            item.save_brackets
-          end
+        models = Cms::Bracket.group(:owner_type).pluck(:owner_type).map(&:constantize)
+        models.each do |model|
+          items = model
+          items = items.in_site(ENV['SITE_ID']) if ENV['SITE_ID']
+          items.find_each(&:save_brackets)
         end
       end
     end
 
     namespace :links do
-      desc 'Rebuild links'
+      desc 'Rebuild links (SITE_ID=int)'
       task :rebuild => :environment do
-        [Cms::Node::Page, GpArticle::Doc].each do |model|
-          model.find_each do |item|
-            item.save_links
-          end
+        models = Cms::Link.group(:linkable_type)
+                          .pluck(:linkable_type)
+                          .map { |type| type.sub('Cms::Node', 'Cms::Node::Page').constantize }
+        models.each do |model|
+          items = model
+          items = items.in_site(ENV['SITE_ID']) if ENV['SITE_ID']
+          items.find_each(&:save_links)
         end
       end
     end
 
     namespace :publish_urls do
-      desc 'Rebuild publish urls'
+      desc 'Rebuild publish urls (SITE_ID=int)'
       task :rebuild => :environment do
-        Cms::Node::Page.public_state.find_each(&:set_public_name)
-        GpArticle::Doc.public_state.find_each(&:set_public_name)
+        models = Cms::PublishUrl.group(:publishable_type)
+                                .pluck(:publishable_type)
+                                .map { |type| type.sub('Cms::Node', 'Cms::Node::Page').constantize }
+        models.each do |model|
+          items = model
+          items = items.in_site(ENV['SITE_ID']) if ENV['SITE_ID']
+          items.find_each(&:set_public_name)
+        end
       end
     end
 
     namespace :search_texts do
-      desc 'Rebuild search texts'
+      desc 'Rebuild search texts (SITE_ID=int)'
       task :rebuild => :environment do
-        [Cms::Node::Page, GpArticle::Doc].each do |model|
+        models = Cms::SearchText.group(:searchable_type)
+                                .pluck(:searchable_type)
+                                .map { |type| type.sub('Cms::Node', 'Cms::Node::Page').constantize }
+        models.each do |model|
           items = model
+          items = items.in_site(ENV['SITE_ID']) if ENV['SITE_ID']
           items = items.where(model: 'Cms::Page') if model == Cms::Node::Page
-          items.find_each do |item|
-            item.rebuild_search_texts
-          end
+          items.find_each(&:rebuild_search_texts)
         end
       end
     end

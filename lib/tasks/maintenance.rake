@@ -75,9 +75,11 @@ namespace ZomekiCMS::NAME do
     end
 
     namespace :common_dir do
-      desc 'Copy _common directory for all sites'
+      desc 'Copy _common directory for all sites (SITE_ID=int)'
       task copy: :environment do
-        Cms::Site.all.each do |site|
+        sites = Cms::Site.all
+        sites.where!(id: ENV['SITE_ID']) if ENV['SITE_ID']
+        sites.each do |site|
           site.copy_common_directory(force: true)
         end
       end
