@@ -5,11 +5,15 @@
   </tr>
   <tr>
     <th><%= @item.class.human_attribute_name :to %></th>
-    <td><%= @item.to %></td>
+    <td><%= @item.to %> <%= '（CCを含む）' if @item.include_cc %></td>
   </tr>
   <tr>
     <th><%= @item.class.human_attribute_name :subject %></th>
     <td><%= @item.subject %></td>
+  </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :logic %></th>
+    <td><%= @item.logic_text %></td>
   </tr>
   <tr>
     <th><%= @item.class.human_attribute_name :dest_content_id %></th>

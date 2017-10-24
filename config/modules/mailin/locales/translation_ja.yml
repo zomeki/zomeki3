@@ -8,6 +8,8 @@ ja:
         from: 送信元アドレス
         to: 宛先アドレス
         subject: タイトル
+        include_cc: CCを含む
+        logic: 結合論理
         dest_content_id: 取り込み先記事コンテンツ
         default_user_id: 送信元未登録ユーザー
         sort_no: 並び順
