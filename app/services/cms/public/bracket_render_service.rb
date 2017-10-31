@@ -12,7 +12,6 @@ class Cms::Public::BracketRenderService < ApplicationService
   def render_data_texts_and_files(html)
     render_data_texts(html)
     render_data_files(html)
-    render_emoji(html)
     render_adobe_reader_link(html)
 
     html.gsub!(/\[\[[a-z]+\/[^\]]+\]\]/, '')
@@ -35,13 +34,6 @@ class Cms::Public::BracketRenderService < ApplicationService
                %Q|<a href="#{item.public_uri}" class="#{item.css_class}" target="_blank">#{item.united_name}</a>|
              end
       html.gsub!("[[file/#{name}]]", data)
-    end
-  end
-
-  def render_emoji(html)
-    html.gsub!(/\[\[emoji\/([0-9a-zA-Z\._-]+)\]\]/) do |m|
-      name = m.gsub(/\[\[emoji\/([0-9a-zA-Z\._-]+)\]\]/, '\1')
-      Cms::Lib::Mobile::Emoji.convert(name, @mobile)
     end
   end
 
