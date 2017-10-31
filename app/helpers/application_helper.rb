@@ -76,12 +76,6 @@ module ApplicationHelper
     number_to_currency(num, :unit => '', :precision => 0)
   end
 
-  ## emoji
-  def emoji(name)
-    require 'jpmobile'
-    return Cms::Lib::Mobile::Emoji.convert(name, request.mobile)
-  end
-
   ## furigana
   def ruby(str, ruby = nil)
     ruby = Page.ruby unless ruby
