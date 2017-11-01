@@ -1,6 +1,6 @@
 module Zomeki
   def self.version
-    "3.1.9 build-55"
+    "3.1.10 build-56"
   end
 
   def self.default_config
