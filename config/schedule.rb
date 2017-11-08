@@ -70,3 +70,8 @@ end
 every :day, at: '5:00 am' do
   rake "#{ZomekiCMS::NAME}:cms:file_transfers:exec"
 end
+
+# delayed_jobを再起動します。
+every :sunday, at: '0:10 am' do
+  rake "delayed_job:restart"
+end
