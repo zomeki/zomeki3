@@ -14,7 +14,7 @@ pid_file "#{rails_root}/tmp/pids/delayed_job_master.pid"
 log_file "#{rails_root}/log/#{rails_env}_delayed_job_master.log"
 
 # log level
-log_level :debug
+log_level :info
 
 # task
 add_worker do |worker|
