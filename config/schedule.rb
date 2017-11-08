@@ -41,11 +41,6 @@ every '9-54/15 * * * *' do
   rake "#{ZomekiCMS::NAME}:remote:data:pull"
 end
 
-# delayed_jobプロセスを監視します。
-every '26,56 * * * *' do
-  rake 'delayed_job:monitor'
-end
-
 # Feedコンテンツで設定したRSS・Atomフィードを取り込みます。
 every :hour do
   rake "#{ZomekiCMS::NAME}:feed:feeds:read"
@@ -74,4 +69,9 @@ end
 # 静的ファイルを転送します。
 every :day, at: '5:00 am' do
   rake "#{ZomekiCMS::NAME}:cms:file_transfers:exec"
+end
+
+# delayed_jobを再起動します。
+every :sunday, at: '0:10 am' do
+  rake "delayed_job:restart"
 end
