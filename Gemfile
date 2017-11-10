@@ -103,7 +103,7 @@ gem 'octokit', '~> 4.6.2'
 gem 'whenever', '~> 0.9.7', require: false
 gem 'postgres-copy', '~> 1.1.0', require: false
 
-gem 'logical_query_parser', '~> 0.1.0'
+gem 'logical_query_parser', '~> 0.2.0'
 gem 'params_keeper_rails', '~> 1.0.0'
 
 # Plugins
