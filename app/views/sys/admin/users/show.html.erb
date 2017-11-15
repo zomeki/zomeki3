@@ -27,10 +27,6 @@
           <td><%= @item.locale(:admin_creatable) %></td>
           <td><%= @item.class::ADMIN_CREATABLE_OPTIONS.rassoc(@item.admin_creatable).try(:first) %></td>
         </tr>
-        <tr>
-          <td><%= @item.locale(:site_creatable) %></td>
-          <td><%= @item.class::SITE_CREATABLE_OPTIONS.rassoc(@item.site_creatable).try(:first) %></td>
-        </tr>
       </table>
       <%- end -%>
     </td>

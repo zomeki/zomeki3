@@ -55,7 +55,7 @@ class Sys::Admin::GroupUsersController < Cms::Controller::Admin::Base
   def user_params
     params.require(:item).permit(
       :account, :admin_creatable, :auth_no, :email, :in_group_id,
-      :ldap, :name, :name_en, :password, :site_creatable, :state, :role_name_ids => []
+      :ldap, :name, :name_en, :password, :state, :role_name_ids => []
     )
   end
 end

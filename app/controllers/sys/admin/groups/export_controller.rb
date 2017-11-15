@@ -63,7 +63,7 @@ class Sys::Admin::Groups::ExportController < Cms::Controller::Admin::Base
 
       csv << if Core.user.root?
         [:account, :state, :name, :name_en, :email, :auth_no, :password, :ldap, :ldap_version,
-        :group_code, :admin_creatable, :site_creatable]
+        :group_code, :admin_creatable]
       else
         [:account, :state, :name, :name_en, :email, :auth_no, :password, :ldap, :ldap_version,
         :group_code]
@@ -83,7 +83,6 @@ class Sys::Admin::Groups::ExportController < Cms::Controller::Admin::Base
         row << user.ldap_version
         row << user.groups[0].code
         row << user.admin_creatable if Core.user.root?
-        row << user.site_creatable if Core.user.root?
         csv << row
       end
     end
