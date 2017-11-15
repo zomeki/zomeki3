@@ -78,8 +78,8 @@ gem 'jpmobile', '~> 5.0.0'
 gem 'mail', '~> 2.6.4'
 gem 'mail-iso-2022-jp', '~> 2.0.7'
 gem 'moji', '~> 1.6'
-gem 'nokogiri', '~> 1.6.8.1'
-gem 'parallel', '~> 1.6.1'
+gem 'nokogiri', '~> 1.8.1'
+gem 'parallel', '~> 1.12.0'
 gem 'rails_autolink', '~> 1.1.6'
 gem 'rmagick', '~> 2.15.4'
 gem 'rqrcode_png', '~> 0.1.5'
@@ -103,7 +103,7 @@ gem 'octokit', '~> 4.6.2'
 gem 'whenever', '~> 0.9.7', require: false
 gem 'postgres-copy', '~> 1.1.0', require: false
 
-gem 'logical_query_parser', '~> 0.1.0'
+gem 'logical_query_parser', '~> 0.2.0'
 gem 'params_keeper_rails', '~> 1.0.0'
 
 # Plugins
