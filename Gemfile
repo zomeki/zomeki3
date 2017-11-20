@@ -91,7 +91,7 @@ gem 'sanitize', '~> 4.5.0'
 
 gem 'delayed_job', '~> 4.1.3'
 gem 'delayed_job_active_record', '~> 4.1.2'
-gem 'delayed_job_master', '~> 1.0.0', require: false
+gem 'delayed_job_master', '~> 1.1.0', require: false
 
 gem 'faraday', '~> 0.9.2'
 gem 'faraday-cookie_jar', '~> 0.0.6'

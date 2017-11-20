@@ -58,3 +58,10 @@ end
 after_fork do |master, worker_info|
   Delayed::Worker.after_fork if defined?(Delayed::Worker)
 end
+
+before_monitor do |master|
+  ActiveRecord::Base.connection.verify! if defined?(ActiveRecord::Base)
+end
+
+after_monitor do |master|
+end
