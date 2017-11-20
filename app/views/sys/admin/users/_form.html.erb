@@ -49,10 +49,6 @@
           <td><%= @item.locale(:admin_creatable) %></td>
           <td><%= f.radio_buttons :admin_creatable, @item.class::ADMIN_CREATABLE_OPTIONS %></td>
         </tr>
-        <tr>
-          <td><%= @item.locale(:site_creatable) %></td>
-          <td><%= f.radio_buttons :site_creatable, @item.class::SITE_CREATABLE_OPTIONS %></td>
-        </tr>
       </table>
       <%- end -%>
     </td>

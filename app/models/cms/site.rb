@@ -81,7 +81,7 @@ class Cms::Site < ApplicationRecord
 
   def creatable?
     return false unless Core.user.has_auth?(:manager)
-    Core.user.root? || Core.user.site_creatable?
+    Core.user.root?
   end
 
   def readable?

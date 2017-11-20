@@ -117,7 +117,6 @@ class Sys::Admin::Groups::ImportController < Cms::Controller::Admin::Base
 
       if Core.user.root?
         user.admin_creatable = data[:admin_creatable] if data.include?(:admin_creatable)
-        user.site_creatable  = data[:site_creatable] if data.include?(:site_creatable)
       end
       
       next unless user.changed?
