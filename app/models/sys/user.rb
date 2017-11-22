@@ -9,7 +9,6 @@ class Sys::User < ApplicationRecord
 
   ROOT_ID = 1
   ADMIN_CREATABLE_OPTIONS = [['許可する', true], ['許可しない', false]]
-  SITE_CREATABLE_OPTIONS = [['許可する', true], ['許可しない', false]]
 
   has_many :users_groups, foreign_key: :user_id, class_name: 'Sys::UsersGroup', dependent: :destroy
   has_many :groups, through: :users_groups, source: :group

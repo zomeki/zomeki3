@@ -74,7 +74,6 @@ ja:
         in_group_id: "グループ"
         role_name: "ロール権限"
         admin_creatable: "サイト管理者作成"
-        site_creatable: "サイト作成"
 
       sys/role_name:
         name: "ロールID"
