@@ -76,7 +76,7 @@ class Cms::Public::InquiryFormatService < FormatService
     if @inquiry.note.present?
       content_tag :div, class: 'note' do
         concat content_tag :span, '備考', class: 'label'
-        concat "：#{@inquiry.note}"
+        concat "：#{@inquiry.note}".html_safe
       end
     end
   end
