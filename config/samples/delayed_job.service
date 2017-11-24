@@ -9,7 +9,7 @@ WorkingDirectory=/var/www/zomeki/
 Environment=RAILS_ENV=production
 SyslogIdentifier=zomeki_delayed_job
 PIDFile=/var/www/zomeki/tmp/pids/delayed_job_master.pid
-ExecStart=/usr/local/rbenv/shims/bundle exec bin/delayed_job_master -c config/delayed_job/production.rb
+ExecStart=/usr/local/rbenv/shims/bundle exec bin/delayed_job_master -c config/delayed_job/delayed_job_master.rb
 ExecStop=/bin/kill -QUIT $MAINPID
 ExecReload=/bin/kill -USR2 $MAINPID
 
