@@ -286,6 +286,8 @@ GEM
     sexp_processor (4.7.0)
     simple_captcha2 (0.4.2)
       rails (>= 4.1)
+    slonik_migration (1.0.0)
+      activerecord (>= 5.0.0)
     slop (3.6.0)
     spring (1.7.1)
     sprockets (3.7.0)
@@ -382,6 +384,7 @@ DEPENDENCIES
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)
   simple_captcha2 (~> 0.4.2)
+  slonik_migration (~> 1.0.0)
   spring
   tamtam (= 0.0.3)
   tzinfo-data
