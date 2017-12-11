@@ -1,5 +1,7 @@
 class GpCategory::Piece::Doc < Cms::Piece
-  DOCS_ORDER_OPTIONS = [['公開日（降順）', 'published_at_desc'], ['公開日（昇順）', 'published_at_asc'], ['ランダム', 'random']]
+  DOCS_ORDER_OPTIONS = [['公開日（降順）', 'published_at_desc'], ['公開日（昇順）', 'published_at_asc'],
+                        ['更新日（降順）', 'updated_at_desc'], ['更新日（昇順）', 'updated_at_asc'],
+                        ['ランダム', 'random']]
   LAYER_OPTIONS = [['下層のカテゴリすべて', 'descendants'], ['該当カテゴリのみ', 'self']]
   PAGE_FILTER_OPTIONS = [['絞り込む', 'filter'], ['絞り込まない', 'through']]
 
