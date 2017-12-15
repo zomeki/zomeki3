@@ -10,7 +10,7 @@
   <%- @items.each do |item| -%>
   <tr class="<%= cycle '', 'cycle' %>">
     <td style="text-align: center;"><%= link_to :show, { action: :show, id: item } %></td>
-    <td><%= link_to_if item.state_enabled?, item.name, item.engine_route %></td>
+    <td><%= link_to_if item.state_enabled? && !item.use_as_content?, item.name, item.engine_route %></td>
     <td><%= item.title %></td>
     <td><%= item.version %></td>
     <td><%= item.state_label %></td>

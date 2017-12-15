@@ -22,7 +22,7 @@ module Cms::Controller::Layout
 
     begin
       node = Core.search_node(path)
-      opt  = Rails.application.routes.recognize_path(node)
+      opt  = Util::Route.recognize_path(node)
       opt  = qp.merge(opt)
       ctl  = opt[:controller]
       act  = opt[:action]

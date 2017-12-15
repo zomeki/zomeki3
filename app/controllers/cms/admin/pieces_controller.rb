@@ -47,7 +47,7 @@ class Cms::Admin::PiecesController < Cms::Controller::Admin::Base
     _create @item do
       Core.set_concept(session, @item.concept_id)
       respond_to do |format|
-        format.html { return redirect_to(controller: @item.admin_controller, action: :show, concept: @item.concept_id, id: @item.id) }
+        format.html { return redirect_to(@item.admin_uri) }
       end
     end
   end

@@ -16,6 +16,10 @@ class Sys::Plugin < ApplicationRecord
     all
   }
 
+  scope :enabled_contents, ->{
+    where(state: 'enabled').where(use_as_content: true)
+  }
+
   def gem_name
     name.split('/').last
   end
@@ -25,8 +29,12 @@ class Sys::Plugin < ApplicationRecord
   end
 
   def engine_route
-    route = name.split('/').last
-    "/#{ZomekiCMS::ADMIN_URL_PREFIX}/plugins/#{route}"
+    if use_as_content?
+      "/"
+    else
+      route = name.split('/').last
+      "/#{ZomekiCMS::ADMIN_URL_PREFIX}/plugins/#{route}"
+    end
   end
 
   def source

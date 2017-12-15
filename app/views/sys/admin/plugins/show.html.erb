@@ -18,6 +18,10 @@
     <td><%= @item.state_label %></td>
   </tr>
   <tr>
+    <th><%= @item.locale :kind %></th>
+    <td><%= @item.locale :use_as_content if @item.use_as_content %></td>
+  </tr>
+  <tr>
     <th><%= @item.class.human_attribute_name :note %></th>
     <td><%=hbr @item.note %></td>
   </tr>
