@@ -4,7 +4,7 @@ class Cms::Admin::NodesController < Cms::Controller::Admin::Base
   def pre_dispatch
     return error_auth unless Core.user.has_auth?(:designer)
     return redirect_to(cms_nodes_path(0)) if params[:reset]
-    
+
     id      = params[:parent] == '0' ? Core.site.node_id : params[:parent]
     @parent = Cms::Node.find(id)
   end
@@ -67,7 +67,7 @@ class Cms::Admin::NodesController < Cms::Controller::Admin::Base
       @item.name = nil # for validation
       @item.save(:validate => false)
       respond_to do |format|
-        format.html { return redirect_to(controller: @item.admin_controller, action: :show, id: @item.id) }
+        format.html { return redirect_to(@item.admin_uri) }
       end
     end
   end
@@ -135,7 +135,7 @@ class Cms::Admin::NodesController < Cms::Controller::Admin::Base
 
   def node_params
     params.require(:item).permit(
-      :concept_id, :content_id, :layout_id, :model, :parent_id, :route_id, 
+      :concept_id, :content_id, :layout_id, :model, :parent_id, :route_id,
       :sitemap_sort_no, :sitemap_state, :creator_attributes => [:id, :group_id, :user_id]
     )
   end

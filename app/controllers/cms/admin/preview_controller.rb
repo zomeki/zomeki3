@@ -37,7 +37,7 @@ class Cms::Admin::PreviewController < Cms::Controller::Admin::Base
 
     else
       node = Core.search_node(path)
-      opt  = Rails.application.routes.recognize_path(node)
+      opt  = Util::Route.recognize_path(node)
 
       if opt[:controller] == 'cms/public/exception'
         file_path = File.join(Page.site.public_path, path)

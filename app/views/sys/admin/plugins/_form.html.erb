@@ -28,6 +28,10 @@
     <td><%= f.radio_buttons :state, @item.class::STATE_OPTIONS %></td>
   </tr>
   <tr>
+    <th><%= f.label :kind %></th>
+    <td><%= f.check_box :use_as_content %><%= f.label :use_as_content %></td>
+  </tr>
+  <tr>
     <th><%= f.label :note %></th>
     <td><%= f.text_area :note %></td>
   </tr>

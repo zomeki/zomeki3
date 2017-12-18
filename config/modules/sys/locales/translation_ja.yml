@@ -142,6 +142,8 @@ ja:
         state: "状態"
         note: "備考"
         sort_no: "並び順"
+        kind: "種別"
+        use_as_content: "コンテンツプラグインとして利用"
         created_at: "作成日時"
 
   activemodel:
