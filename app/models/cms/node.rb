@@ -264,6 +264,7 @@ class Cms::Node < ApplicationRecord
   end
 
   def path_changed?
+    return false if name.blank? || name_was.blank?
     [:name, :parent_id].any? do |column|
       changes[column].present? && changes[column][0].present? && changes[column][1].present?
     end
