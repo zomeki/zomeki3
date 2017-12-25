@@ -29,7 +29,7 @@ blank = defined?(includ_blank) && includ_blank == false ? false : true
   <script type="text/javascript">
   $(function() {
     $('#item_concept_id').on('change', function() {
-      $.get('<%= layouts_cms_concepts_path(@parent) %>', { concept_id: $(this).val() }, function(data) {
+      $.get('<%= main_app.layouts_cms_concepts_path(@parent) %>', { concept_id: $(this).val() }, function(data) {
         $('#item_layout_id').html(data);
         $('#item_more_layout_id').html(data);
       });

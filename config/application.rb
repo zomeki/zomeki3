@@ -44,6 +44,8 @@ module ZomekiCMS
 
     config.action_view.sanitized_allowed_tags = ActionView::Base.sanitized_allowed_tags.to_a | %w(table caption tr th td iframe)
     config.action_view.sanitized_allowed_attributes = ActionView::Base.sanitized_allowed_attributes.to_a | %w(style class href src alt title colspan rowspan target id)
+    # Plugins
+    config.x.plugins = []
   end
 
   NAME = 'zomeki'
