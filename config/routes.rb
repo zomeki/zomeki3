@@ -95,6 +95,13 @@ Rails.application.routes.draw do
   Dir.glob("#{Rails.root}/config/plugins/**/routes.rb").each do |file|
     load file
   end
+  Rails.application.config.x.plugins.each do |plugin|
+    spec = Gem::Specification.find_by_name(plugin.name.split('::').first.underscore)
+    next unless spec
+    Dir.glob("#{spec.gem_dir}/config/**/routes.rb").each do |file|
+      load file
+    end
+  end
 
   # Exception
   get "#{admin_prefix}/*path" => "cms/admin/exception#index"
