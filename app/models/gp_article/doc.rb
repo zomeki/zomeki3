@@ -319,7 +319,7 @@ class GpArticle::Doc < ApplicationRecord
     inquiries.each_with_index do |inquiry, i|
       attrs = inquiry.attributes
       attrs[:id] = nil
-      attrs[:group_id] = Core.user.group_id if i == 0
+      attrs[:group_id] = Core.user.group_id if i == 0 && !Core.user.has_auth?(:manager)
       new_doc.inquiries.build(attrs)
     end
 

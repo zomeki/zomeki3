@@ -1,6 +1,10 @@
 <%-
 groups_for_option = Core.site.groups_for_option
-group = Core.user.root? ? Sys::Group.find_by(id: groups_for_option.first.try(:last)) : Core.user_group
+group = if Core.user.root? && !Core.user.sites.include?(Core.site)
+          Sys::Group.find_by(id: groups_for_option.first.try(:last))
+        else
+          Core.user_group
+        end
 item.build_default_inquiry(group: group)
 -%>
 
