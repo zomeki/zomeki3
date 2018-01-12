@@ -11,35 +11,36 @@ class GpArticle::DocsScript < PublicationScript
     if content.doc_list_pagination == 'simple'
       publish_more(@node, common_params.merge(limit: content.doc_publish_more_pages))
     else
+      paginator = content.public_docs_for_list
+                         .date_paginate(content.docs_order_column, content.docs_order_direction, scope: content.doc_list_pagination)
+                         .paginator
       if params[:target_date].present?
         publish_target_dates(@node, common_params.merge(
                                     page_style: content.doc_list_pagination,
-                                    first_date: date_pagination_query(content).first_page_date,
-                                    target_dates: load_neighbor_dates(content, params[:target_date])))
+                                    first_date: paginator.pages.first || Date.today,
+                                    target_dates: load_neighbor_dates(content.doc_list_pagination, paginator.pages, params[:target_date])))
       else
         publish_more_dates(@node, common_params.merge(
                                   page_style: content.doc_list_pagination,
-                                  page_dates: date_pagination_query(content).page_dates))
+                                  page_dates: paginator.pages))
       end
     end
   end
 
-  def date_pagination_query(content, current_date = nil)
-    DatePaginationQuery.new(content.public_docs_for_list,
-                            page_style: content.doc_list_pagination,
-                            column: content.docs_order_column,
-                            direction: content.docs_order_direction,
-                            current_date: current_date)
-  end
-
-  def load_neighbor_dates(content, target_date)
-    dates = []
+  def load_neighbor_dates(style, pages, target_date)
+    neighbors = []
     Array(target_date).each do |date|
-      current_date = Time.parse(date)
-      query = date_pagination_query(content, current_date)
-      dates += [query.next_page_date, current_date, query.prev_page_date]
+      date = case style.to_sym
+             when :monthly
+               Date.parse(date).beginning_of_month
+             when :weekly
+               Date.parse(date).beginning_of_week
+             end
+      if (i = pages.index(date))
+        neighbors += [pages[i - 1], pages[i], pages[i + 1]]
+      end
     end
-    dates.compact.uniq
+    neighbors.compact.uniq
   end
 
   def publish_doc
