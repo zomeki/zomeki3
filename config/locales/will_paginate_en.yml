@@ -1,0 +1,7 @@
+en:
+  will_paginate:
+    page_gap: " || "
+    previous_label: "PREVIOUS"
+    next_label: "NEXT"
+    mobile_previous_label: "&lt;&lt;*prev"
+    mobile_next_label: "next#&gt;&gt;"

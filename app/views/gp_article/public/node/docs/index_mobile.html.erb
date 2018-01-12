@@ -16,7 +16,7 @@
     <%- end -%>
   </div>
   <%- if @content.simple_pagination? -%>
-    <%= paginate @docs, prev_label: @content.prev_label, next_label: @content.next_label %>
+    <%= paginate @docs, previous_label: @content.prev_label, next_label: @content.next_label %>
   <%- else -%>
     <%= paginate_by_date Page.current_node.public_uri, page_info: @page_info, page_style: @content.doc_list_pagination, prev_label: @content.prev_label, next_label: @content.next_label if @docs.present? %>
   <%- end -%>

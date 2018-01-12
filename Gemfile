@@ -85,7 +85,7 @@ gem 'rmagick', '~> 2.15.4'
 gem 'rqrcode_png', '~> 0.1.5'
 gem 'rubyzip', '~> 1.2.1'
 gem 'simple_captcha2', '~> 0.4.2', require: 'simple_captcha'
-gem 'will_paginate', '~> 3.1.5'
+gem 'will_paginate', '~> 3.1.6'
 
 gem 'sanitize', '~> 4.5.0'
 
