@@ -10,19 +10,6 @@ class Cms::Lib::Modules::ModuleSet
   attr_accessor :pieces
 
   def self.load_modules
-    return @@modules if @@modules
-    Dir::entries('config/modules').sort.each do |mod|
-      next if mod =~ /^\.+$/
-      file = "#{Rails.root}/config/modules/#{mod}/module.rb"
-      load(file) if FileTest.exist?(file)
-    end
-    Rails.application.config.x.plugins.each do |plugin|
-      spec = Gem::Specification.find_by_name(plugin.name.split('::').first.underscore)
-      next unless spec
-      Dir.glob("#{spec.gem_dir}/config/**/module.rb").each do |file|
-        load file
-      end
-    end
     @@modules
   end
 

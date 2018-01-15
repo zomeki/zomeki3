@@ -107,7 +107,6 @@ gem 'logical_query_parser', '~> 0.2.0'
 gem 'params_keeper_rails', '~> 1.0.0'
 gem 'slonik_migration', '~> 1.0.0'
 
-# Plugins
-Dir.glob(File.join(File.dirname(__FILE__), 'config', 'plugins', '**', "Gemfile")) do |gemfile|
-  eval(IO.read(gemfile), binding)
+Dir[File.join(File.dirname(__FILE__), 'config/plugins/**/Gemfile')].each do |file|
+  instance_eval File.read(file)
 end
