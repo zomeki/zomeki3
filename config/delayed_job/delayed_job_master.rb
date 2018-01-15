@@ -22,6 +22,8 @@ add_worker do |worker|
   worker.control :dynamic
   worker.count (ENV['TASK_WORKERS'] || 1).to_i
   worker.max_memory 512
+  worker.max_run_time 3600
+  worker.read_ahead 1
 end
 
 # rebuild
@@ -30,6 +32,8 @@ add_worker do |worker|
   worker.control :dynamic
   worker.count (ENV['REBUILD_WORKERS'] || 1).to_i
   worker.max_memory 512
+  worker.max_run_time 24*3600
+  worker.read_ahead 1
 end
 
 # publisher
@@ -38,6 +42,8 @@ add_worker do |worker|
   worker.control :dynamic
   worker.count (ENV['PUBLISHER_WORKERS'] || 1).to_i
   worker.max_memory 512
+  worker.max_run_time 24*3600
+  worker.read_ahead 1
 end
 
 # file transfer
@@ -48,6 +54,8 @@ if YAML.load_file("#{rails_root}/config/application.yml").dig('cms', 'file_trans
     worker.control :dynamic
     worker.count (ENV['FILE_TRANSFER_WORKERS'] || 1).to_i
     worker.max_memory 512
+    worker.max_run_time 3600
+    worker.read_ahead 1
   end
 end
 
