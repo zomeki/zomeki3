@@ -22,7 +22,7 @@ module PaginateHelper
       if Core.mode_system?
         super
       else
-        uri = Page.uri
+        uri = Page.uri.dup
         uri.gsub!(/\/(\?|$)/, "/index.html\\1")
         uri.gsub!(/\.p[0-9]+\.html/, ".html")
         uri.gsub!(/\.html/, ".p#{page}.html") if page.to_i > 1

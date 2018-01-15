@@ -14,7 +14,7 @@ module DatePaginateHelper
         super
       else
         page = public_date_param(date)
-        uri = Page.uri
+        uri = Page.uri.dup
         uri.gsub!(/\/(\?|$)/, "/index.html\\1")
         uri.gsub!(/\.[0-9]+\.html/, ".html")
         uri.gsub!(/\.html/, ".#{page}.html") if page.present?
