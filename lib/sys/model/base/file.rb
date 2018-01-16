@@ -22,6 +22,7 @@ module Sys::Model::Base::File
     validate :validate_file_type
     validate :validate_upload_file
     after_save :upload_internal_file
+    after_save :remove_exif_from_image
     after_destroy :remove_internal_file
 
     define_model_callbacks :save_files, :remove_files
@@ -340,6 +341,14 @@ module Sys::Model::Base::File
       Util::File.put(upload_path, data: @file_content, mkdir: true) unless @file_content.nil?
       Util::File.put(upload_path(type: :thumb), data: @thumbnail_image.to_blob, mkdir: true) if @thumbnail_image
       true
+    end
+  end
+
+  def remove_exif_from_image
+    if image_file?
+      [upload_path, upload_path(type: :thumb)].each do |path|
+        Util::Image.remove_exif(path) if ::File.exist?(path)
+      end
     end
   end
 
