@@ -54,8 +54,8 @@ class Sys::Admin::Inline::FilesController < Cms::Controller::Admin::Base
       end
 
       item.image_resize = params[:image_resize] if params[:image_resize].present?
-      item.allowed_type = get_allowed_type
-      item.use_thumbnail(get_thumbnail_size)
+      item.allowed_types = get_allowed_types
+      item.thumbnail_size = get_thumbnail_size
 
       if item.creatable? && item.save
         success += 1
@@ -75,7 +75,7 @@ class Sys::Admin::Inline::FilesController < Cms::Controller::Admin::Base
   def update
     @item = Sys::File.find(params[:id])
     @item.attributes = file_params
-    @item.allowed_type = get_allowed_type
+    @item.allowed_types = get_allowed_types
     @item.skip_upload
     _update @item
   end
@@ -101,7 +101,7 @@ class Sys::Admin::Inline::FilesController < Cms::Controller::Admin::Base
       @item.find_by!(name: "#{params[:name]}.#{params[:format]}")
     return error_auth unless @item.readable?
 
-    if params[:convert] == 'csv:table' && @item.csv?
+    if params[:convert] == 'csv:table' && @item.csv_file?
       render plain: convert_to_csv(@item)
     else
       send_file @item.upload_path(type: params[:type]), filename: @item.name
@@ -111,10 +111,11 @@ class Sys::Admin::Inline::FilesController < Cms::Controller::Admin::Base
   def crop
     @item = Sys::File.find(params[:id])
     return error_auth unless @item.editable?
+    return error_auth unless @item.image_file?
 
     if request.post?
       if params[:x].to_i != 0 || params[:y].to_i != 0
-        @item.use_thumbnail(get_thumbnail_size)
+        @item.thumbnail_size = get_thumbnail_size
         if @item.crop(params[:x].to_i, params[:y].to_i, params[:w].to_i, params[:h].to_i)
           flash[:notice] = "トリミングしました。"
         else
@@ -136,11 +137,11 @@ class Sys::Admin::Inline::FilesController < Cms::Controller::Admin::Base
     params.require(:item).permit(:file, :name, :title, :alt_text)
   end
 
-  def get_allowed_type
-    if @content.respond_to?(:allowed_attachment_type)
-      @content.allowed_attachment_type
+  def get_allowed_types
+    if @content.respond_to?(:allowed_attachment_types)
+      @content.allowed_attachment_types
     else
-      params[:allowed_type]
+      params[:allowed_types]
     end 
   end
 

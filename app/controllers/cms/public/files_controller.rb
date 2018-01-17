@@ -19,8 +19,10 @@ class Cms::Public::FilesController < Cms::Controller::Public::Data
       return send_file(path, type: item.mime_type, filename: item.name)
     end
 
-    if img = item.mobile_image(request.mobile, path: item.public_path)
-      return send_data(img.to_blob, type: item.mime_type, filename: item.name, disposition: 'inline')
+    if request.mobile && item.image_file? && (item.image_width > 300 || item.image_height > 400)
+      if (img = Util::Image::Mobile.reduce_size(item.public_path, 300, 400, request.mobile))
+        return send_data(img.to_blob, type: item.mime_type, filename: item.name, disposition: 'inline')
+      end
     end
 
     return send_file(path, type: item.mime_type, filename: item.name, disposition: 'inline')

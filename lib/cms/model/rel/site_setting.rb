@@ -26,8 +26,28 @@ module Cms::Model::Rel::SiteSetting
     (setting_value(:file_upload_max_size).presence || 5).to_i
   end
 
+  def ext_upload_max_size
+    return @ext_upload_max_size if @ext_upload_max_size
+
+    @ext_upload_max_size = {}
+    csv = setting_value(:extension_upload_max_size).to_s
+    csv.split(/\r\n|\r|\n/).each do |line|
+      ext, size = line.gsub(/#.*/, "").split(',').map(&:strip)
+      @ext_upload_max_size[ext] = size.to_i if ext.present? && size.present?
+    end
+    @ext_upload_max_size
+  end
+
+  def file_upload_max_size_for(ext)
+    ext_upload_max_size[ext] || file_upload_max_size
+  end
+
   def allowed_attachment_type
     setting_value(:allowed_attachment_type)
+  end
+
+  def allowed_attachment_types
+    allowed_attachment_type.to_s.split(',').map { |type| type.strip.downcase }.select(&:present?)
   end
 
   def link_check_enabled?
@@ -69,33 +89,6 @@ module Cms::Model::Rel::SiteSetting
 
   def zip_download_max_size
     setting_value(:zip_download_max_size).to_i * (1024**2)
-  end
-
-  def get_upload_max_size(ext)
-    ext.gsub!(/^\./, '')
-    list = ext_upload_max_size_list
-    return list[ext.to_s] if list.include?(ext.to_s)
-    return nil
-  end
-
-  def ext_upload_max_size_list
-    return @ext_upload_max_size_list if @ext_upload_max_size_list
-
-    csv = setting_value(:extension_upload_max_size).to_s
-    @ext_upload_max_size_list = {}
-
-    csv.split(/(\r\n|\n)/u).each_with_index do |line, idx|
-      line = line.to_s.gsub(/#.*/, "")
-      line.strip!
-      next if line.blank?
-
-      data = line.split(/\s*,\s*/)
-      ext = data[0].strip
-      size = data[1].strip
-
-      @ext_upload_max_size_list[ext.to_s] = size.to_i
-    end if csv.present?
-    return @ext_upload_max_size_list
   end
 
   def load_site_settings

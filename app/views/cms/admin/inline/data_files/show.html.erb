@@ -17,5 +17,5 @@
     <td><%= @item.alt_text %></td>
   </tr><tr>
     <th><%= @item.locale(:size) %></th>
-    <td><%= @item.eng_unit %><br /><%= @item.image_size %></td>
+    <td><%= @item.eng_unit %><br /><%= @item.image_size if @item.image_file? %></td>
 </table>
