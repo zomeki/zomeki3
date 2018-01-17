@@ -246,8 +246,11 @@ module Sys::Model::Base::File
 
   def remove_exif_from_image
     if image_file?
-      [upload_path, upload_path(type: :thumb)].each do |path|
-        Util::Image.remove_exif(path) if ::File.exist?(path)
+      { size: upload_path, thumb_size: upload_path(type: :thumb) }.each do |column, path|
+        if ::File.exist?(path)
+          Util::Image.remove_exif(path)
+          update_columns(column => ::File.size(path))
+        end
       end
     end
   end
