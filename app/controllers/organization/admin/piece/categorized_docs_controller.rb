@@ -10,4 +10,10 @@ class Organization::Admin::Piece::CategorizedDocsController < Cms::Admin::Piece:
                          end
     _update @item, location: cms_pieces_url
   end
+
+  private
+
+  def base_params_item_in_settings
+    [:list_count, :docs_order, :doc_style, :date_style, :page_filter]
+  end
 end
