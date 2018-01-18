@@ -341,7 +341,7 @@ class GpArticle::Doc < ApplicationRecord
         new_attributes = f.attributes
         new_attributes[:id] = nil
         new_file = Sys::File.new(new_attributes)
-        new_file.file = Sys::Lib::File::NoUploadedFile.new(f.upload_path, mime_type: new_file.mime_type)
+        new_file.file = Sys::Lib::File::NoUploadedFile.new(path: f.upload_path, mime_type: new_file.mime_type)
         new_file.file_attachable = new_doc
         new_file.save
       end

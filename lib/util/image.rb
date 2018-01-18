@@ -18,9 +18,5 @@ class Util::Image
 
       return dst_w.ceil, dst_h.ceil
     end
-
-    def remove_exif(path)
-      system 'exiv2', 'rm', path
-    end
   end
 end

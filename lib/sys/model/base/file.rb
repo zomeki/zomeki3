@@ -195,17 +195,15 @@ module Sys::Model::Base::File
     self.image_height = nil
     self.thumb_width  = nil
     self.thumb_height = nil
+    self.thumb_size = nil
 
-    begin
-      image = case file
-              when ActionDispatch::Http::UploadedFile
-                Magick::Image.read(file.path).first if (ftype = Util::File.file_type(file.path)).nil? || ftype =~ /GIF|JPEG|PNG/
-              when Sys::Lib::File::NoUploadedFile
-                Magick::Image.from_blob(file.read).first if file.image?
-              else
-                raise %Q!"#{file.class}" is not supported.!
+    if Util::File.mime_type(file.path) =~ %r{image/(gif|jpeg|png)}
+      image = begin
+                Magick::Image.read(file.path).first
+              rescue => e
+                warn_log("#{self.mime_type}: #{e.message}")
+                nil
               end
-
       if image && image.format.in?(%w!GIF JPEG PNG!)
         image.auto_orient!
 
@@ -215,7 +213,6 @@ module Sys::Model::Base::File
           self.size = image.to_blob.size
         end
 
-        # Overwrite browser declaration
         self.mime_type = IMAGE_FORMAT_TO_MIME_TYPE[image.format]
         self.image_is = 1
         self.image_width = image.columns
@@ -228,8 +225,6 @@ module Sys::Model::Base::File
           self.thumb_size   = @thumbnail_image.to_blob.size
         end
       end
-    rescue => e
-      warn_log("#{self.mime_type}: #{e.message}")
     end
 
     @file_content = file.read
@@ -247,10 +242,8 @@ module Sys::Model::Base::File
   def remove_exif_from_image
     if image_file?
       { size: upload_path, thumb_size: upload_path(type: :thumb) }.each do |column, path|
-        if ::File.exist?(path)
-          Util::Image.remove_exif(path)
-          update_columns(column => ::File.size(path))
-        end
+        Util::File.remove_exif(path)
+        update_columns(column => ::File.size(path))
       end
     end
   end
