@@ -1,5 +1,7 @@
 <%= render 'search' %>
 
+<%= page_entries_info @ranks -%>
+
 <table class="index">
   <tr>
     <th><%= Rank::Rank.human_attribute_name :order %></th>

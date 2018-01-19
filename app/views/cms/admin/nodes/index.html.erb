@@ -1,5 +1,9 @@
 <%= render 'search' %>
 
+<div class="pageEntryInfo">
+<%= @dirs.count + @pages.count %>件表示
+</div>
+
 <%#= link_to :up, url_for(:parent => @parent.parent_id) if @parent.parent_id > 0 %>
 
 <table class="index directories">
