@@ -206,9 +206,9 @@ module Sys::Model::Base::File
               end
       if image && image.format.in?(%w!GIF JPEG PNG!)
         image.auto_orient!
+        image.resize_to_fit!(image_resize) if image_resize
 
-        if image_resize
-          image.resize_to_fit!(image_resize)
+        if image.changed?
           image.write(file.path)
           self.size = image.to_blob.size
         end
@@ -242,8 +242,10 @@ module Sys::Model::Base::File
   def remove_exif_from_image
     if image_file?
       { size: upload_path, thumb_size: upload_path(type: :thumb) }.each do |column, path|
-        Util::File.remove_exif(path)
-        update_columns(column => ::File.size(path))
+        if ::File.exist?(path)
+          Util::File.remove_exif(path)
+          update_columns(column => ::File.size(path))
+        end
       end
     end
   end
