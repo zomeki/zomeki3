@@ -1,7 +1,6 @@
 class Sys::Controller::Admin::Base < ApplicationController
   include Jpmobile::ViewSelector
   include Sys::Controller::Admin::Auth
-  helper Sys::FormHelper
   before_action :pre_dispatch
   rescue_from ActiveRecord::RecordNotFound, :with => :error_auth
 
