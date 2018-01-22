@@ -87,6 +87,10 @@ class GpCalendar::Content::Event < Cms::Content
     'gif,jpg,png'
   end
 
+  def allowed_attachment_types
+    allowed_attachment_type.to_s.split(',').map { |type| type.strip.downcase }.select(&:present?)
+  end
+
   def attachment_embed_link
     false
   end

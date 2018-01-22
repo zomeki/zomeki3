@@ -12,6 +12,7 @@ def info_log(message)
 end
 
 def warn_log(message)
+  message = "#{message}: #{message.backtrace.join("\n")}" if message.is_a?(Exception) && message.backtrace.present?
   Rails.logger.warn "[#{Time.now.strftime('%Y-%m-%d %H:%M:%S')}] WARN  #{message}"
 end
 

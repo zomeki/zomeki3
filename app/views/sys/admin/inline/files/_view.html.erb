@@ -13,7 +13,9 @@
       <td style="text-align: center;"><%= item.id %></td>
       <td style="text-align: center;">
         <%- if item.image_file? -%>
-          <%= link_to image_tag(download_path, style: item.reduced_size(width: 80, height: 40, css: true)), download_path, class: 'thumbnail', title: item.title, target: '_blank' %>
+          <%= link_to download_path, class: 'thumbnail', title: item.title, target: '_blank' do %>
+            <%= image_tag download_path, style: thumbnail_style(item.image_width, item.image_height, 80, 40) %>
+          <%- end -%>
         <%- else -%>
           <%= link_to 'File', download_path, class: item.css_class %>
         <%- end -%>
@@ -22,7 +24,7 @@
         <span class="item_name"><%= item.name %></span>
         <span class="item_title"><%= "（#{item.title}）" if item.title.present? %></span>
       </td>
-      <td style="text-align: center;"><%= item.eng_unit %><br /><%= item.image_size %></td>
+      <td style="text-align: center;"><%= item.eng_unit %><br /><%= item.image_size if item.image_file? %></td>
     </tr>
   <% end %>
 </table>

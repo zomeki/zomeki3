@@ -19,7 +19,7 @@
   </tr>
   <tr>
     <th>ファイルサイズ</th>
-    <td><%= @item.eng_unit %><br /><%= @item.image_size %></td>
+    <td><%= @item.eng_unit %><br /><%= @item.image_size if @item.image_file? %></td>
   </tr>
   <tr>
     <th>ファイル種別</th>

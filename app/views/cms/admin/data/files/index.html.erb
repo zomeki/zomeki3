@@ -17,16 +17,16 @@
     <td style="text-align: center;"><%= link_to :show, url_for(:action => :show, :concept => item.concept_id, :id => item) %></td>
     <td style="text-align: center;">
       <% if item.image_file? %>
-        <a href="<%= url_for(:id => item, :concept => item.concept_id, :action => :download) %>" target="_blank">
-        <img src="<%= url_for(:id => item, :concept => item.concept_id, :action => :download) %>" 
-        style="<%= item.reduced_size(:width => 80, :height => 40, :css => true) %>" /></a>
+        <%= link_to url_for(action: :download, concept: item.concept_id, id: item), target: '_blank' do %>
+          <%= image_tag url_for(action: :download, concept: item.concept_id, id: item), style: thumbnail_style(item.image_width, item.image_height, 80, 40) %>
+        <%- end -%>
       <% else %>
         <a href="<%= url_for(:id => item, :concept => item.concept_id, :action => :download) %>" class="<%= item.css_class %>" target="_blank">File</a>
       <% end %>
     </td>
     <td><%= safe{item.node.name} %><br /><%= "（#{item.node.title}）" if safe{item.node.title}.to_s != '' %></td>
     <td><%= item.name %><br /><%= "（#{item.title}）" if item.name != item.title %></td>
-    <td style="text-align: center;"><%= item.eng_unit %><br /><%= item.image_size %></td>
+    <td style="text-align: center;"><%= item.eng_unit %><br /><%= item.image_size if item.image_file? %></td>
     <td style="text-align: center;"><%= item.updated_at.strftime('%Y-%m-%d %H:%M')%></td>
     
     <% if item.public? %>

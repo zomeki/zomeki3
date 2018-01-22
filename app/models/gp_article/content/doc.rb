@@ -350,6 +350,10 @@ class GpArticle::Content::Doc < Cms::Content
     setting_value(:allowed_attachment_type)
   end
 
+  def allowed_attachment_types
+    allowed_attachment_type.to_s.split(',').map { |type| type.strip.downcase }.select(&:present?)
+  end
+
   def attachment_thumbnail_size
     setting_value(:attachment_thumbnail_size)
   end

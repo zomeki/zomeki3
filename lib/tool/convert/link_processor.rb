@@ -129,7 +129,7 @@ private
 
   def save_file(doc, clink)
     file = doc.files.find_by(name: clink.filename) || doc.files.build(name: clink.filename)
-    file.file = Sys::Lib::File::NoUploadedFile.new(clink.file_path, skip_image: true)
+    file.file = Sys::Lib::File::NoUploadedFile.new(path: clink.file_path)
     file.site_id = doc.content.site_id if doc.content
     file.name = clink.filename
     file.title = clink.title.presence || clink.filename
