@@ -28,7 +28,7 @@ module Cms::Controller::Layout
       act  = opt[:action]
 
       opt[:authenticity_token] = params[:authenticity_token] if params[:authenticity_token]
-      body = Sys::Lib::Controller.render(ctl, act, params: opt, agent_type: options[:agent_type])
+      body = Sys::Lib::Controller.render(ctl, act, params: opt, agent_type: options[:agent_type], session: session, cookie: cookies)
 
       info_log("#{URI.join(Page.site.full_uri, path)}: #{Page.error}") if Page.error
     rescue => e
@@ -98,8 +98,7 @@ module Cms::Controller::Layout
       begin
         next if item.content_id && !item.content
         mnames= item.model.underscore.pluralize.split('/')
-
-        data = Sys::Lib::Controller.render("#{mnames[0]}/public/piece/#{mnames[1]}", 'index', params: params)
+        data = Sys::Lib::Controller.render("#{mnames[0]}/public/piece/#{mnames[1]}", 'index', params: params, session: session, cookie: cookies)
         if data =~ /^<html/ && Rails.env.to_s == 'production'
           # component error
         else

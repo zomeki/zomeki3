@@ -28,6 +28,8 @@ class Sys::Lib::Controller
       request = ActionDispatch::Request.new(Rack::MockRequest.env_for(options[:base_url]))
       request.env["REQUEST_METHOD"] = options[:method]
       request.env['action_dispatch.request.parameters'] = params.symbolize_keys.with_indifferent_access
+      request.env["action_dispatch.cookies"] = options[:cookie] || {}
+      request.env["rack.session"] = options[:session] || {}
 
       if options[:agent_type] == :smart_phone
         jpmobile_envs_for_smart_phone.each do |key, value|
