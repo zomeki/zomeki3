@@ -1,8 +1,5 @@
 class ApplicationController < ActionController::Base
-  include Cms::Controller::Public
   include ParamsKeeper::Controller
-  helper  FormHelper
-  helper  LinkHelper
   protect_from_forgery with: :exception
   before_action :initialize_application
 #  rescue_from Exception, :with => :rescue_exception
