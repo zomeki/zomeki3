@@ -18,10 +18,6 @@ class ApplicationController < ActionController::Base
     return Core.dispatched
   end
 
-  def query(params = nil)
-    Util::Http::QueryString.get_query(params)
-  end
-
   def send_mail(fr_addr, to_addr, subject, body)
     return false if fr_addr.blank? || to_addr.blank?
     CommonMailer.plain(from: fr_addr, to: to_addr, subject: subject, body: body).deliver_now
