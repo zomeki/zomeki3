@@ -1,8 +1,3 @@
-def dump(data)
-  ActiveSupport::Deprecation.warn("Replace dump with rails logger (#{caller[0..4].join("\n")})")
-  Sys::Lib::Debugger::Dump.dump_log(data)
-end
-
 def debug_log(message)
   Rails.logger.debug "[#{Time.now.strftime('%Y-%m-%d %H:%M:%S')}] DEBUG  #{message.pretty_inspect}"
 end
