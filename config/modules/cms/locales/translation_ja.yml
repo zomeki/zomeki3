@@ -1,43 +1,43 @@
 ja:
   activerecord:
     models:
-      cms/content: "コンテンツ"
-      cms/piece: "ピース"
-      cms/layout: "レイアウト"
-      cms/site: "サイト"
-      cms/site_basic_auth: "Basic認証"
+      cms/content: コンテンツ
+      cms/piece: ピース
+      cms/layout: レイアウト
+      cms/site: サイト
+      cms/site_basic_auth: Basic認証
 
-      tool/convert_download: "ダウンロード"
-      tool/convert_setting: "変換設定"
-      tool/convert_import: "書き込み"
-      tool/convert_doc: "変換記事"
-      tool/convert_link: "リンク変換"
+      tool/convert_download: ダウンロード
+      tool/convert_setting: 変換設定
+      tool/convert_import: 書き込み
+      tool/convert_doc: 変換記事
+      tool/convert_link: リンク変換
 
     attributes:
       cms/concept:
-        state: "状態"
-        parent_id: "親コンセプト"
-        level_no: "階層"
-        sort_no: "並び順"
-        name: "コンセプト名"
+        state: 状態
+        parent_id: 親コンセプト
+        level_no: 階層
+        sort_no: 並び順
+        name: コンセプト名
 
       cms/site:
-        state: "状態"
-        node_id: "ROOTディレクトリ"
-        name: "サイト名称"
-        body: "紹介文"
-        full_uri: "サイトURL"
-        mobile_full_uri: "携帯URL"
-        admin_full_uri: "管理画面URL"
-        related_site: "関連サイト"
-        site_image: "サイト画像"
-        map_key: "地図APIキー（廃止）"
-        portal_group_state: "ポータル公開設定"
-        portal_group_id: "ポータル記事分類"
-        portal_group_category_ids: "分野"
-        portal_group_business_ids: "業種"
-        portal_group_attribute_ids: "属性"
-        portal_group_area_ids: "地域"
+        state: 状態
+        node_id: ROOTディレクトリ
+        name: サイト名称
+        body: 紹介文
+        full_uri: サイトURL
+        mobile_full_uri: 携帯URL
+        admin_full_uri: 管理画面URL
+        related_site: 関連サイト
+        site_image: サイト画像
+        map_key: 地図APIキー（廃止）
+        portal_group_state: ポータル公開設定
+        portal_group_id: ポータル記事分類
+        portal_group_category_ids: 分野
+        portal_group_business_ids: 業種
+        portal_group_attribute_ids: 属性
+        portal_group_area_ids: 地域
         og_type: タイプ
         og_title: タイトル
         og_description: 説明
@@ -47,87 +47,87 @@ ja:
         spp_target: 書き出し対象
         mobile_feature: 携帯サイト
         in_root_group_id: 最上位グループ
-        in_setting_site_transfer_dest_user: "転送先ユーザー名"
-        in_setting_site_transfer_dest_host: "転送先サーバーホスト"
-        in_setting_site_transfer_dest_dir: "転送先サーバーディレクトリ"
-        in_setting_site_transfer_dest_domain: "転送先サイトURL"
-        in_setting_site_common_ssl: "共有SSL"
-        in_setting_site_admin_mail_sender: "管理者メール送信元アドレス"
-        in_setting_site_allowed_attachment_type: "添付ファイル/許可する種類"
-        in_setting_site_file_upload_max_size: "添付ファイル最大サイズ"
-        in_setting_site_extension_upload_max_size: "拡張子別アップロードサイズ"
-        in_setting_site_link_check: "リンクチェック機能"
-        in_setting_site_link_check_hour: "リンクチェック開始時刻"
-        in_setting_site_link_check_domain_type: "リンクチェック対象ドメイン"
-        in_setting_site_link_check_exclusion: "リンクチェック対象外URL"
-        in_setting_site_accessibility_check: "アクセシビリティチェック機能"
-        in_setting_site_adobe_reader_link: "Adobe Acrobat Reader リンク"
-        in_setting_site_kana_talk: "ふりがな・音声"
-        in_setting_site_map_coordinate: "地図/デフォルト座標"
-        in_setting_site_zip_download_max_size: "ZIPダウンロード最大サイズ"
+        in_setting_site_transfer_dest_user: 転送先ユーザー名
+        in_setting_site_transfer_dest_host: 転送先サーバーホスト
+        in_setting_site_transfer_dest_dir: 転送先サーバーディレクトリ
+        in_setting_site_transfer_dest_domain: 転送先サイトURL
+        in_setting_site_common_ssl: 共有SSL
+        in_setting_site_admin_mail_sender: 管理者メール送信元アドレス
+        in_setting_site_allowed_attachment_type: 添付ファイル/許可する種類
+        in_setting_site_file_upload_max_size: 添付ファイル最大サイズ
+        in_setting_site_extension_upload_max_size: 拡張子別アップロードサイズ
+        in_setting_site_link_check: リンクチェック機能
+        in_setting_site_link_check_hour: リンクチェック開始時刻
+        in_setting_site_link_check_domain_type: リンクチェック対象ドメイン
+        in_setting_site_link_check_exclusion: リンクチェック対象外URL
+        in_setting_site_accessibility_check: アクセシビリティチェック機能
+        in_setting_site_adobe_reader_link: Adobe Acrobat Reader リンク
+        in_setting_site_kana_talk: ふりがな・音声
+        in_setting_site_map_coordinate: 地図/デフォルト座標
+        in_setting_site_zip_download_max_size: ZIPダウンロード最大サイズ
 
       cms/site_basic_auth_user:
-        state: "状態"
-        site_id: "サイト"
-        name: "ユーザーID"
-        password: "パスワード"
-        target_type: "対象"
-        target_location: "ディレクトリ"
+        state: 状態
+        site_id: サイト
+        name: ユーザーID
+        password: パスワード
+        target_type: 対象
+        target_location: ディレクトリ
 
       cms/site_setting:
 
       cms/site_setting/emergency_layout:
-        value: "レイアウト"
-        sort_no: "並び順"
+        value: レイアウト
+        sort_no: 並び順
 
       cms/content:
-        state: "状態"
-        concept_id: "コンセプト"
-        model: "コンテンツ種別"
-        code: "コンテンツID"
-        name: "コンテンツ名"
-        note: "備考"
-        sort_no: "並び順"
+        state: 状態
+        concept_id: コンセプト
+        model: コンテンツ種別
+        code: コンテンツID
+        name: コンテンツ名
+        note: 備考
+        sort_no: 並び順
 
       cms/content_setting:
-        content_id: "コンテンツ"
-        name: "設定名"
-        value: "設定値"
+        content_id: コンテンツ
+        name: 設定名
+        value: 設定値
 
       cms/layout:
-        concept_id: "コンセプト"
-        state_no: "状態"
-        sort_no: "並び順"
-        name: "レイアウトID"
-        title: "レイアウト名"
-        head: "標準 HEADタグ"
-        body: "標準 BODYタグ"
-        stylesheet: "標準 スタイルシート"
-        mobile_head: "携帯 HEADタグ"
-        mobile_body: "携帯 BODYタグ"
-        mobile_stylesheet: "携帯 スタイルシート"
-        smart_phone_head: "スマートフォン HEADタグ"
-        smart_phone_body: "スマートフォン BODYタグ"
-        smart_phone_stylesheet: "スマートフォン スタイルシート"
+        concept_id: コンセプト
+        state_no: 状態
+        sort_no: 並び順
+        name: レイアウトID
+        title: レイアウト名
+        head: 標準 HEADタグ
+        body: 標準 BODYタグ
+        stylesheet: 標準 スタイルシート
+        mobile_head: 携帯 HEADタグ
+        mobile_body: 携帯 BODYタグ
+        mobile_stylesheet: 携帯 スタイルシート
+        smart_phone_head: スマートフォン HEADタグ
+        smart_phone_body: スマートフォン BODYタグ
+        smart_phone_stylesheet: スマートフォン スタイルシート
 
       cms/piece:
-        concept_id: "コンセプト"
-        model: "アイテム種別"
-        state: "状態"
-        content_id: "コンテンツ"
-        name: "ピースID"
-        title: "ピース名"
-        view_title: "表示タイトル"
-        head: "ヘッダー"
-        body: "本文"
-        sort_no: "並び順"
+        concept_id: コンセプト
+        model: アイテム種別
+        state: 状態
+        content_id: コンテンツ
+        name: ピースID
+        title: ピース名
+        view_title: 表示タイトル
+        head: ヘッダー
+        body: 本文
+        sort_no: 並び順
 
       cms/piece_link_item:
-        state: "状態"
-        name: "リンク名"
-        uri: "URL"
-        sort_no: "並び順"
-        target: "対象ウィンドウ"
+        state: 状態
+        name: リンク名
+        uri: URL
+        sort_no: 並び順
+        target: 対象ウィンドウ
 
       cms/piece/pickup_doc:
         list_style: 表示形式
@@ -143,71 +143,71 @@ ja:
         top_label: TOPリンク文字
 
       cms/node:
-        parent_id: "親ディレクトリ"
-        concept_id: "コンセプト"
-        route_id: "パンくず"
-        layout_id:  "レイアウト"
-        state: "状態"
-        content_id: "コンテンツ"
-        model: "アイテム種別"
-        name: "ディレクトリ名"
-        title: "タイトル"
-        body: "本文"
-        mobile_title: "携帯タイトル"
-        mobile_body: "携帯本文"
-        sitemap_state: "サイトマップ"
-        sitemap_sort_no: "並び順"
+        parent_id: 親ディレクトリ
+        concept_id: コンセプト
+        route_id: パンくず
+        layout_id:  レイアウト
+        state: 状態
+        content_id: コンテンツ
+        model: アイテム種別
+        name: ディレクトリ名
+        title: タイトル
+        body: 本文
+        mobile_title: 携帯タイトル
+        mobile_body: 携帯本文
+        sitemap_state: サイトマップ
+        sitemap_sort_no: 並び順
 
       cms/kana_dictionary:
-        name: "名称"
-        body: "辞書データ"
+        name: 名称
+        body: 辞書データ
 
       cms/data_text:
-        concept_id: "コンセプト"
-        state: "状態"
-        name: "テキストID"
-        title: "テキスト名"
-        body: "本文"
-        module: "モジュール"
+        concept_id: コンセプト
+        state: 状態
+        name: テキストID
+        title: テキスト名
+        body: 本文
+        module: モジュール
 
       cms/data_file:
-        concept_id: "コンセプト"
-        node_id: "フォルダ"
-        file: "ファイル"
-        name: "保存ファイル名"
-        title: "表示ファイル名"
-        size: "サイズ"
-        alt_text: "代替テキスト"
+        concept_id: コンセプト
+        node_id: フォルダ
+        file: ファイル
+        name: 保存ファイル名
+        title: 表示ファイル名
+        size: サイズ
+        alt_text: 代替テキスト
 
       cms/data_file_node:
-        concept_id: "コンセプト"
-        name: "フォルダ名"
-        title: "説明"
+        concept_id: コンセプト
+        name: フォルダ名
+        title: 説明
 
       cms/feed:
-        state: "状態"
-        name: "フィードID"
-        title: "フィード名"
-        uri: "フィードURL"
-        feed_type: "フィード文書種別"
-        feed_id: "フィード文書ID"
-        feed_title: "フィード文書名"
-        link_alternate: "代替URL"
-        entry_count: "記事取込数"
+        state: 状態
+        name: フィードID
+        title: フィード名
+        uri: フィードURL
+        feed_type: フィード文書種別
+        feed_id: フィード文書ID
+        feed_title: フィード文書名
+        link_alternate: 代替URL
+        entry_count: 記事取込数
 
       cms/stylesheet:
-        path: "パス"
-        name: "ファイル名"
-        body: "内容"
-        new_directory: "新規ディレクトリ名"
-        new_file: "新規ファイル名"
-        new_upload: "ファイル"
+        path: パス
+        name: ファイル名
+        body: 内容
+        new_directory: 新規ディレクトリ名
+        new_file: 新規ファイル名
+        new_upload: ファイル
 
       ## node
       cms/node/page:
-        name: "ファイル名"
+        name: ファイル名
       cms/node/sitemap:
-        name: "ファイル名"
+        name: ファイル名
 
       cms/inquiry:
         group_id: 課
@@ -220,10 +220,10 @@ ja:
 
       ## tool
       cms/model/tool/export:
-        concept_id: "コンセプト"
+        concept_id: コンセプト
       cms/model/tool/import:
-        concept_id: "コンセプト"
-        file: "ファイル"
+        concept_id: コンセプト
+        file: ファイル
 
       tool/convert_download:
         site_url: サイトURL

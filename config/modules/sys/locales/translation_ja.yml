@@ -1,154 +1,154 @@
 ja:
   activerecord:
     models:
-      sys/user: "ユーザー"
-      sys/group: "グループ"
-      sys/role_name: "ロール"
-      sys/object_privilege: "権限"
-      sys/plugin: "プラグイン"
+      sys/user: ユーザー
+      sys/group: グループ
+      sys/role_name: ロール
+      sys/object_privilege: 権限
+      sys/plugin: プラグイン
     attributes:
 
       sys/sequence:
-        created_at: "作成日時"
-        updated_at: "更新日時"
-        name: "名前"
-        version: "バージョン"
-        value: "値"
+        created_at: 作成日時
+        updated_at: 更新日時
+        name: 名前
+        version: バージョン
+        value: 値
 
       sys/creator:
-        group_id: "所属"
-        user_id: "作成者"
+        group_id: 所属
+        user_id: 作成者
       creator:
-        group: "作成者グループ"
-        user: "作成者ユーザー"
+        group: 作成者グループ
+        user: 作成者ユーザー
 
       sys/language:
-        state: "状態"
-        created_at: "作成日時"
-        updated_at: "更新日時"
-        sort_no: "並び順"
-        name: "内部名前"
-        title: "表示名称"
+        state: 状態
+        created_at: 作成日時
+        updated_at: 更新日時
+        sort_no: 並び順
+        name: 内部名前
+        title: 表示名称
 
       sys/group:
-        state: "状態"
-        created_at: "作成日時"
-        updated_at: "更新日時"
-        parent_id: "上位グループ"
-        level_no: "階層"
-        sort_no: "並び順"
-        code: "グループID"
-        name: "グループ名"
-        name_en: "グループ名（英語表記）"
-        email: "メールアドレス"
-        ldap: "LDAP同期"
-        ldap_version: "LDAP同期バージョン"
-        web_state: "Web公開"
-        address: "住所"
-        tel: "TEL"
-        fax: "FAX"
-        outline_uri: "業務概要URL"
-        note: "備考"
+        state: 状態
+        created_at: 作成日時
+        updated_at: 更新日時
+        parent_id: 上位グループ
+        level_no: 階層
+        sort_no: 並び順
+        code: グループID
+        name: グループ名
+        name_en: グループ名（英語表記）
+        email: メールアドレス
+        ldap: LDAP同期
+        ldap_version: LDAP同期バージョン
+        web_state: Web公開
+        address: 住所
+        tel: TEL
+        fax: FAX
+        outline_uri: 業務概要URL
+        note: 備考
 
       sys/group_user:
-        created_at: "作成日時"
-        updated_at: "更新日時"
+        created_at: 作成日時
+        updated_at: 更新日時
 
       sys/user:
-        id: "ID"
-        created_at: "作成日時"
-        updated_at: "更新日時"
-        state: "状態"
-        account: "ユーザーID"
-        password: "パスワード"
-        ldap: "LDAP同期"
-        ldap_version: "LDAP同期バージョン"
-        auth_no: "ユーザー権限"
-        name: "氏名"
-        name_en: "氏名(英語表記)"
-        kana: "かな"
-        email: "メールアドレス"
-        remember_token: "トークン"
-        remember_token_expires_at: "トークン有効期限"
-        group_id: "グループ"
-        in_group_id: "グループ"
-        role_name: "ロール権限"
-        admin_creatable: "サイト管理者作成"
+        id: ID
+        created_at: 作成日時
+        updated_at: 更新日時
+        state: 状態
+        account: ユーザーID
+        password: パスワード
+        ldap: LDAP同期
+        ldap_version: LDAP同期バージョン
+        auth_no: ユーザー権限
+        name: 氏名
+        name_en: 氏名(英語表記)
+        kana: かな
+        email: メールアドレス
+        remember_token: トークン
+        remember_token_expires_at: トークン有効期限
+        group_id: グループ
+        in_group_id: グループ
+        role_name: ロール権限
+        admin_creatable: サイト管理者作成
 
       sys/role_name:
-        name: "ロールID"
-        title: "ロール名"
+        name: ロールID
+        title: ロール名
 
       sys/object_privilege:
-        concept_id: "コンセプト"
-        action: "権限"
-        in_actions: "権限"
+        concept_id: コンセプト
+        action: 権限
+        in_actions: 権限
 
       sys/maintenance:
-        created_at: "作成日時"
-        updated_at: "編集日時"
-        published_at: "公開日時"
-        state: "状態"
-        title: "タイトル"
-        body: "本文"
+        created_at: 作成日時
+        updated_at: 編集日時
+        published_at: 公開日時
+        state: 状態
+        title: タイトル
+        body: 本文
 
       sys/message:
-        created_at: "作成日時"
-        updated_at: "編集日時"
-        published_at: "公開日時"
-        state: "状態"
-        title: "タイトル"
-        body: "本文"
+        created_at: 作成日時
+        updated_at: 編集日時
+        published_at: 公開日時
+        state: 状態
+        title: タイトル
+        body: 本文
 
       sys/file:
-        file: "ファイル"
-        name: "保存ファイル名"
-        title: "表示ファイル名"
-        alt_text: "代替テキスト"
+        file: ファイル
+        name: 保存ファイル名
+        title: 表示ファイル名
+        alt_text: 代替テキスト
 
       sys/operation_log:
-        id: "ID"
-        created_at: "操作日時"
-        updated_at: "更新日時"
-        user_id: "ユーザーID（内部ID）"
-        user_name: "ユーザー名"
-        ipaddr: "IPアドレス"
-        uri: "URL"
-        action: "操作"
-        item: "操作アイテム"
-        item_model: "操作アイテム種別"
-        item_id: "操作アイテムID"
-        item_name: "操作アイテム名"
+        id: ID
+        created_at: 操作日時
+        updated_at: 更新日時
+        user_id: ユーザーID（内部ID）
+        user_name: ユーザー名
+        ipaddr: IPアドレス
+        uri: URL
+        action: 操作
+        item: 操作アイテム
+        item_model: 操作アイテム種別
+        item_id: 操作アイテムID
+        item_name: 操作アイテム名
 
       sys/process:
-        id: "ID"
-        started_at: "開始日時"
-        closed_at: "終了日時"
-        created_at: "操作日時"
-        updated_at: "更新日時"
-        user_id: "ユーザーID（内部ID）"
-        user_name: "ユーザー名"
-        name: "プロセス"
-        title: "処理"
-        total: "処理数"
-        success: "成功"
-        error: "失敗"
+        id: ID
+        started_at: 開始日時
+        closed_at: 終了日時
+        created_at: 操作日時
+        updated_at: 更新日時
+        user_id: ユーザーID（内部ID）
+        user_name: ユーザー名
+        name: プロセス
+        title: 処理
+        total: 処理数
+        success: 成功
+        error: 失敗
 
       sys/plugin:
-        id: "ID"
-        name: "プラグイン名"
-        title: "タイトル"
-        version: "バージョン"
-        state: "状態"
-        note: "備考"
-        sort_no: "並び順"
-        created_at: "作成日時"
+        id: ID
+        name: プラグイン名
+        title: タイトル
+        version: バージョン
+        state: 状態
+        note: 備考
+        sort_no: 並び順
+        created_at: 作成日時
 
   activemodel:
     attributes:
       sys/storage/entry:
-        name: "エントリ"
+        name: エントリ
       sys/storage/directory:
-        name: "ディレクトリ名"
+        name: ディレクトリ名
       sys/storage/file:
-        name: "ファイル名"
+        name: ファイル名
