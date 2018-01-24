@@ -34,7 +34,9 @@ display_embed_link = @content.respond_to?(:attachment_embed_link) ? @content.att
       <%- end -%>
       <td style="text-align: center;">
         <%- if item.image_file? -%>
-          <%= link_to image_tag(download_path, style: item.reduced_size(width: 80, height: 40, css: true)), { action: :crop, id: item }, class: 'thumbnail', title: item.title %>
+          <%= link_to url_for(action: :crop, id: item), class: 'thumbnail', title: item.title do %>
+            <%= image_tag download_path, style: thumbnail_style(item.image_width, item.image_height, 80, 40) %>
+          <%- end -%>
         <%- else -%>
           <%= link_to 'File', download_path, class: item.css_class %>
         <%- end -%>
@@ -55,14 +57,14 @@ display_embed_link = @content.respond_to?(:attachment_embed_link) ? @content.att
                     id: "link_image#{item.id}thumb" %>
                <%- end -%>
             </div>
-          <%- elsif item.csv? -%>
+          <%- elsif item.csv_file? -%>
             <div class="pasteLinks">
               <%= link_to '表貼付', download_path, id: "link_csv#{item.id}", class: 'insertCsv' %>
             </div>
           <%- end -%>
         <%- end -%>
       </td>
-      <td style="text-align: center;"><%= item.eng_unit %><br /><%= item.image_size %></td>
+      <td style="text-align: center;"><%= item.eng_unit %><br /><%= item.image_size if item.image_file? %></td>
     </tr>
   <% end %>
 </table>

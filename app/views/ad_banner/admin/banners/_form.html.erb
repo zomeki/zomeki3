@@ -10,7 +10,7 @@
   <tr>
     <th><%= f.label :file %> <span class="note">※</span></th>
     <td>
-      <%- if @item.file_exist? -%>
+      <%- if @item.persisted? && ::File.exist?(@item.upload_path) -%>
       <%= image_tag file_content_ad_banner_banner_path(content: @content, id: @item.id), width: 100 %><br />
       <%- end -%>
       <%= f.file_field :file, :style => 'width: 400px;' %>

@@ -40,7 +40,7 @@ class AdBanner::Admin::BannersController < Cms::Controller::Admin::Base
   def update
     @item = @content.banners.find(params[:id])
     @item.attributes = banner_params
-    @item.skip_upload if @item.file.blank? && @item.file_exist?
+    @item.skip_upload if @item.file.blank? && ::File.exist?(@item.upload_path)
     _update @item
   end
 

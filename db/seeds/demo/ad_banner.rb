@@ -41,7 +41,7 @@ def create(content, file_path, mime_type, name, title, sort_no, group, advertise
   AdBanner::Banner.create content_id: content.id,
     site_id: content.site_id,
     advertiser_name: advertiser_name,
-    file: Sys::Lib::File::NoUploadedFile.new("#{Rails.root}/db/seeds/demo/#{file_path}", :mime_type => mime_type),
+    file: Sys::Lib::File::NoUploadedFile.new(path: "#{Rails.root}/db/seeds/demo/#{file_path}", mime_type: mime_type),
     name: name,
     title: title,
     sort_no: sort_no,

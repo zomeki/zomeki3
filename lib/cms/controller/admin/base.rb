@@ -1,6 +1,5 @@
 class Cms::Controller::Admin::Base < Sys::Controller::Admin::Base
   include Cms::Controller::Layout
-  helper Cms::FormHelper
   layout  'admin/cms'
 
   def default_url_options

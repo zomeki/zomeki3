@@ -473,7 +473,7 @@ def create_data_file(concept, node_id, name, title, mime_type)
   file = Cms::DataFile.create site_id: concept.site_id, state: 'public',
     concept_id: concept.id, node_id: node_id,
     name: name, title: title,
-    file: Sys::Lib::File::NoUploadedFile.new("#{Rails.root}/db/seeds/demo/data/files/#{name}", :mime_type => mime_type)
+    file: Sys::Lib::File::NoUploadedFile.new(path: "#{Rails.root}/db/seeds/demo/data/files/#{name}", mime_type: mime_type)
   file.publish
 end
 create_data_file c_site , nil, 'qr.gif', 'QRコード', 'image/gif'
