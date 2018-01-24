@@ -19,3 +19,9 @@ ja:
         list_style: 組織一覧表示形式
       organization/piece/contact_information:
         in_settings_source: 取得元
+      organization/piece/categorized_doc:
+        list_count: 表示件数
+        docs_order: 記事表示順
+        doc_style: 記事表示形式
+        date_style: 日付形式
+        page_filter: 組織
