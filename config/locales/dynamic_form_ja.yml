@@ -1,0 +1,10 @@
+ja:
+  activerecord: &activerecord
+    errors:
+      template:
+        header:
+          one: "入力もれがあります。"
+          other: "%{count}個の入力もれがあります。"
+        body: "次の項目を確認してください。"
+  activemodel:
+    <<: *activerecord

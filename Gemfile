@@ -73,7 +73,6 @@ gem 'tamtam', '0.0.3'
 
 gem 'activerecord-import', '~> 0.17.1'
 gem 'addressable', '~> 2.3.8'
-gem 'dynamic_form', '~> 1.1.4'
 gem 'holiday_jp', '~> 0.6.1'
 gem 'jpmobile', '~> 5.0.0'
 gem 'mail', '~> 2.6.4'
@@ -88,6 +87,8 @@ gem 'rubyzip', '~> 1.2.1'
 gem 'simple_captcha2', '~> 0.4.2', require: 'simple_captcha'
 gem 'will_paginate', '~> 3.1.6'
 
+gem 'dynamic_form', '~> 1.1.4'
+gem 'rails-i18n', '~> 5.0.4'
 gem 'sanitize', '~> 4.5.0'
 
 gem 'delayed_job', '~> 4.1.3'
