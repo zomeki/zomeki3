@@ -1,0 +1,4 @@
+<%- css_class += [File.basename(menu_item.name, '.*').camelize(:lower)] -%>
+<li class="level<%= level %> <%= css_class.join('-') %>">
+  <%= link_to menu_item.title, menu_item.public_uri, class: "level#{level}" %>
+</li>
