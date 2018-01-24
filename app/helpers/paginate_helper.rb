@@ -19,7 +19,7 @@ module PaginateHelper
 
   class LinkRenderer < WillPaginate::ActionView::LinkRenderer
     def url(page)
-      if Core.mode_system?
+      if Core.request_uri == Core.internal_uri
         super
       else
         uri = Page.uri.dup

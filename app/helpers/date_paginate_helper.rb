@@ -10,30 +10,26 @@ module DatePaginateHelper
 
   class LinkRenderer < Datewari::Helper::LinkRenderer
     def url(date)
-      if Core.mode_system?
+      if Core.request_uri == Core.internal_uri
         super
       else
-        page = public_date_param(date)
+        page = if date == @paginator.pages.first
+                 ''
+               else
+                 case @paginator.scope
+                 when :monthly
+                   date.strftime('%Y%m')
+                 when :weekly
+                   date.strftime('%Y%m%d')
+                 else
+                   raise "unexpected date pagination scope: #{@paginator.scope}"
+                 end
+               end
         uri = Page.uri.dup
         uri.gsub!(/\/(\?|$)/, "/index.html\\1")
         uri.gsub!(/\.[0-9]+\.html/, ".html")
         uri.gsub!(/\.html/, ".#{page}.html") if page.present?
         uri
-      end
-    end
-
-    def public_date_param(date)
-      if date == @paginator.pages.first
-        ''
-      else
-        case @paginator.scope
-        when :monthly
-          date.strftime('%Y%m')
-        when :weekly
-          date.strftime('%Y%m%d')
-        else
-          raise "unexpected date pagination scope: #{@paginator.scope}"
-        end
       end
     end
   end
