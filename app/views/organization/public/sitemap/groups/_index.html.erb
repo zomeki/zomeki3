@@ -1,0 +1,6 @@
+<%- if (groups = node.content.public_top_layer_groups.visible_in_sitemap).present? -%>
+<ul class="level<%= level + 1 %> <%= css_class.join('-') %>">
+  <%= render partial: 'organization/public/sitemap/groups/group',
+             collection: groups, locals: { level: level + 1, css_class: css_class } %>
+</ul>
+<%- end -%>

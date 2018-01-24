@@ -112,6 +112,7 @@ GEM
       activesupport (>= 4.1.0)
     google-oauth2-installed (0.0.3)
       oauth2
+    holiday_jp (0.6.1)
     hpricot (0.8.6)
     htmlentities (4.3.4)
     http-cookie (1.0.3)
@@ -359,6 +360,7 @@ DEPENDENCIES
   faraday_middleware (~> 0.11.0.1)
   garb (~> 0.9.8)
   google-oauth2-installed (= 0.0.3)
+  holiday_jp (~> 0.6.1)
   hpricot (= 0.8.6)
   i18n_generators
   jbuilder (~> 2.5)

@@ -1,0 +1,6 @@
+<%- if (forms = node.content.public_forms.visible_in_sitemap).present? -%>
+<ul class="level<%= level + 1 %> <%= css_class.join('-') %>">
+  <%= render partial: 'survey/public/sitemap/forms/form',
+             collection: forms, locals: { level: level + 1, css_class: css_class } %>
+</ul>
+<%- end -%>

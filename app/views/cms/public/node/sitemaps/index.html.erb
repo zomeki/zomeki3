@@ -1,4 +1,4 @@
 <%- level = 1 -%>
 <ul class="sitemap level<%= level %>">
-  <%= render partial: 'node', collection: @items, locals: {level: level, css_class: ''} %>
+  <%= render partial: 'node', collection: @items, locals: { level: level, css_class: [] } %>
 </ul>

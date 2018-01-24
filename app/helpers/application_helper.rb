@@ -1,9 +1,4 @@
 module ApplicationHelper
-  ## query string
-  def query(params = nil)
-    Util::Http::QueryString.get_query(params)
-  end
-
   ## nl2br
   def br(str)
     str.gsub(/\r\n|\r|\n/, '<br />')
