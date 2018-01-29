@@ -67,7 +67,7 @@ class Feed::Feed < ApplicationRecord
     end
 
   rescue => e
-    dump "Error: #{e.class}"
+    error_log e
     errors.add :base, "Error: #{e.class}"
     return false
   end
@@ -135,7 +135,7 @@ class Feed::Feed < ApplicationRecord
         break if latest.size >= self.entry_count
       end
     rescue Exception => e
-      dump "FeedEntryError: #{e}"
+      error_log e
       errors.add :base, "FeedEntryError: #{e}"
     end
 

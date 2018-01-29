@@ -66,6 +66,10 @@ GEM
     concurrent-ruby (1.0.2)
     crass (1.0.2)
     database_rewinder (0.5.3)
+    datewari (1.0.1)
+      actionview (>= 5.0)
+      activerecord (>= 5.0)
+      activesupport (>= 5.0)
     debug_inspector (0.0.2)
     delayed_job (4.1.3)
       activesupport (>= 3.0, < 5.2)
@@ -108,6 +112,7 @@ GEM
       activesupport (>= 4.1.0)
     google-oauth2-installed (0.0.3)
       oauth2
+    holiday_jp (0.6.1)
     hpricot (0.8.6)
     htmlentities (4.3.4)
     http-cookie (1.0.3)
@@ -206,6 +211,9 @@ GEM
       nokogiri (>= 1.6)
     rails-html-sanitizer (1.0.3)
       loofah (~> 2.0)
+    rails-i18n (5.0.4)
+      i18n (~> 0.7)
+      railties (~> 5.0)
     rails_autolink (1.1.6)
       rails (> 3.1)
     rails_best_practices (1.16.0)
@@ -329,7 +337,7 @@ GEM
     websocket-extensions (0.1.2)
     whenever (0.9.7)
       chronic (>= 0.6.3)
-    will_paginate (3.1.5)
+    will_paginate (3.1.6)
 
 PLATFORMS
   ruby
@@ -342,6 +350,7 @@ DEPENDENCIES
   byebug
   coffee-rails (~> 4.2)
   database_rewinder
+  datewari (~> 1.0.1)
   delayed_job (~> 4.1.3)
   delayed_job_active_record (~> 4.1.2)
   delayed_job_master (~> 1.1.0)
@@ -354,6 +363,7 @@ DEPENDENCIES
   faraday_middleware (~> 0.11.0.1)
   garb (~> 0.9.8)
   google-oauth2-installed (= 0.0.3)
+  holiday_jp (~> 0.6.1)
   hpricot (= 0.8.6)
   i18n_generators
   jbuilder (~> 2.5)
@@ -373,6 +383,7 @@ DEPENDENCIES
   pry-byebug
   rails (= 5.0.0.1)
   rails-controller-testing
+  rails-i18n (~> 5.0.4)
   rails_autolink (~> 1.1.6)
   rails_best_practices
   rmagick (~> 2.15.4)
@@ -393,7 +404,7 @@ DEPENDENCIES
   unicorn-worker-killer (~> 0.4.4)
   web-console (~> 2.0)
   whenever (~> 0.9.7)
-  will_paginate (~> 3.1.5)
+  will_paginate (~> 3.1.6)
 
 BUNDLED WITH
    1.16.0

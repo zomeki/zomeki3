@@ -1,26 +1,56 @@
 <%= render 'shared/admin/piece/form', f: f do -%>
-  <p class="form">詳細設定</p>
+<p class="form">詳細設定</p>
 
-  <%- if (category_content = @piece.content.category_content) -%>
-  <table class="show">
-    <%- category_content.category_types.each do |category_type| -%>
-    <tr>
-      <th><%= category_type.title %></th>
-      <td>
-        <div id="category_type_<%= category_type.id %>_categories">
-          <%= render 'category', category_type: category_type, category: nil,
-                                 categories_for_option: category_type.categories_for_option %>
-          <%- @item.categories.where(category_type_id: category_type.id).each do |category| -%>
-          <%= render 'category', category_type: category_type, category: category,
-                                 categories_for_option: category_type.categories_for_option %>
+<table class="show">
+  <tr>
+    <th><%= @item.locale :list_count %></th>
+    <td><%= f.array_text_field 'in_settings[list_count]', class: 'number' %></td>
+  </tr>
+  <tr>
+    <th><%= @item.locale :docs_order %></th>
+    <td><%= f.array_select 'in_settings[docs_order]', @item.class::DOCS_ORDER_OPTIONS %></td>
+  </tr>
+  <tr>
+    <th><%= @item.locale :page_filter %></th>
+    <td><%= f.array_radio_buttons 'in_settings[page_filter]', @item.class::PAGE_FILTER_OPTIONS %></td>
+  </tr>
+  <tr>
+    <th>表示カテゴリ</th>
+    <td>
+      <%- if (category_content = @piece.content.category_content) -%>
+        <table class="show">
+          <%- category_content.category_types.each do |category_type| -%>
+          <tr>
+            <th><%= category_type.title %></th>
+            <td>
+              <div id="category_type_<%= category_type.id %>_categories">
+                <%= render 'category', category_type: category_type, category: nil,
+                                       categories_for_option: category_type.categories_for_option %>
+                <%- @item.categories.where(category_type_id: category_type.id).each do |category| -%>
+                <%= render 'category', category_type: category_type, category: category,
+                                       categories_for_option: category_type.categories_for_option %>
+                <%- end -%>
+                <span><%= button_tag '追加', type: 'button', class: 'add_category' %></span>
+              </div>
+            </td>
+          </tr>
           <%- end -%>
-          <span><%= button_tag '追加', type: 'button', class: 'add_category' %></span>
-        </div>
-      </td>
-    </tr>
-    <%- end -%>
-  </table>
-  <%- end -%>
+        </table>
+      <%- end -%>
+    </td>
+  </tr>
+  <tr>
+    <th><%= @item.locale :doc_style %></th>
+    <td>
+      <%= link_to '置き換えテキストを確認する', '#', class: 'show_dialog' %>
+      <%= f.array_text_area 'in_settings[doc_style]', size: '100x10' %>
+    </td>
+  </tr>
+  <tr>
+    <th><%= @item.locale :date_style %></th>
+    <td><%= f.array_text_field 'in_settings[date_style]', size: 50 %> 年：%Y 月：%m 日：%d 時：%H 分：%M 秒：%S</td>
+  </tr>
+</table>
 <%- end -%>
 
 <%- if (category_content = @piece.content.category_content) -%>
@@ -43,4 +73,15 @@ $(function () {
   <%- end -%>
 });
 <%- end -%>
+<%- end -%>
+
+<%= render 'gp_article/admin/shared/doc_style_tags' %>
+
+<%= javascript_tag do -%>
+$(document).ready(function () {
+  $('a.show_dialog').on('click', function() {
+    $('#doc_style_tags').dialog({width: 400});
+    return false;
+  });
+});
 <%- end -%>
