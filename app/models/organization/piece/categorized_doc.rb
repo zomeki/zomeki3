@@ -54,7 +54,7 @@ class Organization::Piece::CategorizedDoc < Cms::Piece
 
     settings['date_style'] = '%Y年%m月%d日 %H時%M分' if setting_value(:date_style).nil?
     settings['docs_order'] = 'published_at_desc' if setting_value(:docs_order).nil?
-    settings['page_filter'] = 'descendants' if setting_value(:docs_order).nil?
+    settings['page_filter'] = 'descendants' if setting_value(:page_filter).nil?
 
     self.in_settings = settings
   end
