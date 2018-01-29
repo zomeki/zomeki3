@@ -111,14 +111,17 @@ class Sys::Admin::AccountController < Sys::Controller::Admin::Base
       if password.blank? || password_confirmation.blank?
         flash[:alert] = 'パスワードを入力してください。'
         render :edit_password
-      elsif password == password_confirmation
+      elsif password != password_confirmation
+        flash[:alert] = 'パスワードが一致しません。'
+        render :edit_password
+      elsif user.password == password
+        flash[:alert] = '現在のパスワードと同じパスワードは使用できません。'
+        render :edit_password
+      else
         user.update_column(:reset_password_token_expires_at, nil)
         user.update_column(:reset_password_token, nil)
         user.update_column(:password, password)
         redirect_to admin_login_url, notice: 'パスワードを再設定しました。'
-      else
-        flash[:alert] = 'パスワードが一致しません。'
-        render :edit_password
       end
     end
   end
