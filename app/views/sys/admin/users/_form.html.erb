@@ -61,7 +61,10 @@
 <table class="show">
   <tr>
     <th><%= @item.locale(:password) %></th>
-    <td><%= f.text_field :password, :class => 'id' %></td>
+    <td>
+      <%= f.text_field :password, :class => 'id' %>
+      <span style="margin-left: 10px;"><%= button_tag 'ランダムパスワード設定', type: 'button', id: 'genRandomPass' %></span>
+    </td>
   </tr>
 </table>
 
@@ -73,6 +76,10 @@ $(document).ready(function() {
     } else {
       $('#auth_extra_settings').hide();
     }
+  });
+  $('#genRandomPass').on('click', function() {
+    var pass = Math.random().toString(36).slice(-8);
+    $('#item_password').val(pass);
   });
 });
 </script>
