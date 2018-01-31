@@ -86,6 +86,7 @@ gem 'rqrcode_png', '~> 0.1.5'
 gem 'rubyzip', '~> 1.2.1'
 gem 'simple_captcha2', '~> 0.4.2', require: 'simple_captcha'
 gem 'will_paginate', '~> 3.1.6'
+gem 'romaji', '~> 0.2.4'
 
 gem 'dynamic_form', '~> 1.1.4'
 gem 'rails-i18n', '~> 5.0.4'
