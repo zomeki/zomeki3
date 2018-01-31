@@ -73,7 +73,7 @@ gem 'tamtam', '0.0.3'
 
 gem 'activerecord-import', '~> 0.17.1'
 gem 'addressable', '~> 2.3.8'
-gem 'dynamic_form', '~> 1.1.4'
+gem 'holiday_jp', '~> 0.6.1'
 gem 'jpmobile', '~> 5.0.0'
 gem 'mail', '~> 2.6.4'
 gem 'mail-iso-2022-jp', '~> 2.0.7'
@@ -85,8 +85,10 @@ gem 'rmagick', '~> 2.15.4'
 gem 'rqrcode_png', '~> 0.1.5'
 gem 'rubyzip', '~> 1.2.1'
 gem 'simple_captcha2', '~> 0.4.2', require: 'simple_captcha'
-gem 'will_paginate', '~> 3.1.5'
+gem 'will_paginate', '~> 3.1.6'
 
+gem 'dynamic_form', '~> 1.1.4'
+gem 'rails-i18n', '~> 5.0.4'
 gem 'sanitize', '~> 4.5.0'
 
 gem 'delayed_job', '~> 4.1.3'
@@ -105,6 +107,7 @@ gem 'postgres-copy', '~> 1.1.0', require: false
 
 gem 'logical_query_parser', '~> 0.2.0'
 gem 'params_keeper_rails', '~> 1.0.0'
+gem 'datewari', '~> 1.0.1'
 gem 'slonik_migration', '~> 1.0.0'
 
 # Plugins

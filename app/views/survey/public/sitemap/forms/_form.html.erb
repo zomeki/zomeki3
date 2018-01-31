@@ -1,0 +1,4 @@
+<%- css_class += [File.basename(form.name, '.*').camelize(:lower)] -%>
+<li class="level<%= level %> <%= css_class.join('-') %>">
+  <%= link_to form.title, form.public_uri, class: "level#{level}" %>
+</li>

@@ -41,6 +41,11 @@
 <% @results.each do |result| %>
 <%- reset_cycle -%>
 <p style="margin: 10px 0px; padding: 2px 5px; border-left: 4px solid #bbb;"><%= result[:title] %></p>
+<%- if result[:items].size > 0 -%>
+<div class="pageEntryInfo">
+  <%= result[:items].size %>件表示
+</div>
+<%- end -%>
 <table class="index">
   <tr>
     <th style="width: 70px; text-align: right;">ID</th>

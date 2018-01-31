@@ -1,0 +1,11 @@
+<%- css_class += [File.basename(group.name, '.*').camelize(:lower)] -%>
+<li class="level<%= level %> <%= css_class.join('-') %>">
+  <%= link_to group.sys_group.try!(:name), group.public_uri, class: "level#{level}" %>
+
+  <%- if (children = group.public_children.visible_in_sitemap).present? -%>
+  <ul class="level<%= level + 1 %> <%= css_class.join('-') %>">
+    <%= render partial: 'organization/public/sitemap/groups/group',
+               collection: children, locals: { level: level + 1, css_class: css_class } %>
+  </ul>
+  <%- end -%>
+</li>

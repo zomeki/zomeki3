@@ -66,7 +66,7 @@ class Util::Date::Calendar
       day[:wday] = w
       day[:wday_label] = @@wday_specs[w][:label]
       
-      day[:holiday] = holiday?(day[:year], day[:month], day[:day], w) || nil
+      day[:holiday] = holiday?(day[:year], day[:month], day[:day]) || nil
       hclass = day[:holiday] ? ' holiday' : ''
       day[:class] += ' ' + @@wday_specs[w][:class] + hclass
       
@@ -84,8 +84,8 @@ class Util::Date::Calendar
     day
   end
   
-  def holiday?(year, month, day, wday = nil)
-    Util::Date::Holiday.holiday?(year, month, day, wday)
+  def holiday?(year, month, day)
+    HolidayJp.holiday?(Date.new(year, month, day)).try(:name)
   end
   
   def year

@@ -1,0 +1,9 @@
+<%- category_types = node.content.public_category_types.visible_in_sitemap
+    category_types = GpCategory::CategoryTypesPreloader.new(category_types).preload(:public_node_ancestors)
+-%>
+<%- if category_types.present? -%>
+<ul class="level<%= level + 1 %> <%= css_class.join('-') %>">
+  <%= render partial: 'gp_category/public/sitemap/category_types/category_type',
+             collection: category_types, locals: { level: level + 1, css_class: css_class } %>
+</ul>
+<%- end -%>

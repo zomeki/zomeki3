@@ -1,9 +1,4 @@
 module ApplicationHelper
-  ## query string
-  def query(params = nil)
-    Util::Http::QueryString.get_query(params)
-  end
-
   ## nl2br
   def br(str)
     str.gsub(/\r\n|\r|\n/, '<br />')
@@ -29,46 +24,6 @@ module ApplicationHelper
       #  raise
       #end
     end
-  end
-
-  ## paginates
-  def paginate(items, options = {})
-    return '' unless items
-    lang = options[:lang].presence || :ja
-    defaults = {
-      :params         => params.merge(jpmobile: nil),
-      :previous_label => I18n.t("will_paginate.previous_label", {locale: lang}),
-      :next_label     => I18n.t("will_paginate.next_label", {locale: lang}),
-      :link_separator => '<span class="separator"> | </span' + "\n" + '>'
-    }
-    if request.mobile?
-      defaults[:page_links]     = false
-      defaults[:previous_label] = I18n.t("will_paginate.mobile_previous_label", {locale: lang})
-      defaults[:next_label]     = I18n.t("will_paginate.mobile_next_label", {locale: lang})
-    end
-    defaults[:previous_label] = options[:prev_label] if options[:prev_label].present?
-    defaults[:next_label]     = options[:next_label] if options[:next_label].present?
-    links = will_paginate(items, defaults.deep_merge!(options))
-    return links if links.blank?
-
-    if Core.request_uri != Core.internal_uri
-      links.gsub!(/href="(#{URI.encode Core.internal_uri}[^"]+|#{URI.encode File.dirname(Core.internal_uri)}[^"]+)/m) do |m|
-        page = m =~ /(\?|\&amp;)page=([0-9]+)/ ? m.gsub(/.*(\?|\&amp;)page=([0-9]+).*/, '\\2') : 1
-        uri  = m.gsub(/^href="(#{URI.encode Core.internal_uri}|#{URI.encode Core.internal_uri.gsub(/\.html/,'')}|#{URI.encode File.dirname(Core.internal_uri)})/, URI.encode(Page.uri))
-        uri.gsub!(/\/(\?|$)/, "/index.html\\1")
-        uri.gsub!(/\.p[0-9]+\.html/, ".html")
-        uri.gsub!(/\.html/, ".p#{page}.html") if page.to_i > 1
-        uri.gsub!(/\&amp;page=\d+/, '')
-        uri.gsub!(/\?page=\d+/, '?')
-        uri.sub!(/\?\z/, '')
-        %Q(href="#{uri})
-      end
-    end
-    if request.mobile?
-      links.gsub!(/<a [^>]*?rel="prev( |")/) {|m| m.gsub(/<a /, '<a accesskey="*" ')}
-      links.gsub!(/<a [^>]*?rel="next( |")/) {|m| m.gsub(/<a /, '<a accesskey="#" ')}
-    end
-    links.html_safe
   end
 
   ## number format

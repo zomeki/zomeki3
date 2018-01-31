@@ -183,7 +183,7 @@ class BizCalendar::BussinessHoliday < ApplicationRecord
       while(_dates.size < limit) do
         dt = dt + 1 if count > 0
         count += 1
-        next if (dt.wday == 0 || dt.wday == 6 || Util::Date::Holiday.holiday?(dt.year, dt.month, dt.day, dt.wday))
+        next if (dt.wday == 0 || dt.wday == 6 || HolidayJp.holiday?(dt))
         break if edate && edate < dt
         next if end_type != 1 && sdate && sdate > dt
         _dates << dt
@@ -198,9 +198,9 @@ class BizCalendar::BussinessHoliday < ApplicationRecord
         dt = dt + 1 if count > 0
         count += 1
         if repeat_type == 'saturdays'
-          next if !Util::Date::Holiday.holiday?(dt.year, dt.month, dt.day, dt.wday) && (dt.wday != 0 && dt.wday != 6)
+          next if !HolidayJp.holiday?(dt) && (dt.wday != 0 && dt.wday != 6)
         else
-          next if !Util::Date::Holiday.holiday?(dt.year, dt.month, dt.day, dt.wday)
+          next if !HolidayJp.holiday?(dt)
         end
         break if edate && edate < dt
         next if end_type != 1 && sdate && sdate > dt

@@ -87,7 +87,9 @@ class Tool::Convert
 
     if conf.overwrite == 1
       conf.dump "--- 記事非公開処理"
-      docs = GpArticle::Doc.where(content_id: conf.content_id).where.not(id: processed_doc_ids)
+      docs = GpArticle::Doc.where(content_id: conf.content_id)
+                           .where(id: Tool::ConvertDoc.select(:docable_id).where(content_id: conf.content_id))
+                           .where.not(id: processed_doc_ids)
       docs.each do |doc|
         doc.close
         conf.dump "記事非公開: #{doc.id} #{doc.title}"

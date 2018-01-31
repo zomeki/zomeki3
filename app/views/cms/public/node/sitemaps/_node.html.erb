@@ -1,51 +1,21 @@
 <%-
-  return '' unless node.sitemap_visible?
-  css_class = "#{css_class + '-' if css_class.present?}#{File.basename(node.name.to_s, '.*').camelize(:lower)}"
+return '' unless node.sitemap_visible?
+css_class += [File.basename(node.name.to_s, '.*').camelize(:lower)]
 -%>
-<li class="level<%= level %> <%= css_class %>">
+<li class="level<%= level %> <%= css_class.join('-') %>">
   <%= link_to node.title, node.public_uri, class: "level#{level}" %>
 
-  <%- case node.model -%>
-  <%- when 'GpCategory::CategoryType' -%>
-    <%- category_types = node.content.public_category_types.visible_in_sitemap
-        category_types = GpCategory::CategoryTypesPreloader.new(category_types).preload(:public_node_ancestors)
-    -%>
-    <%- if category_types.present? -%>
-    <ul class="level<%= level + 1 %> <%= css_class %>">
-      <%= render partial: 'category_type', collection: category_types, locals: {level: level + 1, css_class: css_class} %>
-    </ul>
+  <%- if node.model !~ /^Cms::/ -%>
+    <%- names = node.model.split('::').map(&:underscore)
+        path = "#{names[0]}/public/sitemap/#{names[1].to_s.pluralize}" -%>
+    <%- if lookup_context.exists?('index', path, true) -%>
+      <%= render "#{path}/index", node: node, css_class: css_class, level: level %>
     <%- end -%>
-
-  <%- when 'Organization::Group' -%>
-    <%- groups = node.content.public_top_layer_groups.visible_in_sitemap -%>
-    <%- if groups.present? -%>
-    <ul class="level<%= level + 1 %> <%= css_class %>">
-      <%= render partial: 'organization_group', collection: groups, locals: {level: level + 1, css_class: css_class} %>
-    </ul>
-    <%- end -%>
-
-  <%- when 'Survey::Form' -%>
-    <%- forms = node.content.public_forms.visible_in_sitemap -%>
-    <%- if forms.present? -%>
-    <ul class="level<%= level + 1 %> <%= css_class %>">
-      <%= render partial: 'survey_form', collection: forms, locals: {level: level + 1, css_class: css_class} %>
-    </ul>
-    <%- end -%>
-
-  <%- when 'Gnav::MenuItem' -%>
-    <%- menu_items = node.content.public_menu_items.visible_in_sitemap
-        menu_items = Cms::ContentsPreloader.new(menu_items).preload(:public_node_ancestors) -%>
-    <%- if menu_items.present? -%>
-    <ul class="level<%= level + 1 %> <%= css_class %>">
-      <%= render partial: 'gnav_menu_item', collection: menu_items, locals: {level: level + 1, css_class: css_class} %>
-    </ul>
-    <%- end -%>
-
   <%- end -%>
 
   <%- if (children = node.public_children_for_sitemap).present? -%>
-  <ul class="level<%= level + 1 %> <%= css_class %>">
-    <%= render partial: 'node', collection: children, locals: {level: level + 1, css_class: css_class} %>
+  <ul class="level<%= level + 1 %> <%= css_class.join('-') %>">
+    <%= render partial: 'node', collection: children, locals: { level: level + 1, css_class: css_class } %>
   </ul>
   <%- end -%>
 </li>
