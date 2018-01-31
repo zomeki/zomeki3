@@ -4,131 +4,166 @@
 function Navigation() {
 }
 
-function Navigation_initialize(settings) {
+Navigation.initialize = function(settings) {
   Navigation.settings = settings
-  
+
   if (Navigation.settings['theme']) {
     jQuery.each(Navigation.settings['theme'], function(key, val) {
-      $(key).click(function(){
+      $(key).on('click', function(){
         Navigation.theme(val);
         return false;
       });
     });
+    Navigation.theme();
   }
-  
+
   if (Navigation.settings['fontSize']) {
     jQuery.each(Navigation.settings['fontSize'], function(key, val) {
-      $(key).click(function(){
+      $(key).on('click', function(){
         Navigation.fontSize(val);
         return false;
       });
     });
+    Navigation.fontSize();
   }
-  
+
+  if (Navigation.settings['zoom']) {
+    jQuery.each(Navigation.settings['zoom'], function(key, val) {
+      $(key).on('click', function(){
+        Navigation.zoom(val);
+        return false;
+      });
+    });
+    Navigation.zoom();
+  }
+
   if (Navigation.settings['ruby']) {
-    $(Navigation.settings['ruby']).click(function(){
+    $(Navigation.settings['ruby']).on('click', function() {
       var flag = ($(this).attr('class') + '').match(/(^| )rubyOn( |$)/);
-      Navigation.ruby( (flag ? 'off' : 'on') );
+      Navigation.ruby( (flag ? 'off' : 'on'), 'kana' );
       return false;
     });
+    if (Navigation.settings['rubyKana']) {
+      $(Navigation.settings['rubyKana']).on('click', function() {
+        Navigation.ruby(undefined, 'kana');
+        return false;
+      });
+    }
+    if (Navigation.settings['rubyRoman']) {
+      $(Navigation.settings['rubyRoman']).on('click', function() {
+        Navigation.ruby(undefined, 'roman');
+        return false;
+      });
+    }
+    Navigation.ruby();
   }
-  
+
   if (Navigation.settings['talk']) {
-    $(Navigation.settings['talk']).click(function(){
+    $(Navigation.settings['talk']).on('click', function(){
       var flag = ($(this).attr('class') + '').match(/(^| )talkOn( |$)/);
       Navigation.talk( (flag ? 'off' : 'on') );
       return false;
     });
   }
-  
-  Navigation.theme();
-  Navigation.fontSize();
-  Navigation.ruby();
-}
-Navigation.initialize = Navigation_initialize;
-  
-    // if (this.settings['talk']) {
-      // var k = this.settings['talk'];
-      // if (k) {
-        // $(this.settings['talk']).addClassName('talkOff');
-        // Event.observe($(k), 'click', function(evt) {self.talk(evt); Event.stop(evt);}, false);
-      // }
-    // }
-  
-  // this.talk = function(evt) {
-    // var element = Event.element(evt);
-    // Navigation.talk(element, $(this.settings['player']), $(this.settings['notice']));
-  // }
+};
 
-function Navigation_theme(theme) {
+Navigation.theme = function(theme) {
   if (theme) {
     $.cookie('navigation_theme', theme, {path: '/'});
   } else {
     theme = $.cookie('navigation_theme');
-    if (!theme) return false;
   }
-  $('link[title]').each(function() {
-    this.disabled = true;
-    if (theme == $(this).attr('title')) this.disabled = false;
-  });
-}
-Navigation.theme = Navigation_theme;
+  if (theme) {
+    $('link[title]').each(function() {
+      this.disabled = true;
+      if (theme == $(this).attr('title')) this.disabled = false;
+    });
+  }
+};
 
-function Navigation_fontSize(size) {
+Navigation.fontSize = function(size) {
   if (size) {
     $.cookie('navigation_font_size', size, {path: '/'});
   } else {
     size = $.cookie('navigation_font_size');
-    if (!size) return false;
   }
-  $('body').css('font-size', size);
-}
-Navigation.fontSize = Navigation_fontSize;
+  if (size) {
+    $('body').css('font-size', size);
+  }
+};
 
-function Navigation_ruby(flag) {
-  if (!Navigation.settings['ruby']) return false;
-  var elem = $(Navigation.settings['ruby']);
-  if (flag == 'on') {
+Navigation.zoom = function(zoom) {
+  if (zoom) {
+    $.cookie('navigation_zoom', zoom, {path: '/'});
+  } else {
+    zoom = $.cookie('navigation_zoom');
+  }
+  if (zoom) {
+    $('body').css('transform-origin', 'top left')
+             .css('transform', 'scale(' + zoom + ')');
+  }
+};
+
+Navigation.ruby = function(flag, type) {
+  if (flag) {
     $.cookie('navigation_ruby', flag, {path: '/'});
+  } else {
+    flag = $.cookie('navigation_ruby');
+  }
+  if (type) {
+    $.cookie('navigation_ruby_type', type, {path: '/'});
+  } else {
+    type = $.cookie('navigation_ruby_type');
+  }
+
+  if (flag == 'on') {
     if (location.pathname.search(/\/$/i) != -1) {
       location.href = location.pathname + "index.html.r" + location.search;
+      return;
     } else if (location.pathname.search(/\.html\.mp3$/i) != -1) {
       location.href = location.pathname.replace(/\.html\.mp3$/, ".html.r") + location.search;
+      return;
     } else if (location.pathname.search(/\.html$/i) != -1) {
       location.href = location.pathname.replace(/\.html$/, ".html.r") + location.search;
-    } else if (location.pathname.search(/\.html$/i) != -1) {
-      location.href = location.pathname.replace(/\.html$/, ".html.r") + location.search;
-    } else {
-      location.href = location.href.replace(/#.*/, '');
+      return;
     }
   } else if (flag == 'off') {
-    $.cookie('navigation_ruby', flag, {path: '/'});
     if (location.pathname.search(/\.html\.r$/i) != -1) {
       location.href = location.pathname.replace(/\.html\.r$/, ".html") + location.search;
-    } else {
-      location.reload();
+      return;
     }
   }
-  if (flag) return;
-  
-  if ($.cookie('navigation_ruby') == 'on') {
-    if (location.pathname.search(/\/$/i) != -1) {
-      location.href = location.pathname + "index.html.r" + location.search;
-    } else if (location.pathname.search(/\.html$/i) != -1) {
-      location.href = location.pathname.replace(/\.html/, ".html.r") + location.search;
+
+  var elem = $(Navigation.settings['ruby']);
+  var elemKana = $(Navigation.settings['rubyKana']);
+  var elemRoman = $(Navigation.settings['rubyRoman']);
+
+  elemKana.removeClass('current');
+  elemRoman.removeClass('current');
+  $('rt.kana, rt.roman').hide();
+
+  if (flag == 'on') {
+    if (type == 'roman') {
+      $('rt.roman').show();
+      elemRoman.addClass('current');
     } else {
-      elem.removeClass('rubyOff');
-      elem.addClass('rubyOn');
-      Navigation.notice();
+      $('rt.kana').show();
+      elemKana.addClass('current');
     }
+    elem.removeClass('rubyOff');
+    elem.addClass('rubyOn');
+    elemKana.show();
+    elemRoman.show();
+    Navigation.notice();
   } else {
     elem.removeClass('rubyOn');
     elem.addClass('rubyOff');
+    elemKana.hide();
+    elemRoman.hide();
   }
-}
-Navigation.ruby = Navigation_ruby;
+};
 
-function Navigation_Talk(flag) {
+Navigation.talk = function(flag) {
   var player = $(Navigation.settings['player']);
   var elem   = $(Navigation.settings['talk']);
   if (!player || !elem) return false;
@@ -172,10 +207,9 @@ function Navigation_Talk(flag) {
   } else {
     location.href = uri;
   }
-}
-Navigation.talk = Navigation_Talk;
+};
 
-function Navigation_notice(flag) {
+Navigation.notice = function(flag) {
   var wrap   = Navigation.settings['notice'] || 'container';
   var notice = $('#navigationNotice');
   
@@ -192,5 +226,4 @@ function Navigation_notice(flag) {
     '人名，地名，用語等が正確に発音されない場合があります。';
   // $(wrap + ' *:first').before(notice);
   $('#accessibilityTool').prepend(notice);
-}
-Navigation.notice = Navigation_notice;
+};

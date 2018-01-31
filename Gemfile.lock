@@ -243,6 +243,8 @@ GEM
     responders (2.3.0)
       railties (>= 4.2.0, < 5.1)
     rmagick (2.15.4)
+    romaji (0.2.4)
+      rake (>= 0.8.0)
     rqrcode (0.10.1)
       chunky_png (~> 1.0)
     rqrcode_png (0.1.5)
@@ -387,6 +389,7 @@ DEPENDENCIES
   rails_autolink (~> 1.1.6)
   rails_best_practices
   rmagick (~> 2.15.4)
+  romaji (~> 0.2.4)
   rqrcode_png (~> 0.1.5)
   rspec-rails (~> 3.5, >= 3.5.2)
   rubocop
