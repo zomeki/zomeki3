@@ -1,4 +1,4 @@
-class Cms::Admin::Data::TextsController < Cms::Controller::Admin::Base
+class Cms::Admin::DataTextsController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 
   def pre_dispatch

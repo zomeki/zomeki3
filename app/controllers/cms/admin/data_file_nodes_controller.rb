@@ -1,4 +1,4 @@
-class Cms::Admin::Data::FileNodesController < Cms::Controller::Admin::Base
+class Cms::Admin::DataFileNodesController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 
   def pre_dispatch
