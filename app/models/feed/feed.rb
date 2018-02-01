@@ -78,7 +78,7 @@ class Feed::Feed < ApplicationRecord
     channel = root.elements['channel']
     self.feed_id        = nil
     self.feed_type      = root.name.downcase
-    self.feed_updated   = Core.now
+    self.feed_updated   = Time.now
     self.feed_title     = channel.elements['title'].text
     self.link_alternate = channel.elements['link'].text
     self.entry_count ||= 20

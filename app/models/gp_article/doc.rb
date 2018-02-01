@@ -505,17 +505,13 @@ class GpArticle::Doc < ApplicationRecord
 
   def set_name
     return if self.name.present?
-    date = if created_at
-             created_at.strftime('%Y%m%d')
-           else
-             Date.strptime(Core.now, '%Y-%m-%d').strftime('%Y%m%d')
-           end
+    date = (created_at || Time.now).strftime('%Y%m%d')
     seq = Util::Sequencer.next_id('gp_article_docs', version: date, site_id: content.site_id)
     self.name = Util::String::CheckDigit.check(date + format('%04d', seq))
   end
 
   def set_published_at
-    self.published_at ||= Core.now if self.state == 'public'
+    self.published_at ||= Time.now if self.state == 'public'
   end
 
   def set_defaults

@@ -365,7 +365,7 @@ class Cms::Node < ApplicationRecord
     concerning :Publication do
       def publish
         self.state = 'public'
-        self.published_at ||= Core.now
+        self.published_at ||= Time.now
         transaction do
           return false unless save(validate: false)
           rebuild

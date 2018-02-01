@@ -38,7 +38,7 @@ module Sys::Model::Rel::Recognition
     rs = recognition.recognize(user)
 
     if state == 'recognize' && recognition.recognized_all?
-      update_columns(state: 'recognized', recognized_at: Core.now)
+      update_columns(state: 'recognized', recognized_at: Time.now)
     end
     return rs
   end

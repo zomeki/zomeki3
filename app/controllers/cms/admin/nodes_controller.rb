@@ -56,7 +56,7 @@ class Cms::Admin::NodesController < Cms::Controller::Admin::Base
     @item.site_id      = Core.site.id
     #@item.parent_id    = @parent.id
     @item.state        = 'closed'
-    @item.published_at = Core.now
+    @item.published_at = Time.now
     @item.name         = "tmp" # for validation
     @item.title        = @item.content_model_name.to_s.gsub(/.*\//, '')
 

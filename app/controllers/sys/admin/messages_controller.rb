@@ -19,7 +19,7 @@ class Sys::Admin::MessagesController < Cms::Controller::Admin::Base
   end
 
   def new
-    @item = @messages.build(state: 'public', published_at: Core.now)
+    @item = @messages.build(state: 'public', published_at: Time.now)
   end
 
   def create

@@ -63,7 +63,7 @@ class Sys::Recognition < ApplicationRecord
     
     info = info(user.id)
     info.id            = user.id
-    info.recognized_at = Core.now
+    info.recognized_at = Time.now.to_s(:db)
     info.save
   end
   
