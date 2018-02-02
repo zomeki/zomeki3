@@ -13,7 +13,7 @@
         <td style="text-align: center;"><%= link_to :show, { path: path, do: 'show' } %></td>
         <td class="name"><%= link_to h(item.name), cms_tool_convert_files_path(path: path) %></td>
         <td> </td>
-        <td style="text-align: center;"><%=l item.mtime if item.mtime %></td>
+        <td style="text-align: center;"><%=l item.mtime %></td>
         <td style="text-align: center;"><%= link_to '変換設定', new_cms_tool_convert_setting_path(item: { site_url: path }) %></td>
       </tr>
     <%- else -%>
@@ -21,7 +21,7 @@
         <td style="text-align: center;"><%= link_to :show, { path: path, do: 'show' } %> </td>
         <td class="name"><%= link_to h(item.name), { path: path, do: 'show' } %></td>
         <td style="text-align: right;"><%= number_format item.kb_size %> KB</td>
-        <td style="text-align: center;"><%=l item.mtime if item.mtime %></td>
+        <td style="text-align: center;"><%=l item.mtime %></td>
         <td style="text-align: center;"></td>
       </tr>
     <%- end -%>

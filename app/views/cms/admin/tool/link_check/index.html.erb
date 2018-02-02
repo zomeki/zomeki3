@@ -32,7 +32,7 @@
       <td><%= link_to log.url, log.url, target: 'preview' %></td>
       <td style="text-align: center;"><%= log.result_state_mark %></td>
       <td><%= log.status %> <%= log.reason %></td>
-      <td style="text-align: center;"><%=l log.checked_at if log.checked_at %></td>
+      <td style="text-align: center;"><%=l log.checked_at %></td>
     </tr>
   <%- end -%>
 </table>
