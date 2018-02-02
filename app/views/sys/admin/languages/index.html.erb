@@ -9,7 +9,7 @@
     <th style="width: 60px; text-align: center;">状態</th>
   </tr>
   
-  <% for item in @items %>
+  <% @items.each do |item| %>
   <tr class="<%= cycle '', 'cycle' %>">
     <td style="text-align: center;"><%= link_to :show, url_for(:action => :show, :id => item) %></td>
     <td style="text-align: right;"><%= item.id %></td>

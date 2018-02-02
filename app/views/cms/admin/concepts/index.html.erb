@@ -9,7 +9,7 @@
     <div>
       <%= link_to :up, url_for(:parent => @parent.parent_id) if @parent.id != 0 %></div>
     
-    <% for item in @items %>
+    <% @items.each do |item| %>
     <%= link_to :show, url_for(:action => :show, :id => item) %>
     <%= link_to item.name, url_for(:action => :index, :parent => item) %>
     <span class="remark"><%= item.sort_no %></span><br />

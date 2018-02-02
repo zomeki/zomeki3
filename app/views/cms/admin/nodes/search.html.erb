@@ -12,7 +12,7 @@
     <th style="width: 100px; text-align: center;">プレビュー</th>
   </tr>
   
-  <% for item in @items %>
+  <% @items.each do |item| %>
   <tr class="<%= cycle '', 'cycle' %>">
     <td style="text-align: center;"><%= link_to :show, item.admin_uri %></td>
     <td><%= truncate(item.public_uri, :length => 40) %></td>
