@@ -34,7 +34,7 @@
           </tr>
           <tr>
             <th>開始日</th>
-            <td><%= safe{@item.start_date.strftime("%Y年%m月%d日")} %></td>
+            <td><%=l @item.start_date, format: :default_ja %></td>
           </tr>
           <tr>
             <th>終了日</th>
@@ -44,7 +44,7 @@
               <%- elsif @item.end_type == 1 -%>
               <%= @item.end_times %>回
               <%- else -%>
-                <%= safe{@item.end_date.strftime("%Y年%m月%d日")} %>
+                <%=l @item.end_date, format: :default_ja %>
               <%- end -%>
             </td>
           </tr>
@@ -53,7 +53,7 @@
     </td>
   </tr><tr>
     <th><%= @item.locale(:business_hours_time) %></th>
-    <td><%= safe{"#{@item.business_hours_start_time.strftime("%H:%M")} ～ #{@item.business_hours_end_time.strftime("%H:%M")}"} %></td>
+    <td><%= "#{l(@item.business_hours_start_time, format: :short)} ～ #{l(@item.business_hours_end_time, format: :short)}" %></td>
   </tr>
 </table>
 

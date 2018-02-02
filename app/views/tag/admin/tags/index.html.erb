@@ -7,7 +7,7 @@
   <% @items.each do |item| %>
   <tr class="<%= cycle '', 'cycle' %>">
     <td><%= item.word %></td>
-    <td style="text-align: center;"><%= item.last_tagged_at.strftime('%Y-%m-%d %H:%M') %></td>
+    <td style="text-align: center;"><%=l item.last_tagged_at %></td>
   </tr>
   <% end %>
 </table>

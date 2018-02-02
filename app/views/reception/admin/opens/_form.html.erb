@@ -12,9 +12,9 @@
     <td>
       <span><%= f.text_field :open_on, value: l(@item.open_on), class: 'datepicker' %></span>
       <span style="margin-left: 10px;">
-        <span><%= f.text_field :start_at, value: @item.start_at.try(:strftime, '%H:%M'), class: 'timepicker' %></span>
+        <span><%= f.text_field :start_at, value: l(@item.start_at, format: :short), class: 'timepicker' %></span>
         <span>～</span>
-        <span><%= f.text_field :end_at, value: @item.end_at.try(:strftime, '%H:%M'), class: 'timepicker' %></span>
+        <span><%= f.text_field :end_at, value: l(@item.end_at, format: :short), class: 'timepicker' %></span>
       </span>
     </td>
   </tr>

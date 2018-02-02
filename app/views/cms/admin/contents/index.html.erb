@@ -16,7 +16,7 @@
     <td><%= item.note %></td>
     <td><%= item.module_name(:short) %></td>
     <td><%= item.sort_no %></td>
-    <td style="text-align: center;"><%= item.updated_at.strftime('%Y-%m-%d %H:%M') %></td>
+    <td style="text-align: center;"><%=l item.updated_at %></td>
   </tr>
   <% end %>
 

@@ -15,7 +15,7 @@
     <td style="text-align: center;"><%= link_to :show, url_for(:action => :show, :id => item) %></td>
     <td><%= item.name %></td>
     <td><%= item.title %></td>
-    <td style="text-align: center;"><%= item.updated_at.strftime('%Y-%m-%d %H:%M')%></td>
+    <td style="text-align: center;"><%=l item.updated_at %></td>
     <td style="text-align: center;"><%= item.status.name %></td>
   </tr>
   <% end %>

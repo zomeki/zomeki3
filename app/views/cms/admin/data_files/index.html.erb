@@ -29,7 +29,7 @@
     <td><%= safe{item.node.name} %><br /><%= "（#{item.node.title}）" if safe{item.node.title}.to_s != '' %></td>
     <td><%= item.name %><br /><%= "（#{item.title}）" if item.name != item.title %></td>
     <td style="text-align: center;"><%= item.eng_unit %><br /><%= item.image_size if item.image_file? %></td>
-    <td style="text-align: center;"><%= item.updated_at.strftime('%Y-%m-%d %H:%M')%></td>
+    <td style="text-align: center;"><%=l item.updated_at %></td>
     
     <% if item.public? %>
     <td style="text-align: center;"><%= link_to item.status.name, item.public_full_uri, :target => '_blank' %></td>

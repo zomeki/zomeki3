@@ -15,7 +15,7 @@
   </tr>
   <tr>
     <th>アップロード日時</th>
-    <td><%= @item.created_at.try(:strftime, '%Y-%m-%d %H:%M') %></td>
+    <td><%=l @item.created_at %></td>
   </tr>
   <tr>
     <th>ファイルサイズ</th>

@@ -5,8 +5,8 @@
   </tr><tr>
     <th><%= @item.locale(:start_date) %></th>
     <td>
-      <%= safe{@item.start_date.strftime("%Y-%m-%d")} %>&nbsp;&nbsp;～&nbsp;&nbsp;
-      <%= safe{@item.end_date.strftime("%Y-%m-%d")} %>
+      <%=l @item.start_date %>&nbsp;&nbsp;～&nbsp;&nbsp;
+      <%=l @item.end_date %>
     </td>
   </tr>
 </table>

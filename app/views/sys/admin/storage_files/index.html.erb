@@ -14,7 +14,7 @@
         <td style="text-align: center;"><%= link_to :show, { path: "#{item.path_from_site_root}/", do: :show } %></td>
         <td class="name"><%= link_to item.name, { path: "#{item.path_from_site_root}/" } %></td>
         <td style="text-align: right;"></td>
-        <td style="text-align: center;"><%= item.mtime.strftime('%Y-%m-%d %H:%M') if item.mtime %></td>
+        <td style="text-align: center;"><%=l item.mtime %></td>
       </tr>
     <%- else -%>
       <tr class="file <%= cycle '', 'cycle' %>">
@@ -22,7 +22,7 @@
         
         <td class="name"><%= link_to item.name, { path: item.path_from_site_root, do: :show } %></td>
         <td style="text-align: right;"><%= number_format item.kb_size %> KB</td>
-        <td style="text-align: center;"><%= item.mtime.strftime('%Y-%m-%d %H:%M') if item.mtime %></td>
+        <td style="text-align: center;"><%=l item.mtime %></td>
       </tr>
     <%- end -%>
   <%- end -%>

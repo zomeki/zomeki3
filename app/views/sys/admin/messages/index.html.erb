@@ -14,7 +14,7 @@
   <tr class="<%= cycle '', 'cycle' %>">
     <td style="text-align: center;"><%= link_to :show, url_for(:action => :show, :id => item) %></td>
     <td style="text-align: right;"><%= item.id %></td>
-    <td style="text-align: center;"><%= item.published_at.strftime('%Y-%m-%d %H:%M') %></td>
+    <td style="text-align: center;"><%=l item.published_at %></td>
     <td><%= item.title %></td>
     <td style="text-align: center;"><%= item.status.name %></td>
   </tr>

@@ -16,7 +16,7 @@
     <td style="text-align: center;"><%= link_to :show, url_for(:action => :show, :id => item) %></td>
     <td><%= item.name %></td>
     <td><%= link_to h(item.title), sys_object_privileges_path(item) %></td>
-    <td style="text-align: center;"><%= safe{item.updated_at.strftime('%Y-%m-%d %H:%M')} %></td>
+    <td style="text-align: center;"><%=l item.updated_at %></td>
   </tr>
   <% end %>
 
