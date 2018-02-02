@@ -14,10 +14,10 @@ types = @content.visible_types.order(:id).collect{|c| [c.title, c.id]}
   </tr><tr>
     <th><%= @item.locale(:holiday_date) %></th>
     <td>
-      <%= f.text_field :holiday_start_date, :value => value_for_datepicker(f.object_name, :holiday_start_date),
+      <%= f.text_field :holiday_start_date, :value => l(@item.holiday_start_date),
                              :style => 'width: 150px;', :class => 'datepicker' %>
       &nbsp;&nbsp;～&nbsp;&nbsp;
-      <%= f.text_field :holiday_end_date, :value => value_for_datepicker(f.object_name, :holiday_end_date),
+      <%= f.text_field :holiday_end_date, :value => l(@item.holiday_end_date),
                              :style => 'width: 150px;', :class => 'datepicker' %>
     </td>
   </tr><tr>
@@ -50,7 +50,7 @@ types = @content.visible_types.order(:id).collect{|c| [c.title, c.id]}
           </tr>
           <tr>
             <th>開始日</th>
-            <td><%= f.text_field :start_date, :value => value_for_datepicker(f.object_name, :start_date),
+            <td><%= f.text_field :start_date, :value => l(@item.start_date),
                              :style => 'width: 150px;', :class => 'datepicker' %></td>
           </tr>
           <tr>
@@ -69,7 +69,7 @@ types = @content.visible_types.order(:id).collect{|c| [c.title, c.id]}
           <tr>
             <td>
               <%= f.radio_button :end_type, @item.class::END_TYPE_OPTIONS[2].last, {:checked => (@item.end_type == @item.class::END_TYPE_OPTIONS[2].last)} %>
-              <%= f.text_field :end_date, :value => value_for_datepicker(f.object_name, :end_date),
+              <%= f.text_field :end_date, :value => l(@item.end_date),
                              :style => 'width: 150px;', :class => 'datepicker' %>
             </td>
           </tr>

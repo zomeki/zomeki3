@@ -6,12 +6,12 @@
 <%- end -%>
 <div>
   <div class="label1"><%= f.label :event_started_on %></div>
-  <%= f.text_field :event_started_on, value: value_for_datepicker(f.object_name, :event_started_on),
+  <%= f.text_field :event_started_on, value: l(@item.event_started_on),
                                       style: 'width: 150px;', class: 'datepicker' %>
 </div>
 <div>
   <div class="label1"><%= f.label :event_ended_on %></div>
-  <%= f.text_field :event_ended_on, value: value_for_datepicker(f.object_name, :event_ended_on),
+  <%= f.text_field :event_ended_on, value: l(@item.event_ended_on),
                                     style: 'width: 150px;', class: 'datepicker' %>
 </div>
 <%- @content.event_category_types.each do |category_type| -%>

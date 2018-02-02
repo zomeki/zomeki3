@@ -7,10 +7,10 @@
   </tr><tr>
     <th><%= @item.locale(:start_date) %> <span class="note">※</span></th>
     <td>
-      <%= f.text_field :start_date, :value => value_for_datepicker(f.object_name, :start_date),
+      <%= f.text_field :start_date, :value => l(@item.start_date),
                              :style => 'width: 150px;', :class => 'datepicker' %>
       &nbsp;&nbsp;～&nbsp;&nbsp;
-      <%= f.text_field :end_date, :value => value_for_datepicker(f.object_name, :end_date),
+      <%= f.text_field :end_date, :value => l(@item.end_date),
                              :style => 'width: 150px;', :class => 'datepicker' %>
     </td>
     </td>

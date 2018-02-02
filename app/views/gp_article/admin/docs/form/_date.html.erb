@@ -5,7 +5,7 @@
   <%- if @content.display_dates(:published_at) -%>
   <tr>
     <th><%= f.label :display_published_at %></th>
-    <td><%= f.text_field :display_published_at, value: value_for_datetimepicker(f.object_name, :display_published_at),
+    <td><%= f.text_field :display_published_at, value: l(@item.display_published_at),
                          style: 'width: 150px;', class: 'datetimepicker' %></td>
   </tr>
   <%- end -%>
@@ -13,7 +13,7 @@
   <tr>
     <th><%= f.label :display_updated_at %></th>
     <td>
-      <%= f.text_field :display_updated_at, value: value_for_datetimepicker(f.object_name, :display_updated_at),
+      <%= f.text_field :display_updated_at, value: l(@item.display_updated_at),
                                             style: 'width: 150px;', class: 'datetimepicker' %>
       <span style="margin-left: 12px;">
       <%= f.check_box :keep_display_updated_at %> <%= f.label :keep_display_updated_at %>
