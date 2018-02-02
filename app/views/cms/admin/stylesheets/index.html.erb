@@ -23,7 +23,7 @@
         <td style="text-align: center;"><br /></td>
         <td class="name"><%= link_to item.name, { path: item.path_from_themes_root, do: :show } %></td>
         <td class="uri"><%= link_to item.public_themes_uri, item.public_themes_uri, target: '_blank' %> </td>
-        <td style="text-align: right;"><%= number_format item.kb_size %> KB</td>
+        <td style="text-align: right;"><%= item.kb_size %> KB</td>
         <td style="text-align: center;"><%=l item.mtime %></td>
       </tr>
     <%- end -%>

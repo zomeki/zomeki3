@@ -26,17 +26,6 @@ module ApplicationHelper
     end
   end
 
-  ## number format
-  def number_format(num)
-    number_to_currency(num, :unit => '', :precision => 0)
-  end
-
-  ## furigana
-  def ruby(str, ruby = nil)
-    ruby = Page.ruby unless ruby
-    return ruby == true ? Cms::Lib::Navi::Kana.convert(str) : str
-  end
-
   # I18n.localize
   def l(object, options = {})
     super(object, options) if object

@@ -20,7 +20,7 @@
       <tr class="file <%= cycle 'cycle', '' %>">
         <td style="text-align: center;"><%= link_to :show, { path: path, do: 'show' } %> </td>
         <td class="name"><%= link_to h(item.name), { path: path, do: 'show' } %></td>
-        <td style="text-align: right;"><%= number_format item.kb_size %> KB</td>
+        <td style="text-align: right;"><%= item.kb_size %> KB</td>
         <td style="text-align: center;"><%=l item.mtime %></td>
         <td style="text-align: center;"></td>
       </tr>

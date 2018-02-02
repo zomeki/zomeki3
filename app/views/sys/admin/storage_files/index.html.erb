@@ -21,7 +21,7 @@
         <td style="text-align: center;"><br /></td>
         
         <td class="name"><%= link_to item.name, { path: item.path_from_site_root, do: :show } %></td>
-        <td style="text-align: right;"><%= number_format item.kb_size %> KB</td>
+        <td style="text-align: right;"><%= item.kb_size %> KB</td>
         <td style="text-align: center;"><%=l item.mtime %></td>
       </tr>
     <%- end -%>
