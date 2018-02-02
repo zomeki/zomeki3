@@ -1,4 +1,4 @@
-class Survey::FormsFinder < FinderQuery
+class Survey::FormsFinder < ApplicationFinder
   def initialize(forms, user)
     @forms = forms
     @user = user

@@ -1,4 +1,4 @@
-class GpArticle::DocsFinder < FinderQuery
+class GpArticle::DocsFinder < ApplicationFinder
   def initialize(docs, user)
     @docs = docs
     @user = user

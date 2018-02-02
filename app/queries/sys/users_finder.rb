@@ -1,4 +1,4 @@
-class Sys::UsersFinder < FinderQuery
+class Sys::UsersFinder < ApplicationFinder
   def initialize(users)
     @users = users
   end

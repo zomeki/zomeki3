@@ -1,4 +1,4 @@
-class PreloaderQuery < ApplicationQuery
+class ApplicationPreloader
   def initialize(relation)
     @relation = relation
   end

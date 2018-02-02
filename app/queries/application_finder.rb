@@ -1,0 +1,2 @@
+class ApplicationFinder
+end
