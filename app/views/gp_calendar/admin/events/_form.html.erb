@@ -43,8 +43,6 @@
 <%= creator_form f %>
 
 <%= javascript_tag do -%>
-<%= toggle_form_function %>
-
 function set_copy_date(from, to) {
   $(from).on('change', function () {
     if ($(to).val() === '') { $(to).val($(from).val()); }
