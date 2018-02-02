@@ -376,7 +376,7 @@ class Cms::Node < ApplicationRecord
         return false if state != 'public'
 
         run_callbacks :publish_files do
-          rendered = Cms::Admin::RenderService.new(site).render_public(public_uri)
+          rendered = Cms::RenderService.new(site).render_public(public_uri)
           return true unless publish_page(rendered, path: public_path)
 
           if site.use_kana?
@@ -385,7 +385,7 @@ class Cms::Node < ApplicationRecord
           end
 
           if site.publish_for_smart_phone?(self)
-            rendered = Cms::Admin::RenderService.new(site).render_public(public_uri, agent_type: :smart_phone)
+            rendered = Cms::RenderService.new(site).render_public(public_uri, agent_type: :smart_phone)
             publish_page(rendered, path: public_smart_phone_path, dependent: :smart_phone)
           end
         end

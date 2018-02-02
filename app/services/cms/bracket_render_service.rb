@@ -1,4 +1,4 @@
-class Cms::Public::BracketRenderService < ApplicationService
+class Cms::BracketRenderService < ApplicationService
   def initialize(site, concept, mobile: nil)
     @site = site
     @concepts = if concept.is_a?(Array)

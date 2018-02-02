@@ -1,4 +1,4 @@
-module GpTemplate::GpTemplateHelper
+module GpTemplate::TemplateHelper
   def template_body(template, template_values, files)
     template.items.inject(template.body.to_s) do |body, item|
       body.gsub(/\[\[item\/#{item.name}\]\]/i, template_item_value(item, template_values[item.name].to_s, files))

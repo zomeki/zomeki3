@@ -1,4 +1,4 @@
-class Cms::Public::SslLinkReplaceService < ApplicationService
+class Cms::SslLinkReplaceService < ApplicationService
   def initialize(site, current_path)
     @site = site
     @current_path = current_path

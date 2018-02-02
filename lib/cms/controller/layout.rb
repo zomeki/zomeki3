@@ -114,8 +114,8 @@ module Cms::Controller::Layout
     body.gsub!("[[content]]", Page.content)
 
     ## render other brackets
-    body = Cms::Public::BracketRenderService.new(Page.site, concepts, mobile: request.mobile)
-                                            .render_data_texts_and_files(body)
+    body = Cms::BracketRenderService.new(Page.site, concepts, mobile: request.mobile)
+                                    .render_data_texts_and_files(body)
 
     ## mobile
     if request.mobile?
@@ -162,7 +162,7 @@ module Cms::Controller::Layout
     return body if Core.request_uri =~ /^\/_preview\//
     return body unless Page.site.use_common_ssl?
 
-    Cms::Public::SslLinkReplaceService.new(Page.site, Page.current_node.public_uri).run(body)
+    Cms::SslLinkReplaceService.new(Page.site, Page.current_node.public_uri).run(body)
   end
 
   def piece_container_html(piece, body)

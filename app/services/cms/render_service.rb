@@ -1,4 +1,4 @@
-class Cms::Admin::RenderService < ApplicationService
+class Cms::RenderService < ApplicationService
   include Cms::Controller::Layout
   attr_accessor :params
 

@@ -1,4 +1,4 @@
-class Cms::Admin::WordDictionaryService < ApplicationService
+class Cms::WordDictionaryService < ApplicationService
   def initialize(dic)
     @words = []
     dic.to_s.split(/\r\n|\n/).each do |line|

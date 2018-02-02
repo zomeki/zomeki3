@@ -44,11 +44,11 @@ class Cms::Controller::Public::Base < Sys::Controller::Public::Base
     html = if Page.site && FileTest.exist?("#{Page.site.public_path}/#{file_status}")
              ::File.read("#{Page.site.public_path}/#{file_status}")
            elsif Page.site && (node = Page.site.nodes.where(state: 'public', name: file_status).first)
-             Cms::Admin::RenderService.new(Page.site).render_public(node.public_uri, agent_type: Page.agent_type)
+             Cms::RenderService.new(Page.site).render_public(node.public_uri, agent_type: Page.agent_type)
            elsif FileTest.exist?("#{Rails.public_path}/#{file_status}")
              ::File.read("#{Rails.public_path}/#{file_status}")
            elsif Page.site && (node = Page.site.nodes.where(state: 'public', name: file_500).first)
-             Cms::Admin::RenderService.new(Page.site).render_public(node.public_uri, agent_type: Page.agent_type)
+             Cms::RenderService.new(Page.site).render_public(node.public_uri, agent_type: Page.agent_type)
            elsif FileTest.exist?("#{Rails.public_path}/#{file_500}")
              ::File.read("#{Rails.public_path}/#{file_500}")
            else
@@ -56,7 +56,7 @@ class Cms::Controller::Public::Base < Sys::Controller::Public::Base
            end
 
     if Core.mode == 'ssl' && Page.site && Page.site.use_common_ssl?
-      html = Cms::Public::SslLinkReplaceService.new(Page.site, Core.request_uri.sub(/^\/_ssl\/([0-9]+)/, '')).run(html)
+      html = Cms::SslLinkReplaceService.new(Page.site, Core.request_uri.sub(/^\/_ssl\/([0-9]+)/, '')).run(html)
     end
 
     Page.error = status

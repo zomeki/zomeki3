@@ -415,7 +415,7 @@ class GpArticle::Doc < ApplicationRecord
   def replace_words_with_dictionary
     return if content.word_dictionary.blank?
 
-    dic = Cms::Admin::WordDictionaryService.new(content.word_dictionary)
+    dic = Cms::WordDictionaryService.new(content.word_dictionary)
     [:body, :mobile_body].each do |column|
       text = read_attribute(column)
       self[column] = dic.replace(text) if text.present?
@@ -626,7 +626,7 @@ class GpArticle::Doc < ApplicationRecord
       return false unless state_public?
       return true unless terminal_pc_or_smart_phone
 
-      rendered = Cms::Admin::RenderService.new(content.site).render_public(public_uri)
+      rendered = Cms::RenderService.new(content.site).render_public(public_uri)
       return true unless publish_page(rendered, path: public_path)
       publish_files
       publish_qrcode
@@ -637,7 +637,7 @@ class GpArticle::Doc < ApplicationRecord
       end
 
       if content.site.publish_for_smart_phone?
-        rendered = Cms::Admin::RenderService.new(content.site).render_public(public_uri, agent_type: :smart_phone)
+        rendered = Cms::RenderService.new(content.site).render_public(public_uri, agent_type: :smart_phone)
         publish_page(rendered, path: public_smart_phone_path, dependent: :smart_phone)
         publish_smart_phone_files
         publish_smart_phone_qrcode

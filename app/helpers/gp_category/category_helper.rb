@@ -1,4 +1,4 @@
-module GpCategory::GpCategoryHelper
+module GpCategory::CategoryHelper
   def public_docs_with_category_id(category_id)
     GpArticle::Doc.categorized_into(category_id).except(:order).mobile(::Page.mobile?).public_state
   end
