@@ -7,7 +7,7 @@
   <%- end -%>
   <tr>
     <th><%= f.label :event_started_on %></th>
-    <td><%= f.text_field :event_started_on, value: value_for_datepicker(f.object_name, :event_started_on),
+    <td><%= f.text_field :event_started_on, value: @item.event_started_on ? I18n.l(@item.event_started_on) : nil,
                                             style: 'width: 150px;', class: 'datepicker' %></td>
   </tr>
   <tr>

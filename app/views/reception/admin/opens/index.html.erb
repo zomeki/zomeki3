@@ -14,10 +14,10 @@
   <tr class="<%= cycle '', 'cycle' %>">
     <td style="text-align: center;"><%= link_to :show, { action: :show, id: item.id } %></td>
     <td style="text-align: left;"><%= item.title %></td>
-    <td style="text-align: center;"><%=i18n_l item.open_on %></td>
-    <td style="text-align: center;"><%=i18n_l item.expired_at %></td>
+    <td style="text-align: center;"><%=l item.open_on %></td>
+    <td style="text-align: center;"><%=l item.expired_at %></td>
     <td style="text-align: center;"><%= link_to item.applicants.size, reception_course_open_applicants_path(content: @content, course_id: item.course_id, open_id: item.id) %></td>
-    <td style="text-align: center;"><%=i18n_l item.created_at %></td>
+    <td style="text-align: center;"><%=l item.created_at %></td>
     <td style="text-align: center;"><%= item.state_text %></td>
   </tr>
   <%- end -%>

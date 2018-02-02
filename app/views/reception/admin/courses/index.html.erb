@@ -26,12 +26,12 @@
       <td rowspan="<%= rowspan %>" style="text-align: center;"><%= item.capacity %></td>
       <td style="text-align: center; border-top: 1px solid #ccc;"><%= link_to first_open.applicants.size, reception_course_open_applicants_path(content: @content, course_id: item.id, open_id: first_open.id) if first_open %></td>
       <td rowspan="<%= rowspan %>" style="text-align: center;"><%= item.sort_no %></td>
-      <td rowspan="<%= rowspan %>" style="text-align: center;"><%=i18n_l item.created_at %></td>
+      <td rowspan="<%= rowspan %>" style="text-align: center;"><%=l item.created_at %></td>
       <td rowspan="<%= rowspan %>" style="text-align: center;"><%= item.state_text %></td>
     </tr>
     <%- item.opens.drop(1).each do |open| -%>
     <tr class="<%= cycle_class %>">
-      <td style="text-align: center; border-top: 1px solid #ccc;"><%=i18n_l open.open_on %></td>
+      <td style="text-align: center; border-top: 1px solid #ccc;"><%=l open.open_on %></td>
       <td style="text-align: center; border-top: 1px solid #ccc;"><%= link_to open.applicants.size, reception_course_open_applicants_path(content: @content, course_id: item.id, open_id: open.id) %></td>
     </tr>
     <%- end -%>

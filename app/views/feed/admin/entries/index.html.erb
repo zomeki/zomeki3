@@ -18,7 +18,7 @@
     <td style="text-align: center;"><%= link_to :show, url_for(:action => :show, :id => item) %></td>
     <td style="text-align: right;"><%= item.id %></td>
     <td><%= item.title %></td>
-    <td style="text-align: center;"><%=i18n_l item.entry_updated %></td>
+    <td style="text-align: center;"><%=l item.entry_updated %></td>
     <td style="text-align: center;"><%= item.status.try(:name) %></td>
     <td style="text-align: center;"><%= link_to '表示', item.link_alternate, :target => '_blank' if item.link_alternate %></td>
   <% end %>

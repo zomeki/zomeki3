@@ -16,7 +16,7 @@
     <td style="text-align: left;"><%= item.group.try(:name) || 'すべて' %></td>
     <td style="text-align: left;"><%= item.approvals.map(&:approvers_label).join(' ＞ ') %></td>
     <td style="text-align: right;"><%= item.sort_no %></td>
-    <td style="text-align: center;"><%=i18n_l item.updated_at %></td>
+    <td style="text-align: center;"><%=l item.updated_at %></td>
   </tr>
   <%- end -%>
 </table>

@@ -37,13 +37,9 @@ module ApplicationHelper
     return ruby == true ? Cms::Lib::Navi::Kana.convert(str) : str
   end
 
-  def i18n_l(value, format=nil)
-    return value if value.nil?
-    if format.nil?
-      I18n.l value
-    else
-      I18n.l value, format: format
-    end
+  # I18n.localize
+  def l(object, options = {})
+    super(object, options) if object
   end
 
   def i18n_view(path)

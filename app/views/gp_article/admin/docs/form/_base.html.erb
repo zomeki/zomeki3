@@ -158,7 +158,7 @@
                                                              doc_link: link_to_if(doc.state_public?, doc.title, doc.public_full_uri, target: 'preview'),
                                                              doc_user_name: doc.creator.user.try(:name),
                                                              doc_group_name: doc.creator.group.try(:name),
-                                                             doc_updated_at: i18n_l(doc.updated_at),
+                                                             doc_updated_at: l(doc.updated_at),
                                                              doc_status: doc.status.name %>
           <%- end -%>
         <%- end -%>
