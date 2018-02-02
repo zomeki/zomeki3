@@ -1,4 +1,4 @@
-class Cms::Admin::Data::FilesController < Cms::Controller::Admin::Base
+class Cms::Admin::DataFilesController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
   include Sys::Controller::Scaffold::Publication
 
