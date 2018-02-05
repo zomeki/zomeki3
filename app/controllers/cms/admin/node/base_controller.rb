@@ -47,6 +47,7 @@ class Cms::Admin::Node::BaseController < Cms::Controller::Admin::Base
 
     _update @item do
       @item.close_page if !@item.public?
+      update_site_configs
       respond_to do |format|
         format.html { return redirect_to(cms_nodes_path) }
       end
@@ -63,6 +64,12 @@ class Cms::Admin::Node::BaseController < Cms::Controller::Admin::Base
   end
 
   private
+
+  def update_site_configs
+    unless @item.model.in?(Cms::Lib::Modules.modules.flat_map(&:pages).map(&:model))
+      Cms::SiteConfigUpdateService.new(@item.site).update
+    end
+  end
 
   def base_params
     params.require(:item).permit(
