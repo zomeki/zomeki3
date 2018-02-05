@@ -23,15 +23,15 @@ CKEDITOR.editorConfig = function( config ) {
     ];
   } else {
     config.toolbar = [
-      { name: 'document',    items : [ 'Source','-','DocProps','-','Templates' ] },
       { name: 'clipboard',   items : [ 'Cut','Copy','Paste','PasteText','PasteFromWord','-','Undo','Redo' ] },
       { name: 'styles',      items : [ 'Format' ] },
+      { name: 'insert',      items : [ 'Image','Table','HorizontalRule','Youtube','Audio','Video' ] },
+      { name: 'document',    items : [ 'Source','-','DocProps','-','Templates' ] },
       { name: 'tools',       items : [ 'Maximize' ] },
       '/',
       { name: 'basicstyles', items : [ 'TextColor','Bold','Italic','Strike','-','RemoveFormat' ] },
       { name: 'paragraph',   items : [ 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock' ] },
-      { name: 'links',       items : [ 'CmsLink','CmsUnlink','CmsAnchor' ] },
-      { name: 'insert',      items : [ 'Image','Table','HorizontalRule','Youtube','Audio','Video' ] }
+      { name: 'links',       items : [ 'CmsLink','CmsUnlink','CmsAnchor' ] }
     ];
   }
 
