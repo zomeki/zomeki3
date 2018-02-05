@@ -2,19 +2,19 @@
 
 <table class="show">
   <tr>
-    <th><%= @item.locale(:state) %></th>
+    <th><%= f.label :state %></th>
     <td><%= f.radio_buttons :state, @item.states, :class => 'status' %></td>
   </tr><tr>
-    <th><%= @item.locale(:name) %></th>
+    <th><%= f.label :name %></th>
     <td><%= f.text_field :name, :class => 'nameEn' %></td>
   </tr><tr>
-    <th><%= @item.locale(:password) %></th>
+    <th><%= f.label :password %></th>
     <td><%= f.text_field :password, :class => 'nameEn' %></td>
   </tr><tr>
-    <th><%= @item.locale(:target_type) %></th>
+    <th><%= f.label :target_type %></th>
     <td><%= f.radio_buttons :target_type, @item.class::TARGET_TYPE_LIST, :class => 'status' %></td>
   </tr><tr id="targetLocation">
-    <th><%= @item.locale(:target_location) %></th>
+    <th><%= f.label :target_location %></th>
     <td>/<%= f.text_field :target_location, :class => 'nameEn' %></td>
   </tr>
 </table>

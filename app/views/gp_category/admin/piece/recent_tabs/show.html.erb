@@ -3,19 +3,19 @@
 
 <table class="show">
   <tr>
-    <th><%= @item.locale :list_count %></th>
+    <th><%= @item.class.human_attribute_name :list_count %></th>
     <td><%= @item.setting_value(:list_count) %></td>
   </tr>
   <tr>
-    <th><%= @item.locale :list_style %></th>
+    <th><%= @item.class.human_attribute_name :list_style %></th>
     <td colspan="3"><%= @item.setting_value(:list_style) %></td>
   </tr>
   <tr>
-    <th><%= @item.locale :date_style %></th>
+    <th><%= @item.class.human_attribute_name :date_style %></th>
     <td colspan="3"><%= @item.setting_value(:date_style) %></td>
   </tr>
   <tr>
-    <th><%= @item.locale :more_label %></th>
+    <th><%= @item.class.human_attribute_name :more_label %></th>
     <td><%= @item.setting_value(:more_label) %></td>
   </tr>
 </table>

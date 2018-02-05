@@ -25,11 +25,11 @@
     <td class="cke_editor_wrapper"><%= text_area_tag :receipt, @item.receipt, class: 'ckeditor' %></td>
   </tr>
   <tr>
-    <th><%= @item.locale(:sitemap_state) %></th>
+    <th><%= @item.class.human_attribute_name :sitemap_state %></th>
     <td><%= @item.sitemap_state_text %></td>
   </tr>
   <tr>
-    <th><%= @item.locale(:index_link) %></th>
+    <th><%= @item.class.human_attribute_name :index_link %></th>
     <td><%= @item.class::INDEX_LINK_OPTIONS.detect{|o| o.last == @item.index_link }.try(:first) %></td>
   </tr>
   <tr>

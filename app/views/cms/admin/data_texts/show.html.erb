@@ -1,22 +1,22 @@
 <table class="show">
   <tr>
-    <th><%= @item.locale(:concept_id) %></th>
+    <th><%= @item.class.human_attribute_name :concept_id %></th>
     <td><%= safe{@item.concept.name} %> </td>
   </tr><tr>
-    <th><%= @item.locale(:state) %></th>
+    <th><%= @item.class.human_attribute_name :state %></th>
     <td><%= safe{@item.status.name} %> </td>
   </tr><tr>
-    <th><%= @item.locale(:name) %></th>
+    <th><%= @item.class.human_attribute_name :name %></th>
     <td><%= @item.name %></td>
   </tr><tr>
-    <th><%= @item.locale(:title) %></th>
+    <th><%= @item.class.human_attribute_name :title %></th>
     <td><%= @item.title %></td>
   </tr>
 </table>
 
 <table class="show" style="margin: 0px;">
   <tr>
-    <th><%= @item.locale(:body) %></th></tr><tr>
+    <th><%= @item.class.human_attribute_name :body %></th></tr><tr>
     <td><%=hbr @item.body %></td>
   </tr>
 </table>

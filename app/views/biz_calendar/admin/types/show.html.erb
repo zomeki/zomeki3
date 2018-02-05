@@ -1,12 +1,12 @@
 <table class="show">
   <tr>
-    <th><%= @item.locale(:state) %></th>
+    <th><%= @item.class.human_attribute_name :state %></th>
     <td><%= safe{@item.status.name} %></td>
   </tr><tr>
-    <th><%= @item.locale(:title) %></th>
+    <th><%= @item.class.human_attribute_name :title %></th>
     <td><%= @item.title %></td>
   </tr><tr>
-    <th><%= @item.locale(:name) %></th>
+    <th><%= @item.class.human_attribute_name :name %></th>
     <td><%= @item.name %></td>
   </tr>
 </table>

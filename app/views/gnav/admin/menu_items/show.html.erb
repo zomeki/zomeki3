@@ -14,7 +14,7 @@
     <td><%= @item.title %></td>
   </tr>
   <tr>
-    <th><%= @item.locale(:sitemap_state) %></th>
+    <th><%= @item.class.human_attribute_name :sitemap_state %></th>
     <td><%= @item.sitemap_state_text %></td>
   </tr>
   <tr>

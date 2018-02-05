@@ -1,9 +1,9 @@
 <table class="show">
   <tr>
-    <th><%= @item.locale(:state) %></th>
+    <th><%= @item.class.human_attribute_name :state %></th>
     <td><%= safe{@item.status.name} %></td>
   </tr><tr>
-    <th><%= @item.locale(:start_date) %></th>
+    <th><%= @item.class.human_attribute_name :start_date %></th>
     <td>
       <%=l @item.start_date %>&nbsp;&nbsp;～&nbsp;&nbsp;
       <%=l @item.end_date %>

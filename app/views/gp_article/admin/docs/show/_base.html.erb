@@ -1,21 +1,21 @@
 <table class="show">
   <tr>
-    <th><%= @item.locale :serial_no %></th>
+    <th><%= @item.class.human_attribute_name :serial_no %></th>
     <td colspan="3"><%= @item.serial_no %></td>
   </tr>
   <tr>
-    <th><%= @item.locale :public_full_uri %></th>
+    <th><%= @item.class.human_attribute_name :public_full_uri %></th>
     <td colspan="3"><%= link_to_if @item.public_full_uri.present?,
                                    @item.public_full_uri, @item.public_full_uri, target: 'preview' %></td>
   </tr>
   <%- if @item.template -%>
   <tr>
-    <th><%= @item.locale :template_id %></th>
+    <th><%= @item.class.human_attribute_name :template_id %></th>
     <td colspan="3"><%= @item.template.title %></td>
   </tr>
   <%- end -%>
   <tr>
-    <th><%= @item.locale :title %></th>
+    <th><%= @item.class.human_attribute_name :title %></th>
     <td><%= @item.title %></td>
     <th style="width: 110px;">タイトル設定</th>
     <td style="width: 80px;"><%= link_to '開く▼', 'javascript:void(0);', onclick: "$(this).toggleOpen('#title_settings');" %></td>
@@ -25,22 +25,22 @@
 <div id="title_settings" style="display: none;">
   <table class="show">
     <tr>
-      <th><%= @item.locale :href %></th>
+      <th><%= @item.class.human_attribute_name :href %></th>
       <td>
         <%= link_to_unless(@item.target == 'attached_file', @item.href, @item.href, target: '_blank') %>
         <span style="<%= 'margin-left: 10px;' unless @item.href.blank? %>"><%= @item.target_text %></span>
       </td>
     </tr>
     <tr>
-      <th><%= @item.locale :subtitle %></th>
+      <th><%= @item.class.human_attribute_name :subtitle %></th>
       <td><%=simple_format @item.subtitle %></td>
     </tr>
     <tr>
-      <th><%= @item.locale :summary %></th>
+      <th><%= @item.class.human_attribute_name :summary %></th>
       <td><%=simple_format @item.summary %></td>
     </tr>
     <tr>
-      <th><%= @item.locale :list_image %></th>
+      <th><%= @item.class.human_attribute_name :list_image %></th>
       <td><%= @item.list_image %></td>
     </tr>
   </table>
@@ -48,7 +48,7 @@
 
 <table class="show">
   <tr>
-    <th><%= @item.locale :body %></th>
+    <th><%= @item.class.human_attribute_name :body %></th>
   </tr>
 </table>
 
@@ -67,7 +67,7 @@
 <%- if (links = @item.links.where(linkable_column: %w(body template_values))).present? -%>
 <table class="show">
   <tr>
-    <th><%= @item.locale :body %>に含まれるリンク</th>
+    <th><%= @item.class.human_attribute_name :body %>に含まれるリンク</th>
     <td>
       <ul>
         <%- links.each do |link|
@@ -84,7 +84,7 @@
 <%- if @content.blog_functions_available? -%>
 <table class="show">
   <tr>
-    <th colspan="2"><%= @item.locale :body_more %></th>
+    <th colspan="2"><%= @item.class.human_attribute_name :body_more %></th>
   </tr>
   <tr>
     <td colspan="2" class="cke_editor_wrapper">
@@ -106,18 +106,18 @@
   </tr>
   <%- end -%>
   <tr>
-    <th><%= @item.locale :feature_1 %></th>
+    <th><%= @item.class.human_attribute_name :feature_1 %></th>
     <td><%= @item.feature_1_text %></td>
   </tr>
   <%- if @content.tag_related? && @content.tag_content_tag.present? -%>
   <tr>
-    <th><%= @item.locale :raw_tags %></th>
+    <th><%= @item.class.human_attribute_name :raw_tags %></th>
     <td><%= @item.raw_tags %></td>
   </tr>
   <%- end -%>
   <%- if @content.related_doc_enabled? -%>
   <tr>
-    <th><%= @item.locale :in_rel_doc_ids %></th>
+    <th><%= @item.class.human_attribute_name :in_rel_doc_ids %></th>
     <td>
       <ul>
         <%- @item.related_docs.each do |doc|
@@ -130,7 +130,7 @@
   <%- end -%>
   <%- if @content.qrcode_related? -%>
   <tr>
-    <th><%= @item.locale :qrcode_state %></th>
+    <th><%= @item.class.human_attribute_name :qrcode_state %></th>
     <td><%= @item.qrcode_state_text %></td>
   </tr>
   <%- end -%>

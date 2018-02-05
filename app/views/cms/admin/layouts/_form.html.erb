@@ -12,10 +12,10 @@ $(function() {
 <table class="show">
   <%= concept_form f %>
   <tr>
-    <th><%= @item.locale(:name) %></th>
+    <th><%= f.label :name %></th>
     <td><%= f.text_field :name, :class => 'id' %></td>
   </tr><tr>
-    <th><%= @item.locale(:title) %></th>
+    <th><%= f.label :title %></th>
     <td><%= f.text_field :title, :class => 'name' %></td>
   </tr>
 </table>

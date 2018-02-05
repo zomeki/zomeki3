@@ -3,7 +3,7 @@
 
 <table class="show">
   <tr>
-    <th><%= @item.locale :filename %></th>
+    <th><%= @item.class.human_attribute_name :filename %></th>
     <td><%= @item.setting_value(:filename) %></td>
   </tr>
 </table>

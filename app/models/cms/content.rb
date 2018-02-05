@@ -60,17 +60,6 @@ class Cms::Content < ApplicationRecord
     @in_settings = values
   end
 
-  def locale(name)
-    model = self.class.to_s.underscore
-    label = ''
-    if model != 'cms/content'
-      label = I18n.t name, :scope => [:activerecord, :attributes, model]
-      return label if label !~ /^translation missing:/
-    end
-    label = I18n.t name, :scope => [:activerecord, :attributes, 'cms/content']
-    return label =~ /^translation missing:/ ? name.to_s.humanize : label
-  end
-
   def states
     [['公開','public']]
   end

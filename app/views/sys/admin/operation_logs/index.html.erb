@@ -5,11 +5,11 @@
 <table class="index">
   <tr>
     <th style="width: 60px; padding: 0px; text-align: center;">詳細</th>
-    <th style="width: 200px;"><%= @item.locale(:user_name) %></th>
-    <th style="width: 200px;"><%= @item.locale(:action) %></th>
-    <th style="width: ;"><%= @item.locale(:item) %></th>
-    <th style="width: 120px; text-align: center;"><%= @item.locale(:ipaddr) %></th>
-    <th style="width: 120px; text-align: center;"><%= @item.locale(:created_at) %></th>
+    <th style="width: 200px;"><%= Sys::OperationLog.human_attribute_name :user_name %></th>
+    <th style="width: 200px;"><%= Sys::OperationLog.human_attribute_name :action %></th>
+    <th style="width: ;"><%= Sys::OperationLog.human_attribute_name :item %></th>
+    <th style="width: 120px; text-align: center;"><%= Sys::OperationLog.human_attribute_name :ipaddr %></th>
+    <th style="width: 120px; text-align: center;"><%= Sys::OperationLog.human_attribute_name :created_at %></th>
   </tr>
   <% @items.each do |item| %>
   <tr class="<%= cycle '', 'cycle' %>">

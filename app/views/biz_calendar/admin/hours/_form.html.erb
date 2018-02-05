@@ -2,10 +2,10 @@
 
 <table class="show">
   <tr>
-    <th><%= @item.locale(:state) %></th>
+    <th><%= f.label :state %></th>
     <td><%= f.radio_buttons :state, @item.class::STATE_OPTIONS, :class => 'states' %></td>
   </tr><tr>
-    <th><%= @item.locale(:fixed_start_date) %></th>
+    <th><%= f.label :fixed_start_date %></th>
     <td>
       <%= f.text_field :fixed_start_date, :value => l(@item.fixed_start_date),
                              :style => 'width: 150px;', :class => 'datepicker' %>
@@ -19,7 +19,7 @@
       <table id="categories">
         <tbody>
           <tr>
-            <th><%= @item.locale(:repeat_type) %></th>
+            <th><%= f.label :repeat_type %></th>
             <td><%= f.select :repeat_type, @item.class::REPEAT_OPTIONS, include_blank: true %></td>
           </tr>
           <tr id ="intervalTr">
@@ -70,7 +70,7 @@
       </table>
     </td>
   </tr><tr>
-    <th><%= @item.locale(:business_hours_start_time) %> <span class="note">※</span></th>
+    <th><%= f.label :business_hours_start_time %> <span class="note">※</span></th>
     <td>
       <%= f.text_field :business_hours_start_time, :value => l(@item.business_hours_start_time, format: :short), :style => 'width: 120px;', :class => 'timepicker' %>
       &nbsp;&nbsp;～&nbsp;&nbsp;

@@ -2,13 +2,13 @@
 
 <table class="show">
   <tr>
-    <th><%= @item.locale(:concept_id) %></th>
+    <th><%= @item.class.human_attribute_name :concept_id %></th>
     <td><%= safe{@item.concept.name} %></td>
   </tr><tr>
-    <th><%= @item.locale(:name) %></th>
+    <th><%= @item.class.human_attribute_name :name %></th>
     <td><%= @item.name %></td>
   </tr><tr>
-    <th><%= @item.locale(:title) %></th>
+    <th><%= @item.class.human_attribute_name :title %></th>
     <td><%= @item.title %></td>
   </tr>
 </table>

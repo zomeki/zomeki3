@@ -82,14 +82,4 @@ module Cms::Model::Base::Node
     end
     Cms::Lib::BreadCrumbs.new(crumbs)
   end
-
-  def locale(name)
-    _model = self.class.to_s.underscore.gsub(/\/model/, '')
-    label = I18n.t name, :scope => [:activerecord, :attributes, _model]
-    if label =~ /^translation missing:/
-      label = I18n.t name, :scope => [:activerecord, :attributes, 'cms/node']
-      return label =~ /^translation missing:/ ? name.to_s.humanize : label
-    end
-    return label
-  end
 end

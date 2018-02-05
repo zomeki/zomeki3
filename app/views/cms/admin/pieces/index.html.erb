@@ -3,9 +3,9 @@
 <table class="index">
   <tr>
     <th style="width: 60px; text-align: center;">詳細</th>
-    <th style="width: 20%;"><%= Cms::Piece.new.locale(:name) %></th>
-    <th style="width: ;"><%= Cms::Piece.new.locale(:title) %></th>
-    <th style="width: 25%;"><%= Cms::Piece.new.locale(:model) %></th>
+    <th style="width: 20%;"><%= Cms::Piece.human_attribute_name :name %></th>
+    <th style="width: ;"><%= Cms::Piece.human_attribute_name :title %></th>
+    <th style="width: 25%;"><%= Cms::Piece.human_attribute_name :model %></th>
     <th style="width: 120px; text-align: center;">更新日時</th>
     <th style="width: 60px; text-align: center;">状態</th>
     <th style="width: 80px; text-align: center;">プレビュー</th>

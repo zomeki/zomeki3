@@ -13,7 +13,7 @@
     <td class="cke_editor_wrapper"><%= text_area_tag :description, @item.description, class: 'ckeditor' %></td>
   </tr>
   <tr>
-    <th><%= @item.locale :form_type %></th>
+    <th><%= @item.class.human_attribute_name :form_type %></th>
     <td><%= @item.class::FORM_TYPE_OPTIONS.detect{|o| o.last == @item.form_type }.try(:first) %></td>
   </tr>
   <tr>

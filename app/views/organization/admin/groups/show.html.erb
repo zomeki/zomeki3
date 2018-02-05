@@ -7,23 +7,23 @@
     <td><%= @item.status.try(:name) %></td>
   </tr>
   <tr>
-    <th><%= @item.locale(:name) %></th>
+    <th><%= @item.class.human_attribute_name :name %></th>
     <td><%= @item.name %></td>
   </tr>
   <tr>
-    <th><%= @item.locale(:title) %></th>
+    <th><%= @item.class.human_attribute_name :title %></th>
     <td><%= @item.sys_group.name %></td>
   </tr>
   <tr>
-    <th><%= @item.locale(:sitemap_state) %></th>
+    <th><%= @item.class.human_attribute_name :sitemap_state %></th>
     <td><%= @item.sitemap_state_text %></td>
   </tr>
   <tr>
-    <th><%= @item.locale(:docs_order) %></th>
+    <th><%= @item.class.human_attribute_name :docs_order %></th>
     <td><%= @item.docs_order_text %></td>
   </tr>
   <tr>
-    <th><%= @item.locale(:sort_no) %></th>
+    <th><%= @item.class.human_attribute_name :sort_no %></th>
     <td><%= @item.sort_no %></td>
   </tr>
 </table>
@@ -39,15 +39,15 @@
 
 <table class="show">
   <tr>
-    <th><%= @item.locale(:outline) %></th>
+    <th><%= @item.class.human_attribute_name :outline %></th>
     <td class="cke_editor_wrapper"><%= text_area_tag :outline, @item.outline, class: 'ckeditor' %></td>
   </tr>
   <tr>
-    <th><%= @item.locale(:business_outline) %></th>
+    <th><%= @item.class.human_attribute_name :business_outline %></th>
     <td class="cke_editor_wrapper"><%= text_area_tag :business_outline, @item.business_outline, class: 'ckeditor' %></td>
   </tr>
   <tr>
-    <th><%= @item.locale(:contact_information) %></th>
+    <th><%= @item.class.human_attribute_name :contact_information %></th>
     <td class="cke_editor_wrapper"><%= text_area_tag :contact_information, @item.contact_information, class: 'ckeditor' %></td>
   </tr>
 </table>

@@ -1,21 +1,21 @@
 <table class="show">
   <tr>
-    <th><%= @item.locale(:in_group_id) %></th>
+    <th><%= f.label :in_group_id %></th>
     <td><%= f.select :in_group_id, Core.site.groups_for_option, include_blank: true %></td>
   </tr><tr>
-    <th><%= @item.locale(:account) %></th>
+    <th><%= f.label :account %></th>
     <td><%= f.text_field :account, :class => 'id' %></td>
   </tr><tr>
-    <th><%= @item.locale(:name) %></th>
+    <th><%= f.label :name %></th>
     <td><%= f.text_field :name, :class => 'name' %></td>
   </tr><tr>
-    <th><%= @item.locale(:name_en) %></th>
+    <th><%= f.label :name_en %></th>
     <td><%= f.text_field :name_en, :class => 'nameEn' %></td>
   </tr><tr>
-    <th><%= @item.locale(:email) %></th>
+    <th><%= f.label :email %></th>
     <td><%= f.text_field :email, :class => 'email' %></td>
   </tr><tr>
-    <th><%= @item.locale(:state) %></th>
+    <th><%= f.label :state %></th>
     <td>
       <%- if @item.root? -%>
         <%= @item.status.name %>
@@ -24,7 +24,7 @@
       <%- end -%>
     </td>
   </tr><tr>
-    <th><%= @item.locale(:auth_no) %></th>
+    <th><%= f.label :auth_no %></th>
     <td>
       <%- if @item.root? -%>
         <%= @item.auth_name %>
@@ -46,21 +46,21 @@
       <%- if Core.user.root? -%>
       <table id="auth_extra_settings" class="noDesign" style="margin-top: 10px; <%= 'display: none;' if @item.auth_no != 5 %>">
         <tr>
-          <td><%= @item.locale(:admin_creatable) %></td>
+          <td><%= f.label :admin_creatable %></td>
           <td><%= f.radio_buttons :admin_creatable, @item.class::ADMIN_CREATABLE_OPTIONS %></td>
         </tr>
       </table>
       <%- end -%>
     </td>
   </tr><tr>
-    <th><%= @item.locale(:role_name) %></th>
+    <th><%= f.label :role_name %></th>
     <td><%= render 'sys/admin/_partial/role_names/form', f: f, item: @item %></td>
   </tr>
 </table>
 
 <table class="show">
   <tr>
-    <th><%= @item.locale(:password) %></th>
+    <th><%= f.label :password %></th>
     <td>
       <%= f.text_field :password, :class => 'id' %>
       <span style="margin-left: 10px;"><%= button_tag 'ランダムパスワード設定', type: 'button', id: 'genRandomPass' %></span>

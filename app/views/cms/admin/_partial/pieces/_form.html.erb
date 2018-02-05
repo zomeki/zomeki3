@@ -2,24 +2,24 @@
 <table class="show">
 <% end %>
   <tr>
-    <th><%= @item.locale(:state) %></th>
+    <th><%= f.label :state %></th>
     <td><%= f.radio_buttons :state, @item.states, :class => 'status' %></td>
   </tr>
   <%= concept_form f %>
   <tr>
-    <th><%= @item.locale(:content_id) %></th>
+    <th><%= f.label :content_id %></th>
     <td><%= safe{@item.content_name} %></td>
   </tr><tr>
-    <th><%= @item.locale(:model) %></th>
+    <th><%= f.label :model %></th>
     <td><%= @item.module_name(:short) %></td>
   </tr><tr>
-    <th><%= @item.locale(:name) %></th>
+    <th><%= f.label :name %></th>
     <td><%= f.text_field :name, :class => 'id' %></td>
   </tr><tr>
-    <th><%= @item.locale(:title) %></th>
+    <th><%= f.label :title %></th>
     <td><%= f.text_field :title, :class => 'name' %></td>
   </tr><tr>
-    <th><%= @item.locale(:view_title) %></th>
+    <th><%= f.label :view_title %></th>
     <td><%= f.text_field :view_title, :class => 'name' %></td>
   </tr>
 <% if defined?(container) && container != :tr %>

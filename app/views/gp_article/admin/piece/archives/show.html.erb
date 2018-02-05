@@ -3,15 +3,15 @@
 
 <table class="show">
   <tr>
-    <th><%= @item.locale :num_docs_visibility %></th>
+    <th><%= @item.class.human_attribute_name :num_docs_visibility %></th>
     <td><%= @item.num_docs_visibility_text %></td>
   </tr>
   <tr>
-    <th><%= @item.locale :term %></th>
+    <th><%= @item.class.human_attribute_name :term %></th>
     <td><%= @item.term_text %></td>
   </tr>
   <tr>
-    <th><%= @item.locale :order %></th>
+    <th><%= @item.class.human_attribute_name :order %></th>
     <td><%= @item.order_text %></td>
   </tr>
 </table>

@@ -1,14 +1,14 @@
 <table class="show">
   <tr>
-    <th><%= @item.locale :name %></th>
+    <th><%= @item.class.human_attribute_name :name %></th>
     <td><%= @item.name %></td>
   </tr>
   <tr>
-    <th><%= @item.locale :title %></th>
+    <th><%= @item.class.human_attribute_name :title %></th>
     <td><%= @item.title %></td>
   </tr>
   <tr>
-    <th><%= @item.locale :more %></th>
+    <th><%= @item.class.human_attribute_name :more %></th>
     <td><%= @item.more %></td>
   </tr>
   <tr>
@@ -16,7 +16,7 @@
     <td>
       <table class="noDesign">
         <tr>
-          <td><%= @item.locale :condition %></td>
+          <td><%= @item.class.human_attribute_name :condition %></td>
           <td><%= @item.condition_name %></td>
           <td>&nbsp;</td>
         </tr>
@@ -31,7 +31,7 @@
     </td>
   </tr>
   <tr>
-    <th><%= @item.locale :sort_no %></th>
+    <th><%= @item.class.human_attribute_name :sort_no %></th>
     <td><%= @item.sort_no %></td>
   </tr>
 </table>

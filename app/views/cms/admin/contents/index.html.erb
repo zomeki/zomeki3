@@ -3,7 +3,7 @@
 <table class="index" style="table-layout: fixed;">
   <tr>
     <th style="width: 60px; text-align: center;">詳細</th>
-    <th style="width: auto;"><%= Cms::Content.new.locale(:name) %></th>
+    <th style="width: auto;"><%= Cms::Content.human_attribute_name :name %></th>
     <th style="width: auto;"><%= Cms::Content.human_attribute_name :note %></th>
     <th style="width: 150px;">コンテンツ種別</th>
     <th style="width: 60px;"><%= Cms::Content.human_attribute_name :sort_no %></th>
