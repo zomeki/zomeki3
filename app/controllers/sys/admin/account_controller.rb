@@ -2,11 +2,9 @@ class Sys::Admin::AccountController < Sys::Controller::Admin::Base
   layout 'admin/login'
 
   def login
-    admin_uri = "/#{ZomekiCMS::ADMIN_URL_PREFIX}"
+    return redirect_to(admin_root_path) if logged_in?
 
-    return redirect_to(admin_uri) if logged_in?
-
-    @uri = params[:uri] || cookies[:sys_login_referrer] || admin_uri
+    @uri = params[:uri] || cookies[:sys_login_referrer] || admin_root_path
     @uri = @uri.gsub(/^http:\/\/[^\/]+/, '')
     return unless request.post?
 

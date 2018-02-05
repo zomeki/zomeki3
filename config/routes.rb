@@ -61,15 +61,15 @@ Rails.application.routes.draw do
   match '/_themes(/*path)' => 'exception#index', via: :all
 
   # Admin
-  admin_prefix = ZomekiCMS::ADMIN_URL_PREFIX
-  get admin_prefix => 'sys/admin/front#index'
-  match "#{admin_prefix}/login" => 'sys/admin/account#login', as: :admin_login, via: [:get, :post]
-  get "#{admin_prefix}/logout" => 'sys/admin/account#logout', as: :admin_logout
-  get "#{admin_prefix}/account" => 'sys/admin/account#info', as: :admin_account
-  get "#{admin_prefix}/password_reminders/new" => 'sys/admin/account#new_password_reminder', as: :new_admin_password_reminder
-  post "#{admin_prefix}/password_reminders" => 'sys/admin/account#create_password_reminder', as: :admin_password_reminders
-  get "#{admin_prefix}/password/edit" => 'sys/admin/account#edit_password', as: :edit_admin_password
-  put "#{admin_prefix}/password" => 'sys/admin/account#update_password', as: :admin_password
+  admin = ZomekiCMS::ADMIN_URL_PREFIX
+  get admin => 'sys/admin/front#index', as: :admin_root
+  match "#{admin}/login" => 'sys/admin/account#login', as: :admin_login, via: [:get, :post]
+  get "#{admin}/logout" => 'sys/admin/account#logout', as: :admin_logout
+  get "#{admin}/account" => 'sys/admin/account#info', as: :admin_account
+  get "#{admin}/password_reminders/new" => 'sys/admin/account#new_password_reminder', as: :new_admin_password_reminder
+  post "#{admin}/password_reminders" => 'sys/admin/account#create_password_reminder', as: :admin_password_reminders
+  get "#{admin}/password/edit" => 'sys/admin/account#edit_password', as: :edit_admin_password
+  put "#{admin}/password" => 'sys/admin/account#update_password', as: :admin_password
 
   # Tool
   get "/_tools/captcha/index"  => "simple_captcha#index"
@@ -97,7 +97,7 @@ Rails.application.routes.draw do
   end
 
   # Exception
-  get "#{admin_prefix}/*path" => "cms/admin/exception#index"
+  get "#{admin}/*path" => "cms/admin/exception#index"
   get "404.:format" => "cms/public/exception#index"
   get "*path"       => "cms/public/exception#index"
 end
