@@ -11,7 +11,6 @@ class GpArticle::Doc < ApplicationRecord
   include Cms::Model::Base::Page::TalkTask
   include Cms::Model::Base::Qrcode
   include Cms::Model::Rel::Content
-  include Cms::Model::Rel::Concept
   include Cms::Model::Rel::Inquiry
   include Cms::Model::Rel::Map
   include Cms::Model::Rel::Bracket
@@ -49,7 +48,8 @@ class GpArticle::Doc < ApplicationRecord
   validates :content_id, :presence => true
 
   # Page
-  belongs_to :layout, :foreign_key => :layout_id, :class_name => 'Cms::Layout'
+  belongs_to :concept, foreign_key: :concept_id, class_name: 'Cms::Concept'
+  belongs_to :layout, foreign_key: :layout_id, class_name: 'Cms::Layout'
 
   has_many :operation_logs, -> { where(item_model: 'GpArticle::Doc') },
     foreign_key: :item_id, class_name: 'Sys::OperationLog'

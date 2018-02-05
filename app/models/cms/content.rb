@@ -1,11 +1,11 @@
 class Cms::Content < ApplicationRecord
   include Sys::Model::Base
-  include Cms::Model::Base::Content
   include Sys::Model::Rel::Creator
   include Cms::Model::Site
   include Cms::Model::Rel::Site
   include Cms::Model::Rel::Concept
   include Cms::Model::Auth::Concept
+  include Cms::Model::Base::Content
 
   REBUILDABLE_MODELS = ['AdBanner::Banner', 'BizCalendar::Place', 'Feed::Feed',
                         'Gnav::MenuItem', 'GpArticle::Doc', 'GpCalendar::Event', 'GpCategory::CategoryType',

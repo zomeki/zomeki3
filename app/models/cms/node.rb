@@ -1,19 +1,19 @@
 class Cms::Node < ApplicationRecord
   include Sys::Model::Base
-  include Cms::Model::Base::Page
-  include Cms::Model::Base::Page::Publisher
-  include Cms::Model::Base::Page::TalkTask
-  include Cms::Model::Base::Node
-  include Cms::Model::Base::Sitemap
   include Sys::Model::Tree
   include Sys::Model::Rel::Creator
   include Cms::Model::Site
+  include Cms::Model::Base::Sitemap
+  include Cms::Model::Base::Page
+  include Cms::Model::Base::Page::Publisher
+  include Cms::Model::Base::Page::TalkTask
   include Cms::Model::Rel::Site
   include Cms::Model::Rel::Concept
   include Cms::Model::Rel::ContentModel
   include Sys::Model::Rel::ObjectRelation
   include Cms::Model::Rel::Bracket
   include Cms::Model::Auth::Concept
+  include Cms::Model::Base::Node
 
   include StateText
 
