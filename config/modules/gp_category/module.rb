@@ -1,6 +1,6 @@
 Cms::Lib::Modules::ModuleSet.draw :gp_category, 'カテゴリ', 20 do |mod|
   ## contents
-  mod.content :category_types, 'カテゴリ'
+  mod.content :category_types, 'カテゴリ', publishable: true
 
   ## directories
   mod.directory :category_types, 'カテゴリ種別ページ'

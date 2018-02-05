@@ -17,9 +17,6 @@ class Cms::Node < ApplicationRecord
 
   include StateText
 
-  REBUILDABLE_MODELS = ['Cms::Page', 'Cms::Sitemap']
-  DYNAMIC_MODELS = ['GpArticle::SearchDoc', 'GpCalendar::SearchEvent', 'Reception::Course', 'Survey::Form']
-
   belongs_to :parent, :foreign_key => :parent_id, :class_name => 'Cms::Node'
   belongs_to :route, :foreign_key => :route_id, :class_name => 'Cms::Node'
   belongs_to :layout, :foreign_key => :layout_id, :class_name => 'Cms::Layout'
@@ -56,8 +53,11 @@ class Cms::Node < ApplicationRecord
 
   scope :public_state, -> { where(state: 'public') }
   scope :sitemap_order, -> { order('sitemap_sort_no IS NULL, sitemap_sort_no, name') }
-  scope :rebuildable_models, -> { where(model: REBUILDABLE_MODELS) }
-  scope :dynamic_models, -> { where(model: DYNAMIC_MODELS) }
+  scope :rebuildable_models, -> { where(model: ['Cms::Page', 'Cms::Sitemap']) }
+  scope :dynamic_models, -> {
+    models = Cms::Lib::Modules.modules.flat_map(&:directories).select { |d| d.options[:dynamic] }.map(&:model)
+    where(model: models)
+  }
 
   scope :search_with_params, ->(params) {
     rel = all

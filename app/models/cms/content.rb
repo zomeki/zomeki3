@@ -7,11 +7,6 @@ class Cms::Content < ApplicationRecord
   include Cms::Model::Auth::Concept
   include Cms::Model::Base::Content
 
-  REBUILDABLE_MODELS = ['AdBanner::Banner', 'BizCalendar::Place', 'Feed::Feed',
-                        'Gnav::MenuItem', 'GpArticle::Doc', 'GpCalendar::Event', 'GpCategory::CategoryType',
-                        'Map::Marker', 'Organization::Group', 'Rank::Rank',
-                        'Survey::Form', 'Tag::Tag']
-
   has_many :settings, -> { order(:sort_no) },
     :foreign_key => :content_id, :class_name => 'Cms::ContentSetting', :dependent => :destroy
   has_many :pieces, :foreign_key => :content_id, :class_name => 'Cms::Piece',
@@ -32,7 +27,10 @@ class Cms::Content < ApplicationRecord
   before_create :set_default_settings_from_configs
   after_save :save_settings
 
-  scope :rebuildable_models, -> { where(model: REBUILDABLE_MODELS) }
+  scope :rebuildable_models, -> {
+    models = Cms::Lib::Modules.modules.flat_map(&:contents).select { |d| d.options[:publishable] }.map(&:model)
+    where(model: models)
+  }
 
   def inherited_concept
     main_node.try!(:inherited_concept) || concept

@@ -35,34 +35,36 @@ class Cms::Lib::Modules::ModuleSet
     @pieces      = []
   end
   
-  def content(name, label)
-    @contents << Model.new(self, name, label)
+  def content(name, label, options = {})
+    @contents << Model.new(self, name, label, :content, options)
   end
   
-  def directory(name, label)
+  def directory(name, label, options = {})
     label = "ディレクトリ/#{label}" if label != 'ディレクトリ'
-    @pages << Model.new(self, name, label, :directory)
+    @directories << Model.new(self, name, label, :directory, options)
   end
   
-  def page(name, label)
+  def page(name, label, options = {})
     label = "ページ/#{label}"
-    @pages << Model.new(self, name, label, :page)
+    @pages << Model.new(self, name, label, :page, options)
   end
   
-  def piece(name, label)
-    @pieces << Model.new(self, name, label)
+  def piece(name, label, options = {})
+    @pieces << Model.new(self, name, label, :piece, options)
   end
   
   class Model
     attr_accessor :name
     attr_accessor :label
     attr_accessor :type
+    attr_accessor :options
     
-    def initialize(mod, name, label, type = nil)
+    def initialize(mod, name, label, type = nil, options = {})
       @mod = mod
       self.name  = name
       self.label = label
       self.type  = type
+      self.options = options
     end
     
     def model

@@ -1,11 +1,11 @@
 Cms::Lib::Modules::ModuleSet.draw :gp_article, '記事', 10 do |mod|
   ## contents
-  mod.content :docs, '記事'
+  mod.content :docs, '記事', publishable: true
 
   ## directories
   mod.directory :docs, '記事ページ'
   mod.directory :archives, 'アーカイブ一覧'
-  mod.directory :search_docs, '検索結果一覧'
+  mod.directory :search_docs, '検索結果一覧', dynamic: true
 
   ## pieces
   mod.piece :docs, '記事一覧'
