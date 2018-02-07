@@ -19,7 +19,7 @@ class Sys::Admin::MaintenancesController < Cms::Controller::Admin::Base
   end
 
   def new
-    @item = @maintenances.new(state: 'public', published_at: Core.now)
+    @item = @maintenances.new(state: 'public', published_at: Time.now)
   end
 
   def create

@@ -23,16 +23,15 @@ CKEDITOR.editorConfig = function( config ) {
     ];
   } else {
     config.toolbar = [
-      { name: 'document',    items : [ 'Source','-','DocProps','Preview','-','Templates' ] },
       { name: 'clipboard',   items : [ 'Cut','Copy','Paste','PasteText','PasteFromWord','-','Undo','Redo' ] },
-      { name: 'styles',      items : [ 'FontSize','Font','Format','Styles' ] },
-      { name: 'editing',     items : [ 'Find','Replace','-','SelectAll' ] },
-      { name: 'tools',       items : [ 'Maximize', 'ShowBlocks' ] },
+      { name: 'styles',      items : [ 'Format' ] },
+      { name: 'insert',      items : [ 'Image','Table','HorizontalRule','Youtube','Audio','Video' ] },
+      { name: 'document',    items : [ 'Source','-','DocProps','-','Templates' ] },
+      { name: 'tools',       items : [ 'Maximize' ] },
       '/',
-      { name: 'basicstyles', items : [ 'TextColor','Bold','Italic','Underline','Strike','Subscript','Superscript','-','RemoveFormat' ] },
-      { name: 'paragraph',   items : [ 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock' ] },
-      { name: 'links',       items : [ 'CmsLink','CmsUnlink','CmsAnchor' ] },
-      { name: 'insert',      items : [ 'Image','Table','HorizontalRule','SpecialChar','PageBreak','Flash','Iframe','Youtube','Audio','Video' ] }
+      { name: 'basicstyles', items : [ 'TextColor','Bold','Italic','Strike','-','RemoveFormat' ] },
+      { name: 'paragraph',   items : [ 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock' ] },
+      { name: 'links',       items : [ 'CmsLink','CmsUnlink','CmsAnchor' ] }
     ];
   }
 
@@ -45,8 +44,8 @@ CKEDITOR.editorConfig = function( config ) {
   // フォントサイズをパーセンテージに変更
   config.fontSize_sizes = '10px/71.53%;12px/85.71%;14px(標準)/100%;16px/114.29%;18px/128.57%;21px/150%;24px/171.43%;28px/200%';
 
-  // フォーマットからh1を除外
-  config.format_tags = 'p;h2;h3;h4;h5;h6;pre;address;div';
+  // フォーマットからh1などを除外
+  config.format_tags = 'p;h2;h3;h4';
 
   // 使用するテンプレート
   config.templates_files = [ '/_common/js/ckeditor/plugins/templates/templates/cms_template.js' ];

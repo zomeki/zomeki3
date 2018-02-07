@@ -83,7 +83,7 @@ class Sys::Group < ApplicationRecord
   private
 
   def validate_code_uniqueness_in_site
-    groups = self.class.in_site(sites).where(code: code)
+    groups = self.class.in_site(sites.map(&:id)).where(code: code)
     groups = groups.where.not(id: id) if persisted?
     if groups.exists?
       errors.add(:code, :taken_in_site)

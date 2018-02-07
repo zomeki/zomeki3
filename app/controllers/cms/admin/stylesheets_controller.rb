@@ -83,7 +83,7 @@ class Cms::Admin::StylesheetsController < Cms::Controller::Admin::Base
 
     if @item.save
       flash[:notice] = "更新処理が完了しました。"
-      redirect_to(path: @parent.path_from_themes_root)
+      redirect_to(path: @item.path_from_themes_root, do: :edit)
     else
       flash.now[:notice] = "更新処理に失敗しました。"
       render :edit, formats: [:html]

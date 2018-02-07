@@ -90,7 +90,7 @@ class Cms::DataFile < ApplicationRecord
         return false
       end
       self.state        = 'public'
-      self.published_at = Core.now
+      self.published_at = Time.now
       return false unless save(:validate => false)
 
       run_callbacks :publish_files do
