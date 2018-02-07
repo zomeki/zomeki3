@@ -57,7 +57,7 @@ module Sys::Model::Base::File
                       [size.to_i, size.to_i]
                     end
 
-    @thumbnail_size = if width > 0 || height > 0 || width <= 640 || height <= 480
+    @thumbnail_size = if width > 0 && height > 0 && width <= 640 && height <= 480
                         { width: width, height: height }
                       else
                         DEFAULT_THUMBNAIL_SIZE
