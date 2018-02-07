@@ -54,7 +54,7 @@ class Cms::Admin::PreviewController < Cms::Controller::Admin::Base
     #opt[:layout_id] = params[:layout_id] if params[:layout_id]
     #opt[:authenticity_token] = params[:authenticity_token] if params[:authenticity_token]
 
-    rendered = Sys::Lib::Controller.dispatch(ctl, act, params: params, base_url: request.base_url)
+    rendered = Sys::Lib::Controller.dispatch(ctl, act, params: params, base_url: request.base_url, session: session, cookie: cookies)
     return redirect_to(rendered.redirect_url) if rendered.redirect_url
 
     response.content_type = rendered.content_type if rendered.respond_to?(:content_type)
