@@ -24,13 +24,13 @@ module Cms::Model::Site::Scope
 
     def define_has_many_or_has_one_site_scope(ref)
       class_eval do
-        scope :in_site, ->(site) { where(primary_key => ref.klass.select(ref.foreign_key).in_site(site)) }
+        scope :in_site, ->(site) { where(primary_key => ref.klass.in_site(site).select(ref.foreign_key)) }
       end
     end
 
     def define_belongs_to_site_scope(ref)
       class_eval do
-        scope :in_site, ->(site) { where(ref.foreign_key => ref.klass.in_site(site)) }
+        scope :in_site, ->(site) { where(ref.foreign_key => ref.klass.in_site(site).select(primary_key)) }
       end
     end
 
@@ -44,7 +44,7 @@ module Cms::Model::Site::Scope
                    model = model_name.safe_constantize
                    where(p_type => model_name, p_id => model.in_site(site)) if model && model.respond_to?(:in_site)
                  }.compact
-          union(rels)
+          rels.reduce(:union)
         }
       end
     end

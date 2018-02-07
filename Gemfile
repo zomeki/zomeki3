@@ -71,6 +71,7 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'hpricot', '0.8.6'
 gem 'tamtam', '0.0.3'
 
+gem 'active_record_union', '~> 1.3.0'
 gem 'activerecord-import', '~> 0.17.1'
 gem 'addressable', '~> 2.3.8'
 gem 'holiday_jp', '~> 0.6.1'
