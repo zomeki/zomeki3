@@ -16,10 +16,9 @@
 
   <%- @items.each do |item| -%>
   <tr class="<%= cycle '', 'cycle' %>">
-    <td style="text-align: center;"><%= link_to :show, gp_category_category_type_category_doc_path(content: @content,
-                                                                                                   category_type_id: @category_type.id,
-                                                                                                   category_id: @category.id,
-                                                                                                   id: item.id) %></td>
+    <td style="text-align: center;"><%= link_to :show, { action: :show, category_type_id: @category_type.id,
+                                                                        category_id: @category.id,
+                                                                        id: item } %></td>
     <td style="text-align: left;"><%= item.title %></td>
     <td style="text-align: left;"><%= item.name %></td>
     <td><%= item.creator.group.try(:name) %></td>

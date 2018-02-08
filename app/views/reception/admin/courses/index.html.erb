@@ -20,7 +20,7 @@
       cycle_class = cycle '', 'cycle'
     -%>
     <tr class="<%= cycle_class %>">
-      <td rowspan="<%= rowspan %>" style="text-align: center;"><%= link_to :show, reception_course_path(content: @content, id: item.id) %></td>
+      <td rowspan="<%= rowspan %>" style="text-align: center;"><%= link_to :show, { action: :show, id: item.id } %></td>
       <td rowspan="<%= rowspan %>" style="text-align: left;"><%= link_to item.title, reception_course_opens_path(content: @content, course_id: item.id) %></td>
       <td style="text-align: center; border-top: 1px solid #ccc;"><%= first_open.open_on if first_open %></td>
       <td rowspan="<%= rowspan %>" style="text-align: center;"><%= item.capacity %></td>

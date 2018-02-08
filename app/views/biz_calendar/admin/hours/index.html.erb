@@ -12,7 +12,7 @@
 
   <% @items.each do |item| %>
   <tr class="<%= cycle '', 'cycle' %>">
-    <td style="text-align: center;"><%= link_to :show, url_for(:action => :show, :id => item) %></td>
+    <td style="text-align: center;"><%= link_to :show, { action: :show, id: item } %></td>
     <td style="text-align: center;"><%= safe{item.target_date_label("%Y-%m-%d", true)} %></td>
     <td style="text-align: center;"><%= "#{l(item.business_hours_start_time, format: :short)} ～ #{l(item.business_hours_end_time, format: :short)}" %></td>
     <td style="text-align: center;"><%=l item.updated_at %></td>

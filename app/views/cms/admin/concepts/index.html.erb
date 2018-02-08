@@ -2,16 +2,16 @@
 <div class="tree">
   
   <p>
-    <%= link_to :show, cms_concept_url(@parent.parent_id, @parent) if @parent.id != 0 %>
+    <%= link_to :show, { action: :show, parent: @parent.parent_id, id: @parent } if @parent.id != 0 %>
     <%= @parent.name %></p>
   
   <div class="links">
     <div>
-      <%= link_to :up, url_for(:parent => @parent.parent_id) if @parent.id != 0 %></div>
+      <%= link_to :up, { action: :index, parent: @parent.parent_id } if @parent.id != 0 %></div>
     
     <% @items.each do |item| %>
-    <%= link_to :show, url_for(:action => :show, :id => item) %>
-    <%= link_to item.name, url_for(:action => :index, :parent => item) %>
+    <%= link_to :show, { action: :show, id: item } %>
+    <%= link_to item.name, { action: :index, parent: item } %>
     <span class="remark"><%= item.sort_no %></span><br />
     <% end %>
   </div>

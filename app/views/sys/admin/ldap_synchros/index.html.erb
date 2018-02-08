@@ -10,7 +10,7 @@
   
   <% @items.each do |item| %>
   <tr class="<%= cycle '', 'cycle' %>">
-    <td style="text-align: center;"><%= link_to :show, url_for(:action => :show, :id => item.version) %></td>
+    <td style="text-align: center;"><%= link_to :show, { action: :show, id: item.version } %></td>
     <td style="text-align: center;"><%= item.version%></td>
     <td style="text-align: right;"><%=number_with_delimiter item.group_count %></td>
     <td style="text-align: right;"><%=number_with_delimiter item.user_count %></td>

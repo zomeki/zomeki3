@@ -16,7 +16,7 @@
 
   <% @items.each do |item| %>
   <tr class="<%= cycle '', 'cycle' %>">
-    <td style="text-align: center;"><%= link_to :show, url_for(:action => :show, :id => item) %></td>
+    <td style="text-align: center;"><%= link_to :show, { action: :show, id: item } %></td>
     <td style="text-align: center;"><%= item.title %></td>
     <td style="text-align: center;"><%= link_to '業務時間', biz_calendar_place_hours_path(content: @content, place_id: item.id) %></td>
     <td style="text-align: center;"><%= link_to '休業日', biz_calendar_place_holidays_path(content: @content, place_id: item.id) %></td>

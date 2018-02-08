@@ -12,7 +12,7 @@
   
   <% @items.each do |item| %>
   <tr class="<%= cycle '', 'cycle' %>">
-    <td style="text-align: center;"><%= link_to :show, url_for(:action => :show, :id => item) %></td>
+    <td style="text-align: center;"><%= link_to :show, { action: :show, id: item } %></td>
     <td><%= item.name %></td>
     <td><%= item.title %></td>
     <td style="text-align: center;"><%=l item.updated_at %></td>

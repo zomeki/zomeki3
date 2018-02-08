@@ -16,14 +16,14 @@
   
   <% @items.each do |item| %>
   <tr class="<%= cycle '', 'cycle' %>">
-    <td style="text-align: center;"><%= link_to :show, url_for(:action => :show, :concept => item.concept_id, :id => item) %></td>
+    <td style="text-align: center;"><%= link_to :show, { action: :show, concept: item.concept_id, id: item } %></td>
     <td style="text-align: center;">
       <% if item.image_file? %>
         <%= link_to url_for(action: :download, concept: item.concept_id, id: item), target: '_blank' do %>
           <%= image_tag url_for(action: :download, concept: item.concept_id, id: item), style: thumbnail_style(item.image_width, item.image_height, 80, 40) %>
         <%- end -%>
       <% else %>
-        <a href="<%= url_for(:id => item, :concept => item.concept_id, :action => :download) %>" class="<%= item.css_class %>" target="_blank">File</a>
+        <a href="<%= url_for(action: :download, concept: item.concept_id, id: item) %>" class="<%= item.css_class %>" target="_blank">File</a>
       <% end %>
     </td>
     <td><%= safe{item.node.name} %><br /><%= "（#{item.node.title}）" if safe{item.node.title}.to_s != '' %></td>
