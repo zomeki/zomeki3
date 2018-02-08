@@ -1,6 +1,4 @@
 class Cms::Lib::Modules::ModuleSet
-  @@modules = nil
-
   attr_accessor :name
   attr_accessor :label
   attr_accessor :sort_no
@@ -10,16 +8,16 @@ class Cms::Lib::Modules::ModuleSet
   attr_accessor :pieces
 
   def self.load_modules
-    @@modules
+    Rails.application.config.x.modules
   end
 
   def self.draw(name, label, sort_no, &block)
-    @@modules = [] unless @@modules
     yield mod = self.new
     mod.name  = name
     mod.label = label
     mod.sort_no = sort_no
-    @@modules << mod
+    Rails.application.config.x.modules << mod
+    Rails.application.config.x.modules.sort_by!(&:sort_no)
   end
 
   def initialize
