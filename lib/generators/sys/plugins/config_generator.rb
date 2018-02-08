@@ -8,11 +8,6 @@ module Sys
         template 'Gemfile.erb', 'config/plugins/Gemfile' 
       end
 
-      def create_routes
-        @plugins = enabled_plugins
-        template 'routes.rb.erb', 'config/plugins/routes.rb' 
-      end
-
       private
 
       def enabled_plugins

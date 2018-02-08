@@ -1,6 +1,6 @@
 class Cms::Lib::Modules::ModuleSet
   @@modules = nil
-  
+
   attr_accessor :name
   attr_accessor :label
   attr_accessor :sort_no
@@ -8,17 +8,11 @@ class Cms::Lib::Modules::ModuleSet
   attr_accessor :directories
   attr_accessor :pages
   attr_accessor :pieces
-  
+
   def self.load_modules
-    return @@modules if @@modules
-    Dir::entries('config/modules').sort.each do |mod|
-      next if mod =~ /^\.+$/
-      file = "#{Rails.root}/config/modules/#{mod}/module.rb"
-      load(file) if FileTest.exist?(file)
-    end
     @@modules
   end
-  
+
   def self.draw(name, label, sort_no, &block)
     @@modules = [] unless @@modules
     yield mod = self.new
@@ -27,7 +21,7 @@ class Cms::Lib::Modules::ModuleSet
     mod.sort_no = sort_no
     @@modules << mod
   end
-  
+
   def initialize
     @contents    = []
     @directories = []
@@ -52,7 +46,7 @@ class Cms::Lib::Modules::ModuleSet
   def piece(name, label, options = {})
     @pieces << Model.new(self, name, label, :piece, options)
   end
-  
+
   class Model
     attr_accessor :name
     attr_accessor :label
@@ -66,11 +60,11 @@ class Cms::Lib::Modules::ModuleSet
       self.type  = type
       self.options = options
     end
-    
+
     def model
       "#{@mod.name}/#{name}".singularize.camelize
     end
-    
+
     def full_label
       "#{@mod.label}/#{label}"
     end

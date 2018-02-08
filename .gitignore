@@ -24,6 +24,6 @@
 /config/nginx/*.conf
 /config/nginx/servers
 /config/nginx/admin_servers
-/config/plugins
+/config/plugins/Gemfile
 
 /vendor/tika/*
