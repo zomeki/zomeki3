@@ -1,3 +1,16 @@
 <h2><%= menu_header @content.name, AdBanner::Banner.model_name.human %></h2>
 
-<%= render 'ad_banner/admin/shared/menu' %>
+<div class="actionMenu">
+  <%= action_menu :new %>
+  <%= action_menu :index %>
+  <%= action_menu :show %>
+  <%= action_menu :edit if @item.try(:editable?) %>
+  <%= action_menu :destroy if @item.try(:deletable?) %>
+
+  <%- if action_name == 'index' -%>
+    <span class="separator"></span>
+    <%= link_to "すべて", { content: @content }, class: "#{'current' if params[:target].blank? }" %>
+    <%= link_to '公開期間中', { content: @content, target: 'published' }, class: "#{'current' if params[:target] == 'published' }" %>
+    <%= link_to '公開期間外', { content: @content, target: 'closed' }, class: "#{'current' if params[:target] == 'closed' }" %>
+  <%- end -%>
+</div>
