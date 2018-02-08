@@ -13,6 +13,7 @@
 /sites
 /tmp
 /upload
+/wget_sites
 
 /config/*.yml
 /config/mecab/sites
