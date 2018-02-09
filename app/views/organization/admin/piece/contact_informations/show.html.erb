@@ -3,7 +3,7 @@
 
 <table class="show">
   <tr>
-    <th><%= @item.locale :in_settings_source %></th>
+    <th><%= @item.class.human_attribute_name :in_settings_source %></th>
     <td><%= @item.source_text %></td>
   </tr>
 </table>

@@ -98,8 +98,7 @@ module Cms::Controller::Layout
       begin
         next if item.content_id && !item.content
         mnames= item.model.underscore.pluralize.split('/')
-
-        data = Sys::Lib::Controller.render("#{mnames[0]}/public/piece/#{mnames[1]}", 'index', params: params)
+        data = Sys::Lib::Controller.render("#{mnames[0]}/public/piece/#{mnames[1]}", 'index', params: params, session: session, cookie: cookies)
         if data =~ /^<html/ && Rails.env.to_s == 'production'
           # component error
         else
@@ -114,8 +113,8 @@ module Cms::Controller::Layout
     body.gsub!("[[content]]", Page.content)
 
     ## render other brackets
-    body = Cms::Public::BracketRenderService.new(Page.site, concepts, mobile: request.mobile)
-                                            .render_data_texts_and_files(body)
+    body = Cms::BracketRenderService.new(Page.site, concepts, mobile: request.mobile)
+                                    .render_data_texts_and_files(body)
 
     ## mobile
     if request.mobile?
@@ -162,7 +161,7 @@ module Cms::Controller::Layout
     return body if Core.request_uri =~ /^\/_preview\//
     return body unless Page.site.use_common_ssl?
 
-    Cms::Public::SslLinkReplaceService.new(Page.site, Page.current_node.public_uri).run(body)
+    Cms::SslLinkReplaceService.new(Page.site, Page.current_node.public_uri).run(body)
   end
 
   def piece_container_html(piece, body)

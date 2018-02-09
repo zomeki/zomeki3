@@ -19,13 +19,27 @@ module Cms::Model::Base::Content
     node.public_uri
   end
 
-  def admin_uri
-    controller = model.underscore.pluralize.gsub(/^(.*?\/)/, "\\1c#{concept_id}/#{id}/")
-    "#{Core.uri}#{ZomekiCMS::ADMIN_URL_PREFIX}/#{controller}"
+  def admin_uri(options = {})
+    controller = model.tableize.sub('/', '/admin/')
+    Rails.application.routes.url_helpers.url_for({ controller: controller,
+                                                   action: :index,
+                                                   concept: concept,
+                                                   content: self,
+                                                   only_path: true }.merge(options))
+  rescue ActionController::UrlGenerationError => e
+    error_log e
+    nil
   end
 
-  def admin_content_uri
-    controller = model.to_s.underscore.pluralize.gsub(/^(.*?)\/.*/, "\\1/c#{concept_id}/content_base") + "/#{id}"
-    "#{Core.uri}#{ZomekiCMS::ADMIN_URL_PREFIX}/#{controller}"
+  def admin_content_uri(options = {})
+    controller = model.tableize.split('/').first + '/admin/content/base'
+    Rails.application.routes.url_helpers.url_for({ controller: controller,
+                                                   action: :show,
+                                                   concept: concept,
+                                                   id: self,
+                                                   only_path: true }.merge(options))
+  rescue ActionController::UrlGenerationError => e
+    error_log e
+    nil
   end
 end

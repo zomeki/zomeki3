@@ -22,8 +22,8 @@
     <td style="text-align: left;"><%= item.logic_text %></td>
     <td style="text-align: left;"><%= link_to item.dest_content.name, item.dest_content.admin_uri if item.dest_content %></td>
     <td style="text-align: center;"><%= item.sort_no %></td>
-    <td style="text-align: center;"><%=l item.updated_at if item.updated_at %></td>
-    <td style="text-align: center;"><%=l item.filtered_at if item.filtered_at %></td>
+    <td style="text-align: center;"><%=l item.updated_at %></td>
+    <td style="text-align: center;"><%=l item.filtered_at %></td>
     <td style="text-align: center;"><%= item.status.name %></td>
   </tr>
   <%- end -%>

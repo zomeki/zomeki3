@@ -90,12 +90,13 @@ class Cms::Admin::Tool::SearchController < Cms::Controller::Admin::Base
   end
 
   def search_gp_article_docs(content, criteria)
-    publics = GpArticle::Doc.where(state: 'public')
-    non_publics = GpArticle::Doc.where.not(state: 'public')
-    items = GpArticle::Doc.distinct.union([non_publics.editable, non_publics.creator_or_approvables, publics])
-                          .where(content_id: content.id)
-                          .search_with_text(:title, :subtitle, :summary, :body, :mobile_title, :mobile_body, criteria[:keyword])
-                          .order(:id)
+    publics = GpArticle::Doc.where(state: 'public').where(content_id: content.id)
+    non_publics = GpArticle::Doc.where.not(state: 'public').where(content_id: content.id)
+    items = [publics,
+             non_publics.editable,
+             non_publics.creator_or_approvables].reduce(:union)
+    items = items.search_with_text(:title, :subtitle, :summary, :body, :mobile_title, :mobile_body, criteria[:keyword])
+                 .order(:id)
     items.map { |c|
       {
         id: c.id,

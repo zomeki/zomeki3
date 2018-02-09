@@ -2,15 +2,15 @@
 
 <table class="show">
   <tr>
-    <th><%= @item.locale(:state) %></th>
+    <th><%= f.label :state %></th>
     <td><%= f.radio_buttons :state, @item.class::STATE_OPTIONS, :class => 'states' %></td>
   </tr><tr>
-    <th><%= @item.locale(:fixed_start_date) %></th>
+    <th><%= f.label :fixed_start_date %></th>
     <td>
-      <%= f.text_field :fixed_start_date, :value => value_for_datepicker(f.object_name, :fixed_start_date),
+      <%= f.text_field :fixed_start_date, :value => l(@item.fixed_start_date),
                              :style => 'width: 150px;', :class => 'datepicker' %>
       &nbsp;&nbsp;～&nbsp;&nbsp;
-      <%= f.text_field :fixed_end_date, :value => value_for_datepicker(f.object_name, :fixed_end_date),
+      <%= f.text_field :fixed_end_date, :value => l(@item.fixed_end_date),
                              :style => 'width: 150px;', :class => 'datepicker' %>
     </td>
   </tr><tr>
@@ -19,7 +19,7 @@
       <table id="categories">
         <tbody>
           <tr>
-            <th><%= @item.locale(:repeat_type) %></th>
+            <th><%= f.label :repeat_type %></th>
             <td><%= f.select :repeat_type, @item.class::REPEAT_OPTIONS, include_blank: true %></td>
           </tr>
           <tr id ="intervalTr">
@@ -43,7 +43,7 @@
           </tr>
           <tr>
             <th>開始日</th>
-            <td><%= f.text_field :start_date, :value => value_for_datepicker(f.object_name, :start_date),
+            <td><%= f.text_field :start_date, :value => l(@item.start_date),
                              :style => 'width: 150px;', :class => 'datepicker' %></td>
           </tr>
           <tr>
@@ -62,7 +62,7 @@
           <tr>
             <td>
               <%= f.radio_button :end_type, @item.class::END_TYPE_OPTIONS[2].last, {:checked => (@item.end_type == @item.class::END_TYPE_OPTIONS[2].last)} %>
-              <%= f.text_field :end_date, :value => value_for_datepicker(f.object_name, :end_date),
+              <%= f.text_field :end_date, :value => l(@item.end_date),
                              :style => 'width: 150px;', :class => 'datepicker' %>
             </td>
           </tr>
@@ -70,11 +70,11 @@
       </table>
     </td>
   </tr><tr>
-    <th><%= @item.locale(:business_hours_start_time) %> <span class="note">※</span></th>
+    <th><%= f.label :business_hours_start_time %> <span class="note">※</span></th>
     <td>
-      <%= f.text_field :business_hours_start_time, :value => value_for_timepicker(f.object_name, :business_hours_start_time), :style => 'width: 120px;', :class => 'timepicker' %>
+      <%= f.text_field :business_hours_start_time, :value => l(@item.business_hours_start_time, format: :short), :style => 'width: 120px;', :class => 'timepicker' %>
       &nbsp;&nbsp;～&nbsp;&nbsp;
-      <%= f.text_field :business_hours_end_time, :value => value_for_timepicker(f.object_name, :business_hours_end_time), :style => 'width: 120px;', :class => 'timepicker' %>
+      <%= f.text_field :business_hours_end_time, :value => l(@item.business_hours_end_time, format: :short), :style => 'width: 120px;', :class => 'timepicker' %>
     </td>
   </tr>
 </table>

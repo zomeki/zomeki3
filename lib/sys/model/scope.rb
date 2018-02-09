@@ -56,15 +56,6 @@ module Sys::Model::Scope
       s.gsub(/[\\%_]/) {|r| "\\#{r}"}
     end
 
-    def union(relations)
-      if relations.present?
-        sql = '((' + relations.map{|rel| rel.to_sql}.join(') UNION (') + ')) AS ' + self.table_name 
-        from(sql)
-      else
-        none
-      end
-    end
-
     def replace_for_all(column, from, to)
       column = connection.quote_column_name(column)
       update_all(["#{column} = REPLACE(#{column}, ?, ?)", from, to])

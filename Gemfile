@@ -71,6 +71,7 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'hpricot', '0.8.6'
 gem 'tamtam', '0.0.3'
 
+gem 'active_record_union', '~> 1.3.0'
 gem 'activerecord-import', '~> 0.17.1'
 gem 'addressable', '~> 2.3.8'
 gem 'holiday_jp', '~> 0.6.1'
@@ -86,6 +87,7 @@ gem 'rqrcode_png', '~> 0.1.5'
 gem 'rubyzip', '~> 1.2.1'
 gem 'simple_captcha2', '~> 0.4.2', require: 'simple_captcha'
 gem 'will_paginate', '~> 3.1.6'
+gem 'romaji', '~> 0.2.4'
 
 gem 'dynamic_form', '~> 1.1.4'
 gem 'rails-i18n', '~> 5.0.4'
@@ -110,7 +112,6 @@ gem 'params_keeper_rails', '~> 1.0.0'
 gem 'datewari', '~> 1.0.1'
 gem 'slonik_migration', '~> 1.0.0'
 
-# Plugins
-Dir.glob(File.join(File.dirname(__FILE__), 'config', 'plugins', '**', "Gemfile")) do |gemfile|
-  eval(IO.read(gemfile), binding)
+Dir[File.join(File.dirname(__FILE__), 'config/plugins/**/Gemfile')].each do |file|
+  instance_eval File.read(file)
 end

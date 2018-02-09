@@ -2,12 +2,12 @@
 <div class="tree">
   <%- if @parent -%>
   <p>
-    <%= link_to :show, sys_group_url(@parent.parent_id, @parent) %>
+    <%= link_to :show, { action: :show, parent: @parent.parent_id, id: @parent } %>
     <%= @parent.name %>
   </p>
   <%- end -%>
   <div class="links">
-    <div><%= link_to :up, url_for(:parent => @parent.parent_id) if @parent && @parent.level_no > 1 %></div>
+    <div><%= link_to :up, { action: :index, parent: @parent.parent_id } if @parent && @parent.level_no > 1 %></div>
     <%- @groups.each do |group| -%>
       <%= link_to :show, { action: :show, id: group } %>
       <%= link_to h(group.name), { action: :index, parent: group } %>

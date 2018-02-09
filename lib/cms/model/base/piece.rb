@@ -19,15 +19,17 @@ module Cms::Model::Base::Piece
   end
 
   def admin_controller
-    model.to_s.underscore.pluralize.sub('/', '/admin/piece/')
+    model.to_s.tableize.sub('/', '/admin/piece/')
   end
 
-  def admin_uri
-    controller = model.to_s.underscore.pluralize.gsub(/^(.*?)\//, "\\1/c#{concept_id}/piece_") + "/#{id}"
-    "#{Core.uri}#{ZomekiCMS::ADMIN_URL_PREFIX}/#{controller}"
-  end
-
-  def edit_admin_uri
-    "#{admin_uri}/edit"
+  def admin_uri(options = {})
+    Rails.application.routes.url_helpers.url_for({ controller: admin_controller,
+                                                   action: :show,
+                                                   concept: concept,
+                                                   id: id,
+                                                   only_path: true }.merge(options))
+  rescue ActionController::UrlGenerationError => e
+    error_log e
+    nil
   end
 end

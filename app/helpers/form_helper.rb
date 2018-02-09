@@ -56,29 +56,4 @@ module FormHelper
     h += '</div>'
     h.html_safe
   end
-  
-  def value_for_datepicker(object_name, attribute)
-    if object = instance_variable_get("@#{object_name}")
-      object.send(attribute).try(:strftime, '%Y-%m-%d')
-    end
-  end
-
-  def value_for_datetimepicker(object_name, attribute)
-    if object = instance_variable_get("@#{object_name}")
-      object.send(attribute).try(:strftime, '%Y-%m-%d %H:%M')
-    end
-  end
-
-  def value_for_timepicker(object_name, attribute)
-    if object = instance_variable_get("@#{object_name}")
-      object.send(attribute).try(:strftime, '%H:%M')
-    end
-  end
-
-  def disable_enter_script
-    s = <<-EOS
-$('form').on('keypress', function (e) { if (e.target.type !== 'textarea' && e.which === 13) return false; });
-    EOS
-    s.html_safe
-  end
 end

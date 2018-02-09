@@ -1,3 +1,9 @@
 <h2><%= menu_header @content.name, AdBanner::Group.model_name.human %></h2>
 
-<%= render 'ad_banner/admin/shared/menu' %>
+<div class="actionMenu">
+  <%= action_menu :new %>
+  <%= action_menu :index %>
+  <%= action_menu :show %>
+  <%= action_menu :edit if @item.try(:editable?) %>
+  <%= action_menu :destroy if @item.try(:deletable?) %>
+</div>

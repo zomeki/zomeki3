@@ -7,12 +7,12 @@
   </tr>
   <tr>
     <th><%= f.label :started_on %> <span class="note">※</span></th>
-    <td colspan="2"><%= f.text_field :started_on, :value => value_for_datepicker(f.object_name, :started_on),
+    <td colspan="2"><%= f.text_field :started_on, :value => l(@item.started_on),
                                                   :style => 'width: 150px;', :class => 'datepicker' %></td>
   </tr>
   <tr>
     <th><%= f.label :ended_on %> <span class="note">※</span></th>
-    <td colspan="2"><%= f.text_field :ended_on, :value => value_for_datepicker(f.object_name, :ended_on),
+    <td colspan="2"><%= f.text_field :ended_on, :value => l(@item.ended_on),
                                                 :style => 'width: 150px;', :class => 'datepicker' %></td>
   </tr>
   <tr>
@@ -43,8 +43,6 @@
 <%= creator_form f %>
 
 <%= javascript_tag do -%>
-<%= toggle_form_function %>
-
 function set_copy_date(from, to) {
   $(from).on('change', function () {
     if ($(to).val() === '') { $(to).val($(from).val()); }

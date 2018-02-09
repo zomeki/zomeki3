@@ -1,18 +1,18 @@
 <table class="show">
   <tr>
-    <th><%= @item.locale(:state) %></th>
+    <th><%= @item.class.human_attribute_name :state %></th>
     <td><%= safe{@item.status.name} %></td>
   </tr><tr>
-    <th><%= @item.locale(:name) %></th>
+    <th><%= @item.class.human_attribute_name :name %></th>
     <td><%= safe{@item.name} %></td>
   </tr><tr>
-    <th><%= @item.locale(:uri) %></th>
+    <th><%= @item.class.human_attribute_name :uri %></th>
     <td><%= @item.uri %></td>
   </tr><tr>
-    <th><%= @item.locale(:target) %></th>
+    <th><%= @item.class.human_attribute_name :target %></th>
     <td><%= @item.target_name %></td>
   </tr><tr>
-    <th><%= @item.locale(:sort_no) %></th>
+    <th><%= @item.class.human_attribute_name :sort_no %></th>
     <td><%= @item.sort_no %></td>
   </tr>
 </table>

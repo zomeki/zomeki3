@@ -12,18 +12,9 @@
 
   <%- @items.each do |item| -%>
   <tr class="<%= cycle '', 'cycle' %>">
-    <td style="text-align: center;">
-      <%- if @parent_sys_group -%>
-      <%= link_to :show, organization_group_group_path(content: @content,
-                                                       group_id: @parent_sys_group.code,
-                                                       id: item.id) %>
-      <%- else -%>
-      <%= link_to :show, organization_group_path(content: @content, id: item.id) %>
-      <%- end -%>
-    </td>
+    <td style="text-align: center;"><%= link_to :show, { action: :show, id: item } %></td>
     <td><%= item.name %></td>
-    <td><%= link_to item.sys_group.name,
-                    organization_group_groups_path(content: @content, group_id: item.sys_group_code) %></td>
+    <td><%= link_to item.sys_group.name, { action: :index, group_id: item.sys_group_code } %></td>
     <td style="text-align: right;"><%= item.sort_no %></td>
     <td style="text-align: center;"><%=l item.updated_at %></td>
     <td style="text-align: center;"><%= item.status.name %></td>

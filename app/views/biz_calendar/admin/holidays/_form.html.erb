@@ -6,18 +6,18 @@ types = @content.visible_types.order(:id).collect{|c| [c.title, c.id]}
 
 <table class="show">
   <tr>
-    <th><%= @item.locale(:state) %></th>
+    <th><%= f.label(:state) %></th>
     <td><%= f.radio_buttons :state, @item.class::STATE_OPTIONS, :class => 'states' %></td>
   </tr><tr>
-    <th><%= @item.locale(:type_id) %> <span class="note">※</span></th>
+    <th><%= f.label(:type_id) %> <span class="note">※</span></th>
     <td><%= f.select :type_id, types, include_blank: true %></td>
   </tr><tr>
-    <th><%= @item.locale(:holiday_date) %></th>
+    <th><%= f.label(:holiday_date) %></th>
     <td>
-      <%= f.text_field :holiday_start_date, :value => value_for_datepicker(f.object_name, :holiday_start_date),
+      <%= f.text_field :holiday_start_date, :value => l(@item.holiday_start_date),
                              :style => 'width: 150px;', :class => 'datepicker' %>
       &nbsp;&nbsp;～&nbsp;&nbsp;
-      <%= f.text_field :holiday_end_date, :value => value_for_datepicker(f.object_name, :holiday_end_date),
+      <%= f.text_field :holiday_end_date, :value => l(@item.holiday_end_date),
                              :style => 'width: 150px;', :class => 'datepicker' %>
     </td>
   </tr><tr>
@@ -26,7 +26,7 @@ types = @content.visible_types.order(:id).collect{|c| [c.title, c.id]}
       <table id="categories">
         <tbody>
           <tr>
-            <th><%= @item.locale(:repeat_type) %></th>
+            <th><%= f.label(:repeat_type) %></th>
             <td><%= f.select :repeat_type, @item.class::REPEAT_OPTIONS, include_blank: true %></td>
           </tr>
           <tr id ="intervalTr">
@@ -50,7 +50,7 @@ types = @content.visible_types.order(:id).collect{|c| [c.title, c.id]}
           </tr>
           <tr>
             <th>開始日</th>
-            <td><%= f.text_field :start_date, :value => value_for_datepicker(f.object_name, :start_date),
+            <td><%= f.text_field :start_date, :value => l(@item.start_date),
                              :style => 'width: 150px;', :class => 'datepicker' %></td>
           </tr>
           <tr>
@@ -69,7 +69,7 @@ types = @content.visible_types.order(:id).collect{|c| [c.title, c.id]}
           <tr>
             <td>
               <%= f.radio_button :end_type, @item.class::END_TYPE_OPTIONS[2].last, {:checked => (@item.end_type == @item.class::END_TYPE_OPTIONS[2].last)} %>
-              <%= f.text_field :end_date, :value => value_for_datepicker(f.object_name, :end_date),
+              <%= f.text_field :end_date, :value => l(@item.end_date),
                              :style => 'width: 150px;', :class => 'datepicker' %>
             </td>
           </tr>

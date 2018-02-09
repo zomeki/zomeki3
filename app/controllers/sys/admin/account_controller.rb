@@ -2,11 +2,9 @@ class Sys::Admin::AccountController < Sys::Controller::Admin::Base
   layout 'admin/login'
 
   def login
-    admin_uri = "/#{ZomekiCMS::ADMIN_URL_PREFIX}"
+    return redirect_to(admin_root_path) if logged_in?
 
-    return redirect_to(admin_uri) if logged_in?
-
-    @uri = params[:uri] || cookies[:sys_login_referrer] || admin_uri
+    @uri = params[:uri] || cookies[:sys_login_referrer] || admin_root_path
     @uri = @uri.gsub(/^http:\/\/[^\/]+/, '')
     return unless request.post?
 
@@ -111,14 +109,17 @@ class Sys::Admin::AccountController < Sys::Controller::Admin::Base
       if password.blank? || password_confirmation.blank?
         flash[:alert] = 'パスワードを入力してください。'
         render :edit_password
-      elsif password == password_confirmation
+      elsif password != password_confirmation
+        flash[:alert] = 'パスワードが一致しません。'
+        render :edit_password
+      elsif user.password == password
+        flash[:alert] = '現在のパスワードと同じパスワードは使用できません。'
+        render :edit_password
+      else
         user.update_column(:reset_password_token_expires_at, nil)
         user.update_column(:reset_password_token, nil)
         user.update_column(:password, password)
         redirect_to admin_login_url, notice: 'パスワードを再設定しました。'
-      else
-        flash[:alert] = 'パスワードが一致しません。'
-        render :edit_password
       end
     end
   end

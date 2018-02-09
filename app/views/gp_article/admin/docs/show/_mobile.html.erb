@@ -1,10 +1,10 @@
 <table class="show">
   <tr>
-    <th><%= @item.locale :mobile_title %></th>
+    <th><%= @item.class.human_attribute_name :mobile_title %></th>
     <td><%= @item.mobile_title %></td>
   </tr>
   <tr>
-    <th colspan="2"><%= @item.locale :mobile_body %></th>
+    <th colspan="2"><%= @item.class.human_attribute_name :mobile_body %></th>
   </tr>
   <tr>
     <td colspan="2" class="cke_editor_wrapper">
@@ -13,7 +13,7 @@
   </tr>
   <%- if (links = @item.links.where(linkable_column: 'mobile_body')).present? -%>
   <tr>
-    <th><%= @item.locale :mobile_body %>に含まれるリンク</th>
+    <th><%= @item.class.human_attribute_name :mobile_body %>に含まれるリンク</th>
     <td>
       <ul>
         <%- links.each do |link| -%>

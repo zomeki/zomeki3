@@ -16,7 +16,7 @@
       <td style="text-align: left;"><%= link_to item.doc_public_uri, item.doc_public_uri, target: 'blank' %></td>
       <td style="text-align: left;"><%= link_to item.doc_name, gp_article_doc_path(content: item.latest_doc.content, id: item.latest_doc.id) if item.latest_doc %></td>
       <td style="text-align: left;"><%= item.title %></td>
-      <td style="text-align: center;"><%=l item.updated_at if item.updated_at %></td>
+      <td style="text-align: center;"><%=l item.updated_at %></td>
     </tr>
   <%- end -%>
 </table>

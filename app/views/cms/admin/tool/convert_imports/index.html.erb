@@ -2,29 +2,29 @@
   <%= f.error_messages %>
   <table class="show">
     <tr>
-      <th><%= @item.locale(:site_url) %></th>
+      <th><%= f.label(:site_url) %></th>
       <td><%= f.select :site_url, Tool::ConvertSetting.order('site_url').all.map(&:site_url), { include_blank: true } %></td>
     </tr>
     <tr>
-      <th><%= @item.locale(:site_filename) %></th>
+      <th><%= f.label(:site_filename) %></th>
       <td><%= select_tag 'item[site_filename]', options_for_select(@item.site_filename_options, @item.site_filename),
                 id: 'item_site_filename', include_blank: true, multiple: true, size: 10 %>
     </td>
     </tr>
     <tr>
-      <th><%= @item.locale(:content_id) %></th>
+      <th><%= f.label(:content_id) %></th>
       <td><%= f.select :content_id, GpArticle::Content::Doc.where(site_id: Core.site.id).order("id ASC").all.map {|c| [ c.name, c.id ] }, { include_blank: true } %></td>
     </tr>
     <tr>
-      <th><%= @item.locale(:creator_group_id) %></th>
+      <th><%= f.label(:creator_group_id) %></th>
       <td><%= f.select :creator_group_id, Core.site.groups_for_option, include_blank: true %></td>
     </tr>
     <tr>
-      <th><%= @item.locale(:overwrite) %></th>
+      <th><%= f.label(:overwrite) %></th>
       <td><%= f.radio_buttons :overwrite, @item.class::OVERWRITE_OPTIONS %></td>
     </tr>
     <tr>
-      <th><%= @item.locale(:keep_filename) %></th>
+      <th><%= f.label(:keep_filename) %></th>
       <td><%= f.radio_buttons :keep_filename, @item.class::KEEP_FILENAME_OPTIONS %></td>
     </tr>
   </table>
@@ -58,8 +58,8 @@
     <td style="text-align: center;"><%= item.updated_num %></td>
     <td style="text-align: center;"><%= item.nonupdated_num %></td>
     <td style="text-align: center;"><%= item.skipped_num %></td>
-    <td style="text-align: center;"><%=l item.start_at if item.start_at %></td>
-    <td style="text-align: center;"><%=l item.end_at if item.end_at %></td>
+    <td style="text-align: center;"><%=l item.start_at %></td>
+    <td style="text-align: center;"><%=l item.end_at %></td>
   </tr>
   <%- end -%>
 </table>

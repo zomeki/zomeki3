@@ -1,4 +1,4 @@
-class GpArticle::DocsPreloader < PreloaderQuery
+class GpArticle::DocsPreloader < ApplicationPreloader
   DEPTH_LIMIT = 5
 
   class << self

@@ -11,11 +11,11 @@
 
   <%- @items.each do |item| -%>
   <tr class="<%= cycle '', 'cycle' %>">
-    <td style="text-align: center;"><%= link_to :show, ad_banner_group_path(content: @content, id: item.id) %></td>
+    <td style="text-align: center;"><%= link_to :show, { action: :show, id: item } %></td>
     <td style="text-align: left;"><%= item.name %></td>
     <td style="text-align: left;"><%= item.title %></td>
     <td style="text-align: right; width: 100px;"><%= item.sort_no %></td>
-    <td style="text-align: left; width: 150px;"><%=i18n_l item.updated_at %></td>
+    <td style="text-align: left; width: 150px;"><%=l item.updated_at %></td>
   </tr>
   <%- end -%>
 </table>

@@ -3,11 +3,11 @@
 
 <table class="show">
   <tr>
-    <th><%= @item.locale :target_form_id %></th>
+    <th><%= @item.class.human_attribute_name :target_form_id %></th>
     <td><%= "#{@item.target_form.title}（#{@item.target_form.name}）" if @item.target_form %></td>
   </tr>
   <tr>
-    <th><%= @item.locale :head_css %></th>
+    <th><%= @item.class.human_attribute_name :head_css %></th>
     <td><%= @item.setting_value(:head_css) %></td>
   </tr>
 </table>
@@ -16,13 +16,13 @@
 
 <table class="show">
   <tr>
-    <th><%= @item.locale :upper_text %></th>
+    <th><%= @item.class.human_attribute_name :upper_text %></th>
   </tr>
   <tr>
     <td><%= @item.setting_value(:upper_text) %></td>
   </tr>
   <tr>
-    <th><%= @item.locale :lower_text %></th>
+    <th><%= @item.class.human_attribute_name :lower_text %></th>
   </tr>
   <tr>
     <td><%= @item.setting_value(:lower_text) %></td>

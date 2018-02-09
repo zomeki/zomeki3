@@ -1,4 +1,4 @@
-class Rank::TotalsFinder < FinderQuery
+class Rank::TotalsFinder < ApplicationFinder
   def initialize(relation)
     @relation = relation
   end

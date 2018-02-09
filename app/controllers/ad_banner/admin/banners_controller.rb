@@ -9,9 +9,10 @@ class AdBanner::Admin::BannersController < Cms::Controller::Admin::Base
   def index
     items = @content.banners.except(:order).order(sort_no: :asc, created_at: :desc)
 
-    items = if params[:published].present?
+    items = case params[:target]
+            when 'published'
               items.published
-            elsif params[:closed].present?
+            when 'closed'
               items.closed
             else
               items

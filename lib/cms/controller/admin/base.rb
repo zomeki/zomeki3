@@ -3,7 +3,7 @@ class Cms::Controller::Admin::Base < Sys::Controller::Admin::Base
   layout  'admin/cms'
 
   def default_url_options
-    Core.concept ? { :concept => Core.concept.id } : {}
+    Core.concept ? { :concept => Core.concept.id, only_path: true } : {}
   end
 
   def initialize_application

@@ -1,6 +1,6 @@
 Cms::Lib::Modules::ModuleSet.draw :gnav, 'グローバルナビ', 100 do |mod|
   ## contents
-  mod.content :menu_items, 'グローバルナビ'
+  mod.content :menu_items, 'グローバルナビ', publishable: true
 
   ## directories
   mod.directory :menu_items, 'グローバルナビ'

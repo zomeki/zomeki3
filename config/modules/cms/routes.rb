@@ -118,16 +118,16 @@ ZomekiCMS::Application.routes.draw do
         end
       end
     resources :data_texts,
-      :controller  => "admin/data/texts"
+      :controller  => "admin/data_texts"
     resources :data_files,
-      :controller  => "admin/data/files",
+      :controller  => "admin/data_files",
       :path        => ":parent/data_files" do
         member do
           get :download
         end
       end
     resources :data_file_nodes,
-      :controller  => "admin/data/file_nodes",
+      :controller  => "admin/data_file_nodes",
       :path        => ":parent/data_file_nodes"
     resources :inline_data_files,
       :controller  => "admin/inline/data_files",

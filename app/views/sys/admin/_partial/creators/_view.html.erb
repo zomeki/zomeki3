@@ -7,9 +7,9 @@
     <td><%= "#{item.creator.group.try(:name)}　#{item.creator.user.try(:name_with_account)}" if item.creator %></td>
   </tr><tr>
     <th>作成日時</th>
-    <td colspan="3"><%=l @item.created_at if @item.created_at %></td>
+    <td colspan="3"><%=l @item.created_at %></td>
   </tr><tr>
     <th>編集日時</th>
-    <td colspan="3"><%=l @item.updated_at if @item.updated_at %></td>
+    <td colspan="3"><%=l @item.updated_at %></td>
   </tr>
 </table>

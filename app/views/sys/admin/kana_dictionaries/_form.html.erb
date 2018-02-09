@@ -2,10 +2,10 @@
 
 <table class="show">
   <tr>
-    <th><%= @item.locale(:name) %></th>
+    <th><%= f.label :name %></th>
     <td><%= f.text_field :name, :class => 'string' %></td>
   </tr><tr>
-    <th><%= @item.locale(:body) %></th>
+    <th><%= f.label :body %></th>
     <td><%= f.text_area :body, :class => 'string body' %></td>
   </tr>
 </table>

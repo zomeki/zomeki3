@@ -1,4 +1,4 @@
-class Cms::ContentsPreloader < PreloaderQuery
+class Cms::ContentsPreloader < ApplicationPreloader
   DEPTH_LIMIT = 5
 
   class << self

@@ -10,12 +10,12 @@
     <th style="width: 60px; text-align: center;">状態</th>
   </tr>
 
-  <% for item in @items %>
+  <% @items.each do |item| %>
   <tr class="<%= cycle '', 'cycle' %>">
-    <td style="text-align: center;"><%= link_to :show, url_for(:action => :show, :id => item) %></td>
+    <td style="text-align: center;"><%= link_to :show, { action: :show, id: item } %></td>
     <td style="text-align: center;"><%= safe{item.target_date_label("%Y-%m-%d", true)} %></td>
-    <td style="text-align: center;"><%= safe{"#{item.business_hours_start_time.strftime("%H:%M")} ～ #{item.business_hours_end_time.strftime("%H:%M")}"} %></td>
-    <td style="text-align: center;"><%= safe{item.updated_at.strftime("%Y-%m-%d %H:%M")} %></td>
+    <td style="text-align: center;"><%= "#{l(item.business_hours_start_time, format: :short)} ～ #{l(item.business_hours_end_time, format: :short)}" %></td>
+    <td style="text-align: center;"><%=l item.updated_at %></td>
     <td style="text-align: center;"><%= item.status.name %></td>
   </tr>
   <% end %>

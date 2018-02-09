@@ -1,21 +1,21 @@
 <%= render 'menu' %>
 
-<%#= render :file => "cms/admin/data/files/show.html.erb" %>
+<%#= render :file => "cms/admin/data_files/show.html.erb" %>
 
 <table class="show">
   <tr>
-    <th><%= @item.locale(:node_id) %></th>
+    <th><%= @item.class.human_attribute_name :node_id %></th>
     <td><%= safe{@item.node.name} %></td>
   </tr><tr>
-    <th><%= @item.locale(:name) %></th>
+    <th><%= @item.class.human_attribute_name :name %></th>
     <td><%= @item.name %></td>
   </tr><tr>
-    <th><%= @item.locale(:title) %></th>
+    <th><%= @item.class.human_attribute_name :title %></th>
     <td><%= @item.title %></td>
   </tr><tr>
-    <th><%= @item.locale(:alt_text) %></th>
+    <th><%= @item.class.human_attribute_name :alt_text %></th>
     <td><%= @item.alt_text %></td>
   </tr><tr>
-    <th><%= @item.locale(:size) %></th>
+    <th><%= @item.class.human_attribute_name :size %></th>
     <td><%= @item.eng_unit %><br /><%= @item.image_size if @item.image_file? %></td>
 </table>

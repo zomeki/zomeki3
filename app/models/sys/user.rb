@@ -153,7 +153,7 @@ class Sys::User < ApplicationRecord
     root_users = self.where(state: 'enabled', account: account, id: ROOT_ID)
     users = self.where(state: 'enabled', account: account)
     users = users.in_site(site) if site
-    self.union([root_users, users])
+    [root_users, users].reduce(:union)
   end
 
   ## Authenticates a user by their account name and unencrypted password.  Returns the user or nil.
@@ -225,7 +225,7 @@ class Sys::User < ApplicationRecord
     users = users.where.not(id: id) if persisted?
     root_users = self.class.where(account: account, id: ROOT_ID)
 
-    if self.class.union([users, root_users]).exists?
+    if [users, root_users].reduce(:union).exists?
       errors.add(:account, :taken_in_site)
     end
   end

@@ -1,16 +1,11 @@
 class Cms::Content < ApplicationRecord
   include Sys::Model::Base
-  include Cms::Model::Base::Content
   include Sys::Model::Rel::Creator
   include Cms::Model::Site
   include Cms::Model::Rel::Site
   include Cms::Model::Rel::Concept
   include Cms::Model::Auth::Concept
-
-  REBUILDABLE_MODELS = ['AdBanner::Banner', 'BizCalendar::Place', 'Feed::Feed',
-                        'Gnav::MenuItem', 'GpArticle::Doc', 'GpCalendar::Event', 'GpCategory::CategoryType',
-                        'Map::Marker', 'Organization::Group', 'Rank::Rank',
-                        'Survey::Form', 'Tag::Tag']
+  include Cms::Model::Base::Content
 
   has_many :settings, -> { order(:sort_no) },
     :foreign_key => :content_id, :class_name => 'Cms::ContentSetting', :dependent => :destroy
@@ -32,7 +27,10 @@ class Cms::Content < ApplicationRecord
   before_create :set_default_settings_from_configs
   after_save :save_settings
 
-  scope :rebuildable_models, -> { where(model: REBUILDABLE_MODELS) }
+  scope :rebuildable_models, -> {
+    models = Cms::Lib::Modules.modules.flat_map(&:contents).select { |d| d.options[:publishable] }.map(&:model)
+    where(model: models)
+  }
 
   def inherited_concept
     main_node.try!(:inherited_concept) || concept
@@ -60,17 +58,6 @@ class Cms::Content < ApplicationRecord
 
   def in_settings=(values)
     @in_settings = values
-  end
-
-  def locale(name)
-    model = self.class.to_s.underscore
-    label = ''
-    if model != 'cms/content'
-      label = I18n.t name, :scope => [:activerecord, :attributes, model]
-      return label if label !~ /^translation missing:/
-    end
-    label = I18n.t name, :scope => [:activerecord, :attributes, 'cms/content']
-    return label =~ /^translation missing:/ ? name.to_s.humanize : label
   end
 
   def states

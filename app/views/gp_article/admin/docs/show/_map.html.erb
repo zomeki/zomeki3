@@ -1,10 +1,10 @@
 <table class="show">
   <tr>
-    <th><%= @item.locale :marker_state %></th>
+    <th><%= @item.class.human_attribute_name :marker_state %></th>
     <td><%= @item.marker_state_text %></td>
   </tr>
   <tr>
-    <th><%= @item.locale :marker_icon_category_id %></th>
+    <th><%= @item.class.human_attribute_name :marker_icon_category_id %></th>
     <td><%= @item.marker_icon_category.try(:title) %></td>
   </tr>
   <%- @content.marker_category_types.each do |category_type| -%>

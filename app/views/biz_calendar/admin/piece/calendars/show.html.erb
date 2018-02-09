@@ -3,23 +3,23 @@
 
 <table class="show">
   <tr>
-    <th><%= @item.locale :place_id %></th>
+    <th><%= @item.class.human_attribute_name :place_id %></th>
     <td><%= safe{@item.place.title} %></td>
   </tr>
   <tr>
-    <th><%= @item.locale :month_number %></th>
+    <th><%= @item.class.human_attribute_name :month_number %></th>
     <td><%= @item.setting_value(:month_number) %></td>
   </tr>
   <tr>
-    <th><%= @item.locale :holiday_type_state %></th>
+    <th><%= @item.class.human_attribute_name :holiday_type_state %></th>
     <td><%= @item.class::HOLIDAY_TYPE_STATE_OPTIONS.detect{|o| o.last == @item.setting_value(:holiday_type_state) }.try(:first) %></td>
   </tr>
   <tr>
-    <th><%= @item.locale :holiday_state %></th>
+    <th><%= @item.class.human_attribute_name :holiday_state %></th>
     <td><%= @item.class::HOLIDAY_STATE_OPTIONS.detect{|o| o.last == @item.setting_value(:holiday_state) }.try(:first) %></td>
   </tr>
   <tr>
-    <th><%= @item.locale :date_style %></th>
+    <th><%= @item.class.human_attribute_name :date_style %></th>
     <td><%= @item.setting_value(:date_style) %></td>
   </tr>
 </table>
@@ -28,7 +28,7 @@
 
 <table class="show">
   <tr>
-    <th><%= @item.locale :lower_text %></th>
+    <th><%= @item.class.human_attribute_name :lower_text %></th>
   <tr>
   </tr>
     <td><%== @item.setting_value(:lower_text) %></td>

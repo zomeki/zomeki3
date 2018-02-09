@@ -12,9 +12,9 @@
 
   <%- @items.each do |item| -%>
   <tr class="<%= cycle '', 'cycle' %>">
-    <td style="text-align: center;"><%= link_to :show, gp_calendar_holiday_path(content: @content, id: item.id) %></td>
+    <td style="text-align: center;"><%= link_to :show, { action: :show, id: item } %></td>
     <td style="text-align: center;"><%= item.title %></td>
-    <td style="text-align: center;"><%= item.repeat ? i18n_l(item.date, '* %m月%d日') : i18n_l(item.date, '%Y年%m月%d日') %></td>
+    <td style="text-align: center;"><%=l item.date, format: (item.repeat ? '* %m月%d日': '%Y年%m月%d日') %></td>
     <td style="text-align: left;"><%= item.description %></td>
     <td style="text-align: center;"><%= item.class::KIND_OPTIONS.detect{|to| to.last == item.kind }.try(:first) %></td>
     <td style="text-align: center;"><%= item.status.name %></td>

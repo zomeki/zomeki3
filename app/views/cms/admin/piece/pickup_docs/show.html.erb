@@ -9,11 +9,11 @@
 
 <table class="show">
   <tr>
-    <th><%= @item.locale :date_style %></th>
+    <th><%= @item.class.human_attribute_name :date_style %></th>
     <td colspan="3"><%= @item.setting_value(:date_style) %></td>
   </tr>
   <tr>
-    <th><%= @item.locale :list_style %></th>
+    <th><%= @item.class.human_attribute_name :list_style %></th>
     <td colspan="3"><%= @item.setting_value(:list_style) %></td>
   </tr>
 </table>

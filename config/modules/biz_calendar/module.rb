@@ -1,6 +1,6 @@
 Cms::Lib::Modules::ModuleSet.draw :biz_calendar, '業務カレンダー', 70 do |mod|
   ## contents
-  mod.content :places, '業務カレンダー'
+  mod.content :places, '業務カレンダー', publishable: true
   
   ## directory
   mod.directory :places, "拠点一覧"

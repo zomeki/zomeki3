@@ -3,31 +3,31 @@
 
 <table class="show">
   <tr>
-    <th><%= @item.locale :ranking_target %></th>
+    <th><%= @item.class.human_attribute_name :ranking_target %></th>
     <td><%= @item.show_label(:ranking_target, @item.ranking_targets) %></td>
   </tr>
   <tr>
-    <th><%= @item.locale :ranking_term %></th>
+    <th><%= @item.class.human_attribute_name :ranking_term %></th>
     <td><%= @item.show_label(:ranking_term, @item.ranking_terms) %></td>
   </tr>
   <tr>
-    <th><%= @item.locale :display_count %></th>
+    <th><%= @item.class.human_attribute_name :display_count %></th>
     <td><%= @item.setting_value(:display_count) %></td>
   </tr>
   <tr>
-    <th><%= @item.locale :show_count %></th>
+    <th><%= @item.class.human_attribute_name :show_count %></th>
     <td><%= @item.show_label(:show_count, @item.show_counts) %></td>
   </tr>
   <tr>
-    <th><%= @item.locale :more_link_body %></th>
+    <th><%= @item.class.human_attribute_name :more_link_body %></th>
     <td><%= @item.setting_value(:more_link_body) %></td>
   </tr>
   <tr>
-    <th><%= @item.locale :more_link_url %></th>
+    <th><%= @item.class.human_attribute_name :more_link_url %></th>
     <td><%= @item.setting_value(:more_link_url) %></td>
   </tr>
   <tr>
-    <th><%= @item.locale :category_option %></th>
+    <th><%= @item.class.human_attribute_name :category_option %></th>
     <td><%= @item.show_label(:category_option, @item.category_options) %></td>
   </tr>
 </table>

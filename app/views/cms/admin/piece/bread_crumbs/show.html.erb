@@ -8,7 +8,7 @@
 
 <table class="show">
   <tr>
-    <th><%= @item.locale :top_label %></th>
+    <th><%= @item.class.human_attribute_name :top_label %></th>
     <td><%= @item.setting_value(:top_label) %></td>
   </tr>
 </table>

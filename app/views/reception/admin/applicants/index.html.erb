@@ -15,7 +15,7 @@
   <tr class="<%= cycle '', 'cycle' %>">
     <td style="text-align: center;"><%= link_to :show, { action: :show, id: item.id } %></td>
     <td style="text-align: center;"><%= item.seq_no %></td>
-    <td style="text-align: center;"><%=i18n_l item.applied_at %></td>
+    <td style="text-align: center;"><%=l item.applied_at %></td>
     <td style="text-align: left;"><%= item.name %></td>
     <td style="text-align: center;"><%= item.applied_from_text %></td>
     <td style="text-align: center;"><%= item.state_text %></td>

@@ -2,33 +2,33 @@
 <p class="form">詳細設定</p>
 <table class="show">
   <tr>
-    <th><%= @item.locale :docs_number %></th>
+    <th><%= @item.class.human_attribute_name :docs_number %></th>
     <td><%= @item.docs_number %></td>
   </tr>
   <tr>
-    <th><%= @item.locale :target_date %></th>
+    <th><%= @item.class.human_attribute_name :target_date %></th>
     <td><%= @item.target_date_text %></td>
   </tr>
   <tr>
-    <th><%= @item.locale :category_ids %></th>
+    <th><%= @item.class.human_attribute_name :category_ids %></th>
     <td>
       <%= @item.categories_label %>
     </td>
   </tr>
   <tr>
-    <th><%= @item.locale :table_style %></th>
+    <th><%= @item.class.human_attribute_name :table_style %></th>
     <td><%= @item.table_style_text %></td>
   </tr>
   <tr>
-    <th><%= @item.locale :date_style %></th>
+    <th><%= @item.class.human_attribute_name :date_style %></th>
     <td><%= @item.date_style %></td>
   </tr>
   <tr>
-    <th><%= @item.locale :more_link_label %></th>
+    <th><%= @item.class.human_attribute_name :more_link_label %></th>
     <td><%= @item.more_link_label %></td>
   </tr>
   <tr>
-    <th><%= @item.locale :more_link_url %></th>
+    <th><%= @item.class.human_attribute_name :more_link_url %></th>
     <td><%= @item.more_link_url %></td>
   </tr>
 </table>

@@ -1,15 +1,15 @@
 class Cms::Piece < ApplicationRecord
   include Sys::Model::Base
-  include Cms::Model::Base::Piece
   include Sys::Model::Rel::Creator
+  include Sys::Model::Rel::ObjectRelation
   include Cms::Model::Site
   include Cms::Model::Rel::Site
   include Cms::Model::Rel::Concept
   include Cms::Model::Rel::ContentModel
-  include Sys::Model::Rel::ObjectRelation
   include Cms::Model::Rel::Bracket
   include Cms::Model::Rel::Bracketee
   include Cms::Model::Auth::Concept
+  include Cms::Model::Base::Piece
 
   include StateText
 
@@ -60,17 +60,6 @@ class Cms::Piece < ApplicationRecord
 
   def in_settings=(values)
     @in_settings = values
-  end
-
-  def locale(name)
-    model = self.class.to_s.underscore
-    label = ''
-    if model != 'cms/piece'
-      label = I18n.t name, :scope => [:activerecord, :attributes, model]
-      return label if label !~ /^translation missing:/
-    end
-    label = I18n.t name, :scope => [:activerecord, :attributes, 'cms/piece']
-    return label =~ /^translation missing:/ ? name.to_s.humanize : label
   end
 
   def css_id

@@ -1,0 +1,27 @@
+<%= form_tag url_for(action: :index), method: :get, class: 'search' do |f| %>
+<table>
+  <tr>
+    <th>キーワード</th>
+    <th>クリック日時</th>
+  </tr>
+  <tr>
+    <td>
+      <%= text_field_tag 'criteria[keyword]', params.dig(:criteria, :keyword), style: 'width: 300px;' %>
+    </td>
+    <td>
+      <%= text_field_tag 'criteria[start_date]', params.dig(:criteria, :start_date), class: 'datepicker' %> ～
+      <%= text_field_tag 'criteria[end_date]', params.dig(:criteria, :end_date), class: 'datepicker' %>
+    </td>
+    <td class="submitters">
+      <%= submit_tag '検索', name: :search %>
+      <%= submit_tag 'リセット', name: :reset %>
+    </td>
+  </tr>
+</table>
+<!-- end .search --><% end %>
+
+<%= javascript_tag do -%>
+$(document).ready(function () {
+  $('input.datepicker').datepicker();
+});
+<%- end -%>

@@ -3,17 +3,17 @@
 <table class="show">
   <%= concept_and_layout_form f, includ_blank: false %>
   <tr>
-    <th><%= @item.locale(:content_id) %></th>
+    <th><%= f.label :content_id %></th>
     <td><%= f.select :content_id, @contents, {} %></td>
   </tr><tr>
-    <th><%= @item.locale(:model) %></th>
+    <th><%= f.label :model %></th>
     <td><%= f.select :model, @models, :include_blank => "" %></td>
   </tr><tr>
-    <th><%= @item.locale(:parent_id) %></th>
-    <td><%= f.select(:parent_id, @item.candidate_parents, :include_blank => true) %></td>
+    <th><%= f.label :parent_id %></th>
+    <td><%= f.select :parent_id, @item.candidate_parents, :include_blank => true %></td>
   </tr><tr>
-    <th><%= @item.locale(:route_id) %></th>
-    <td><%= f.select(:route_id, @item.candidate_routes, :include_blank => true) %></td>
+    <th><%= f.label :route_id %></th>
+    <td><%= f.select :route_id, @item.candidate_routes, :include_blank => true %></td>
   </tr>
   <tr>
     <th><%= f.label :sitemap_state %></th>

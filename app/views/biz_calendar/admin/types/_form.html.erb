@@ -2,13 +2,13 @@
 
 <table class="show">
   <tr>
-    <th><%= @item.locale(:state) %></th>
+    <th><%= f.label :state %></th>
     <td><%= f.radio_buttons :state, @item.class::STATE_OPTIONS, :class => 'states' %></td>
   </tr><tr>
-    <th><%= @item.locale(:title) %> <span class="note">※</span></th>
+    <th><%= f.label :title %> <span class="note">※</span></th>
     <td><%= f.text_field :title, :class => 'title' %></td>
   </tr><tr>
-    <th><%= @item.locale(:name) %> <span class="note">※</span></th>
+    <th><%= f.label :name %> <span class="note">※</span></th>
     <td><%= f.text_field :name, :class => 'name', :style => 'ime-mode: disabled;' %></td>
   </tr>
 </table>

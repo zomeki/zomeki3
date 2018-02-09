@@ -52,25 +52,15 @@ class Approval::Admin::Mailer < ApplicationMailer
     "#{@content.name}（#{@content.site.name}）"
   end
 
-  def host
-    @item.content.site.main_admin_uri.sub(/\/+$/, '')
-  end
-
-  def admin_controller
-     @item.class.name.tableize.sub('/', '/admin/')
-  end
-
   def preview_uri
     @item.preview_uri
   end
 
-  def approve_uri
-    url_for(host: host, controller: admin_controller, action: :show,
-      content: @item.content, concept: @item.content.concept, id: @item.id, active_tab: 'approval')
+  def detail_uri
+    Addressable::URI.join(@item.content.site.main_admin_uri, @item.admin_uri).to_s
   end
 
-  def detail_uri
-    url_for(host: host, controller: admin_controller, action: :show,
-      content: @item.content, concept: @item.content.concept, id: @item.id)
+  def approve_uri
+    Addressable::URI.join(@item.content.site.main_admin_uri, @item.admin_uri(active_tab: 'approval')).to_s
   end
 end
