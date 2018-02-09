@@ -17,7 +17,7 @@ class Organization::Group < ApplicationRecord
                         ['更新日（降順）', 'display_updated_at DESC, updated_at DESC'],
                         ['更新日（昇順）', 'display_updated_at ASC, updated_at ASC']]
 
-  default_scope { order("#{self.table_name}.sort_no IS NULL").order(:sort_no, :sys_group_code) }
+  default_scope { order(:sort_no, :sys_group_code) }
 
   # Page
   belongs_to :concept, :class_name => 'Cms::Concept'

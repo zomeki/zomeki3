@@ -11,7 +11,7 @@ class AdBanner::Banner < ApplicationRecord
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
   TARGET_OPTIONS = [['同一ウィンドウ', '_self'], ['別ウィンドウ', '_blank']]
 
-  default_scope { order(:sort_no) }
+  default_scope { order(:sort_no, :id) }
 
   # Content
   belongs_to :content, :foreign_key => :content_id, :class_name => 'AdBanner::Content::Banner'

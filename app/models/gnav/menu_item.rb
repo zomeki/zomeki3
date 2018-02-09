@@ -11,7 +11,7 @@ class Gnav::MenuItem < ApplicationRecord
 
   include StateText
 
-  default_scope { order(:sort_no) }
+  default_scope { order(:sort_no, :id) }
 
   # Content
   belongs_to :content, :foreign_key => :content_id, :class_name => 'Gnav::Content::MenuItem'

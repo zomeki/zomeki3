@@ -9,7 +9,7 @@ class GpTemplate::Template < ApplicationRecord
 
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
 
-  default_scope { order("#{self.table_name}.sort_no IS NULL, #{self.table_name}.sort_no") }
+  default_scope { order(:sort_no, :id) }
 
   belongs_to :content, :foreign_key => :content_id, :class_name => 'GpTemplate::Content::Template'
   validates :content_id, presence: true

@@ -16,7 +16,7 @@ class Survey::Form < ApplicationRecord
   CONFIRMATION_OPTIONS = [['あり', true], ['なし', false]]
   INDEX_LINK_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
 
-  default_scope { order("#{self.table_name}.sort_no IS NULL, #{self.table_name}.sort_no") }
+  default_scope { order(:sort_no, :id) }
 
   # Content
   belongs_to :content, :foreign_key => :content_id, :class_name => 'Survey::Content::Form'

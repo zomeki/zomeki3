@@ -3,7 +3,7 @@ class Sys::OperationLog < ApplicationRecord
   include Cms::Model::Site
   include Cms::Model::Rel::Site
 
-  default_scope { order(updated_at: :desc) }
+  default_scope { order(id: :desc) }
 
   ACTION_OPTIONS = [["作成","create"], ["更新","update"], ["承認","recognize"], ["承認","approve"], ["削除","destroy"], ["公開","publish"], ["非公開","close"], ["期限切れ","expire"], ["ログイン","login"], ["ログアウト","logout"]]
 

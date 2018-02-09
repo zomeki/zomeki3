@@ -11,7 +11,7 @@ class Survey::Question < ApplicationRecord
                        ['選択/複数回答（チェックボックス）', 'check_box'],['自由形式','free'],['入力/1行（メールアドレス）', 'text_field_email']]
   REQUIRED_OPTIONS = [['必須', true], ['任意', false]]
 
-  default_scope { order("#{self.table_name}.sort_no IS NULL, #{self.table_name}.sort_no") }
+  default_scope { order(:sort_no, :id) }
 
   belongs_to :form
   validates :form_id, presence: true
