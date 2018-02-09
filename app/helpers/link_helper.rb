@@ -82,4 +82,8 @@ module LinkHelper
     return tel if tel.to_s !~ /^([\(]?)([0-9]+)([-\(\)]?)([0-9]+)([-\)]?)([0-9]+$)/
     link_to text.html_safe, "tel:#{tel}"
   end
+
+  def data_uri(data, mime_type:)
+    "data:#{mime_type};base64,#{Base64.strict_encode64(data)}"
+  end
 end

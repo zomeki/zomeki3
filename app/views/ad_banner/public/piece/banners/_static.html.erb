@@ -5,9 +5,15 @@
 <%- unless @banners.empty? -%>
 <ul class="ad_banner">
   <%- @banners.each do |banner| -%>
-  <li class="banner"><%= link_to image_tag(banner.image_uri, alt: banner.alt_text, title: banner.title),
-                                 @piece.content.click_count_related? ? banner.link_uri : banner.url,
-                                 target: banner.target %></li>
+  <li class="banner">
+    <%= link_to @piece.content.click_count_related? ? banner.link_uri : banner.url, target: banner.target do %>
+      <%- if request.mobile? || @piece.content.image_display == 'link' -%>
+        <%= image_tag banner.image_uri, alt: banner.alt_text, title: banner.title %>
+      <%- else -%>
+        <%= image_tag data_uri(File.read(banner.upload_path), mime_type: banner.mime_type), alt: banner.alt_text, title: banner.title %>
+      <%- end -%>
+    <%- end -%>
+  </li>
   <%- end -%>
 </ul>
 <%- end -%>
