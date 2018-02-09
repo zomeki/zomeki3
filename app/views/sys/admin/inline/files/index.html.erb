@@ -38,7 +38,7 @@ display_embed_link = @content.respond_to?(:attachment_embed_link) ? @content.att
             <%= image_tag download_path, style: thumbnail_style(item.image_width, item.image_height, 80, 40) %>
           <%- end -%>
         <%- else -%>
-          <%= link_to 'File', download_path, class: item.css_class %>
+          <%= link_to 'File', download_path, class: item.css_class, target: '_blank' %>
         <%- end -%>
       </td>
       <td>
