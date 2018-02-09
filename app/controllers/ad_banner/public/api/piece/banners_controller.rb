@@ -38,17 +38,19 @@ class AdBanner::Public::Api::Piece::BannersController < Cms::Controller::Public:
   private
 
   def banner_to_hash(banner)
-    url = if @piece.content.click_count_related?
+    url = if request.mobile? && @piece.content.click_count_related?
             banner.link_uri
           else
             banner.url
           end
-    image_url = if request.mobile? || @piece.content.image_display == 'link'
-                  banner.image_uri
-                else
+    image_url = if @piece.content.image_display == 'embed' && File.exist?(banner.image_path) && !request.mobile?
                   ApplicationController.helpers.data_uri(File.read(banner.image_path), mime_type: banner.mime_type)
+                else
+                  banner.image_uri
                 end
     {
+      id: banner.id,
+      token: banner.token,
       url: url,
       image_url: image_url,
       alt_text: banner.alt_text,

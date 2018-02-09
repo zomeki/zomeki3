@@ -44,5 +44,6 @@ ZomekiCMS::Application.routes.draw do
   ## api
   scope "_api/#{mod}", :module => mod, :as => '' do
     get 'piece_banners' => 'public/api/piece/banners#index'
+    get 'piece_clicks' => 'public/api/piece/clicks#index'
   end
 end

@@ -6,11 +6,16 @@
 <ul class="ad_banner">
   <%- @banners.each do |banner| -%>
   <li class="banner">
-    <%= link_to @piece.content.click_count_related? ? banner.link_uri : banner.url, target: banner.target do %>
-      <%- if request.mobile? || @piece.content.image_display == 'link' -%>
-        <%= image_tag banner.image_uri, alt: banner.alt_text, title: banner.title %>
-      <%- else -%>
+    <% url = if @piece.content.click_count_related? && request.mobile?
+               banner.link_uri
+             else
+               banner.url
+             end %>
+    <%= link_to url, target: banner.target, data: { token: banner.token } do %>
+      <%- if @piece.content.image_display == 'embed' && File.exist?(banner.upload_path) -%>
         <%= image_tag data_uri(File.read(banner.upload_path), mime_type: banner.mime_type), alt: banner.alt_text, title: banner.title %>
+      <%- else -%>
+        <%= image_tag banner.image_uri, alt: banner.alt_text, title: banner.title %>
       <%- end -%>
     <%- end -%>
   </li>
@@ -20,4 +25,14 @@
 
 <%- if @piece.lower_text.present? -%>
 <div class="lower_text"><%=raw @piece.lower_text %></div>
+<%- end -%>
+
+<%- if @piece.content.click_count_related? && !request.mobile? -%>
+<script type="text/javascript">
+$(function() {
+  $('#<%= @piece.css_id %> li.banner a').on('click', function() {
+    $.get('/_api/ad_banner/piece_clicks', { piece_id: <%= @piece.id %>, token: $(this).data('token') });
+  });
+});
+</script>
 <%- end -%>
