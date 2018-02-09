@@ -41,7 +41,7 @@ class AdBanner::Public::Api::Piece::BannersController < Cms::Controller::Public:
     url = if request.mobile? && @piece.content.click_count_related?
             banner.link_uri
           else
-            banner.url
+            request.smart_phone? && banner.sp_url.presence || banner.url
           end
     image_url = if @piece.content.image_display == 'embed' && File.exist?(banner.image_path) && !request.mobile?
                   ApplicationController.helpers.data_uri(File.read(banner.image_path), mime_type: banner.mime_type)

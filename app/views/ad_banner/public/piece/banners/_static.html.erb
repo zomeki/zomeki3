@@ -9,9 +9,9 @@
     <% url = if @piece.content.click_count_related? && request.mobile?
                banner.link_uri
              else
-               banner.url
+               request.smart_phone? && banner.sp_url.presence || banner.url
              end %>
-    <%= link_to url, target: banner.target, data: { token: banner.token } do %>
+    <%= link_to url, target: banner.target, data: { token: banner.token, sp_url: banner.sp_url } do %>
       <%- if @piece.content.image_display == 'embed' && File.exist?(banner.upload_path) -%>
         <%= image_tag data_uri(File.read(banner.upload_path), mime_type: banner.mime_type), alt: banner.alt_text, title: banner.title %>
       <%- else -%>
@@ -28,11 +28,24 @@
 <%- end -%>
 
 <%- if @piece.content.click_count_related? && !request.mobile? -%>
-<script type="text/javascript">
+<%= javascript_tag do -%>
 $(function() {
   $('#<%= @piece.css_id %> li.banner a').on('click', function() {
     $.get('/_api/ad_banner/piece_clicks', { piece_id: <%= @piece.id %>, token: $(this).data('token') });
   });
 });
-</script>
+<%- end -%>
+<%- end -%>
+
+<%= javascript_tag do -%>
+$(function() {
+  if (bowser && bowser.mobile) {
+    $('#<%= @piece.css_id %> li.banner a').each(function() {
+      var a = $(this);
+      if (a.data('sp_url')) {
+        a.attr('href', a.data('sp_url'));
+      }
+    });
+  }
+});
 <%- end -%>

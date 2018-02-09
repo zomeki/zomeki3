@@ -40,11 +40,11 @@ $(document).ready(function () {
 <%- end -%>
 
 <%- if !request.mobile? && @piece.content.click_count_related? -%>
-<script type="text/javascript">
+<%= javascript_tag do -%>
 $(function() {
   $(document).on('click', '#<%= @piece.css_id %> li.banner a', function() {
     $.get('/_api/ad_banner/piece_clicks', { piece_id: <%= @piece.id %>, token: $(this).data('token') });
   });
 });
-</script>
+<%- end -%>
 <%- end -%>
