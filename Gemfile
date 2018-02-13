@@ -79,7 +79,7 @@ gem 'jpmobile', '~> 5.0.0'
 gem 'mail', '~> 2.6.4'
 gem 'mail-iso-2022-jp', '~> 2.0.7'
 gem 'moji', '~> 1.6'
-gem 'nokogiri', '~> 1.8.1'
+gem 'nokogiri', '~> 1.8.2'
 gem 'parallel', '~> 1.12.0'
 gem 'rails_autolink', '~> 1.1.6'
 gem 'rmagick', '~> 2.15.4'
@@ -93,7 +93,7 @@ gem 'dynamic_form', '~> 1.1.4'
 gem 'rails-i18n', '~> 5.0.4'
 gem 'sanitize', '~> 4.5.0'
 
-gem 'delayed_job', '~> 4.1.3'
+gem 'delayed_job', '~> 4.1.4'
 gem 'delayed_job_active_record', '~> 4.1.2'
 gem 'delayed_job_master', '~> 1.1.0', require: false
 
@@ -109,7 +109,7 @@ gem 'postgres-copy', '~> 1.1.0', require: false
 
 gem 'logical_query_parser', '~> 0.2.0'
 gem 'params_keeper_rails', '~> 1.0.0'
-gem 'datewari', '~> 1.0.1'
+gem 'datewari', '~> 1.0.2'
 gem 'slonik_migration', '~> 1.0.0'
 
 Dir[File.join(File.dirname(__FILE__), 'config/plugins/**/Gemfile')].each do |file|
