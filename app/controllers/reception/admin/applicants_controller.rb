@@ -13,7 +13,11 @@ class Reception::Admin::ApplicantsController < Cms::Controller::Admin::Base
 
   def index
     @items = @open.applicants.search_with_criteria(params[:criteria] || {}).order(:seq_no, :applied_at)
-    return download_csv(@items) if params[:csv].present?
+
+    if params[:csv].present?
+      csv = generate_csv(@items)
+      return send_data platform_encode(csv), type: 'text/csv', filename: "applicants_#{Time.now.to_i}.csv"
+    end
 
     @items = @items.paginate(page: params[:page], per_page: 50)
     _index @items
@@ -64,9 +68,9 @@ class Reception::Admin::ApplicantsController < Cms::Controller::Admin::Base
     )
   end
 
-  def download_csv(items)
+  def generate_csv(items)
     require 'csv'
-    csv_string = CSV.generate do |csv|
+    CSV.generate do |csv|
       csv << [
         Reception::Applicant.human_attribute_name(:seq_no),
         Reception::Applicant.human_attribute_name(:name),
@@ -91,9 +95,6 @@ class Reception::Admin::ApplicantsController < Cms::Controller::Admin::Base
         ]
       end
     end
-
-    csv_string = csv_string.encode(Encoding::WINDOWS_31J, invalid: :replace, undef: :replace)
-    send_data csv_string, type: 'text/csv', filename: "applicants_#{Time.now.to_i}.csv"
   end
 
   def send_received_mail(item)

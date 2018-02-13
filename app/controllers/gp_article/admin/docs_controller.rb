@@ -27,7 +27,8 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
                                   .preload(:prev_edition, :content, creator: [:user, :group])
 
     if params[:csv]
-      return export_csv(@items, GpArticle::Doc::Criteria.new(criteria))
+      csv = generate_csv(@items, GpArticle::Doc::Criteria.new(criteria))
+      return send_data platform_encode(csv), type: 'text/csv', filename: "gp_article_docs_#{Time.now.to_i}.csv"
     else
       @items = @items.paginate(page: params[:page], per_page: 30)
     end
@@ -323,9 +324,9 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     end
   end
 
-  def export_csv(items, criteria)
+  def generate_csv(items, criteria)
     require 'csv'
-    data = CSV.generate(force_quotes: true) do |csv|
+    CSV.generate(force_quotes: true) do |csv|
       csv << [criteria.to_csv_string]
       csv << ['記事番号', 'タイトル', 'ディレクトリ名', '所属', '作成者', '更新日時', '状態']
       items.each do |item|
@@ -340,8 +341,5 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
         ]
       end
     end
-
-    data = NKF.nkf('-s', data)
-    send_data data, type: 'text/csv', filename: "gp_article_docs_#{Time.now.to_i}.csv"
   end
 end
