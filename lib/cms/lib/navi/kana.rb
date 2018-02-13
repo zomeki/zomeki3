@@ -10,8 +10,9 @@ class Cms::Lib::Navi::Kana
 
       parse_by_mecab(tmp, site_id).split("\n").each do |line|
         s, e, word, kana = line.split(",")
+        kana = word if kana.blank?
         next if s !~ /^[0-9]+$/
-        next if kana.blank?
+        next if kana !~ /^[ァ-ンー]+$/
 
         s = s.to_i
         e = e.to_i
@@ -47,7 +48,7 @@ class Cms::Lib::Navi::Kana
     def parse_by_mecab(text, site_id)
       require 'MeCab'
       mecab_rc = Cms::KanaDictionary.mecab_rc(site_id)
-      mc = MeCab::Tagger.new('--node-format=%ps,%pe,%m,%f[7]\n --unk-format= --eos-format= -r ' + mecab_rc)
+      mc = MeCab::Tagger.new('--node-format=%ps,%pe,%m,%f[7]\n --unk-format=%ps,%pe,%m\n --eos-format= -r ' + mecab_rc)
       mc.parse(text).to_s
     rescue => e
       error_log e
