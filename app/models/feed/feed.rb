@@ -13,11 +13,9 @@ class Feed::Feed < ApplicationRecord
   default_scope { order(created_at: :desc) }
 
   # Content
-  belongs_to :content, :foreign_key => :content_id, :class_name => 'Feed::Content::Feed'
-  validates :content_id, presence: true
+  belongs_to :content, class_name: 'Feed::Content::Feed', required: true
 
-  has_many   :entries,        :foreign_key => :feed_id,         :class_name => 'Feed::FeedEntry',
-    :dependent => :destroy
+  has_many :entries, foreign_key: :feed_id, class_name: 'Feed::FeedEntry', dependent: :destroy
 
   validates :name, presence: true
   validates :title, presence: true

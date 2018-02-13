@@ -20,13 +20,12 @@ class Organization::Group < ApplicationRecord
   default_scope { order(:sort_no, :sys_group_code) }
 
   # Page
-  belongs_to :concept, :class_name => 'Cms::Concept'
-  belongs_to :layout, :class_name => 'Cms::Layout'
-  belongs_to :more_layout, :class_name => 'Cms::Layout'
+  belongs_to :concept, class_name: 'Cms::Concept'
+  belongs_to :layout, class_name: 'Cms::Layout'
+  belongs_to :more_layout, class_name: 'Cms::Layout'
 
   # Content
-  belongs_to :content, :foreign_key => :content_id, :class_name => 'Organization::Content::Group'
-  validates :content_id, :presence => true
+  belongs_to :content, class_name: 'Organization::Content::Group', required: true
 
   after_initialize :set_defaults
 

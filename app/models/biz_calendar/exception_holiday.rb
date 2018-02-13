@@ -8,7 +8,7 @@ class BizCalendar::ExceptionHoliday < ApplicationRecord
 
   STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
 
-  belongs_to :place,  :foreign_key => :place_id, :class_name => 'BizCalendar::Place'
+  belongs_to :place, class_name: 'BizCalendar::Place'
 
   delegate :content, to: :place
 

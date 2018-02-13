@@ -10,14 +10,12 @@ class AdBanner::Group < ApplicationRecord
   default_scope { order(:sort_no, :id) }
 
   # Content
-  belongs_to :content, :foreign_key => :content_id, :class_name => 'AdBanner::Content::Banner'
-  validates :content_id, presence: true
+  belongs_to :content, class_name: 'AdBanner::Content::Banner', required: true
 
-  # Proper
-  has_many :banners, :foreign_key => :group_id, :class_name => 'AdBanner::Banner'
+  has_many :banners, foreign_key: :group_id, class_name: 'AdBanner::Banner'
 
-  validates :name, :presence => true
-  validates :title, :presence => true
+  validates :name, presence: true
+  validates :title, presence: true
 
   after_initialize :set_defaults
   before_destroy :uncategorize

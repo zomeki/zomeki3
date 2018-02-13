@@ -14,8 +14,8 @@ class BizCalendar::BussinessHoliday < ApplicationRecord
   REPEAT_CRITERION_OPTIONS = [['日付', 'day'], ['曜日', 'week']]
   END_TYPE_OPTIONS = [['なし', 0], ['回数指定', 1], ['日指定', 2]]
 
-  belongs_to :place,  :foreign_key => :place_id, :class_name => 'BizCalendar::Place'
-  belongs_to :type,   :foreign_key => :type_id,  :class_name => 'BizCalendar::HolidayType'
+  belongs_to :place, class_name: 'BizCalendar::Place'
+  belongs_to :type, class_name: 'BizCalendar::HolidayType'
 
   delegate :content, to: :place
 

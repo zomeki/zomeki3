@@ -7,15 +7,15 @@ class Sys::Group < ApplicationRecord
 
   include StateText
 
-  belongs_to :parent, :foreign_key => :parent_id, :class_name => 'Sys::Group'
-
+  belongs_to :parent, class_name: self.name
   has_many :children, -> { order(:sort_no, :code) },
-    :foreign_key => :parent_id, :class_name => 'Sys::Group', :dependent => :destroy
-  has_many :users_groups, :class_name => 'Sys::UsersGroup'
-  has_many :users, -> { order(:id) }, :through => :users_groups
+                      foreign_key: :parent_id, class_name: self.name, dependent: :destroy
 
-  has_many :site_belongings, :dependent => :destroy, :class_name => 'Cms::SiteBelonging'
-  has_many :sites, -> { order(:id) }, :through => :site_belongings, :class_name => 'Cms::Site'
+  has_many :users_groups, class_name: 'Sys::UsersGroup'
+  has_many :users, -> { order(:id) }, through: :users_groups
+
+  has_many :site_belongings, class_name: 'Cms::SiteBelonging', dependent: :destroy
+  has_many :sites, -> { order(:id) }, through: :site_belongings, class_name: 'Cms::Site'
 
   before_save :disable_users, if: -> { state_changed? && state == 'disabled' }
   before_destroy :disable_users

@@ -13,8 +13,7 @@ class Cms::Piece < ApplicationRecord
 
   include StateText
 
-  has_many :settings, -> { order(:sort_no) }, :foreign_key => :piece_id,
-    :class_name => 'Cms::PieceSetting', :dependent => :destroy
+  has_many :settings, -> { order(:sort_no) }, class_name: 'Cms::PieceSetting', dependent: :destroy
 
   attr_accessor :setting_save_skip
 

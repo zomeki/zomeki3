@@ -14,12 +14,11 @@ class BizCalendar::Place < ApplicationRecord
   BUSINESS_HOLIDAY_STATE_OPTIONS = [['表示する','visible'],['表示しない','hidden']]
 
   # Content
-  belongs_to :content, :foreign_key => :content_id, :class_name => 'BizCalendar::Content::Place'
-  validates :content_id, presence: true
+  belongs_to :content, class_name: 'BizCalendar::Content::Place', required: true
 
-  has_many :hours,              :class_name => 'BizCalendar::BussinessHour',    :dependent => :destroy
-  has_many :holidays,           :class_name => 'BizCalendar::BussinessHoliday', :dependent => :destroy
-  has_many :exception_holidays, :class_name => 'BizCalendar::ExceptionHoliday', :dependent => :destroy
+  has_many :hours,              class_name: 'BizCalendar::BussinessHour',    dependent: :destroy
+  has_many :holidays,           class_name: 'BizCalendar::BussinessHoliday', dependent: :destroy
+  has_many :exception_holidays, class_name: 'BizCalendar::ExceptionHoliday', dependent: :destroy
 
   validates :state, :url, :title, presence: true
   validate :url_validity

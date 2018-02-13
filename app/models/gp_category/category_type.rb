@@ -19,17 +19,16 @@ class GpCategory::CategoryType < ApplicationRecord
   default_scope { order(sort_no: :asc, name: :asc) }
 
   # Content
-  belongs_to :content, :foreign_key => :content_id, :class_name => 'GpCategory::Content::CategoryType'
-  validates :content_id, presence: true
+  belongs_to :content, class_name: 'GpCategory::Content::CategoryType', required: true
 
   # Page
-  belongs_to :concept, :foreign_key => :concept_id, :class_name => 'Cms::Concept'
-  belongs_to :layout, :foreign_key => :layout_id,  :class_name => 'Cms::Layout'
+  belongs_to :concept, class_name: 'Cms::Concept'
+  belongs_to :layout, class_name: 'Cms::Layout'
   belongs_to :template
-  belongs_to :internal_category_type, :class_name => self.name
+  belongs_to :internal_category_type, class_name: self.name
 
-  has_many :categories, :foreign_key => :category_type_id, :class_name => 'GpCategory::Category', :dependent => :destroy
-  has_many :marker_icons, :class_name => 'Map::MarkerIcon', :as => :relatable, :dependent => :destroy
+  has_many :categories, foreign_key: :category_type_id, class_name: 'GpCategory::Category', dependent: :destroy
+  has_many :marker_icons, class_name: 'Map::MarkerIcon', as: :relatable, dependent: :destroy
 
   # conditional associations
   has_many :root_categories, -> { with_root },

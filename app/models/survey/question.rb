@@ -13,8 +13,7 @@ class Survey::Question < ApplicationRecord
 
   default_scope { order(:sort_no, :id) }
 
-  belongs_to :form
-  validates :form_id, presence: true
+  belongs_to :form, required: true
 
   delegate :content, to: :form
 

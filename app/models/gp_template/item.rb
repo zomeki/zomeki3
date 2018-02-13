@@ -11,13 +11,11 @@ class GpTemplate::Item < ApplicationRecord
 
   default_scope { order(:sort_no, :id) }
 
-  belongs_to :template
-  validates :template_id, presence: true
+  belongs_to :template, required: true
 
   delegate :content, to: :template
 
   validates :state, presence: true
-
   validates :title, presence: true
   validates :name, presence: true, uniqueness: { scope: :template_id, case_sensitive: false },
                    format: { with: /\A[-\w]*\z/ }

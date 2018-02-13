@@ -6,11 +6,10 @@ class Approval::Approval < ApplicationRecord
 
   default_scope { order(:approval_flow_id, :index) }
 
-  belongs_to :approval_flow
-  validates :approval_flow_id, presence: true
+  belongs_to :approval_flow, required: true
 
-  has_many :assignments, :as => :assignable, :dependent => :destroy
-  has_many :approvers, :through => :assignments, :source => :user
+  has_many :assignments, as: :assignable, dependent: :destroy
+  has_many :approvers, through: :assignments, source: :user
 
   validates :index, presence: true, uniqueness: { scope: [:approval_flow_id] }
 
