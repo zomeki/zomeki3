@@ -4,7 +4,8 @@ class Sys::Plugin < ApplicationRecord
 
   GITHUB_USER = 'zomeki'
   GITHUB_TOPIC = 'zomeki3-plugin'
-  STATE_OPTIONS = [['有効','enabled'], ['無効','disabled']]
+
+  enum_ish :state, [:enabled, :disabled], predicate: true
 
   validates :name, presence: true, uniqueness: true,
                    format: { with: %r|\A[^/]+/[^/]+\z| }
@@ -35,14 +36,6 @@ class Sys::Plugin < ApplicationRecord
 
   def source_version
     version.split('/').last
-  end
-
-  def state_enabled?
-    state == 'enabled'
-  end
-
-  def state_label
-    STATE_OPTIONS.rassoc(state).try(:first)
   end
 
   class << self

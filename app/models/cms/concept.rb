@@ -7,7 +7,7 @@ class Cms::Concept < ApplicationRecord
   include Cms::Model::Rel::Site
   include Cms::Model::Auth::Site
 
-  include StateText
+  enum_ish :state, [:public, :closed], default: :public
 
   has_many :children, -> { order(:sort_no) },
                       foreign_key: :parent_id, class_name: self.name, dependent: :destroy

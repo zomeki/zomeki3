@@ -11,7 +11,7 @@
   </tr>
   <tr>
     <td><%= select_tag 'criteria[state]',
-              options_for_select(Reception::Applicant::STATE_OPTIONS, params.dig(:criteria, :state)), include_blank: true %></td>
+              options_for_select(Reception::Applicant.state_options.reject { |opt| opt[1] =~ /tmp_/ }, params.dig(:criteria, :state)), include_blank: true %></td>
   </tr>
 </table>
 <%- end -%>

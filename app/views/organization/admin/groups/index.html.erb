@@ -17,7 +17,7 @@
     <td><%= link_to item.sys_group.name, { action: :index, group_id: item.sys_group_code } %></td>
     <td style="text-align: right;"><%= item.sort_no %></td>
     <td style="text-align: center;"><%=l item.updated_at %></td>
-    <td style="text-align: center;"><%= item.status.name %></td>
+    <td style="text-align: center;"><%= item.state_text %></td>
   </tr>
   <%- end -%>
 </table>

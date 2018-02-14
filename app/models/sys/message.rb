@@ -6,7 +6,7 @@ class Sys::Message < ApplicationRecord
   include Cms::Model::Rel::Site
   include Cms::Model::Auth::Site
 
-  include StateText
+  enum_ish :state, [:public, :closed]
 
   belongs_to :site, class_name: 'Cms::Site'
 

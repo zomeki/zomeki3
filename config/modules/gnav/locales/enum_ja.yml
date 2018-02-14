@@ -1,0 +1,6 @@
+ja:
+  enum_ish:
+    gnav/category_set:
+      layer:
+        descendants: 下層のカテゴリすべて
+        self: 該当カテゴリのみ

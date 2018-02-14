@@ -4,9 +4,7 @@ class BizCalendar::ExceptionHoliday < ApplicationRecord
   include Cms::Model::Site
   include Cms::Model::Auth::Content
 
-  include StateText
-
-  STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
+  enum_ish :state, [:public, :closed], default: :public, predicate: true
 
   belongs_to :place, class_name: 'BizCalendar::Place'
 
@@ -15,8 +13,6 @@ class BizCalendar::ExceptionHoliday < ApplicationRecord
   validates :state, :start_date, :end_date, presence: true
   validate :dates_range
   
-  after_initialize :set_defaults
-
   after_save     Cms::Publisher::ContentCallbacks.new(belonged: true), if: :changed?
   before_destroy Cms::Publisher::ContentCallbacks.new(belonged: true)
 
@@ -70,18 +66,10 @@ class BizCalendar::ExceptionHoliday < ApplicationRecord
     return rel
   end
 
-  def state_public?
-    state == 'public'
-  end
-
   def dates_range
     return if self.start_date.blank? && self.end_date.blank?
     self.start_date = self.end_date if self.start_date.blank?
     self.end_date = self.start_date if self.end_date.blank?
     errors.add(:end_date, "が#{self.class.human_attribute_name :start_date}を過ぎています。") if self.end_date < self.start_date
-  end
-
-  def set_defaults
-    self.state ||= STATE_OPTIONS.first.last if self.has_attribute?(:state)
   end
 end

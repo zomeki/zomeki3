@@ -11,12 +11,13 @@ class Survey::Form < ApplicationRecord
 
   include Approval::Model::Rel::Approval
 
-  include StateText
-
-  CONFIRMATION_OPTIONS = [['あり', true], ['なし', false]]
-  INDEX_LINK_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
-
   default_scope { order(:sort_no, :id) }
+
+  attribute :sort_no, :integer, default: 10
+
+  enum_ish :state, [:draft, :approvable, :approved, :prepared, :public, :closed], predicate: true
+  enum_ish :confirmation, [true, false], default: true
+  enum_ish :index_link, [:visible, :hidden], default: :visible
 
   # Content
   belongs_to :content, class_name: 'Survey::Content::Form', required: true
@@ -31,8 +32,6 @@ class Survey::Form < ApplicationRecord
   validates :name, presence: true, uniqueness: { scope: :content_id }, format: { with: /\A[-\w]*\z/ }
   validates :title, presence: true
   validates :mail_to, format: { with: /\A.+@.+\z/ }, if: -> { mail_to.present? }
-
-  after_initialize :set_defaults
 
   after_save     Cms::Publisher::ContentCallbacks.new(belonged: true), if: :changed?
   before_destroy Cms::Publisher::ContentCallbacks.new(belonged: true)
@@ -53,30 +52,6 @@ class Survey::Form < ApplicationRecord
       return q if q.email_field?
     end
     return nil
-  end
-
-  def state_draft?
-    state == 'draft'
-  end
-
-  def state_approvable?
-    state == 'approvable'
-  end
-
-  def state_approved?
-    state == 'approved'
-  end
-
-  def state_prepared?
-    state == 'prepared'
-  end
-
-  def state_public?
-    state == 'public'
-  end
-
-  def state_closed?
-    state == 'closed'
   end
 
   def duplicate
@@ -141,13 +116,5 @@ class Survey::Form < ApplicationRecord
 
   def index_visible?
     self.index_link != 'hidden'
-  end
-
-  private
-
-  def set_defaults
-    self.confirmation = CONFIRMATION_OPTIONS.first.last if self.has_attribute?(:confirmation) && self.confirmation.nil?
-    self.index_link   = INDEX_LINK_OPTIONS.first.last   if self.has_attribute?(:index_link) && self.index_link.nil?
-    self.sort_no      = 10 if self.has_attribute?(:sort_no) && self.sort_no.nil?
   end
 end

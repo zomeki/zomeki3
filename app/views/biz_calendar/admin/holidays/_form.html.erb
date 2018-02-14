@@ -7,7 +7,7 @@ types = @content.visible_types.order(:id).collect{|c| [c.title, c.id]}
 <table class="show">
   <tr>
     <th><%= f.label(:state) %></th>
-    <td><%= f.radio_buttons :state, @item.class::STATE_OPTIONS, :class => 'states' %></td>
+    <td><%= f.radio_buttons :state, @item.class.state_options, :class => 'states' %></td>
   </tr><tr>
     <th><%= f.label(:type_id) %> <span class="note">※</span></th>
     <td><%= f.select :type_id, types, include_blank: true %></td>
@@ -27,7 +27,7 @@ types = @content.visible_types.order(:id).collect{|c| [c.title, c.id]}
         <tbody>
           <tr>
             <th><%= f.label(:repeat_type) %></th>
-            <td><%= f.select :repeat_type, @item.class::REPEAT_OPTIONS, include_blank: true %></td>
+            <td><%= f.select :repeat_type, @item.class.repeat_type_options, include_blank: true %></td>
           </tr>
           <tr id ="intervalTr">
             <th>繰り返す間隔</th>
@@ -38,7 +38,7 @@ types = @content.visible_types.order(:id).collect{|c| [c.title, c.id]}
           <tr id ="criterionTr">
             <th>繰り返しの基準</th>
             <td>
-              <%= f.radio_buttons :repeat_criterion, @item.class::REPEAT_CRITERION_OPTIONS, :class => 'states' %>
+              <%= f.radio_buttons :repeat_criterion, @item.class.repeat_criterion_options, :class => 'states' %>
             </td>
           </tr>
           <tr id ="weekTr">
@@ -56,19 +56,19 @@ types = @content.visible_types.order(:id).collect{|c| [c.title, c.id]}
           <tr>
             <th rowspan="3">終了日</th>
             <td>
-              <%= f.radio_button :end_type, @item.class::END_TYPE_OPTIONS[0].last, {:checked => (@item.end_type == @item.class::END_TYPE_OPTIONS[0].last)} %>
+              <%= f.radio_button :end_type, @item.class.end_type_options[0].last, {:checked => (@item.end_type == @item.class.end_type_options[0].last)} %>
               なし
             </td>
           </tr>
           <tr>
             <td>
-              <%= f.radio_button :end_type, @item.class::END_TYPE_OPTIONS[1].last, {:checked => (@item.end_type == @item.class::END_TYPE_OPTIONS[1].last)} %>
+              <%= f.radio_button :end_type, @item.class.end_type_options[1].last, {:checked => (@item.end_type == @item.class.end_type_options[1].last)} %>
               <%= f.text_field :end_times, :class => 'name', :style => 'width: 60px; ime-mode: disabled;' %>&nbsp;回
             </td>
           </tr>
           <tr>
             <td>
-              <%= f.radio_button :end_type, @item.class::END_TYPE_OPTIONS[2].last, {:checked => (@item.end_type == @item.class::END_TYPE_OPTIONS[2].last)} %>
+              <%= f.radio_button :end_type, @item.class.end_type_options[2].last, {:checked => (@item.end_type == @item.class.end_type_options[2].last)} %>
               <%= f.text_field :end_date, :value => l(@item.end_date),
                              :style => 'width: 150px;', :class => 'datepicker' %>
             </td>

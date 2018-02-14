@@ -7,19 +7,17 @@ class GpCalendar::Event < ApplicationRecord
   include Cms::Model::Auth::Content
   include GpCategory::Model::Rel::Category
 
-  include StateText
-
-  STATE_OPTIONS = [['公開中', 'public'], ['非公開', 'closed']]
-  TARGET_OPTIONS = [['同一ウィンドウ', '_self'], ['別ウィンドウ', '_blank']]
   ORDER_OPTIONS = [['作成日時（降順）', 'created_at_desc'], ['作成日時（昇順）', 'created_at_asc']]
 
   # Not saved to database
   attr_accessor :doc
 
+  enum_ish :state, [:public, :closed], default: :public
+  enum_ish :target, [:_self, :_blank], default: :_self
+
   # Content
   belongs_to :content, class_name: 'GpCalendar::Content::Event', required: true
 
-  after_initialize :set_defaults
   before_save :set_name
   before_destroy :close_files
 
@@ -110,17 +108,6 @@ class GpCalendar::Event < ApplicationRecord
   end
 
   private
-
-  def set_defaults
-    self.state ||= STATE_OPTIONS.first.last if self.has_attribute?(:state)
-    self.target ||= TARGET_OPTIONS.first.last if self.has_attribute?(:target)
-
-    set_defaults_from_content if new_record?
-  end
-
-  def set_defaults_from_content
-    return unless content
-  end
 
   def set_name
     return if self.name.present?

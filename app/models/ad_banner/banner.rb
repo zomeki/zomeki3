@@ -6,12 +6,12 @@ class AdBanner::Banner < ApplicationRecord
   include Cms::Model::Rel::Content
   include Cms::Model::Auth::Content
 
-  include StateText
-
-  STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
-  TARGET_OPTIONS = [['同一ウィンドウ', '_self'], ['別ウィンドウ', '_blank']]
-
   default_scope { order(:sort_no, :id) }
+
+  attribute :sort_no, :integer, default: 10
+
+  enum_ish :state, [:public, :closed], default: :public
+  enum_ish :target, [:_self, :_blank], default: :_self
 
   # Content
   belongs_to :content, class_name: 'AdBanner::Content::Banner', required: true
@@ -25,7 +25,6 @@ class AdBanner::Banner < ApplicationRecord
   validates :url, presence: true
   validates :token, uniqueness: { scope: :content_id } 
 
-  after_initialize :set_defaults
   before_validation :set_token
 
   after_save     Cms::Publisher::ContentCallbacks.new(belonged: true), if: :changed?
@@ -64,10 +63,6 @@ class AdBanner::Banner < ApplicationRecord
     "#{content.public_node.public_uri}#{token}"
   end
 
-  def target_text
-    TARGET_OPTIONS.detect{|o| o.last == self.target }.try(:first).to_s
-  end
-
   def published?
     now = Time.now
     (state == 'public') && (published_at.nil? || published_at <= now) && (closed_at.nil? || closed_at > now)
@@ -78,12 +73,6 @@ class AdBanner::Banner < ApplicationRecord
   end
 
   private
-
-  def set_defaults
-    self.state    ||= STATE_OPTIONS.first.last if self.has_attribute?(:state)
-    self.target   ||= TARGET_OPTIONS.last.last if self.has_attribute?(:target)
-    self.sort_no  ||= 10 if self.has_attribute?(:sort_no)
-  end
 
   def set_token
     self.token ||= Util::String::Token.generate_unique_token(self.class, :token)

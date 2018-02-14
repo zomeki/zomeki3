@@ -23,13 +23,13 @@ namespace ZomekiCMS::NAME do
           applicant = course.applicants.where(seq_no: row['受付番号']).first_or_initialize
           applicant.attributes = {
             open_id: open.id,
-            state: Reception::Applicant::STATE_OPTIONS.assoc(row['状態']).try(:last),
+            state: Reception::Applicant.state_options.assoc(row['状態']).try(:last),
             name: row['名前'].to_s,
             kana: row['フリガナ'].to_s,
             tel: row['電話番号'].to_s,
             email: row['E-mail'].to_s,
             remark: row['備考'].to_s,
-            applied_from: Reception::Applicant::APPLIED_FROM_OPTIONS.assoc(row['申込方法']).try(:last),
+            applied_from: Reception::Applicant.applied_from_options.assoc(row['申込方法']).try(:last),
             applied_at: row['申込日時'] || Time.now,
             remote_addr: row['IPアドレス'],
             user_agent: row['ユーザーエージェント'],

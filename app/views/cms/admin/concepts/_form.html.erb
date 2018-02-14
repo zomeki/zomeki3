@@ -9,7 +9,7 @@
     <td><%= f.text_field :name, :class => 'name' %></td>
   </tr><tr>
     <th><%= f.label :state %></th>
-    <td><%= f.radio_buttons :state, @item.states, :class => 'status' %></td>
+    <td><%= f.radio_buttons :state, @item.class.state_options, :class => 'status' %></td>
   </tr><tr>
     <th><%= f.label :sort_no %></th>
     <td><%= f.text_field :sort_no, :class => 'number' %></td>

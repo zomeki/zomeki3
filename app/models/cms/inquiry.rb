@@ -2,7 +2,7 @@ class Cms::Inquiry < ApplicationRecord
   include Sys::Model::Base
   include Cms::Model::Site
 
-  include StateText
+  enum_ish :state, [:visible, :hidden]
 
   belongs_to :inquirable, polymorphic: true
   belongs_to :group, class_name: 'Sys::Group'

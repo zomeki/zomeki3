@@ -5,7 +5,9 @@ class Sys::Group < ApplicationRecord
   include Cms::Model::Site
   include Cms::Model::Auth::Site
 
-  include StateText
+  enum_ish :state, [:enabled, :disabled]
+  enum_ish :ldap_state, [1, 0]
+  enum_ish :web_state, [:public, :closed]
 
   belongs_to :parent, class_name: self.name
   has_many :children, -> { order(:sort_no, :code) },
@@ -40,19 +42,6 @@ class Sys::Group < ApplicationRecord
       !Sys::Creator.where(group_id: group_ids, creatable_type: 'GpArticle::Doc').exists?
   end
 
-  def ldap_states
-    [['同期',1],['非同期',0]]
-  end
-  
-  def web_states
-    [['公開','public'],['非公開','closed']]
-  end
-  
-  def ldap_label
-    ldap_states.each {|a| return a[0] if a[1] == ldap }
-    return nil
-  end
-  
   def ou_name
     "#{code}#{name}"
   end

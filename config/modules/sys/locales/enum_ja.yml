@@ -1,0 +1,39 @@
+ja:
+  enum_ish:
+    sys/group:
+      ldap_state:
+        0: 非同期
+        1: 同期
+      web_state:
+        public: 公開
+        closed: 非公開
+    sys/user:
+      ldap_state:
+        0: 非同期
+        1: 同期
+      admin_creatable:
+        true: 許可する
+        false: 許可しない
+    sys/object_privilege:
+      action:
+        read: 閲覧
+        create: 作成
+        update: 編集
+        delete: 削除
+    sys/operation_log:
+      action:
+        create: 作成
+        update: 更新
+        recognize: 承認
+        approve: 承認
+        destroy: 削除
+        publish: 公開
+        close: 非公開
+        expire: 期限切れ
+        login: ログイン
+        logout: ログアウト
+    sys/process:
+      state:
+        running: 実行中
+        closed: 完了
+        stop: 停止

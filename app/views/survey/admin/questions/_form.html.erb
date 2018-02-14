@@ -4,7 +4,7 @@
 <table class="show">
   <tr>
     <th><%= f.label :state %></th>
-    <td><%= f.radio_buttons :state, @item.class::STATE_OPTIONS, :class => 'status' %></td>
+    <td><%= f.radio_buttons :state, @item.class.state_options, :class => 'status' %></td>
   </tr>
   <tr>
     <th><%= f.label :title %> <span class="note">※</span></th>
@@ -16,7 +16,7 @@
   </tr>
   <tr>
     <th><%= f.label :form_type %></th>
-    <td><%= f.select :form_type, @item.class::FORM_TYPE_OPTIONS %></td>
+    <td><%= f.select :form_type, @item.class.form_type_options %></td>
   </tr>
   <tr>
     <th><%= f.label :form_text_max_length %><br />（種別が入力の時に使用）</th>
@@ -28,7 +28,7 @@
   </tr>
   <tr>
     <th><%= f.label :required %></th>
-    <td><%= f.radio_buttons :required, @item.class::REQUIRED_OPTIONS %></td>
+    <td><%= f.radio_buttons :required, @item.class.required_options %></td>
   </tr>
   <tr>
     <th><%= f.label :style_attribute %></th>

@@ -9,14 +9,16 @@ class GpCategory::CategoryType < ApplicationRecord
   include Cms::Model::Base::Sitemap
   include Cms::Model::Rel::Content
 
-  include StateText
-
-  STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
-  DOCS_ORDER_OPTIONS = [['コンテンツ設定を継承', ''],
-                        ['公開日（降順）', 'display_published_at DESC, published_at DESC'], ['公開日（昇順）', 'display_published_at ASC, published_at ASC'],
-                        ['更新日（降順）', 'display_updated_at DESC, updated_at DESC'], ['更新日（昇順）', 'display_updated_at ASC, updated_at ASC']]
-
   default_scope { order(sort_no: :asc, name: :asc) }
+
+  attribute :sort_no, :integer, default: 10
+
+  enum_ish :state, [:public, :closed], default: :public
+  enum_ish :docs_order, ['',
+                         'display_published_at DESC, published_at DESC',
+                         'display_published_at ASC, published_at ASC',
+                         'display_updated_at DESC, updated_at DESC',
+                         'display_updated_at ASC, updated_at ASC'], default: 'display_published_at DESC, published_at DESC'
 
   # Content
   belongs_to :content, class_name: 'GpCategory::Content::CategoryType', required: true
@@ -42,8 +44,6 @@ class GpCategory::CategoryType < ApplicationRecord
                    format: { with: /\A[0-9A-Za-z@\.\-_\+\s]+\z/ }
   validates :title, presence: true
   validates :state, presence: true
-
-  after_initialize :set_defaults
 
   after_save     GpCategory::Publisher::CategoryTypeCallbacks.new, if: :changed?
   before_destroy GpCategory::Publisher::CategoryTypeCallbacks.new
@@ -114,12 +114,6 @@ class GpCategory::CategoryType < ApplicationRecord
   end
 
   private
-
-  def set_defaults
-    self.state         = STATE_OPTIONS.first.last         if self.has_attribute?(:state) && self.state.nil?
-    self.docs_order    = DOCS_ORDER_OPTIONS.second.last   if self.has_attribute?(:docs_order) && self.docs_order.nil?
-    self.sort_no = 10 if self.has_attribute?(:sort_no) && self.sort_no.nil?
-  end
 
   def clean_published_files
     return if !destroyed? && public?

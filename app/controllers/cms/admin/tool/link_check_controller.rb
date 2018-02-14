@@ -39,7 +39,7 @@ class Cms::Admin::Tool::LinkCheckController < Cms::Controller::Admin::Base
                 log.link_checkable.try!(:creator).try!(:group).try!(:name),
                 log.body,
                 log.url,
-                log.result_state_mark,
+                log.result_state_text(format: :mark),
                 [log.status, log.reason].compact.join(' '),
                 log.checked_at ? I18n.l(log.checked_at) : nil]
       end

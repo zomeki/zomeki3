@@ -57,7 +57,7 @@
       <%- approval_request.histories.each do |history| -%>
       <tr>
         <th>
-          <span class="reason"><%= history.reason_title %></span>
+          <span class="reason"><%= history.reason_text %></span>
           <span class="group"><%= history.operator ? history.operator.group.name : '担当者削除済み' %></span>
           <span class="user"><%= history.operator ? history.operator.name : '担当者削除済み' %>
                              （<%= history.operator ? history.operator.account : '担当者削除済み' %>）</span>
