@@ -24,7 +24,7 @@ class Cms::LinkCheckLog < ApplicationRecord
              creatable_ids = Sys::Creator.select(:creatable_id).where(creatable_type: type, group_id: group) 
              where(link_checkable_type: type, link_checkable_id: model.where(id: creatable_ids))
            end
-    union(rels.compact)
+    rels.compact.reduce(:union)
   }
 
   def result_state_mark

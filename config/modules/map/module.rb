@@ -1,6 +1,6 @@
 Cms::Lib::Modules::ModuleSet.draw :map, '地図', 30 do |mod|
   ## contents
-  mod.content :markers, '地図'
+  mod.content :markers, '地図', publishable: true
 
   ## directories
   mod.directory :markers, 'マップ'

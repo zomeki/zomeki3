@@ -20,7 +20,7 @@ module Cms::Model::Rel::SearchText
   def save_search_texts
     return unless Zomeki.config.application['cms.search_indexer']
 
-    renderer = Cms::Public::BracketRenderService.new(site, inherited_concept)
+    renderer = Cms::BracketRenderService.new(site, inherited_concept)
 
     searchable_columns.each do |column|
       st = search_texts.detect { |s| s.searchable_column == column.to_s } || search_texts.build(searchable_column: column)

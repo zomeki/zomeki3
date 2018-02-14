@@ -3,23 +3,23 @@
 
 <table class="show">
   <tr>
-    <th><%= @item.locale :place_id %></th>
+    <th><%= f.label :place_id %></th>
     <td><%= f.array_select 'in_settings[place_id]', @item.content.public_places.map{|p| [p.title, p.id]}, include_blank: true %></td>
   </tr>
   <tr>
-    <th><%= @item.locale :month_number %></th>
+    <th><%= f.label :month_number %></th>
     <td><%= f.array_text_field 'in_settings[month_number]', size: 25 %></td>
   </tr>
   <tr>
-    <th><%= @item.locale :holiday_type_state %></th>
+    <th><%= f.label :holiday_type_state %></th>
     <td><%= f.array_radio_buttons 'in_settings[holiday_type_state]', @item.class::HOLIDAY_TYPE_STATE_OPTIONS %></td>
   </tr>
   <tr>
-    <th><%= @item.locale :holiday_state %></th>
+    <th><%= f.label :holiday_state %></th>
     <td><%= f.array_radio_buttons 'in_settings[holiday_state]', @item.class::HOLIDAY_STATE_OPTIONS %></td>
   </tr>
   <tr>
-    <th><%= @item.locale :date_style %></th>
+    <th><%= f.label :date_style %></th>
     <td><%= f.array_text_field 'in_settings[date_style]', size: 25 %> <%= I18n.t('comments.date_style').html_safe %></td>
   </tr>
 </table>
@@ -28,7 +28,7 @@
 
 <table class="show">
   <tr>
-    <th><%= @item.locale :lower_text %></th>
+    <th><%= f.label :lower_text %></th>
   <tr>
   </tr>
     <td><%= f.array_text_area 'in_settings[lower_text]', size: '100x10' %></td>

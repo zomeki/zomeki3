@@ -4,7 +4,7 @@
 
 <table class="show">
   <tr>
-    <th><%= @item.locale :list_style %></th>
+    <th><%= f.label :list_style %></th>
     <td>
       <%= link_to '置き換えテキストを確認する', '#', class: 'show_group_list_style_dialog' %><br />
       <%= f.array_text_area 'in_settings[list_style]', size: '100x10' %>

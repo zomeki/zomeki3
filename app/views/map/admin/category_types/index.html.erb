@@ -10,7 +10,7 @@
   <%- @items.each do |item| -%>
     <%- icon = @content.marker_icons.find_by(relatable: item) -%>
     <tr class="<%= cycle '', 'cycle' %>">
-      <td style="text-align: center;"><%= link_to :edit, edit_map_category_type_path(content: @content, id: item.id) %></td>
+      <td style="text-align: center;"><%= link_to :edit, { action: :edit, id: item } %></td>
       <td><%= item.name %></td>
       <td><%= link_to item.title, map_category_type_categories_path(content: @content, category_type_id: item.id) %></td>
       <td><%= icon.url if icon %></td>

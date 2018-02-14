@@ -67,10 +67,7 @@ class Cms::Admin::Site::BasicAuthUsersController < Cms::Controller::Admin::Base
   end
 
   def update_configs
-    Rails::Generators.invoke('cms:apache:basic_auth', ['--force', "--site_id=#{@site.id}"])
-    Rails::Generators.invoke('cms:nginx:site_config', ['--force', "--site_id=#{@site.id}"])
-    Cms::Site.reload_servers
-
+    Cms::SiteConfigUpdateService.new(@site).update
     Cms::FileTransferCallbacks.new(:basic_auth_htpasswd_path).enqueue(@site)
   end
 

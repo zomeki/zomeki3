@@ -1,12 +1,12 @@
 Cms::Lib::Modules::ModuleSet.draw :gp_calendar, 'カレンダー', 60 do |mod|
   ## contents
-  mod.content :events, 'カレンダー'
+  mod.content :events, 'カレンダー', publishable: true
 
   ## directories
   mod.directory :events, 'イベント一覧'
   mod.directory :todays_events, '今日のイベント'
   mod.directory :calendar_styled_events, 'イベントカレンダー'
-  mod.directory :search_events, 'イベント検索'
+  mod.directory :search_events, 'イベント検索', dynamic: true
 
   ## pieces
   mod.piece :monthly_links, '月別リンク'

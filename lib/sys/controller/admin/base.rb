@@ -33,14 +33,14 @@ class Sys::Controller::Admin::Base < ApplicationController
 private
   def authenticate
     return true  if logged_in?
-    return false if request.env['PATH_INFO'] =~ Regexp.new("^/#{ZomekiCMS::ADMIN_URL_PREFIX}/login")
-    return false if request.env['PATH_INFO'] =~ Regexp.new("^/#{ZomekiCMS::ADMIN_URL_PREFIX}/password")
+    return false if request.env['PATH_INFO'] =~ Regexp.new("^#{admin_login_path}")
+    return false if request.env['PATH_INFO'] =~ Regexp.new("^#{admin_password_path}")
     uri  = request.env['PATH_INFO']
     uri += "?#{request.env['QUERY_STRING']}" if !request.env['QUERY_STRING'].blank?
     cookies[:sys_login_referrer] = uri
     respond_to do |format|
-      format.any  { redirect_to("/#{ZomekiCMS::ADMIN_URL_PREFIX}/login") }
-      format.html { redirect_to("/#{ZomekiCMS::ADMIN_URL_PREFIX}/login") }
+      format.any  { redirect_to(admin_login_path) }
+      format.html { redirect_to(admin_login_path) }
       format.xml  { http_error 500, 'This is a secure page.' }
     end
     return false

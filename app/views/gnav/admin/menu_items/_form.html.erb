@@ -55,11 +55,7 @@
 <%= creator_form f %>
 
 <%= javascript_tag do -%>
-<%= toggle_form_function -%>
-
 $(document).ready(function () {
-  <%= disable_enter_script -%>
-
   $('#categories > tbody > tr > td.category_type > select').on('change', function (event) {
     var category_type_id = parseInt(event.target.value);
     var category_select = $(event.target).closest('tr').find('td.category > select');

@@ -18,11 +18,11 @@
     <td><%= @item.description %></td>
   </tr>
   <tr>
-    <th><%= @item.locale(:sitemap_state) %></th>
+    <th><%= @item.class.human_attribute_name :sitemap_state %></th>
     <td><%= @item.sitemap_state_text %></td>
   </tr>
   <tr>
-    <th><%= @item.locale(:docs_order) %></th>
+    <th><%= @item.class.human_attribute_name :docs_order %></th>
     <td><%= @item.class::DOCS_ORDER_OPTIONS.detect{|o| o.last == @item.docs_order }.try(:first) %></td>
   </tr>
   <tr>

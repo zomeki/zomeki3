@@ -3,15 +3,15 @@
 
 <table class="show">
   <tr>
-    <th><%= @item.locale :docs_number %></th>
+    <th><%= @item.class.human_attribute_name :docs_number %></th>
     <td><%= @item.setting_value(:docs_number) %></td>
   </tr>
   <tr>
-    <th><%= @item.locale :doc_style %></th>
+    <th><%= @item.class.human_attribute_name :doc_style %></th>
     <td><%=simple_format @item.setting_value(:doc_style) %></td>
   </tr>
   <tr>
-    <th><%= @item.locale :date_style %></th>
+    <th><%= @item.class.human_attribute_name :date_style %></th>
     <td><%= @item.setting_value(:date_style) %></td>
   </tr>
 </table>

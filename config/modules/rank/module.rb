@@ -1,6 +1,6 @@
 Cms::Lib::Modules::ModuleSet.draw :rank, 'アクセスランキング', 120 do |mod|
   ## contents
-  mod.content :ranks, 'アクセスランキング'
+  mod.content :ranks, 'アクセスランキング', publishable: true
 
   ## directories
   mod.directory :previous_days, '前日'

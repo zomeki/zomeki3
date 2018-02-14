@@ -3,19 +3,19 @@
 
 <table class="show">
   <tr>
-    <th><%= @item.locale :target_type %></th>
+    <th><%= @item.class.human_attribute_name :target_type %></th>
     <td><%= @item.class::TARGET_TYPE_OPTIONS.detect{|o| o.last == @item.setting_value(:target_type) }.try(:first) %></td>
   </tr>
   <tr>
-    <th><%= @item.locale :page_filter %></th>
+    <th><%= @item.class.human_attribute_name :page_filter %></th>
     <td><%= @item.class::PAGE_FILTER_OPTIONS.detect{|o| o.last == @item.setting_value(:page_filter) }.try(:first) %></td>
   </tr>
   <tr>
-    <th><%= @item.locale :place_link %></th>
+    <th><%= @item.class.human_attribute_name :place_link %></th>
     <td><%= @item.class::PLACE_LINK_OPTIONS.detect{|o| o.last == @item.setting_value(:place_link) }.try(:first) %></td>
   </tr>
   <tr>
-    <th><%= @item.locale :date_style %></th>
+    <th><%= @item.class.human_attribute_name :date_style %></th>
     <td><%= @item.setting_value(:date_style) %></td>
   </tr>
 </table>

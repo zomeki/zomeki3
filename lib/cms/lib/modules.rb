@@ -1,6 +1,6 @@
 module Cms::Lib::Modules
   def self.modules
-    Cms::Lib::Modules::ModuleSet.load_modules.sort { |a, b| a.sort_no <=> b.sort_no }
+    Cms::Lib::Modules::ModuleSet.load_modules
   end
   
   def self.find(type, model)

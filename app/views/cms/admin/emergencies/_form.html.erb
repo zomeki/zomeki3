@@ -9,10 +9,10 @@ end
 
 %><table class="show">
   <tr>
-    <th><%= @item.locale :value %></th>
+    <th><%= f.label :value %></th>
     <td><%= f.select :value, layouts, include_blank: '　　　　' %></td>
   </tr><tr>
-    <th><%= @item.locale :sort_no %></th>
+    <th><%= f.label :sort_no %></th>
     <td><%= f.text_field :sort_no, class: 'number' %></td>
   </tr>
 </table>

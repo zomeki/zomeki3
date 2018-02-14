@@ -31,7 +31,7 @@
                                                                                            @item.approvers.include?(Core.user) %>
   <%-
   task = @item.queued_tasks.find_by(name: 'publish')
-  pubmsg = task ? "公開日時が設定されています。\n（ #{task.process_at.strftime('%Y-%m-%d %H:%M')} ）\n直ちに公開してよろしいですか？" : '公開してよろしいですか？'
+  pubmsg = task ? "公開日時が設定されています。\n（ #{l(task.process_at)} ）\n直ちに公開してよろしいですか？" : '公開してよろしいですか？'
   -%>
   <%= link_to :publish, { action: :publish }, method: :post, confirm: pubmsg if @item.publishable? %>
   <%= link_to '公開終了', { do: :close }, confirm: '公開を終了してよろしいですか？' if @item.closable? %>

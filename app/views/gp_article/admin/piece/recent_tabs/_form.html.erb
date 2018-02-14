@@ -3,26 +3,26 @@
 
 <table class="show">
   <tr>
-    <th><%= @item.locale :list_count %></th>
+    <th><%= f.label :list_count %></th>
     <td><%= f.array_text_field 'in_settings[list_count]', class: 'number' %></td>
   </tr>
   <tr>
-    <th><%= @item.locale :docs_order %></th>
+    <th><%= f.label :docs_order %></th>
     <td><%= f.array_select 'in_settings[docs_order]', @item.class::DOCS_ORDER_OPTIONS %></td>
   </tr>
   <tr>
-    <th><%= @item.locale :date_style %></th>
+    <th><%= f.label :date_style %></th>
     <td colspan="3"><%= f.array_text_field 'in_settings[date_style]', size: 50 %> <%=raw t('comments.date_style') %></td>
   </tr>
   <tr>
-    <th><%= @item.locale :list_style %></th>
+    <th><%= f.label :list_style %></th>
     <td colspan="3">
       <%= link_to '置き換えテキストを確認する', '#', id: 'show_dialog' %><br />
       <%= f.array_text_field 'in_settings[list_style]', size: 50 %>
     </td>
   </tr>
   <tr>
-    <th><%= @item.locale :more_label %></th>
+    <th><%= f.label :more_label %></th>
     <td><%= f.array_text_field 'in_settings[more_label]', class: 'name' %></td>
   </tr>
 </table>

@@ -2,19 +2,19 @@
 
 <table class="show">
   <tr>
-    <th><%= @item.locale(:state) %></th>
+    <th><%= f.label :state %></th>
     <td><%= f.radio_buttons :state, [["公開","public"],["非公開","closed"]], :class => 'states' %></td>
   </tr><tr>
-    <th><%= @item.locale(:name) %> <span class="note">※</span></th>
+    <th><%= f.label :name %> <span class="note">※</span></th>
     <td><%= f.text_field :name, :class => 'id' %></td>
   </tr><tr>
-    <th><%= @item.locale(:title) %> <span class="note">※</span></th>
+    <th><%= f.label :title %> <span class="note">※</span></th>
     <td><%= f.text_field :title, :class => 'name' %></td>
   </tr><tr>
-    <th><%= @item.locale(:uri) %> <span class="note">※</span></th>
+    <th><%= f.label :uri %> <span class="note">※</span></th>
     <td><%= f.text_field :uri, :class => 'title' %></td>
   </tr><tr>
-    <th><%= @item.locale(:entry_count) %></th>
+    <th><%= f.label :entry_count %></th>
     <td><%= f.text_field :entry_count, :class => "number" %></td>
   </tr>
 </table>

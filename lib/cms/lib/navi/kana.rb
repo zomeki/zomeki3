@@ -10,16 +10,21 @@ class Cms::Lib::Navi::Kana
 
       parse_by_mecab(tmp, site_id).split("\n").each do |line|
         s, e, word, kana = line.split(",")
+        kana = word if kana.blank?
         next if s !~ /^[0-9]+$/
-        next if word !~ /[一-龠]/
-        next if kana.blank?
+        next if kana !~ /^[ァ-ンー]+$/
 
         s = s.to_i
         e = e.to_i
         kana = kana.to_s.tr('ァ-ン', 'ぁ-ん')
+        roman = Romaji.kana2romaji(kana)
 
         texts << html.byteslice(pos..s-1) if pos < s
-        texts << "<ruby><rb>#{word}</rb><rp>(</rp><rt>#{kana}</rt><rp>)</rp></ruby>"
+
+        ruby = %Q|<ruby><rb>#{word}</rb><rp>(</rp>|
+        ruby << %Q|<rt class="kana">#{kana}</rt>| if word =~ /[一-龠々]/
+        ruby << %Q|<rt class="roman" style="display: none;">#{roman}</rt><rp>)</rp></ruby>|
+        texts << ruby
 
         pos = e
       end
@@ -43,7 +48,7 @@ class Cms::Lib::Navi::Kana
     def parse_by_mecab(text, site_id)
       require 'MeCab'
       mecab_rc = Cms::KanaDictionary.mecab_rc(site_id)
-      mc = MeCab::Tagger.new('--node-format=%ps,%pe,%m,%f[7]\n --unk-format= --eos-format= -r ' + mecab_rc)
+      mc = MeCab::Tagger.new('--node-format=%ps,%pe,%m,%f[7]\n --unk-format=%ps,%pe,%m\n --eos-format= -r ' + mecab_rc)
       mc.parse(text).to_s
     rescue => e
       error_log e

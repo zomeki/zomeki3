@@ -39,12 +39,12 @@
   </tr>
   <tr>
     <th><%= f.label :published_at %></th>
-    <td><%= f.text_field :published_at, :value => value_for_datetimepicker(f.object_name, :published_at),
+    <td><%= f.text_field :published_at, :value => l(@item.published_at),
                                         :style => 'width: 150px;', :class => 'datetimepicker' %></td>
   </tr>
   <tr>
     <th><%= f.label :closed_at %></th>
-    <td><%= f.text_field :closed_at, :value => value_for_datetimepicker(f.object_name, :closed_at),
+    <td><%= f.text_field :closed_at, :value => l(@item.closed_at),
                                      :style => 'width: 150px;', :class => 'datetimepicker' %></td>
   </tr>
   <tr>

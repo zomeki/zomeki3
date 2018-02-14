@@ -7,7 +7,7 @@
   <%- items.group_by(&:menu).each do |menu, items| -%>
     <%- if menu -%>
       <tr class="<%= cycle '', 'cycle' %>">
-        <td colspan="3" style="background-color: #ddd;"><%= i18n_view("menus.#{menu}") %></td>
+        <td colspan="3" style="background-color: #ddd;"><%=t "#{controller_path.tr('/', '.')}.menus.#{menu}" %></td>
       </tr>
     <%- end -%>
     <%- reset_cycle -%>

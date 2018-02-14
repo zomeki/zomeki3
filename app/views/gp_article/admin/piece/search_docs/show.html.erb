@@ -3,7 +3,7 @@
 
 <table class="show">
   <tr>
-    <th><%= @item.locale :in_category_type_ids %></th>
+    <th><%= @item.class.human_attribute_name :in_category_type_ids %></th>
     <td><%= @item.category_types.map(&:title).join(', ') %></td>
   </tr>
 </table>

@@ -4,14 +4,14 @@
 <table class="show">
   <%- if @content.display_dates(:published_at) -%>
   <tr>
-    <th><%= @item.locale :display_published_at %></th>
-    <td><%=l @item.display_published_at if @item.display_published_at %></td>
+    <th><%= @item.class.human_attribute_name :display_published_at %></th>
+    <td><%=l @item.display_published_at %></td>
   </tr>
   <%- end -%>
   <%- if @content.display_dates(:updated_at) -%>
   <tr>
-    <th><%= @item.locale :display_updated_at %></th>
-    <td><%=l @item.display_updated_at if @item.display_updated_at %></td>
+    <th><%= @item.class.human_attribute_name :display_updated_at %></th>
+    <td><%=l @item.display_updated_at %></td>
   </tr>
   <%- end -%>
 </table>

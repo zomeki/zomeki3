@@ -7,7 +7,7 @@
 
 <table class="show" style="margin: 0px;">
   <tr>
-    <th><%= @item.locale(:body) %></th></tr><tr>
+    <th><%= f.label :body %></th></tr><tr>
     <td class="cke_editor_wrapper"><%= f.text_area :body, :class => 'body ckeditor', :style => 'width: 100%' %></td>
   </tr>
 </table>
@@ -93,10 +93,10 @@ function setText(element, text ) {
 
 <table class="show">
   <tr>
-    <th><%= @item.locale(:mobile_title) %></th>
+    <th><%= f.label :mobile_title %></th>
     <td><%= f.text_field :mobile_title, :class => 'title' %></td>
   </tr><tr>
-    <th><%= @item.locale(:mobile_body) %></th>
+    <th><%= f.label :mobile_body %></th>
     <td><%= f.text_area :mobile_body, :style => 'width: 600px; height: 240px;' %></td>
   </tr>
 </table>

@@ -36,16 +36,19 @@ module Cms::Model::Base::Node
   end
 
   def admin_controller
-    model.to_s.underscore.pluralize.sub('/', '/admin/node/')
+    model.to_s.tableize.sub('/', '/admin/node/')
   end
 
-  def admin_uri
-    controller = model.underscore.pluralize.gsub(/^(.*?\/)/, "\\1c#{concept_id}/#{parent_id}/node_")
-    return "#{Core.uri}#{ZomekiCMS::ADMIN_URL_PREFIX}/#{controller}/#{id}"
-  end
-
-  def edit_admin_uri
-    "#{admin_uri}/edit"
+  def admin_uri(options = {})
+    Rails.application.routes.url_helpers.url_for({ controller: admin_controller,
+                                                   action: :show,
+                                                   concept: concept,
+                                                   parent: parent_id,
+                                                   id: id,
+                                                   only_path: true }.merge(options))
+  rescue ActionController::UrlGenerationError => e
+    error_log e
+    nil
   end
 
   def routes
@@ -78,15 +81,5 @@ module Cms::Model::Base::Node
       crumbs << c
     end
     Cms::Lib::BreadCrumbs.new(crumbs)
-  end
-
-  def locale(name)
-    _model = self.class.to_s.underscore.gsub(/\/model/, '')
-    label = I18n.t name, :scope => [:activerecord, :attributes, _model]
-    if label =~ /^translation missing:/
-      label = I18n.t name, :scope => [:activerecord, :attributes, 'cms/node']
-      return label =~ /^translation missing:/ ? name.to_s.humanize : label
-    end
-    return label
   end
 end

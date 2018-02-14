@@ -22,11 +22,10 @@ class Sys::Admin::UsersController < Cms::Controller::Admin::Base
   end
 
   def new
-    @item = Sys::User.new(
-      :state       => 'enabled',
-      :ldap        => 0,
-      :auth_no     => 2
-    )
+    @item = Sys::User.new(state: 'enabled',
+                          ldap: 0,
+                          auth_no: 2,
+                          password: SecureRandom.base64(8).slice(0, 8))
   end
 
   def create

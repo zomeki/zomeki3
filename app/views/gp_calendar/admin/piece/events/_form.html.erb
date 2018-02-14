@@ -13,15 +13,15 @@ $(function() {
 <p class="form">詳細設定</p>
 <table class="show">
   <tr>
-    <th><%= @item.locale :docs_number %></th>
+    <th><%= f.label :docs_number %></th>
     <td><%= f.array_text_field 'in_settings[docs_number]', :class => 'name' %></td>
   </tr>
   <tr>
-    <th><%= @item.locale :target_date %></th>
+    <th><%= f.label :target_date %></th>
     <td><%= f.array_select 'in_settings[target_date]', @item.class::TARGET_DATE_OPTIONS, include_blank: true %></td>
   </tr>
   <tr>
-    <th><%= @item.locale :category_ids %></th>
+    <th><%= f.label :category_ids %></th>
     <td>
       <table class="show" id="categories">
         <tbody>
@@ -38,7 +38,7 @@ $(function() {
     </td>
   </tr>
   <tr>
-    <th><%= @item.locale :table_style %></th>
+    <th><%= f.label :table_style %></th>
     <td>
       <a href="#" class="show_dialog">置き換えテキストを確認する</a>
       <table id="table_field">
@@ -87,18 +87,18 @@ $(function() {
     </td>
   </tr>
   <tr>
-    <th><%= @item.locale :date_style %></th>
+    <th><%= f.label :date_style %></th>
     <td>
       <%= f.array_text_field 'in_settings[date_style]', :class => 'name' %>
       <strong>年：</strong>%Y <strong>月：</strong>%m <strong>日：</strong>%d <strong>曜日：</strong>%A <strong>曜日（省略）：</strong>%a
     </td>
   </tr>
   <tr>
-    <th><%= @item.locale :more_link_label %></th>
+    <th><%= f.label :more_link_label %></th>
     <td><%= f.array_text_field 'in_settings[more_link_label]', :class => 'title' %></td>
   </tr>
   <tr>
-    <th><%= @item.locale :more_link_url %></th>
+    <th><%= f.label :more_link_url %></th>
     <td><%= f.array_text_field 'in_settings[more_link_url]', :class => 'title' %></td>
   </tr>
 </table>

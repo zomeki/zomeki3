@@ -1,24 +1,21 @@
 class Cms::Node < ApplicationRecord
   include Sys::Model::Base
-  include Cms::Model::Base::Page
-  include Cms::Model::Base::Page::Publisher
-  include Cms::Model::Base::Page::TalkTask
-  include Cms::Model::Base::Node
-  include Cms::Model::Base::Sitemap
   include Sys::Model::Tree
   include Sys::Model::Rel::Creator
   include Cms::Model::Site
+  include Cms::Model::Base::Sitemap
+  include Cms::Model::Base::Page
+  include Cms::Model::Base::Page::Publisher
+  include Cms::Model::Base::Page::TalkTask
   include Cms::Model::Rel::Site
   include Cms::Model::Rel::Concept
   include Cms::Model::Rel::ContentModel
   include Sys::Model::Rel::ObjectRelation
   include Cms::Model::Rel::Bracket
   include Cms::Model::Auth::Concept
+  include Cms::Model::Base::Node
 
   include StateText
-
-  REBUILDABLE_MODELS = ['Cms::Page', 'Cms::Sitemap']
-  DYNAMIC_MODELS = ['GpArticle::SearchDoc', 'GpCalendar::SearchEvent', 'Reception::Course', 'Survey::Form']
 
   belongs_to :parent, :foreign_key => :parent_id, :class_name => 'Cms::Node'
   belongs_to :route, :foreign_key => :route_id, :class_name => 'Cms::Node'
@@ -56,8 +53,11 @@ class Cms::Node < ApplicationRecord
 
   scope :public_state, -> { where(state: 'public') }
   scope :sitemap_order, -> { order('sitemap_sort_no IS NULL, sitemap_sort_no, name') }
-  scope :rebuildable_models, -> { where(model: REBUILDABLE_MODELS) }
-  scope :dynamic_models, -> { where(model: DYNAMIC_MODELS) }
+  scope :rebuildable_models, -> { where(model: ['Cms::Page', 'Cms::Sitemap']) }
+  scope :dynamic_models, -> {
+    models = Cms::Lib::Modules.modules.flat_map(&:directories).select { |d| d.options[:dynamic] }.map(&:model)
+    where(model: models)
+  }
 
   scope :search_with_params, ->(params) {
     rel = all
@@ -221,17 +221,6 @@ class Cms::Node < ApplicationRecord
     nodes.map{|n| [n.tree_title, n.id]}
   end
 
-  def locale(name)
-    model = self.class.to_s.underscore
-    label = ''
-    if model != 'cms/node'
-      label = I18n.t name, :scope => [:activerecord, :attributes, model]
-      return label if label !~ /^translation missing:/
-    end
-    label = I18n.t name, :scope => [:activerecord, :attributes, 'cms/node']
-    return label =~ /^translation missing:/ ? name.to_s.humanize : label
-  end
-
   def top_page?
     parent.try(:parent_id) == 0 && name == 'index.html'
   end
@@ -376,7 +365,7 @@ class Cms::Node < ApplicationRecord
         return false if state != 'public'
 
         run_callbacks :publish_files do
-          rendered = Cms::Admin::RenderService.new(site).render_public(public_uri)
+          rendered = Cms::RenderService.new(site).render_public(public_uri)
           return true unless publish_page(rendered, path: public_path)
 
           if site.use_kana?
@@ -385,7 +374,7 @@ class Cms::Node < ApplicationRecord
           end
 
           if site.publish_for_smart_phone?(self)
-            rendered = Cms::Admin::RenderService.new(site).render_public(public_uri, agent_type: :smart_phone)
+            rendered = Cms::RenderService.new(site).render_public(public_uri, agent_type: :smart_phone)
             publish_page(rendered, path: public_smart_phone_path, dependent: :smart_phone)
           end
         end

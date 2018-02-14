@@ -2,16 +2,16 @@
 
 <table class="show">
   <tr>
-    <th><%= @item.locale(:state) %></th>
+    <th><%= @item.class.human_attribute_name :state %></th>
     <td><%= safe{@item.status.name} %></td>
   </tr><tr>
-    <th><%= @item.locale(:published_at) %></th>
-    <td><%= @item.published_at.strftime("%Y-%m-%d %H:%M") %></td>
+    <th><%= @item.class.human_attribute_name :published_at %></th>
+    <td><%=l @item.published_at %></td>
   </tr><tr>
-    <th><%= @item.locale(:title) %></th>
+    <th><%= @item.class.human_attribute_name :title %></th>
     <td><%= @item.title %></td>
   </tr><tr>
-    <th colspan="2"><%= @item.locale(:body) %></th>
+    <th colspan="2"><%= @item.class.human_attribute_name :body %></th>
   </tr><tr>
     <td colspan="2"><%= text_area_tag 'body', @item.body, :class => 'ckeditor', :style => 'width:100%' %></td>
   </tr>

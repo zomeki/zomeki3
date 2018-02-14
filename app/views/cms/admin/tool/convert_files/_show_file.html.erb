@@ -7,10 +7,10 @@
     <td><%= @item.mime_type %></td>
   </tr><tr>
     <th>サイズ</th>
-    <td><%= number_format @item.kb_size %> KB</td>
+    <td><%= @item.kb_size %> KB</td>
   </tr><tr>
     <th>更新日時</th>
-    <td><%= @item.mtime.strftime('%Y-%m-%d %H:%M') if @item.mtime %></td>
+    <td><%=l @item.mtime %></td>
   </tr>
 </table>
 

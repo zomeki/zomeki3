@@ -11,4 +11,17 @@ module Cms::Model::Rel::Content
   def inherited_concept
     (respond_to?(:concept) && concept) || content.inherited_concept
   end
+
+  def admin_uri(options = {})
+    controller = self.class.name.tableize.sub('/', '/admin/')
+    Rails.application.routes.url_helpers.url_for({ controller: controller,
+                                                   action: :show,
+                                                   content: content,
+                                                   concept: content.concept,
+                                                   id: id,
+                                                   only_path: true }.merge(options))
+  rescue ActionController::UrlGenerationError => e
+    error_log e
+    nil
+  end
 end

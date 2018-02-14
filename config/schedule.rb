@@ -75,3 +75,18 @@ end
 every :sunday, at: '0:10 am' do
   rake "delayed_job:restart"
 end
+
+# Modules
+Dir[Rails.root.join('config/modules/**/schedule.rb')].each do |file|
+  instance_eval File.read(file)
+end
+
+# Engines
+Rails.application.config.x.engines.each do |engine|
+  gem_name = engine.name.chomp('::Engine').underscore.tr('/', '-')
+  if (spec = Gem.loaded_specs[gem_name])
+    Dir["#{spec.full_gem_path}/config/modules/**/schedule.rb"].each do |file|
+      instance_eval File.read(file)
+    end
+  end
+end

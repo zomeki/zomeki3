@@ -1,44 +1,44 @@
 <table class="show">
   <tr>
-    <th><%= @item.locale(:in_group_id) %></th>
+    <th><%= @item.class.human_attribute_name :in_group_id %></th>
     <td><%= @item.group.try!(:name) %></td>
   </tr><tr>
-    <th><%= @item.locale(:account) %></th>
+    <th><%= @item.class.human_attribute_name :account %></th>
     <td><%= @item.account %></td>
   </tr><tr>
-    <th><%= @item.locale(:name) %></th>
+    <th><%= @item.class.human_attribute_name :name %></th>
     <td><%= @item.name %></td>
   </tr><tr>
-    <th><%= @item.locale(:name_en) %></th>
+    <th><%= @item.class.human_attribute_name :name_en %></th>
     <td><%= @item.name_en %></td>
   </tr><tr>
-    <th><%= @item.locale(:email) %></th>
+    <th><%= @item.class.human_attribute_name :email %></th>
     <td><%= @item.email %></td>
   </tr><tr>
-    <th><%= @item.locale(:state) %></th>
+    <th><%= @item.class.human_attribute_name :state %></th>
     <td><%= @item.status.name %></td>
   </tr><tr>
-    <th><%= @item.locale(:auth_no) %></th>
+    <th><%= @item.class.human_attribute_name :auth_no %></th>
     <td>
       <%= @item.auth_name %>
       <%- if Core.user.root? && @item.auth_no == 5 -%>
       <table class="noDesign" style="margin-top: 10px;">
         <tr>
-          <td><%= @item.locale(:admin_creatable) %></td>
+          <td><%= @item.class.human_attribute_name :admin_creatable %></td>
           <td><%= @item.class::ADMIN_CREATABLE_OPTIONS.rassoc(@item.admin_creatable).try(:first) %></td>
         </tr>
       </table>
       <%- end -%>
     </td>
   </tr><tr>
-    <th><%= @item.locale(:role_name) %></th>
+    <th><%= @item.class.human_attribute_name :role_name %></th>
     <td><%= @item.role_names.map(&:title).join('，') %></td>
   </tr>
 </table>
 
 <table class="show">
   <tr>
-    <th><%= @item.locale(:password) %></th>
+    <th><%= @item.class.human_attribute_name :password %></th>
     <td><%= @item.editable? ? @item.password : '*'*10 %></td>
   </tr>
 </table>

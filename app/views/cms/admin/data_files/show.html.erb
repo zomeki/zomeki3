@@ -1,0 +1,24 @@
+<p class="form">基本情報</p>
+
+<table class="show">
+  <tr>
+    <th><%= @item.class.human_attribute_name :concept_id %></th>
+    <td><%= safe{@item.concept.name} %></td>
+  </tr><tr>
+    <th><%= @item.class.human_attribute_name :node_id %></th>
+    <td><%= safe{@item.node.name} %></td>
+  </tr><tr>
+    <th><%= @item.class.human_attribute_name :name %></th>
+    <td><%= @item.name %></td>
+  </tr><tr>
+    <th><%= @item.class.human_attribute_name :title %></th>
+    <td><%= @item.title %></td>
+  </tr><tr>
+    <th><%= @item.class.human_attribute_name :alt_text %></th>
+    <td><%= @item.alt_text %></td>
+  </tr><tr>
+    <th><%= @item.class.human_attribute_name :size %></th>
+    <td><%= @item.eng_unit %><br /><%= @item.image_size if @item.image_file? %></td>
+</table>
+
+<%= creator_view @item %>

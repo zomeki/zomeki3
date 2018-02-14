@@ -13,19 +13,17 @@
 
   <% @items.each do |item| %>
   <tr class="<%= cycle '', 'cycle' %>">
-    <td style="text-align: center;"><%= link_to :show, gp_category_category_type_category_category_path(content: @content,
-                                                                                                        category_type_id: @category_type.id,
-                                                                                                        category_id: @parent_category.try(:id).to_i,
-                                                                                                        id: item.id) %></td>
+    <td style="text-align: center;"><%= link_to :show, { action: :show, category_type_id: @category_type.id,
+                                                                        category_id: @parent_category.try(:id).to_i,
+                                                                        id: item } %></td>
     <td style="text-align: center;"><%= link_to :index, gp_category_category_type_category_docs_path(content: @content,
                                                                                                      category_type_id: @category_type.id,
                                                                                                      category_id: item.id) %></td>
     <td><%= item.name %></td>
-    <td><%= link_to item.title, gp_category_category_type_category_categories_path(content: @content,
-                                                                                   category_type_id: @category_type.id,
-                                                                                   category_id: item.id) %></td>
+    <td><%= link_to item.title, { action: :index, category_type_id: @category_type.id,
+                                                  category_id: item.id } %></td>
     <td style="text-align: right;"><%= item.sort_no %></td>
-    <td style="text-align: center;"><%= item.updated_at.strftime('%Y-%m-%d %H:%M') %></td>
+    <td style="text-align: center;"><%=l item.updated_at %></td>
     <td style="text-align: center;"><%= item.status.try(:name) %></td>
   </tr>
   <% end %>

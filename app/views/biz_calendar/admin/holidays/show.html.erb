@@ -1,12 +1,12 @@
 <table class="show">
   <tr>
-    <th><%= @item.locale(:state) %></th>
+    <th><%= @item.class.human_attribute_name(:state) %></th>
     <td><%= safe{@item.status.name} %></td>
   </tr><tr>
-    <th><%= @item.locale(:type_id) %></th>
+    <th><%= @item.class.human_attribute_name(:type_id) %></th>
     <td><%= safe{@item.type.title} %></td>
   </tr><tr>
-    <th><%= @item.locale(:holiday_date) %></th>
+    <th><%= @item.class.human_attribute_name(:holiday_date) %></th>
     <td><%= safe{@item.holiday_date} %></td>
   </tr><tr>
     <th>対象条件</th>
@@ -14,7 +14,7 @@
       <table id="categories">
         <tbody>
           <tr>
-            <th><%= @item.locale(:repeat_type) %></th>
+            <th><%= @item.class.human_attribute_name(:repeat_type) %></th>
             <td><%= @item.repeat_type_text %></td>
           </tr>
           <tr id ="intervalTr">
@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <th>開始日</th>
-            <td><%= safe{@item.start_date.strftime("%Y年%m月%d日")} %></td>
+            <td><%=l @item.start_date, format: :default_ja %></td>
           </tr>
           <tr>
             <th>終了日</th>
@@ -47,7 +47,7 @@
               <% elsif @item.end_type == 1 %>
                 <%= @item.end_times %>回
               <% else %>
-                <%= safe{@item.end_date.strftime("%Y年%m月%d日")} %>
+                <%=l @item.end_date, format: :default_ja %>
               <% end %>
             </td>
           </tr>

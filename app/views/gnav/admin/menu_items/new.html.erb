@@ -1,1 +1,5 @@
-<%= render 'gnav/admin/shared/new' %>
+<%= form_for @item, as: :item, url: { action: :create }, html: { method: :post } do |f| %>
+  <%= error_messages_for :item %>
+  <%= render 'form', f: f %>
+  <%= submit :create %>
+<% end %>

@@ -115,6 +115,10 @@ class Sys::Admin::Groups::ImportController < Cms::Controller::Admin::Base
       user.email        = data[:email]
       user.in_group_id  = group.id if group.id != user.group_id
 
+      if user.password == 'RANDOM'
+        user.password = SecureRandom.base64(8).slice(0, 8)
+      end
+
       if Core.user.root?
         user.admin_creatable = data[:admin_creatable] if data.include?(:admin_creatable)
       end

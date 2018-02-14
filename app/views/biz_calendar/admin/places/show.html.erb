@@ -2,28 +2,28 @@
 
 <table class="show">
   <tr>
-    <th><%= @item.locale(:state) %></th>
+    <th><%= @item.class.human_attribute_name :state %></th>
     <td><%= safe{@item.status.name} %></td>
   </tr><tr>
-    <th><%= @item.locale(:url) %></th>
+    <th><%= @item.class.human_attribute_name :url %></th>
     <td><%= @item.url %></td>
   </tr><tr>
-    <th><%= @item.locale(:title) %></th>
+    <th><%= @item.class.human_attribute_name :title %></th>
     <td><%= @item.title %></td>
   </tr><tr>
-    <th><%= @item.locale(:summary) %></th>
+    <th><%= @item.class.human_attribute_name :summary %></th>
     <td><%= text_area_tag :summary, @item.summary, class: 'ckeditor' %></td>
   </tr><tr>
-    <th><%= @item.locale(:description) %></th>
+    <th><%= @item.class.human_attribute_name :description %></th>
     <td><%= text_area_tag :description, @item.description, class: 'ckeditor' %></td>
   </tr><tr>
-    <th><%= @item.locale(:business_hours_state) %></th>
+    <th><%= @item.class.human_attribute_name :business_hours_state %></th>
     <td><%= @item.class::BUSINESS_HOURS_STATE_OPTIONS.detect{|to| to.last == @item.business_hours_state }.try(:first) %></td>
   </tr><tr>
-    <th><%= @item.locale(:business_holiday_state) %></th>
+    <th><%= @item.class.human_attribute_name :business_holiday_state %></th>
     <td><%= @item.class::BUSINESS_HOLIDAY_STATE_OPTIONS.detect{|to| to.last == @item.business_holiday_state }.try(:first) %></td>
   </tr><tr>
-    <th><%= @item.locale(:sort_no) %></th>
+    <th><%= @item.class.human_attribute_name :sort_no %></th>
     <td><%= @item.sort_no %></td>
   </tr>
 </table>

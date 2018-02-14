@@ -13,6 +13,7 @@
 /sites
 /tmp
 /upload
+/wget_sites
 
 /config/*.yml
 /config/mecab/sites
@@ -23,6 +24,6 @@
 /config/nginx/*.conf
 /config/nginx/servers
 /config/nginx/admin_servers
-/config/plugins
+/config/plugins/Gemfile
 
 /vendor/tika/*

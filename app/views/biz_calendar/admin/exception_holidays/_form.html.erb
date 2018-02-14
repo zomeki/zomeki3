@@ -2,15 +2,15 @@
 
 <table class="show">
   <tr>
-    <th><%= @item.locale(:state) %></th>
+    <th><%= f.label :state %></th>
     <td><%= f.radio_buttons :state, @item.class::STATE_OPTIONS, :class => 'states' %></td>
   </tr><tr>
-    <th><%= @item.locale(:start_date) %> <span class="note">※</span></th>
+    <th><%= f.label :start_date %> <span class="note">※</span></th>
     <td>
-      <%= f.text_field :start_date, :value => value_for_datepicker(f.object_name, :start_date),
+      <%= f.text_field :start_date, :value => l(@item.start_date),
                              :style => 'width: 150px;', :class => 'datepicker' %>
       &nbsp;&nbsp;～&nbsp;&nbsp;
-      <%= f.text_field :end_date, :value => value_for_datepicker(f.object_name, :end_date),
+      <%= f.text_field :end_date, :value => l(@item.end_date),
                              :style => 'width: 150px;', :class => 'datepicker' %>
     </td>
     </td>

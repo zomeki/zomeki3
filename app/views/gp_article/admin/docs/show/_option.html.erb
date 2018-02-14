@@ -4,7 +4,7 @@
   <%= concept_view @item, container: :tr %>
   <%= layout_view @item, container: :tr %>
   <tr>
-    <th><%= @item.locale :filename_base %></th>
+    <th><%= @item.class.human_attribute_name :filename_base %></th>
     <td>
       <%= @item.name %>
       /
@@ -14,12 +14,12 @@
   <tr>
     <th>表示端末</th>
     <td>
-      <%= @item.locale :terminal_pc_or_smart_phone if @item.terminal_pc_or_smart_phone %>
-      <%= @item.locale :terminal_mobile if @item.terminal_mobile %>
+      <%= @item.class.human_attribute_name :terminal_pc_or_smart_phone if @item.terminal_pc_or_smart_phone %>
+      <%= @item.class.human_attribute_name :terminal_mobile if @item.terminal_mobile %>
     </td>
   </tr>
   <tr>
-    <th><%= @item.locale :lang %></th>
+    <th><%= @item.class.human_attribute_name :lang %></th>
     <td><%= @item.lang_text %></td>
   </tr>
 </table>
@@ -28,11 +28,11 @@
 
 <table class="show">
   <tr>
-    <th><%= @item.locale :meta_description %></th>
+    <th><%= @item.class.human_attribute_name :meta_description %></th>
     <td><%= @item.meta_description.try(:gsub, /(\r\n|\r|\n)/, ' ') %></td>
   </tr>
   <tr>
-    <th><%= @item.locale :meta_keywords %></th>
+    <th><%= @item.class.human_attribute_name :meta_keywords %></th>
     <td><%= @item.meta_keywords %></td>
   </tr>
 </table>
@@ -41,19 +41,19 @@
 
 <table class="show">
   <tr>
-    <th><%= @item.locale :og_type %></th>
+    <th><%= @item.class.human_attribute_name :og_type %></th>
     <td><%= @item.og_type_text %></td>
   </tr>
   <tr>
-    <th><%= @item.locale :og_title %></th>
+    <th><%= @item.class.human_attribute_name :og_title %></th>
     <td><%= @item.og_title %></td>
   </tr>
   <tr>
-    <th><%= @item.locale :og_description %></th>
+    <th><%= @item.class.human_attribute_name :og_description %></th>
     <td><%=simple_format @item.og_description %></td>
   </tr>
   <tr>
-    <th><%= @item.locale :og_image %></th>
+    <th><%= @item.class.human_attribute_name :og_image %></th>
     <td><%= @item.og_image %></td>
   </tr>
 </table>
@@ -62,7 +62,7 @@
 
 <table class="show">
   <tr>
-    <th><%= @item.locale :remark %></th>
+    <th><%= @item.class.human_attribute_name :remark %></th>
     <td><%=hbr @item.remark %></td>
   </tr>
 </table>

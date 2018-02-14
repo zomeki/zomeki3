@@ -9,11 +9,11 @@
     <td><%= f.radio_buttons :state, @item.class::STATE_OPTIONS %></td>
   </tr>
   <tr>
-    <th><%= @item.locale(:name) %></th>
+    <th><%= f.label :name %></th>
     <td><%= @item.name %></td>
   </tr>
   <tr>
-    <th><%= @item.locale(:title) %></th>
+    <th><%= f.label :title %></th>
     <td><%= @item.sys_group.name %></td>
   </tr>
   <tr>

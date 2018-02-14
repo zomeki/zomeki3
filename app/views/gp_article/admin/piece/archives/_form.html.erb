@@ -3,15 +3,15 @@
 
 <table class="show">
   <tr>
-    <th><%= @item.locale :num_docs_visibility %></th>
+    <th><%= f.label :num_docs_visibility %></th>
     <td><%= f.array_select 'in_settings[num_docs_visibility]', @item.class::NUM_DOCS_VISIBILITY_OPTIONS %></td>
   </tr>
   <tr>
-    <th><%= @item.locale :term %></th>
+    <th><%= f.label :term %></th>
     <td><%= f.array_select 'in_settings[term]', @item.class::TERM_OPTIONS %></td>
   </tr>
   <tr>
-    <th><%= @item.locale :order %></th>
+    <th><%= f.label :order %></th>
     <td><%= f.array_select 'in_settings[order]', @item.class::ORDER_OPTIONS %></td>
   </tr>
 </table>

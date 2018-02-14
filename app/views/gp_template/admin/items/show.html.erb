@@ -12,7 +12,7 @@
     <td><%= @item.title %></td>
   </tr>
   <tr>
-    <th><%= @item.locale :item_type %></th>
+    <th><%= @item.class.human_attribute_name :item_type %></th>
     <td><%= @item.item_type_label %></td>
   </tr>
   <tr>

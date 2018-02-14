@@ -1,9 +1,9 @@
 <table class="show">
   <tr>
-    <th><%= @item.locale(:value) %></th>
+    <th><%= @item.class.human_attribute_name :value %></th>
     <td><%= safe{@item.layout.title} %></td>
   </tr><tr>
-    <th><%= @item.locale :sort_no %></th>
+    <th><%= @item.class.human_attribute_name :sort_no %></th>
     <td><%= @item.sort_no %></td>
   </tr>
 </table>

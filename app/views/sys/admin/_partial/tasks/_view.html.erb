@@ -5,7 +5,7 @@
     <th>公開開始日時</th>
     <td>
       <%- if (publish_task = item.tasks.detect(&:publish_task?)) -%>
-        <%=l publish_task.process_at if publish_task.process_at %>
+        <%=l publish_task.process_at %>
         <%= '（処理済）' if publish_task.state_performed? %>
       <%- end -%>
     </td>
@@ -14,7 +14,7 @@
     <th>公開終了日時</th>
     <td>
       <%- if (close_task = item.tasks.detect(&:close_task?)) -%>
-        <%=l close_task.process_at if close_task.process_at %>
+        <%=l close_task.process_at %>
         <%= '（処理済）' if close_task.state_performed? %>
       <%- end -%>
     </td>

@@ -14,7 +14,7 @@ class GpArticle::Admin::RelatedDocsController < Cms::Controller::Admin::Base
       link: @item.state_public? ? view_context.link_to(@item.title, @item.public_full_uri, target: 'preview') : @item.title,
       name: @item.name,
       content_id: @item.content_id,
-      updated_at: @item.updated_at.strftime('%Y/%m/%d %H:%M'),
+      updated_at: l(@item.updated_at),
       status: @item.status.name,
       user_name: @item.creator.user.try(:name),
       group_name: @item.creator.group.try(:name)

@@ -96,32 +96,6 @@ module Cms::FormHelper
     end
   end
 
-  def toggle_form_function
-    f = <<-EOS
-function toggle_form(link, target, open_label, close_label, quick) {
-  if (open_label === undefined) open_label = '開く▼';
-  if (close_label === undefined) close_label = '閉じる▲';
-  var l = jQuery(link);
-  var t = jQuery(target);
-  if (t.is(':hidden')) {
-    l.html(close_label);
-  } else {
-    l.html(open_label);
-  }
-  if (quick) {
-    t.toggle();
-  } else {
-    t.slideToggle();
-  }
-}
-
-$('a[data-toggle-form]').on('click', function (e) {
-  toggle_form(this, $(this).data('toggle-form'));
-});
-    EOS
-    f.html_safe
-  end
-
   def piece_replace_menu(item)
     if rep = item.replaced_page
       %Q(<div class="noticeBox">更新用のピースが作成されています : #{link_to h(rep.title), rep.admin_uri}</div>).html_safe
