@@ -15,8 +15,13 @@ class Sys::Admin::OperationLogsController < Cms::Controller::Admin::Base
     @action_type_options = [["作成","create"], ["更新","update"], ["承認","recognize"], ["削除","destroy"], ["公開","publish"], ["非公開","close"], ["ログイン","login"], ["ログアウト","logout"]]
    
     items = Core.site.operation_logs.search_with_params(params).order(id: :desc)
-    return destroy_items(items) if params[:destroy].present?
-    return export_csv(items) if params[:csv].present?
+
+    if params[:destroy].present?
+      return destroy_items(items)
+    elsif params[:csv].present?
+      csv = generate_csv(items)
+      return send_data platform_encode(csv), type: 'text/csv', filename: "sys_operation_logs_#{Time.now.to_i}.csv"
+    end 
 
     @items = items.paginate(page: params[:page], per_page: params[:limit])
 
@@ -44,8 +49,8 @@ protected
     redirect_to url_for(:action => :index)
   end
 
-  def export_csv(items)
-    csv = CSV.generate do |csv|
+  def generate_csv(items)
+    CSV.generate do |csv|
       fields = ["ログID", :created_at, :user_id, :user_name, :ipaddr, :uri, :action, :item_model, :item_id, :item_name]
       csv << fields.map {|c| c.is_a?(Symbol) ? Sys::OperationLog.human_attribute_name(c) : c }
 
@@ -64,8 +69,5 @@ protected
         csv << row
       end
     end
-
-    csv = NKF.nkf('-s', csv)
-    send_data(csv, :type => 'text/csv', :filename => "sys_operation_logs_#{Time.now.to_i}.csv")
   end
 end

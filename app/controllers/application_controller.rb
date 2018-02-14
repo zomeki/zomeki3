@@ -23,6 +23,18 @@ class ApplicationController < ActionController::Base
     CommonMailer.plain(from: fr_addr, to: to_addr, subject: subject, body: body).deliver_now
   end
 
+  def browser
+    @browser ||= Browser.new(request.user_agent)
+  end
+
+  def platform_encode(text)
+    if browser.platform.windows?
+      text.encode(Encoding::WINDOWS_31J, invalid: :replace, undef: :replace)
+    else
+      text
+    end
+  end
+
   def send_data(data, options = {})
     options = set_default_file_options(options)
     super
@@ -37,21 +49,15 @@ class ApplicationController < ActionController::Base
 
   def set_default_file_options(options)
     if options.include?(:filename)
-      options[:filename] = URI::escape(options[:filename]) if request.user_agent =~ /(MSIE|Trident)/
+      options[:filename] = URI::escape(options[:filename]) if browser.platform.windows?
       options[:type] ||= Rack::Mime.mime_type(File.extname(options[:filename]))
-      options[:disposition] ||= detect_disposition_from_mime(options[:type])
+      options[:disposition] ||= if browser.platform.android? || options[:type].to_s !~ %r!\Aimage/|\Aapplication/pdf\z!
+                                  'attachment'
+                                else
+                                  'inline'
+                                end
     end
     options
-  end
-
-  def detect_disposition_from_mime(mime_type)
-    if request.user_agent =~ /Android/
-      'attachment'
-    elsif mime_type.to_s =~ %r!\Aimage/|\Aapplication/pdf\z!
-      'inline'
-    else
-      'attachment'
-    end
   end
 
   def rescue_action(error)

@@ -13,9 +13,11 @@ class Sys::Admin::Groups::ExportController < Cms::Controller::Admin::Base
  
   def export
     if params[:do] == 'groups'
-      export_groups
+      csv = export_groups
+      send_data platform_encode(csv), type: 'text/csv', filename: "sys_groups_#{Time.now.to_i}.csv"
     elsif params[:do] == 'users'
-      export_users
+      csv = export_users
+      send_data platform_encode(csv), type: 'text/csv', filename: "sys_users_#{Time.now.to_i}.csv"
     else
       return redirect_to(:action => :index)
     end
@@ -26,7 +28,7 @@ class Sys::Admin::Groups::ExportController < Cms::Controller::Admin::Base
   end
 
   def export_groups
-    csv = CSV.generate do |csv|
+    CSV.generate do |csv|
       csv << [:code, :parent_code, :state, :level_no, :sort_no,:ldap,
         :ldap_version, :name, :name_en, :address, :tel, :tel_attend, :fax,
         :email, :note]
@@ -50,8 +52,6 @@ class Sys::Admin::Groups::ExportController < Cms::Controller::Admin::Base
         csv << row
       end
     end
-    csv = NKF.nkf('-Ws -Lw', csv)
-    send_data(csv, :type => 'text/csv; charset=Shift_JIS', :filename => "sys_groups_#{Time.now.to_i}.csv")
   end
 
   def site_users
@@ -59,7 +59,7 @@ class Sys::Admin::Groups::ExportController < Cms::Controller::Admin::Base
   end
 
   def export_users
-    csv = CSV.generate do |csv|
+    CSV.generate do |csv|
 
       csv << if Core.user.root?
         [:account, :state, :name, :name_en, :email, :auth_no, :password, :ldap, :ldap_version,
@@ -86,7 +86,5 @@ class Sys::Admin::Groups::ExportController < Cms::Controller::Admin::Base
         csv << row
       end
     end
-    csv = NKF.nkf('-Ws -Lw', csv)
-    send_data(csv, :type => 'text/csv; charset=Shift_JIS', :filename => "sys_users_#{Time.now.to_i}.csv")
   end
 end

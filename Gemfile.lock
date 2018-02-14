@@ -48,6 +48,7 @@ GEM
     binding_of_caller (0.7.2)
       debug_inspector (>= 0.0.1)
     brakeman (3.4.0)
+    browser (2.5.2)
     builder (3.2.3)
     bullet (5.1.0)
       activesupport (>= 3.0.0)
@@ -353,6 +354,7 @@ DEPENDENCIES
   activerecord-import (~> 0.17.1)
   addressable (~> 2.3.8)
   brakeman
+  browser (~> 2.5.2)
   bullet
   byebug
   coffee-rails (~> 4.2)
