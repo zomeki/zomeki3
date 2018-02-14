@@ -1,6 +1,5 @@
 class Sys::Group < ApplicationRecord
   include Sys::Model::Base
-  include Sys::Model::Base::Config
   include Sys::Model::Tree
   include Cms::Model::Site
   include Cms::Model::Auth::Site
