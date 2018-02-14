@@ -6,8 +6,7 @@ class Tag::Tag < ApplicationRecord
   include Cms::Model::Rel::Content
 
   # Content
-  belongs_to :content, :foreign_key => :content_id, :class_name => 'Tag::Content::Tag'
-  validates :content_id, presence: true
+  belongs_to :content, class_name: 'Tag::Content::Tag', required: true
 
   # Proper
   has_and_belongs_to_many :docs, -> { order(display_published_at: :desc, published_at: :desc) },

@@ -13,17 +13,14 @@ class Map::Marker < ApplicationRecord
   attr_accessor :doc # Not saved to database
 
   # Content
-  belongs_to :content, :foreign_key => :content_id, :class_name => 'Map::Content::Marker'
-  validates :content_id, :presence => true
+  belongs_to :content, class_name: 'Map::Content::Marker', required: true
 
-  belongs_to :icon_category, :class_name => 'GpCategory::Category'
+  belongs_to :icon_category, class_name: 'GpCategory::Category'
 
-  # Proper
-  validates_presence_of :state
-
-  validates :title, :presence => true
-  validates :latitude, :presence => true, :numericality => true
-  validates :longitude, :presence => true, :numericality => true
+  validates :state, presence: true
+  validates :title, presence: true
+  validates :latitude, presence: true, numericality: true
+  validates :longitude, presence: true, numericality: true
 
   after_initialize :set_defaults
   before_save :set_name

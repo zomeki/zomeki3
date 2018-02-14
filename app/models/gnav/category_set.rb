@@ -5,7 +5,7 @@ class Gnav::CategorySet < ApplicationRecord
   LAYER_OPTIONS = [['下層のカテゴリすべて', 'descendants'], ['該当カテゴリのみ', 'self']]
 
   belongs_to :menu_item
-  belongs_to :category, :class_name => 'GpCategory::Category'
+  belongs_to :category, class_name: 'GpCategory::Category'
 
   after_initialize :set_defaults
 

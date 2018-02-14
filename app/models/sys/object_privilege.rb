@@ -5,7 +5,7 @@ class Sys::ObjectPrivilege < ApplicationRecord
 
   belongs_to :privilegable, polymorphic: true
   belongs_to :concept, class_name: 'Cms::Concept'
-  belongs_to :role_name, :foreign_key => 'role_id', :class_name => 'Sys::RoleName'
+  belongs_to :role_name, foreign_key: :role_id, class_name: 'Sys::RoleName'
 
   after_save :save_actions
   after_destroy :destroy_actions

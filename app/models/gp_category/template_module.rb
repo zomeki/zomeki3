@@ -20,8 +20,7 @@ class GpCategory::TemplateModule < ApplicationRecord
                                         ['自カテゴリ直下のカテゴリ（カテゴリで分類）',                     'docs_7'],
                                         ['自カテゴリ直下のカテゴリ+1階層目カテゴリ表示（カテゴリで分類）', 'docs_8']]}
 
-  belongs_to :content, :foreign_key => :content_id, :class_name => 'GpCategory::Content::CategoryType'
-  validates :content_id, presence: true
+  belongs_to :content, class_name: 'GpCategory::Content::CategoryType', required: true
 
   after_initialize :set_defaults
 

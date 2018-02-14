@@ -17,11 +17,7 @@ class GpCalendar::Event < ApplicationRecord
   attr_accessor :doc
 
   # Content
-  belongs_to :content, :foreign_key => :content_id, :class_name => 'GpCalendar::Content::Event'
-  validates :content_id, :presence => true
-
-  # Proper
-  validates :state, :presence => true
+  belongs_to :content, class_name: 'GpCalendar::Content::Event', required: true
 
   after_initialize :set_defaults
   before_save :set_name
@@ -30,6 +26,7 @@ class GpCalendar::Event < ApplicationRecord
   after_save     GpCalendar::Publisher::EventCallbacks.new, if: :changed?
   before_destroy GpCalendar::Publisher::EventCallbacks.new
 
+  validates :state, presence: true
   validates :started_on, presence: true
   validates :ended_on, presence: true
   validates :title, presence: true

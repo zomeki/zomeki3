@@ -11,10 +11,9 @@ class Feed::FeedEntry < ApplicationRecord
   default_scope { order(created_at: :desc) }
 
   # Content
-  belongs_to :content, :foreign_key => :content_id, :class_name => 'Feed::Content::Feed'
-  validates :content_id, presence: true
+  belongs_to :content, class_name: 'Feed::Content::Feed', required: true
 
-  belongs_to :feed, :foreign_key => :feed_id, :class_name => 'Feed::Feed'
+  belongs_to :feed, class_name: 'Feed::Feed'
 
   define_site_scope :feed
 

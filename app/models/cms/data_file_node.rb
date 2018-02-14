@@ -6,7 +6,7 @@ class Cms::DataFileNode < ApplicationRecord
   include Cms::Model::Rel::Concept
   include Cms::Model::Auth::Concept::Creator
 
-  has_many :files, :foreign_key => :node_id, :class_name => 'Cms::DataFile', :primary_key => :id
+  has_many :files, foreign_key: :node_id, class_name: 'Cms::DataFile'
 
   validates :name, presence: true, uniqueness: { scope: :concept_id, case_sensitive: false }
   validate :validate_name

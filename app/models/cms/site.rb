@@ -16,30 +16,23 @@ class Cms::Site < ApplicationRecord
   SPP_TARGET_OPTIONS = [['トップページのみ書き出す', 'only_top'], ['すべて書き出す', 'all']]
   MOBILE_FEATURE_OPTIONS = [['使用する', 'enabled'], ['使用しない', 'disabled']]
 
-  has_many :concepts, -> { order(:sort_no, :name, :id) }, :foreign_key => :site_id,
-    :class_name => 'Cms::Concept', :dependent => :destroy
-  has_many :contents, -> { order(:sort_no, :name, :id) }, :foreign_key => :site_id,
-    :class_name => 'Cms::Content'
-  has_many :settings, -> { order(:name, :sort_no) }, :foreign_key => :site_id,
-    :class_name => 'Cms::SiteSetting'
-  has_many :basic_auth_users, -> { order(:name) }, :foreign_key => :site_id,
-    :class_name => 'Cms::SiteBasicAuthUser'
-  has_many :kana_dictionaries, :foreign_key => :site_id,
-    :class_name => 'Cms::KanaDictionary'
-  has_many :site_belongings, :dependent => :destroy, :class_name => 'Cms::SiteBelonging'
-  has_many :groups, :through => :site_belongings, :class_name => 'Sys::Group'
-  has_many :nodes, :dependent => :destroy
+  has_many :concepts, -> { order(:sort_no, :name, :id) }, dependent: :destroy
+  has_many :contents, -> { order(:sort_no, :name, :id) }
+  has_many :settings, -> { order(:name, :sort_no) }, class_name: 'Cms::SiteSetting'
+  has_many :basic_auth_users, -> { order(:name) }, class_name: 'Cms::SiteBasicAuthUser'
+  has_many :kana_dictionaries
+  has_many :site_belongings, dependent: :destroy
+  has_many :groups, through: :site_belongings, class_name: 'Sys::Group'
+  has_many :nodes, dependent: :destroy
   has_many :messages, class_name: 'Sys::Message', dependent: :destroy
   has_many :operation_logs, class_name: 'Sys::OperationLog'
+
   belongs_to :root_node, foreign_key: :node_id, class_name: 'Cms::Node'
 
   # conditional relations
-  has_many :root_concepts, -> { where(level_no: 1).order(:sort_no, :name, :id) },
-    class_name: 'Cms::Concept'
-  has_many :public_root_concepts, -> { where(level_no: 1, state: 'public').order(:sort_no, :name, :id) },
-    class_name: 'Cms::Concept'
-  has_many :public_sitemap_nodes, -> { where(state: 'public', model: 'Cms::Sitemap').order(:name) },
-    class_name: 'Cms::Node'
+  has_many :root_concepts, -> { where(level_no: 1).order(:sort_no, :name, :id) }, class_name: 'Cms::Concept'
+  has_many :public_root_concepts, -> { where(level_no: 1, state: 'public').order(:sort_no, :name, :id) }, class_name: 'Cms::Concept'
+  has_many :public_sitemap_nodes, -> { where(state: 'public', model: 'Cms::Sitemap').order(:name) }, class_name: 'Cms::Node'
   has_many :emergency_layout_settings, class_name: 'Cms::SiteSetting::EmergencyLayout'
 
   validates :state, :name, presence: true

@@ -10,7 +10,7 @@ class Cms::DataText < ApplicationRecord
 
   include StateText
 
-  belongs_to :concept, :foreign_key => :concept_id, :class_name => 'Cms::Concept'
+  belongs_to :concept
 
   after_save     Cms::Publisher::BracketeeCallbacks.new, if: :changed?
   before_destroy Cms::Publisher::BracketeeCallbacks.new

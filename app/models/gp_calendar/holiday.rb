@@ -17,18 +17,15 @@ class GpCalendar::Holiday < ApplicationRecord
   attr_accessor :doc
 
   # Content
-  belongs_to :content, :foreign_key => :content_id, :class_name => 'GpCalendar::Content::Event'
-  validates :content_id, :presence => true
-
-  # Proper
-  validates :state, :presence => true
+  belongs_to :content, class_name: 'GpCalendar::Content::Event', required: true
 
   after_initialize :set_defaults
 
   after_save     Cms::Publisher::ContentCallbacks.new(belonged: true), if: :changed?
   before_destroy Cms::Publisher::ContentCallbacks.new(belonged: true)
 
-  validates :title, :presence => true
+  validates :state, presence: true
+  validates :title, presence: true
 
   scope :public_state, -> { where(state: 'public') }
 

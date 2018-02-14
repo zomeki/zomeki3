@@ -14,16 +14,13 @@ class AdBanner::Banner < ApplicationRecord
   default_scope { order(:sort_no, :id) }
 
   # Content
-  belongs_to :content, :foreign_key => :content_id, :class_name => 'AdBanner::Content::Banner'
-  validates :content_id, presence: true
+  belongs_to :content, class_name: 'AdBanner::Content::Banner', required: true
 
-  # Proper
-  validates :state, presence: true
-
-  belongs_to :group, :foreign_key => :group_id, :class_name => 'AdBanner::Group'
-  has_many :clicks, :foreign_key => :banner_id, :class_name => 'AdBanner::Click', :dependent => :destroy
+  belongs_to :group, class_name: 'AdBanner::Group'
+  has_many :clicks, foreign_key: :banner_id, class_name: 'AdBanner::Click', dependent: :destroy
   has_many :publishers, class_name: 'Sys::Publisher', dependent: :destroy, as: :publishable
 
+  validates :state, presence: true
   validates :advertiser_name, presence: true
   validates :url, presence: true
   validates :token, uniqueness: { scope: :content_id } 

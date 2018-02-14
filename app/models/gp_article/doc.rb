@@ -44,15 +44,14 @@ class GpArticle::Doc < ApplicationRecord
   default_scope { where.not(state: 'archived') }
 
   # Content
-  belongs_to :content, :foreign_key => :content_id, :class_name => 'GpArticle::Content::Doc'
-  validates :content_id, :presence => true
+  belongs_to :content, class_name: 'GpArticle::Content::Doc', required: true
 
   # Page
   belongs_to :concept, foreign_key: :concept_id, class_name: 'Cms::Concept'
   belongs_to :layout, foreign_key: :layout_id, class_name: 'Cms::Layout'
 
   has_many :operation_logs, -> { where(item_model: 'GpArticle::Doc') },
-    foreign_key: :item_id, class_name: 'Sys::OperationLog'
+           foreign_key: :item_id, class_name: 'Sys::OperationLog'
 
   belongs_to :prev_edition, :class_name => self.name
   has_one :next_edition, :foreign_key => :prev_edition_id, :class_name => self.name

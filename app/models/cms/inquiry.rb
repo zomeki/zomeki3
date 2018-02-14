@@ -5,7 +5,7 @@ class Cms::Inquiry < ApplicationRecord
   include StateText
 
   belongs_to :inquirable, polymorphic: true
-  belongs_to :group, :foreign_key => :group_id, :class_name => 'Sys::Group'
+  belongs_to :group, class_name: 'Sys::Group'
 
   delegate :address, to: :group, allow_nil: true
   delegate :tel, to: :group, allow_nil: true

@@ -10,22 +10,17 @@ class Cms::Concept < ApplicationRecord
   include StateText
 
   has_many :children, -> { order(:sort_no) },
-    foreign_key: :parent_id, class_name: self.name, dependent: :destroy
+                      foreign_key: :parent_id, class_name: self.name, dependent: :destroy
   has_many :public_children, -> { where(state: 'public').order(:sort_no) },
-    foreign_key: :parent_id, class_name: self.name
+                             foreign_key: :parent_id, class_name: self.name
 
   belongs_to :parent, foreign_key: :parent_id, class_name: self.name
 
-  has_many :layouts, -> { order(:name) },
-    :foreign_key => :concept_id, :class_name => 'Cms::Layout', :dependent => :destroy
-  has_many :pieces, -> { order(:name) },
-    :foreign_key => :concept_id, :class_name => 'Cms::Piece', :dependent => :destroy
-  has_many :contents, -> { order(:name) },
-    :foreign_key => :concept_id, :class_name => 'Cms::Content', :dependent => :destroy
-  has_many :data_files , :foreign_key => :concept_id,
-    :class_name => 'Cms::DataFile', :dependent => :destroy
-  has_many :data_file_nodes , :foreign_key => :concept_id,
-    :class_name => 'Cms::DataFileNode', :dependent => :destroy
+  has_many :layouts, -> { order(:name) }, dependent: :destroy
+  has_many :pieces, -> { order(:name) }, dependent: :destroy
+  has_many :contents, -> { order(:name) }, dependent: :destroy
+  has_many :data_files, dependent: :destroy
+  has_many :data_file_nodes, dependent: :destroy
 
   validates :site_id, :state, :level_no, :name, presence: true
 

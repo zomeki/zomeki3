@@ -10,8 +10,8 @@ class Cms::DataFile < ApplicationRecord
 
   include StateText
 
-  belongs_to :concept, :foreign_key => :concept_id, :class_name => 'Cms::Concept'
-  belongs_to :node   , :foreign_key => :node_id   , :class_name => 'Cms::DataFileNode'
+  belongs_to :concept
+  belongs_to :node, class_name: 'Cms::DataFileNode'
 
   after_save     Cms::Publisher::BracketeeCallbacks.new, if: :changed?
   before_destroy Cms::Publisher::BracketeeCallbacks.new

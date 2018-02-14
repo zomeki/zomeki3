@@ -3,8 +3,7 @@ class GpArticle::RelatedDoc < ApplicationRecord
   include Cms::Model::Site
 
   # Content
-  belongs_to :content, foreign_key: :content_id, class_name: 'GpArticle::Content::Doc'
-  validates :content_id, presence: true
+  belongs_to :content, class_name: 'GpArticle::Content::Doc', required: true
 
   belongs_to :relatable, polymorphic: true
 

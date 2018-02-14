@@ -11,13 +11,11 @@ class GpTemplate::Template < ApplicationRecord
 
   default_scope { order(:sort_no, :id) }
 
-  belongs_to :content, :foreign_key => :content_id, :class_name => 'GpTemplate::Content::Template'
-  validates :content_id, presence: true
+  belongs_to :content, class_name: 'GpTemplate::Content::Template', required: true
+
+  has_many :items, dependent: :destroy
 
   validates :state, presence: true
-
-  has_many :items, :dependent => :destroy
-
   validates :title, presence: true
 
   after_initialize :set_defaults

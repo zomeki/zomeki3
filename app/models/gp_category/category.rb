@@ -19,15 +19,15 @@ class GpCategory::Category < ApplicationRecord
   default_scope { order(category_type_id: :asc, parent_id: :asc, level_no: :asc, sort_no: :asc, name: :asc) }
 
   # Page
-  belongs_to :concept, :foreign_key => :concept_id, :class_name => 'Cms::Concept'
-  belongs_to :layout,  :foreign_key => :layout_id,  :class_name => 'Cms::Layout'
+  belongs_to :concept, class_name: 'Cms::Concept'
+  belongs_to :layout, class_name: 'Cms::Layout'
   belongs_to :template
 
-  belongs_to :category_type, :foreign_key => :category_type_id, :class_name => 'GpCategory::CategoryType'
-  validates :category_type_id, presence: true
+  belongs_to :category_type, class_name: 'GpCategory::CategoryType', required: true
 
-  belongs_to :parent, :foreign_key => :parent_id, :class_name => self.name, :counter_cache => :children_count
-  has_many :children, :foreign_key => :parent_id, :class_name => self.name, :dependent => :destroy
+  belongs_to :parent, foreign_key: :parent_id, class_name: self.name, counter_cache: :children_count
+  has_many :children, foreign_key: :parent_id, class_name: self.name, dependent: :destroy
+
 
   validates :name, presence: true, uniqueness: { scope: [:category_type_id, :parent_id] },
                    format: { with: /\A[0-9A-Za-z@\.\-_\+\s]+\z/ }

@@ -19,14 +19,13 @@ class Survey::Form < ApplicationRecord
   default_scope { order(:sort_no, :id) }
 
   # Content
-  belongs_to :content, :foreign_key => :content_id, :class_name => 'Survey::Content::Form'
-  validates :content_id, presence: true
+  belongs_to :content, class_name: 'Survey::Content::Form', required: true
 
   has_many :operation_logs, -> { where(item_model: 'Survey::Form') },
-    foreign_key: :item_id, class_name: 'Sys::OperationLog'
+                            foreign_key: :item_id, class_name: 'Sys::OperationLog'
 
-  has_many :questions, :dependent => :destroy
-  has_many :form_answers, :dependent => :destroy
+  has_many :questions, dependent: :destroy
+  has_many :form_answers, dependent: :destroy
 
   validates :state, presence: true
   validates :name, presence: true, uniqueness: { scope: :content_id }, format: { with: /\A[-\w]*\z/ }

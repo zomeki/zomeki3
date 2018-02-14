@@ -7,17 +7,14 @@ class Cms::Content < ApplicationRecord
   include Cms::Model::Auth::Concept
   include Cms::Model::Base::Content
 
-  has_many :settings, -> { order(:sort_no) },
-    :foreign_key => :content_id, :class_name => 'Cms::ContentSetting', :dependent => :destroy
-  has_many :pieces, :foreign_key => :content_id, :class_name => 'Cms::Piece',
-    :dependent => :destroy
-  has_many :nodes, :foreign_key => :content_id, :class_name => 'Cms::Node',
-    :dependent => :destroy
+  has_many :settings, -> { order(:sort_no) }, class_name: 'Cms::ContentSetting', dependent: :destroy
+  has_many :pieces, dependent: :destroy
+  has_many :nodes, dependent: :destroy
 
   # conditional
-  has_one :main_node, -> { order(:id) }, foreign_key: :content_id, class_name: 'Cms::Node'
-  has_many :public_nodes, -> { public_state }, foreign_key: :content_id, class_name: 'Cms::Node'
-  has_many :public_pieces, -> { public_state }, foreign_key: :content_id, class_name: 'Cms::Piece'
+  has_one :main_node, -> { order(:id) }, class_name: 'Cms::Node'
+  has_many :public_nodes, -> { public_state }, class_name: 'Cms::Node'
+  has_many :public_pieces, -> { public_state }, class_name: 'Cms::Piece'
 
   validates :concept_id, :state, :model, :name, presence: true
   validates :code, presence: true,

@@ -12,7 +12,7 @@ class Reception::Course < ApplicationRecord
   STATE_OPTIONS = [['下書き','draft'],['公開中','public'],['非公開','closed']]
 
   # Content
-  belongs_to :content, foreign_key: :content_id, class_name: 'Reception::Content::Course'
+  belongs_to :content, class_name: 'Reception::Content::Course', required: true
 
   has_many :opens, -> { order_by_open_at }, dependent: :destroy
   has_many :public_opens, -> { public_state.order_by_open_at }, class_name: 'Reception::Open'

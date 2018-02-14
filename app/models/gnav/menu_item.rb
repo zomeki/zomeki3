@@ -14,17 +14,16 @@ class Gnav::MenuItem < ApplicationRecord
   default_scope { order(:sort_no, :id) }
 
   # Content
-  belongs_to :content, :foreign_key => :content_id, :class_name => 'Gnav::Content::MenuItem'
-  validates :content_id, :presence => true
+  belongs_to :content, class_name: 'Gnav::Content::MenuItem', required: true
 
   # Page
-  belongs_to :concept, :foreign_key => :concept_id, :class_name => 'Cms::Concept'
-  belongs_to :layout,  :foreign_key => :layout_id,  :class_name => 'Cms::Layout'
+  belongs_to :concept, class_name: 'Cms::Concept'
+  belongs_to :layout, class_name: 'Cms::Layout'
 
   has_many :category_sets
 
-  validates :name, :presence => true, :uniqueness => {:scope => :content_id}
-  validates :title, :presence => true
+  validates :name, presence: true, uniqueness: { scope: :content_id }
+  validates :title, presence: true
 
   after_save     Cms::Publisher::ContentCallbacks.new(belonged: true), if: :changed?
   before_destroy Cms::Publisher::ContentCallbacks.new(belonged: true)

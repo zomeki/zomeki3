@@ -10,8 +10,7 @@ class BizCalendar::HolidayType < ApplicationRecord
   STATE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
 
   # Content
-  belongs_to :content, :foreign_key => :content_id, :class_name => 'BizCalendar::Content::Place'
-  validates :content_id, presence: true
+  belongs_to :content, class_name: 'BizCalendar::Content::Place', required: true
 
   validates :state, :name, :title, presence: true
   validate :name_validity
