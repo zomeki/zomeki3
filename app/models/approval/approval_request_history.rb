@@ -2,7 +2,7 @@ class Approval::ApprovalRequestHistory < ApplicationRecord
   include Sys::Model::Base
   include Cms::Model::Site
 
-  REASON_OPTIONS = [['承認', 'approve'], ['差し戻し', 'passback'], ['引き戻し', 'pullback']]
+  enum_ish :reason, [:approve, :passback, :pullback]
 
   belongs_to :request, :class_name => 'Approval::ApprovalRequest'
   validates :request_id, presence: true
@@ -10,8 +10,4 @@ class Approval::ApprovalRequestHistory < ApplicationRecord
   validates :user_id, presence: true
 
   define_site_scope :request
-
-  def reason_title
-    REASON_OPTIONS.detect{|o| o.last == reason }.try(:first)
-  end
 end

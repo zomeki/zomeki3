@@ -2,10 +2,10 @@ class Sys::Task < ApplicationRecord
   include Sys::Model::Base
   include Cms::Model::Site
 
+  enum_ish :state, [:queued, :performed], default: :queued, predicate: true
+
   belongs_to :processable, polymorphic: true
   belongs_to :provider_job, class_name: 'Delayed::JobExtension', dependent: :destroy
-
-  after_initialize :set_defaults
 
   define_site_scope :processable
 
@@ -24,25 +24,11 @@ class Sys::Task < ApplicationRecord
     name == 'close'
   end
 
-  def state_queued?
-    state == 'queued'
-  end
-
-  def state_performed?
-    state == 'performed'
-  end
-
   def enqueue_job
     transaction do
       provider_job.destroy if provider_job
       job = Sys::TaskJob.set(wait_until: process_at).perform_later(id)
       update_columns(job_id: job.job_id, provider_job_id: job.provider_job_id)
     end
-  end
-
-  private
-
-  def set_defaults
-    self.state ||= 'queued' if has_attribute?(:state)
   end
 end

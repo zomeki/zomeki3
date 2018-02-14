@@ -5,7 +5,7 @@ class Sys::OperationLog < ApplicationRecord
 
   default_scope { order(updated_at: :desc) }
 
-  ACTION_OPTIONS = [["作成","create"], ["更新","update"], ["承認","recognize"], ["承認","approve"], ["削除","destroy"], ["公開","publish"], ["非公開","close"], ["期限切れ","expire"], ["ログイン","login"], ["ログアウト","logout"]]
+  enum_ish :action, [:create, :update, :recognize, :approve, :destroy, :publish, :close, :expire, :login, :logout]
 
   belongs_to :loggable, :polymorphic => true
   belongs_to :user, :class_name => 'Sys::User'
@@ -35,10 +35,6 @@ class Sys::OperationLog < ApplicationRecord
     end
     rel
   }
-
-  def action_text
-    ACTION_OPTIONS.detect{|o| o.last == action }.try(:first).to_s
-  end
 
   def set_item_info(item)
     self.item_model  = item.class.to_s

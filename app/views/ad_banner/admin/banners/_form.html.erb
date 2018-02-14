@@ -35,7 +35,7 @@
 <table class="show">
   <tr>
     <th><%= f.label :state %></th>
-    <td><%= f.radio_buttons :state, @item.class::STATE_OPTIONS, :class => 'status' %></td>
+    <td><%= f.radio_buttons :state, @item.class.state_options, :class => 'status' %></td>
   </tr>
   <tr>
     <th><%= f.label :published_at %></th>
@@ -51,7 +51,7 @@
     <th><%= f.label :url %> <span class="note">※</span></th>
     <td>
       <%= f.text_field :url, :style => 'width: 400px;' %>
-      <%= f.radio_buttons :target, AdBanner::Banner::TARGET_OPTIONS, :class => 'status' %>
+      <%= f.radio_buttons :target, @item.class.target_options, :class => 'status' %>
     </td>
   </tr>
   <tr>

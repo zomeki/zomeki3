@@ -3,7 +3,7 @@
 <table class="show">
   <tr>
     <th><%= f.label :state %></th>
-    <td><%= f.radio_buttons :state, @item.states, class: 'status' %></td>
+    <td><%= f.radio_buttons :state, @item.class.state_options, class: 'status' %></td>
   </tr><tr>
     <th><%= f.label :published_at %></th>
     <td><%= f.text_field :published_at, value: l(@item.published_at), class: 'datetimepicker pulished_at' %></td>

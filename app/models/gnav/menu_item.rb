@@ -9,9 +9,9 @@ class Gnav::MenuItem < ApplicationRecord
   include Cms::Model::Base::Sitemap
   include Cms::Model::Rel::Content
 
-  include StateText
-
   default_scope { order(:sort_no) }
+
+  enum_ish :state, [:public, :closed], default: :public
 
   # Content
   belongs_to :content, :foreign_key => :content_id, :class_name => 'Gnav::Content::MenuItem'

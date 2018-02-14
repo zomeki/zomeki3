@@ -3,12 +3,9 @@ class Feed::FeedEntry < ApplicationRecord
   include Cms::Model::Site
   include Cms::Model::Auth::Content
 
-  include StateText
-
-  STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
-  TARGET_OPTIONS = [['同一ウィンドウ', '_self'], ['別ウィンドウ', '_blank']]
-
   default_scope { order(created_at: :desc) }
+
+  enum_ish :state, [:public, :closed], default: :public
 
   # Content
   belongs_to :content, :foreign_key => :content_id, :class_name => 'Feed::Content::Feed'

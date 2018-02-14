@@ -15,7 +15,7 @@ class Cms::Node < ApplicationRecord
   include Cms::Model::Auth::Concept
   include Cms::Model::Base::Node
 
-  include StateText
+  enum_ish :state, [:draft, :recognize, :recognized, :public, :closed]
 
   belongs_to :parent, :foreign_key => :parent_id, :class_name => 'Cms::Node'
   belongs_to :route, :foreign_key => :route_id, :class_name => 'Cms::Node'

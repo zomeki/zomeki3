@@ -3,11 +3,7 @@ class Sys::Language < ApplicationRecord
   include Sys::Model::Base::Config
   include Sys::Model::Auth::Manager
 
-  include StateText
+  enum_ish :state, [:enabled, :disabled]
 
   validates :state, :name, :title, presence: true
-
-  def states
-    [['有効','enabled'],['無効','disabled']]
-  end
 end

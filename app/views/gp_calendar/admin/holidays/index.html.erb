@@ -16,8 +16,8 @@
     <td style="text-align: center;"><%= item.title %></td>
     <td style="text-align: center;"><%=l item.date, format: (item.repeat ? '* %m月%d日': '%Y年%m月%d日') %></td>
     <td style="text-align: left;"><%= item.description %></td>
-    <td style="text-align: center;"><%= item.class::KIND_OPTIONS.detect{|to| to.last == item.kind }.try(:first) %></td>
-    <td style="text-align: center;"><%= item.status.name %></td>
+    <td style="text-align: center;"><%= item.kind_text %></td>
+    <td style="text-align: center;"><%= item.state_text %></td>
   </tr>
   <%- end -%>
 </table>

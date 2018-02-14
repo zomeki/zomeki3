@@ -4,26 +4,15 @@ class GpCategory::TemplateModule < ApplicationRecord
   include Cms::Model::Rel::Content
   include Cms::Model::Auth::Content
 
-  WRAPPER_TAG_OPTIONS = [['li', 'li'], ['article', 'article'], ['section', 'section']]
-  MODULE_TYPE_OPTIONS = {'カテゴリ一覧' => [['自カテゴリ以下全て', 'categories_1'],
-                                            ['自カテゴリの1階層',  'categories_2'],
-                                            ['自カテゴリの2階層',  'categories_3'],
-                                            ['自カテゴリ以下全て＋説明', 'categories_summary_1'],
-                                            ['自カテゴリの1階層＋説明',  'categories_summary_2'],
-                                            ['自カテゴリの2階層＋説明',  'categories_summary_3']],
-                         '記事一覧' => [['自カテゴリ以下全て',                                             'docs_1'],
-                                        ['自カテゴリのみ ',                                                'docs_2'],
-                                        ['自カテゴリ以下全て+ネスト（カテゴリ種別の1階層目で分類）', 'docs_3'],
-                                        ['自カテゴリのみ+ネスト（カテゴリ種別の1階層目で分類）',     'docs_4'],
-                                        ['自カテゴリ以下全て+組織 （グループで分類）',                     'docs_5'],
-                                        ['自カテゴリのみ+組織（グループで分類）',                          'docs_6'],
-                                        ['自カテゴリ直下のカテゴリ（カテゴリで分類）',                     'docs_7'],
-                                        ['自カテゴリ直下のカテゴリ+1階層目カテゴリ表示（カテゴリで分類）', 'docs_8']]}
+  attribute :num_docs, :integer, default: 10
+  enum_ish :module_type, [:categories_1, :categories_2, :categories_3,
+                          :categories_summary_1, :categories_summary_2, :categories_summary_3,
+                          :docs_1, :docs_2, :docs_3, :docs_4, :docs_5, :docs_6, :docs_7, :docs_8],
+                         default: :categories_1
+  enum_ish :wrapper_tag, [:li, :article, :section], default: :li
 
   belongs_to :content, :foreign_key => :content_id, :class_name => 'GpCategory::Content::CategoryType'
   validates :content_id, presence: true
-
-  after_initialize :set_defaults
 
   after_save     GpCategory::Publisher::TemplateModuleCallbacks.new, if: :changed?
   before_destroy GpCategory::Publisher::TemplateModuleCallbacks.new
@@ -31,14 +20,6 @@ class GpCategory::TemplateModule < ApplicationRecord
   validates :name, presence: true, uniqueness: { scope: :content_id, case_sensitive: false },
                    format: { with: /\A[0-9A-Za-z\-_]+\z/, if: -> { name.present? } }
   validates :title, presence: true
-
-  def module_type_text
-    MODULE_TYPE_OPTIONS.values.flatten(1).detect{|o| o.last == module_type }.try(:first).to_s
-  end
-
-  def wrapper_tag_text
-    WRAPPER_TAG_OPTIONS.detect{|o| o.last == wrapper_tag }.try(:first).to_s
-  end
 
   def gp_article_content_ids=(val)
     self.module_type_feature = YAML.dump(val.select(&:present?).map(&:to_i))
@@ -56,11 +37,10 @@ class GpCategory::TemplateModule < ApplicationRecord
     end
   end
 
-  private
-
-  def set_defaults
-    self.module_type ||= MODULE_TYPE_OPTIONS.values.flatten(1).first.last if self.has_attribute?(:module_type)
-    self.wrapper_tag ||= WRAPPER_TAG_OPTIONS.first.last if self.has_attribute?(:wrapper_tag)
-    self.num_docs ||= 10 if self.has_attribute?(:num_docs)
+  class << self
+    def grouped_module_type_options
+      cats, docs = module_type_options.partition { |opt| opt.last =~ /cat/ }
+      { 'カテゴリ一覧' => cats, '記事一覧' => docs }
+    end
   end
 end

@@ -5,16 +5,13 @@ class GpCalendar::Holiday < ApplicationRecord
   include Cms::Model::Rel::Content
   include Cms::Model::Auth::Content
 
-  include StateText
-
-  STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
-  KIND_OPTIONS = [['休日', 'holiday'], ['イベント', 'event']]
-  ORDER_OPTIONS = [['作成日時（降順）', 'created_at_desc'], ['作成日時（昇順）', 'created_at_asc']]
-
   # Pseudo event attributes
   attr_accessor :href, :name, :note, :categories, :files, :image_files
   # Not saved to database
   attr_accessor :doc
+
+  enum_ish :state, [:public, :closed], default: :public
+  enum_ish :kind, [:holiday, :event], default: :holiday
 
   # Content
   belongs_to :content, :foreign_key => :content_id, :class_name => 'GpCalendar::Content::Event'
@@ -87,7 +84,6 @@ class GpCalendar::Holiday < ApplicationRecord
   private
 
   def set_defaults
-    self.state ||= STATE_OPTIONS.first.last if self.has_attribute?(:state)
     # event attributes
     self.categories ||= []
     self.files ||= []

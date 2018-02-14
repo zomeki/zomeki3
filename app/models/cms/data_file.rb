@@ -8,7 +8,7 @@ class Cms::DataFile < ApplicationRecord
   include Cms::Model::Rel::Bracketee
   include Cms::Model::Auth::Concept::Creator
 
-  include StateText
+  enum_ish :state, [:public, :closed]
 
   belongs_to :concept, :foreign_key => :concept_id, :class_name => 'Cms::Concept'
   belongs_to :node   , :foreign_key => :node_id   , :class_name => 'Cms::DataFileNode'

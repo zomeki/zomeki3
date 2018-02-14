@@ -1,7 +1,7 @@
 <%- if @content.gp_calendar_content_event -%>
 <div>
   <div class="label1"><%= f.label :event_state %></div>
-  <%= f.radio_buttons :event_state, @item.class::EVENT_STATE_OPTIONS %>
+  <%= f.radio_buttons :event_state, @item.class.event_state_options %>
 </div>
 <%- end -%>
 <div>

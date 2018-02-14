@@ -20,7 +20,7 @@
     <td><%= item.name %></td>
     <td><%= item.title %></td>
     <td style="text-align: center;"><%=l item.updated_at %></td>
-    <td style="text-align: center;"><%= item.status.try(:name) %></td>
+    <td style="text-align: center;"><%= item.state_text %></td>
   <% end %>
 
 </table>

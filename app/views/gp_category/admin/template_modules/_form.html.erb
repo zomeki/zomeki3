@@ -13,7 +13,7 @@
   </tr>
   <tr>
     <th><%= f.label :module_type %></th>
-    <td><%= f.select :module_type, grouped_options_for_select(@item.class::MODULE_TYPE_OPTIONS, @item.module_type) %></td>
+    <td><%= f.select :module_type, grouped_options_for_select(@item.class.grouped_module_type_options, @item.module_type) %></td>
   </tr>
 </table>
 
@@ -51,7 +51,7 @@
 <table class="show">
   <tr>
     <th><%= f.label :wrapper_tag %></th>
-    <td><%= f.select :wrapper_tag, @item.class::WRAPPER_TAG_OPTIONS %></td>
+    <td><%= f.select :wrapper_tag, @item.class.wrapper_tag_options %></td>
   </tr>
   <tr>
     <th><%= f.label :upper_text %></th>

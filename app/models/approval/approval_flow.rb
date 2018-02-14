@@ -4,6 +4,8 @@ class Approval::ApprovalFlow < ApplicationRecord
   include Cms::Model::Rel::Content
   include Cms::Model::Auth::Content
 
+  attribute :sort_no, :integer, default: 10
+
   # Content
   belongs_to :content, :foreign_key => :content_id, :class_name => 'Approval::Content::ApprovalFlow'
   validates :content_id, presence: true
@@ -13,17 +15,9 @@ class Approval::ApprovalFlow < ApplicationRecord
   has_many :approvals, :dependent => :destroy
   has_many :approval_requests, :dependent => :destroy
 
-  after_initialize :set_defaults
-
   validates :title, :presence => true
 
   scope :for_user, ->(user) {
     where(group_id: [nil] + user.groups.map(&:id))
   }
-
-  private
-
-  def set_defaults
-    self.sort_no ||= 10 if self.has_attribute?(:sort_no)
-  end
 end

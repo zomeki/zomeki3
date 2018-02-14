@@ -17,7 +17,7 @@
     <td><%= link_to item.title, gp_category_category_type_categories_path(content: @content, category_type_id: item.id) %></td>
     <td style="text-align: right;"><%= item.sort_no %></td>
     <td style="text-align: center;"><%=l item.updated_at %></td>
-    <td style="text-align: center;"><%= item.status.try(:name) %></td>
+    <td style="text-align: center;"><%= item.state_text %></td>
   </tr>
   <% end %>
 </table>

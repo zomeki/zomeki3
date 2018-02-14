@@ -5,9 +5,7 @@ class Reception::Open < ApplicationRecord
   include Cms::Model::Site
   include Cms::Model::Auth::Content
 
-  include StateText
-
-  STATE_OPTIONS = [['下書き','draft'],['公開','public']]
+  enum_ish :state, [:draft, :public, :closed], default: :public, predicate: true
 
   belongs_to :course
   has_many :applicants, dependent: :destroy
@@ -56,18 +54,6 @@ class Reception::Open < ApplicationRecord
     d = open_on.to_datetime
     d += start_at.seconds_since_midnight.seconds if start_at
     d
-  end
-
-  def state_draft?
-    state == 'draft'
-  end
-
-  def state_public?
-    state == 'public'
-  end
-
-  def state_closed?
-    state == 'closed'
   end
 
   def available_period?(time = Time.now)

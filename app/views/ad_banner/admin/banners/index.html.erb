@@ -22,7 +22,7 @@
     <td style="text-align: left;"><%=l item.published_at %></td>
     <td style="text-align: left;"><%=l item.closed_at %></td>
     <td style="text-align: left;"><%=l item.created_at %></td>
-    <td style="text-align: center;"><%= item.status.try(:name) %></td>
+    <td style="text-align: center;"><%= item.state_text %></td>
     <td style="text-align: center;"><%= item.sort_no %></td>
   </tr>
   <%- end -%>

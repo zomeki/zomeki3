@@ -6,11 +6,9 @@ class Map::Marker < ApplicationRecord
   include Cms::Model::Auth::Content
   include GpCategory::Model::Rel::Category
 
-  include StateText
-
-  STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
-
   attr_accessor :doc # Not saved to database
+
+  enum_ish :state, [:public, :closed], default: :public
 
   # Content
   belongs_to :content, :foreign_key => :content_id, :class_name => 'Map::Content::Marker'
@@ -25,7 +23,6 @@ class Map::Marker < ApplicationRecord
   validates :latitude, :presence => true, :numericality => true
   validates :longitude, :presence => true, :numericality => true
 
-  after_initialize :set_defaults
   before_save :set_name
   before_destroy :close_files
 
@@ -60,11 +57,6 @@ class Map::Marker < ApplicationRecord
   end
 
   private
-
-  def set_defaults
-    self.state ||= STATE_OPTIONS.first.last if self.has_attribute?(:state)
-    self.target ||= TARGET_OPTIONS.first.last if self.has_attribute?(:target)
-  end
 
   def set_name
     return if self.name.present?

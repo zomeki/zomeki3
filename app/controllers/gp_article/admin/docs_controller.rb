@@ -336,7 +336,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
           item.creator.group.try(:name),
           item.creator.user.try(:name),
           item.updated_at ? I18n.l(item.updated_at) : nil,
-          item.status.name
+          item.state_text
         ]
       end
     end

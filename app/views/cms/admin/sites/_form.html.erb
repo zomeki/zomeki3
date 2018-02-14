@@ -56,7 +56,7 @@
 <table class="show">
   <tr>
     <th><%= f.label :mobile_feature %></th>
-    <td><%= f.radio_buttons :mobile_feature, @item.class::MOBILE_FEATURE_OPTIONS %></td>
+    <td><%= f.radio_buttons :mobile_feature, @item.class.mobile_feature_options %></td>
   </tr>
 </table>
 
@@ -66,16 +66,16 @@
 <table class="show">
   <tr>
     <th><%= f.label :smart_phone_layout %></th>
-    <td><%= f.radio_buttons :smart_phone_layout, @item.class::SMART_PHONE_LAYOUT_OPTIONS %></td>
+    <td><%= f.radio_buttons :smart_phone_layout, @item.class.smart_phone_layout_options %></td>
   </tr>
   <tr>
     <th><%= f.label :smart_phone_publication %></th>
-    <td><%= f.radio_buttons :smart_phone_publication, @item.class::SMART_PHONE_PUBLICATION_OPTIONS,
+    <td><%= f.radio_buttons :smart_phone_publication, @item.class.smart_phone_publication_options,
                                                       onchange: 'confirm_smart_phone_deletion(this)' %></td>
   </tr>
   <tr>
     <th><%= f.label :spp_target %></th>
-    <td><%= f.select :spp_target, @item.class::SPP_TARGET_OPTIONS %></td>
+    <td><%= f.select :spp_target, @item.class.spp_target_options %></td>
   </tr>
 </table>
 
@@ -96,7 +96,7 @@
 <table class="show">
   <tr>
     <th><%= f.label :og_type %></th>
-    <td><%= f.select :og_type, @item.class::OGP_TYPE_OPTIONS, include_blank: true %></td>
+    <td><%= f.select :og_type, @item.class.og_type_options, include_blank: true %></td>
   </tr>
   <tr>
     <th><%= f.label :og_title %></th>

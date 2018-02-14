@@ -16,7 +16,7 @@
     <td><%= select_tag 'criteria[group_id]',
                        options_for_select(Core.site.groups_for_option, params.dig(:criteria, :group_id)), include_blank: true %></td>
     <td><%= select_tag 'criteria[result_state]',
-                       options_for_select(Cms::LinkCheckLog::RESULT_STATE_OPTIONS, params.dig(:criteria, :result_state)), include_blank: true %></td>
+                       options_for_select(Cms::LinkCheckLog.result_state_options, params.dig(:criteria, :result_state)), include_blank: true %></td>
   </tr>
 </table>
 <%- end -%>

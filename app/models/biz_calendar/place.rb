@@ -7,11 +7,11 @@ class BizCalendar::Place < ApplicationRecord
   include Cms::Model::Rel::Content
   include Cms::Model::Auth::Content
 
-  include StateText
+  attribute :sort_no, :integer, default: 10
 
-  STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
-  BUSINESS_HOURS_STATE_OPTIONS = [['表示する','visible'],['表示しない','hidden']]
-  BUSINESS_HOLIDAY_STATE_OPTIONS = [['表示する','visible'],['表示しない','hidden']]
+  enum_ish :state, [:public, :closed], default: :public, predicate: true
+  enum_ish :business_hours_state, [:visible, :hidden], default: :visible
+  enum_ish :business_holiday_state, [:visible, :hidden], default: :visible
 
   # Content
   belongs_to :content, :foreign_key => :content_id, :class_name => 'BizCalendar::Content::Place'
@@ -23,8 +23,6 @@ class BizCalendar::Place < ApplicationRecord
 
   validates :state, :url, :title, presence: true
   validate :url_validity
-
-  after_initialize :set_defaults
 
   after_save     Cms::Publisher::ContentCallbacks.new(belonged: true), if: :changed?
   before_destroy Cms::Publisher::ContentCallbacks.new(belonged: true)
@@ -65,10 +63,6 @@ class BizCalendar::Place < ApplicationRecord
       date_hours << h if h.repeat_type.blank? || (!h.repeat_type.blank? && h.check(date))
     end
     return date_hours
-  end
-
-  def state_public?
-    state == 'public'
   end
 
   def public_uri
@@ -127,12 +121,5 @@ class BizCalendar::Place < ApplicationRecord
         errors.add(:url, :taken) unless state_public?
       end
     end
-  end
-
-  def set_defaults
-    self.state                  ||= STATE_OPTIONS.first.last if self.has_attribute?(:state)
-    self.business_hours_state   ||= BUSINESS_HOURS_STATE_OPTIONS.last.last if self.has_attribute?(:business_hours_state)
-    self.business_holiday_state ||= BUSINESS_HOLIDAY_STATE_OPTIONS.last.last if self.has_attribute?(:business_holiday_state)
-    self.sort_no                ||= 10 if self.has_attribute?(:sort_no)
   end
 end

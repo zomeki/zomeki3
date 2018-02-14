@@ -30,7 +30,7 @@
       <td><%= log.link_checkable.try!(:creator).try!(:group).try!(:name) %></td>
       <td><%= log.body %></td>
       <td><%= link_to log.url, log.url, target: 'preview' %></td>
-      <td style="text-align: center;"><%= log.result_state_mark %></td>
+      <td style="text-align: center;"><%= log.result_state_text(format: :mark) %></td>
       <td><%= log.status %> <%= log.reason %></td>
       <td style="text-align: center;"><%=l log.checked_at %></td>
     </tr>

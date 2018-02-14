@@ -3,7 +3,7 @@
 <% end %>
   <tr>
     <th><%= @item.class.human_attribute_name :state %></th>
-    <td><%= safe{@item.status.name} %></td>
+    <td><%= @item.state_text %></td>
   </tr><tr>
     <th><%= @item.class.human_attribute_name :concept_id %></th>
     <td><%= safe{@item.concept.name} %></td>

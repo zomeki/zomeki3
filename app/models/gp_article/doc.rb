@@ -29,19 +29,30 @@ class GpArticle::Doc < ApplicationRecord
   include Approval::Model::Rel::Approval
   include GpTemplate::Model::Rel::Template
 
-  include StateText
-
   self.linkable_columns = [:body, :mobile_body, :body_more]
   self.searchable_columns = [:body]
 
-  TARGET_OPTIONS = [['無効', ''], ['同一ウィンドウ', '_self'], ['別ウィンドウ', '_blank'], ['添付ファイル', 'attached_file']]
-  EVENT_STATE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
-  MARKER_STATE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
-  OGP_TYPE_OPTIONS = [['article', 'article']]
-  FEATURE_1_OPTIONS = [['表示', true], ['非表示', false]]
-  FEATURE_2_OPTIONS = [['表示', true], ['非表示', false]]
-
   default_scope { where.not(state: 'archived') }
+
+  attribute :href, :string, default: ''
+  attribute :title, :string, default: ''
+  attribute :mobile_title, :string, default: ''
+  attribute :subtitle, :text, default: ''
+  attribute :summary, :text, default: ''
+  attribute :body, :text, default: ''
+  attribute :mobile_body, :text, default: ''
+  attribute :body_more, :text, default: ''
+  attribute :terminal_pc_or_smart_phone, :boolean, default: true
+  attribute :terminal_mobile, :boolean, default: true
+  attribute :body_more_link_text, :string, default: '続きを読む'
+  attribute :filename_base, :string, default: 'index'
+
+  enum_ish :state, [:draft, :approvable, :approved, :prepared, :public, :closed, :archived], predicate: true
+  enum_ish :target, ['', '_self', '_blank', 'attached_file'], default: ''
+  enum_ish :event_state, [:visible, :hidden], default: :hidden
+  enum_ish :marker_state, [:visible, :hidden], default: :hidden
+  enum_ish :og_type, [:article]
+  enum_ish :feature_1, [true, false], default: true
 
   # Content
   belongs_to :content, :foreign_key => :content_id, :class_name => 'GpArticle::Content::Doc'
@@ -217,30 +228,6 @@ class GpArticle::Doc < ApplicationRecord
     else
       %Q(#{content.admin_uri}/#{id}/file_contents/)
     end
-  end
-
-  def state_draft?
-    state == 'draft'
-  end
-
-  def state_approvable?
-    state == 'approvable'
-  end
-
-  def state_approved?
-    state == 'approved'
-  end
-
-  def state_prepared?
-    state == 'prepared'
-  end
-
-  def state_public?
-    state == 'public'
-  end
-
-  def state_closed?
-    state == 'closed'
   end
 
   def external_link?
@@ -437,30 +424,6 @@ class GpArticle::Doc < ApplicationRecord
     next_edition && state_public?
   end
 
-  def og_type_text
-    OGP_TYPE_OPTIONS.detect{|o| o.last == self.og_type }.try(:first).to_s
-  end
-
-  def target_text
-    TARGET_OPTIONS.detect{|o| o.last == self.target }.try(:first).to_s
-  end
-
-  def event_state_text
-    EVENT_STATE_OPTIONS.detect{|o| o.last == self.event_state }.try(:first).to_s
-  end
-
-  def marker_state_text
-    MARKER_STATE_OPTIONS.detect{|o| o.last == self.marker_state }.try(:first).to_s
-  end
-
-  def feature_1_text
-    FEATURE_1_OPTIONS.detect{|o| o.last == self.feature_1 }.try(:first).to_s
-  end
-
-  def feature_2_text
-    FEATURE_2_OPTIONS.detect{|o| o.last == self.feature_2 }.try(:first).to_s
-  end
-
   def qrcode_visible?
     super && content && content.qrcode_related?
   end
@@ -519,24 +482,10 @@ class GpArticle::Doc < ApplicationRecord
   end
 
   def set_defaults
-    self.target       ||= TARGET_OPTIONS.first.last if self.has_attribute?(:target)
-    self.event_state  ||= 'hidden'                  if self.has_attribute?(:event_state)
-    self.marker_state ||= 'hidden'                  if self.has_attribute?(:marker_state)
-    self.terminal_pc_or_smart_phone = true if self.has_attribute?(:terminal_pc_or_smart_phone) && self.terminal_pc_or_smart_phone.nil?
-    self.terminal_mobile            = true if self.has_attribute?(:terminal_mobile) && self.terminal_mobile.nil?
-    self.body_more_link_text ||= '続きを読む' if self.has_attribute?(:body_more_link_text)
-    self.filename_base ||= 'index' if self.has_attribute?(:filename_base)
-
-    [:href, :subtitle, :summary, :title, :mobile_title, :body, :mobile_body, :body_more].each do |column|
-      self[column] ||= '' if has_attribute?(column)
-    end
-
-    set_defaults_from_content if new_record?
+    set_defaults_from_content if new_record? && content
   end
 
   def set_defaults_from_content
-    return unless content
-
     self.qrcode_state = content.qrcode_default_state if self.has_attribute?(:qrcode_state) && self.qrcode_state.nil?
     self.feature_1 = content.feature_settings[:feature_1] if self.has_attribute?(:feature_1) && self.feature_1.nil?
     self.feature_2 = content.feature_settings[:feature_2] if self.has_attribute?(:feature_2) && self.feature_2.nil?
