@@ -85,10 +85,6 @@ class Cms::Site < ApplicationRecord
     readable?
   end
 
-  def states
-    [['公開','public']]
-  end
-
   def root_path
     Rails.root.join("sites/#{format('%04d', id)}").to_s
   end

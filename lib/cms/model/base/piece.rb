@@ -1,10 +1,6 @@
 module Cms::Model::Base::Piece
-  def states
-    [['公開','public'],['非公開','closed']]
-  end
-  
   def public?
-    return state == "public"
+    state == "public"
   end
 
   def content_name

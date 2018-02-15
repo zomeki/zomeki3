@@ -1,8 +1,4 @@
 module Cms::Model::Base::Content
-  def states
-    [['公開','public'],['非公開','closed']]
-  end
-
   def module_name(option = nil)
     name = Cms::Lib::Modules.model_name(:content, model)
     return name.to_s.gsub(/.*\//, '') if option == :short

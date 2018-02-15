@@ -57,10 +57,6 @@ class Cms::Content < ApplicationRecord
     @in_settings = values
   end
 
-  def states
-    [['公開','public']]
-  end
-
   def new_setting(name = nil)
     Cms::ContentSetting.new({:content_id => id, :name => name.to_s})
   end
