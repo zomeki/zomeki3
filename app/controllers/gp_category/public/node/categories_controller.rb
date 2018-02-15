@@ -2,7 +2,7 @@ class GpCategory::Public::Node::CategoriesController < GpCategory::Public::Node:
   def show
     @category_type = @content.category_types.find_by(name: params[:category_type_name])
     @category = @category_type.find_category_by_path_from_root_category(params[:category_names])
-    return http_error(404) unless @category.try(:public?)
+    return http_error(404) unless @category.try(:state_public?)
 
     if params[:format].in?(['rss', 'atom'])
       docs = @category.public_docs.order(display_published_at: :desc, published_at: :desc)

@@ -11,7 +11,7 @@ class GpCategory::Category < ApplicationRecord
 
   default_scope { order(category_type_id: :asc, parent_id: :asc, level_no: :asc, sort_no: :asc, name: :asc) }
 
-  enum_ish :state, [:public, :closed], default: :public
+  enum_ish :state, [:public, :closed], default: :public, predicate: true
   enum_ish :docs_order, ['',
                          'display_published_at DESC, published_at DESC',
                          'display_published_at ASC, published_at ASC',
@@ -84,7 +84,7 @@ class GpCategory::Category < ApplicationRecord
   end
 
   def public_descendants(categories=[])
-    return categories unless self.public?
+    return categories unless self.state_public?
     categories << self
     public_children.each {|c| c.public_descendants(categories) }
     return categories

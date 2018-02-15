@@ -13,7 +13,7 @@ class GpCategory::CategoryType < ApplicationRecord
 
   attribute :sort_no, :integer, default: 10
 
-  enum_ish :state, [:public, :closed], default: :public
+  enum_ish :state, [:public, :closed], default: :public, predicate: true
   enum_ish :docs_order, ['',
                          'display_published_at DESC, published_at DESC',
                          'display_published_at ASC, published_at ASC',
@@ -116,7 +116,7 @@ class GpCategory::CategoryType < ApplicationRecord
   private
 
   def clean_published_files
-    return if !destroyed? && public?
+    return if !destroyed? && state_public?
     FileUtils.rm_r(public_path) if public_path.present? && ::File.exist?(public_path)
     FileUtils.rm_r(public_smart_phone_path) if public_smart_phone_path.present? && ::File.exist?(public_smart_phone_path)
   end

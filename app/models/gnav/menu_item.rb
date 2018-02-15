@@ -60,7 +60,7 @@ class Gnav::MenuItem < ApplicationRecord
 
   def public_categories
     category_sets.inject([]) {|result, category_set|
-      next result unless category_set.category.public?
+      next result unless category_set.category.state_public?
       if category_set.layer == 'descendants'
         result | category_set.category.public_descendants_with_preload
       else

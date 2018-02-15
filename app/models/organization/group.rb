@@ -12,7 +12,7 @@ class Organization::Group < ApplicationRecord
 
   attribute :sort_no, :integer, default: 10
 
-  enum_ish :state, [:public, :closed], default: :public
+  enum_ish :state, [:public, :closed], default: :public, predicate: true
   enum_ish :docs_order, ['',
                          'display_published_at DESC, published_at DESC',
                          'display_published_at ASC, published_at ASC',
@@ -57,10 +57,6 @@ class Organization::Group < ApplicationRecord
     children.public_state
   end
 
-  def public?
-    state == 'public'
-  end
-
   def public_uri
     return '' unless content.public_node
     "#{content.public_node.public_uri}#{path_from_root}/"
@@ -91,7 +87,7 @@ class Organization::Group < ApplicationRecord
   end
 
   def public_descendants(groups=[])
-    return groups unless self.public?
+    return groups unless self.state_public?
     groups << self
     public_children.each{|c| c.public_descendants(groups) }
     return groups
