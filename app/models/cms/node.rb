@@ -5,8 +5,6 @@ class Cms::Node < ApplicationRecord
   include Cms::Model::Site
   include Cms::Model::Base::Sitemap
   include Cms::Model::Base::Page
-  include Cms::Model::Base::Page::Publisher
-  include Cms::Model::Base::Page::TalkTask
   include Cms::Model::Rel::Site
   include Cms::Model::Rel::Concept
   include Cms::Model::Rel::ContentModel

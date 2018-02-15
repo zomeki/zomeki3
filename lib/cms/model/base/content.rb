@@ -5,16 +5,6 @@ module Cms::Model::Base::Content
     name
   end
 
-  def public_path
-    id_dir  = Util::String::CheckDigit.check(format('%07d', id)).gsub(/(.*)(..)(..)(..)$/, '\1/\2/\3/\4/\1\2\3\4')
-    "#{site.public_path}/_contents/#{id_dir}"
-  end
-
-  def public_uri(class_name)
-    return nil unless node = Cms::Node.where(content_id: id, model: class_name.to_s).order(:id).first
-    node.public_uri
-  end
-
   def admin_uri(options = {})
     controller = model.tableize.sub('/', '/admin/')
     Rails.application.routes.url_helpers.url_for({ controller: controller,

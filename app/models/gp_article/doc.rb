@@ -7,8 +7,6 @@ class GpArticle::Doc < ApplicationRecord
   include Sys::Model::Rel::Task
   include Cms::Model::Site
   include Cms::Model::Base::Page
-  include Cms::Model::Base::Page::Publisher
-  include Cms::Model::Base::Page::TalkTask
   include Cms::Model::Base::Qrcode
   include Cms::Model::Rel::Content
   include Cms::Model::Rel::Inquiry

@@ -2,8 +2,7 @@ class BizCalendar::Place < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Rel::Creator
   include Cms::Model::Site
-  include Cms::Model::Base::Page::Publisher
-  include Cms::Model::Base::Page::TalkTask
+  include Cms::Model::Base::Page
   include Cms::Model::Rel::Content
   include Cms::Model::Auth::Content
 
