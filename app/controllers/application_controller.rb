@@ -29,7 +29,7 @@ class ApplicationController < ActionController::Base
 
   def platform_encode(text)
     if browser.platform.windows?
-      text.encode(Encoding::WINDOWS_31J, invalid: :replace, undef: :replace)
+      text.encode(Encoding::WINDOWS_31J, invalid: :replace, undef: :replace).gsub(/\r\n|\r|\n/, "\r\n")
     else
       text
     end
