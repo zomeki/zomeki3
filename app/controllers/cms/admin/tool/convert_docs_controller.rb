@@ -52,8 +52,8 @@ class Cms::Admin::Tool::ConvertDocsController < Cms::Controller::Admin::Base
                 item.page_published_at,
                 item.page_group_code,
                 item.page_category_names,
-                item.docable.creator.try(:group).try(:name),
-                item.docable.categories.map(&:title).join(',')]
+                item.latest_doc&.creator&.group&.name,
+                item.latest_doc&.categories&.map(&:title)&.join(',')]
       end
     end
 
