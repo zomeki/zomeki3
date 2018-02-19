@@ -322,12 +322,7 @@ class GpArticle::Doc < ApplicationRecord
       new_doc.save!
 
       files.each do |f|
-        new_attributes = f.attributes
-        new_attributes[:id] = nil
-        new_file = Sys::File.new(new_attributes)
-        new_file.file = Sys::Lib::File::NoUploadedFile.new(path: f.upload_path, mime_type: new_file.mime_type)
-        new_file.file_attachable = new_doc
-        new_file.save
+        f.duplicate(file_attachable: new_doc)
       end
 
       new_doc.categories = self.categories
