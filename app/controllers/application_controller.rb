@@ -49,7 +49,7 @@ class ApplicationController < ActionController::Base
 
   def set_default_file_options(options)
     if options.include?(:filename)
-      options[:filename] = URI::escape(options[:filename]) if browser.platform.windows?
+      options[:filename] = URI::escape(options[:filename]) if browser.ie?
       options[:type] ||= Rack::Mime.mime_type(File.extname(options[:filename]))
       options[:disposition] ||= if browser.platform.android? || options[:type].to_s !~ %r!\Aimage/|\Aapplication/pdf\z!
                                   'attachment'
