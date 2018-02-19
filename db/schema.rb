@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171016045853) do
+ActiveRecord::Schema.define(version: 20180131072709) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -43,6 +43,7 @@ ActiveRecord::Schema.define(version: 20171016045853) do
     t.integer  "thumb_height"
     t.integer  "thumb_size"
     t.text     "alt_text"
+    t.string   "sp_url"
     t.index ["token"], name: "index_ad_banner_banners_on_token", using: :btree
   end
 

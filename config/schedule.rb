@@ -83,10 +83,7 @@ end
 
 # Engines
 Rails.application.config.x.engines.each do |engine|
-  gem_name = engine.name.chomp('::Engine').underscore.tr('/', '-')
-  if (spec = Gem.loaded_specs[gem_name])
-    Dir["#{spec.full_gem_path}/config/modules/**/schedule.rb"].each do |file|
-      instance_eval File.read(file)
-    end
+  Dir["#{engine.root}/config/modules/**/schedule.rb"].each do |file|
+    instance_eval File.read(file)
   end
 end

@@ -8,7 +8,7 @@ if defined?(approval) && approval
 else
   index = nil
   approvers = []
-  type = Approval::Approval::TYPE_OPTIONS.first.last
+  type = Approval::Approval.approval_type_options.first.last
   common_attrs.merge!(disabled: true)
 end
 -%>
@@ -17,7 +17,7 @@ end
   <div>
     <span class="index"><%= index ? index + 1 : 'N' %></span>次
     <span class="approval_types">
-      <% Approval::Approval::TYPE_OPTIONS.each do |t| %>
+      <% Approval::Approval.approval_type_options.each do |t| %>
         <%= radio_button "approval_types", "#{index || 'N'}", t[1], :id => "approval_types_#{index || 'N'}_#{t[1]}", :class => "approval_type_#{t[1]}", :checked => type == t[1] %>
         <%= label "approval_types_#{index || 'N'}", "#{t[1]}", t[0], :class => "approval_type_#{t[1]}" %>
       <% end %>

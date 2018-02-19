@@ -5,7 +5,7 @@
 <table class="show">
   <tr>
     <th><%= f.label :state %></th>
-    <td><%= f.radio_buttons :state, @item.class::STATE_OPTIONS, :class => 'status' %></td>
+    <td><%= f.radio_buttons :state, @item.class.state_options, :class => 'status' %></td>
   </tr>
   <tr>
     <th><%= f.label :name %> <span class="note">※</span></th>
@@ -17,7 +17,7 @@
   </tr>
   <tr>
     <th><%= f.label :sitemap_state %></th>
-    <td><%= f.radio_buttons :sitemap_state, @item.class::SITEMAP_STATE_OPTIONS %></td>
+    <td><%= f.radio_buttons :sitemap_state, @item.class.sitemap_state_options %></td>
   </tr>
   <tr>
     <th><%= f.label :sort_no %></th>

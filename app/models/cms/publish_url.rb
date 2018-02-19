@@ -4,5 +4,5 @@ class Cms::PublishUrl < ApplicationRecord
   include Cms::Model::Rel::Node
 
   belongs_to :publishable, polymorphic: true
-  belongs_to :content, class_name: 'Cms::Content'
+  belongs_to :content
 end

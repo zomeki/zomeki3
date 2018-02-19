@@ -13,7 +13,11 @@ class Cms::Admin::Tool::LinkCheckController < Cms::Controller::Admin::Base
 
     @logs = logs.search_with_params(params[:criteria] || {}).order(:id)
                      .preload(link_checkable: { creator: :group })
-    return export_csv(@logs) if params[:csv]
+
+    if params[:csv]
+      csv = generate_csv(@logs)
+      return send_data platform_encode(csv), type: 'text/csv', filename: "cms_link_check_logs_#{Time.now.to_i}.csv"
+    end
 
     @logs = @logs.paginate(page: params[:page], per_page: params[:limit])
 
@@ -26,22 +30,19 @@ class Cms::Admin::Tool::LinkCheckController < Cms::Controller::Admin::Base
 
   private
 
-  def export_csv(logs)
+  def generate_csv(logs)
     require 'csv'
-    data = CSV.generate(force_quotes: true) do |csv|
+    CSV.generate(force_quotes: true) do |csv|
       csv << ['ページタイトル', '作成者グループ', 'リンクテキスト', 'リンクURL', '結果', 'ステータス', '確認日時']
       logs.each do |log|
         csv << [log.title,
                 log.link_checkable.try!(:creator).try!(:group).try!(:name),
                 log.body,
                 log.url,
-                log.result_state_mark,
+                log.result_state_text(format: :mark),
                 [log.status, log.reason].compact.join(' '),
                 log.checked_at ? I18n.l(log.checked_at) : nil]
       end
     end
-
-    data = NKF.nkf('-s', data)
-    send_data data, type: 'text/csv', filename: "cms_link_check_logs_#{Time.now.to_i}.csv"
   end
 end

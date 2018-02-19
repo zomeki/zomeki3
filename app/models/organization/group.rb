@@ -2,33 +2,29 @@ class Organization::Group < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Rel::Creator
   include Cms::Model::Site
-  include Cms::Model::Base::Page::Publisher
-  include Cms::Model::Base::Page::TalkTask
+  include Cms::Model::Base::Page
   include Cms::Model::Base::Sitemap
   include Cms::Model::Rel::Content
   include Cms::Model::Auth::Content
 
-  include StateText
+  default_scope { order(:sort_no, :sys_group_code) }
 
-  STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
-  DOCS_ORDER_OPTIONS = [['上位設定を継承', ''],
-                        ['公開日（降順）', 'display_published_at DESC, published_at DESC'],
-                        ['公開日（昇順）', 'display_published_at ASC, published_at ASC'],
-                        ['更新日（降順）', 'display_updated_at DESC, updated_at DESC'],
-                        ['更新日（昇順）', 'display_updated_at ASC, updated_at ASC']]
+  attribute :sort_no, :integer, default: 10
 
-  default_scope { order("#{self.table_name}.sort_no IS NULL").order(:sort_no, :sys_group_code) }
+  enum_ish :state, [:public, :closed], default: :public, predicate: true
+  enum_ish :docs_order, ['',
+                         'display_published_at DESC, published_at DESC',
+                         'display_published_at ASC, published_at ASC',
+                         'display_updated_at DESC, updated_at DESC',
+                         'display_updated_at ASC, updated_at ASC'], default: ''
 
   # Page
-  belongs_to :concept, :class_name => 'Cms::Concept'
-  belongs_to :layout, :class_name => 'Cms::Layout'
-  belongs_to :more_layout, :class_name => 'Cms::Layout'
+  belongs_to :concept, class_name: 'Cms::Concept'
+  belongs_to :layout, class_name: 'Cms::Layout'
+  belongs_to :more_layout, class_name: 'Cms::Layout'
 
   # Content
-  belongs_to :content, :foreign_key => :content_id, :class_name => 'Organization::Content::Group'
-  validates :content_id, :presence => true
-
-  after_initialize :set_defaults
+  belongs_to :content, class_name: 'Organization::Content::Group', required: true
 
   after_save     Organization::Publisher::GroupCallbacks.new, if: :changed?
   before_destroy Organization::Publisher::GroupCallbacks.new
@@ -58,14 +54,6 @@ class Organization::Group < ApplicationRecord
 
   def public_children
     children.public_state
-  end
-
-  def docs_order_text
-    DOCS_ORDER_OPTIONS.detect{|o| o.last == self.docs_order }.try(:first).to_s
-  end
-
-  def public?
-    state == 'public'
   end
 
   def public_uri
@@ -98,7 +86,7 @@ class Organization::Group < ApplicationRecord
   end
 
   def public_descendants(groups=[])
-    return groups unless self.public?
+    return groups unless self.state_public?
     groups << self
     public_children.each{|c| c.public_descendants(groups) }
     return groups
@@ -140,12 +128,6 @@ class Organization::Group < ApplicationRecord
   end
 
   private
-
-  def set_defaults
-    self.state = STATE_OPTIONS.first.last if self.has_attribute?(:state) && self.state.nil?
-    self.docs_order = '' if self.has_attribute?(:docs_order) && self.docs_order.nil?
-    self.sort_no = 10 if self.has_attribute?(:sort_no) && self.sort_no.nil?
-  end
 
   def name_uniqueness_in_siblings
     siblings = parent ? parent.children : content.top_layer_groups

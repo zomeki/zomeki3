@@ -20,7 +20,7 @@
     <td>
       <%= link_to @item.href, @item.href, target: '_blank' %>
       <%- if @item.href.present? -%>
-      <span style="margin-left: 10px;"><%= @item.class::TARGET_OPTIONS.detect{|to| to.last == @item.target }.try(:first) %></span>
+      <span style="margin-left: 10px;"><%= @item.target_text %></span>
       <%- end -%>
     </td>
   </tr>

@@ -3,7 +3,7 @@ class Cms::FileTransfer < ApplicationRecord
   include Cms::Model::Site
   include Cms::Model::Rel::Site
 
-  STATE_OPTIONS = [['待機中','queued'],['実行中','performing']]
+  enum_ish :state, [:queued, :performing]
 
   validates :path, presence: true
   validate :validate_queue, on: :create

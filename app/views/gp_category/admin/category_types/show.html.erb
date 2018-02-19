@@ -3,7 +3,7 @@
 <table class="show">
   <tr>
     <th><%= @item.class.human_attribute_name :state %></th>
-    <td><%= @item.status.try(:name) %></td>
+    <td><%= @item.state_text %></td>
   </tr>
   <tr>
     <th><%= @item.class.human_attribute_name :name %></th>
@@ -23,7 +23,7 @@
   </tr>
   <tr>
     <th><%= @item.class.human_attribute_name :docs_order %></th>
-    <td><%= @item.class::DOCS_ORDER_OPTIONS.detect{|o| o.last == @item.docs_order }.try(:first) %></td>
+    <td><%= @item.docs_order_text %></td>
   </tr>
   <tr>
     <th><%= @item.class.human_attribute_name :sort_no %></th>

@@ -18,9 +18,9 @@
     <th><%= f.label :state %></th>
     <td>
       <%- if @item.root? -%>
-        <%= @item.status.name %>
+        <%= @item.state_text %>
       <%- else -%>
-        <%= f.radio_buttons :state, @item.states, :class => 'status' %>
+        <%= f.radio_buttons :state, @item.class.state_options, :class => 'status' %>
       <%- end -%>
     </td>
   </tr><tr>
@@ -47,7 +47,7 @@
       <table id="auth_extra_settings" class="noDesign" style="margin-top: 10px; <%= 'display: none;' if @item.auth_no != 5 %>">
         <tr>
           <td><%= f.label :admin_creatable %></td>
-          <td><%= f.radio_buttons :admin_creatable, @item.class::ADMIN_CREATABLE_OPTIONS %></td>
+          <td><%= f.radio_buttons :admin_creatable, @item.class.admin_creatable_options %></td>
         </tr>
       </table>
       <%- end -%>

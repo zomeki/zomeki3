@@ -4,8 +4,7 @@ class AdBanner::Click < ApplicationRecord
 
   default_scope { order(created_at: :desc) }
 
-  belongs_to :banner, :foreign_key => :banner_id, :class_name => 'AdBanner::Banner'
-  validates :banner_id, presence: true
+  belongs_to :banner, class_name: 'AdBanner::Banner', required: true
 
   define_site_scope :banner
 end

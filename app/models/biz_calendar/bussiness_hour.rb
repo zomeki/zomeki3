@@ -5,16 +5,14 @@ class BizCalendar::BussinessHour < ApplicationRecord
   include Cms::Model::Auth::Content
   include BizCalendar::Model::Base::Date
 
-  include StateText
-
-  STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
-  REPEAT_OPTIONS = [['毎日', 'daily'], ['平日（月～金）', 'weekday'], ['土日祝日', 'saturdays'], ['祝日', 'holiday'],
-    ['毎週', 'weekly'], ['毎月', 'monthly'], ['毎年', 'yearly']]
   REPEAT_WEEK_OPTIONS = [['月', 'mon'], ['火', 'tue'], ['水', 'wed'], ['木', 'thurs'], ['金', 'fri'], ['土', 'sat'],['日', 'sun']]
-  REPEAT_CRITERION_OPTIONS = [['日付', 'day'], ['曜日', 'week']]
-  END_TYPE_OPTIONS = [['なし', 0], ['回数指定', 1], ['日指定', 2]]
 
-  belongs_to :place,  :foreign_key => :place_id, :class_name => 'BizCalendar::Place'
+  enum_ish :state, [:public, :closed], default: :public, predicate: true
+  enum_ish :repeat_type, [:daily, :weekday, :saturdays, :holiday, :weekly, :monthly, :yearly]
+  enum_ish :repeat_criterion, [:day, :week], default: :day
+  enum_ish :end_type, [0, 1, 2], default: 0
+
+  belongs_to :place, class_name: 'BizCalendar::Place'
 
   delegate :content, to: :place
 
@@ -22,8 +20,6 @@ class BizCalendar::BussinessHour < ApplicationRecord
   validate :dates_range
   validate :repeat_setting
   validate :ended_setting
-
-  after_initialize :set_defaults
 
   after_save     Cms::Publisher::ContentCallbacks.new(belonged: true), if: :changed?
   before_destroy Cms::Publisher::ContentCallbacks.new(belonged: true)
@@ -199,18 +195,6 @@ class BizCalendar::BussinessHour < ApplicationRecord
     return sdate.blank? ? @all_repeat_dates : @repeat_dates
   end
 
-  def state_public?
-    state == 'public'
-  end
-
-  def repeat_type_text
-    REPEAT_OPTIONS.detect{|o| o.last == self.repeat_type }.try(:first).to_s
-  end
-
-  def repeat_criterion_text
-    REPEAT_CRITERION_OPTIONS.detect{|o| o.last == self.repeat_criterion }.try(:first).to_s
-  end
-
   def weeks
     repeat_week.collect{|c| c[0]}
   end
@@ -232,7 +216,7 @@ class BizCalendar::BussinessHour < ApplicationRecord
   end
 
   def repeat_weeks
-    repeat_week_ary.map{ |w| REPEAT_WEEK_OPTIONS.detect{|o| o.last == w[0] }.try(:first).to_s }
+    repeat_week_ary.map{ |w| self.class::REPEAT_WEEK_OPTIONS.detect{|o| o.last == w[0] }.try(:first).to_s }
   end
 
   def fixed_date
@@ -327,11 +311,5 @@ class BizCalendar::BussinessHour < ApplicationRecord
     if self.end_type == 2
       errors.add(:end_date, "を入力してください。") if self.end_date.blank?
     end
-  end
-
-  def set_defaults
-    self.state    ||= STATE_OPTIONS.first.last if self.has_attribute?(:state)
-    self.end_type ||= END_TYPE_OPTIONS.first.last if self.has_attribute?(:end_type)
-    self.repeat_criterion ||= REPEAT_CRITERION_OPTIONS.first.last if self.has_attribute?(:repeat_criterion)
   end
 end

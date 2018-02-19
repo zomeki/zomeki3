@@ -1,0 +1,6 @@
+ja:
+  enum_ish:
+    mailin/filter:
+      logic:
+        and: AND
+        or: OR

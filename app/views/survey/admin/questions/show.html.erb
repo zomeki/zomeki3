@@ -2,7 +2,7 @@
 <table class="show">
   <tr>
     <th><%= @item.class.human_attribute_name :state %></th>
-    <td><%= @item.status.name %></td>
+    <td><%= @item.state_text %></td>
   </tr>
   <tr>
     <th><%= @item.class.human_attribute_name :title %></th>
@@ -14,7 +14,7 @@
   </tr>
   <tr>
     <th><%= @item.class.human_attribute_name :form_type %></th>
-    <td><%= @item.class::FORM_TYPE_OPTIONS.detect{|o| o.last == @item.form_type }.try(:first) %></td>
+    <td><%= @item.form_type_text %></td>
   </tr>
   <tr>
     <th><%= @item.class.human_attribute_name :form_text_max_length %><br />（種別が入力の時に使用）</th>
@@ -26,7 +26,7 @@
   </tr>
   <tr>
     <th><%= @item.class.human_attribute_name :required %></th>
-    <td><%= @item.class::REQUIRED_OPTIONS.detect{|o| o.last == @item.required }.try(:first) %></td>
+    <td><%= @item.required_text %></td>
   </tr>
   <tr>
     <th><%= @item.class.human_attribute_name :style_attribute %></th>

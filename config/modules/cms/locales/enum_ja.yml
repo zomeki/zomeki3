@@ -1,0 +1,61 @@
+ja:
+  enum_ish:
+    defaults:
+      state:
+        enabled: 有効
+        disabled: 無効
+        visible: 表示
+        hidden: 非表示
+        draft: 下書き
+        recognize: 承認待ち
+        approvable: 承認待ち
+        recognized: 公開待ち
+        approved: 公開待ち
+        prepared: 公開日時待ち
+        public: 公開
+        closed: 非公開
+        archived: 履歴
+        queued: 待機中
+        performing: 実行中
+        performed: 実行済
+      sitemap_state:
+        visible: 表示
+        hidden: 非表示
+      qrcode_state:
+        visible: 表示
+        hidden: 非表示
+    cms/site:
+      og_type:
+        article: article
+        product: product
+        profile: profile
+      smart_phone_layout:
+        smart_phone: スマートフォンレイアウトを優先
+        pc: PCレイアウトで表示
+      smart_phone_publication:
+        'no': 書き出さない
+        'yes': 書き出す
+      spp_target:
+        only_top: トップページのみ書き出す
+        all: すべて書き出す
+      mobile_feature:
+        enabled: 使用する
+        disabled: 使用しない
+    cms/site_basic_auth_user:
+      target_type:
+        all: サイト全体
+        _system: 管理画面
+        directory: ディレクトリ
+    cms/link_check_log:
+      result_state:
+        success: 成功
+        failure: 失敗
+        skip: スキップ
+      result_state/mark:
+        success: ○
+        failure: ×
+        skip: －
+    cms/piece_link_item:
+      target:
+        '': 指定なし
+        _blank: 別ウィンドウ

@@ -3,12 +3,11 @@ class Cms::LinkCheckLog < ApplicationRecord
   include Cms::Model::Site
   include Cms::Model::Rel::Site
 
-  RESULT_STATE_OPTIONS = [['成功','success'],['失敗','failure'],['スキップ','skip']]
-  RESULT_STATE_MARK_OPTIONS = [['○','success'],['×','failure'],['－','skip']]
+  attribute :checked, :boolean, default: false
+
+  enum_ish :result_state, [:success, :failure, :skip]
 
   belongs_to :link_checkable, polymorphic: true
-
-  after_initialize :set_defaults
 
   scope :search_with_params, ->(criteria) {
     rel = all
@@ -26,14 +25,4 @@ class Cms::LinkCheckLog < ApplicationRecord
            end
     rels.compact.reduce(:union)
   }
-
-  def result_state_mark
-    RESULT_STATE_MARK_OPTIONS.rassoc(result_state).try(:first)
-  end
-
-  private
-
-  def set_defaults
-    self.checked = false if self.has_attribute?(:checked) && self.checked.nil?
-  end
 end

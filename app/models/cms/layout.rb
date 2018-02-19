@@ -7,6 +7,8 @@ class Cms::Layout < ApplicationRecord
   include Cms::Model::Rel::Bracket
   include Cms::Model::Auth::Concept
 
+  enum_ish :state, [:public, :closed], default: :public
+
   after_save     Cms::Publisher::LayoutCallbacks.new, if: :changed?
   before_destroy Cms::Publisher::LayoutCallbacks.new
 
@@ -14,10 +16,6 @@ class Cms::Layout < ApplicationRecord
   validates :name, presence: true,
                    uniqueness: { scope: :concept_id, case_sensitive: false },
                    format: { with: /\A[0-9a-zA-Z\-_]+\z/, if: -> { name.present? }, message: :invalid_bracket_name }
-
-  def states
-    [['公開','public']]
-  end
 
   def concept_name_and_title
     "#{concept.try(:name)} : #{title}"

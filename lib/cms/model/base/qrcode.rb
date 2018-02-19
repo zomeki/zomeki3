@@ -1,15 +1,14 @@
 module Cms::Model::Base::Qrcode
   extend ActiveSupport::Concern
 
-  QRCODE_OPTIONS = [['表示', 'visible'], ['非表示', 'hidden']]
   QRCODE_FILENAME = 'qrcode.png'
+
+  included do
+    enum_ish :qrcode_state, [:visible, :hidden], default: :hidden
+  end
 
   def qrcode_visible?
     qrcode_state == 'visible'
-  end
-
-  def qrcode_state_text
-    QRCODE_OPTIONS.rassoc(qrcode_state).try(:first).to_s
   end
 
   concerning :Publication do

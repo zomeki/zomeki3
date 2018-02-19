@@ -1,0 +1,57 @@
+ja:
+  enum_ish:
+    biz_calendar/place:
+      business_hours_state:
+        visible: 表示する
+        hidden: 表示しない
+      business_holiday_state:
+        visible: 表示する
+        hidden: 表示しない
+    biz_calendar/bussiness_holiday:
+      repeat_type:
+        daily: 毎日
+        weekday: 平日（月～金）
+        saturdays: 土日祝日
+        holiday: 祝日
+        weekly: 毎週
+        monthly: 毎月
+        yearly: 毎年
+      repeat_week:
+        mon: 月
+        tue: 火
+        wed: 水
+        thurs: 木
+        fri: 金
+        sat: 土
+        sun: 日
+      repeat_criterion:
+        day: 日付
+        week: 曜日
+      end_type:
+        0: なし
+        1: 回数指定
+        2: 日指定
+    biz_calendar/bussiness_hour:
+      repeat_type:
+        daily: 毎日
+        weekday: 平日（月～金）
+        saturdays: 土日祝日
+        holiday: 祝日
+        weekly: 毎週
+        monthly: 毎月
+        yearly: 毎年
+      repeat_week:
+        mon: 月
+        tue: 火
+        wed: 水
+        thurs: 木
+        fri: 金
+        sat: 土
+        sun: 日
+      repeat_criterion:
+        day: 日付
+        week: 曜日
+      end_type:
+        0: なし
+        1: 回数指定
+        2: 日指定

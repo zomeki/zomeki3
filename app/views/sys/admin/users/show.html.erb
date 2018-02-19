@@ -16,7 +16,7 @@
     <td><%= @item.email %></td>
   </tr><tr>
     <th><%= @item.class.human_attribute_name :state %></th>
-    <td><%= @item.status.name %></td>
+    <td><%= @item.state_text %></td>
   </tr><tr>
     <th><%= @item.class.human_attribute_name :auth_no %></th>
     <td>
@@ -25,7 +25,7 @@
       <table class="noDesign" style="margin-top: 10px;">
         <tr>
           <td><%= @item.class.human_attribute_name :admin_creatable %></td>
-          <td><%= @item.class::ADMIN_CREATABLE_OPTIONS.rassoc(@item.admin_creatable).try(:first) %></td>
+          <td><%= @item.admin_creatable_text %></td>
         </tr>
       </table>
       <%- end -%>

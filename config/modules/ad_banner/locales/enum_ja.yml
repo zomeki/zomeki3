@@ -1,0 +1,6 @@
+ja:
+  enum_ish:
+    ad_banner/banner:
+      target:
+        _self: 同一ウィンドウ
+        _blank: 別ウィンドウ

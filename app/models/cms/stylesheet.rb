@@ -4,7 +4,7 @@ class Cms::Stylesheet < ApplicationRecord
   include Cms::Model::Rel::Site
   include Cms::Model::Auth::Concept
 
-  belongs_to :concept, class_name: 'Cms::Concept'
+  belongs_to :concept
 
   after_save :update_descendants, if: :path_changed?
   after_destroy :destroy_descendants, if: :path_changed?

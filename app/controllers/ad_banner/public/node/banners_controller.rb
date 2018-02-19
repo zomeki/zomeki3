@@ -24,7 +24,7 @@ class AdBanner::Public::Node::BannersController < Cms::Controller::Public::Base
 
       @banner.clicks.create(referer: request.referer, remote_addr: request.remote_ip, user_agent: request.user_agent)
 
-      redirect_to @banner.url
+      redirect_to request.smart_phone? && @banner.sp_url.presence || @banner.url
     else
       http_error(404)
     end

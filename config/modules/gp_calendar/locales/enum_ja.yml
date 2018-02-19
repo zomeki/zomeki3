@@ -1,0 +1,16 @@
+ja:
+  enum_ish:
+    gp_calendar/event:
+      target:
+        _self: 同一ウィンドウ
+        _blank: 別ウィンドウ
+      order:
+        created_at_desc: 作成日時（降順）
+        created_at_asc: 作成日時（昇順）
+    gp_calendar/holiday:
+      kind:
+        holiday: 休日
+        event: イベント
+      order:
+        created_at_desc: 作成日時（降順）
+        created_at_asc: 作成日時（昇順）

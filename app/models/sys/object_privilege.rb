@@ -3,9 +3,11 @@ class Sys::ObjectPrivilege < ApplicationRecord
   include Cms::Model::Site
   include Cms::Model::Auth::Site::Role
 
+  enum_ish :action, [:read, :create, :update, :delete]
+
   belongs_to :privilegable, polymorphic: true
   belongs_to :concept, class_name: 'Cms::Concept'
-  belongs_to :role_name, :foreign_key => 'role_id', :class_name => 'Sys::RoleName'
+  belongs_to :role_name, foreign_key: :role_id, class_name: 'Sys::RoleName'
 
   after_save :save_actions
   after_destroy :destroy_actions
@@ -30,10 +32,6 @@ class Sys::ObjectPrivilege < ApplicationRecord
                   end
   end
 
-  def action_labels
-    [['閲覧','read'], ['作成','create'], ['編集','update'], ['削除','delete']]
-  end
-
   def privileges
     self.class.where(role_id: role_id, privilegable_id: privilegable_id, privilegable_type: privilegable_type).order(:action)
   end
@@ -44,7 +42,7 @@ class Sys::ObjectPrivilege < ApplicationRecord
   
   def action_names
     _actions = actions
-    action_labels.map { |label, name| _actions.include?(name) ? label : nil }.compact
+    self.class.action_options.map { |label, name| _actions.include?(name) ? label : nil }.compact
   end
 
   private

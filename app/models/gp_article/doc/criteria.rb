@@ -1,12 +1,6 @@
 class GpArticle::Doc::Criteria
   include ActiveModel::Model
-
-  TARGET_OPTIONS = [['作成記事','user'], ['所属記事','group'], ['全所属','all']]
-  TARGET_STATE_OPTIONS = [['公開前','processing'], ['公開中','public'], ['公開終了','closed'], ['全記事','all']]
-  DATE_COLUMN_OPTIONS = [['作成','created_at'], ['更新','updated_at'], ['承認','recognized_at'], ['公開','published_at']]
-  DATE_OPERATION_OPTIONS = [['本日','today'],['今週','this_week'],['先週','last_week'],['指定日','equal'],['以前','before'],['以後','after'],['期間','between']]
-  STATE_OPTIONS = [['下書き','draft'],['承認待ち','approvable'],['公開待ち','approved'],['公開日時待ち','prepared'],['公開中','public'],['公開終了','closed']]
-  USER_OPERATION_OPTIONS = [['作成','create'], ['承認','approve'], ['公開','publish']]
+  extend EnumIsh
 
   CHECK_BOX_OPTIONS = [
     [:texts,'概要','summary'], [:assocs,'添付ファイル','files'], [:marker_state,'地図','visible'], [:tasks,'公開開始日時','publish'],
@@ -23,7 +17,15 @@ class GpArticle::Doc::Criteria
     :user_operation, :user_group_id, :user_name,
     :marker_state, :event_state, :texts, :assocs, :tasks
   ]
+
   attr_accessor(*ATTRIBUTES)
+
+  enum_ish :target, [:user, :group, :all]
+  enum_ish :target_state, [:processing, :public, :closed, :all]
+  enum_ish :date_column, [:created_at, :updated_at, :recognized_at, :published_at]
+  enum_ish :date_operation, [:today, :this_week, :last_week, :equal, :before, :after, :between]
+  enum_ish :state, [:draft, :approvable, :approved, :prepared, :public, :closed]
+  enum_ish :user_operation, [:create, :approve, :publish]
 
   def initialize(params = {})
     params = params.slice(*ATTRIBUTES)
@@ -40,13 +42,9 @@ class GpArticle::Doc::Criteria
     self.dates = dates.map { |date| Date.parse(date) rescue nil }.compact
   end
 
-  def target_text
-    TARGET_OPTIONS.rassoc(target).try(:first)
-  end
-
-  def target_state_text
+  def target_state_text_for_csv
     if target_state
-      TARGET_STATE_OPTIONS.rassoc(target_state).try(:first)
+      target_state_text
     elsif target_public
       '公開記事'
     end
@@ -54,18 +52,6 @@ class GpArticle::Doc::Criteria
 
   def category_texts
     category_ids.map { |id| GpCategory::Category.find_by(id: id).try(:title) }.compact
-  end
-
-  def state_text
-    STATE_OPTIONS.rassoc(state).try(:first)
-  end
-
-  def date_column_text
-    DATE_COLUMN_OPTIONS.rassoc(date_column).try(:first)
-  end
-
-  def date_operation_text
-    DATE_OPERATION_OPTIONS.rassoc(date_operation).try(:first)
   end
 
   def date_options_text
@@ -77,10 +63,6 @@ class GpArticle::Doc::Criteria
       strs << I18n.l(date)
     end
     strs.compact.join(' ')
-  end
-
-  def user_operation_text
-    USER_OPERATION_OPTIONS.rassoc(user_operation).try(:first)
   end
 
   def user_group_id_text
@@ -112,7 +94,7 @@ class GpArticle::Doc::Criteria
   def to_csv_string
     headers = []
     headers << "所属:#{target_text}" if target_text.present?
-    headers << "公開:#{target_state_text}" if target_state_text.present?
+    headers << "公開:#{target_state_text_for_csv}" if target_state_text_for_csv.present?
     headers << "記事番号:#{serial_no}" if serial_no.present?
     headers << "キーワード:#{free_word}" if free_word.present?
     headers << "カテゴリ:#{category_texts.join(' ')}" if category_texts.present?

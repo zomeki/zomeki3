@@ -9,7 +9,7 @@
   <%- end -%>
   <tr>
     <th><%= @item.class.human_attribute_name :state %></th>
-    <td><%= @item.status.name %></td>
+    <td><%= @item.state_text %></td>
   </tr><tr>
     <th><%= @item.class.human_attribute_name :code %></th>
     <td><%= @item.code %></td>

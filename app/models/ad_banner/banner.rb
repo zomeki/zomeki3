@@ -6,29 +6,25 @@ class AdBanner::Banner < ApplicationRecord
   include Cms::Model::Rel::Content
   include Cms::Model::Auth::Content
 
-  include StateText
+  default_scope { order(:sort_no, :id) }
 
-  STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
-  TARGET_OPTIONS = [['同一ウィンドウ', '_self'], ['別ウィンドウ', '_blank']]
+  attribute :sort_no, :integer, default: 10
 
-  default_scope { order(:sort_no) }
+  enum_ish :state, [:public, :closed], default: :public
+  enum_ish :target, [:_self, :_blank], default: :_self
 
   # Content
-  belongs_to :content, :foreign_key => :content_id, :class_name => 'AdBanner::Content::Banner'
-  validates :content_id, presence: true
+  belongs_to :content, class_name: 'AdBanner::Content::Banner', required: true
 
-  # Proper
-  validates :state, presence: true
-
-  belongs_to :group, :foreign_key => :group_id, :class_name => 'AdBanner::Group'
-  has_many :clicks, :foreign_key => :banner_id, :class_name => 'AdBanner::Click', :dependent => :destroy
+  belongs_to :group, class_name: 'AdBanner::Group'
+  has_many :clicks, foreign_key: :banner_id, class_name: 'AdBanner::Click', dependent: :destroy
   has_many :publishers, class_name: 'Sys::Publisher', dependent: :destroy, as: :publishable
 
+  validates :state, presence: true
   validates :advertiser_name, presence: true
   validates :url, presence: true
   validates :token, uniqueness: { scope: :content_id } 
 
-  after_initialize :set_defaults
   before_validation :set_token
 
   after_save     Cms::Publisher::ContentCallbacks.new(belonged: true), if: :changed?
@@ -67,10 +63,6 @@ class AdBanner::Banner < ApplicationRecord
     "#{content.public_node.public_uri}#{token}"
   end
 
-  def target_text
-    TARGET_OPTIONS.detect{|o| o.last == self.target }.try(:first).to_s
-  end
-
   def published?
     now = Time.now
     (state == 'public') && (published_at.nil? || published_at <= now) && (closed_at.nil? || closed_at > now)
@@ -81,12 +73,6 @@ class AdBanner::Banner < ApplicationRecord
   end
 
   private
-
-  def set_defaults
-    self.state    ||= STATE_OPTIONS.first.last if self.has_attribute?(:state)
-    self.target   ||= TARGET_OPTIONS.last.last if self.has_attribute?(:target)
-    self.sort_no  ||= 10 if self.has_attribute?(:sort_no)
-  end
 
   def set_token
     self.token ||= Util::String::Token.generate_unique_token(self.class, :token)

@@ -52,7 +52,7 @@
       <td class="num"><%= proc.current_per_total %></td>
     </tr><tr>
       <th class="name">ステータス</th>
-      <td class="name"><%= proc.status %> <span id="reloadTimer"></span></td>
+      <td class="name"><%= proc.state_text %> <span id="reloadTimer"></span></td>
       <th class="date">更新日時</th>
       <td class="date"><%=l proc.updated_at, format: :long %></td>
       <th class="num">成功</th>

@@ -4,8 +4,7 @@ class GpCategory::Template < ApplicationRecord
   include Cms::Model::Rel::Content
   include Cms::Model::Auth::Content
 
-  belongs_to :content, :foreign_key => :content_id, :class_name => 'GpCategory::Content::CategoryType'
-  validates :content_id, presence: true
+  belongs_to :content, class_name: 'GpCategory::Content::CategoryType', required: true
 
   has_many :category_types
   has_many :categories

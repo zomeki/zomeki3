@@ -7,17 +7,14 @@ class Reception::Course < ApplicationRecord
   include Cms::Model::Auth::Content
   include GpCategory::Model::Rel::Category
 
-  include StateText
-
-  STATE_OPTIONS = [['下書き','draft'],['公開中','public'],['非公開','closed']]
+  enum_ish :state, [:draft, :public, :closed], default: :public, predicate: true
 
   # Content
-  belongs_to :content, foreign_key: :content_id, class_name: 'Reception::Content::Course'
+  belongs_to :content, class_name: 'Reception::Content::Course', required: true
 
   has_many :opens, -> { order_by_open_at }, dependent: :destroy
   has_many :public_opens, -> { public_state.order_by_open_at }, class_name: 'Reception::Open'
 
-  before_save :set_defaults
   after_save :set_name
 
   after_save     Cms::Publisher::ContentCallbacks.new(belonged: true), if: :changed?
@@ -69,18 +66,6 @@ class Reception::Course < ApplicationRecord
          .merge(Reception::Open.public_state)
          .merge(Reception::Open.available_period)
          .merge(Reception::Open.within_capacity)
-  end
-
-  def state_draft?
-    state == 'draft'
-  end
-
-  def state_public?
-    state == 'public'
-  end
-
-  def state_closed?
-    state == 'closed'
   end
 
   def public_uri
@@ -141,10 +126,6 @@ class Reception::Course < ApplicationRecord
   end
 
   private
-
-  def set_defaults
-    self.state ||= 'public'
-  end
 
   def set_name
     update_column(:name, id) if name.blank?
