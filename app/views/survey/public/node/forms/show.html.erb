@@ -16,32 +16,33 @@
         </div>
 
         <div class="answer_content">
+          <%- answer = @form_answer.answers.detect { |a| a.question_id == question.id } -%>
           <%- case question.form_type -%>
           <%- when 'text_field', 'text_field_email' -%>
-            <%= text_field_tag "question_answers[#{question.id}]", @form_answer.detect_answer_by_question(question).try(:content), style: question.style_attribute %>
+            <%= text_field_tag "question_answers[#{question.id}]", answer.try(:content), style: question.style_attribute %>
             <%- if question.form_text_max_length -%>
             <span class="max_length">（最大<%= question.form_text_max_length %>文字）</span>
             <%- end -%>
           <%- when 'text_area' -%>
-            <%= text_area_tag "question_answers[#{question.id}]", @form_answer.detect_answer_by_question(question).try(:content), style: question.style_attribute, size: '100x10' %>
+            <%= text_area_tag "question_answers[#{question.id}]", answer.try(:content), style: question.style_attribute, size: '100x10' %>
             <%- if question.form_text_max_length -%>
             <span class="max_length">（最大<%= question.form_text_max_length %>文字）</span>
             <%- end -%>
           <%- when 'select' -%>
             <%= select_tag "question_answers[#{question.id}]",
-                           options_for_select(question.form_options_for_select, @form_answer.detect_answer_by_question(question).try(:content)), style: question.style_attribute,
+                           options_for_select(question.form_options_for_select, answer.try(:content)), style: question.style_attribute,
                            include_blank: true %>
           <%- when 'radio_button' -%>
             <%= hidden_field_tag "question_answers[#{question.id}][]" %>
             <%- question.form_options_for_select.each do |option| -%>
               <label><%= radio_button_tag "question_answers[#{question.id}]", option,
-                                          option == @form_answer.detect_answer_by_question(question).try(:content) %> <%= option %></label>
+                                          option == answer.try(:content) %> <%= option %></label>
             <%- end -%>
           <%- when 'check_box' -%>
             <%= hidden_field_tag "question_answers[#{question.id}][]" %>
             <%- question.form_options_for_select.each do |option| -%>
               <label><%= check_box_tag "question_answers[#{question.id}][]", option,
-                                       @form_answer.detect_answer_by_question(question).try(:content).try(:split, ',').try(:include?, option) %> <%= option %></label>
+                                       answer.try(:content).try(:split, ',').try(:include?, option) %> <%= option %></label>
             <%- end -%>
           <%- end -%>
         </div>

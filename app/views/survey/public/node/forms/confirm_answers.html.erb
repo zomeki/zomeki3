@@ -9,21 +9,16 @@
         </div>
 
         <% if question.form_type != 'free' %>
-        <div class="answer_content">
-          <%= hidden_field_tag "question_answers[#{question.id}]", @form_answer.detect_answer_by_question(question).try(:content) %>
-          <%- case question.form_type -%>
-          <%- when 'text_field', 'text_field_email' -%>
-            <%= @form_answer.detect_answer_by_question(question).try(:content) %>
-          <%- when 'text_area' -%>
-            <%=simple_format @form_answer.detect_answer_by_question(question).try(:content) %>
-          <%- when 'select' -%>
-            <%= @form_answer.detect_answer_by_question(question).try(:content) %>
-          <%- when 'radio_button' -%>
-            <%= @form_answer.detect_answer_by_question(question).try(:content) %>
-          <%- when 'check_box' -%>
-            <%= @form_answer.detect_answer_by_question(question).try(:content) %>
-          <%- end -%>
-        </div>
+          <%- answer = @form_answer.answers.detect { |a| a.question_id == question.id } -%>
+          <div class="answer_content">
+            <%= hidden_field_tag "question_answers[#{question.id}]", answer.try(:content) %>
+            <%- case question.form_type -%>
+            <%- when 'text_field', 'text_field_email', 'select', 'radio_button', 'check_box' -%>
+              <%= answer.try(:content) %>
+            <%- when 'text_area' -%>
+              <%=simple_format answer.try(:content) %>
+            <%- end -%>
+          </div>
         <% end %>
 
         <%- if question.description.present? -%>

@@ -5,7 +5,7 @@
 <ul class="contentMenu">
 <%-
 current = :setting
-current = params[:id].to_sym if params[:id].present?
+current = params[:id].to_sym if params[:id].in?(%w(maintenance_mode common_ssl))
 -%>
 <%= render 'layouts/admin/cms/navi/setting', current: current %>
 </ul>

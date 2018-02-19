@@ -10,21 +10,18 @@ class Survey::FormAnswer < ApplicationRecord
 
   has_many :answers, -> { order(:id) }, dependent: :destroy
 
-  validate :validate_base
+  validate :validate_answers
 
   define_site_scope :form
 
   def question_answers=(qa)
     qa.each do |key, value|
       next unless question = form.questions.find_by(id: key)
-      answers.build(question: question, content: value.kind_of?(Array) ? value.reject{|v| v.blank? }.join(',') : value)
+      answers.build(form_answer: self,
+                    question: question,
+                    content: value.kind_of?(Array) ? value.reject{|v| v.blank? }.join(',') : value)
     end
     qa
-  end
-
-  # Use before saving answers
-  def detect_answer_by_question(question)
-    answers.detect{|a| a.question_id == question.id }
   end
 
   def reply_to
@@ -49,18 +46,13 @@ class Survey::FormAnswer < ApplicationRecord
 
   private
 
-  def validate_base
+  def validate_answers
     errors.keys.each{|k| errors.delete(k) unless [:base, :form_id].include?(k) }
     answers.each do |answer|
       next if answer.question.form_type == 'free'
-      if ['text_field', 'text_area'].include?(answer.question.form_type)
-        max = answer.question.form_text_max_length
-        errors.add(:base, "#{answer.question.title}は#{max}文字以内で入力してください。") if max && max < answer.content.size
+      if answer.invalid?
+        answer.errors.full_messages.each { |msg| errors.add(:base, msg) } 
       end
-      if [ 'text_field_email' ].include?(answer.question.form_type)
-        errors.add(:base, "#{answer.question.title}を正しく入力してください。") if answer.content !~ /\A.+@.+\z/ && !answer.content.blank?
-      end
-      errors.add(:base, "#{answer.question.title}を入力してください。") if answer.question.required? && answer.content.blank?
     end
   end
 end

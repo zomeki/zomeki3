@@ -57,6 +57,12 @@ class Survey::Content::Form < Cms::Content
     setting_value(:common_ssl) == 'enabled'
   end
 
+  def block_words
+    words = setting_value(:block_word).to_s.split(/(\r\n|\n|\t| |　)+/).uniq.map(&:strip).select(&:present?)
+    words += Sys::Setting.block_words
+    words.uniq
+  end
+
   def form_state_options(user = Core.user)
     options = FORM_STATE_OPTIONS.clone
     options.reject! { |o| o.last == 'public' } unless user.has_auth?(:manager)
