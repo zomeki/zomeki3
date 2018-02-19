@@ -93,14 +93,11 @@ Rails.application.routes.draw do
 
   # Engines
   Rails.application.config.x.engines.each do |engine|
-    gem_name = engine.name.chomp('::Engine').underscore.tr('/', '-')
-    if (spec = Gem.loaded_specs[gem_name])
-      Dir["#{spec.full_gem_path}/config/modules/**/routes.rb"].each do |file|
-        load file
-      end
-     end
-     mount engine => "/#{ZomekiCMS::ADMIN_URL_PREFIX}/plugins/#{gem_name}"
-   end
+    Dir["#{engine.root}/config/modules/**/routes.rb"].each do |file|
+      load file
+    end
+    mount engine => "/#{ZomekiCMS::ADMIN_URL_PREFIX}/plugins/#{engine.engine_name}"
+  end
 
   # Exception
   get "#{admin}/*path" => "cms/admin/exception#index"

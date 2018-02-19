@@ -21,13 +21,8 @@ class Sys::Plugin < ApplicationRecord
     name.split('/').last
   end
 
-  def engine_class_name
-    gem_name.gsub('-', '/').classify + '::Engine'
-  end
-
-  def engine_route
-    route = name.split('/').last
-    "/#{ZomekiCMS::ADMIN_URL_PREFIX}/plugins/#{route}"
+  def engine
+    Rails.application.config.x.engines.detect { |engine| engine.root.to_s.split('/').last == gem_name }
   end
 
   def source
