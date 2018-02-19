@@ -31,10 +31,6 @@ class Sys::File < ApplicationRecord
     !!duplicated
   end
 
-  def parent
-    file_attachable
-  end
-
   def duplicate(attrs = {})
     new_item = self.class.new(attributes.except('id').merge(attrs))
     new_item.skip_upload
