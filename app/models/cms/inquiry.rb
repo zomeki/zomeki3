@@ -1,6 +1,5 @@
 class Cms::Inquiry < ApplicationRecord
   include Sys::Model::Base
-  include Cms::Model::Site
 
   enum_ish :state, [:visible, :hidden]
 
@@ -14,7 +13,7 @@ class Cms::Inquiry < ApplicationRecord
   delegate :email, to: :group, allow_nil: true
   delegate :note, to: :group, allow_nil: true
 
-  define_site_scope :inquirable
+  nested_scope :in_site, through: :inquirable
 
   def visible?
     state == 'visible'

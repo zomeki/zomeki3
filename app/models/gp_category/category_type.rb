@@ -1,7 +1,6 @@
 class GpCategory::CategoryType < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Rel::Creator
-  include Cms::Model::Site
   include Cms::Model::Auth::Content
   include Cms::Model::Base::Page
   include Cms::Model::Base::Sitemap

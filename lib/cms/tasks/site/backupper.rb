@@ -2,7 +2,7 @@ class Cms::Tasks::Site::Backupper
   def initialize(site, dir:)
     @site = site
     @dir = dir
-    @models = Cms::Model::Site.sub_models
+    @models = Cms::Tasks::Site::Scanner.in_site_models
 
     require 'postgres-copy'
     @models.each do |model|

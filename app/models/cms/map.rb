@@ -1,10 +1,9 @@
 class Cms::Map < ApplicationRecord
   include Sys::Model::Base
-  include Cms::Model::Site
 
   belongs_to :map_attachable, polymorphic: true
   has_many :markers, class_name: 'Cms::MapMarker', dependent: :destroy
   accepts_nested_attributes_for :markers
 
-  define_site_scope :map_attachable
+  nested_scope :in_site, through: :map_attachable
 end

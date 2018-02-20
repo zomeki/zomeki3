@@ -1,7 +1,6 @@
 class Reception::Applicant < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Rel::Creator
-  include Cms::Model::Site
   include Cms::Model::Auth::Content
 
   attr_accessor :email_confirmation
@@ -37,7 +36,7 @@ class Reception::Applicant < ApplicationRecord
   validate :validate_capacity_for_admin, if: :in_register_from_admin
   validate :validate_capacity_for_public, if: :in_register_from_public
 
-  define_site_scope :open
+  nested_scope :in_site, through: :open
 
   scope :received_state, -> { where(state: 'received') }
   scope :canceled_state, -> { where(state: 'canceled') }

@@ -2,7 +2,6 @@ class AdBanner::Banner < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Base::File
   include Sys::Model::Rel::Creator
-  include Cms::Model::Site
   include Cms::Model::Rel::Content
   include Cms::Model::Auth::Content
 

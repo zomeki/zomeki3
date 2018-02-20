@@ -1,13 +1,12 @@
 class Sys::EditableGroup < ApplicationRecord
   include Sys::Model::Base
-  include Cms::Model::Site
 
   ALL_GROUP = 0
 
   belongs_to :editable, polymorphic: true
   belongs_to :group
 
-  define_site_scope :editable
+  nested_scope :in_site, through: :editable
 
   def all_group?
     group_id == ALL_GROUP

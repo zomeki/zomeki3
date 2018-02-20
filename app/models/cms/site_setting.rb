@@ -1,7 +1,6 @@
 class Cms::SiteSetting < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Base::Setting
-  include Cms::Model::Site
   include Cms::Model::Rel::Site
   include Cms::Model::Auth::Site
 

@@ -1,6 +1,5 @@
 class Sys::Sequence < ApplicationRecord
   include Sys::Model::Base
-  include Cms::Model::Site
   include Cms::Model::Rel::Site
 
   validates :version, uniqueness: { scope: [:site_id, :name] }

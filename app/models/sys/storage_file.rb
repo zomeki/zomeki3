@@ -1,7 +1,6 @@
 class Sys::StorageFile < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::TextExtraction
-  include Cms::Model::Site
 
   before_save :set_mime_type
 

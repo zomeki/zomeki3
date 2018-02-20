@@ -5,7 +5,6 @@ class GpArticle::Doc < ApplicationRecord
   include Sys::Model::Rel::EditableGroup
   include Sys::Model::Rel::File
   include Sys::Model::Rel::Task
-  include Cms::Model::Site
   include Cms::Model::Base::Page
   include Cms::Model::Base::Qrcode
   include Cms::Model::Rel::Content

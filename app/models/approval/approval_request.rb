@@ -1,6 +1,5 @@
 class Approval::ApprovalRequest < ApplicationRecord
   include Sys::Model::Base
-  include Cms::Model::Site
 
   attribute :current_index, :integer, default: 0
 
@@ -17,7 +16,7 @@ class Approval::ApprovalRequest < ApplicationRecord
 
   validates :user_id, presence: true
 
-  define_site_scope :approval_flow
+  nested_scope :in_site, through: :approval_flow
 
   def current_approval
     approval_flow.approvals.find_by(index: current_index)

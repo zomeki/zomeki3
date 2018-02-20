@@ -1,6 +1,5 @@
 class GpCategory::TemplateModule < ApplicationRecord
   include Sys::Model::Base
-  include Cms::Model::Site
   include Cms::Model::Rel::Content
   include Cms::Model::Auth::Content
 

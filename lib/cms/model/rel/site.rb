@@ -3,6 +3,6 @@ module Cms::Model::Rel::Site
 
   included do
     belongs_to :site, class_name: 'Cms::Site'
-    scope :in_site, ->(site) { where(site_id: site) }
+    nested_scope :in_site, through: :site
   end
 end

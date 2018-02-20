@@ -1,6 +1,5 @@
 class Sys::Editor < ApplicationRecord
   include Sys::Model::Base
-  include Cms::Model::Site
 
   belongs_to :editable, polymorphic: true, required: true
 
@@ -10,7 +9,7 @@ class Sys::Editor < ApplicationRecord
   before_save :set_user
   before_save :set_group
 
-  define_site_scope :editable
+  nested_scope :in_site, through: :editable
 
   def group_and_user_name
     "#{group.try!(:name)}#{user.try!(:name)}"

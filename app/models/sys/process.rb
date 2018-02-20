@@ -1,7 +1,6 @@
 class Sys::Process < ApplicationRecord
   self.table_name = "sys_processes"
   include Sys::Model::Base
-  include Cms::Model::Site
   include Cms::Model::Rel::Site
 
   ALL_PROCESSES = [

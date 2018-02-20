@@ -1,6 +1,5 @@
 class Survey::FormAnswer < ApplicationRecord
   include Sys::Model::Base
-  include Cms::Model::Site
 
   apply_simple_captcha
 
@@ -12,7 +11,7 @@ class Survey::FormAnswer < ApplicationRecord
 
   validate :validate_answers
 
-  define_site_scope :form
+  nested_scope :in_site, through: :form
 
   def question_answers=(qa)
     qa.each do |key, value|

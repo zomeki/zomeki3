@@ -1,9 +1,8 @@
 class GpArticle::DocsTagTag < ApplicationRecord
   include Sys::Model::Base
-  include Cms::Model::Site
 
   belongs_to :doc, class_name: 'GpArticle::Doc'
   belongs_to :tag, class_name: 'Tag::Tag'
 
-  define_site_scope :doc
+  nested_scope :in_site, through: :doc
 end

@@ -1,6 +1,5 @@
 class Survey::Question < ApplicationRecord
   include Sys::Model::Base
-  include Cms::Model::Site
   include Cms::Model::Auth::Content
 
   default_scope { order(:sort_no, :id) }
@@ -21,7 +20,7 @@ class Survey::Question < ApplicationRecord
   validates :title, presence: true
   validates :sort_no, presence: true
 
-  define_site_scope :form
+  nested_scope :in_site, through: :form
 
   scope :public_state, -> { where(state: 'public') }
 

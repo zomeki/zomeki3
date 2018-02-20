@@ -1,6 +1,5 @@
 class Cms::LinkCheckLog < ApplicationRecord
   include Sys::Model::Base
-  include Cms::Model::Site
   include Cms::Model::Rel::Site
 
   attribute :checked, :boolean, default: false
