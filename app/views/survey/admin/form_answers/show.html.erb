@@ -26,9 +26,13 @@
 <table class="show">
   <%- @item.answers.each do |answer| -%>
   <tr>
-    <th><%= safe{answer.question.title} %></th>
+    <th><%= answer.question.title if answer.question %></th>
     <td>
-      <%=simple_format answer.content %>
+      <%- if answer.attachment -%>
+        <%= link_to answer.content, { do: :download, answer_id: answer.id } %>
+      <%- else -%>
+        <%=hbr answer.content %>
+      <%- end -%>
     </td>
   </tr>
   <%- end -%>

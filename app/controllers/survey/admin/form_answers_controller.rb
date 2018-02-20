@@ -16,6 +16,14 @@ class Survey::Admin::FormAnswersController < Cms::Controller::Admin::Base
     if params[:csv]
       csv = generate_csv(@items)
       return send_data platform_encode(csv), type: 'text/csv', filename: "answers_#{Time.now.to_i}.csv"
+    elsif params[:attachments]
+      answers = @form.answers.where(form_answer_id: @items.select(:id))
+      if Survey::Attachment.where(answer_id: answers.select(:id)).sum(:size) > 100 * 1024**2
+        return redirect_to url_for(action: :index), notice: 'ファイルサイズが100MBを超えています。ダウンロード対象を絞り込んでください。'
+      else
+        data = Survey::AttachmentCompressService.new(answers).compress
+        return send_data data, type: 'application/zip', filename: "attachments_#{Time.now.to_i}.zip"
+      end
     end
 
     @items = @items.paginate(page: params[:page], per_page: 30)
@@ -24,6 +32,12 @@ class Survey::Admin::FormAnswersController < Cms::Controller::Admin::Base
   end
 
   def show
+    if params[:do] == 'download'
+      answer = @item.answers.find_by(id: params[:answer_id])
+      return http_error(404) if answer.nil? || (attachment = answer.attachment).nil?
+      return send_data attachment.data, type: attachment.mime_type, filename: attachment.name, disposition: :attachment
+    end
+
     _show @item
   end
 

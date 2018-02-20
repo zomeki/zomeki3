@@ -25,6 +25,14 @@
     <td><%=simple_format @item.form_options %></td>
   </tr>
   <tr>
+    <th><%= @item.class.human_attribute_name :form_file_max_size %><br />（種別が添付の時に使用）</th>
+    <td><%= "#{@item.form_file_max_size} MB" if @item.form_file_max_size %></td>
+  </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :form_file_extension %><br />（種別が添付の時に使用）</th>
+    <td><%= @item.form_file_extension %></td>
+  </tr>
+  <tr>
     <th><%= @item.class.human_attribute_name :required %></th>
     <td><%= @item.required_text %></td>
   </tr>

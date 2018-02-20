@@ -3,8 +3,6 @@
 <div class="actionMenu">
 <%- case action_name -%>
 <%- when 'index' -%>
-  <%= link_to 'フォーム一覧', survey_forms_path %>
-  <span class="separator"></span>
   <%= link_to '集計', survey_form_aggregations_path %>
 <%- when 'show' -%>
   <%= link_to '一覧', { action: :index } %>

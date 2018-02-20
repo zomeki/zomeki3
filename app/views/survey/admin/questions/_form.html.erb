@@ -27,6 +27,14 @@
     <td><%= f.text_area :form_options, :size => '100x5' %></td>
   </tr>
   <tr>
+    <th><%= f.label :form_file_max_size %><br />（種別が添付の時に使用）</th>
+    <td><%= f.text_field :form_file_max_size, class: 'number' %> MB</td>
+  </tr>
+  <tr>
+    <th><%= f.label :form_file_extension %><br />（種別が添付の時に使用）</th>
+    <td><%= f.text_field :form_file_extension, class: 'title' %> コンマ区切り</td>
+  </tr>
+  <tr>
     <th><%= f.label :required %></th>
     <td><%= f.radio_buttons :required, @item.class.required_options %></td>
   </tr>

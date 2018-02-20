@@ -16,10 +16,29 @@ class Survey::FormAnswer < ApplicationRecord
 
   def question_answers=(qa)
     qa.each do |key, value|
-      next unless question = form.questions.find_by(id: key)
-      answers.build(form_answer: self,
-                    question: question,
-                    content: value.kind_of?(Array) ? value.reject{|v| v.blank? }.join(',') : value)
+      next unless question = form.questions.detect { |q| q.id == key.to_i }
+      case question.form_type
+      when 'attachment'
+        if value.respond_to?(:original_filename)  # UploadedFile
+          answer = answers.build(form_answer: self, question: question, content: value.original_filename)
+          at = answer.build_attachment(site_id: form.content.site_id)
+          at.name = at.title = value.original_filename
+          at.file = value
+          at.data = value.read
+        elsif value.key?(:name)
+          answer = answers.build(form_answer: self, question: question, content: value[:name])
+          if value[:data]
+            at = answer.build_attachment(site_id: form.content.site_id)
+            at.name = Util::File.sanitize_filename(value[:name])
+            at.title = value[:name]
+            at.file = Sys::Lib::File::NoUploadedFile.new(data: Base64.strict_decode64(value[:data]), filename: at.name)
+          end
+        end
+      else
+        answers.build(form_answer: self,
+                      question: question,
+                      content: value.kind_of?(Array) ? value.select(&:present?).join(',') : value)
+      end
     end
     qa
   end
@@ -48,6 +67,7 @@ class Survey::FormAnswer < ApplicationRecord
 
   def validate_answers
     errors.keys.each{|k| errors.delete(k) unless [:base, :form_id].include?(k) }
+
     answers.each do |answer|
       next if answer.question.form_type == 'free'
       if answer.invalid?

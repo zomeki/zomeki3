@@ -39,5 +39,9 @@ class Util::File
       return unless ::File.exist?(path)
       system 'exiv2', 'rm', path
     end
+
+    def sanitize_filename(name)
+      name.gsub(/[\x00-\x1F\/\\:\*\?\"<>\|]/u, '_')
+    end
   end
 end

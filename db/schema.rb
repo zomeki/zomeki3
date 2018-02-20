@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180131072709) do
+ActiveRecord::Schema.define(version: 20180219072056) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1235,6 +1235,27 @@ ActiveRecord::Schema.define(version: 20180131072709) do
     t.index ["question_id"], name: "index_survey_answers_on_question_id", using: :btree
   end
 
+  create_table "survey_attachments", force: :cascade do |t|
+    t.integer  "site_id"
+    t.integer  "answer_id"
+    t.string   "name"
+    t.text     "title"
+    t.text     "mime_type"
+    t.integer  "size"
+    t.integer  "image_is"
+    t.integer  "image_width"
+    t.integer  "image_height"
+    t.binary   "data"
+    t.integer  "thumb_width"
+    t.integer  "thumb_height"
+    t.integer  "thumb_size"
+    t.binary   "thumb_data"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.index ["answer_id"], name: "index_survey_attachments_on_answer_id", using: :btree
+    t.index ["site_id"], name: "index_survey_attachments_on_site_id", using: :btree
+  end
+
   create_table "survey_form_answers", force: :cascade do |t|
     t.integer  "form_id"
     t.string   "answered_url"
@@ -1279,6 +1300,8 @@ ActiveRecord::Schema.define(version: 20180131072709) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "form_text_max_length"
+    t.float    "form_file_max_size"
+    t.string   "form_file_extension"
     t.index ["form_id"], name: "index_survey_questions_on_form_id", using: :btree
   end
 

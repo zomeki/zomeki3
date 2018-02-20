@@ -1,18 +1,18 @@
 class Survey::AnswersScript < ParametersScript
   def pull
     ApplicationRecordSlave.each_slaves do
-      form_answers = Survey::Slave::FormAnswer.date_before(:created_at, 5.minutes.ago)
+      s_form_answers = Survey::Slave::FormAnswer.date_before(:created_at, 5.minutes.ago)
       if ::Script.site
         form_ids = Survey::Form.in_site(::Script.site).pluck(:id)
-        form_answers.where!(form_id: form_ids)
+        s_form_answers.where!(form_id: form_ids)
       end
 
-      ::Script.total form_answers.size
+      ::Script.total s_form_answers.size
 
-      form_answers.each do |form_answer|
-        ::Script.progress(form_answer) do
-          pull_answers(form_answer)
-          form_answer.destroy
+      s_form_answers.each do |s_form_answer|
+        ::Script.progress(s_form_answer) do
+          pull_answers(s_form_answer)
+          s_form_answer.destroy
         end
       end
     end
@@ -25,6 +25,10 @@ class Survey::AnswersScript < ParametersScript
 
     s_form_answer.answers.each do |s_answer|
       answer = form_answer.answers.build(s_answer.attributes.except('id'))
+      if s_attachment = s_answer.attachment
+        at = answer.build_attachment(s_attachment.attributes.except('id'))
+        at.skip_upload
+      end
     end
 
     form_answer.save(validate: false)

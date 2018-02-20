@@ -9,7 +9,7 @@ class Survey::Question < ApplicationRecord
 
   enum_ish :state, [:public, :closed], default: :public
   enum_ish :form_type, [:text_field, :text_field_email, :text_area,
-                        :select, :radio_button, :check_box, :free], default: :text_field
+                        :select, :radio_button, :check_box, :attachment, :free], default: :text_field
   enum_ish :required, [true, false], default: true
 
   belongs_to :form, required: true
@@ -31,5 +31,9 @@ class Survey::Question < ApplicationRecord
 
   def email_field?
     form_type == 'text_field_email'
+  end
+
+  def form_file_extensions
+    form_file_extension.to_s.split(',').map(&:strip).select(&:present?)
   end
 end
