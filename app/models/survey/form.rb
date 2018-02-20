@@ -27,6 +27,7 @@ class Survey::Form < ApplicationRecord
 
   has_many :questions, dependent: :destroy
   has_many :form_answers, dependent: :destroy
+  has_many :answers, through: :form_answers
 
   validates :state, presence: true
   validates :name, presence: true, uniqueness: { scope: :content_id }, format: { with: /\A[-\w]*\z/ }

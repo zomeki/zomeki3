@@ -13,6 +13,7 @@ class Survey::Question < ApplicationRecord
   enum_ish :required, [true, false], default: true
 
   belongs_to :form, required: true
+  has_many :answers
 
   delegate :content, to: :form
 

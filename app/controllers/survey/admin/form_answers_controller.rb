@@ -4,12 +4,14 @@ class Survey::Admin::FormAnswersController < Cms::Controller::Admin::Base
   def pre_dispatch
     @content = Survey::Content::Form.find(params[:content])
     return error_auth unless Core.user.has_priv?(:read, item: @content.concept)
+    return redirect_to url_for(action: :index) if params[:reset_criteria]
     @form = @content.forms.find(params[:form_id])
     @item = @form.form_answers.find(params[:id]) if params[:id].present?
   end
 
   def index
-    @items = @form.form_answers
+    @items = Survey::FormAnswersFinder.new(@form.form_answers)
+                                      .search(params[:criteria])
 
     if params[:csv]
       csv = generate_csv(@items)
