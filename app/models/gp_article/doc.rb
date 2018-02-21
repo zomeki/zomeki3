@@ -133,34 +133,25 @@ class GpArticle::Doc < ApplicationRecord
   scope :visible_in_list, -> { where(feature_1: true) }
   scope :event_scheduled_between, ->(start_date, end_date, category_ids = nil) {
     rel = dates_intersects(:event_started_on, :event_ended_on, start_date.try(:beginning_of_day), end_date.try(:end_of_day))
-    rel = rel.categorized_into_event(category_ids) if category_ids.present?
+    rel = rel.categorized_into_all(category_ids, categorized_as: 'GpCalendar::Event') if category_ids.present?
     rel
   }
-  scope :categorized_into, ->(category_ids) {
+  scope :categorized_into, ->(category_ids, categorized_as: 'GpArticle::Doc') {
     cats = GpCategory::Categorization.arel_table
     where(id: GpCategory::Categorization.select(:categorizable_id)
-      .where(cats[:categorized_as].eq('GpArticle::Doc'))
-      .where(cats[:category_id].in(category_ids)))
+                                        .where(cats[:categorized_as].eq(categorized_as))
+                                        .where(cats[:category_id].in(category_ids)))
   }
-  scope :categorized_into_all, ->(category_ids) {
+  scope :categorized_into_all, ->(category_ids, categorized_as: 'GpArticle::Doc') {
     cats = GpCategory::Categorization.arel_table
     category_ids.inject(all) do |rel, category_id|
-      rel = rel.where(id: GpCategory::Categorization.select(:categorizable_id)
-        .where(cats[:categorized_as].eq('GpArticle::Doc'))
-        .where(cats[:category_id].eq(category_id)))
-    end
-  }
-  scope :categorized_into_event, ->(category_ids) {
-    cats = GpCategory::Categorization.arel_table
-    category_ids.inject(all) do |rel, category_id|
-      rel = rel.where(id: GpCategory::Categorization.select(:categorizable_id)
-        .where(cats[:categorized_as].eq('GpCalendar::Event'))
-        .where(cats[:category_id].eq(category_id)))
+      rel.where(id: GpCategory::Categorization.select(:categorizable_id)
+                                              .where(cats[:categorized_as].eq(categorized_as))
+                                              .where(cats[:category_id].eq(category_id)))
     end
   }
   scope :organized_into, ->(group_ids) {
-    groups = Sys::Group.arel_table
-    joins(creator: :group).where(groups[:id].in(group_ids))
+    joins(creator: :group).where(Sys::Group.arel_table[:id].in(group_ids))
   }
 
   def public_path
