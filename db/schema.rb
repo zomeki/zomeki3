@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180219072056) do
+ActiveRecord::Schema.define(version: 20180220094107) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -537,7 +537,7 @@ ActiveRecord::Schema.define(version: 20180219072056) do
 
   create_table "cms_pieces", force: :cascade do |t|
     t.integer  "concept_id"
-    t.integer  "site_id",        null: false
+    t.integer  "site_id",                     null: false
     t.string   "state"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -1300,7 +1300,7 @@ ActiveRecord::Schema.define(version: 20180219072056) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "form_text_max_length"
-    t.float    "form_file_max_size"
+    t.integer  "form_file_max_size"
     t.string   "form_file_extension"
     t.index ["form_id"], name: "index_survey_questions_on_form_id", using: :btree
   end
