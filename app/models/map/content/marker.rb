@@ -1,14 +1,13 @@
 class Map::Content::Marker < Cms::Content
   default_scope { where(model: 'Map::Marker') }
 
-  has_one :public_node, -> { public_state.where(model: 'Map::Marker').order(:id) },
-    foreign_key: :content_id, class_name: 'Cms::Node'
-
-  has_many :settings, -> { order(:sort_no) },
-    foreign_key: :content_id, class_name: 'Map::Content::Setting', dependent: :destroy
-
+  has_many :settings, foreign_key: :content_id, class_name: 'Map::Content::Setting', dependent: :destroy
   has_many :markers, foreign_key: :content_id, class_name: 'Map::Marker', dependent: :destroy
   has_many :marker_icons, foreign_key: :content_id, class_name: 'Map::MarkerIcon', dependent: :destroy
+
+  # node
+  has_one :public_node, -> { public_state.where(model: 'Map::Marker').order(:id) },
+                        foreign_key: :content_id, class_name: 'Cms::Node'
 
   def public_markers
     markers.public_state

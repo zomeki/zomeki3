@@ -3,15 +3,14 @@ class Survey::Content::Form < Cms::Content
 
   FORM_STATE_OPTIONS = [['下書き保存', 'draft'], ['承認依頼', 'approvable'], ['即時公開', 'public']]
 
-  has_one :public_node, -> { public_state.where(model: 'Survey::Form').order(:id) },
-    foreign_key: :content_id, class_name: 'Cms::Node'
-  has_one :form_node, -> { where(model: 'Survey::Form').order(:id) },
-    foreign_key: :content_id, class_name: 'Cms::Node'
-
-  has_many :settings, -> { order(:sort_no) },
-    foreign_key: :content_id, class_name: 'Survey::Content::Setting', dependent: :destroy
-
+  has_many :settings, foreign_key: :content_id, class_name: 'Survey::Content::Setting', dependent: :destroy
   has_many :forms, foreign_key: :content_id, class_name: 'Survey::Form', dependent: :destroy
+
+  # node
+  has_one :public_node, -> { public_state.where(model: 'Survey::Form').order(:id) },
+                        foreign_key: :content_id, class_name: 'Cms::Node'
+  has_one :form_node, -> { where(model: 'Survey::Form').order(:id) },
+                      foreign_key: :content_id, class_name: 'Cms::Node'
 
   def public_forms
     forms.public_state
