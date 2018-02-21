@@ -11,10 +11,9 @@ class Cms::Piece < ApplicationRecord
   include Cms::Model::Auth::Concept
   include Cms::Model::Base::Piece
 
-  include StateText
+  enum_ish :state, [:public, :closed]
 
-  has_many :settings, -> { order(:sort_no) }, :foreign_key => :piece_id,
-    :class_name => 'Cms::PieceSetting', :dependent => :destroy
+  has_many :settings, -> { order(:sort_no) }, class_name: 'Cms::PieceSetting', dependent: :destroy
 
   attr_accessor :setting_save_skip
 

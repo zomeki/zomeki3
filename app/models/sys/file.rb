@@ -31,8 +31,22 @@ class Sys::File < ApplicationRecord
     !!duplicated
   end
 
-  def parent
-    file_attachable
+  def duplicate(attrs = {})
+    new_item = self.class.new(attributes.except('id').merge(attrs))
+    new_item.skip_upload
+
+    transaction do
+      new_item.save!
+
+      if ::File.exist?(upload_path)
+        Util::File.put(new_item.upload_path, src: upload_path, mkdir: true)
+      end
+      if ::File.exist?(upload_path(type: :thumb))
+        Util::File.put(new_item.upload_path(type: :thumb), src: upload_path(type: :thumb), mkdir: true)
+      end
+    end
+
+    new_item
   end
 
   class << self

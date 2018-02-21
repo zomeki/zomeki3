@@ -5,7 +5,7 @@ class Sys::EditableGroup < ApplicationRecord
   ALL_GROUP = 0
 
   belongs_to :editable, polymorphic: true
-  belongs_to :group, class_name: 'Sys::Group'
+  belongs_to :group
 
   define_site_scope :editable
 

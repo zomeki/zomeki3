@@ -1,21 +1,22 @@
 class Sys::Group < ApplicationRecord
   include Sys::Model::Base
-  include Sys::Model::Base::Config
   include Sys::Model::Tree
   include Cms::Model::Site
   include Cms::Model::Auth::Site
 
-  include StateText
+  enum_ish :state, [:enabled, :disabled]
+  enum_ish :ldap_state, [1, 0]
+  enum_ish :web_state, [:public, :closed]
 
-  belongs_to :parent, :foreign_key => :parent_id, :class_name => 'Sys::Group'
-
+  belongs_to :parent, class_name: self.name
   has_many :children, -> { order(:sort_no, :code) },
-    :foreign_key => :parent_id, :class_name => 'Sys::Group', :dependent => :destroy
-  has_many :users_groups, :class_name => 'Sys::UsersGroup'
-  has_many :users, -> { order(:id) }, :through => :users_groups
+                      foreign_key: :parent_id, class_name: self.name, dependent: :destroy
 
-  has_many :site_belongings, :dependent => :destroy, :class_name => 'Cms::SiteBelonging'
-  has_many :sites, -> { order(:id) }, :through => :site_belongings, :class_name => 'Cms::Site'
+  has_many :users_groups, class_name: 'Sys::UsersGroup'
+  has_many :users, -> { order(:id) }, through: :users_groups
+
+  has_many :site_belongings, class_name: 'Cms::SiteBelonging', dependent: :destroy
+  has_many :sites, -> { order(:id) }, through: :site_belongings, class_name: 'Cms::Site'
 
   before_save :disable_users, if: -> { state_changed? && state == 'disabled' }
   before_destroy :disable_users
@@ -40,19 +41,6 @@ class Sys::Group < ApplicationRecord
       !Sys::Creator.where(group_id: group_ids, creatable_type: 'GpArticle::Doc').exists?
   end
 
-  def ldap_states
-    [['同期',1],['非同期',0]]
-  end
-  
-  def web_states
-    [['公開','public'],['非公開','closed']]
-  end
-  
-  def ldap_label
-    ldap_states.each {|a| return a[0] if a[1] == ldap }
-    return nil
-  end
-  
   def ou_name
     "#{code}#{name}"
   end

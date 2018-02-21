@@ -104,7 +104,7 @@
   <% @item.basic_auth_users.each do |user| %>
   <tr>
     <th><%= user.name %></th>
-    <td><%= user.status.name %></td>
+    <td><%= user.state_text %></td>
   </tr>
   <% end %>
 </table>

@@ -4,13 +4,15 @@ class Sys::Lib::File::NoUploadedFile
   def initialize(options = {})
     if options.key?(:path)
       @path = options[:path]
-      @mime_type = options[:mime_type] || Util::File.mime_type(path)
+      @mime_type = options[:mime_type] || Util::File.mime_type(@path)
     elsif options.key?(:data)
       @temp = Tempfile.new
       @temp.binmode
       @temp.write(options[:data])
+      @temp.flush
+      @temp.rewind
       @path = @temp.path
-      @mime_type = options[:mime_type] || Util::File.mime_type(path)
+      @mime_type = options[:mime_type] || Util::File.mime_type(@path)
     else
       raise "unexpected option"
     end

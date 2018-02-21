@@ -13,7 +13,11 @@ class Reception::Admin::CoursesController < Cms::Controller::Admin::Base
     @items = @content.courses.search_with_criteria(params[:criteria] || {})
                      .with_target(params[:target])
                      .order(id: :asc)
-    return download_csv(@items) if params[:csv].present?
+
+    if params[:csv].present?
+      csv = generate_csv(@items)
+      return send_data platform_encode(csv), type: 'text/csv', filename: "courses_#{Time.now.to_i}.csv"
+    end
 
     @items = @items.paginate(page: params[:page], per_page: 30)
     _index @items
@@ -70,9 +74,9 @@ class Reception::Admin::CoursesController < Cms::Controller::Admin::Base
     end
   end
 
-  def download_csv(items)
+  def generate_csv(items)
     require 'csv'
-    csv_string = CSV.generate do |csv|
+    CSV.generate do |csv|
       csv << [
         Reception::Course.human_attribute_name(:title),
         Reception::Open.human_attribute_name(:open_on),
@@ -98,8 +102,5 @@ class Reception::Admin::CoursesController < Cms::Controller::Admin::Base
         end
       end
     end
-
-    csv_string = csv_string.encode(Encoding::WINDOWS_31J, invalid: :replace, undef: :replace)
-    send_data csv_string, type: 'text/csv', filename: "courses_#{Time.now.to_i}.csv"
   end
 end

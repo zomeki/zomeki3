@@ -6,8 +6,7 @@ class Survey::FormAnswer < ApplicationRecord
 
   default_scope { order(created_at: :desc) }
 
-  belongs_to :form
-  validates :form_id, presence: true
+  belongs_to :form, required: true
 
   has_many :answers, -> { order(:id) }, dependent: :destroy
 

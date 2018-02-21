@@ -15,7 +15,7 @@ class GpArticle::Admin::RelatedDocsController < Cms::Controller::Admin::Base
       name: @item.name,
       content_id: @item.content_id,
       updated_at: l(@item.updated_at),
-      status: @item.status.name,
+      status: @item.state_text,
       user_name: @item.creator.user.try(:name),
       group_name: @item.creator.group.try(:name)
     }

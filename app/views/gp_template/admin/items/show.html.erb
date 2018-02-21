@@ -1,7 +1,7 @@
 <table class="show">
   <tr>
     <th><%= @item.class.human_attribute_name :state %></th>
-    <td><%= @item.status.name %></td>
+    <td><%= @item.state_text %></td>
   </tr>
   <tr>
     <th><%= @item.class.human_attribute_name :name %></th>
@@ -13,7 +13,7 @@
   </tr>
   <tr>
     <th><%= @item.class.human_attribute_name :item_type %></th>
-    <td><%= @item.item_type_label %></td>
+    <td><%= @item.item_type_text %></td>
   </tr>
   <tr>
     <th><%= @item.class.human_attribute_name :item_options %><br />（種別が選択の時に使用）</th>

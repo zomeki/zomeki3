@@ -1,53 +1,41 @@
 class Cms::Site < ApplicationRecord
   include Sys::Model::Base
-  include Sys::Model::Base::Page
-
   include Sys::Model::Rel::Creator
   include Sys::Model::Auth::Manager
   include Cms::Model::Site
   include Cms::Model::Rel::DataFile
   include Cms::Model::Rel::SiteSetting
 
-  include StateText
+  enum_ish :state, [:public, :closed]
+  enum_ish :og_type, [:article, :product, :profile]
+  enum_ish :smart_phone_layout, [:smart_phone, :pc], default: :smart_phone
+  enum_ish :smart_phone_publication, [:no, :yes], default: :no
+  enum_ish :spp_target, [:only_top, :all], default: :only_top
+  enum_ish :mobile_feature, [:enabled, :disabled], default: :enabled
 
-  OGP_TYPE_OPTIONS = [['article', 'article'], ['product', 'product'], ['profile', 'profile']]
-  SMART_PHONE_LAYOUT_OPTIONS = [['スマートフォンレイアウトを優先', 'smart_phone'], ['PCレイアウトで表示', 'pc']]
-  SMART_PHONE_PUBLICATION_OPTIONS = [['書き出さない', 'no'], ['書き出す', 'yes']]
-  SPP_TARGET_OPTIONS = [['トップページのみ書き出す', 'only_top'], ['すべて書き出す', 'all']]
-  MOBILE_FEATURE_OPTIONS = [['使用する', 'enabled'], ['使用しない', 'disabled']]
-
-  has_many :concepts, -> { order(:sort_no, :name, :id) }, :foreign_key => :site_id,
-    :class_name => 'Cms::Concept', :dependent => :destroy
-  has_many :contents, -> { order(:sort_no, :name, :id) }, :foreign_key => :site_id,
-    :class_name => 'Cms::Content'
-  has_many :settings, -> { order(:name, :sort_no) }, :foreign_key => :site_id,
-    :class_name => 'Cms::SiteSetting'
-  has_many :basic_auth_users, -> { order(:name) }, :foreign_key => :site_id,
-    :class_name => 'Cms::SiteBasicAuthUser'
-  has_many :kana_dictionaries, :foreign_key => :site_id,
-    :class_name => 'Cms::KanaDictionary'
-  has_many :site_belongings, :dependent => :destroy, :class_name => 'Cms::SiteBelonging'
-  has_many :groups, :through => :site_belongings, :class_name => 'Sys::Group'
-  has_many :nodes, :dependent => :destroy
+  has_many :concepts, -> { order(:sort_no, :name, :id) }, dependent: :destroy
+  has_many :contents, -> { order(:sort_no, :name, :id) }
+  has_many :settings, -> { order(:name, :sort_no) }, class_name: 'Cms::SiteSetting'
+  has_many :basic_auth_users, -> { order(:name) }, class_name: 'Cms::SiteBasicAuthUser'
+  has_many :kana_dictionaries
+  has_many :site_belongings, dependent: :destroy
+  has_many :groups, through: :site_belongings, class_name: 'Sys::Group'
+  has_many :nodes, dependent: :destroy
   has_many :messages, class_name: 'Sys::Message', dependent: :destroy
   has_many :operation_logs, class_name: 'Sys::OperationLog'
+
   belongs_to :root_node, foreign_key: :node_id, class_name: 'Cms::Node'
 
   # conditional relations
-  has_many :root_concepts, -> { where(level_no: 1).order(:sort_no, :name, :id) },
-    class_name: 'Cms::Concept'
-  has_many :public_root_concepts, -> { where(level_no: 1, state: 'public').order(:sort_no, :name, :id) },
-    class_name: 'Cms::Concept'
-  has_many :public_sitemap_nodes, -> { where(state: 'public', model: 'Cms::Sitemap').order(:name) },
-    class_name: 'Cms::Node'
+  has_many :root_concepts, -> { where(level_no: 1).order(:sort_no, :name, :id) }, class_name: 'Cms::Concept'
+  has_many :public_root_concepts, -> { where(level_no: 1, state: 'public').order(:sort_no, :name, :id) }, class_name: 'Cms::Concept'
+  has_many :public_sitemap_nodes, -> { where(state: 'public', model: 'Cms::Sitemap').order(:name) }, class_name: 'Cms::Node'
   has_many :emergency_layout_settings, class_name: 'Cms::SiteSetting::EmergencyLayout'
 
   validates :state, :name, presence: true
   validates :full_uri, presence: true, uniqueness: true, url: true
   validates :mobile_full_uri, uniqueness: true, url: true, if: -> { mobile_full_uri.present? }
   validates :admin_full_uri, uniqueness: true, url: true, if: -> { admin_full_uri.present? }
-
-  after_initialize :set_defaults
 
   ## site image
   attr_accessor :site_image, :del_site_image
@@ -95,10 +83,6 @@ class Cms::Site < ApplicationRecord
 
   def deletable?
     readable?
-  end
-
-  def states
-    [['公開','public']]
   end
 
   def root_path
@@ -215,24 +199,8 @@ class Cms::Site < ApplicationRecord
               .map { |g| [g.tree_name, g.id] }
   end
 
-  def og_type_text
-    OGP_TYPE_OPTIONS.detect{|o| o.last == self.og_type }.try(:first).to_s
-  end
-
-  def smart_phone_layout_text
-    SMART_PHONE_LAYOUT_OPTIONS.rassoc(smart_phone_layout).try(:first).to_s
-  end
-
   def smart_phone_layout_same_as_pc?
     smart_phone_layout == 'pc'
-  end
-
-  def smart_phone_publication_text
-    SMART_PHONE_PUBLICATION_OPTIONS.detect{|o| o.last == smart_phone_publication }.try(:first).to_s
-  end
-
-  def spp_target_text
-    SPP_TARGET_OPTIONS.detect{|o| o.last == spp_target }.try(:first).to_s
   end
 
   def publish_for_smart_phone?(node = nil)
@@ -249,10 +217,6 @@ class Cms::Site < ApplicationRecord
 
   def spp_only_top?
     spp_target == 'only_top'
-  end
-
-  def mobile_feature_text
-    MOBILE_FEATURE_OPTIONS.rassoc(mobile_feature).try(:first)
   end
 
   def use_mobile_feature?
@@ -325,13 +289,6 @@ class Cms::Site < ApplicationRecord
   end
 
   private
-
-  def set_defaults
-    self.smart_phone_layout ||= SMART_PHONE_LAYOUT_OPTIONS.first.last if self.has_attribute?(:smart_phone_layout)
-    self.smart_phone_publication ||= SMART_PHONE_PUBLICATION_OPTIONS.first.last if self.has_attribute?(:smart_phone_publication)
-    self.spp_target ||= SPP_TARGET_OPTIONS.first.last if self.has_attribute?(:spp_target)
-    self.mobile_feature ||= MOBILE_FEATURE_OPTIONS.first.last if self.has_attribute?(:mobile_feature)
-  end
 
   def generate_files
     FileUtils.mkdir_p public_path

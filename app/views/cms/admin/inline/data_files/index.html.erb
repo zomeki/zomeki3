@@ -57,9 +57,9 @@ end
     <td style="text-align: center;"><%= _input.call('file_url', i, safe{item.public_uri}, 120) %></td>
 
     <% if item.public? %>
-    <td style="text-align: center;"><%= link_to item.status.name, item.public_full_uri, target: '_blank' %></td>
+    <td style="text-align: center;"><%= link_to item.state_text, item.public_full_uri, target: '_blank' %></td>
     <% else %>
-    <td style="text-align: center;"><%= item.status.name %></td>
+    <td style="text-align: center;"><%= item.state_text %></td>
     <% end %>
   </tr>
   <%- end -%>

@@ -1,0 +1,60 @@
+ja:
+  enum_ish:
+    gp_article/doc:
+      state:
+        draft: 下書き
+        approvable: 承認待ち
+        approved: 公開待ち
+        prepared: 公開日時待ち
+        public: 公開
+        closed: 公開終了
+      target:
+        '': 無効
+        _self: 同一ウィンドウ
+        _blank: 別ウィンドウ
+        attached_file: 添付ファイル
+      event_state:
+        visible: 表示
+        hidden: 非表示
+      marker_state:
+        visible: 表示
+        hidden: 非表示
+      og_type:
+        article: article
+      feature_1:
+        true: 表示
+        false: 非表示
+    gp_article/doc/criteria:
+      target:
+        user: 作成記事
+        group: 所属記事
+        all: 全所属
+      target_state:
+        processing: 公開前
+        public: 公開中
+        closed: 公開終了
+        all: 全記事
+      date_column:
+        created_at: 作成
+        updated_at: 更新
+        recognized_at: 承認
+        published_at: 公開
+      date_operation:
+        today: 本日
+        this_week: 今週
+        last_week: 先週
+        equal: 指定日
+        before: 以前
+        after: 以後
+        between: 期間
+      state:
+        draft: 下書き
+        approvable: 承認待ち
+        approved: 公開待ち
+        prepared: 公開日時待ち
+        public: 公開中
+        closed: 公開終了
+      user_operation:
+        create: 作成
+        approve: 承認
+        publish: 公開

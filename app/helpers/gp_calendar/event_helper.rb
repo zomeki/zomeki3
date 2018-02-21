@@ -199,7 +199,7 @@ module GpCalendar::EventHelper
       if (doc = @event.doc)
         GpArticle::DocHelper::Formatter.new(doc).format("@image_tag@")
       elsif (f = @event.image_files.first)
-        image_tag("#{f.parent.content.public_node.public_uri}#{f.parent.name}/file_contents/#{url_encode f.name}", alt: f.title, title: f.title)
+        image_tag("#{f.file_attachable.content.public_node.public_uri}#{f.file_attachable.name}/file_contents/#{url_encode f.name}", alt: f.title, title: f.title)
       elsif @event.content.default_image.present?
         image_tag(@event.content.default_image)
       end

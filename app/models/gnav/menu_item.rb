@@ -4,27 +4,24 @@ class Gnav::MenuItem < ApplicationRecord
   include Cms::Model::Site
   include Cms::Model::Auth::Content
   include Cms::Model::Base::Page
-  include Cms::Model::Base::Page::Publisher
-  include Cms::Model::Base::Page::TalkTask
   include Cms::Model::Base::Sitemap
   include Cms::Model::Rel::Content
 
-  include StateText
+  default_scope { order(:sort_no, :id) }
 
-  default_scope { order(:sort_no) }
+  enum_ish :state, [:public, :closed], default: :public
 
   # Content
-  belongs_to :content, :foreign_key => :content_id, :class_name => 'Gnav::Content::MenuItem'
-  validates :content_id, :presence => true
+  belongs_to :content, class_name: 'Gnav::Content::MenuItem', required: true
 
   # Page
-  belongs_to :concept, :foreign_key => :concept_id, :class_name => 'Cms::Concept'
-  belongs_to :layout,  :foreign_key => :layout_id,  :class_name => 'Cms::Layout'
+  belongs_to :concept, class_name: 'Cms::Concept'
+  belongs_to :layout, class_name: 'Cms::Layout'
 
   has_many :category_sets
 
-  validates :name, :presence => true, :uniqueness => {:scope => :content_id}
-  validates :title, :presence => true
+  validates :name, presence: true, uniqueness: { scope: :content_id }
+  validates :title, presence: true
 
   after_save     Cms::Publisher::ContentCallbacks.new(belonged: true), if: :changed?
   before_destroy Cms::Publisher::ContentCallbacks.new(belonged: true)
@@ -61,7 +58,7 @@ class Gnav::MenuItem < ApplicationRecord
 
   def public_categories
     category_sets.inject([]) {|result, category_set|
-      next result unless category_set.category.public?
+      next result unless category_set.category.state_public?
       if category_set.layer == 'descendants'
         result | category_set.category.public_descendants_with_preload
       else

@@ -3,7 +3,7 @@ class Cms::Publisher < ApplicationRecord
   include Cms::Model::Site
   include Cms::Model::Rel::Site
 
-  STATE_OPTIONS = [['待機中','queued'],['実行中','performing']]
+  enum_ish :state, [:queued, :performing]
 
   belongs_to :publishable, polymorphic: true
 

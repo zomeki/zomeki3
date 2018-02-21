@@ -3,7 +3,7 @@
 <table class="show">
   <tr>
     <th><%= @item.class.human_attribute_name :state %></th>
-    <td><%= safe{@item.status.name} %></td>
+    <td><%= @item.state_text %></td>
   </tr><tr>
     <th><%= @item.class.human_attribute_name :url %></th>
     <td><%= @item.url %></td>
@@ -18,10 +18,10 @@
     <td><%= text_area_tag :description, @item.description, class: 'ckeditor' %></td>
   </tr><tr>
     <th><%= @item.class.human_attribute_name :business_hours_state %></th>
-    <td><%= @item.class::BUSINESS_HOURS_STATE_OPTIONS.detect{|to| to.last == @item.business_hours_state }.try(:first) %></td>
+    <td><%= @item.business_hours_state_text %></td>
   </tr><tr>
     <th><%= @item.class.human_attribute_name :business_holiday_state %></th>
-    <td><%= @item.class::BUSINESS_HOLIDAY_STATE_OPTIONS.detect{|to| to.last == @item.business_holiday_state }.try(:first) %></td>
+    <td><%= @item.business_holiday_state_text %></td>
   </tr><tr>
     <th><%= @item.class.human_attribute_name :sort_no %></th>
     <td><%= @item.sort_no %></td>

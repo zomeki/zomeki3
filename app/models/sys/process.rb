@@ -29,7 +29,7 @@ class Sys::Process < ApplicationRecord
   ]
   RUNNABLE_PROCESSES = ALL_PROCESSES.select { |p| p.last.in?(RUNNABLE_PROCESS_NAMES) }
 
-  STATES = [["実行中", "running"], ["完了", "closed"], ["停止", "stop"]]
+  enum_ish :state, [:running, :closed, :stop]
 
   scope :search_with_params, ->(params = {}) {
     rel = all
@@ -54,10 +54,6 @@ class Sys::Process < ApplicationRecord
 
   def title
     ALL_PROCESSES.detect { |p| name =~ Regexp.new(p.last) }.try!(:first)
-  end
-
-  def status
-    STATES.rassoc(state).try!(:last)
   end
 
   def current_per_total

@@ -2,7 +2,7 @@ class Cms::MapMarker < ApplicationRecord
   include Sys::Model::Base
   include Cms::Model::Site
 
-  belongs_to :map, class_name: 'Cms::Map'
+  belongs_to :map
 
   validates :lat, :lng, presence: true
 

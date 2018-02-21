@@ -5,7 +5,7 @@ class Reception::Public::Node::CategoriesController < Cms::Controller::Public::B
 
     @category_type = @content.category_types.find_by!(name: params[:category_type_name])
     @category = @category_type.find_category_by_path_from_root_category(params[:category_names])
-    return http_error(404) unless @category.try(:public?)
+    return http_error(404) unless @category.try(:state_public?)
 
     Page.current_item = @category.becomes(Reception::Category) # becomes for bread crumbs
     Page.title = @category.title

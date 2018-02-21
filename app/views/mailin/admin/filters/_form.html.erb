@@ -3,7 +3,7 @@
 <table class="show">
   <tr>
     <th><%= f.label :state %></th>
-    <td><%= f.radio_buttons :state, @item.class::STATE_OPTIONS %></td>
+    <td><%= f.radio_buttons :state, @item.class.state_options %></td>
   </tr>
   <tr>
     <th><%= f.label :to %></th>
@@ -18,7 +18,7 @@
   </tr>
   <tr>
     <th><%= f.label :logic %></th>
-    <td><%= f.radio_buttons :logic, @item.class::LOGIC_OPTIONS %></td>
+    <td><%= f.radio_buttons :logic, @item.class.logic_options %></td>
   </tr>
   <tr>
     <th><%= f.label :dest_content_id %> <span class="note">※</span></th>

@@ -1,0 +1,10 @@
+ja:
+  enum_ish:
+    gp_template/item:
+      item_type:
+        text_field: 入力/1行（テキストフィールド）
+        text_area: 入力/複数行（テキストエリア）
+        rich_text: 入力/フリー（エディタ付）
+        select: 選択/単数回答（プルダウン）
+        radio_button: 選択/単数回答（ラジオボタン）
+        attachment_file: 添付ファイル

@@ -2,15 +2,14 @@ class Approval::Approval < ApplicationRecord
   include Sys::Model::Base
   include Cms::Model::Site
 
-  TYPE_OPTIONS = [['固定', 'fix'], ['選択', 'select']]
-
   default_scope { order(:approval_flow_id, :index) }
 
-  belongs_to :approval_flow
-  validates :approval_flow_id, presence: true
+  enum_ish :approval_type, [:fix, :select], default: :fix
 
-  has_many :assignments, :as => :assignable, :dependent => :destroy
-  has_many :approvers, :through => :assignments, :source => :user
+  belongs_to :approval_flow, required: true
+
+  has_many :assignments, as: :assignable, dependent: :destroy
+  has_many :approvers, through: :assignments, source: :user
 
   validates :index, presence: true, uniqueness: { scope: [:approval_flow_id] }
 
@@ -20,10 +19,6 @@ class Approval::Approval < ApplicationRecord
 
   def approval_type_select?
     approval_type == 'select'
-  end
-
-  def approval_type_title
-    TYPE_OPTIONS.detect { |o| o.last == approval_type }.try(:first)
   end
 
   def approvers_label
@@ -71,7 +66,6 @@ class Approval::Approval < ApplicationRecord
   private
 
   def set_defaults
-    self.approval_type ||= TYPE_OPTIONS.first.last if self.has_attribute?(:approval_type)
     self.index ||= approval_flow.approvals.count if self.has_attribute?(:index) && approval_flow
   end
 end

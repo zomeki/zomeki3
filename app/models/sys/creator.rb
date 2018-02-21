@@ -4,8 +4,8 @@ class Sys::Creator < ApplicationRecord
 
   belongs_to :creatable, polymorphic: true
 
-  belongs_to :user, class_name: 'Sys::User', required: true
-  belongs_to :group, class_name: 'Sys::Group', required: true
+  belongs_to :user, required: true
+  belongs_to :group, required: true
 
   before_save :set_user
   before_save :set_group

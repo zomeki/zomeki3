@@ -13,6 +13,8 @@ ja:
         published_at: 公開開始日時
         closed_at: 公開終了日時
         url: URL
+        sp_url: スマートフォンURL
+        target: ウィンドウ
         sort_no: 表示順
         created_at: 作成日時
         state: 状態

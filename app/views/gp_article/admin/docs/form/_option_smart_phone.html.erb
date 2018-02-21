@@ -35,7 +35,7 @@
 
 <div>
   <div class="label1"><%= f.label :og_type %></div>
-  <%= f.select :og_type, @item.class::OGP_TYPE_OPTIONS, include_blank: true %>
+  <%= f.select :og_type, @item.class.og_type_options, include_blank: true %>
 </div>
 <div>
   <div class="label1"><%= f.label :og_title %></div>

@@ -18,7 +18,7 @@
     <tr>
       <th><%= f.label :href %></th>
       <td><%= f.text_field :href, style: 'width: 500px;' %></td>
-      <td><%= f.radio_buttons :target, GpArticle::Doc::TARGET_OPTIONS %></td>
+      <td><%= f.radio_buttons :target, @item.class.target_options %></td>
     </tr>
     <tr>
       <th><%= f.label :subtitle %></th>
@@ -114,7 +114,7 @@
   <%- if @content.feature_settings_enabled? -%>
   <tr>
     <th><%= f.label :feature_1 %></th>
-    <td><%= f.radio_buttons :feature_1, @item.class::FEATURE_1_OPTIONS %></td>
+    <td><%= f.radio_buttons :feature_1, @item.class.feature_1_options %></td>
   </tr>
   <%- end -%>
   <%- if @content.tag_related? && @content.tag_content_tag.present? -%>
@@ -159,7 +159,7 @@
                                                              doc_user_name: doc.creator.user.try(:name),
                                                              doc_group_name: doc.creator.group.try(:name),
                                                              doc_updated_at: l(doc.updated_at),
-                                                             doc_status: doc.status.name %>
+                                                             doc_status: doc.state_text %>
           <%- end -%>
         <%- end -%>
        </table>
@@ -169,7 +169,7 @@
   <%- if @content.qrcode_related? -%>
   <tr>
     <th><%= f.label :qrcode_state %></th>
-    <td><%= f.radio_buttons :qrcode_state, @item.class::QRCODE_OPTIONS %></td>
+    <td><%= f.radio_buttons :qrcode_state, @item.class.qrcode_state_options %></td>
   </tr>
   <%- end -%>
 </table>

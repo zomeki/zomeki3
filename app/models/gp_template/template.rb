@@ -5,31 +5,23 @@ class GpTemplate::Template < ApplicationRecord
   include Cms::Model::Rel::Content
   include Cms::Model::Auth::Content
 
-  include StateText
+  default_scope { order(:sort_no, :id) }
 
-  STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
+  attribute :sort_no, :integer, default: 10
 
-  default_scope { order("#{self.table_name}.sort_no IS NULL, #{self.table_name}.sort_no") }
+  enum_ish :state, [:public, :closed], default: :public, predicate: true
 
-  belongs_to :content, :foreign_key => :content_id, :class_name => 'GpTemplate::Content::Template'
-  validates :content_id, presence: true
+  belongs_to :content, class_name: 'GpTemplate::Content::Template', required: true
+
+  has_many :items, dependent: :destroy
 
   validates :state, presence: true
-
-  has_many :items, :dependent => :destroy
-
   validates :title, presence: true
-
-  after_initialize :set_defaults
 
   scope :public_state, -> { where(state: 'public') }
 
   def public_items
     items.public_state
-  end
-
-  def state_public?
-    state == 'public'
   end
 
   def duplicate
@@ -45,12 +37,5 @@ class GpTemplate::Template < ApplicationRecord
     end
 
     return item
-  end
-
-  private
-
-  def set_defaults
-    self.state   = STATE_OPTIONS.first.last if self.has_attribute?(:state) && self.state.nil?
-    self.sort_no = 10 if self.has_attribute?(:sort_no) && self.sort_no.nil?
   end
 end

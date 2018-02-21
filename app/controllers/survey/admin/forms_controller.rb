@@ -58,37 +58,6 @@ class Survey::Admin::FormsController < Cms::Controller::Admin::Base
     _destroy @item
   end
 
-  def download_form_answers
-    csv_string = CSV.generate do |csv|
-      header = [Survey::FormAnswer.human_attribute_name(:id),
-                Survey::FormAnswer.human_attribute_name(:created_at),
-                "#{Survey::FormAnswer.human_attribute_name(:answered_url)}URL",
-                "#{Survey::FormAnswer.human_attribute_name(:answered_url)}タイトル",
-                Survey::FormAnswer.human_attribute_name(:remote_addr),
-                Survey::FormAnswer.human_attribute_name(:user_agent)]
-
-      @item.questions.each{|q| header << q.title }
-
-      csv << header
-
-      @item.form_answers.each do |form_answer|
-        line = [form_answer.id,
-                I18n.l(form_answer.created_at),
-                form_answer.answered_full_uri,
-                form_answer.answered_url_title,
-                form_answer.remote_addr,
-                form_answer.user_agent]
-
-        @item.questions.each{|q| line << form_answer.answers.find_by(question_id: q.id).try(:content) }
-
-        csv << line
-      end
-    end
-
-    send_data csv_string.encode(Encoding::WINDOWS_31J, :invalid => :replace, :undef => :replace),
-              type: Rack::Mime.mime_type('.csv'), filename: 'answers.csv'
-  end
-
   def approve
     if @item.state_approvable? && @item.approvers.include?(Core.user)
       @item.approve(Core.user) do

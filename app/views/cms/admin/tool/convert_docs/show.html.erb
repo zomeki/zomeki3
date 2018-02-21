@@ -15,7 +15,7 @@
   </tr>
   <tr>
     <th><%= @item.class.human_attribute_name :doc_name %></th>
-    <td><%= link_to @item.doc_name, gp_article_doc_path(content: @item.doc.content, id: @item.doc.id) if @item.doc %></td>
+    <td><%= link_to @item.latest_doc.name, gp_article_doc_path(content: @item.latest_doc.content, id: @item.latest_doc.id) if @item.latest_doc %></td>
   </tr>
   <tr>
     <th><%= @item.class.human_attribute_name :doc_public_uri %></th>

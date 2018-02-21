@@ -3,7 +3,7 @@
 <table class="show">
   <tr>
     <th><%= f.label :state %></th>
-    <td colspan="2"><%= f.radio_buttons :state, @item.class::STATE_OPTIONS, :class => 'status' %></td>
+    <td colspan="2"><%= f.radio_buttons :state, @item.class.state_options, :class => 'status' %></td>
   </tr>
   <tr>
     <th><%= f.label :started_on %> <span class="note">※</span></th>
@@ -22,7 +22,7 @@
   <tr>
     <th><%= f.label :href %></th>
     <td><%= f.text_field :href, :style => 'width: 500px;' %></td>
-    <td><%= f.radio_buttons :target, @item.class::TARGET_OPTIONS %></td>
+    <td><%= f.radio_buttons :target, @item.class.target_options %></td>
   </tr>
   <tr>
     <th><%= f.label :description %></th>

@@ -1,7 +1,7 @@
 <table class="show">
   <tr>
     <th><%= @item.class.human_attribute_name :state %></th>
-    <td><%= @item.status.name %></td>
+    <td><%= @item.state_text %></td>
   </tr>
   <tr>
     <th><%= @item.class.human_attribute_name :title %></th>
@@ -17,7 +17,7 @@
   </tr>
   <tr>
     <th><%= @item.class.human_attribute_name :kind %></th>
-    <td><%= @item.class::KIND_OPTIONS.detect{|to| to.last == @item.kind }.try(:first) %></td>
+    <td><%= @item.kind_text %></td>
   </tr>
 </table>
 

@@ -3,7 +3,7 @@
 <table class="show">
   <tr>
     <th><%= f.label :state %></th>
-    <td><%= f.radio_buttons :state, @item.states, :class => 'status' %></td>
+    <td><%= f.radio_buttons :state, @item.class.state_options, :class => 'status' %></td>
   </tr><tr>
     <th><%= f.label :name %></th>
     <td><%= f.text_field :name, :class => 'nameEn' %></td>
@@ -12,7 +12,7 @@
     <td><%= f.text_field :password, :class => 'nameEn' %></td>
   </tr><tr>
     <th><%= f.label :target_type %></th>
-    <td><%= f.radio_buttons :target_type, @item.class::TARGET_TYPE_LIST, :class => 'status' %></td>
+    <td><%= f.radio_buttons :target_type, @item.class.target_type_options, :class => 'status' %></td>
   </tr><tr id="targetLocation">
     <th><%= f.label :target_location %></th>
     <td>/<%= f.text_field :target_location, :class => 'nameEn' %></td>

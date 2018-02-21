@@ -1,16 +1,16 @@
 <table class="show">
   <tr>
     <th><%= @item.class.human_attribute_name :state %></th>
-    <td><%= safe{@item.status.name} %></td>
+    <td><%= @item.state_text %></td>
   </tr><tr>
     <th><%= @item.class.human_attribute_name :name %></th>
-    <td><%= safe{@item.name} %></td>
+    <td><%= @item.name %></td>
   </tr><tr>
     <th><%= @item.class.human_attribute_name :uri %></th>
     <td><%= @item.uri %></td>
   </tr><tr>
     <th><%= @item.class.human_attribute_name :target %></th>
-    <td><%= @item.target_name %></td>
+    <td><%= @item.target_text %></td>
   </tr><tr>
     <th><%= @item.class.human_attribute_name :sort_no %></th>
     <td><%= @item.sort_no %></td>

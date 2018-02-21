@@ -3,7 +3,7 @@ class Cms::Link < ApplicationRecord
   include Cms::Model::Site
 
   belongs_to :linkable, polymorphic: true
-  belongs_to :content, class_name: 'Cms::Content'
+  belongs_to :content
 
   define_site_scope :linkable
 

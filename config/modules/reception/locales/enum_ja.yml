@@ -1,0 +1,10 @@
+ja:
+  enum_ish:
+    reception/applicant:
+      state:
+        applied: 申込
+        received: 受付
+        canceled: キャンセル
+      applied_from:
+        public: フォーム
+        admin: 登録

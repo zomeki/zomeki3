@@ -5,29 +5,27 @@ class GpCategory::Category < ApplicationRecord
   include Cms::Model::Site
   include Cms::Model::Auth::Content
   include Cms::Model::Base::Page
-  include Cms::Model::Base::Page::Publisher
-  include Cms::Model::Base::Page::TalkTask
   include Cms::Model::Base::Sitemap
-
-  include StateText
-
-  STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
-  DOCS_ORDER_OPTIONS = [['上位設定を継承', ''],
-                        ['公開日（降順）', 'display_published_at DESC, published_at DESC'], ['公開日（昇順）', 'display_published_at ASC, published_at ASC'],
-                        ['更新日（降順）', 'display_updated_at DESC, updated_at DESC'], ['更新日（昇順）', 'display_updated_at ASC, updated_at ASC']]
 
   default_scope { order(category_type_id: :asc, parent_id: :asc, level_no: :asc, sort_no: :asc, name: :asc) }
 
+  enum_ish :state, [:public, :closed], default: :public, predicate: true
+  enum_ish :docs_order, ['',
+                         'display_published_at DESC, published_at DESC',
+                         'display_published_at ASC, published_at ASC',
+                         'display_updated_at DESC, updated_at DESC',
+                         'display_updated_at ASC, updated_at ASC'], default: ''
+
   # Page
-  belongs_to :concept, :foreign_key => :concept_id, :class_name => 'Cms::Concept'
-  belongs_to :layout,  :foreign_key => :layout_id,  :class_name => 'Cms::Layout'
+  belongs_to :concept, class_name: 'Cms::Concept'
+  belongs_to :layout, class_name: 'Cms::Layout'
   belongs_to :template
 
-  belongs_to :category_type, :foreign_key => :category_type_id, :class_name => 'GpCategory::CategoryType'
-  validates :category_type_id, presence: true
+  belongs_to :category_type, class_name: 'GpCategory::CategoryType', required: true
 
-  belongs_to :parent, :foreign_key => :parent_id, :class_name => self.name, :counter_cache => :children_count
-  has_many :children, :foreign_key => :parent_id, :class_name => self.name, :dependent => :destroy
+  belongs_to :parent, foreign_key: :parent_id, class_name: self.name, counter_cache: :children_count
+  has_many :children, foreign_key: :parent_id, class_name: self.name, dependent: :destroy
+
 
   validates :name, presence: true, uniqueness: { scope: [:category_type_id, :parent_id] },
                    format: { with: /\A[0-9A-Za-z@\.\-_\+\s]+\z/ }
@@ -54,8 +52,6 @@ class GpCategory::Category < ApplicationRecord
   delegate :content, to: :category_type
   delegate :site, to: :content
   delegate :site_id, to: :content
-
-  after_initialize :set_defaults
 
   before_validation :set_attributes_from_parent
 
@@ -86,7 +82,7 @@ class GpCategory::Category < ApplicationRecord
   end
 
   def public_descendants(categories=[])
-    return categories unless self.public?
+    return categories unless self.state_public?
     categories << self
     public_children.each {|c| c.public_descendants(categories) }
     return categories
@@ -191,12 +187,6 @@ class GpCategory::Category < ApplicationRecord
   end
 
   private
-
-  def set_defaults
-    self.state         = STATE_OPTIONS.first.last         if self.has_attribute?(:state) && self.state.nil?
-    self.docs_order    = DOCS_ORDER_OPTIONS.first.last    if self.has_attribute?(:docs_order) && self.docs_order.nil?
-    self.sort_no = 10 if self.has_attribute?(:sort_no) && self.sort_no.nil?
-  end
 
   def set_attributes_from_parent
     if parent

@@ -5,8 +5,6 @@ class Cms::Node < ApplicationRecord
   include Cms::Model::Site
   include Cms::Model::Base::Sitemap
   include Cms::Model::Base::Page
-  include Cms::Model::Base::Page::Publisher
-  include Cms::Model::Base::Page::TalkTask
   include Cms::Model::Rel::Site
   include Cms::Model::Rel::Concept
   include Cms::Model::Rel::ContentModel
@@ -15,22 +13,20 @@ class Cms::Node < ApplicationRecord
   include Cms::Model::Auth::Concept
   include Cms::Model::Base::Node
 
-  include StateText
+  enum_ish :state, [:draft, :recognize, :recognized, :public, :closed]
 
-  belongs_to :parent, :foreign_key => :parent_id, :class_name => 'Cms::Node'
-  belongs_to :route, :foreign_key => :route_id, :class_name => 'Cms::Node'
-  belongs_to :layout, :foreign_key => :layout_id, :class_name => 'Cms::Layout'
+  belongs_to :parent, class_name: self.name
+  belongs_to :route, class_name: self.name
+  belongs_to :layout
 
-  has_many :children, -> { sitemap_order },
-    :foreign_key => :parent_id, :class_name => 'Cms::Node', :dependent => :destroy
-  has_many :children_in_route, -> { sitemap_order },
-    :foreign_key => :route_id,  :class_name => 'Cms::Node', :dependent => :destroy
+  has_many :children, -> { sitemap_order }, foreign_key: :parent_id, class_name: self.name, dependent: :destroy
+  has_many :children_in_route, -> { sitemap_order }, foreign_key: :route_id, class_name: self.name, dependent: :destroy
 
   # conditional associations
   has_many :public_children, -> { public_state.sitemap_order },
-    :foreign_key => :parent_id, :class_name => 'Cms::Node'
+                            foreign_key: :parent_id, class_name: self.name
   has_many :public_children_for_sitemap, -> { public_state.visible_in_sitemap.sitemap_order },
-    :foreign_key => :route_id, :class_name => 'Cms::Node'
+                                         foreign_key: :route_id, class_name: self.name
 
   validates :parent_id, :state, :model, :title, presence: true
   validates :name, presence: true, uniqueness: {scope: [:site_id, :parent_id], if: %Q(!replace_page?) },

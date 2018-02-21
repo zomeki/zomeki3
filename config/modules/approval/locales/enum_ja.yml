@@ -1,0 +1,15 @@
+ja:
+  enum_ish:
+    approval/approval:
+      approval_type:
+        fix: 固定
+        select: 選択
+    approval/assignment:
+      assign_type:
+        user: ユーザー
+        group_users: 所属ユーザー
+    approval/approval_request_history:
+      reason:
+        approve: 承認
+        passback: 差し戻し
+        pullback: 引き戻し

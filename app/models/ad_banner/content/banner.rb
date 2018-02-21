@@ -17,4 +17,8 @@ class AdBanner::Content::Banner < Cms::Content
   def click_count_related?
     setting_value(:click_count_setting) != 'disabled'
   end
+
+  def image_display
+    setting_value(:image_display)
+  end
 end

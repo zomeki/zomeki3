@@ -14,9 +14,9 @@
     <td style="text-align: center;"><%= link_to :show, { action: :show, id: item } %></td>
     <td style="text-align: center;"><%= item.id %></td>
     <td><%= item.name %></td>
-    <td><%= item.target_type_label %></td>
+    <td><%= item.target_type_text %></td>
     <td style="text-align: center;"><%=l item.updated_at %></td>
-    <td style="text-align: center;"><%= item.status.name %></td>
+    <td style="text-align: center;"><%= item.state_text %></td>
   </tr>
   <% end %>
 

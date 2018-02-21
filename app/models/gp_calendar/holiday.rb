@@ -5,30 +5,24 @@ class GpCalendar::Holiday < ApplicationRecord
   include Cms::Model::Rel::Content
   include Cms::Model::Auth::Content
 
-  include StateText
-
-  STATE_OPTIONS = [['公開', 'public'], ['非公開', 'closed']]
-  KIND_OPTIONS = [['休日', 'holiday'], ['イベント', 'event']]
-  ORDER_OPTIONS = [['作成日時（降順）', 'created_at_desc'], ['作成日時（昇順）', 'created_at_asc']]
-
   # Pseudo event attributes
   attr_accessor :href, :name, :note, :categories, :files, :image_files
   # Not saved to database
   attr_accessor :doc
 
-  # Content
-  belongs_to :content, :foreign_key => :content_id, :class_name => 'GpCalendar::Content::Event'
-  validates :content_id, :presence => true
+  enum_ish :state, [:public, :closed], default: :public
+  enum_ish :kind, [:holiday, :event], default: :holiday
 
-  # Proper
-  validates :state, :presence => true
+  # Content
+  belongs_to :content, class_name: 'GpCalendar::Content::Event', required: true
 
   after_initialize :set_defaults
 
   after_save     Cms::Publisher::ContentCallbacks.new(belonged: true), if: :changed?
   before_destroy Cms::Publisher::ContentCallbacks.new(belonged: true)
 
-  validates :title, :presence => true
+  validates :state, presence: true
+  validates :title, presence: true
 
   scope :public_state, -> { where(state: 'public') }
 
@@ -87,7 +81,6 @@ class GpCalendar::Holiday < ApplicationRecord
   private
 
   def set_defaults
-    self.state ||= STATE_OPTIONS.first.last if self.has_attribute?(:state)
     # event attributes
     self.categories ||= []
     self.files ||= []

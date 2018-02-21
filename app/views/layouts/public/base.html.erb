@@ -12,6 +12,7 @@
   <meta name="keywords" content="<%= meta_keywords %>" />
   <%- end -%>
   <%= og_tags(Page.current_item) %>
+  <%= javascript_include_tag '/_common/js/bowser.min.js' %>
 </head>
 <body <%= Page.body_id %> <%= Page.body_class %>>
   <%= yield %>

@@ -1,6 +1,5 @@
 class Cms::DataText < ApplicationRecord
   include Sys::Model::Base
-  include Sys::Model::Base::Page
   include Sys::Model::Rel::Creator
   include Cms::Model::Site
   include Cms::Model::Rel::Site
@@ -8,9 +7,9 @@ class Cms::DataText < ApplicationRecord
   include Cms::Model::Rel::Bracketee
   include Cms::Model::Auth::Concept::Creator
 
-  include StateText
+  enum_ish :state, [:public, :closed]
 
-  belongs_to :concept, :foreign_key => :concept_id, :class_name => 'Cms::Concept'
+  belongs_to :concept
 
   after_save     Cms::Publisher::BracketeeCallbacks.new, if: :changed?
   before_destroy Cms::Publisher::BracketeeCallbacks.new
