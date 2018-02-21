@@ -8,7 +8,7 @@ class BizCalendar::Admin::HolidaysController < Cms::Controller::Admin::Base
   end
 
   def index
-    @items = @place.holidays.paginate(page: params[:page], per_page: 30)
+    @items = @place.holidays.paginate(page: params[:page], per_page: params[:limit])
     _index @items
   end
 

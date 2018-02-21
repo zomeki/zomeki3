@@ -12,7 +12,7 @@ class GpCategory::Admin::DocsController < Cms::Controller::Admin::Base
   end
 
   def index
-    @items = find_docs.paginate(page: params[:page], per_page: 30)
+    @items = find_docs.paginate(page: params[:page], per_page: params[:limit])
                       .preload(:categorizations, creator: [:user, :group])
     _index @items
   end

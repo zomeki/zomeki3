@@ -14,7 +14,7 @@ class Survey::Admin::FormsController < Cms::Controller::Admin::Base
     criteria = form_criteria
     @items = Survey::FormsFinder.new(@content.forms, Core.user).search(criteria).distinct
                                 .reorder(:sort_no)
-                                .paginate(page: params[:page], per_page: 30)
+                                .paginate(page: params[:page], per_page: params[:limit])
                                 .preload(content: { public_node: :site })
 
     _index @items

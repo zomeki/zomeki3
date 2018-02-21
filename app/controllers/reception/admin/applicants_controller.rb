@@ -12,14 +12,16 @@ class Reception::Admin::ApplicantsController < Cms::Controller::Admin::Base
   end
 
   def index
-    @items = @open.applicants.search_with_criteria(params[:criteria] || {}).order(:seq_no, :applied_at)
+    @items = @open.applicants
+                  .search_with_criteria(params[:criteria] || {})
+                  .order(:seq_no, :applied_at)
 
     if params[:csv].present?
       csv = generate_csv(@items)
       return send_data platform_encode(csv), type: 'text/csv', filename: "applicants_#{Time.now.to_i}.csv"
     end
 
-    @items = @items.paginate(page: params[:page], per_page: 50)
+    @items = @items.paginate(page: params[:page], per_page: params[:limit])
     _index @items
   end
 

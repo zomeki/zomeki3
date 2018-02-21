@@ -8,7 +8,7 @@ class Survey::Admin::QuestionsController < Cms::Controller::Admin::Base
   end
 
   def index
-    @items = @form.questions.paginate(page: params[:page], per_page: 30)
+    @items = @form.questions.paginate(page: params[:page], per_page: params[:limit])
     _index @items
   end
 

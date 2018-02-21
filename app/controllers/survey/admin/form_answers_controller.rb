@@ -26,7 +26,7 @@ class Survey::Admin::FormAnswersController < Cms::Controller::Admin::Base
       end
     end
 
-    @items = @items.paginate(page: params[:page], per_page: 30)
+    @items = @items.paginate(page: params[:page], per_page: params[:limit])
 
     _index @items
   end

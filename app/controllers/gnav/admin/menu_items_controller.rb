@@ -14,7 +14,7 @@ class Gnav::Admin::MenuItemsController < Cms::Controller::Admin::Base
   end
 
   def index
-    @items = @content.menu_items.paginate(page: params[:page], per_page: 50)
+    @items = @content.menu_items.paginate(page: params[:page], per_page: params[:limit])
     _index @items
   end
 
