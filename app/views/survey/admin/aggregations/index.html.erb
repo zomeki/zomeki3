@@ -1,5 +1,12 @@
 <%= render 'search' %>
 
+<table class="show">
+  <tr>
+    <th>回答件数</th>
+    <td><%= @form_answers.count %></td>
+  </tr>
+</table>
+
 <%- @items.each do |item| -%>
   <p class="form"><%= item.question.title %></p>
   <p><%= strip_tags(item.question.description) %></p>
@@ -11,5 +18,9 @@
         <td><%= count %></td>
       </tr>
     <%- end -%>
+    <tr>
+      <th>合計</th>
+      <td><%= item.sums.map(&:last).sum %></td>
+    </tr>
   </table>
 <%- end -%>

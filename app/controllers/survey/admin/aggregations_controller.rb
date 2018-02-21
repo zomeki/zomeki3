@@ -9,13 +9,15 @@ class Survey::Admin::AggregationsController < Cms::Controller::Admin::Base
   end
 
   def index
-    answers = Survey::AnswersFinder.new(@form.answers)
-                                  .search(params[:criteria])
+    @form_answers = Survey::FormAnswersFinder.new(@form.form_answers)
+                                             .search(params[:criteria])
 
-    @items = Survey::AggregationService.new(@form).aggregate(answers)
+    answers = Survey::Answer.where(form_answer_id: @form_answers.select(:id))
+    @items = Survey::AggregationService.new(@form)
+                                       .aggregate(answers)
 
     if params[:csv]
-      csv = generate_csv(@items)
+      csv = generate_csv(@form_answers, @items)
       return send_data platform_encode(csv), type: 'text/csv', filename: "answers_aggregation_#{Time.now.to_i}.csv"
     end
 
@@ -24,15 +26,19 @@ class Survey::Admin::AggregationsController < Cms::Controller::Admin::Base
 
   private
 
-  def generate_csv(items)
+  def generate_csv(form_answers, items)
     require 'csv'
     CSV.generate(force_quotes: true) do |csv|
+      csv << ['回答件数', form_answers.count]
+      csv << []
+
       items.each do |item|
         csv << [item.question.title]
         csv << [self.class.helpers.strip_tags(item.question.description).strip]
         item.sums.each do |option, count|
           csv << [option, count]
         end
+        csv << ['合計', item.sums.map(&:last).sum]
         csv << []
       end
     end
