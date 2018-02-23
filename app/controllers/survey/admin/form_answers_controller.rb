@@ -18,7 +18,10 @@ class Survey::Admin::FormAnswersController < Cms::Controller::Admin::Base
       return send_data platform_encode(csv), type: 'text/csv', filename: "answers_#{Time.now.to_i}.csv"
     elsif params[:attachments]
       answers = @form.answers.where(form_answer_id: @items.select(:id))
-      if Survey::Attachment.where(answer_id: answers.select(:id)).sum(:size) > 100 * 1024**2
+      total_size = Survey::Attachment.where(answer_id: answers.select(:id)).sum(:size)
+      if total_size == 0
+        return redirect_to url_for(action: :index), notice: '添付ファイルは見つかりませんでした。'
+      elsif total_size > 100 * 1024**2
         return redirect_to url_for(action: :index), notice: 'ファイルサイズが100MBを超えています。ダウンロード対象を絞り込んでください。'
       else
         data = Survey::AttachmentCompressService.new(answers).compress
