@@ -22,7 +22,9 @@ class Sys::Plugin < ApplicationRecord
   end
 
   def engine
-    Rails.application.config.x.engines.detect { |engine| engine.root.to_s.split('/').last == gem_name }
+    Rails.application.config.x.engines.detect { |engine|
+      engine.root.to_s.split('/').last.gsub(/-[0-9a-z]{12}$/, '') == gem_name
+    }
   end
 
   def source
