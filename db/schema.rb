@@ -1709,6 +1709,17 @@ ActiveRecord::Schema.define(version: 20180220094107) do
     t.index ["user_id", "group_id"], name: "index_sys_users_groups_on_user_id_and_group_id", using: :btree
   end
 
+  create_table "sys_users_holds", force: :cascade do |t|
+    t.integer  "user_id"
+    t.string   "holdable_type"
+    t.integer  "holdable_id"
+    t.string   "session_id"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.index ["holdable_type", "holdable_id"], name: "index_sys_users_holds_on_holdable_type_and_holdable_id", using: :btree
+    t.index ["user_id"], name: "index_sys_users_holds_on_user_id", using: :btree
+  end
+
   create_table "sys_users_roles", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "role_id"
