@@ -4,6 +4,8 @@ class GpCategory::Piece::CategoryList < Cms::Piece
 
   default_scope { where(model: 'GpCategory::CategoryList') }
 
+  belongs_to :content, class_name: 'GpCategory::Content::CategoryType'
+
   def layer
     setting_value(:layer).presence || LAYER_OPTIONS.first.last
   end
@@ -18,11 +20,6 @@ class GpCategory::Piece::CategoryList < Cms::Piece
 
   def category_id
     setting_value(:category_id).presence || nil
-  end
-
-
-  def content
-    GpCategory::Content::CategoryType.find(super.id)
   end
 
   def category_types

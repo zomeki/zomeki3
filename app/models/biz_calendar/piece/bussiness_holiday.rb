@@ -5,11 +5,9 @@ class BizCalendar::Piece::BussinessHoliday < Cms::Piece
 
   default_scope { where(model: 'BizCalendar::BussinessHoliday') }
 
-  after_initialize :set_default_settings
+  belongs_to :content, class_name: 'BizCalendar::Content::Place'
 
-  def content
-    BizCalendar::Content::Place.find(super.id)
-  end
+  after_initialize :set_default_settings
 
   def target_next?
     target_type == 'next'

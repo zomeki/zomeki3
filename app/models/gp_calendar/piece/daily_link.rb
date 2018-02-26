@@ -1,7 +1,7 @@
 class GpCalendar::Piece::DailyLink < Cms::Piece
   default_scope { where(model: 'GpCalendar::DailyLink') }
 
-  belongs_to :content, :foreign_key => :content_id, :class_name => 'GpCalendar::Content::Event'
+  belongs_to :content, class_name: 'GpCalendar::Content::Event'
 
   def target_node
     return @target_node if defined? @target_node

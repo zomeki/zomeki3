@@ -1,7 +1,5 @@
 class Tag::Piece::Tag < Cms::Piece
   default_scope { where(model: 'Tag::Tag') }
 
-  def content
-    Tag::Content::Tag.find(super.id)
-  end
+  belongs_to :content, class_name: 'Tag::Content::Tag'
 end
