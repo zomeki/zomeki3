@@ -14,8 +14,10 @@ class Organization::Admin::GroupsController < Cms::Controller::Admin::Base
                       else
                         @content.top_layer_sys_group_codes
                       end
-    @items = @content.groups.where(sys_group_code: sys_group_codes)
-                            .paginate(page: params[:page], per_page: 30)
+
+    @items = @content.groups
+                     .where(sys_group_code: sys_group_codes)
+                     .paginate(page: params[:page], per_page: params[:limit])
     _index @items
   end
 

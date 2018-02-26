@@ -2,7 +2,6 @@ class GpCategory::Category < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Rel::Creator
   include Sys::Model::Tree
-  include Cms::Model::Site
   include Cms::Model::Auth::Content
   include Cms::Model::Base::Page
   include Cms::Model::Base::Sitemap
@@ -64,7 +63,7 @@ class GpCategory::Category < ApplicationRecord
   after_update :move_published_files
   after_destroy :clean_published_files
 
-  define_site_scope :category_type
+  nested_scope :in_site, through: :category_type
 
   def descendants(categories=[])
     categories << self

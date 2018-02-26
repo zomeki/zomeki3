@@ -1,6 +1,5 @@
 class Cms::PieceLinkItem < ApplicationRecord
   include Sys::Model::Base
-  include Cms::Model::Site
   include Cms::Model::Rel::Piece
   include Cms::Model::Auth::Concept
 

@@ -2,7 +2,6 @@ require 'digest/sha1'
 class Sys::User < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Auth::Manager
-  include Cms::Model::Site
 
   ROOT_ID = 1
 
@@ -32,7 +31,7 @@ class Sys::User < ApplicationRecord
 
   before_destroy :block_root_deletion
 
-  define_site_scope :users_groups
+  nested_scope :in_site, through: :users_groups
 
   scope :in_group, ->(group) { joins(:users_groups).where(sys_users_groups: { group_id: group.id }) }
 

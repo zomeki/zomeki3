@@ -1,6 +1,5 @@
 class Approval::Approval < ApplicationRecord
   include Sys::Model::Base
-  include Cms::Model::Site
 
   default_scope { order(:approval_flow_id, :index) }
 
@@ -15,7 +14,7 @@ class Approval::Approval < ApplicationRecord
 
   after_initialize :set_defaults
 
-  define_site_scope :approval_flow
+  nested_scope :in_site, through: :approval_flow
 
   def approval_type_select?
     approval_type == 'select'

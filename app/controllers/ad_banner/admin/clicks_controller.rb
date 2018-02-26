@@ -12,7 +12,7 @@ class AdBanner::Admin::ClicksController < Cms::Controller::Admin::Base
   def index
     @items = AdBanner::ClicksFinder.new(@banner.clicks)
                                    .search(params[:criteria])
-                                   .paginate(page: params[:page], per_page: 50)
+                                   .paginate(page: params[:page], per_page: params[:limit])
 
     _index @items
   end

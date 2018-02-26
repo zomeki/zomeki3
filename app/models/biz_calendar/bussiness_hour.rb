@@ -1,7 +1,6 @@
 class BizCalendar::BussinessHour < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Rel::Creator
-  include Cms::Model::Site
   include Cms::Model::Auth::Content
   include BizCalendar::Model::Base::Date
 
@@ -24,7 +23,7 @@ class BizCalendar::BussinessHour < ApplicationRecord
   after_save     Cms::Publisher::ContentCallbacks.new(belonged: true), if: :changed?
   before_destroy Cms::Publisher::ContentCallbacks.new(belonged: true)
 
-  define_site_scope :place
+  nested_scope :in_site, through: :place
 
   scope :public_state, -> { where(state: 'public') }
   scope :search_with_params, ->(params = {}) {

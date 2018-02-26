@@ -18,7 +18,7 @@ class AdBanner::Admin::BannersController < Cms::Controller::Admin::Base
               items
             end
 
-    @items = items.paginate(page: params[:page], per_page: 50)
+    @items = items.paginate(page: params[:page], per_page: params[:limit])
 
     _index @items
   end

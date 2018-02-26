@@ -1,6 +1,5 @@
 class Cms::TalkTask < ApplicationRecord
   include Sys::Model::Base
-  include Cms::Model::Site
   include Cms::Model::Rel::Site
 
   belongs_to :talk_processable, polymorphic: true

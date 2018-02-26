@@ -8,8 +8,9 @@ class BizCalendar::Admin::TypesController < Cms::Controller::Admin::Base
   end
 
   def index
-    @items = BizCalendar::HolidayType.where(content_id: @content.id).order(updated_at: :desc, id: :desc)
-      .paginate(page: params[:page], per_page: params[:limit])
+    @items = BizCalendar::HolidayType.where(content_id: @content.id)
+                                     .order(updated_at: :desc, id: :desc)
+                                     .paginate(page: params[:page], per_page: params[:limit])
 
     _index @items
   end

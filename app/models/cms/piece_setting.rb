@@ -1,6 +1,5 @@
 class Cms::PieceSetting < ApplicationRecord
   include Sys::Model::Base
-  include Cms::Model::Site
   include Cms::Model::Rel::Piece
 
   validates :piece_id, :name, presence: true

@@ -4,13 +4,12 @@ class Organization::Content::Group < Cms::Content
 
   default_scope { where(model: 'Organization::Group') }
 
-  has_one :public_node, -> { public_state.where(model: 'Organization::Group').order(:id) },
-    foreign_key: :content_id, class_name: 'Cms::Node'
-
-  has_many :settings, -> { order(:sort_no) },
-    foreign_key: :content_id, class_name: 'Organization::Content::Setting', dependent: :destroy
-
+  has_many :settings, foreign_key: :content_id, class_name: 'Organization::Content::Setting', dependent: :destroy
   has_many :groups, foreign_key: :content_id, class_name: 'Organization::Group', dependent: :destroy
+
+  # node
+  has_one :public_node, -> { public_state.where(model: 'Organization::Group').order(:id) },
+                        foreign_key: :content_id, class_name: 'Cms::Node'
 
   def top_layer_sys_groups
     Sys::Group.in_site(site).where(level_no: 2)

@@ -1,6 +1,5 @@
 class Tag::Tag < ApplicationRecord
   include Sys::Model::Base
-  include Cms::Model::Site
   include Cms::Model::Base::Page
   include Cms::Model::Rel::Content
 

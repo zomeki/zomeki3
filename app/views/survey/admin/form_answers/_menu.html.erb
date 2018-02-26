@@ -3,7 +3,7 @@
 <div class="actionMenu">
 <%- case action_name -%>
 <%- when 'index' -%>
-  <%= link_to 'CSV出力', { action: :index, csv: true } %>
+  <%= link_to '集計', survey_form_aggregations_path %>
 <%- when 'show' -%>
   <%= link_to '一覧', { action: :index } %>
   <%= link_to '削除', { action: :destroy }, method: :delete, confirm: '削除してよろしいですか？' if @item.form.deletable? %>

@@ -2,7 +2,6 @@ class Cms::Concept < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Rel::Creator
   include Sys::Model::Tree
-  include Cms::Model::Site
   include Cms::Model::Rel::Site
   include Cms::Model::Auth::Site
 

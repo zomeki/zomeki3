@@ -23,6 +23,8 @@ ZomekiCMS::Application.routes.draw do
         :controller => 'admin/questions'
       resources :form_answers, :only => [:index, :show, :destroy],
         :controller => 'admin/form_answers'
+      resources :aggregations, :only => [:index],
+        :controller => 'admin/aggregations'
     end
 
     ## nodes

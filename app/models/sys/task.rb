@@ -1,13 +1,12 @@
 class Sys::Task < ApplicationRecord
   include Sys::Model::Base
-  include Cms::Model::Site
 
   enum_ish :state, [:queued, :performed], default: :queued, predicate: true
 
   belongs_to :processable, polymorphic: true
   belongs_to :provider_job, class_name: 'Delayed::JobExtension', dependent: :destroy
 
-  define_site_scope :processable
+  nested_scope :in_site, through: :processable
 
   scope :queued_items, -> {
     where([

@@ -1,7 +1,6 @@
 class Sys::Group < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Tree
-  include Cms::Model::Site
   include Cms::Model::Auth::Site
 
   enum_ish :state, [:enabled, :disabled]
@@ -30,7 +29,7 @@ class Sys::Group < ApplicationRecord
   validate :validate_disable_state
   validate :validate_code_uniqueness_in_site
 
-  define_site_scope :site_belongings
+  nested_scope :in_site, through: :site_belongings
 
   scope :in_group, ->(group) { where(parent_id: group.id) }
 

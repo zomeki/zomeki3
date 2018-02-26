@@ -1,10 +1,9 @@
 <div class="surveyForm">
   <% if @form_answer.form.description.present? %><div class="body"><%=raw @form_answer.form.description %></div><% end %>
 
-  <%= form_for(@form_answer, url: "#{@node.public_uri}#{@form_answer.form.name}/confirm_answers") do |f| -%>
+  <%= form_for @form_answer, url: "#{@node.public_uri}#{@form_answer.form.name}/confirm_answers", html: { multipart: true } do |f| -%>
     <%= f.error_messages %>
 
-    <%- unless @form_answer.form.public_questions.empty? -%>
     <div class="questions">
       <%- @form_answer.form.public_questions.each do |question| -%>
       <div class="question">
@@ -16,33 +15,39 @@
         </div>
 
         <div class="answer_content">
+          <%- answer = @form_answer.answers.detect { |a| a.question_id == question.id } -%>
           <%- case question.form_type -%>
           <%- when 'text_field', 'text_field_email' -%>
-            <%= text_field_tag "question_answers[#{question.id}]", @form_answer.detect_answer_by_question(question).try(:content), style: question.style_attribute %>
+            <%= text_field_tag "question_answers[#{question.id}]", answer&.content, style: question.style_attribute %>
             <%- if question.form_text_max_length -%>
             <span class="max_length">（最大<%= question.form_text_max_length %>文字）</span>
             <%- end -%>
           <%- when 'text_area' -%>
-            <%= text_area_tag "question_answers[#{question.id}]", @form_answer.detect_answer_by_question(question).try(:content), style: question.style_attribute, size: '100x10' %>
+            <%= text_area_tag "question_answers[#{question.id}]", answer&.content, style: question.style_attribute, size: '100x10' %>
             <%- if question.form_text_max_length -%>
             <span class="max_length">（最大<%= question.form_text_max_length %>文字）</span>
             <%- end -%>
           <%- when 'select' -%>
             <%= select_tag "question_answers[#{question.id}]",
-                           options_for_select(question.form_options_for_select, @form_answer.detect_answer_by_question(question).try(:content)), style: question.style_attribute,
+                           options_for_select(question.form_options_for_select, answer&.content), style: question.style_attribute,
                            include_blank: true %>
           <%- when 'radio_button' -%>
             <%= hidden_field_tag "question_answers[#{question.id}][]" %>
             <%- question.form_options_for_select.each do |option| -%>
               <label><%= radio_button_tag "question_answers[#{question.id}]", option,
-                                          option == @form_answer.detect_answer_by_question(question).try(:content) %> <%= option %></label>
+                                          option == answer&.content %> <%= option %></label>
             <%- end -%>
           <%- when 'check_box' -%>
             <%= hidden_field_tag "question_answers[#{question.id}][]" %>
             <%- question.form_options_for_select.each do |option| -%>
               <label><%= check_box_tag "question_answers[#{question.id}][]", option,
-                                       @form_answer.detect_answer_by_question(question).try(:content).try(:split, ',').try(:include?, option) %> <%= option %></label>
+                                       answer&.content&.split(',')&.include?(option) %> <%= option %></label>
             <%- end -%>
+          <%- when 'attachment' -%>
+            <%= hidden_field_tag "question_answers[#{question.id}][name]" %>
+            <%= hidden_field_tag "question_answers[#{question.id}][data]" %>
+            <%= file_field_tag "question_answers[#{question.id}]" %>
+            <span class="max_length">（最大<%= question.form_file_max_size || 1 %> MB）</span>
           <%- end -%>
         </div>
 
@@ -52,7 +57,6 @@
       </div>
       <%- end -%>
     </div>
-    <%- end -%>
 
     <%- if @content.use_captcha? -%>
     <div class="question">

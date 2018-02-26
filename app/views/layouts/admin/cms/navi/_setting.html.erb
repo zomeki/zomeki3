@@ -3,3 +3,4 @@
 <%= content_tag('li') { link_to '辞書', sys_kana_dictionaries_path, class: (current == :dictionary ? 'current' : '') } -%>
 <%= content_tag('li') { link_to 'メール', sys_tests_path, class: (current == :test ? 'current' : '') } -%>
 <%= content_tag('li') { link_to 'SSL', edit_sys_setting_path(id: 'common_ssl'), class: (current == :common_ssl ? 'current' : '') } -%>
+<%= content_tag('li') { link_to '設定', sys_settings_path, class: (current == :setting ? 'current' : '') } -%>

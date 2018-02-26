@@ -17,12 +17,13 @@ ja:
     survey/question:
       form_type:
         text_field: 入力/1行（テキストフィールド）
+        text_field_email: 入力/1行（メールアドレス）
         text_area: 入力/複数行（テキストエリア）
         select: 選択/単数回答（プルダウン）
         radio_button: 選択/単数回答（ラジオボタン）
         check_box: 選択/複数回答（チェックボックス）
+        attachment: 添付ファイル
         free: 自由形式
-        text_field_email: 入力/1行（メールアドレス）
       required:
         true: 必須
         false: 任意

@@ -1,6 +1,5 @@
 class Feed::FeedEntry < ApplicationRecord
   include Sys::Model::Base
-  include Cms::Model::Site
   include Cms::Model::Auth::Content
 
   default_scope { order(created_at: :desc) }
@@ -12,7 +11,7 @@ class Feed::FeedEntry < ApplicationRecord
 
   belongs_to :feed, class_name: 'Feed::Feed'
 
-  define_site_scope :feed
+  nested_scope :in_site, through: :feed
 
   def source_title
     return @source_title if @source_title

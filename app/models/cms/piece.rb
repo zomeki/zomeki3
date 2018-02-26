@@ -2,7 +2,6 @@ class Cms::Piece < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Rel::Creator
   include Sys::Model::Rel::ObjectRelation
-  include Cms::Model::Site
   include Cms::Model::Rel::Site
   include Cms::Model::Rel::Concept
   include Cms::Model::Rel::ContentModel

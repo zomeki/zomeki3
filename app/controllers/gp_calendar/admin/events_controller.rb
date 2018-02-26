@@ -30,7 +30,7 @@ class GpCalendar::Admin::EventsController < Cms::Controller::Admin::Base
         @items.sort! {|a, b| (a.started_on <=> b.started_on) * -1}
     end
 
-    @items = @items.to_a.paginate(page: params[:page], per_page: 50)
+    @items = @items.to_a.paginate(page: params[:page], per_page: params[:limit])
 
     _index @items
   end

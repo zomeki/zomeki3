@@ -1,6 +1,5 @@
 class Approval::Assignment < ApplicationRecord
   include Sys::Model::Base
-  include Cms::Model::Site
 
   enum_ish :assign_type, [:user, :group_users], default: :user
 
@@ -8,7 +7,7 @@ class Approval::Assignment < ApplicationRecord
   belongs_to :user, class_name: 'Sys::User'
   belongs_to :group, class_name: 'Sys::Group'
 
-  define_site_scope :assignable
+  nested_scope :in_site, through: :assignable
 
   def assign_type_group_users?
     assign_type == 'group_users'

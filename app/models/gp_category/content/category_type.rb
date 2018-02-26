@@ -4,16 +4,15 @@ class GpCategory::Content::CategoryType < Cms::Content
 
   default_scope { where(model: 'GpCategory::CategoryType') }
 
-  has_one :public_node, -> { public_state.where(model: 'GpCategory::CategoryType').order(:id) },
-    foreign_key: :content_id, class_name: 'Cms::Node'
-
-  has_many :settings, -> { order(:sort_no) },
-    foreign_key: :content_id, class_name: 'GpCategory::Content::Setting', dependent: :destroy
-
+  has_many :settings, foreign_key: :content_id, class_name: 'GpCategory::Content::Setting', dependent: :destroy
   has_many :category_types, -> { order(:sort_no) },
-    foreign_key: :content_id, class_name: 'GpCategory::CategoryType', dependent: :destroy
+                            foreign_key: :content_id, class_name: 'GpCategory::CategoryType', dependent: :destroy
   has_many :templates, foreign_key: :content_id, class_name: 'GpCategory::Template', dependent: :destroy
   has_many :template_modules, foreign_key: :content_id, class_name: 'GpCategory::TemplateModule', dependent: :destroy
+
+  # node
+  has_one :public_node, -> { public_state.where(model: 'GpCategory::CategoryType').order(:id) },
+                        foreign_key: :content_id, class_name: 'Cms::Node'
 
   def public_category_types
     category_types.public_state

@@ -5,6 +5,6 @@ module Cms::Model::Rel::Node
     belongs_to :node, class_name: 'Cms::Node'
     delegate :site, to: :node
     delegate :site_id, to: :node
-    scope :in_site, ->(site) { where(node_id: Cms::Node.where(site_id: site)) }
+    nested_scope :in_site, through: :node
   end
 end

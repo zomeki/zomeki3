@@ -1,6 +1,5 @@
 class Sys::RoleName < ApplicationRecord
   include Sys::Model::Base
-  include Cms::Model::Site
   include Cms::Model::Rel::Site
   include Cms::Model::Auth::Site
 

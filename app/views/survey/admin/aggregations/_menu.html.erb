@@ -1,0 +1,8 @@
+<h2><%= menu_header @content.name, @form.title, Survey::FormAnswer.model_name.human, '集計' %></h2>
+
+<div class="actionMenu">
+<%- case action_name -%>
+<%- when 'index' -%>
+  <%= link_to '戻る', survey_form_form_answers_path %>
+<%- end -%>
+</div>

@@ -1,0 +1,26 @@
+<%= form_tag url_for(action: :index), method: :get, class: 'search' do -%>
+<table>
+  <tr>
+    <th>回答日時</th>
+    <td rowspan="2" class="submitters">
+      <%= submit_tag '検索', data: { disable_with: false } %>
+      <%= submit_tag 'リセット', name: 'reset_criteria', data: { disable_with: false } %>
+      <span class="separator">|</span>
+      <%= submit_tag 'CSV出力', name: 'csv', data: { disable_with: false } %>
+      <%= submit_tag '添付出力', name: 'attachments', data: { disable_with: false } %>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <%= text_field_tag 'criteria[start_date]', params.dig(:criteria, :start_date), class: 'datepicker' %> ～
+      <%= text_field_tag 'criteria[end_date]', params.dig(:criteria, :end_date), class: 'datepicker' %>
+    </td>
+  </tr>
+</table>
+<%- end -%>
+
+<%= javascript_tag do -%>
+$(function() {
+  $('input.datepicker').datepicker();
+});
+<%- end -%>

@@ -14,7 +14,7 @@ class GpCategory::Admin::CategoryTypesController < Cms::Controller::Admin::Base
       @items = @content.category_types
       render 'index_options', :layout => false
     else
-      @items = @content.category_types.paginate(page: params[:page], per_page: 50)
+      @items = @content.category_types.paginate(page: params[:page], per_page: params[:limit])
       _index @items
     end
   end

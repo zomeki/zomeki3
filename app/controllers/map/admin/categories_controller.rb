@@ -13,10 +13,11 @@ class Map::Admin::CategoriesController < Cms::Controller::Admin::Base
 
   def index
     @items = if @parent_category
-               @parent_category.children.paginate(page: params[:page], per_page: 50)
+               @parent_category.children
              else
-               @category_type.categories.where(id: @content.categories.pluck(:id)).paginate(page: params[:page], per_page: 50)
+               @category_type.categories.where(id: @content.categories.pluck(:id))
              end
+    @items = @items.paginate(page: params[:page], per_page: params[:limit])
   end
 
   def edit
