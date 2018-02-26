@@ -1,4 +1,4 @@
-class Survey::AggregationModel
+class Survey::Model::Aggregation
   include ActiveModel::Model
 
   attr_accessor :question, :sums

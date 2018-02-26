@@ -16,7 +16,7 @@ class Survey::AggregationService < ApplicationService
                 next
               end
 
-      agg = Survey::AggregationModel.new(question: question)
+      agg = Survey::Model::Aggregation.new(question: question)
       question.form_options_for_select.each do |option|
         agg.sums[option] = count[option].to_i
       end
