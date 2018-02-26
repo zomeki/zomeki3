@@ -20,7 +20,7 @@
 # Learn more: http://github.com/javan/whenever
 
 # set :environment, 'development'
-require_relative 'application'
+require_relative 'environment'
 
 set :output, nil
 
