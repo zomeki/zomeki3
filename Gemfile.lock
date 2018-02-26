@@ -1,9 +1,9 @@
 GIT
-  remote: git://github.com/zomeki/zomekip3-sitebk.git
-  revision: a31cc3f77690f5f53d289f75a4046350a7234ca0
+  remote: git://github.com/zomeki/zplugin3-sitebk.git
+  revision: d2ab16e3345765a9b9f5f4e1d699a1540d9d7f06
   tag: v1.0.0
   specs:
-    zomekip3-sitebk (1.0.0)
+    zplugin3-sitebk (1.0.0)
       pg
       postgres-copy
       rails
@@ -431,7 +431,7 @@ DEPENDENCIES
   web-console (~> 2.0)
   whenever (~> 0.9.7)
   will_paginate (~> 3.1.6)
-  zomekip3-sitebk!
+  zplugin3-sitebk!
 
 BUNDLED WITH
    1.16.0
