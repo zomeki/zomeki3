@@ -40,7 +40,11 @@ class Sys::Admin::AccountController < Sys::Controller::Admin::Base
   end
 
   def logout
-    self.current_user.forget_me if logged_in?
+    if logged_in?
+      current_user.forget_me
+      current_user.users_sessions.where(session_id: session.id).delete_all
+    end
+
     cookies.delete :auth_token
     cookies.delete :cms_site
     reset_session

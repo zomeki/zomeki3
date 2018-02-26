@@ -1717,6 +1717,14 @@ ActiveRecord::Schema.define(version: 20180220094107) do
     t.index ["user_id", "role_id"], name: "index_sys_users_roles_on_user_id_and_role_id", using: :btree
   end
 
+  create_table "sys_users_sessions", force: :cascade do |t|
+    t.integer  "user_id"
+    t.string   "session_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_sys_users_sessions_on_user_id", using: :btree
+  end
+
   create_table "tag_tags", force: :cascade do |t|
     t.integer  "content_id"
     t.text     "word"

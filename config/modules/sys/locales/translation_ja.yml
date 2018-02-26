@@ -74,6 +74,7 @@ ja:
         in_group_id: グループ
         role_name: ロール権限
         admin_creatable: サイト管理者作成
+        sites: 所属サイト
 
       sys/role_name:
         name: ロールID
@@ -143,6 +144,11 @@ ja:
         note: 備考
         sort_no: 並び順
         created_at: 作成日時
+
+      sys/users_session:
+        session_id: セッションID
+        created_at: 作成日時
+        updated_at: 最終アクセス日時
 
   activemodel:
     attributes:
