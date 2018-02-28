@@ -48,6 +48,6 @@ class Sys::Admin::ObjectPrivilegesController < Cms::Controller::Admin::Base
   private
 
   def privilege_params
-    params.require(:item).permit(:concept_id, in_actions: [:read, :create, :update, :delete])
+    params.require(:item).permit(:concept_id, in_actions: [])
   end
 end

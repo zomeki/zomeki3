@@ -17,7 +17,7 @@
   </tr>
   <tr>
     <th><%= f.label :sitemap_state %></th>
-    <td><%= f.radio_buttons :sitemap_state, @item.class.sitemap_state_options %></td>
+    <td><%= f.collection_radio_buttons :sitemap_state, @item.class.sitemap_state_options, :last, :first %></td>
   </tr>
   <tr>
     <th><%= f.label :sitemap_sort_no %></th>

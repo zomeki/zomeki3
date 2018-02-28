@@ -7,7 +7,7 @@ when :select
 when :text
   value_form = f.text_area(:value, :style => "width: 600px; height: 160px;")
 when :radio_buttons
-  value_form = f.radio_buttons(:value, @item.config_options)
+  value_form = f.collection_radio_buttons(:value, @item.config_options, :last, :first)
 else
   style = @item.style || "width: 400px;"
   value_form = f.text_field(:value, :style => style)

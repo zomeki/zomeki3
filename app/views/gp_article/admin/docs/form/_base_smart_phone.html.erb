@@ -17,7 +17,7 @@
   <div>
     <div class="label1"><%= f.label :href %></div>
     <%= f.text_field :href, style: 'width: 290px;' %><br />
-    <%= f.radio_buttons :target, @item.class.target_options %>
+    <%= f.collection_radio_buttons :target, @item.class.target_options, :last, :first %>
   </div>
   <div>
     <div class="label1"><%= f.label :subtitle %></div>
@@ -86,7 +86,7 @@
 
 <div>
   <div class="label1"><%= f.label :feature_1 %></div>
-  <%= f.radio_buttons :feature_1, @item.class.feature_1_options %>
+  <%= f.collection_radio_buttons :feature_1, @item.class.feature_1_options, :last, :first %>
 </div>
 
 <%- if @content.tag_related? && @content.tag_content_tag.present? -%>
