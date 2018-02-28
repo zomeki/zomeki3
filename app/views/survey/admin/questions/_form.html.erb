@@ -4,7 +4,7 @@
 <table class="show">
   <tr>
     <th><%= f.label :state %></th>
-    <td><%= f.radio_buttons :state, @item.class.state_options, :class => 'status' %></td>
+    <td><%= f.collection_radio_buttons :state, @item.class.state_options, :last, :first %></td>
   </tr>
   <tr>
     <th><%= f.label :title %> <span class="note">※</span></th>
@@ -36,7 +36,7 @@
   </tr>
   <tr>
     <th><%= f.label :required %></th>
-    <td><%= f.radio_buttons :required, @item.class.required_options %></td>
+    <td><%= f.collection_radio_buttons :required, @item.class.required_options, :last, :first %></td>
   </tr>
   <tr>
     <th><%= f.label :style_attribute %></th>

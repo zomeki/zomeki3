@@ -20,7 +20,7 @@
       <%- if @item.root? -%>
         <%= @item.state_text %>
       <%- else -%>
-        <%= f.radio_buttons :state, @item.class.state_options, :class => 'status' %>
+        <%= f.collection_radio_buttons :state, @item.class.state_options, :last, :first %>
       <%- end -%>
     </td>
   </tr><tr>
@@ -30,16 +30,16 @@
         <%= @item.auth_name %>
       <%- else -%>
         <%- if Core.user.root? || Core.user.admin_creatable? || Core.user == @item -%>
-          <%= f.radio_buttons :auth_no, @item.authes, :class => 'status' %>
+          <%= f.collection_radio_buttons :auth_no, @item.authes, :last, :first %>
         <%- else -%>
           <%- if @item.has_auth?(:manager) -%>
             <%- if @item.admin_creatable? -%>
               <%= @item.auth_name %>
             <%- else -%>
-              <%= f.radio_buttons :auth_no, @item.authes, :class => 'status' %>
+              <%= f.collection_radio_buttons :auth_no, @item.authes, :last, :first %>
             <%- end -%>
           <%- else -%>
-            <%= f.radio_buttons :auth_no, @item.authes_exclude_admin, :class => 'status' %>
+            <%= f.collection_radio_buttons :auth_no, @item.authes_exclude_admin, :last, :first %>
           <%- end -%>
         <%- end -%>
       <%- end -%>
@@ -47,7 +47,7 @@
       <table id="auth_extra_settings" class="noDesign" style="margin-top: 10px; <%= 'display: none;' if @item.auth_no != 5 %>">
         <tr>
           <td><%= f.label :admin_creatable %></td>
-          <td><%= f.radio_buttons :admin_creatable, @item.class.admin_creatable_options %></td>
+          <td><%= f.collection_radio_buttons :admin_creatable, @item.class.admin_creatable_options, :last, :first %></td>
         </tr>
       </table>
       <%- end -%>
