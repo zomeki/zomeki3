@@ -35,6 +35,7 @@ class Cms::TalkTask < ApplicationRecord
       dep = [publisher.dependent.presence, "talk"].compact.join('/')
       pub = Sys::Publisher.where(publishable: talk_processable, dependent: dep).first_or_initialize
       pub.publish_file_with_digest(mp3[:path], public_talk_file_path)
+      ::File.chmod(0644, public_talk_file_path)
     end
 
     ::File.delete(mp3[:path]) if ::File.exist?(mp3[:path])
