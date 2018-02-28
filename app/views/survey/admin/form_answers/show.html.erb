@@ -3,14 +3,6 @@
     <th><%= @item.class.human_attribute_name :id %></th>
     <td><%= @item.id %></td>
   </tr>
-  <%- @item.answers.each do |answer| -%>
-  <tr>
-    <th><%= safe{answer.question.title} %></th>
-    <td>
-      <%=simple_format answer.content %>
-    </td>
-  </tr>
-  <%- end -%>
   <tr>
     <th><%= @item.class.human_attribute_name :created_at %></th>
     <td><%=l @item.created_at %></td>
@@ -27,4 +19,21 @@
     <th><%= @item.class.human_attribute_name :user_agent %></th>
     <td><%= @item.user_agent %></td>
   </tr>
+</table>
+
+<p class="form">回答</p>
+
+<table class="show">
+  <%- @item.answers.each do |answer| -%>
+  <tr>
+    <th><%= answer.question.title if answer.question %></th>
+    <td>
+      <%- if answer.attachment -%>
+        <%= link_to answer.content, { do: :download, answer_id: answer.id } %>
+      <%- else -%>
+        <%=hbr answer.content %>
+      <%- end -%>
+    </td>
+  </tr>
+  <%- end -%>
 </table>

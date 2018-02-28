@@ -1,6 +1,5 @@
 class Cms::Publisher < ApplicationRecord
   include Sys::Model::Base
-  include Cms::Model::Site
   include Cms::Model::Rel::Site
 
   enum_ish :state, [:queued, :performing]

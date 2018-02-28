@@ -16,7 +16,7 @@ class GpTemplate::Admin::TemplatesController < Cms::Controller::Admin::Base
       return render 'index_options', :layout => false
     end
     
-    @items = @content.templates.paginate(page: params[:page], per_page: 30)
+    @items = @content.templates.paginate(page: params[:page], per_page: params[:limit])
     _index @items
   end
 

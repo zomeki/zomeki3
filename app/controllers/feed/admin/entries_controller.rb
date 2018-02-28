@@ -11,8 +11,9 @@ class Feed::Admin::EntriesController < Cms::Controller::Admin::Base
     return update_entries if params[:do] == "update_entries"
     return delete_entries if params[:do] == "delete_entries"
     
-    @items = Feed::FeedEntry.where(feed_id: @feed.id).order(entry_updated: :desc, id: :desc)
-      .paginate(page: params[:page], per_page: params[:limit])
+    @items = Feed::FeedEntry.where(feed_id: @feed.id)
+                            .order(entry_updated: :desc, id: :desc)
+                            .paginate(page: params[:page], per_page: params[:limit])
     _index @items
   end
 

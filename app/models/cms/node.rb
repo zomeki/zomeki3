@@ -2,7 +2,6 @@ class Cms::Node < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Tree
   include Sys::Model::Rel::Creator
-  include Cms::Model::Site
   include Cms::Model::Base::Sitemap
   include Cms::Model::Base::Page
   include Cms::Model::Rel::Site

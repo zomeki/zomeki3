@@ -7,7 +7,7 @@ class Tag::Admin::TagsController < Cms::Controller::Admin::Base
   end
 
   def index
-    @items = @content.tags.paginate(page: params[:page], per_page: 50)
+    @items = @content.tags.paginate(page: params[:page], per_page: params[:limit])
     _index @items
   end
 end

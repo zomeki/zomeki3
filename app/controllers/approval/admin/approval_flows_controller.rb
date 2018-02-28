@@ -9,7 +9,8 @@ class Approval::Admin::ApprovalFlowsController < Cms::Controller::Admin::Base
   def index
     return user_options if params[:user_options]
 
-    @items = @content.approval_flows.paginate(page: params[:page], per_page: 30).order(:sort_no)
+    @items = @content.approval_flows.order(:sort_no, :id)
+                                    .paginate(page: params[:page], per_page: params[:limit])
     _index @items
   end
 

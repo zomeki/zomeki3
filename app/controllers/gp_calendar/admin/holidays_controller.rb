@@ -7,8 +7,9 @@ class GpCalendar::Admin::HolidaysController < Cms::Controller::Admin::Base
   end
 
   def index
-    @items = @content.holidays.order("repeat desc, COALESCE(TO_CHAR(date,'YYYYMMDD'), '00000000')")
-      .paginate(page: params[:page], per_page: 50)
+    @items = @content.holidays
+                     .order("repeat desc, COALESCE(TO_CHAR(date,'YYYYMMDD'), '00000000')")
+                     .paginate(page: params[:page], per_page: params[:limit])
     _index @items
   end
 

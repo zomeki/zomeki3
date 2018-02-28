@@ -1,11 +1,10 @@
 class Cms::Link < ApplicationRecord
   include Sys::Model::Base
-  include Cms::Model::Site
 
   belongs_to :linkable, polymorphic: true
   belongs_to :content
 
-  define_site_scope :linkable
+  nested_scope :in_site, through: :linkable
 
   def make_absolute_url(site)
     uri = Addressable::URI.parse(url)

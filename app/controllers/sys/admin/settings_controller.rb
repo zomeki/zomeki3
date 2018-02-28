@@ -7,7 +7,7 @@ class Sys::Admin::SettingsController < Cms::Controller::Admin::Base
   end
 
   def index
-    @items = Sys::Setting.configs.values.map { |config| Sys::Setting.where(name: config[:id]).first }
+    @items = Sys::Setting.configs.values.map { |config| Sys::Setting.where(name: config[:id]).first_or_initialize }
     _index @items
   end
 

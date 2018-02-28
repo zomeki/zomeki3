@@ -30,7 +30,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
       csv = generate_csv(@items, GpArticle::Doc::Criteria.new(criteria))
       return send_data platform_encode(csv), type: 'text/csv', filename: "gp_article_docs_#{Time.now.to_i}.csv"
     else
-      @items = @items.paginate(page: params[:page], per_page: 30)
+      @items = @items.paginate(page: params[:page], per_page: params[:limit])
     end
 
     _index @items

@@ -1,6 +1,5 @@
 class Cms::Bracket < ApplicationRecord
   include Sys::Model::Base
-  include Cms::Model::Site
   include Cms::Model::Rel::Site
 
   belongs_to :owner, polymorphic: true

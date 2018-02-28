@@ -10,7 +10,8 @@ class Reception::Admin::CoursesController < Cms::Controller::Admin::Base
   end
 
   def index
-    @items = @content.courses.search_with_criteria(params[:criteria] || {})
+    @items = @content.courses
+                     .search_with_criteria(params[:criteria] || {})
                      .with_target(params[:target])
                      .order(id: :asc)
 
@@ -19,7 +20,7 @@ class Reception::Admin::CoursesController < Cms::Controller::Admin::Base
       return send_data platform_encode(csv), type: 'text/csv', filename: "courses_#{Time.now.to_i}.csv"
     end
 
-    @items = @items.paginate(page: params[:page], per_page: 30)
+    @items = @items.paginate(page: params[:page], per_page: params[:limit])
     _index @items
   end
 

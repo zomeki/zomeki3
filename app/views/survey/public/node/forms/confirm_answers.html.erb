@@ -1,6 +1,6 @@
 <div class="surveyForm">
-  <%= form_for(@form_answer, url: "#{@node.public_uri}#{@form_answer.form.name}/send_answers") do |f| -%>
-    <%- unless @form_answer.form.public_questions.empty? -%>
+  <%= form_for @form_answer, url: "#{@node.public_uri}#{@form_answer.form.name}/send_answers", html: { multipart: true } do |f| -%>
+
     <div class="questions">
       <%- @form_answer.form.public_questions.each do |question| -%>
       <div class="question">
@@ -8,31 +8,30 @@
           <%= label_tag "question_answers_#{question.id}", question.title %>
         </div>
 
-        <% if question.form_type != 'free' %>
-        <div class="answer_content">
-          <%= hidden_field_tag "question_answers[#{question.id}]", @form_answer.detect_answer_by_question(question).try(:content) %>
-          <%- case question.form_type -%>
-          <%- when 'text_field', 'text_field_email' -%>
-            <%= @form_answer.detect_answer_by_question(question).try(:content) %>
-          <%- when 'text_area' -%>
-            <%=simple_format @form_answer.detect_answer_by_question(question).try(:content) %>
-          <%- when 'select' -%>
-            <%= @form_answer.detect_answer_by_question(question).try(:content) %>
-          <%- when 'radio_button' -%>
-            <%= @form_answer.detect_answer_by_question(question).try(:content) %>
-          <%- when 'check_box' -%>
-            <%= @form_answer.detect_answer_by_question(question).try(:content) %>
-          <%- end -%>
-        </div>
-        <% end %>
+        <%- if question.form_type != 'free' -%>
+          <%- answer = @form_answer.answers.detect { |a| a.question_id == question.id } -%>
+          <div class="answer_content">
+            <%- case question.form_type -%>
+            <%- when 'text_field', 'text_field_email', 'select', 'radio_button', 'check_box' -%>
+              <%= hidden_field_tag "question_answers[#{question.id}]", answer&.content %>
+              <%= answer&.content %>
+            <%- when 'text_area' -%>
+              <%= hidden_field_tag "question_answers[#{question.id}]", answer&.content %>
+              <%=simple_format answer&.content %>
+            <%- when 'attachment' -%>
+              <%= hidden_field_tag "question_answers[#{question.id}][name]", answer&.content %>
+              <%= hidden_field_tag "question_answers[#{question.id}][data]", Base64.strict_encode64(answer&.attachment&.data) if answer&.attachment&.data %>
+              <%= answer&.content %>
+            <%- end -%>
+          </div>
+        <%- end -%>
 
         <%- if question.description.present? -%>
-        <div class="body"><%=raw question.description %></div>
+          <div class="body"><%=raw question.description %></div>
         <%- end -%>
       </div>
       <%- end -%>
     </div>
-    <%- end -%>
 
     <div class="submit">
       <%= submit_tag '送信する' %>

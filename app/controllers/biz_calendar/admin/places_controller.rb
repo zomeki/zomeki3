@@ -8,9 +8,10 @@ class BizCalendar::Admin::PlacesController < Cms::Controller::Admin::Base
   end
 
   def index
-    @items = BizCalendar::Place.where(content_id: @content.id).search_with_params(params)
-      .order(sort_no: :asc, updated_at: :desc, id: :desc)
-      .paginate(page: params[:page], per_page: params[:limit])
+    @items = BizCalendar::Place.where(content_id: @content.id)
+                               .search_with_params(params)
+                               .order(sort_no: :asc, updated_at: :desc, id: :desc)
+                               .paginate(page: params[:page], per_page: params[:limit])
 
     _index @items
   end

@@ -2,7 +2,7 @@ module Cms::Model::Rel::Inquiry
   extend ActiveSupport::Concern
 
   included do
-    has_many :inquiries, class_name: 'Cms::Inquiry', dependent: :destroy, as: :inquirable
+    has_many :inquiries, -> { order(:id) }, class_name: 'Cms::Inquiry', dependent: :destroy, as: :inquirable
     accepts_nested_attributes_for :inquiries, allow_destroy: true, reject_if: :reject_inquiry
   end
 

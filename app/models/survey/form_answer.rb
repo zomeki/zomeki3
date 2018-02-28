@@ -1,6 +1,5 @@
 class Survey::FormAnswer < ApplicationRecord
   include Sys::Model::Base
-  include Cms::Model::Site
 
   apply_simple_captcha
 
@@ -10,21 +9,37 @@ class Survey::FormAnswer < ApplicationRecord
 
   has_many :answers, -> { order(:id) }, dependent: :destroy
 
-  validate :validate_base
+  validate :validate_answers
 
-  define_site_scope :form
+  nested_scope :in_site, through: :form
 
   def question_answers=(qa)
     qa.each do |key, value|
-      next unless question = form.questions.find_by(id: key)
-      answers.build(question: question, content: value.kind_of?(Array) ? value.reject{|v| v.blank? }.join(',') : value)
+      next unless question = form.questions.detect { |q| q.id == key.to_i }
+      case question.form_type
+      when 'attachment'
+        if value.respond_to?(:original_filename)  # UploadedFile
+          answer = answers.build(form_answer: self, question: question, content: value.original_filename)
+          at = answer.build_attachment(site_id: form.content.site_id)
+          at.name = at.title = value.original_filename
+          at.file = value
+          at.data = value.read
+        elsif value.key?(:name)
+          answer = answers.build(form_answer: self, question: question, content: value[:name])
+          if value[:data]
+            at = answer.build_attachment(site_id: form.content.site_id)
+            at.name = Util::File.sanitize_filename(value[:name])
+            at.title = value[:name]
+            at.file = Sys::Lib::File::NoUploadedFile.new(data: Base64.strict_decode64(value[:data]), filename: at.name)
+          end
+        end
+      else
+        answers.build(form_answer: self,
+                      question: question,
+                      content: value.kind_of?(Array) ? value.select(&:present?).join(',') : value)
+      end
     end
     qa
-  end
-
-  # Use before saving answers
-  def detect_answer_by_question(question)
-    answers.detect{|a| a.question_id == question.id }
   end
 
   def reply_to
@@ -49,18 +64,14 @@ class Survey::FormAnswer < ApplicationRecord
 
   private
 
-  def validate_base
+  def validate_answers
     errors.keys.each{|k| errors.delete(k) unless [:base, :form_id].include?(k) }
+
     answers.each do |answer|
       next if answer.question.form_type == 'free'
-      if ['text_field', 'text_area'].include?(answer.question.form_type)
-        max = answer.question.form_text_max_length
-        errors.add(:base, "#{answer.question.title}は#{max}文字以内で入力してください。") if max && max < answer.content.size
+      if answer.invalid?
+        answer.errors.full_messages.each { |msg| errors.add(:base, msg) } 
       end
-      if [ 'text_field_email' ].include?(answer.question.form_type)
-        errors.add(:base, "#{answer.question.title}を正しく入力してください。") if answer.content !~ /\A.+@.+\z/ && !answer.content.blank?
-      end
-      errors.add(:base, "#{answer.question.title}を入力してください。") if answer.question.required? && answer.content.blank?
     end
   end
 end

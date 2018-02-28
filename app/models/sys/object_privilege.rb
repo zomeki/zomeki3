@@ -1,6 +1,5 @@
 class Sys::ObjectPrivilege < ApplicationRecord
   include Sys::Model::Base
-  include Cms::Model::Site
   include Cms::Model::Auth::Site::Role
 
   enum_ish :action, [:read, :create, :update, :delete]
@@ -17,7 +16,7 @@ class Sys::ObjectPrivilege < ApplicationRecord
 
   attr_accessor :in_actions
 
-  define_site_scope :role_name
+  nested_scope :in_site, through: :role_name
 
   def in_actions
     @in_actions ||= actions

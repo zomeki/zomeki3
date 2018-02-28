@@ -5,7 +5,7 @@ module Cms::Model::Rel::Content
     belongs_to :content, class_name: 'Cms::Content'
     delegate :site, to: :content
     delegate :site_id, to: :content
-    scope :in_site, ->(site) { where(content_id: Cms::Content.where(site_id: site)) }
+    nested_scope :in_site, through: :content
   end
 
   def inherited_concept

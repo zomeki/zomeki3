@@ -8,7 +8,7 @@ class Feed::Admin::FeedsController < Cms::Controller::Admin::Base
 
   def index
     items = @content.feeds.except(:order).order(created_at: :desc)
-    @items = items.paginate(page: params[:page], per_page: 50)
+    @items = items.paginate(page: params[:page], per_page: params[:limit])
     
     _index @items
   end

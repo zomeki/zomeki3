@@ -7,7 +7,7 @@ class Map::Admin::MarkersController < Cms::Controller::Admin::Base
   end
 
   def index
-    @items = @content.markers.paginate(page: params[:page], per_page: 50)
+    @items = @content.markers.paginate(page: params[:page], per_page: params[:limit])
     _index @items
   end
 

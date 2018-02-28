@@ -1,13 +1,12 @@
 class Reception::Content::Course < Cms::Content
   default_scope { where(model: 'Reception::Course') }
 
-  has_one :public_node, -> { public_state.where(model: 'Reception::Course').order(:id) },
-    foreign_key: :content_id, class_name: 'Cms::Node'
-
-  has_many :settings, -> { order(:sort_no) },
-    foreign_key: :content_id, class_name: 'Reception::Content::Setting', dependent: :destroy
-
+  has_many :settings, foreign_key: :content_id, class_name: 'Reception::Content::Setting', dependent: :destroy
   has_many :courses, foreign_key: :content_id, class_name: 'Reception::Course', dependent: :destroy
+
+  # node
+  has_one :public_node, -> { public_state.where(model: 'Reception::Course').order(:id) },
+                        foreign_key: :content_id, class_name: 'Cms::Node'
 
   def public_path
     site.public_path

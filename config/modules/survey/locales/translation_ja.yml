@@ -30,6 +30,8 @@ ja:
         form_type: 種別
         form_text_max_length: 最大文字数
         form_options: 選択候補
+        form_file_max_size: 最大ファイルサイズ
+        form_file_extension: 許可する拡張子
       survey/form_answer:
         id: ID
         answered_url: 回答されたページ

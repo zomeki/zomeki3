@@ -8,7 +8,7 @@ class Survey::Admin::QuestionsController < Cms::Controller::Admin::Base
   end
 
   def index
-    @items = @form.questions.paginate(page: params[:page], per_page: 30)
+    @items = @form.questions.paginate(page: params[:page], per_page: params[:limit])
     _index @items
   end
 
@@ -40,9 +40,7 @@ class Survey::Admin::QuestionsController < Cms::Controller::Admin::Base
   private
 
   def question_params
-    params.require(:item).permit(
-      :description, :form_options, :form_text_max_length, :form_type, :required, :sort_no,
-      :state, :style_attribute, :title
-    )
+    params.require(:item).permit(:title, :description, :state, :sort_no, :required, :style_attribute, :form_type,
+                                 :form_options, :form_text_max_length, :form_file_max_size, :form_file_extension)
   end
 end

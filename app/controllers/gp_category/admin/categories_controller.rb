@@ -12,11 +12,12 @@ class GpCategory::Admin::CategoriesController < Cms::Controller::Admin::Base
     if params[:options]
       render 'index_options', :layout => false
     else
-      if @parent_category
-        @items = @parent_category.children.paginate(page: params[:page], per_page: 50)
-      else
-        @items = @category_type.root_categories.paginate(page: params[:page], per_page: 50)
-      end
+      @items = if @parent_category
+                 @parent_category.children
+               else
+                 @category_type.root_categories
+               end
+      @items = @items.paginate(page: params[:page], per_page: params[:limit])
       _index @items
     end
   end

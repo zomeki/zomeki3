@@ -9,7 +9,7 @@ class GpCategory::Admin::TemplateModulesController < Cms::Controller::Admin::Bas
 
   def index
     @items = @content.template_modules.order(:name)
-                     .paginate(page: params[:page], per_page: 50)
+                     .paginate(page: params[:page], per_page: params[:limit])
     _index @items
   end
 

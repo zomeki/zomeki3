@@ -7,7 +7,7 @@ class AdBanner::Admin::GroupsController < Cms::Controller::Admin::Base
   end
 
   def index
-    @items = @content.groups.paginate(page: params[:page], per_page: 50)
+    @items = @content.groups.paginate(page: params[:page], per_page: params[:limit])
     _index @items
   end
 

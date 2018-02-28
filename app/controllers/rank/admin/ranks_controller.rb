@@ -16,7 +16,7 @@ class Rank::Admin::RanksController < Cms::Controller::Admin::Base
 
     @ranks = Rank::TotalsFinder.new(@content.ranks)
                                .search(@content, @term, @target, gp_category: @gp_category, category_type: @category_type, category: @category)
-                               .paginate(page: params[:page], per_page: 20)
+                               .paginate(page: params[:page], per_page: params[:limit])
 
     _index @ranks
   end

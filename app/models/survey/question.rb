@@ -1,6 +1,5 @@
 class Survey::Question < ApplicationRecord
   include Sys::Model::Base
-  include Cms::Model::Site
   include Cms::Model::Auth::Content
 
   default_scope { order(:sort_no, :id) }
@@ -9,10 +8,11 @@ class Survey::Question < ApplicationRecord
 
   enum_ish :state, [:public, :closed], default: :public
   enum_ish :form_type, [:text_field, :text_field_email, :text_area,
-                        :select, :radio_button, :check_box, :free], default: :text_field
+                        :select, :radio_button, :check_box, :attachment, :free], default: :text_field
   enum_ish :required, [true, false], default: true
 
   belongs_to :form, required: true
+  has_many :answers
 
   delegate :content, to: :form
 
@@ -20,7 +20,7 @@ class Survey::Question < ApplicationRecord
   validates :title, presence: true
   validates :sort_no, presence: true
 
-  define_site_scope :form
+  nested_scope :in_site, through: :form
 
   scope :public_state, -> { where(state: 'public') }
 
@@ -30,5 +30,9 @@ class Survey::Question < ApplicationRecord
 
   def email_field?
     form_type == 'text_field_email'
+  end
+
+  def form_file_extensions
+    form_file_extension.to_s.split(',').map(&:strip).select(&:present?)
   end
 end

@@ -3,7 +3,6 @@ class Survey::Form < ApplicationRecord
   include Sys::Model::Rel::Creator
   include Sys::Model::Rel::EditableGroup
   include Sys::Model::Rel::Task
-  include Cms::Model::Site
   include Cms::Model::Base::Sitemap
   include Cms::Model::Rel::Content
   include Cms::Model::Auth::Content
@@ -27,6 +26,7 @@ class Survey::Form < ApplicationRecord
 
   has_many :questions, dependent: :destroy
   has_many :form_answers, dependent: :destroy
+  has_many :answers, through: :form_answers
 
   validates :state, presence: true
   validates :name, presence: true, uniqueness: { scope: :content_id }, format: { with: /\A[-\w]*\z/ }

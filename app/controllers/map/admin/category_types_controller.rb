@@ -9,7 +9,7 @@ class Map::Admin::CategoryTypesController < Cms::Controller::Admin::Base
   end
 
   def index
-    @items = @content.category_types.paginate(page: params[:page], per_page: 50)
+    @items = @content.category_types.paginate(page: params[:page], per_page: params[:limit])
   end
 
   def edit

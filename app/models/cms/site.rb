@@ -2,7 +2,6 @@ class Cms::Site < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Rel::Creator
   include Sys::Model::Auth::Manager
-  include Cms::Model::Site
   include Cms::Model::Rel::DataFile
   include Cms::Model::Rel::SiteSetting
 
@@ -55,7 +54,7 @@ class Cms::Site < ApplicationRecord
   after_save :make_node
   after_save :copy_common_directory
 
-  scope :in_site, ->(site) { where(id: site) }
+  nested_scope :in_site
   scope :matches_to_domain, ->(domain) {
     where([
       arel_table[:full_uri].matches("http://#{domain}%"),

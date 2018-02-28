@@ -1,6 +1,5 @@
 class GpTemplate::Item < ApplicationRecord
   include Sys::Model::Base
-  include Cms::Model::Site
   include Cms::Model::Auth::Content
 
   default_scope { order(:sort_no, :id) }
@@ -21,7 +20,7 @@ class GpTemplate::Item < ApplicationRecord
                    format: { with: /\A[-\w]*\z/ }
   validates :item_type, presence: true
 
-  define_site_scope :template
+  nested_scope :in_site, through: :template
 
   scope :public_state, -> { where(state: 'public') }
 
