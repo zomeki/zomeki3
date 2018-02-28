@@ -40,6 +40,7 @@ class Cms::Admin::PreviewController < Cms::Controller::Admin::Base
       opt  = Rails.application.routes.recognize_path(node)
 
       if opt[:controller] == 'cms/public/exception'
+        path += 'index.html' if path.end_with?('/')
         file_path = File.join(Page.site.public_path, path)
         if File.exist?(file_path) && File.ftype(file_path) == 'file'
           return send_file(file_path, type: ::Storage.mime_type(path), filename: ::File.basename(path), disposition: 'inline')

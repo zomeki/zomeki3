@@ -73,3 +73,10 @@ end
 
 after_monitor do |master|
 end
+
+# Engines
+Rails.application.config.x.engines.each do |engine|
+  Dir["#{engine.root}/config/modules/**/delayed_job_master.rb"].each do |file|
+    instance_eval File.read(file)
+  end
+end
