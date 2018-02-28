@@ -7,6 +7,8 @@ class GpCategory::Piece::Doc < Cms::Piece
 
   default_scope { where(model: 'GpCategory::Doc') }
 
+  belongs_to :content, class_name: 'GpCategory::Content::CategoryType'
+
   after_initialize :set_default_settings
 
   validate :validate_settings
@@ -43,10 +45,6 @@ class GpCategory::Piece::Doc < Cms::Piece
 
   def more_link_url
     setting_value(:more_link_url).to_s
-  end
-
-  def content
-    GpCategory::Content::CategoryType.find(super.id)
   end
 
   def categories

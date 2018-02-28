@@ -5,6 +5,8 @@ class GpArticle::Piece::Archive < Cms::Piece
 
   default_scope { where(model: 'GpArticle::Archive') }
 
+  belongs_to :content, class_name: 'GpArticle::Content::Doc'
+
   def num_docs_visibility
     setting_value(:num_docs_visibility).to_s
   end

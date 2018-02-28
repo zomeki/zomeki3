@@ -1,6 +1,7 @@
 class Feed::Piece::FeedEntry < Cms::Piece
-
   default_scope { where(model: 'Feed::FeedEntry') }
+
+  belongs_to :content, class_name: 'Feed::Content::Feed'
 
   after_initialize :set_default_settings
 

@@ -3,6 +3,8 @@ class GpCategory::Piece::CategoryType < Cms::Piece
 
   default_scope { where(model: 'GpCategory::CategoryType') }
 
+  belongs_to :content, class_name: 'GpCategory::Content::CategoryType'
+
   def layer
     setting_value(:layer).presence || LAYER_OPTIONS.first.last
   end
@@ -13,10 +15,6 @@ class GpCategory::Piece::CategoryType < Cms::Piece
 
   def date_style
     setting_value(:date_style).to_s
-  end
-
-  def content
-    GpCategory::Content::CategoryType.find(super.id)
   end
 
   def category_types

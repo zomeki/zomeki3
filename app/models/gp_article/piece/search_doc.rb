@@ -1,11 +1,9 @@
 class GpArticle::Piece::SearchDoc < Cms::Piece
   default_scope { where(model: 'GpArticle::SearchDoc') }
 
-  after_initialize :set_default_settings
+  belongs_to :content, class_name: 'GpArticle::Content::Doc'
 
-  def content
-    GpArticle::Content::Doc.find(super.id)
-  end
+  after_initialize :set_default_settings
 
   def category_types_for_option
     content.category_types.map { |ct| ["#{ct.title}(#{ct.name})", ct.id] }

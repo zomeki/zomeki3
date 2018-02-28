@@ -5,6 +5,8 @@ class GpArticle::Piece::RecentTab < Cms::Piece
 
   default_scope { where(model: 'GpArticle::RecentTab') }
 
+  belongs_to :content, class_name: 'GpArticle::Content::Doc'
+
   after_initialize :set_default_settings
 
   validate :validate_settings
@@ -44,10 +46,6 @@ class GpArticle::Piece::RecentTab < Cms::Piece
 
   def more_label
     setting_value(:more_label).to_s
-  end
-
-  def content
-    GpArticle::Content::Doc.find(super.id)
   end
 
   def category_types

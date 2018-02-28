@@ -3,6 +3,8 @@ class Organization::Piece::ContactInformation < Cms::Piece
 
   default_scope { where(model: 'Organization::ContactInformation') }
 
+  belongs_to :content, class_name: 'Organization::Content::Group'
+
   after_initialize :set_defaults
 
   def source

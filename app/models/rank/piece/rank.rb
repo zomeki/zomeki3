@@ -1,9 +1,7 @@
 class Rank::Piece::Rank < Cms::Piece
   default_scope { where(model: 'Rank::Rank') }
 
-  def content
-    Rank::Content::Rank.find(super.id)
-  end
+  belongs_to :content, class_name: 'Rank::Content::Rank'
 
   def ranking_targets
     return Rank::Rank::TARGETS
