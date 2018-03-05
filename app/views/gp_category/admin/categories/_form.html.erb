@@ -9,15 +9,15 @@
   </tr>
   <tr>
     <th><%= f.label :name, "#{@category_type.title}ID" %> <span class="note">※</span></th>
-    <td><%= f.text_field :name, :class => 'id' %></td>
+    <td><%= f.text_field :name, class: 'id' %></td>
   </tr>
   <tr>
     <th><%= f.label :title, "#{@category_type.title}名" %> <span class="note">※</span></th>
-    <td><%= f.text_field :title, :class => 'name' %></td>
+    <td><%= f.text_field :title, class: 'name' %></td>
   </tr>
   <tr>
     <th><%= f.label :description %></th>
-    <td><%= f.text_field :description, :size => 100 %></td>
+    <td><%= f.text_field :description, size: 100 %></td>
   </tr>
   <tr>
     <th><%= f.label :sitemap_state %></th>
@@ -29,7 +29,7 @@
   </tr>
   <tr>
     <th><%= f.label :sort_no %></th>
-    <td><%= f.text_field :sort_no, :class => 'number' %></td>
+    <td><%= f.text_field :sort_no, class: 'number' %></td>
   </tr>
 </table>
 

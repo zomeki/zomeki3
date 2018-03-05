@@ -2,13 +2,15 @@
 <p class="form">基本情報</p>
 
 <table class="show">
-  <%= node_base_form f, :container => :tr %>
+  <%= node_base_form f, container: :tr %>
 </table>
 
 <table class="show" style="margin: 0px;">
   <tr>
-    <th><%= f.label :body %></th></tr><tr>
-    <td class="cke_editor_wrapper"><%= f.text_area :body, :class => 'body ckeditor', :style => 'width: 100%' %></td>
+    <th><%= f.label :body %></th>
+  </tr>
+  <tr>
+    <td class="cke_editor_wrapper"><%= f.text_area :body, class: 'body ckeditor', style: 'width: 100%' %></td>
   </tr>
 </table>
 
@@ -94,10 +96,10 @@ function setText(element, text ) {
 <table class="show">
   <tr>
     <th><%= f.label :mobile_title %></th>
-    <td><%= f.text_field :mobile_title, :class => 'title' %></td>
+    <td><%= f.text_field :mobile_title, class: 'title' %></td>
   </tr><tr>
     <th><%= f.label :mobile_body %></th>
-    <td><%= f.text_area :mobile_body, :style => 'width: 600px; height: 240px;' %></td>
+    <td><%= f.text_area :mobile_body, style: 'width: 600px; height: 240px;' %></td>
   </tr>
 </table>
 <%- end -%>

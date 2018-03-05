@@ -7,17 +7,17 @@
     <td><%= f.collection_radio_buttons :state, @item.class.state_options, :last, :first %></td>
   </tr><tr>
     <th><%= f.label :name %></th>
-    <td><%= f.text_field :name, :class => 'id' %></td>
+    <td><%= f.text_field :name, class: 'id' %></td>
   </tr><tr>
     <th><%= f.label :title %></th>
-    <td><%= f.text_field :title, :class => 'name' %></td>
+    <td><%= f.text_field :title, class: 'name' %></td>
   </tr>
 </table>
 
 <table class="show" style="margin: 0px;">
   <tr>
     <th><%= f.label :body %></th></tr><tr>
-    <td><%= f.text_area :body, :class => 'body' %></td>
+    <td><%= f.text_area :body, class: 'body' %></td>
   </tr>
 </table>
 

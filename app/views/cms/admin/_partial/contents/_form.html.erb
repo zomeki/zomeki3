@@ -8,7 +8,7 @@
       <%- if @item.persisted? -%>
         <%= @item.module_name(:short) %>
       <%- else -%>
-        <%= f.select :model, Cms::Lib::Modules.contents, :include_blank => :true %>
+        <%= f.select :model, Cms::Lib::Modules.contents, include_blank: true %>
       <%- end -%>
     </td>
   </tr>
@@ -18,7 +18,7 @@
   </tr>
   <tr>
     <th><%= f.label :name %> <span class="note">※</span></th>
-    <td><%= f.text_field :name, :class => 'name' %></td>
+    <td><%= f.text_field :name, class: 'name' %></td>
   </tr>
   <tr>
     <th><%= f.label :note %></th>
@@ -26,7 +26,7 @@
   </tr>
   <tr>
     <th><%= f.label :sort_no %></th>
-    <td><%= f.text_field :sort_no, :class => 'number' %></td>
+    <td><%= f.text_field :sort_no, class: 'number' %></td>
   </tr>
 <% if defined?(container) && container != :tr %>
 </table>
