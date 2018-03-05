@@ -12,15 +12,15 @@ class Cms::Site < ApplicationRecord
   enum_ish :spp_target, [:only_top, :all], default: :only_top
   enum_ish :mobile_feature, [:enabled, :disabled], default: :enabled
 
-  has_many :concepts, -> { order(:sort_no, :name, :id) }, dependent: :destroy
+  has_many :concepts, -> { order(:sort_no, :name, :id) }
   has_many :contents, -> { order(:sort_no, :name, :id) }
   has_many :settings, -> { order(:name, :sort_no) }, class_name: 'Cms::SiteSetting'
   has_many :basic_auth_users, -> { order(:name) }, class_name: 'Cms::SiteBasicAuthUser'
   has_many :kana_dictionaries
-  has_many :site_belongings, dependent: :destroy
+  has_many :site_belongings
   has_many :groups, through: :site_belongings, class_name: 'Sys::Group'
-  has_many :nodes, dependent: :destroy
-  has_many :messages, class_name: 'Sys::Message', dependent: :destroy
+  has_many :nodes
+  has_many :messages, class_name: 'Sys::Message'
   has_many :operation_logs, class_name: 'Sys::OperationLog'
 
   belongs_to :root_node, foreign_key: :node_id, class_name: 'Cms::Node'
@@ -47,6 +47,7 @@ class Cms::Site < ApplicationRecord
   before_destroy :block_last_deletion
 
   after_save :generate_files
+  before_destroy :destroy_related_records
   after_destroy :destroy_files
 
   after_create :make_concept
@@ -294,6 +295,13 @@ class Cms::Site < ApplicationRecord
     FileUtils.mkdir_p "#{public_path}/_themes"
     FileUtils.mkdir_p config_path
     FileUtils.touch "#{config_path}/rewrite.conf"
+  end
+
+  def destroy_related_records
+    scanned = Cms::SiteScanService.new(self).scan
+    scanned.each do |model, ids|
+      model.unscoped.where(id: ids).delete_all if ids.present?
+    end
   end
 
   def destroy_files
