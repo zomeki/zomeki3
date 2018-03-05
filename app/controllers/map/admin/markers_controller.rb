@@ -7,7 +7,9 @@ class Map::Admin::MarkersController < Cms::Controller::Admin::Base
   end
 
   def index
-    @items = @content.markers.paginate(page: params[:page], per_page: params[:limit])
+    @items = @content.markers
+                     .order(:sort_no, :id)
+                     .paginate(page: params[:page], per_page: params[:limit])
     _index @items
   end
 
@@ -64,7 +66,7 @@ class Map::Admin::MarkersController < Cms::Controller::Admin::Base
   end
 
   def marker_params
-    params.require(:item).permit(:latitude, :longitude, :state, :title, :window_text).tap do |permitted|
+    params.require(:item).permit(:latitude, :longitude, :state, :title, :window_text, :sort_no).tap do |permitted|
       [:in_category_ids].each do |key|
         permitted[key] = params[:item][key].to_unsafe_h if params[:item][key]
       end

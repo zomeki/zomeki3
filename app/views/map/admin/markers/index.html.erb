@@ -6,6 +6,7 @@
     <th><%= Map::Marker.human_attribute_name :title %></th>
     <th><%= Map::Marker.human_attribute_name :latitude %></th>
     <th><%= Map::Marker.human_attribute_name :longitude %></th>
+    <th style="width: 60px;"><%= Map::Marker.human_attribute_name :sort_no %></th>
     <th style="text-align: center; width: 60px;"><%= Map::Marker.human_attribute_name :state %></th>
   </tr>
 
@@ -15,6 +16,7 @@
     <td style="text-align: left;"><%= item.title %></td>
     <td style="text-align: left;"><%= item.latitude %></td>
     <td style="text-align: left;"><%= item.longitude %></td>
+    <td><%= item.sort_no %></td>
     <td style="text-align: center;"><%= item.state_text %></td>
   </tr>
   <%- end -%>

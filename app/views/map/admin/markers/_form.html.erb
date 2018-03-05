@@ -38,4 +38,8 @@
       <%= file_field_tag :file, accept: 'image/gif,image/jpeg,image/png', style: 'width: 500px;' %>
     </td>
   </tr>
+  <tr>
+    <th><%= f.label :sort_no %></th>
+    <td><%= f.text_field :sort_no, class: 'number' %></td>
+  </tr>
 </table>

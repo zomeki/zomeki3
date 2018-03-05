@@ -36,6 +36,7 @@ ja:
         editable_groups: 編集可能グループ
         in_rel_doc_ids: 関連記事
         marker_state: マップ表示
+        marker_sort_no: 並び順
         meta_description: 説明文
         meta_keywords: キーワード
         og_type: タイプ
