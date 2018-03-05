@@ -4,10 +4,14 @@
   <tr>
     <th><%= f.label :name %></th>
     <td>
-      <%= f.text_field :name, class: 'name' %>
-      <span style="margin: 0 10px 0 20px;">&lt;&lt;</span>
-      <span>一覧から選択：</span>
-      <%= select_tag :plugins, options_for_select(Sys::Plugin.search_repos.map { |repo| [repo[:full_name], title: repo[:description]] }, @item.name), include_blank: true %>
+      <%- if @item.new_record? -%>
+        <%= f.text_field :name, class: 'name' %>
+        <span style="margin: 0 10px 0 20px;">&lt;&lt;</span>
+        <span>一覧から選択：</span>
+        <%= select_tag :plugins, options_for_select(Sys::Plugin.search_repos.map { |repo| [repo[:full_name], title: repo[:description]] }, @item.name), include_blank: true %>
+      <%- else -%>
+        <%= @item.name %>
+      <%- end -%>
     </td>
   </tr>
   <tr>
@@ -25,7 +29,7 @@
   </tr>
   <tr>
     <th><%= f.label :state %></th>
-    <td><%= f.radio_buttons :state, @item.class.state_options %></td>
+    <td><%= f.collection_radio_buttons :state, @item.class.state_options, :last, :first %></td>
   </tr>
   <tr>
     <th><%= f.label :note %></th>
@@ -38,6 +42,7 @@ $(function() {
   $('#plugins').on('change', function () {
     var selected = $(this).find('option:selected')
     $('#item_name').val(selected.val());
+    $('#item_name').change();
     $('#item_title').val(selected.attr('title'));
   });
   $('#item_name').on('change', function () {

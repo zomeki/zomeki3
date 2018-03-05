@@ -4,11 +4,9 @@ class BizCalendar::Piece::Calendar < Cms::Piece
 
   default_scope { where(model: 'BizCalendar::Calendar') }
 
-  after_initialize :set_default_settings
+  belongs_to :content, class_name: 'BizCalendar::Content::Place'
 
-  def content
-    BizCalendar::Content::Place.find(super.id)
-  end
+  after_initialize :set_default_settings
 
   def place
     return false if place_id.blank?

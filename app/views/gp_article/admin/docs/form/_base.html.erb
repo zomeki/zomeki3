@@ -18,7 +18,7 @@
     <tr>
       <th><%= f.label :href %></th>
       <td><%= f.text_field :href, style: 'width: 500px;' %></td>
-      <td><%= f.radio_buttons :target, @item.class.target_options %></td>
+      <td><%= f.collection_radio_buttons :target, @item.class.target_options, :last, :first %></td>
     </tr>
     <tr>
       <th><%= f.label :subtitle %></th>
@@ -114,7 +114,7 @@
   <%- if @content.feature_settings_enabled? -%>
   <tr>
     <th><%= f.label :feature_1 %></th>
-    <td><%= f.radio_buttons :feature_1, @item.class.feature_1_options %></td>
+    <td><%= f.collection_radio_buttons :feature_1, @item.class.feature_1_options, :last, :first %></td>
   </tr>
   <%- end -%>
   <%- if @content.tag_related? && @content.tag_content_tag.present? -%>
@@ -169,7 +169,7 @@
   <%- if @content.qrcode_related? -%>
   <tr>
     <th><%= f.label :qrcode_state %></th>
-    <td><%= f.radio_buttons :qrcode_state, @item.class.qrcode_state_options %></td>
+    <td><%= f.collection_radio_buttons :qrcode_state, @item.class.qrcode_state_options, :last, :first %></td>
   </tr>
   <%- end -%>
 </table>

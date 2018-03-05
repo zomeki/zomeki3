@@ -3,7 +3,7 @@ class GpCalendar::Piece::Event < Cms::Piece
 
   TARGET_DATE_OPTIONS = [['本日以降のイベント', 'near_future'], ['今月開催のイベント', 'this_month']]
 
-  belongs_to :content, :foreign_key => :content_id, :class_name => 'GpCalendar::Content::Event'
+  belongs_to :content, class_name: 'GpCalendar::Content::Event'
 
   def target_node
     return @target_node if defined? @target_node

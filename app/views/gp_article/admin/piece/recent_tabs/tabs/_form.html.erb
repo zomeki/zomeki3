@@ -17,7 +17,7 @@
       <table class="noDesign">
         <tr>
           <td><%= GpArticle::Piece::RecentTabXml.human_attribute_name(:condition) %></td>
-          <td><%= f.radio_buttons :condition, @item.class::CONDITION_OPTIONS %></td>
+          <td><%= f.collection_radio_buttons :condition, @item.class::CONDITION_OPTIONS, :last, :first %></td>
         </tr>
         <tr>
           <td>表示カテゴリ</td>

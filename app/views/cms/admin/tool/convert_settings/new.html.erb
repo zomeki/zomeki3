@@ -53,7 +53,7 @@
     </tr>
     <tr>
       <th><%= f.label(:creator_group_relation_type) %></th>
-      <td><%= f.radio_buttons :creator_group_relation_type, @item.class::GROUP_RELATION_OPTIONS %></td>
+      <td><%= f.collection_radio_buttons :creator_group_relation_type, @item.class::GROUP_RELATION_OPTIONS, :last, :first %></td>
     </tr>
     <tr>
       <th><%= f.label(:creator_group_relations) %></th>

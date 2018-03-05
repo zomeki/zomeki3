@@ -58,6 +58,7 @@ class GpArticle::Doc < ApplicationRecord
   belongs_to :concept, foreign_key: :concept_id, class_name: 'Cms::Concept'
   belongs_to :layout, foreign_key: :layout_id, class_name: 'Cms::Layout'
 
+  has_many :users_holds, as: :holdable, class_name: 'Sys::UsersHold', dependent: :delete_all
   has_many :operation_logs, -> { where(item_model: 'GpArticle::Doc') },
            foreign_key: :item_id, class_name: 'Sys::OperationLog'
 
@@ -86,8 +87,6 @@ class GpArticle::Doc < ApplicationRecord
                               c = doc.content
                               c && c.tag_related? && c.tag_content_tag ? where(content_id: c.tag_content_tag.id) : where(id: nil)
                             }, class_name: 'Tag::Tag', join_table: 'gp_article_docs_tag_tags'
-
-  has_many :holds, :as => :holdable, :dependent => :destroy
 
   after_initialize :set_defaults
   before_save :set_name

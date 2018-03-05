@@ -14,6 +14,8 @@ class Sys::Controller::Admin::Base < ApplicationController
       Core.user          = current_user
       Core.user.password = Util::String::Crypt.decrypt(session[PASSWD_KEY], crypt_pass)
       Core.user_group    = current_user.groups[0]
+
+      Core.user.users_sessions.where(session_id: session.id).first_or_create.touch
     end
     return true
   end

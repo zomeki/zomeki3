@@ -21,11 +21,11 @@
     </tr>
     <tr>
       <th><%= f.label(:overwrite) %></th>
-      <td><%= f.radio_buttons :overwrite, @item.class::OVERWRITE_OPTIONS %></td>
+      <td><%= f.collection_radio_buttons :overwrite, @item.class::OVERWRITE_OPTIONS, :last, :first %></td>
     </tr>
     <tr>
       <th><%= f.label(:keep_filename) %></th>
-      <td><%= f.radio_buttons :keep_filename, @item.class::KEEP_FILENAME_OPTIONS %></td>
+      <td><%= f.collection_radio_buttons :keep_filename, @item.class::KEEP_FILENAME_OPTIONS, :last, :first %></td>
     </tr>
   </table>
   <%= submit "書き込む" %>

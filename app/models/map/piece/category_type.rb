@@ -1,7 +1,7 @@
 class Map::Piece::CategoryType < Cms::Piece
   default_scope { where(model: 'Map::CategoryType') }
 
-  belongs_to :content, :foreign_key => :content_id, :class_name => 'Map::Content::Marker'
+  belongs_to :content, class_name: 'Map::Content::Marker'
 
   def category_types
     content.category_types

@@ -45,7 +45,11 @@ class Sys::Storage::File < Sys::Storage::Entry
     super do
       if new_entry
         # new file
-        ::Storage.binwrite(path, body) unless ::Storage.exists?(path)
+        unless ::Storage.exists?(path)
+          dir = ::File.dirname(path)
+          ::Storage.mkdir_p(dir) unless ::File.exist?(dir)
+          ::Storage.binwrite(path, body)
+        end
       else
         # move
         if path_changed?

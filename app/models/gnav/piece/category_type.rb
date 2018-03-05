@@ -3,7 +3,7 @@ class Gnav::Piece::CategoryType < Cms::Piece
 
   default_scope { where(model: 'Gnav::CategoryType') }
 
-  belongs_to :content, :foreign_key => :content_id, :class_name => 'Gnav::Content::MenuItem'
+  belongs_to :content, class_name: 'Gnav::Content::MenuItem'
 
   def layer
     setting_value(:layer).presence || LAYER_OPTIONS.first.last

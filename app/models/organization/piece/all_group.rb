@@ -1,6 +1,8 @@
 class Organization::Piece::AllGroup < Cms::Piece
   default_scope { where(model: 'Organization::AllGroup') }
 
+  belongs_to :content, class_name: 'Organization::Content::Group'
+
   after_initialize :set_default_settings
 
   def list_style

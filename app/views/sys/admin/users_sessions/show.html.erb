@@ -1,0 +1,22 @@
+<table class="show">
+  <tr>
+    <th><%= Sys::User.human_attribute_name :account %></th>
+    <td><%= @item.user.account if @item.user %></td>
+  </tr>
+  <tr>
+    <th><%= Sys::User.human_attribute_name :name %></th>
+    <td><%= @item.user.name if @item.user %></td>
+  </tr>
+  <tr>
+    <th><%= Sys::User.human_attribute_name :sites %></th>
+    <td><%= @item.user.sites.map(&:name).join(', ') if @item.user %></td>
+  </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :session_id %></th>
+    <td><%= @item.session_id.gsub(/.{24}$/, '*'*24) %></td>
+  </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :updated_at %></th>
+    <td><%=l @item.updated_at if @item.updated_at %></td>
+  </tr>
+</table>

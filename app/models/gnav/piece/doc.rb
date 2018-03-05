@@ -1,11 +1,11 @@
 class Gnav::Piece::Doc < Cms::Piece
   default_scope { where(model: 'Gnav::Doc') }
 
+  belongs_to :content, class_name: 'Gnav::Content::MenuItem'
+
   after_initialize :set_default_settings
 
   validate :validate_settings
-
-  belongs_to :content, :foreign_key => :content_id, :class_name => 'Gnav::Content::MenuItem'
 
   def validate_settings
     if (lc = in_settings['list_count']).present?

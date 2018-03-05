@@ -4,6 +4,6 @@
     <td><%= f.select :concept_id, [["// #{h(Core.site.name)}", '']] + Core.site.concepts_for_option, :include_blank => true, :class => 'id' %></td>
   </tr><tr>
     <th><%= f.label :action %></th>
-    <td><%= f.check_boxes :in_actions, @item.class.action_options, :class => 'name' %></td>
+    <td><%= f.collection_check_boxes :in_actions, @item.class.action_options, :last, :first %></td>
   </tr>
 </table>

@@ -3,7 +3,7 @@
 <table class="show">
   <tr>
     <th><%= f.label :state %></th>
-    <td><%= f.radio_buttons :state, @item.class.state_options, :class => 'states' %></td>
+    <td><%= f.collection_radio_buttons :state, @item.class.state_options, :last, :first %></td>
   </tr><tr>
     <th><%= f.label :fixed_start_date %></th>
     <td>
@@ -31,14 +31,16 @@
           <tr id ="criterionTr">
             <th>繰り返しの基準</th>
             <td>
-              <%= f.radio_buttons :repeat_criterion, @item.class.repeat_criterion_options, :class => 'states' %>
+              <%= f.collection_radio_buttons :repeat_criterion, @item.class.repeat_criterion_options, :last, :first %>
             </td>
           </tr>
           <tr id ="weekTr">
             <th>曜日</th>
             <td>
               <input type="hidden" name="<%= "#{f.object_name}[repeat_week][_]" %>" value="" />
-              <%= f.check_boxes(:repeat_week, @item.class::REPEAT_WEEK_OPTIONS) -%>
+              <%- @item.class::REPEAT_WEEK_OPTIONS.each do |title, name| -%>
+                <input type="checkbox" name="<%= "item[repeat_week][#{name}]" %>" id="<%= "item_repeat_week_#{name}" %>" value="1" <%= 'checked="checked"' if @item.repeat_week_ary[name] == '1' %>"/><label for="<%= "item_repeat_week_#{name}" %>"><%= title %></label>
+              <%- end -%>
             </td>
           </tr>
           <tr>

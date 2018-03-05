@@ -4,7 +4,7 @@
   <%= concept_form f %>
   <tr>
     <th><%= f.label :state %></th>
-    <td><%= f.radio_buttons :state, @item.class.state_options, :class => 'status' %></td>
+    <td><%= f.collection_radio_buttons :state, @item.class.state_options, :last, :first %></td>
   </tr><tr>
     <th><%= f.label :name %></th>
     <td><%= f.text_field :name, :class => 'id' %></td>
