@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180220094107) do
+ActiveRecord::Schema.define(version: 20180227094107) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -831,6 +831,7 @@ ActiveRecord::Schema.define(version: 20180220094107) do
     t.string   "lang"
     t.text     "event_note"
     t.text     "remark"
+    t.integer  "marker_sort_no"
     t.index ["concept_id"], name: "index_gp_article_docs_on_concept_id", using: :btree
     t.index ["content_id"], name: "index_gp_article_docs_on_content_id", using: :btree
     t.index ["event_started_on", "event_ended_on"], name: "index_gp_article_docs_on_event_started_on_and_event_ended_on", using: :btree
@@ -1069,6 +1070,7 @@ ActiveRecord::Schema.define(version: 20180220094107) do
     t.datetime "updated_at"
     t.string   "name"
     t.integer  "icon_category_id"
+    t.integer  "sort_no"
   end
 
   create_table "organization_groups", force: :cascade do |t|

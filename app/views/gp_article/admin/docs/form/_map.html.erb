@@ -1,10 +1,14 @@
 <table class="show">
   <%- if @content.map_content_marker -%>
-  <tr>
-    <th><%= f.label :marker_state %></th>
-    <td><%= f.radio_buttons :marker_state, @item.class.marker_state_options %></td>
-  </tr>
-    <%- if @content.marker_icon_category_enabled?-%>
+    <tr>
+      <th><%= f.label :marker_state %></th>
+      <td><%= f.radio_buttons :marker_state, @item.class.marker_state_options %></td>
+    </tr>
+    <tr>
+      <th><%= f.label :marker_sort_no %></th>
+      <td><%= f.text_field :marker_sort_no, class: 'number' %></td>
+    </tr>
+    <%- if @content.marker_icon_category_enabled? -%>
     <tr>
       <th><%= f.label :marker_icon_category_id %></th>
       <td><%= f.select :marker_icon_category_id, options_for_select(@content.map_content_marker.icon_categories_for_option,

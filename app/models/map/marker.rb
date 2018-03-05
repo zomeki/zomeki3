@@ -7,6 +7,8 @@ class Map::Marker < ApplicationRecord
 
   attr_accessor :doc # Not saved to database
 
+  attribute :sort_no, :integer, default: 10
+
   enum_ish :state, [:public, :closed], default: :public
 
   # Content
@@ -72,6 +74,7 @@ class Map::Marker < ApplicationRecord
           longitude: m.lng,
           window_text: %Q(<p>#{m.name}</p><p><a href="#{doc.public_uri}">詳細</a></p>),
           doc: doc,
+          sort_no: doc.marker_sort_no,
           created_at: doc.display_published_at,
           updated_at: doc.display_published_at
         )
