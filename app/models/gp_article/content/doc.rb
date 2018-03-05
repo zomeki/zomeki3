@@ -32,7 +32,7 @@ class GpArticle::Content::Doc < Cms::Content
   end
 
   def organization_content_group
-    organization_content_group_setting = settings.where(name: 'organization_content_group_id').first
+    organization_content_group_setting = settings.detect { |st| st.name == 'organization_content_group_id' }
     if organization_content_group_setting
       @organization_content_group ||= organization_content_group_setting.organization_content_group
     end
@@ -140,11 +140,6 @@ class GpArticle::Content::Doc < Cms::Content
 
   def event_category_types
     gp_calendar_content_event.try(:category_types) || GpCategory::CategoryType.none
-  end
-
-  def event_category_type_categories_for_option(category_type, include_descendants: true)
-    gp_calendar_content_event.try(:category_type_categories_for_option,
-                                  category_type, include_descendants: include_descendants) || []
   end
 
   def calendar_related?

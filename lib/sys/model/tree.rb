@@ -20,11 +20,32 @@ module Sys::Model::Tree
 
   class_methods do
     def roots
-      self.where(parent_id: [0, nil])
+      where(parent_id: [0, nil])
     end
 
     def root
       roots.first
+    end
+
+    def to_tree(parent: :parent, children: :children)
+      items = all.to_a
+      item_map = items.index_by { |item| item[primary_key] }
+
+      items.each do |item|
+        item.association(parent).loaded!
+        item.association(children).loaded!
+      end
+
+      items.each do |item|
+        if (pnt = item_map[item[reflect_on_association(children).foreign_key]])
+          assoc = pnt.association(children)
+          assoc.target << item
+          assoc = item.association(parent)
+          assoc.target = pnt
+        end
+      end
+
+      items.select(&:root?)
     end
   end
 end

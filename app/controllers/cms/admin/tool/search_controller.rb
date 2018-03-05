@@ -68,7 +68,7 @@ class Cms::Admin::Tool::SearchController < Cms::Controller::Admin::Base
     elsif Core.user.has_auth?(:manager)
       Core.site.concepts
     else
-      Core.site.concepts.roots.flat_map(&:readable_descendants)
+      Core.site.concepts.readable_for(Core.user).to_tree.flat_map(&:descendants)
     end
   end
 
