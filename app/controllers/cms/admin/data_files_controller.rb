@@ -36,6 +36,8 @@ class Cms::Admin::DataFilesController < Cms::Controller::Admin::Base
           end
 
     @items = rel.paginate(page: params[:page], per_page: params[:limit])
+                .preload(:site, :node)
+
     _index @items
   end
 
