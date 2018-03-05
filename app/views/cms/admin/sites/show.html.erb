@@ -20,19 +20,6 @@
 </table>
 
 <br />
-<p class="form">サイト紹介</p>
-
-<table class="show">
-  <tr>
-    <th><%= @item.class.human_attribute_name :site_image %></th>
-    <td><% if uri = @item.site_image_uri %><img src="<%=h uri %>" alt="" title="" /><% end %></td>
-  </tr><tr>
-    <th><%= @item.class.human_attribute_name :body %></th>
-    <td><%=hbr @item.body %></td>
-  </tr>
-</table>
-
-<br />
 <p class="form">携帯サイト</p>
 
 <table class="show">

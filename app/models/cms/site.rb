@@ -2,8 +2,9 @@ class Cms::Site < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Rel::Creator
   include Sys::Model::Auth::Manager
-  include Cms::Model::Rel::DataFile
   include Cms::Model::Rel::SiteSetting
+
+  attribute :in_root_group_id, :integer
 
   enum_ish :state, [:public, :closed]
   enum_ish :og_type, [:article, :product, :profile]
@@ -35,13 +36,6 @@ class Cms::Site < ApplicationRecord
   validates :full_uri, presence: true, uniqueness: true, url: true
   validates :mobile_full_uri, uniqueness: true, url: true, if: -> { mobile_full_uri.present? }
   validates :admin_full_uri, uniqueness: true, url: true, if: -> { admin_full_uri.present? }
-
-  ## site image
-  attr_accessor :site_image, :del_site_image
-  attr_accessor :in_root_group_id
-
-  after_save :save_cms_data_file
-  after_destroy :destroy_cms_data_file
 
   before_validation :fix_full_uri
   before_destroy :block_last_deletion
@@ -139,22 +133,6 @@ class Cms::Site < ApplicationRecord
 
   def main_admin_uri
     admin_full_uri.presence || full_uri
-  end
-
-  def related_sites(options = {})
-    sites = []
-    related_site.to_s.split(/(\r\n|\n)/).each do |line|
-      sites << line if line.strip != ''
-    end
-    if options[:include_self]
-      sites << "#{full_uri}" if !full_uri.blank?
-      sites << "#{mobile_full_uri}" if !mobile_full_uri.blank?
-    end
-    sites
-  end
-
-  def site_image_uri
-    cms_data_file_uri(:site_image, :site_id => id)
   end
 
   def last?
@@ -321,21 +299,13 @@ class Cms::Site < ApplicationRecord
   end
 
   def make_site_belonging
-    if in_root_group_id == '0'
+    if in_root_group_id == 0
       group = Sys::Group.new(state: 'enabled', parent_id: 0, level_no: 1, code: 'root', name: name, name_en: 'top', ldap: 0)
       group.sites << self
       group.save
     else
       site_belongings.create(group_id: in_root_group_id)
     end
-  end
-
-  def save_cms_data_file(name = nil, params = nil)
-    super(:site_image, site_id: id)
-  end
-
-  def destroy_cms_data_file(name = nil, params = nil)
-    super(:site_image)
   end
 
   class << self
