@@ -30,27 +30,6 @@
 <%= f.hidden_field :in_root_group_id, value: 0 %>
 
 <br />
-<p class="form">サイト紹介</p>
-
-<table class="show">
-  <tr>
-    <th><%= f.label :site_image %></th>
-    <td>
-      <%= f.file_field :site_image, :size => 64, :style => 'width: 450px;' %><br />
-      <% if uri = @item.site_image_uri %>
-      <div style="margin: 10px 0px;">
-        <%= f.check_box :del_site_image, {}, 'on', '' %> <label for="item_del_site_image">削除する</label><br />
-        <img src="<%=h uri %>" alt="" title="" />
-      </div>
-      <% end %>
-    </td>
-  </tr><tr>
-    <th><%= f.label :body %></th>
-    <td><%= f.text_area :body, :class => 'head' %></td>
-  </tr>
-</table>
-
-<br />
 <p class="form">携帯サイト</p>
 
 <table class="show">
