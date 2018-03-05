@@ -90,9 +90,8 @@ table.show td.tableContainer th {
 table.show td textarea {
   width: 100%;
 }
-table.show input[type="radio"]:nth-child(n+3),
-table.show input[type="checkbox"]:nth-child(n+3) {
-  margin-left: 7px;
+table.show td label {
+  margin-right: 4px;
 }
 
 /* Form

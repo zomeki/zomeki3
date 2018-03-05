@@ -13,8 +13,7 @@ item.build_default_inquiry(group: group)
   <th>連絡先表示</th>
   <td>
     <%- item.inquiry_states.each do |(label, value)| -%>
-      <%= radio_button_tag :inquiry_state, value, item.inquiries[0].state == value, class: 'status' %>
-      <%= label_tag :"inquiry_state_#{value}", label -%>
+      <%= radio_button_tag :inquiry_state, value, item.inquiries[0].state == value, class: 'status' %><%= label_tag :"inquiry_state_#{value}", label -%>
     <%- end -%>
   </td>
 </tr>
