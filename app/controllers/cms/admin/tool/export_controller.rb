@@ -7,10 +7,10 @@ class Cms::Admin::Tool::ExportController < Cms::Controller::Admin::Base
   end
 
   def index
-    @item = Cms::Model::Tool::Export.new
+    @item = Cms::Model::Tool::Export.new(target: ['layout', 'piece'])
     return unless request.post?
 
-    @item.attributes = params.require(:item).permit(:concept_id, target: [:layout, :piece])
+    @item.attributes = params.require(:item).permit(:concept_id, target: [])
     return unless @item.valid?
 
     ## concept
@@ -23,7 +23,7 @@ class Cms::Admin::Tool::ExportController < Cms::Controller::Admin::Base
     }
 
     ## layout
-    if @item.target && @item.target[:layout]
+    if @item.target && @item.target.include?('layout')
       #export[:layouts] = @concept.layouts#.to_json
       @concept.layouts.each do |layout|
         data = {}
@@ -35,7 +35,7 @@ class Cms::Admin::Tool::ExportController < Cms::Controller::Admin::Base
 
     ## piece
     export[:pieces] = []
-    if @item.target && @item.target[:piece]
+    if @item.target && @item.target.include?('piece')
       #export[:pieces] << piece.to_json(:include => [:content])
       @concept.pieces.each do |piece|
         next if piece.model !~ /^Cms::/
