@@ -38,7 +38,6 @@ class Cms::Site < ApplicationRecord
   validates :admin_full_uri, uniqueness: true, url: true, if: -> { admin_full_uri.present? }
 
   before_validation :fix_full_uri
-  before_destroy :block_last_deletion
 
   after_save :generate_files
   before_destroy :destroy_related_records
@@ -134,10 +133,6 @@ class Cms::Site < ApplicationRecord
 
   def main_admin_uri
     admin_full_uri.presence || full_uri
-  end
-
-  def last?
-    self.class.count == 1
   end
 
   def concepts_for_option
@@ -254,19 +249,13 @@ class Cms::Site < ApplicationRecord
     end
   end
 
-  protected
+  private
 
   def fix_full_uri
     [:full_uri, :mobile_full_uri, :admin_full_uri].each do |column|
       self[column] += '/' if self[column].present? && self[column][-1] != '/'
     end
   end
-
-  def block_last_deletion
-    raise "Last site can't be deleted." if self.last?
-  end
-
-  private
 
   def generate_files
     FileUtils.mkdir_p public_path
