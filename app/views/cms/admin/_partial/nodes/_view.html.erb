@@ -12,9 +12,9 @@
     <th><%= @item.class.human_attribute_name :concept_id %></th>
     <td>
       <% if @item.concept %>
-        <%= safe{@item.concept.name} %>
-      <% elsif safe{@item.inherited_concept} %>
-        （<%= safe{@item.inherited_concept(:name)} %>）
+        <%= @item.concept.name %>
+      <% elsif @item.inherited_concept %>
+        （<%= @item.inherited_concept(:name) %>）
       <% end %>
     </td>
   </tr>
@@ -29,7 +29,7 @@
   <% if @item.parent_id != 0 %>
   <tr>
     <th><%= @item.class.human_attribute_name :parent_id %></th>
-    <td><%= safe{@item.parent.title} %></td>
+    <td><%= @item.parent.title if @item.parent %></td>
   </tr><tr>
     <th><%= @item.class.human_attribute_name :route_id %></th>
     <td><%= @item.bread_crumbs.to_links.gsub(/<[\/a].*?>/, '').html_safe %></td>
@@ -37,10 +37,10 @@
   <% end %>
   <tr>
     <th><%= @item.class.human_attribute_name :name %></th>
-    <td><%= safe{@item.name} %></td>
+    <td><%= @item.name %></td>
   </tr><tr>
     <th><%= @item.class.human_attribute_name :title %></th>
-    <td><%= safe{@item.title} %></td>
+    <td><%= @item.title %></td>
   </tr>
   <tr>
     <th><%= @item.class.human_attribute_name :sitemap_state %></th>

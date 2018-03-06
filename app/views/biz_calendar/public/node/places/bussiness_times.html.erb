@@ -5,11 +5,11 @@
   <ul>
     <%- if @exception_holidays[place.id].blank? && !@holidays[place.id].blank? -%>
     <%- @holidays[place.id].each do |i, h| -%>
-    <li><span class="<%= safe{h[0]} %>"><%= safe{h[1]} %></span></li>
+    <li><span class="<%= h[0] %>"><%= h[1] %></span></li>
     <%- end -%>
     <%- else -%>
     <% @bussiness_times[place.id].each do |hour| %>
-    <li><span class="time"><%= safe{"#{hour.business_hours_start_time.strftime(localize_ampm(@piece.time_style, hour.business_hours_start_time))}～#{hour.business_hours_end_time.strftime(localize_ampm(@piece.time_style, hour.business_hours_end_time))}"} %></span></li>
+    <li><span class="time"><%= business_hour_start_end_text(hour, time_style: @piece.time_style) %></span></li>
     <%- end -%>
     <%- end -%>
   </ul>
@@ -21,8 +21,8 @@
   <div class="name"><%= place.title %></div>
   <ul>
     <% place.hours.public_state.each do |hour| %>
-    <li><span class="date"><%= safe{hour.target_date_label(@content.date_style)} %></span>：
-      <span class="time"><%= safe{"#{hour.business_hours_start_time.strftime(localize_ampm(@piece.time_style, hour.business_hours_start_time))}～#{hour.business_hours_end_time.strftime(localize_ampm(@piece.time_style, hour.business_hours_end_time))}"} %></span></li>
+    <li><span class="date"><%= hour.target_date_label(@content.date_style) %></span>：
+      <span class="time"><%= business_hour_start_end_text(hour, time_style: @piece.time_style) %></span></li>
     <% end %>
   </ul>
 </div>

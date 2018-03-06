@@ -12,8 +12,8 @@
 
   <ul>
     <% place.hours.public_state.each do |hour| %>
-    <li><span class="date"><%= safe{hour.target_date_label(@content.date_style)} %></span>
-      <span class="time"><%= safe{"#{hour.business_hours_start_time.strftime(localize_ampm(@content.time_style, hour.business_hours_start_time))}～#{hour.business_hours_end_time.strftime(localize_ampm(@content.time_style, hour.business_hours_end_time))}"} %></span></li>
+    <li><span class="date"><%= hour.target_date_label(@content.date_style) %></span>
+      <span class="time"><%= business_hour_start_end_text(hour, time_style: @content.time_style) %></span></li>
     <% end %>
   </ul>
   </div>
@@ -25,7 +25,7 @@
 
   <ul>
     <% place.holidays.public_state.each do |holiday| %>
-    <li><span class="date"><%= safe{holiday.target_date_label(@content.date_style)} %></span></li>
+    <li><span class="date"><%= holiday.target_date_label(@content.date_style) %></span></li>
     <% end %>
   </ul>
   </div>

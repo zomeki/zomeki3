@@ -29,7 +29,7 @@
   <%- Cms::Piece::PickupDocXml.find(:all, @piece, :order => :sort_no).each_with_index do |item, idx| -%>
   <tr>
     <th>ピックアップ <%= idx + 1 %></th>
-    <td><%= safe{item.doc.title} %></td>
+    <td><%= item.doc.title if item.doc %></td>
   </tr>
   <%- end -%>
 </table>

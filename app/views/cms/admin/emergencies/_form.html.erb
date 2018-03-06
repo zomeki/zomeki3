@@ -1,6 +1,6 @@
 <%
 layouts = []
-if concept = safe{@node.inherited_concept} || safe{@parent.inherited_concept}
+if concept = (@node && @node.inherited_concept) || @parent.inherited_concept
   concept.ancestors.each { |c| layouts += c.layouts }
   layouts = layouts.map { |l| [l.concept_name_and_title, l.id] }
 else

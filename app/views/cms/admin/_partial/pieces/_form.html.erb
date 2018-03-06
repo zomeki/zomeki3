@@ -8,7 +8,7 @@
   <%= concept_form f %>
   <tr>
     <th><%= f.label :content_id %></th>
-    <td><%= safe{@item.content_name} %></td>
+    <td><%= @item.content_name %></td>
   </tr><tr>
     <th><%= f.label :model %></th>
     <td><%= @item.module_name(:short) %></td>
