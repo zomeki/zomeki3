@@ -76,7 +76,7 @@ class Cms::Site < ApplicationRecord
   end
 
   def deletable?
-    readable?
+    readable? && !Sys::User.root.sites.include?(self)
   end
 
   def root_path
