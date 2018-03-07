@@ -90,6 +90,9 @@ table.show td.tableContainer th {
 table.show td textarea {
   width: 100%;
 }
+table.show td label {
+  margin-right: 4px;
+}
 
 /* Form
 ------------------------------------- */

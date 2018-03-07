@@ -4,7 +4,7 @@
   <tr>
     <th><%= Cms::Content.human_attribute_name :name %></th>
   </tr>
-  <% @item.contents.each do |item| %>
+  <% @item.contents.order(:sort_no, :name, :id).each do |item| %>
   <tr class="<%= cycle '', 'cycle' %>">
     <td><%= link_to h(item.name), item.admin_uri %></td>
   </tr>

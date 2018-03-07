@@ -56,7 +56,7 @@
 <table class="show">
   <tr>
     <th><%= f.label :mobile_feature %></th>
-    <td><%= f.radio_buttons :mobile_feature, @item.class.mobile_feature_options %></td>
+    <td><%= f.collection_radio_buttons :mobile_feature, @item.class.mobile_feature_options, :last, :first %></td>
   </tr>
 </table>
 
@@ -66,12 +66,12 @@
 <table class="show">
   <tr>
     <th><%= f.label :smart_phone_layout %></th>
-    <td><%= f.radio_buttons :smart_phone_layout, @item.class.smart_phone_layout_options %></td>
+    <td><%= f.collection_radio_buttons :smart_phone_layout, @item.class.smart_phone_layout_options, :last, :first %></td>
   </tr>
   <tr>
     <th><%= f.label :smart_phone_publication %></th>
-    <td><%= f.radio_buttons :smart_phone_publication, @item.class.smart_phone_publication_options,
-                                                      onchange: 'confirm_smart_phone_deletion(this)' %></td>
+    <td><%= f.collection_radio_buttons :smart_phone_publication, @item.class.smart_phone_publication_options, :last, :first, {},
+                                                                 onchange: 'confirm_smart_phone_deletion(this)' %></td>
   </tr>
   <tr>
     <th><%= f.label :spp_target %></th>

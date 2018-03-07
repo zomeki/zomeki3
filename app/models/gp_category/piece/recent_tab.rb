@@ -1,6 +1,8 @@
 class GpCategory::Piece::RecentTab < Cms::Piece
   default_scope { where(model: 'GpCategory::RecentTab') }
 
+  belongs_to :content, class_name: 'GpCategory::Content::CategoryType'
+
   validate :validate_settings
 
   def validate_settings
@@ -23,10 +25,6 @@ class GpCategory::Piece::RecentTab < Cms::Piece
 
   def more_label
     setting_value(:more_label).to_s
-  end
-
-  def content
-    GpCategory::Content::CategoryType.find(super.id)
   end
 
   def category_types

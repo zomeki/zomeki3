@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180220094107) do
+ActiveRecord::Schema.define(version: 20180227094107) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1709,12 +1709,32 @@ ActiveRecord::Schema.define(version: 20180220094107) do
     t.index ["user_id", "group_id"], name: "index_sys_users_groups_on_user_id_and_group_id", using: :btree
   end
 
+  create_table "sys_users_holds", force: :cascade do |t|
+    t.integer  "user_id"
+    t.string   "holdable_type"
+    t.integer  "holdable_id"
+    t.string   "session_id"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.index ["holdable_type", "holdable_id"], name: "index_sys_users_holds_on_holdable_type_and_holdable_id", using: :btree
+    t.index ["user_id"], name: "index_sys_users_holds_on_user_id", using: :btree
+  end
+
   create_table "sys_users_roles", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "role_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.index ["user_id", "role_id"], name: "index_sys_users_roles_on_user_id_and_role_id", using: :btree
+  end
+
+  create_table "sys_users_sessions", force: :cascade do |t|
+    t.integer  "user_id"
+    t.string   "session_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "session_id"], name: "index_sys_users_sessions_on_user_id_and_session_id", unique: true, using: :btree
+    t.index ["user_id"], name: "index_sys_users_sessions_on_user_id", using: :btree
   end
 
   create_table "tag_tags", force: :cascade do |t|

@@ -103,7 +103,7 @@
   text-align: center;
 }
 .pagination a,
-.pagination span.current,
+.pagination em.current,
 .pagination span.disabled {
   display: inline-block;
   padding: 0px 6px;
@@ -114,8 +114,8 @@
   line-height: 1.8;
   vertical-align: top;
 }
-.pagination span.current {
-  background-color: #ddd;
+.pagination em.current {
+  background-color: #eee;
   font-weight: bold;
 }
 .pagination span.disabled {

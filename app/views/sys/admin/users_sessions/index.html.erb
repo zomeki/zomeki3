@@ -1,0 +1,24 @@
+<%= page_entries_info @items %>
+
+<table class="index">
+  <tr>
+    <th style="width: 60px; text-align: center;">詳細</th>
+    <th style="width: 200px;"><%= Sys::User.human_attribute_name :account %></th>
+    <th style="width: 200px;"><%= Sys::User.human_attribute_name :name %></th>
+    <th style="width: ;"><%= Sys::User.human_attribute_name :sites %></th>
+    <th style="width: 300px;"><%= Sys::UsersSession.human_attribute_name :session_id %></th>
+    <th style="width: 160px; text-align: center;"><%= Sys::UsersSession.human_attribute_name :updated_at %></th>
+  </tr>
+  <% @items.each do |item| %>
+  <tr class="<%= cycle '', 'cycle' %>">
+    <td style="text-align: center;"><%= link_to :show, { action: :show, id: item } %></td>
+    <td><%= item.user.account if item.user %></td>
+    <td><%= item.user.name if item.user %></td>
+    <td><%= item.user.sites.map(&:name).join(', ') if item.user %></td>
+    <td><%= item.session_id.gsub(/.{24}$/, '*'*24) %></td>
+    <td style="text-align: center;"><%=l item.updated_at if item.updated_at %></td>
+  </tr>
+  <% end %>
+</table>
+
+<%= paginate @items %>

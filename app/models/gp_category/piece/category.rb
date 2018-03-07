@@ -3,9 +3,7 @@ class GpCategory::Piece::Category < Cms::Piece
 
   default_scope { where(model: 'GpCategory::Category') }
 
-  def content
-    GpCategory::Content::CategoryType.find(super.id)
-  end
+  belongs_to :content, class_name: 'GpCategory::Content::CategoryType'
 
   def category_types
     content.category_types

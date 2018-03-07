@@ -4,6 +4,8 @@ class AdBanner::Piece::Banner < Cms::Piece
 
   default_scope { where(model: 'AdBanner::Banner') }
 
+  belongs_to :content, class_name: 'AdBanner::Content::Banner'
+
   after_initialize :set_default_settings
 
   validate :validate_settings
@@ -11,10 +13,6 @@ class AdBanner::Piece::Banner < Cms::Piece
   def validate_settings
     errors.add(:base, "#{self.class.human_attribute_name :sort} #{errors.generate_message :base, :blank}") unless sort
     errors.add(:base, "#{self.class.human_attribute_name :impl} #{errors.generate_message :base, :blank}") unless impl
-  end
-
-  def content
-    AdBanner::Content::Banner.find(super.id)
   end
 
   def groups

@@ -1,4 +1,8 @@
 class GpCategory::Piece::Feed < Cms::Piece
+  default_scope { where(model: 'GpCategory::Feed') }
+
+  belongs_to :content, class_name: 'GpCategory::Content::CategoryType'
+
   validate :validate_settings
 
   def filename

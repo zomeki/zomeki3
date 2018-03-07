@@ -5,6 +5,8 @@ class GpArticle::Piece::Doc < Cms::Piece
 
   default_scope { where(model: 'GpArticle::Doc') }
 
+  belongs_to :content, class_name: 'GpArticle::Content::Doc'
+
   after_initialize :set_default_settings
 
   validate :validate_settings

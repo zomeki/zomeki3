@@ -6,6 +6,8 @@ class Reception::Piece::Course < Cms::Piece
 
   default_scope { where(model: 'Reception::Course') }
 
+  belongs_to :content, class_name: 'Reception::Content::Course'
+
   after_initialize :set_default_settings
 
   validate :validate_docs_number

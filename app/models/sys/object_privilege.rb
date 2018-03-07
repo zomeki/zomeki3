@@ -24,11 +24,7 @@ class Sys::ObjectPrivilege < ApplicationRecord
 
   def in_actions=(values)
     @_in_actions_changed = true
-    @in_actions = if values.kind_of?(Hash)
-                    values.map{|k, v| k if v.present? }.compact
-                  else
-                    []
-                  end
+    @in_actions = values
   end
 
   def privileges

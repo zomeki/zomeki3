@@ -94,6 +94,8 @@ ZomekiCMS::Application.routes.draw do
           get :restart
         end
       end
+    resources :users_sessions,
+      :controller => "admin/users_sessions"
   end
 
   get "#{ZomekiCMS::ADMIN_URL_PREFIX}/#{mod}/:parent/inline_files/files/:name.:format" => 'sys/admin/inline/files#download'

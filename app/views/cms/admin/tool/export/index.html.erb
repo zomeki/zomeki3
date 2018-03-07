@@ -10,10 +10,7 @@
     <td><%= f.select :concept_id, Core.site.public_concepts_for_option, include_blank: "　" %></td>
   </tr><tr>
     <th>コンポーネント</th>
-    <td>
-      <input type="checkbox" name="item[target][layout]" checked="checked" /> レイアウト<br />
-      <input type="checkbox" name="item[target][piece]" checked="checked" /> ピース<br />
-    </td>
+    <td><%= f.collection_check_boxes :target, [['レイアウト', 'layout'], ['ピース', 'piece']], :last, :first %></td>
   </tr>
 </table>
 

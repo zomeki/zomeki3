@@ -4,6 +4,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
   layout :select_layout
 
+  before_action :check_duplicated_document, only: [:edit]
   before_action :hold_document, only: [:edit]
   before_action :check_intercepted, only: [:update]
 
@@ -121,11 +122,6 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   end
 
   def edit
-    if @item.will_be_replaced?
-      return redirect_to(edit_gp_article_doc_url(@content, @item.next_edition))
-    elsif @item.state_public?
-      return redirect_to(edit_gp_article_doc_url(@content, @item.duplicate(:replace)))
-    end
   end
 
   def update
@@ -242,24 +238,32 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     end
   end
 
-  def hold_document
-    unless (holds = @item.holds).empty?
-      holds = holds.each{|h| h.destroy if h.user == Core.user }.reject(&:destroyed?)
-      alerts = holds.map { |hold| "#{hold.group_and_user_name}さんが#{hold.formatted_updated_at}から編集中です。" }
-      flash.now[:alert] = "<ul><li>#{alerts.join('</li><li>')}</li></ul>".html_safe unless alerts.blank?
+  def check_duplicated_document
+    if @item.will_be_replaced?
+      return redirect_to(edit_gp_article_doc_url(@content, @item.next_edition))
+    elsif @item.state_public?
+      return redirect_to(edit_gp_article_doc_url(@content, @item.duplicate(:replace)))
     end
-    @item.holds.create(user: Core.user)
+  end
+
+  def hold_document
+    Sys::UsersHold.where(user_id: Core.user.id, session_id: session.id, holdable: @item).first_or_create
+
+    if (holds = Sys::UsersHold.where(holdable: @item).where.not(session_id: session.id)).present?
+      alerts = holds.map { |hold| "<li>#{hold.group_and_user_name}さんが#{hold.formatted_updated_at}から編集中です。</li>" }.join
+      flash.now[:alert] = "<ul>#{alerts}</ul>".html_safe
+    end
   end
 
   def check_intercepted
-    unless @item.holds.detect{|h| h.user == Core.user }
+    unless Sys::UsersHold.where(user_id: Core.user.id, session_id: session.id, holdable: @item).exists?
       flash[:alert] = "#{@item.last_editor.try(:group_and_user_name)}さんが記事を編集したため、編集内容を反映できません。"
-      render :action => :edit
+      render action: :edit
     end
   end
 
   def release_document
-    @item.holds.destroy_all
+    Sys::UsersHold.where(holdable: @item).delete_all
   end
 
   def send_broken_link_notification

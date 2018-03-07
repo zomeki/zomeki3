@@ -14,7 +14,8 @@ class Sys::User < ApplicationRecord
   has_many :users_roles, foreign_key: :user_id, class_name: 'Sys::UsersRole', dependent: :destroy
   has_many :role_names, through: :users_roles, source: :role_name
   has_many :operation_logs, class_name: 'Sys::OperationLog'
-  has_many :gp_article_holds, class_name: 'GpArticle::Hold', dependent: :destroy
+  has_many :users_holds, dependent: :delete_all
+  has_many :users_sessions, dependent: :delete_all
 
   attr_accessor :in_group_id
 
