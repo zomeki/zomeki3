@@ -15,7 +15,8 @@ class Sys::Controller::Admin::Base < ApplicationController
       Core.user.password = Util::String::Crypt.decrypt(session[PASSWD_KEY], crypt_pass)
       Core.user_group    = current_user.groups[0]
 
-      Core.user.users_sessions.where(session_id: session.id).first_or_create.touch
+      users_session = Sys::UsersSession.new(user_id: Core.user.id, session_id: session.id)
+      Sys::UsersSession.import [users_session], on_duplicate_key_update: { conflict_target: [:user_id, :session_id] }
     end
     return true
   end
