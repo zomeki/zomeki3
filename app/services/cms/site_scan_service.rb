@@ -16,7 +16,7 @@ class Cms::SiteScanService < ApplicationService
   private
 
   def load_models
-    Rails.application.eager_load!
+    Rails.application.eager_load! unless Rails.env.production?
     klasses = ActiveRecord::Base.descendants.select { |klass| klass.respond_to?(:in_site) }
     klasses.select! { |klass| ((klass.ancestors - [klass]) & klasses).empty? }
     klasses.sort_by(&:name)
