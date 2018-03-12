@@ -4,5 +4,6 @@ module Sys::Model::Base
 
   included do
     self.table_name = self.to_s.underscore.gsub('/', '_').downcase.pluralize
+    validates_with IntegerValidator
   end
 end

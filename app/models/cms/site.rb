@@ -2,8 +2,9 @@ class Cms::Site < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Rel::Creator
   include Sys::Model::Auth::Manager
-  include Cms::Model::Rel::DataFile
   include Cms::Model::Rel::SiteSetting
+
+  attribute :in_root_group_id, :integer
 
   enum_ish :state, [:public, :closed]
   enum_ish :og_type, [:article, :product, :profile]
@@ -12,15 +13,15 @@ class Cms::Site < ApplicationRecord
   enum_ish :spp_target, [:only_top, :all], default: :only_top
   enum_ish :mobile_feature, [:enabled, :disabled], default: :enabled
 
-  has_many :concepts, -> { order(:sort_no, :name, :id) }, dependent: :destroy
+  has_many :concepts, -> { order(:sort_no, :name, :id) }
   has_many :contents, -> { order(:sort_no, :name, :id) }
   has_many :settings, -> { order(:name, :sort_no) }, class_name: 'Cms::SiteSetting'
   has_many :basic_auth_users, -> { order(:name) }, class_name: 'Cms::SiteBasicAuthUser'
   has_many :kana_dictionaries
-  has_many :site_belongings, dependent: :destroy
+  has_many :site_belongings
   has_many :groups, through: :site_belongings, class_name: 'Sys::Group'
-  has_many :nodes, dependent: :destroy
-  has_many :messages, class_name: 'Sys::Message', dependent: :destroy
+  has_many :nodes
+  has_many :messages, class_name: 'Sys::Message'
   has_many :operation_logs, class_name: 'Sys::OperationLog'
 
   belongs_to :root_node, foreign_key: :node_id, class_name: 'Cms::Node'
@@ -36,17 +37,10 @@ class Cms::Site < ApplicationRecord
   validates :mobile_full_uri, uniqueness: true, url: true, if: -> { mobile_full_uri.present? }
   validates :admin_full_uri, uniqueness: true, url: true, if: -> { admin_full_uri.present? }
 
-  ## site image
-  attr_accessor :site_image, :del_site_image
-  attr_accessor :in_root_group_id
-
-  after_save :save_cms_data_file
-  after_destroy :destroy_cms_data_file
-
   before_validation :fix_full_uri
-  before_destroy :block_last_deletion
 
   after_save :generate_files
+  before_destroy :destroy_related_records
   after_destroy :destroy_files
 
   after_create :make_concept
@@ -81,7 +75,7 @@ class Cms::Site < ApplicationRecord
   end
 
   def deletable?
-    readable?
+    readable? && !Sys::User.root.sites.include?(self)
   end
 
   def root_path
@@ -139,26 +133,6 @@ class Cms::Site < ApplicationRecord
 
   def main_admin_uri
     admin_full_uri.presence || full_uri
-  end
-
-  def related_sites(options = {})
-    sites = []
-    related_site.to_s.split(/(\r\n|\n)/).each do |line|
-      sites << line if line.strip != ''
-    end
-    if options[:include_self]
-      sites << "#{full_uri}" if !full_uri.blank?
-      sites << "#{mobile_full_uri}" if !mobile_full_uri.blank?
-    end
-    sites
-  end
-
-  def site_image_uri
-    cms_data_file_uri(:site_image, :site_id => id)
-  end
-
-  def last?
-    self.class.count == 1
   end
 
   def concepts_for_option
@@ -275,7 +249,7 @@ class Cms::Site < ApplicationRecord
     end
   end
 
-  protected
+  private
 
   def fix_full_uri
     [:full_uri, :mobile_full_uri, :admin_full_uri].each do |column|
@@ -283,17 +257,15 @@ class Cms::Site < ApplicationRecord
     end
   end
 
-  def block_last_deletion
-    raise "Last site can't be deleted." if self.last?
-  end
-
-  private
-
   def generate_files
     FileUtils.mkdir_p public_path
     FileUtils.mkdir_p "#{public_path}/_themes"
     FileUtils.mkdir_p config_path
     FileUtils.touch "#{config_path}/rewrite.conf"
+  end
+
+  def destroy_related_records
+    Cms::SiteDestroyService.new(self).destroy
   end
 
   def destroy_files
@@ -321,21 +293,13 @@ class Cms::Site < ApplicationRecord
   end
 
   def make_site_belonging
-    if in_root_group_id == '0'
+    if in_root_group_id == 0
       group = Sys::Group.new(state: 'enabled', parent_id: 0, level_no: 1, code: 'root', name: name, name_en: 'top', ldap: 0)
       group.sites << self
       group.save
     else
       site_belongings.create(group_id: in_root_group_id)
     end
-  end
-
-  def save_cms_data_file(name = nil, params = nil)
-    super(:site_image, site_id: id)
-  end
-
-  def destroy_cms_data_file(name = nil, params = nil)
-    super(:site_image)
   end
 
   class << self

@@ -11,7 +11,7 @@
   </tr>
   <tr>
     <th><%= f.label :date %></th>
-    <td><%= f.text_field :date, value: l(@item.date), style: 'width: 150px;', :class => 'datepicker' %>
+    <td><%= f.text_field :date, value: l(@item.date), style: 'width: 150px;', class: 'datepicker' %>
         <%= f.check_box :repeat, onclick: "$('#rsvp').submit()" %> <%= f.label :repeat %>
     </td>
   </tr>

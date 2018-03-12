@@ -4,15 +4,15 @@
     <td><%= f.collection_radio_buttons :state, @item.class.state_options, :last, :first %></td>
   </tr><tr>
     <th><%= f.label :name %></th>
-    <td><%= f.text_field :name, :class => 'name' %></td>
+    <td><%= f.text_field :name, class: 'name' %></td>
   </tr><tr>
     <th><%= f.label :uri %></th>
-    <td><%= f.text_field :uri, :class => 'url' %></td>
+    <td><%= f.text_field :uri, class: 'url' %></td>
   </tr><tr>
     <th><%= f.label :target %></th>
     <td><%= f.collection_radio_buttons :target, @item.class.target_options, :last, :first %></td>
   </tr><tr>
     <th><%= f.label :sort_no %></th>
-    <td><%= f.text_field :sort_no, :class => 'number' %></td>
+    <td><%= f.text_field :sort_no, class: 'number' %></td>
   </tr>
 </table>

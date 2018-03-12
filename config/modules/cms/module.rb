@@ -16,4 +16,29 @@ Cms::Lib::Modules::ModuleSet.draw :cms, '標準機能', 1 do |mod|
   mod.piece :links, 'リンク集'
   mod.piece :sns_parts, 'SNSパーツ'
   mod.piece :pickup_docs, 'ピックアップ記事'
+
+  ## public models
+  mod.public_model :brackets
+  mod.public_model :concepts
+  mod.public_model :content_settings
+  mod.public_model :contents
+  mod.public_model :data_file_nodes
+  mod.public_model :data_files
+  mod.public_model :data_texts
+  mod.public_model :inquiries
+  mod.public_model :kana_dictionaries
+  mod.public_model :layouts
+  mod.public_model :links
+  mod.public_model :map_markers
+  mod.public_model :maps
+  mod.public_model :nodes
+  mod.public_model :piece_link_items
+  mod.public_model :piece_settings
+  mod.public_model :pieces
+  mod.public_model :publish_urls
+  mod.public_model :site_basic_auth_users
+  mod.public_model :site_belongings
+  mod.public_model :site_settings
+  mod.public_model :sites
+  mod.public_model :stylesheets
 end

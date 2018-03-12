@@ -84,4 +84,10 @@ module Cms::Lib::Modules
     end
     list
   end
+
+  def self.public_models(model = nil)
+    model = model.to_s.underscore.pluralize.split('/')[0] if model
+    modules.reject { |mod| model && model != mod.name.to_s }
+           .flat_map { |mod| mod.public_models.map(&:model) }
+  end
 end

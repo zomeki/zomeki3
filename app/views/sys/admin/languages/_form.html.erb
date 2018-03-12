@@ -4,12 +4,12 @@
     <td><%= f.collection_radio_buttons :state, @item.class.state_options, :last, :first %></td>
   </tr><tr>
     <th><%= f.label :name %></th>
-    <td><%= f.text_field :name, :class => 'id' %></td>
+    <td><%= f.text_field :name, class: 'id' %></td>
   </tr><tr>
     <th><%= f.label :title %></th>
-    <td><%= f.text_field :title, :class => 'name' %></td>
+    <td><%= f.text_field :title, class: 'name' %></td>
   </tr><tr>
     <th><%= f.label :sort_no %></th>
-    <td><%= f.text_field :sort_no, :class => 'number sort_no' %></td>
+    <td><%= f.text_field :sort_no, class: 'number' %></td>
   </tr>
 </table>

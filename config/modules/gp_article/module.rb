@@ -12,4 +12,9 @@ Cms::Lib::Modules::ModuleSet.draw :gp_article, '記事', 10 do |mod|
   mod.piece :recent_tabs, '新着タブ'
   mod.piece :archives, 'アーカイブ'
   mod.piece :search_docs, '検索フォーム'
+
+  ## public models
+  mod.public_model :docs
+  mod.public_model :docs_tag_tags
+  mod.public_model :related_docs
 end

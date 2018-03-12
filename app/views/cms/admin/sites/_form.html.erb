@@ -5,19 +5,19 @@
 <table class="show">
   <tr>
     <th><%= f.label :name %> <span class="note">※</span></th>
-    <td><%= f.text_field :name, :class => 'name' %></td>
+    <td><%= f.text_field :name, class: 'name' %></td>
   </tr>
   <tr>
     <th><%= f.label :full_uri %> <span class="note">※</span></th>
-    <td><%= f.text_field :full_uri, :class => 'url' %></td>
+    <td><%= f.text_field :full_uri, class: 'url' %></td>
   </tr>
   <tr>
     <th><%= f.label :mobile_full_uri %></th>
-    <td><%= f.text_field :mobile_full_uri, :class => 'url' %></td>
+    <td><%= f.text_field :mobile_full_uri, class: 'url' %></td>
   </tr>
   <tr>
     <th><%= f.label :admin_full_uri %></th>
-    <td><%= f.text_field :admin_full_uri, :class => 'url' %></td>
+    <td><%= f.text_field :admin_full_uri, class: 'url' %></td>
   </tr>
   <%- if false && @item.new_record? -%>
   <tr>
@@ -28,27 +28,6 @@
 </table>
 
 <%= f.hidden_field :in_root_group_id, value: 0 %>
-
-<br />
-<p class="form">サイト紹介</p>
-
-<table class="show">
-  <tr>
-    <th><%= f.label :site_image %></th>
-    <td>
-      <%= f.file_field :site_image, :size => 64, :style => 'width: 450px;' %><br />
-      <% if uri = @item.site_image_uri %>
-      <div style="margin: 10px 0px;">
-        <%= f.check_box :del_site_image, {}, 'on', '' %> <label for="item_del_site_image">削除する</label><br />
-        <img src="<%=h uri %>" alt="" title="" />
-      </div>
-      <% end %>
-    </td>
-  </tr><tr>
-    <th><%= f.label :body %></th>
-    <td><%= f.text_area :body, :class => 'head' %></td>
-  </tr>
-</table>
 
 <br />
 <p class="form">携帯サイト</p>
@@ -85,7 +64,7 @@
 <table class="show">
   <tr>
     <th>Google Map API Key</th>
-    <td><%= f.text_field :google_map_api_key, :class => 'url', :style => 'ime-mode: disabled;' %></td>
+    <td><%= f.text_field :google_map_api_key, class: 'url', style: 'ime-mode: disabled;' %></td>
   </tr>
 </table>
 
@@ -104,11 +83,11 @@
   </tr>
   <tr>
     <th><%= f.label :og_description %></th>
-    <td><%= f.text_area :og_description, :size => '100x3' %></td>
+    <td><%= f.text_area :og_description, size: '100x3' %></td>
   </tr>
   <tr>
     <th><%= f.label :og_image %></th>
-    <td><%= f.text_field :og_image, :style => 'width: 200px;' %></td>
+    <td><%= f.text_field :og_image, style: 'width: 200px;' %></td>
   </tr>
 </table>
 

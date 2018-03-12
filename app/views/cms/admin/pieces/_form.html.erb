@@ -9,16 +9,16 @@
     <td><%= f.select :content_id, @contents, {} %></td>
   </tr><tr>
     <th><%= @item.class.human_attribute_name :model %></th>
-    <td><%= f.select :model, @models, :include_blank => "" %></td>
+    <td><%= f.select :model, @models, include_blank: "" %></td>
   </tr><tr>
     <th><%= @item.class.human_attribute_name :name %></th>
-    <td><%= f.text_field :name, :class => 'id' %></td>
+    <td><%= f.text_field :name, class: 'id' %></td>
   </tr><tr>
     <th><%= @item.class.human_attribute_name :title %></th>
-    <td><%= f.text_field :title, :class => 'name' %></td>
+    <td><%= f.text_field :title, class: 'name' %></td>
   </tr><tr>
     <th><%= @item.class.human_attribute_name :view_title %></th>
-    <td><%= f.text_field :view_title, :class => 'name' %></td>
+    <td><%= f.text_field :view_title, class: 'name' %></td>
   </tr>
 </table>
 

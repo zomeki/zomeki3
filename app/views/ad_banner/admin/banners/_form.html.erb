@@ -13,20 +13,20 @@
       <%- if @item.persisted? && ::File.exist?(@item.upload_path) -%>
       <%= image_tag file_content_ad_banner_banner_path(content: @content, id: @item.id), width: 100 %><br />
       <%- end -%>
-      <%= f.file_field :file, :style => 'width: 400px;' %>
+      <%= f.file_field :file, style: 'width: 400px;' %>
     </td>
   </tr>
   <tr>
     <th><%= f.label :name %> <div class="note">※半角英数字のみ</div></th>
-    <td><%= f.text_field :name, :style => 'width: 400px;' %></td>
+    <td><%= f.text_field :name, style: 'width: 400px;' %></td>
   </tr>
   <tr>
     <th><%= f.label :title %> <div class="note">※日本語でわかりやすく</div></th>
-    <td><%= f.text_field :title, :style => 'width: 400px;' %></td>
+    <td><%= f.text_field :title, style: 'width: 400px;' %></td>
   </tr>
   <tr>
     <th><%= f.label :alt_text %> <div class="note">※日本語でわかりやすく</div></th>
-    <td><%= f.text_field :alt_text, :style => 'width: 400px;' %></td>
+    <td><%= f.text_field :alt_text, style: 'width: 400px;' %></td>
   </tr>
 </table>
 
@@ -39,21 +39,21 @@
   </tr>
   <tr>
     <th><%= f.label :published_at %></th>
-    <td><%= f.text_field :published_at, :value => l(@item.published_at),
-                                        :style => 'width: 150px;', :class => 'datetimepicker' %></td>
+    <td><%= f.text_field :published_at, value: l(@item.published_at),
+                                        style: 'width: 150px;', class: 'datetimepicker' %></td>
   </tr>
   <tr>
     <th><%= f.label :closed_at %></th>
-    <td><%= f.text_field :closed_at, :value => l(@item.closed_at),
-                                     :style => 'width: 150px;', :class => 'datetimepicker' %></td>
+    <td><%= f.text_field :closed_at, value: l(@item.closed_at),
+                                     style: 'width: 150px;', class: 'datetimepicker' %></td>
   </tr>
   <tr>
     <th><%= f.label :url %> <span class="note">※</span></th>
-    <td><%= f.text_field :url, :style => 'width: 400px;' %></td>
+    <td><%= f.text_field :url, style: 'width: 400px;' %></td>
   </tr>
   <tr>
     <th><%= f.label :sp_url %></th>
-    <td><%= f.text_field :sp_url, :style => 'width: 400px;' %></td>
+    <td><%= f.text_field :sp_url, style: 'width: 400px;' %></td>
   </tr>
   <tr>
     <th><%= f.label :target %> <span class="note">※</span></th>
@@ -61,7 +61,7 @@
   </tr>
   <tr>
     <th><%= f.label :sort_no %></th>
-    <td><%= f.text_field :sort_no, :class => 'number' %></td>
+    <td><%= f.text_field :sort_no, class: 'number' %></td>
   </tr>
 </table>
 
@@ -70,19 +70,19 @@
 <table class="show">
   <tr>
     <th><%= f.label :advertiser_name %> <span class="note">※</span></th>
-    <td><%= f.text_field :advertiser_name, :style => 'width: 400px;' %></td>
+    <td><%= f.text_field :advertiser_name, style: 'width: 400px;' %></td>
   </tr>
   <tr>
     <th><%= f.label :advertiser_phone %></th>
-    <td><%= f.text_field :advertiser_phone, :style => 'width: 400px;' %></td>
+    <td><%= f.text_field :advertiser_phone, style: 'width: 400px;' %></td>
   </tr>
   <tr>
     <th><%= f.label :advertiser_email %></th>
-    <td><%= f.text_field :advertiser_email, :style => 'width: 400px;' %></td>
+    <td><%= f.text_field :advertiser_email, style: 'width: 400px;' %></td>
   </tr>
   <tr>
     <th><%= f.label :advertiser_contact %></th>
-    <td><%= f.text_field :advertiser_contact, :style => 'width: 400px;' %></td>
+    <td><%= f.text_field :advertiser_contact, style: 'width: 400px;' %></td>
   </tr>
 </table>
 
