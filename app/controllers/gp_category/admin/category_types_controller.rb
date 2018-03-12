@@ -25,7 +25,7 @@ class GpCategory::Admin::CategoryTypesController < Cms::Controller::Admin::Base
   end
 
   def new
-    @item = GpCategory::CategoryType.new(state: 'public', sort_no: 10)
+    @item = GpCategory::CategoryType.new(content_id: @content.id, state: 'public', sort_no: 10)
   end
 
   def create
