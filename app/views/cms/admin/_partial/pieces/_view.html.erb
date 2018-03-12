@@ -6,10 +6,10 @@
     <td><%= @item.state_text %></td>
   </tr><tr>
     <th><%= @item.class.human_attribute_name :concept_id %></th>
-    <td><%= safe{@item.concept.name} %></td>
+    <td><%= @item.concept.name if @item.concept %></td>
   </tr><tr>
     <th><%= @item.class.human_attribute_name :content_id %></th>
-    <td><%= safe{@item.content_name} %></td>
+    <td><%= @item.content_name %></td>
   </tr><tr>
     <th><%= @item.class.human_attribute_name :model %></th>
     <td><%= @item.module_name(:short) %></td>

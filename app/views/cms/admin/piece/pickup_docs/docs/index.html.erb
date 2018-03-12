@@ -9,8 +9,8 @@
   <%- @items.each do |item| -%>
   <tr class="<%= cycle '', 'cycle' %>">
     <td style="text-align: center;"><%= link_to :show, cms_piece_pickup_doc_doc_path(piece_pickup_doc_id: @piece.id, id: item.name) %></td>
-    <td><%= safe{item.doc.content.name} %></td>
-    <td><%= safe{item.doc.title} %></td>
+    <td><%= item.doc&.content&.name %></td>
+    <td><%= item.doc&.title %></td>
     <td style="text-align: right;"><%= item.sort_no %></td>
   </tr>
   <%- end -%>

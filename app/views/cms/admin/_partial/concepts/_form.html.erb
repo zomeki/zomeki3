@@ -8,7 +8,9 @@ blank = defined?(includ_blank) && includ_blank == false ? false : true
   </tr>
 <%- if defined?(layout) && layout == true -%>
   <%
-    layouts = if (concept = safe{@item.inherited_concept} || safe{@parent.inherited_concept} || safe{@item.concept})
+    layouts = if concept = (@item.respond_to?(:inherited_concept) && @item.inherited_concept) ||
+                           (@parent.respond_to?(:inherited_concept) && @parent.inherited_concept) ||
+                           (@item.respond_to?(:concept) && @item.concept)
                 concept.ancestors.map { |c| c.layouts.preload(:concept) }.flatten
                        .map { |l| [l.concept_name_and_title, l.id] }
               else

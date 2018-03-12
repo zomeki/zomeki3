@@ -12,9 +12,9 @@
   <% @items.each do |item| %>
   <tr class="<%= cycle '', 'cycle' %>">
     <td style="text-align: center;"><%= link_to :show, { action: :show, id: item.id } %></td>
-    <td><%= safe{item.layout.title} %></td>
+    <td><%= item.layout.title if item.layout %></td>
     <td style="text-align: right;"><%= item.sort_no %></td>
-    <td style="text-align: center;"><%=l item.layout.updated_at %></td>
+    <td style="text-align: center;"><%=l item.layout.updated_at if item.layout %></td>
     <td style="text-align: center;">
       <% if @node %>
         <%= preview_links(@node.site, @node.preview_uri(params: { layout_id: item.value }),

@@ -51,7 +51,7 @@
 
           <% if is_holiday %>
             <%- holidays.each do |i, holiday| -%>
-            <p class="attributes"><span class="<%= safe{holiday.type.name} %>"><%= safe{holiday.type.title} %></span></p>
+            <p class="attributes"><span class="<%= holiday.type.name if holiday.type %>"><%= holiday.type.title if holiday.type %></span></p>
             <% end %>
           <% end %>
         </td>

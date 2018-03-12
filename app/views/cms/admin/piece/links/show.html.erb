@@ -7,7 +7,7 @@
 <br /><p class="form">リンク設定</p>
 
 <div class="actionMenu">
-  <%= link_to(:edit, cms_piece_link_items_path(@item.id)) if safe{@item.editable?} %>
+  <%= link_to(:edit, cms_piece_link_items_path(@item.id)) if @item && @item.editable? %>
 </div>
 
 <table class="show">

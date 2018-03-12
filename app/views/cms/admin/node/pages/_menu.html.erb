@@ -6,17 +6,17 @@
 </div>
 
 <div class="actionMenu">
-<%= action_menu :new     if Core.user.has_priv?(:create, :item => @parent.concept) %>
+<%= action_menu :new     if Core.user.has_priv?(:create, item: @parent.concept) %>
 <%= action_menu :index, cms_nodes_path %>
 <%= action_menu :show %>
-<%= action_menu :edit    if safe{Core.user.has_priv?(:update, :item => @item.concept)} && !@item.replaced_page? %>
-<%= action_menu :destroy if safe{Core.user.has_priv?(:delete, :item => @parent.concept)} %>
+<%= action_menu :edit    if @item && Core.user.has_priv?(:update, item: @item.concept) && !@item.replaced_page? %>
+<%= action_menu :destroy if @parent && Core.user.has_priv?(:delete, item: @parent.concept) %>
 
 <% if params[:action] == 'show' %>
-<%= link_to :recognize, {:do => :recognize}, :data => {confirm: "承認してよろしいですか？"} if @item.recognizable?(Core.user) %>
-<%= link_to :publish, {:do => :publish}, :data => {confirm: "公開してよろしいですか？"} if @item.publishable? %>
-<%= link_to :close, {:do => :close}, :data => {confirm: "公開を終了してよろしいですか？"} if @item.closable? %>
-<%= link_to :duplicate, {:do => :duplicate}, :data => {confirm: "複製してよろしいですか？"} %>
-<%= link_to("複製（更新用）", {:do => :duplicate_for_replace}, :data => {confirm: "複製してよろしいですか？"}) if @item.public? && !@item.object_related? %>
+<%= link_to :recognize, { do: :recognize }, data: { confirm: "承認してよろしいですか？" } if @item.recognizable?(Core.user) %>
+<%= link_to :publish, { do: :publish }, data: { confirm: "公開してよろしいですか？" } if @item.publishable? %>
+<%= link_to :close, { do: :close }, data: { confirm: "公開を終了してよろしいですか？" } if @item.closable? %>
+<%= link_to :duplicate, { do: :duplicate }, data: { confirm: "複製してよろしいですか？" } %>
+<%= link_to("複製（更新用）", { do: :duplicate_for_replace }, data: { confirm: "複製してよろしいですか？" }) if @item.public? && !@item.object_related? %>
 <% end %>
 </div>

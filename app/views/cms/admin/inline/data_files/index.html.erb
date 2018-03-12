@@ -54,7 +54,7 @@ end
       <% end %>
     </td>
     <td style="text-align: center;"><%= item.eng_unit %><br /><%= item.image_size if item.image_file? %></td>
-    <td style="text-align: center;"><%= _input.call('file_url', i, safe{item.public_uri}, 120) %></td>
+    <td style="text-align: center;"><%= _input.call('file_url', i, item.public_uri, 120) %></td>
 
     <% if item.public? %>
     <td style="text-align: center;"><%= link_to item.state_text, item.public_full_uri, target: '_blank' %></td>
