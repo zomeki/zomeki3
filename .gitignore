@@ -25,5 +25,6 @@
 /config/nginx/servers
 /config/nginx/admin_servers
 /config/plugins/Gemfile
+/config/slony/*.conf
 
 /vendor/tika/*

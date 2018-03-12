@@ -11,4 +11,7 @@ Cms::Lib::Modules::ModuleSet.draw :organization, '組織', 80 do |mod|
   mod.piece :business_outlines, '業務内容'
   mod.piece :contact_informations, '連絡先'
   mod.piece :outlines, '組織概要'
+
+  ## public models
+  mod.public_model :groups
 end

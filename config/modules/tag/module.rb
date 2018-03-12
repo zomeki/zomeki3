@@ -7,4 +7,7 @@ Cms::Lib::Modules::ModuleSet.draw :tag, '関連ワード', 40 do |mod|
 
   ## pieces
   mod.piece :tags, '関連ワード一覧'
+
+  ## public models
+  mod.public_model :tags
 end
