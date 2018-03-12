@@ -50,21 +50,8 @@ class Sys::Group < ApplicationRecord
     n
   end
 
-  def tree_name(opts = {})
-    opts.reverse_merge!(prefix: '　　', depth: 0)
-    opts[:prefix] * [level_no - 1 + opts[:depth], 0].max + name
-  end
-
-  def descendants_in_site(site)
-    descendants do |child|
-      rel = child.in_site(site)
-      rel = yield(rel) || rel if block_given?
-      rel
-    end
-  end
-
-  def descendants_for_option(groups=[])
-    descendants.map {|g| [g.tree_name(depth: -1), g.id] }
+  def tree_name(prefix: '　　', depth: 0)
+    prefix * [level_no - 1 + depth, 0].max + name
   end
 
   private
@@ -111,6 +98,12 @@ class Sys::Group < ApplicationRecord
   class << self
     def readable
       all
+    end
+
+    def parent_options(site, origin = nil)
+      groups = site.groups
+      groups = groups.where.not(id: origin) if origin
+      groups.to_tree.flat_map(&:descendants).map { |g| [g.tree_name, g.id] }
     end
   end
 end

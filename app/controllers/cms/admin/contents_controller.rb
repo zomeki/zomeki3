@@ -11,6 +11,7 @@ class Cms::Admin::ContentsController < Cms::Controller::Admin::Base
     @items = Cms::Content.readable
                          .order(:sort_no, :name, :id)
                          .paginate(page: params[:page], per_page: params[:limit])
+                         .preload(:concept)
     _index @items
   end
 

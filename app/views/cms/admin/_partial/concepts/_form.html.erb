@@ -8,13 +8,12 @@ blank = defined?(includ_blank) && includ_blank == false ? false : true
   </tr>
 <%- if defined?(layout) && layout == true -%>
   <%
-    layouts = []
-    if concept = safe{@item.inherited_concept} || safe{@parent.inherited_concept} || safe{@item.concept}
-      concept.ancestors.each { |c| layouts += c.layouts }
-      layouts = layouts.map { |l| [l.concept_name_and_title, l.id] }
-    else
-      #layouts << ['// コンセプトを選択してください', nil]
-    end
+    layouts = if (concept = safe{@item.inherited_concept} || safe{@parent.inherited_concept} || safe{@item.concept})
+                concept.ancestors.map { |c| c.layouts.preload(:concept) }.flatten
+                       .map { |l| [l.concept_name_and_title, l.id] }
+              else
+                []
+              end
   %>
   <tr>
     <th><%= f.label :layout_id, 'レイアウト' %></th>

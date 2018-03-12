@@ -12,7 +12,7 @@ class Cms::Admin::Tool::LinkCheckController < Cms::Controller::Admin::Base
     logs = Cms::LinkCheckLog.where(site_id: Core.site.id)
 
     @logs = logs.search_with_params(params[:criteria] || {}).order(:id)
-                     .preload(link_checkable: { creator: :group })
+                .preload(link_checkable: [:content, creator: :group])
 
     if params[:csv]
       csv = generate_csv(@logs)

@@ -54,7 +54,7 @@ class GpCategory::CategoryType < ApplicationRecord
   end
 
   def categories_for_option
-    root_categories.map{|c| c.descendants_for_option }.flatten(1)
+    categories.to_tree.flat_map(&:descendants).map { |c| [c.tree_title, c.id] }
   end
 
   def find_category_by_path_from_root_category(path_from_root_category)

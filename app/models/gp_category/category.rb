@@ -65,6 +65,10 @@ class GpCategory::Category < ApplicationRecord
 
   nested_scope :in_site, through: :category_type
 
+  def tree_title(prefix: '　　', depth: 0)
+    prefix * [level_no - 1 + depth, 0].max + title
+  end
+
   def descendants(categories=[])
     categories << self
     children.each {|c| c.descendants(categories) }
@@ -97,7 +101,7 @@ class GpCategory::Category < ApplicationRecord
   end
 
   def descendants_for_option(categories=[])
-    categories << ["#{'　　' * (level_no - 1)}#{title}", id]
+    categories << [tree_title, id]
     children.includes(:children).each {|c| c.descendants_for_option(categories) } unless children.empty?
     return categories
   end
