@@ -265,10 +265,7 @@ class Cms::Site < ApplicationRecord
   end
 
   def destroy_related_records
-    scanned = Cms::SiteScanService.new(self).scan
-    scanned.each do |model, ids|
-      model.unscoped.where(id: ids).delete_all if ids.present?
-    end
+    Cms::SiteDestroyService.new(self).destroy
   end
 
   def destroy_files
