@@ -32,7 +32,7 @@ item.build_default_inquiry(group: group)
         <div>
           <div class="label1"><%= f2.label :group_id -%></div>
           <%- group = Sys::Group.find_by_id(inquiry.group_id) || Core.user_group -%>
-          <span id="inquiryGroupLabel<%= i %>"><%= group.full_name if group && i == 0 && !Core.user.has_auth?(:manager) %></span>
+          <span id="inquiryGroupLabel<%= i %>"><%= group&.full_name if i == 0 && !Core.user.has_auth?(:manager) %></span>
         </div>
         <div>
           <div class="label1"><%= f2.label :address -%></div>

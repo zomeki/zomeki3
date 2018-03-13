@@ -40,7 +40,7 @@ item.build_default_inquiry(group: group)
             <th><%= f2.label :group_id -%></th>
             <td>
               <%- group = inquiry.group || Core.user_group -%>
-              <span id="inquiryGroupLabel<%= i %>"><%= group.full_name if group && i == 0 && !Core.user.has_auth?(:manager) or Core.user.has_auth?(:manager) or !inquiry.group_id.blank? %></span>
+              <span id="inquiryGroupLabel<%= i %>"><%= group&.full_name if i == 0 && !Core.user.has_auth?(:manager) or Core.user.has_auth?(:manager) or !inquiry.group_id.blank? %></span>
             </td>
           </tr>
           <tr>
