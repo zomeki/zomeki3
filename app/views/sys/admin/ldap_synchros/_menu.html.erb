@@ -1,6 +1,5 @@
 <%
-
-return render(:text => "") unless Core.ldap.connection
+return unless Core.ldap.connection
 
 %><div class="actionMenu">
 <%= action_menu :new, ['中間データ作成', url_for(:action => :new)] %>

@@ -44,7 +44,7 @@ class Cms::Admin::Tool::ConvertImportsController < Cms::Controller::Admin::Base
     else
       filenames = [['', '']] + filenames
     end
-    render text: ApplicationController.helpers.options_for_select(filenames), layout: false
+    render html: ApplicationController.helpers.options_for_select(filenames), layout: false
   end
 
   private

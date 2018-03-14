@@ -3,7 +3,7 @@ class Sys::Admin::LdapSynchrosController < Cms::Controller::Admin::Base
   
   def pre_dispatch
     return error_auth unless Core.user.has_auth?(:manager)
-    return render(:text=> "LDAPサーバーに接続できません。", :layout => true) unless Core.ldap.connection
+    return render(html: "LDAPサーバーに接続できません。", layout: true) unless Core.ldap.connection
   end
   
   def index

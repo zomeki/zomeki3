@@ -1,7 +1,7 @@
 class GpCalendar::Public::Piece::NearFutureEventsController < GpCalendar::Public::Piece::BaseController
   def pre_dispatch
     @piece = GpCalendar::Piece::NearFutureEvent.find_by(id: Page.current_piece.id)
-    return render(:text => '') unless @piece
+    return render plain: '' unless @piece
 
     @item = Page.current_item
   end

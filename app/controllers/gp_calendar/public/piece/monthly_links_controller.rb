@@ -1,10 +1,10 @@
 class GpCalendar::Public::Piece::MonthlyLinksController < GpCalendar::Public::Piece::BaseController
   def pre_dispatch
     @piece = GpCalendar::Piece::MonthlyLink.find_by(id: Page.current_piece.id)
-    return render(:text => '') unless @piece
+    return render plain: '' unless @piece
 
     @node = @piece.target_node
-    return render(:text => '') unless @node
+    return render plain: '' unless @node
 
     date      = params[:gp_calendar_event_date]
     @min_date = params[:gp_calendar_event_min_date]
@@ -19,7 +19,7 @@ class GpCalendar::Public::Piece::MonthlyLinksController < GpCalendar::Public::Pi
     @year     = date.year
     @month    = date.month
 
-    return render(:text => '') unless @min_date
+    return render plain: '' unless @min_date
 
     @item = Page.current_item
   end

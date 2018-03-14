@@ -1,6 +1,5 @@
 <%
-
-return render(:text => "") unless Core.ldap.connection
+return unless Core.ldap.connection
 
 %><div class="navi">
 

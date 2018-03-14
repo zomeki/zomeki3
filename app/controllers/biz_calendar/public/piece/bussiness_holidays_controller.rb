@@ -1,14 +1,14 @@
 class BizCalendar::Public::Piece::BussinessHolidaysController < BizCalendar::Public::Piece::BaseController
   def pre_dispatch
     @piece = BizCalendar::Piece::BussinessHoliday.find_by(id: Page.current_piece.id)
-    return render(:text => '') unless @piece
+    return render plain: '' unless @piece
 
     @item = Page.current_item
   end
 
   def index
     node = @piece.content.public_nodes.first
-    return render(:text => '') unless node
+    return render plain: '' unless node
 
     start_date = Date.today
     end_date   = (Date.today >> 12).end_of_month
