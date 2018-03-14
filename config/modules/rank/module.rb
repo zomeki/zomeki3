@@ -10,4 +10,9 @@ Cms::Lib::Modules::ModuleSet.draw :rank, 'アクセスランキング', 120 do |
 
   ## pieces
   mod.piece :ranks, 'アクセスランキング一覧'
+
+  ## public models
+  mod.public_model :ranks
+  mod.public_model :categories
+  mod.public_model :totals
 end

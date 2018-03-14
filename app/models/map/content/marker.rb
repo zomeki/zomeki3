@@ -85,9 +85,11 @@ class Map::Content::Marker < Cms::Content
   def sort_markers(markers)
     case setting_value(:marker_order)
     when 'time_asc'
-      markers.sort {|a, b| a.created_at <=> b.created_at }
+      markers.sort_by { |m| m.created_at }
     when 'time_desc'
-      markers.sort {|a, b| b.created_at <=> a.created_at }
+      markers.sort_by { |m| m.created_at }.reverse
+    when 'sort_no'
+      markers.sort_by { |m| [m.sort_no.to_i, m.created_at] }
     when 'category'
       markers.sort do |a, b|
         next  0 if a.categories.empty? && b.categories.empty?

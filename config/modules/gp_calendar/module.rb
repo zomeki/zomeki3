@@ -15,4 +15,8 @@ Cms::Lib::Modules::ModuleSet.draw :gp_calendar, 'カレンダー', 60 do |mod|
   mod.piece :near_future_events, '本日と明日のイベント'
   mod.piece :events, 'イベント一覧'
   mod.piece :category_daily_links, '日別リンク（イベント検索）'
+
+  ## public models
+  mod.public_model :events
+  mod.public_model :holidays
 end

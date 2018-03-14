@@ -14,6 +14,7 @@ module Cms::InquiryHelper
     def format(inquiry_style, mobile: false)
       contents = {
         name: -> { replace_name },
+        full_name: -> { replace_full_name },
         address: -> { replace_address },
         tel: -> { replace_tel },
         fax: -> { replace_fax },
@@ -31,6 +32,12 @@ module Cms::InquiryHelper
     def replace_name
       if (group = @inquiry.group) && group.name.present?
         content_tag :div, group.name, class: 'section'
+      end
+    end
+
+    def replace_full_name
+      if (group = @inquiry.group) && group.full_name.present?
+        content_tag :div, group.full_name, class: 'section'
       end
     end
 

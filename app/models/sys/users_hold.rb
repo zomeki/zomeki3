@@ -4,7 +4,7 @@ class Sys::UsersHold < ApplicationRecord
   belongs_to :user
   belongs_to :holdable, polymorphic: true
 
-  nested_scope :in_site, through: :user
+  nested_scope :in_site, through: :holdable
 
   def group_and_user_name
     return '' unless user

@@ -8,10 +8,10 @@
       <%- if @item.prev_edition -%>
       <%= @item.name %><%= f.hidden_field :name %>
       <%- else -%>
-      <%= f.text_field :name, :style => 'width: 200px;' %>
+      <%= f.text_field :name, style: 'width: 200px;' %>
       <%- end -%>
       /
-      <%= f.text_field :filename_base, :style => 'width: 200px;' %>.html
+      <%= f.text_field :filename_base, style: 'width: 200px;' %>.html
     </td>
   </tr>
   <tr>
@@ -32,11 +32,11 @@
 <table class="show">
   <tr>
     <th><%= f.label :meta_description %></th>
-    <td><%= f.text_area :meta_description, :size => '100x3' %></td>
+    <td><%= f.text_area :meta_description, size: '100x3' %></td>
   </tr>
   <tr>
     <th><%= f.label :meta_keywords %></th>
-    <td><%= f.text_field :meta_keywords, :style => 'width: 700px;' %></td>
+    <td><%= f.text_field :meta_keywords, style: 'width: 700px;' %></td>
   </tr>
 </table>
 
@@ -53,11 +53,11 @@
   </tr>
   <tr>
     <th><%= f.label :og_description %></th>
-    <td><%= f.text_area :og_description, :size => '100x3' %></td>
+    <td><%= f.text_area :og_description, size: '100x3' %></td>
   </tr>
   <tr>
     <th><%= f.label :og_image %></th>
-    <td><%= f.text_field :og_image, :style => 'width: 200px;' %></td>
+    <td><%= f.text_field :og_image, style: 'width: 200px;' %></td>
   </tr>
 </table>
 

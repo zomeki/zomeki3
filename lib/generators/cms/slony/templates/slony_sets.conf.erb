@@ -1,0 +1,22 @@
+$SLONY_SETS = {
+    "zomeki" => {
+        "set_id" => <%= ENV['SET_ID'] || 1 %>,
+        "table_id" => <%= ENV['TABLE_ID'] || 1 %>,
+        "sequence_id" => <%= ENV['SEQUENCE_ID'] || 1 %>,
+
+        "pkeyedtables" => [
+            <%- @public_tables.each do |table| -%>
+            '<%= table %>',
+            <%- end -%>
+        ],
+
+        "keyedtables" => {
+        },
+
+        "sequences" => [
+            <%- @public_sequences.each do |seq| -%>
+            '<%= seq %>',
+            <%- end -%>
+        ],
+    },
+};

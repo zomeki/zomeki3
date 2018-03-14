@@ -14,4 +14,11 @@ Cms::Lib::Modules::ModuleSet.draw :gp_category, 'カテゴリ', 20 do |mod|
   mod.piece :recent_tabs, '新着タブ'
   mod.piece :feeds, 'フィード'
   mod.piece :category_summaries, 'カテゴリ説明'
+
+  ## public models
+  mod.public_model :category_types
+  mod.public_model :categories
+  mod.public_model :categorizations
+  mod.public_model :template_modules
+  mod.public_model :templates
 end

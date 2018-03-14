@@ -7,4 +7,8 @@ Cms::Lib::Modules::ModuleSet.draw :feed, 'フィード', 140 do |mod|
 
   ## pieces
   mod.piece :feed_entries, '新着記事一覧'
+
+  ## public models
+  mod.public_model :feeds
+  mod.public_model :feed_entries
 end

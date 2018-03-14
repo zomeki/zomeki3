@@ -7,13 +7,13 @@
     <td><%= f.select :content_id, @contents, {} %></td>
   </tr><tr>
     <th><%= f.label :model %></th>
-    <td><%= f.select :model, @models, :include_blank => "" %></td>
+    <td><%= f.select :model, @models, include_blank: "" %></td>
   </tr><tr>
     <th><%= f.label :parent_id %></th>
-    <td><%= f.select :parent_id, @item.candidate_parents, :include_blank => true %></td>
+    <td><%= f.select :parent_id, @item.candidate_parents, include_blank: true %></td>
   </tr><tr>
     <th><%= f.label :route_id %></th>
-    <td><%= f.select :route_id, @item.candidate_routes, :include_blank => true %></td>
+    <td><%= f.select :route_id, @item.candidate_routes, include_blank: true %></td>
   </tr>
   <tr>
     <th><%= f.label :sitemap_state %></th>
@@ -21,7 +21,7 @@
   </tr>
   <tr>
     <th><%= f.label :sitemap_sort_no %></th>
-    <td><%= f.text_field :sitemap_sort_no, :class => 'number' %></td>
+    <td><%= f.text_field :sitemap_sort_no, class: 'number' %></td>
   </tr>
 </table>
 

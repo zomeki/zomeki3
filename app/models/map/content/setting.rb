@@ -17,7 +17,7 @@ class Map::Content::Setting < Cms::ContentSetting
     comment: '（例 /images/sample.jpg ）'
   set_config :marker_order,
     name: '並び順',
-    options: [['投稿日（昇順）', 'time_asc'], ['投稿日（降順）', 'time_desc'], ['カテゴリ順', 'category']]
+    options: [['投稿日（昇順）', 'time_asc'], ['投稿日（降順）', 'time_desc'], ['カテゴリ順', 'category'], ['並び順番号', 'sort_no']]
   set_config :title_style,
     name: "タイトル表示形式",
     form_type: :text,

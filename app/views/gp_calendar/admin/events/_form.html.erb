@@ -7,30 +7,30 @@
   </tr>
   <tr>
     <th><%= f.label :started_on %> <span class="note">※</span></th>
-    <td colspan="2"><%= f.text_field :started_on, :value => l(@item.started_on),
-                                                  :style => 'width: 150px;', :class => 'datepicker' %></td>
+    <td colspan="2"><%= f.text_field :started_on, value: l(@item.started_on),
+                                                  style: 'width: 150px;', class: 'datepicker' %></td>
   </tr>
   <tr>
     <th><%= f.label :ended_on %> <span class="note">※</span></th>
-    <td colspan="2"><%= f.text_field :ended_on, :value => l(@item.ended_on),
-                                                :style => 'width: 150px;', :class => 'datepicker' %></td>
+    <td colspan="2"><%= f.text_field :ended_on, value: l(@item.ended_on),
+                                                style: 'width: 150px;', class: 'datepicker' %></td>
   </tr>
   <tr>
     <th><%= f.label :title %> <span class="note">※</span></th>
-    <td colspan="2"><%= f.text_field :title, :style => 'width: 700px;' %></td>
+    <td colspan="2"><%= f.text_field :title, style: 'width: 700px;' %></td>
   </tr>
   <tr>
     <th><%= f.label :href %></th>
-    <td><%= f.text_field :href, :style => 'width: 500px;' %></td>
+    <td><%= f.text_field :href, style: 'width: 500px;' %></td>
     <td><%= f.collection_radio_buttons :target, @item.class.target_options, :last, :first %></td>
   </tr>
   <tr>
     <th><%= f.label :description %></th>
-    <td colspan="2"><%= f.text_area :description, :size => '100x3', :style => 'width: 700px;' %></td>
+    <td colspan="2"><%= f.text_area :description, size: '100x3', style: 'width: 700px;' %></td>
   </tr>
   <tr>
     <th><%= f.label :note %></th>
-    <td colspan="2"><%= f.text_area :note, :size => '100x3', :style => 'width: 700px;' %></td>
+    <td colspan="2"><%= f.text_area :note, size: '100x3', style: 'width: 700px;' %></td>
   </tr>
 </table>
 

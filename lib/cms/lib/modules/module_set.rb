@@ -6,6 +6,7 @@ class Cms::Lib::Modules::ModuleSet
   attr_accessor :directories
   attr_accessor :pages
   attr_accessor :pieces
+  attr_accessor :public_models
 
   def self.load_modules
     Rails.application.config.x.modules
@@ -25,6 +26,7 @@ class Cms::Lib::Modules::ModuleSet
     @directories = []
     @pages       = []
     @pieces      = []
+    @public_models = []
   end
   
   def content(name, label, options = {})
@@ -43,6 +45,10 @@ class Cms::Lib::Modules::ModuleSet
   
   def piece(name, label, options = {})
     @pieces << Model.new(self, name, label, :piece, options)
+  end
+
+  def public_model(name, options = {})
+    @public_models << Model.new(self, name, nil, :public_model, options)
   end
 
   class Model

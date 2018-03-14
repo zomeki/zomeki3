@@ -6,10 +6,10 @@
     <td><%= f.collection_radio_buttons :state, @item.class.state_options, :last, :first %></td>
   </tr><tr>
     <th><%= f.label :title %> <span class="note">※</span></th>
-    <td><%= f.text_field :title, :class => 'title' %></td>
+    <td><%= f.text_field :title, class: 'title' %></td>
   </tr><tr>
     <th><%= f.label :name %> <span class="note">※</span></th>
-    <td><%= f.text_field :name, :class => 'name', :style => 'ime-mode: disabled;' %></td>
+    <td><%= f.text_field :name, class: 'name', style: 'ime-mode: disabled;' %></td>
   </tr>
 </table>
 

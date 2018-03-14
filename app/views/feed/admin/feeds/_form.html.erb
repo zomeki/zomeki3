@@ -6,16 +6,16 @@
     <td><%= f.collection_radio_buttons :state, @item.class.state_options, :last, :first %></td>
   </tr><tr>
     <th><%= f.label :name %> <span class="note">※</span></th>
-    <td><%= f.text_field :name, :class => 'id' %></td>
+    <td><%= f.text_field :name, class: 'id' %></td>
   </tr><tr>
     <th><%= f.label :title %> <span class="note">※</span></th>
-    <td><%= f.text_field :title, :class => 'name' %></td>
+    <td><%= f.text_field :title, class: 'name' %></td>
   </tr><tr>
     <th><%= f.label :uri %> <span class="note">※</span></th>
-    <td><%= f.text_field :uri, :class => 'title' %></td>
+    <td><%= f.text_field :uri, class: 'title' %></td>
   </tr><tr>
     <th><%= f.label :entry_count %></th>
-    <td><%= f.text_field :entry_count, :class => "number" %></td>
+    <td><%= f.text_field :entry_count, class: 'number' %></td>
   </tr>
 </table>
 

@@ -121,6 +121,7 @@ table.show input.nameEn {
 table.show input.title {
   width: 600px;
 }
+form.search input.number,
 table.show input.number {
   text-align: right;
   width: 100px;

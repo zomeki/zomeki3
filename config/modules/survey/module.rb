@@ -7,4 +7,8 @@ Cms::Lib::Modules::ModuleSet.draw :survey, '問合せ', 110 do |mod|
 
   ## pieces
   mod.piece :forms, 'フォーム'
+
+  ## public models
+  mod.public_model :forms
+  mod.public_model :questions
 end
