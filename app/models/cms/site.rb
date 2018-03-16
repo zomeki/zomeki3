@@ -230,7 +230,7 @@ class Cms::Site < ApplicationRecord
     dst_path = Rails.root.join("#{public_path}/_common")
     if ::File.exists?(src_path) && (force || !::File.exists?(dst_path))
       FileUtils.mkdir_p(dst_path) unless FileTest.exist?(dst_path)
-      ::FileUtils.cp_r("#{src_path}/.", dst_path)
+      FileUtils.cp_r("#{src_path}/.", dst_path)
     end
   end
 

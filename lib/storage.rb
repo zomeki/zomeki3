@@ -79,32 +79,32 @@ module Storage
   end
   
   def self.mkdir(path)
-    ::FileUtils.mkdir(path)
+    FileUtils.mkdir(path)
   end
   
   def self.mkdir_p(path)
-    ::FileUtils.mkdir_p(path)
+    FileUtils.mkdir_p(path)
   end
   
   def self.mv(src, dst)
-    ::FileUtils.mv(src, dst)
+    FileUtils.mv(src, dst)
   end
   
   def self.cp(src, dst)
-    ::FileUtils.cp(src, dst)
+    FileUtils.cp(src, dst)
   end
   
   def self.rmdir(path)
-    ::FileUtils.rmdir(path)
+    FileUtils.rmdir(path)
   end
   
   def self.rm_rf(path)
-    ::FileUtils.rm_rf(path)
-    #::FileUtils.remove_entry_secure(path, true) 
+    FileUtils.rm_rf(path)
+    #FileUtils.remove_entry_secure(path, true) 
   end
   
   def self.touch(path)
-    ::FileUtils.touch(path)
+    FileUtils.touch(path)
   end
   
   def self.read(path)
