@@ -19,7 +19,6 @@ class GpArticle::Doc < ApplicationRecord
   include Cms::Model::Auth::Concept
   include Sys::Model::Auth::EditableGroup
 
-  include GpArticle::Model::Rel::Doc
   include GpArticle::Model::Rel::Category
   include GpArticle::Model::Rel::Tag
   include GpArticle::Model::Rel::RelatedDoc

@@ -117,7 +117,7 @@
   <%- end -%>
   <%- if @content.related_doc_enabled? -%>
   <tr>
-    <th><%= @item.class.human_attribute_name :in_rel_doc_ids %></th>
+    <th><%= @item.class.human_attribute_name :related_docs %></th>
     <td>
       <ul>
         <%- @item.related_docs.each do |doc|

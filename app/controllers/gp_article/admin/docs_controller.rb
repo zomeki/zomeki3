@@ -318,8 +318,6 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
       :maps_attributes => [:id, :name, :title, :map_lat, :map_lng, :map_zoom, :markers_attributes => [:id, :name, :lat, :lng]],
       :editable_groups_attributes => [:id, :group_id],
       :related_docs_attributes => [:id, :name, :content_id, :_destroy],
-      :in_rel_doc_ids => [],
-      :in_share_accounts => [],
       :in_approval_flow_ids => [],
     ).tap do |permitted|
       [:in_file_names, :in_category_ids, :in_event_category_ids, :in_marker_category_ids, :in_approval_assignment_ids].each do |key|

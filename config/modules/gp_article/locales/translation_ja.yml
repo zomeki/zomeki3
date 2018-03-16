@@ -34,7 +34,6 @@ ja:
         terminal_pc_or_smart_phone: PC・スマートフォン
         terminal_mobile: 携帯
         editable_groups: 編集可能グループ
-        in_rel_doc_ids: 関連記事
         marker_state: マップ表示
         marker_sort_no: 並び順
         meta_description: 説明文
@@ -61,6 +60,7 @@ ja:
         inquiries/fax: 連絡先（ファクシミリ）
         inquiries/email: 連絡先（メールアドレス）
         inquiries/note: 連絡先（備考）
+        related_docs: 関連記事
       gp_article/doc/maps/markers:
         lat: 緯度
         lng: 経度
