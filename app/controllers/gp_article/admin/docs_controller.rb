@@ -63,7 +63,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
           users = Sys::User.arel_table
           inners << :user
       end
-      @items = @items.joins(:creator => inners)
+      @items = @items.joins(creator: inners)
 
       @items = @items.where(groups[:id].eq(params[:group_id])) if params[:group_id]
       @items = @items.where(users[:id].eq(params[:user_id])) if params[:user_id]
@@ -181,9 +181,9 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
   def duplicate(item)
     if item.duplicate
-      redirect_to url_for(:action => :index), notice: '複製処理が完了しました。'
+      redirect_to url_for(action: :index), notice: '複製処理が完了しました。'
     else
-      redirect_to url_for(:action => :index), alert: '複製処理に失敗しました。'
+      redirect_to url_for(action: :index), alert: '複製処理に失敗しました。'
     end
   end
 
@@ -205,7 +205,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
         @item.send_approved_notification_mail
       end
     end
-    redirect_to url_for(:action => :show), notice: '承認処理が完了しました。'
+    redirect_to url_for(action: :show), notice: '承認処理が完了しました。'
   end
 
   def passback

@@ -31,11 +31,11 @@ class GpCategory::CategoryType < ApplicationRecord
 
   # conditional associations
   has_many :root_categories, -> { with_root },
-    :foreign_key => :category_type_id, :class_name => 'GpCategory::Category'
+                             foreign_key: :category_type_id, class_name: 'GpCategory::Category'
   has_many :public_categories, -> { public_state },
-    :foreign_key => :category_type_id, :class_name => 'GpCategory::Category'
+                               foreign_key: :category_type_id, class_name: 'GpCategory::Category'
   has_many :public_root_categories, -> { public_state.with_root },
-    :foreign_key => :category_type_id, :class_name => 'GpCategory::Category'
+                                    foreign_key: :category_type_id, class_name: 'GpCategory::Category'
 
   validates :name, presence: true, uniqueness: { scope: :content_id },
                    format: { with: /\A[0-9A-Za-z@\.\-_\+\s]+\z/ }

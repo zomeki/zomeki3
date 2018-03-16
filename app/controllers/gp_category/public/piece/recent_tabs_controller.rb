@@ -8,7 +8,7 @@ class GpCategory::Public::Piece::RecentTabsController < Sys::Controller::Public:
     @more_label = @piece.more_label.presence || '>>新着記事一覧'
     @tabs = []
 
-    GpCategory::Piece::RecentTabXml.find(:all, @piece, :order => :sort_no).each do |tab|
+    GpCategory::Piece::RecentTabXml.find(:all, @piece, order: :sort_no).each do |tab|
       next if tab.name.blank?
 
       tab_class =

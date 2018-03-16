@@ -242,10 +242,7 @@ class Cms::Node < ApplicationRecord
     after_save     Cms::SearchIndexerCallbacks.new, if: :changed?
     before_destroy Cms::SearchIndexerCallbacks.new
 
-#    validate :validate_inquiry,
-#      :if => %Q(state == 'public')
-    validate :validate_recognizers,
-      :if => %Q(state == "recognize")
+    validate :validate_recognizers, if: -> { state == 'recognize' }
 
     def states
       s = [['下書き保存','draft'],['承認待ち','recognize']]
@@ -272,7 +269,7 @@ class Cms::Node < ApplicationRecord
 #      if inquiry != nil && inquiry.group_id == Core.user.group_id
 #        item.in_inquiry = inquiry.attributes
 #      else
-#        item.in_inquiry = {:group_id => Core.user.group_id}
+#        item.in_inquiry = { group_id: Core.user.group_id }
 #      end
 
       inquiries.each_with_index do |inquiry, i|
@@ -282,7 +279,7 @@ class Cms::Node < ApplicationRecord
         item.inquiries.build(attrs)
       end
 
-      return false unless item.save(:validate => false)
+      return false unless item.save(validate: false)
 
       Sys::ObjectRelation.create(source: item, related: self, relation_type: 'replace') if rel_type == :replace
 

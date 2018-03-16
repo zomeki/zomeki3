@@ -69,7 +69,7 @@ function previewTalk() {
 }
 <% end %>
 
-<%= form_for :item, :url => {:do => :test} do |f| %>
+<%= form_for :item, url: { do: :test } do |f| %>
 <div id="convInput">
   <p>入力</p>
   <textarea name="body" id="fromText"><%= params[:body] %></textarea>

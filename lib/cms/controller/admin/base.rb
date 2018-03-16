@@ -3,7 +3,7 @@ class Cms::Controller::Admin::Base < Sys::Controller::Admin::Base
   layout  'admin/cms'
 
   def default_url_options
-    Core.concept ? { :concept => Core.concept.id, only_path: true } : {}
+    Core.concept ? { concept: Core.concept.id, only_path: true } : {}
   end
 
   def initialize_application
@@ -16,7 +16,7 @@ class Cms::Controller::Admin::Base < Sys::Controller::Admin::Base
         # システム管理者以外は所属サイトしか操作できない
         site_id = Core.user.site_ids.first unless Core.user.site_ids.include?(site_id.to_i)
       end
-      cookies[:cms_site] = {:value => site_id, :path => '/', :expires => expires}
+      cookies[:cms_site] = { value: site_id, path: '/', expires: expires}
       Core.set_concept(session, 0)
       return redirect_to "/#{ZomekiCMS::ADMIN_URL_PREFIX}"
     end
@@ -51,8 +51,8 @@ class Cms::Controller::Admin::Base < Sys::Controller::Admin::Base
     error_log("#{status} #{request.env['REQUEST_URI']}") if status != 404
     render status: status, html: "<p>#{message}</p>".html_safe, layout: "admin/cms/error"
     #return respond_to do |format|
-    #  format.html { render :status => status, :text => "<p>#{message}</p>", :layout => "admin/cms/error" }
-    #  format.xml  { render :status => status, :xml => "<errors><error>#{message}</error></errors>" }
+    #  format.html { render status: status, html: "<p>#{message}</p>", layout: "admin/cms/error" }
+    #  format.xml  { render status: status, xml: "<errors><error>#{message}</error></errors>" }
     #end
   end
 end

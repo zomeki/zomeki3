@@ -1,7 +1,7 @@
 <p class="form">基本情報</p>
 
 <table class="show">
-  <%= piece_base_view @item, :container => :tr %>
+  <%= piece_base_view @item, container: :tr %>
 </table>
 
 <br />
@@ -26,7 +26,7 @@
 </div>
 
 <table class="show">
-  <%- Cms::Piece::PickupDocXml.find(:all, @piece, :order => :sort_no).each_with_index do |item, idx| -%>
+  <%- Cms::Piece::PickupDocXml.find(:all, @piece, order: :sort_no).each_with_index do |item, idx| -%>
   <tr>
     <th>ピックアップ <%= idx + 1 %></th>
     <td><%= item.doc.title if item.doc %></td>

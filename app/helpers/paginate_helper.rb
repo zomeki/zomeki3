@@ -9,9 +9,9 @@ module PaginateHelper
                  renderer: LinkRenderer }
 
     if request.mobile?
-      defaults.merge!({ page_links: false,
-                        previous_label: I18n.t('will_paginate.mobile_previous_label'),
-                        next_label: I18n.t('will_paginate.mobile_next_label') })
+      defaults.merge!(page_links: false,
+                      previous_label: I18n.t('will_paginate.mobile_previous_label'),
+                      next_label: I18n.t('will_paginate.mobile_next_label'))
     end
 
     will_paginate(items, defaults)
@@ -34,7 +34,7 @@ module PaginateHelper
       if page && @template.request.mobile?
         # set accesskey
         accesskey = classname == 'previous_page' ? '*' : '#'
-        link(text, page, :class => classname, :accesskey => accesskey)
+        link(text, page, class: classname, accesskey: accesskey)
       else
         super
       end

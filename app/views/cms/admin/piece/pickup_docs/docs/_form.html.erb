@@ -9,11 +9,11 @@
         </tr>
         <tr>
           <td><%= @item.locale :group_id %></td>
-          <td><%= select_tag "group_id", options_for_select(Core.site.groups_for_option), include_blank: true %></td>
+          <td><%= select_tag :group_id, options_for_select(Core.site.groups_for_option), include_blank: true %></td>
         </tr>
         <tr>
           <td><%= @item.locale :user_id %></td>
-          <td><%= select_tag "user_id", options_for_select([]), include_blank: true %></td>
+          <td><%= select_tag :user_id, options_for_select([]), include_blank: true %></td>
         </tr>
         <tr>
           <td><%= @item.locale :doc_id %></td>
@@ -25,7 +25,7 @@
   </tr>
   <tr>
     <th><%= @item.locale :sort_no %> <span class="note">※</span></th>
-    <td><%= f.text_field :sort_no, :class => 'number' %></td>
+    <td><%= f.text_field :sort_no, class: 'number' %></td>
   </tr>
 </table>
 

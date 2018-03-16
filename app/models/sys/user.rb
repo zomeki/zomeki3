@@ -107,12 +107,12 @@ class Sys::User < ApplicationRecord
 
   def has_auth?(name)
     auth = {
-      :none     => 0, # なし  操作不可
-      :reader   => 1, # 読者  閲覧のみ
-      :creator  => 2, #作成者 記事作成者
-      :editor   => 3, #編集者 データ作成者
-      :designer => 4, #設計者 デザイン作成者
-      :manager  => 5, #管理者 設定作成者
+      none:     0, # なし  操作不可
+      reader:   1, # 読者  閲覧のみ
+      creator:  2, #作成者 記事作成者
+      editor:   3, #編集者 データ作成者
+      designer: 4, #設計者 デザイン作成者
+      manager:  5, #管理者 設定作成者
     }
     raise "Unknown authority name: #{name}" unless auth.has_key?(name)
     return auth[name] <= auth_no
@@ -180,14 +180,13 @@ class Sys::User < ApplicationRecord
   def remember_me
     self.remember_token_expires_at = 2.weeks.from_now.utc
     self.remember_token            = encrypt("#{email}--#{remember_token_expires_at}")
-    save(:validate => false)
+    save(validate: false)
   end
 
   def forget_me
     self.remember_token_expires_at = nil
     self.remember_token            = nil
-    #save(:validate => false)
-    update_attributes :remember_token_expires_at => nil, :remember_token => nil
+    update_attributes remember_token_expires_at: nil, remember_token: nil
   end
 
   def root?
@@ -237,8 +236,8 @@ class Sys::User < ApplicationRecord
 
     if !exists && !in_group_id.blank?
       rel = Sys::UsersGroup.create(
-        :user_id  => id,
-        :group_id => in_group_id
+        user_id: id,
+        group_id: in_group_id
       )
     end
 

@@ -39,14 +39,12 @@ class GpCategory::Category < ApplicationRecord
   has_many :events, -> { order(:started_on, :ended_on) },
                     through: :categorizations, source: :categorizable, source_type: 'GpCalendar::Event'
 
-  has_many :marker_icons, :class_name => 'Map::MarkerIcon', :as => :relatable, :dependent => :destroy
-  has_many :category_sets, :class_name => 'Gnav::CategorySet', :dependent => :destroy
-
-  belongs_to :group, :foreign_key => :group_code, :class_name => 'Sys::Group'
+  has_many :marker_icons, class_name: 'Map::MarkerIcon', as: :relatable, dependent: :destroy
+  has_many :category_sets, class_name: 'Gnav::CategorySet', dependent: :destroy
 
   # conditional associations
   has_many :public_children, -> { public_state },
-    :foreign_key => :parent_id, :class_name => self.name
+                             foreign_key: :parent_id, class_name: self.name
 
   delegate :content, to: :category_type
   delegate :site, to: :content

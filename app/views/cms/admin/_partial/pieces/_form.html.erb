@@ -14,13 +14,13 @@
     <td><%= @item.module_name(:short) %></td>
   </tr><tr>
     <th><%= f.label :name %></th>
-    <td><%= f.text_field :name, :class => 'id' %></td>
+    <td><%= f.text_field :name, class: 'id' %></td>
   </tr><tr>
     <th><%= f.label :title %></th>
-    <td><%= f.text_field :title, :class => 'name' %></td>
+    <td><%= f.text_field :title, class: 'name' %></td>
   </tr><tr>
     <th><%= f.label :view_title %></th>
-    <td><%= f.text_field :view_title, :class => 'name' %></td>
+    <td><%= f.text_field :view_title, class: 'name' %></td>
   </tr>
 <% if defined?(container) && container != :tr %>
 </table>

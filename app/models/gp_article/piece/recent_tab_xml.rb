@@ -17,9 +17,9 @@ class GpArticle::Piece::RecentTabXml < Cms::Model::Base::PieceExtension
   elem_accessor :elem_category_ids
   elem_accessor :elem_layers
 
-  validates :name, :presence => true
-  validates :title, :presence => true
-  validates :sort_no, :presence => true
+  validates :name, presence: true
+  validates :title, presence: true
+  validates :sort_no, presence: true
 
   def condition_name
     CONDITION_OPTIONS.detect{|o| o.last == condition }.try(:first).to_s

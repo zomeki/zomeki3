@@ -62,25 +62,25 @@ class GpArticle::Doc < ApplicationRecord
   has_many :operation_logs, -> { where(item_model: 'GpArticle::Doc') },
            foreign_key: :item_id, class_name: 'Sys::OperationLog'
 
-  belongs_to :prev_edition, :class_name => self.name
-  has_one :next_edition, :foreign_key => :prev_edition_id, :class_name => self.name
+  belongs_to :prev_edition, class_name: self.name
+  has_one :next_edition, foreign_key: :prev_edition_id, class_name: self.name
 
-  belongs_to :marker_icon_category, :class_name => 'GpCategory::Category'
+  belongs_to :marker_icon_category, class_name: 'GpCategory::Category'
 
-  has_many :categorizations, :class_name => 'GpCategory::Categorization', :as => :categorizable, :dependent => :destroy
+  has_many :categorizations, class_name: 'GpCategory::Categorization', as: :categorizable, dependent: :destroy
   has_many :categories, -> { where(GpCategory::Categorization.arel_table[:categorized_as].eq('GpArticle::Doc')) },
-           :class_name => 'GpCategory::Category', :through => :categorizations,
-           :after_add => proc {|d, c|
+           class_name: 'GpCategory::Category', through: :categorizations,
+           after_add: proc {|d, c|
              d.categorizations.where(category_id: c.id, categorized_as: nil).first.update_columns(categorized_as: d.class.name)
            }
   has_many :event_categories, -> { where(GpCategory::Categorization.arel_table[:categorized_as].eq('GpCalendar::Event')) },
-           :class_name => 'GpCategory::Category', :through => :categorizations, :source => :category,
-           :after_add => proc {|d, c|
+           class_name: 'GpCategory::Category', through: :categorizations, source: :category,
+           after_add: proc {|d, c|
              d.categorizations.where(category_id: c.id, categorized_as: nil).first.update_columns(categorized_as: 'GpCalendar::Event')
            }
   has_many :marker_categories, -> { where(GpCategory::Categorization.arel_table[:categorized_as].eq('Map::Marker')) },
-           :class_name => 'GpCategory::Category', :through => :categorizations, :source => :category,
-           :after_add => proc {|d, c|
+           class_name: 'GpCategory::Category', through: :categorizations, source: :category,
+           after_add: proc {|d, c|
              d.categorizations.where(category_id: c.id, categorized_as: nil).first.update_columns(categorized_as: 'Map::Marker')
            }
   has_and_belongs_to_many :tags, ->(doc) {
@@ -492,7 +492,7 @@ class GpArticle::Doc < ApplicationRecord
   def validate_platform_dependent_characters
     [:title, :body, :mobile_title, :mobile_body].each do |attr|
       if chars = Util::String.search_platform_dependent_characters(send(attr))
-        errors.add attr, :platform_dependent_characters, :chars => chars
+        errors.add attr, :platform_dependent_characters, chars: chars
       end
     end
   end

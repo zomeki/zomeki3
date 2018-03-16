@@ -26,7 +26,7 @@ class Reception::Course < ApplicationRecord
   scope :with_target, ->(target) { target.present? ? where(state: target) : all }
   scope :search_with_criteria, ->(criteria) {
     rel = all
-    rel = rel.where(:state => criteria[:state]) if criteria[:state].present?
+    rel = rel.where(state: criteria[:state]) if criteria[:state].present?
     rel = rel.search_with_text(:title, :subtitle, :body, :remark, :description, criteria[:keyword]) if criteria[:keyword].present?
     rel
   }

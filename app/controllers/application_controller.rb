@@ -2,7 +2,7 @@ class ApplicationController < ActionController::Base
   include ParamsKeeper::Controller
   protect_from_forgery with: :exception
   before_action :initialize_application
-#  rescue_from Exception, :with => :rescue_exception
+#  rescue_from Exception, with: :rescue_exception
 
   def initialize_application
     if Core.publish
@@ -94,7 +94,7 @@ class ApplicationController < ActionController::Base
 #        html += exception.backtrace.join("<br />")
 #        html += %Q(</div>)
 #      end
-#      render :inline => html, :layout => "admin/cms/error", :status => 500
+#      render inline: html, layout: "admin/cms/error", status: 500
 #    else
 #      http_error 500
 #    end

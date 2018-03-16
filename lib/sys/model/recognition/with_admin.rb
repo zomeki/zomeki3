@@ -48,7 +48,7 @@ module Sys::Model::Recognition::WithAdmin
       next unless user = Sys::User.find_by(id: u.id)
       next if user.id.blank?
       date = u.recognized_at
-      list << { :user => user, :recognized_at => (date.blank? ? nil : date) }
+      list << { user: user, recognized_at: (date.blank? ? nil : date) }
     end
     list
   end

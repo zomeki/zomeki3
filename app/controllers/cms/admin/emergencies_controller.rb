@@ -23,9 +23,7 @@ class Cms::Admin::EmergenciesController < Cms::Controller::Admin::Base
   end
 
   def new
-    @item = Core.site.emergency_layout_settings.build(
-      :sort_no => 0
-    )
+    @item = Core.site.emergency_layout_settings.build(sort_no: 0)
   end
 
   def create
@@ -59,20 +57,20 @@ class Cms::Admin::EmergenciesController < Cms::Controller::Admin::Base
 
     if @item.errors.size == 0
       @node.layout_id = @item.value
-      @node.save(:validate => false)
+      @node.save(validate: false)
     end
 
     if @item.errors.size == 0
       flash[:notice] = '反映処理が完了しました。'
       respond_to do |format|
-        format.html { redirect_to url_for(:action => :index) }
+        format.html { redirect_to url_for(action: :index) }
         format.xml  { head :ok }
       end
     else
       flash[:notice] = '反映処理に失敗しました。'
       respond_to do |format|
-        format.html { redirect_to url_for(:action => :index) }
-        format.xml  { render(:xml => @item.errors, :status => :unprocessable_entity) }
+        format.html { redirect_to url_for(action: :index) }
+        format.xml  { render(xml: @item.errors, status: :unprocessable_entity) }
       end
     end
   end

@@ -1,5 +1,5 @@
 class AdBanner::Public::Node::BannersController < Cms::Controller::Public::Base
-  skip_after_action :render_public_layout, :only => :index
+  skip_after_action :render_public_layout, only: :index
 
   def pre_dispatch
     @content = AdBanner::Content::Banner.find_by(id: Page.current_node.content.id)
@@ -17,7 +17,7 @@ class AdBanner::Public::Node::BannersController < Cms::Controller::Public::Base
       mt = banner.mime_type.presence || Rack::Mime.mime_type(File.extname(banner.name))
       type, disposition = (mt =~ %r!^image/|^application/pdf$! ? [mt, 'inline'] : [mt, 'attachment'])
       disposition = 'attachment' if request.env['HTTP_USER_AGENT'] =~ /Android/
-      send_file banner.upload_path, :type => type, :filename => banner.name, :disposition => disposition
+      send_file banner.upload_path, type: type, filename: banner.name, disposition: disposition
     elsif (banner_token = params[:r]).present? || token.present?
       @banner = @content.banners.find_by(token: banner_token) || @content.banners.find_by(token: token)
       return http_error(404) unless @banner

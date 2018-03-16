@@ -8,14 +8,14 @@
 </div>
 <% end %>
 
-<%= form_for :item, :html => {:multipart => true} do |f| %>
+<%= form_for :item, html: { multipart: true } do |f| %>
 
 <%= error_messages_for :item %>
 
 <table class="show" >
   <tr>
     <th>ファイル</th>
-    <td><%= f.file_field :file, :size => 64, :style => 'width: 450px;' %></td>
+    <td><%= f.file_field :file, size: 64, style: 'width: 450px;' %></td>
   </tr><tr>
     <th>対象コンセプト</th>
     <td><%= f.select :concept_id, Core.site.public_concepts_for_option, include_blank: "　" %></td>

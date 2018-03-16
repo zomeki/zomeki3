@@ -26,7 +26,7 @@ end
   font-size: 80%; line-height: 1.3; font-family: verdana; }
 </style>
 
-<%= form_for :item, :url => {:action => :synchronize} do |f| %>
+<%= form_for :item, url: { action: :synchronize } do |f| %>
   <div class="submitters">
     <span id="message" style="color: #b40; text-align: center;"></span>
     <input type="submit" value="同期する" onclick="$('#message').html('処理を開始しました。そのままでお待ちください。<br /><br />');" />

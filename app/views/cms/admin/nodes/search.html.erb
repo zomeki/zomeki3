@@ -15,8 +15,8 @@
   <% @items.each do |item| %>
   <tr class="<%= cycle '', 'cycle' %>">
     <td style="text-align: center;"><%= link_to :show, item.admin_uri %></td>
-    <td><%= truncate(item.public_uri, :length => 40) %></td>
-    <td><%= truncate(item.title, :length => 30) %></td>
+    <td><%= truncate(item.public_uri, length: 40) %></td>
+    <td><%= truncate(item.title, length: 30) %></td>
     <td style="text-align: center;"><%=l item.updated_at %></td>
     <td style="text-align: center;"><%= item.state_text %></td>
     <td style="text-align: center;">

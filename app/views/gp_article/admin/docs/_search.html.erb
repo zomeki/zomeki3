@@ -9,7 +9,7 @@ category_ids = params.dig(:criteria, :category_ids) || []
   <a href="#" id="toggleSearch"><%= params[:detail_flag] != '1' ? '拡張検索' : '基本検索' %></a>
 </div>
 
-<%= form_tag url_for(action: :index), method: 'get', class: 'search' do -%>
+<%= form_tag url_for(action: :index), method: :get, class: 'search' do -%>
 <%= hidden_field_tag :target, params[:target] %>
 <%= hidden_field_tag :target_state, params[:target_state] %>
 <%= hidden_field_tag :target_public, params[:target_public] %>

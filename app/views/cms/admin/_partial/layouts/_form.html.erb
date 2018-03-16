@@ -8,7 +8,7 @@ layouts = layouts.collect{|i| ["#{i.concept.name} : #{i.title}", i.id]}
 <% end %>
   <tr>
     <th>レイアウト</th>
-    <td><%= f.select(:layout_id, layouts, :include_blank => true) %></td>
+    <td><%= f.select :layout_id, layouts, include_blank: true %></td>
   </tr>
 <% if defined?(container) && container != :tr %>
 </table>

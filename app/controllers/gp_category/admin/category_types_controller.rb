@@ -9,10 +9,10 @@ class GpCategory::Admin::CategoryTypesController < Cms::Controller::Admin::Base
   def index
     if params[:check_boxes]
       @items = @content.category_types
-      render 'index_check_boxes', :layout => false
+      render 'index_check_boxes', layout: false
     elsif params[:options]
       @items = @content.category_types
-      render 'index_options', :layout => false
+      render 'index_options', layout: false
     else
       @items = @content.category_types.paginate(page: params[:page], per_page: params[:limit])
       _index @items

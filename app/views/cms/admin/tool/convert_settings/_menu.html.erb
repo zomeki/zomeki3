@@ -7,6 +7,6 @@
 <%- when 'show' -%>
   <%= link_to '一覧', { action: :index } %>
   <%= link_to '編集', { action: :new, item: { site_url: @item.site_url } } %>
-  <%= link_to '削除', { action: :destroy, id: @item.id }, method: 'delete', confirm: '削除してよろしいですか？' %>
+  <%= link_to '削除', { action: :destroy, id: @item.id }, method: :delete, confirm: '削除してよろしいですか？' %>
 <%- end -%>
 </div>

@@ -22,7 +22,7 @@ class Cms::Admin::KanaDictionariesController < Cms::Controller::Admin::Base
 
   def new
     @item = Core.site.kana_dictionaries.build(
-      :body => "" +
+      body: "" +
         "# コメント ... 先頭に「#」\n" +
         "# 辞書には登録されません。\n\n" +
         "# 日本語例 ... 「漢字, カタカナ」\n" +
@@ -67,9 +67,9 @@ class Cms::Admin::KanaDictionariesController < Cms::Controller::Admin::Base
     @mode = true
 
     if params[:yomi_kana]
-      render :inline => Cms::Lib::Navi::Kana.convert(params[:body], Core.site.id)
+      render inline: Cms::Lib::Navi::Kana.convert(params[:body], Core.site.id)
     elsif params[:talk_kana]
-      render :inline => Cms::Lib::Navi::Jtalk.make_text(params[:body], Core.site.id)
+      render inline: Cms::Lib::Navi::Jtalk.make_text(params[:body], Core.site.id)
     elsif params[:talk_file]
       jtalk = Cms::Lib::Navi::Jtalk.new
       jtalk.make(params[:body], site_id: Core.site.id)

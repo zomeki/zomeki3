@@ -24,9 +24,9 @@ class Cms::Admin::ContentsController < Cms::Controller::Admin::Base
 
   def new
     @item = Cms::Content.new(
-      :concept_id => Core.concept(:id),
-      :state      => 'public',
-      :sort_no    => 10,
+      concept_id: Core.concept(:id),
+      state:      'public',
+      sort_no:    10,
     )
   end
 

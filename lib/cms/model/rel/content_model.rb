@@ -7,7 +7,7 @@ module Cms::Model::Rel::ContentModel
         end
       end
     end
-    mod.belongs_to :content, :foreign_key => :content_id, :class_name => 'Cms::Content'
+    mod.belongs_to :content, foreign_key: :content_id, class_name: 'Cms::Content'
   end
 
   def content_name

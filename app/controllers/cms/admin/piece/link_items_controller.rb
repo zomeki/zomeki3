@@ -20,9 +20,9 @@ class Cms::Admin::Piece::LinkItemsController < Cms::Controller::Admin::Base
 
   def new
     @item = Cms::PieceLinkItem.new(
-      :piece_id   => @piece.id,
-      :state      => 'public',
-      :sort_no    => 0
+      piece_id: @piece.id,
+      state: 'public',
+      sort_no: 0
     )
   end
 

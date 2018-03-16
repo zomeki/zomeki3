@@ -76,7 +76,7 @@ class Cms::Piece < ApplicationRecord
   end
 
   def new_setting(name = nil)
-    Cms::PieceSetting.new({:piece_id => id, :name => name.to_s})
+    Cms::PieceSetting.new(piece_id: id, name: name.to_s)
   end
 
   def setting_value(name)
@@ -112,7 +112,7 @@ class Cms::Piece < ApplicationRecord
     end
 
     item.setting_save_skip = true
-    return false unless item.save(:validate => false)
+    return false unless item.save(validate: false)
 
     # piece_settings
     settings.each do |setting|
@@ -122,7 +122,7 @@ class Cms::Piece < ApplicationRecord
       setting_attributes[:created_at] = nil
       setting_attributes[:updated_at] = nil
       dupe_setting = Cms::PieceSetting.new(setting_attributes)
-      dupe_setting.save(:validate => false)
+      dupe_setting.save(validate: false)
     end
 
     Sys::ObjectRelation.create(source: item, related: self, relation_type: 'replace') if rel_type == :replace

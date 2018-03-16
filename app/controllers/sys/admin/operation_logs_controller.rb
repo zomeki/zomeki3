@@ -46,7 +46,7 @@ protected
     num = items.delete_all
 
     flash[:notice] = "削除処理が完了しました。##{num}件"
-    redirect_to url_for(:action => :index)
+    redirect_to url_for(action: :index)
   end
 
   def generate_csv(items)

@@ -5,7 +5,7 @@
   
   <div class="links">
       <% @groups.each do |g| %>
-      <%= link_to h(g.ou), url_for(:action => :index, :parent => g.ou) %><br />
+      <%= link_to h(g.ou), { action: :index, parent: g.ou } %><br />
       <% end %>
       <%= 'no groups' if @groups.size == 0 %>
   </div>

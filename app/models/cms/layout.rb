@@ -162,6 +162,6 @@ class Cms::Layout < ApplicationRecord
       item.title         = item.title.gsub(/^(【複製】)*/, "【複製】")
     end
 
-    return item.save(:validate => false)
+    return item.save(validate: false)
   end
 end

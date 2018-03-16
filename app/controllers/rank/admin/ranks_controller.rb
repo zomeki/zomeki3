@@ -23,7 +23,7 @@ class Rank::Admin::RanksController < Cms::Controller::Admin::Base
 
   def remote
     @options = options
-    render :partial => 'remote'
+    render partial: 'remote'
   end
 
   private

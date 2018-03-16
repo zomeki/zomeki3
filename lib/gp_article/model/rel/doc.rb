@@ -8,9 +8,9 @@ module GpArticle::Model::Rel::Doc
     ids.each do |id|
       doc = GpArticle::Doc.find_by(id: id)
       if options[:edit]
-        doc ||= GpArticle::Doc.where(:name => id ).first
+        doc ||= GpArticle::Doc.where(name: id).first
       else
-        doc ||= GpArticle::Doc.where(:name => id , :state=>'public').first
+        doc ||= GpArticle::Doc.where(name: id, state: 'public').first
       end
 
       docs << doc if doc

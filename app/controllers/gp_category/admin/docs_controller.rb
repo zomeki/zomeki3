@@ -1,7 +1,7 @@
 class GpCategory::Admin::DocsController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 
-  before_action :find_doc, :only => [ :show, :edit, :update ]
+  before_action :find_doc, only: [:show, :edit, :update]
 
   def pre_dispatch
     @content = GpCategory::Content::CategoryType.find(params[:content])
@@ -29,13 +29,13 @@ class GpCategory::Admin::DocsController < Cms::Controller::Admin::Base
     if (categorization = @item.categorizations.find_by(category_id: @category.id))
       categorization.sort_no = params[:sort_no]
       if categorization.save
-        redirect_to({:action => :index}, notice: '更新処理が完了しました。')
+        redirect_to url_for(action: :index), notice: '更新処理が完了しました。'
       else
         flash.now[:alert] = '更新処理に失敗しました。'
-        render :action => :edit
+        render action: :edit
       end
     else
-      redirect_to({:action => :show}, alert: '更新処理に失敗しました。')
+      redirect_to url_for(action: :show), alert: '更新処理に失敗しました。'
     end
   end
 

@@ -18,7 +18,7 @@
       <% end %>
     </td>
   </tr>
-  <%= layout_view @item, :container => :tr %>
+  <%= layout_view @item, container: :tr %>
   <tr>
     <th><%= @item.class.human_attribute_name :content_id %></th>
     <td><%= @item.content_name %></td>

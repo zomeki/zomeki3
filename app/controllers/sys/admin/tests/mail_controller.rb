@@ -32,7 +32,7 @@ class Sys::Admin::Tests::MailController < Cms::Controller::Admin::Base
           @errors << e.to_s
         else
           flash[:notice] = "メールを送信しました。"
-          redirect_to url_for(:sent => 1)
+          redirect_to url_for(sent: 1)
         end
       end
     end

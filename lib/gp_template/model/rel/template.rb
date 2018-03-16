@@ -3,7 +3,7 @@ module GpTemplate::Model::Rel::Template
 
   included do
     serialize :template_values
-    belongs_to :template, :class_name => 'GpTemplate::Template'
+    belongs_to :template, class_name: 'GpTemplate::Template'
     after_initialize :set_template_defaults
     before_validation :convert_template_values
   end

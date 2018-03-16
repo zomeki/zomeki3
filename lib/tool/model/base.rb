@@ -9,7 +9,7 @@ class Tool::Model::Base
   end
   
   def self.human_attribute_name(name, options = {})
-    label = I18n.t name, :scope => [:activerecord, :attributes, model_name.to_s.underscore]
+    label = I18n.t name, scope: [:activerecord, :attributes, model_name.to_s.underscore]
     label =~ /^translation missing:/ ? name.to_s.humanize : label
   end
   
@@ -18,7 +18,7 @@ class Tool::Model::Base
   end
   
   def locale(name)
-    label = I18n.t name, :scope => [:activerecord, :attributes, self.class.model_name.to_s.underscore]
+    label = I18n.t name, scope: [:activerecord, :attributes, self.class.model_name.to_s.underscore]
     label =~ /^translation missing:/ ? name.to_s.humanize : label
   end
   

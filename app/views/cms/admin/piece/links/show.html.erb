@@ -1,7 +1,7 @@
 <p class="form">基本情報</p>
 
 <table class="show">
-  <%= piece_base_view @item, :container => :tr %>
+  <%= piece_base_view @item, container: :tr %>
 </table>
 
 <br /><p class="form">リンク設定</p>
@@ -14,7 +14,7 @@
   <% @item.link_items.where(state: 'public').each_with_index do |item, idx| %>
   <tr>
     <th>リンク <%= idx + 1 %></th>
-    <td><%= link_to h(item.name), item.uri, :target => item.target %></td>
+    <td><%= link_to h(item.name), item.uri, target: item.target %></td>
   </tr>
   <% end %>
 </table>

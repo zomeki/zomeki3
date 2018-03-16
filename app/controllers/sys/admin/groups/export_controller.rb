@@ -19,7 +19,7 @@ class Sys::Admin::Groups::ExportController < Cms::Controller::Admin::Base
       csv = export_users
       send_data platform_encode(csv), type: 'text/csv', filename: "sys_users_#{Time.now.to_i}.csv"
     else
-      return redirect_to(:action => :index)
+      return redirect_to(action: :index)
     end
   end
 

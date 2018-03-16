@@ -7,7 +7,7 @@ class GpArticle::Admin::Piece::RecentTabs::TabsController < Cms::Controller::Adm
   end
 
   def index
-    @items = GpArticle::Piece::RecentTabXml.find(:all, @piece, :order => :sort_no)
+    @items = GpArticle::Piece::RecentTabXml.find(:all, @piece, order: :sort_no)
     _index @items
   end
 

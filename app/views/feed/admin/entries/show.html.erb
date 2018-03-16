@@ -9,7 +9,7 @@
   <% if uri = @item.link_alternate %>
   <tr>
     <th><%= @item.class.human_attribute_name :link_alternate %></th>
-    <td><div><%= link_to(uri, uri, :target => '_blank') %></div></td>
+    <td><div><%= link_to uri, uri, target: '_blank' %></div></td>
   </tr>
   <% end %>
   <tr>
@@ -22,7 +22,7 @@
   <% if uri = @item.image_uri %>
   <tr>
     <th><%= @item.class.human_attribute_name :image_uri %></th>
-    <td><div><%= link_to(uri, uri, :target => '_blank') %></div></td>
+    <td><div><%= link_to uri, uri, target: '_blank' %></div></td>
   </tr>
   <% end %>
   <tr>

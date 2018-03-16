@@ -5,7 +5,7 @@ class Cms::Admin::DataFilesController < Cms::Controller::Admin::Base
   def pre_dispatch
     return error_auth unless Core.user.has_auth?(:creator)
 
-    return redirect_to(url_for(:action => "index", :parent => '0')) if params[:reset] || (params['s_node_id'] == '' && params[:s_keyword] == '' && params[:s_target] == '')
+    return redirect_to(url_for(action: :index, parent: 0)) if params[:reset] || (params['s_node_id'] == '' && params[:s_keyword] == '' && params[:s_target] == '')
 
     if params[:parent] && params[:parent] != '0'
       @parent = Cms::DataFileNode.find(params[:parent])
@@ -18,7 +18,7 @@ class Cms::Admin::DataFilesController < Cms::Controller::Admin::Base
   def index
     if params['s_node_id']
       parent_id = params['s_node_id'] == '' ? 0 : params['s_node_id']
-      return redirect_to(url_for(:action => "index", :parent => parent_id, :s_keyword => params[:s_keyword], :s_target => params[:s_target], :s_sort => params[:s_sort]))
+      return redirect_to(url_for(action: :index, parent: parent_id, s_keyword: params[:s_keyword], s_target: params[:s_target], s_sort: params[:s_sort]))
     end
 
     @nodes = Cms::DataFileNode.where(concept_id: Core.concept(:id)).order(:name)
@@ -49,8 +49,8 @@ class Cms::Admin::DataFilesController < Cms::Controller::Admin::Base
 
   def new
     @item = Cms::DataFile.new(
-      :concept_id => Core.concept(:id),
-      :state      => 'public'
+      concept_id: Core.concept(:id),
+      state: 'public'
     )
   end
 
@@ -89,7 +89,7 @@ class Cms::Admin::DataFilesController < Cms::Controller::Admin::Base
     @file = Cms::DataFile.find(params[:id])
     return error_auth unless @file.readable?
 
-    send_file @file.upload_path, :type => @file.mime_type, :filename => @file.name, :disposition => 'inline'
+    send_file @file.upload_path, type: @file.mime_type, filename: @file.name, disposition: 'inline'
   end
 
   private

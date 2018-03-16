@@ -1,6 +1,6 @@
 <div class="actionMenu">
 <%- if Core.user.root? -%>
-<%= action_menu :new     if Core.user.has_priv?(:create, :item => Core.concept) %>
+<%= action_menu :new     if Core.user.has_priv?(:create, item: Core.concept) %>
 <%- end -%>
 <%= action_menu :index %>
 <%= action_menu :show %>

@@ -8,8 +8,8 @@ class Tool::ConvertImport < ActiveRecord::Base
 
   serialize :site_filename
 
-  belongs_to :content, :class_name => 'Cms::Content'
-  belongs_to :creator_group, :class_name => 'Sys::Group'
+  belongs_to :content, class_name: 'Cms::Content'
+  belongs_to :creator_group, class_name: 'Sys::Group'
 
   after_initialize :set_defaults
 
