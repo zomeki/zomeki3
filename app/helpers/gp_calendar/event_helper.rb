@@ -169,7 +169,7 @@ module GpCalendar::EventHelper
       image_tag = event_image_tag
       image_link =
         if image_tag.present?
-           if link_to_options
+          if link_to_options
             link_to *([image_tag] + link_to_options)
           else
             image_tag
