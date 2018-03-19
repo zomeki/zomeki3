@@ -31,11 +31,11 @@ class GpCategory::CategoryType < ApplicationRecord
 
   # conditional associations
   has_many :root_categories, -> { with_root },
-    :foreign_key => :category_type_id, :class_name => 'GpCategory::Category'
+                             foreign_key: :category_type_id, class_name: 'GpCategory::Category'
   has_many :public_categories, -> { public_state },
-    :foreign_key => :category_type_id, :class_name => 'GpCategory::Category'
+                               foreign_key: :category_type_id, class_name: 'GpCategory::Category'
   has_many :public_root_categories, -> { public_state.with_root },
-    :foreign_key => :category_type_id, :class_name => 'GpCategory::Category'
+                                    foreign_key: :category_type_id, class_name: 'GpCategory::Category'
 
   validates :name, presence: true, uniqueness: { scope: :content_id },
                    format: { with: /\A[0-9A-Za-z@\.\-_\+\s]+\z/ }
@@ -54,7 +54,7 @@ class GpCategory::CategoryType < ApplicationRecord
   end
 
   def categories_for_option
-    root_categories.map{|c| c.descendants_for_option }.flatten(1)
+    categories.to_tree.flat_map(&:descendants).map { |c| [c.tree_title, c.id] }
   end
 
   def find_category_by_path_from_root_category(path_from_root_category)

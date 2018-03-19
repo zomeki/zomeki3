@@ -90,7 +90,7 @@ class Cms::DataFile < ApplicationRecord
       end
       self.state        = 'public'
       self.published_at = Time.now
-      return false unless save(:validate => false)
+      return false unless save(validate: false)
 
       run_callbacks :publish_files do
         remove_public_file
@@ -101,7 +101,7 @@ class Cms::DataFile < ApplicationRecord
     def close
       self.state        = 'closed'
       self.published_at = nil
-      return false unless save(:validate => false)
+      return false unless save(validate: false)
 
       run_callbacks :close_files do
         remove_public_file

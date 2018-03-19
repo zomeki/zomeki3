@@ -4,7 +4,7 @@
 <%- case params[:action] -%>
 <%- when 'show' -%>
   <%= link_to '一覧', { action: :index } %>
-  <%= link_to '削除', { action: :destroy, id: @item.id }, method: 'delete', confirm: '削除してよろしいですか？' %>
+  <%= link_to '削除', { action: :destroy, id: @item.id }, method: :delete, confirm: '削除してよろしいですか？' %>
   <span class="separator"></span>
   <%= link_to '再実行', { action: :index, item: @item.attributes.slice('site_url', 'include_dir', 'recursive_level') } %>
 <%- end -%>

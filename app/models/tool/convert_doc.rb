@@ -2,7 +2,7 @@ class Tool::ConvertDoc < ActiveRecord::Base
   include Sys::Model::Base
   include Sys::Model::Auth::Manager
 
-  belongs_to :content, :class_name => 'Cms::Content'
+  belongs_to :content, class_name: 'Cms::Content'
   belongs_to :docable, polymorphic: true
 
   after_save :save_cms_importation

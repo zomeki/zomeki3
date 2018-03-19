@@ -24,8 +24,8 @@ class Cms::Admin::PreviewController < Cms::Controller::Admin::Base
       format    = ::File.extname(file_path)
 
       opt  = {
-        :path   => file_path.gsub(format, ''),
-        :format => format.gsub(/^\./, '')
+        path: file_path.gsub(format, ''),
+        format: format.gsub(/^\./, '')
       }
       ctl  = "cms/public/files"
       act  = "down"

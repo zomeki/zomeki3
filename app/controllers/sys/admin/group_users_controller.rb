@@ -11,7 +11,7 @@ class Sys::Admin::GroupUsersController < Cms::Controller::Admin::Base
   
   def index
     if params[:options]
-      render 'index_options', :layout => false
+      render 'index_options', layout: false
     else
       redirect_to(sys_groups_path(@parent))
     end
@@ -26,28 +26,28 @@ class Sys::Admin::GroupUsersController < Cms::Controller::Admin::Base
 
   def new
     @item = Sys::User.new(
-      :state       => 'enabled',
-      :ldap        => '0',
-      :auth_no     => 2,
-      :in_group_id => @parent.id
+      state: 'enabled',
+      ldap: 0,
+      auth_no: 2,
+      in_group_id: @parent.id
     )
   end
   
   def create
     @item = Sys::User.new(user_params)
     @item.ldap = 0
-    _create(@item, :location => sys_groups_path(@parent))
+    _create(@item, location: sys_groups_path(@parent))
   end
   
   def update
     @item = Sys::User.find(params[:id])
     @item.attributes = user_params
-    _update(@item, :location => sys_groups_path(@parent))
+    _update(@item, location: sys_groups_path(@parent))
   end
   
   def destroy
     @item = Sys::User.find(params[:id])
-    _destroy(@item, :location => sys_groups_path(@parent))
+    _destroy(@item, location: sys_groups_path(@parent))
   end
 
   private

@@ -11,6 +11,7 @@ class Cms::Admin::ContentsController < Cms::Controller::Admin::Base
     @items = Cms::Content.readable
                          .order(:sort_no, :name, :id)
                          .paginate(page: params[:page], per_page: params[:limit])
+                         .preload(:concept)
     _index @items
   end
 
@@ -23,9 +24,9 @@ class Cms::Admin::ContentsController < Cms::Controller::Admin::Base
 
   def new
     @item = Cms::Content.new(
-      :concept_id => Core.concept(:id),
-      :state      => 'public',
-      :sort_no    => 10,
+      concept_id: Core.concept(:id),
+      state:      'public',
+      sort_no:    10,
     )
   end
 

@@ -20,7 +20,7 @@ class Cms::Admin::Tool::ConvertDownloadsController < Cms::Controller::Admin::Bas
     @item = Tool::ConvertDownload.new(convert_download_params)
     if @item.creatable? && @item.save
       @item.download
-      redirect_to url_for(:action => :index), :notice => "ダウンロード処理が終了しました。"
+      redirect_to url_for(action: :index), notice: "ダウンロード処理が終了しました。"
     else
       render :index
     end

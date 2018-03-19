@@ -10,7 +10,7 @@ class Sys::Admin::UsersController < Cms::Controller::Admin::Base
     @items = Sys::UsersFinder.new(Core.site.users).search(params)
                              .order("LPAD(account, 15, '0')")
                              .paginate(page: params[:page], per_page: params[:limit])
-                             .preload(:groups, :role_names)
+                             .preload(:role_names, :groups => [:parent])
 
     _index @items
   end

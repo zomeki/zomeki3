@@ -34,7 +34,7 @@ class GpCategory::CategoryTypesScript < PublicationScript
     return nil unless layout
 
     feed_piece_ids = layout.pieces.select{|piece| piece.model == 'GpCategory::Feed'}.map(&:id)
-    GpCategory::Piece::Feed.where(:id => feed_piece_ids).all
+    GpCategory::Piece::Feed.where(id: feed_piece_ids).all
   end
 
   def publish_category(cat)

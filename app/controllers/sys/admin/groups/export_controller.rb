@@ -19,20 +19,18 @@ class Sys::Admin::Groups::ExportController < Cms::Controller::Admin::Base
       csv = export_users
       send_data platform_encode(csv), type: 'text/csv', filename: "sys_users_#{Time.now.to_i}.csv"
     else
-      return redirect_to(:action => :index)
+      return redirect_to(action: :index)
     end
-  end
-
-  def site_groups
-    Sys::Group.roots.in_site(Core.site).flat_map { |g| g.descendants_in_site(Core.site) }
   end
 
   def export_groups
     CSV.generate do |csv|
       csv << [:code, :parent_code, :state, :level_no, :sort_no,:ldap,
-        :ldap_version, :name, :name_en, :address, :tel, :tel_attend, :fax,
-        :email, :note]
-      site_groups.each do |group|
+              :ldap_version, :name, :name_en, :address, :tel, :tel_attend, :fax,
+              :email, :note]
+
+      groups = Core.site.groups.to_tree.flat_map(&:descendants)
+      groups.each do |group|
         row = []
         row << group.code
         row << group.parent.try!(:code)
@@ -54,22 +52,18 @@ class Sys::Admin::Groups::ExportController < Cms::Controller::Admin::Base
     end
   end
 
-  def site_users
-    Sys::User.in_site(Core.site).where.not(id: Sys::User::ROOT_ID).order(:id)
-  end
-
   def export_users
     CSV.generate do |csv|
-
       csv << if Core.user.root?
-        [:account, :state, :name, :name_en, :email, :auth_no, :password, :ldap, :ldap_version,
-        :group_code, :admin_creatable]
-      else
-        [:account, :state, :name, :name_en, :email, :auth_no, :password, :ldap, :ldap_version,
-        :group_code]
-      end
+               [:account, :state, :name, :name_en, :email, :auth_no, :password, :ldap, :ldap_version,
+                :group_code, :admin_creatable]
+             else
+               [:account, :state, :name, :name_en, :email, :auth_no, :password, :ldap, :ldap_version,
+                :group_code]
+             end
 
-      site_users.each do |user|
+      users = Core.site.users.where.not(id: Sys::User::ROOT_ID).order(:id).preload(:groups)
+      users.each do |user|
         next unless user.groups[0]
         row = []
         row << user.account

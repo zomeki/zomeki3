@@ -27,7 +27,7 @@ function writeBussinnesHoliday<%= @piece.id %>(data) {
   <% if @holidays[place.id] && !@holidays[place.id].blank? %>
   <ul>
     <% @holidays[place.id].each do |i,types| %>
-    <li><span class="<%= safe{types[:type].name} %>"><%= safe{types[:type].title} %>：<%= safe{types[:holidays].map {|holiday| holiday.target_date_label(@piece.date_style) }.join('、')} %></span></li>
+    <li><span class="<%= types[:type].name if types[:type] %>"><%= types[:type].title if types[:type] %>：<%= types[:holidays].map {|holiday| holiday.target_date_label(@piece.date_style) }.join('、') if types[:holidays] %></span></li>
     <% end %>
   </ul>
   <% end %>

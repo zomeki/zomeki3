@@ -25,7 +25,7 @@ class Cms::Admin::DataFileNodesController < Cms::Controller::Admin::Base
 
   def new
     @item = Cms::DataFileNode.new(
-      :concept_id => Core.concept(:id)
+      concept_id: Core.concept(:id)
     )
   end
 

@@ -26,7 +26,7 @@ class Cms::Admin::Tool::ConvertDocsController < Cms::Controller::Admin::Base
 
   def destroy_all
     ::Tool::ConvertDoc.in_site(Core.site).delete_all
-    redirect_to url_for(:action => :index)
+    redirect_to url_for(action: :index)
   end
 
   def export
@@ -57,7 +57,7 @@ class Cms::Admin::Tool::ConvertDocsController < Cms::Controller::Admin::Base
       end
     end
 
-    send_data csv_string.encode(Encoding::WINDOWS_31J, :invalid => :replace, :undef => :replace),
+    send_data csv_string.encode(Encoding::WINDOWS_31J, invalid: :replace, undef: :replace),
       type: Rack::Mime.mime_type('.csv'), filename: "export_#{Time.now.strftime('%Y%m%d_%H%M%S')}.csv"
   end
 end

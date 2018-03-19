@@ -7,7 +7,7 @@ class Cms::Admin::Piece::PickupDocs::DocsController < Cms::Controller::Admin::Ba
   end
 
   def index
-    @items =  Cms::Piece::PickupDocXml.find(:all, @piece, :order => :sort_no)
+    @items =  Cms::Piece::PickupDocXml.find(:all, @piece, order: :sort_no)
     _index @items
   end
 

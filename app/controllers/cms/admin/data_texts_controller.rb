@@ -18,8 +18,8 @@ class Cms::Admin::DataTextsController < Cms::Controller::Admin::Base
 
   def new
     @item = Cms::DataText.new(
-      :concept_id => Core.concept(:id),
-      :state      => 'public',
+      concept_id: Core.concept(:id),
+      state: 'public'
     )
   end
 

@@ -10,9 +10,9 @@ class Sys::Lib::Ldap
     unless params
       conf = Util::Config.load(:ldap)
       params = {
-        :host => conf['host'], 
-        :port => conf['port'],
-        :base => conf['base']
+        host: conf['host'], 
+        port: conf['port'],
+        base: conf['base']
       }
     end
     self.host = params[:host]

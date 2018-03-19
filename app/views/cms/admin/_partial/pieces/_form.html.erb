@@ -8,19 +8,19 @@
   <%= concept_form f %>
   <tr>
     <th><%= f.label :content_id %></th>
-    <td><%= safe{@item.content_name} %></td>
+    <td><%= @item.content_name %></td>
   </tr><tr>
     <th><%= f.label :model %></th>
     <td><%= @item.module_name(:short) %></td>
   </tr><tr>
     <th><%= f.label :name %></th>
-    <td><%= f.text_field :name, :class => 'id' %></td>
+    <td><%= f.text_field :name, class: 'id' %></td>
   </tr><tr>
     <th><%= f.label :title %></th>
-    <td><%= f.text_field :title, :class => 'name' %></td>
+    <td><%= f.text_field :title, class: 'name' %></td>
   </tr><tr>
     <th><%= f.label :view_title %></th>
-    <td><%= f.text_field :view_title, :class => 'name' %></td>
+    <td><%= f.text_field :view_title, class: 'name' %></td>
   </tr>
 <% if defined?(container) && container != :tr %>
 </table>

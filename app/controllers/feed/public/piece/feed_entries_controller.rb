@@ -26,8 +26,8 @@ class Feed::Public::Piece::FeedEntriesController < Sys::Controller::Public::Base
     @entries.each do |entry|
       date = entry.entry_updated.strftime('%y%m%d')
       @items << {
-        :date => (date != prev ? entry.entry_updated.strftime('%Y年%-m月%-d日') : nil),
-        :entry  => entry
+        date: (date != prev ? entry.entry_updated.strftime('%Y年%-m月%-d日') : nil),
+        entry: entry
       }
       prev = date
     end

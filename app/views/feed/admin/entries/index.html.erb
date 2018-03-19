@@ -3,7 +3,6 @@
 <%= page_entries_info @items -%>
 
 <table class="index">
-
   <tr>
     <th style="width: 60px; text-align: center;">詳細</th>
     <th style="width: 60px; text-align: right;">記事番号</th>
@@ -12,7 +11,6 @@
     <th style="width: 60px; text-align: center;">状態</th>
     <th style="width: 60px; text-align: center;">表示</th>
   </tr>
-
   <% @items.each do |item| %>
   <tr class="<%= cycle '', 'cycle' %>">
     <td style="text-align: center;"><%= link_to :show, { action: :show, id: item } %></td>
@@ -20,9 +18,8 @@
     <td><%= item.title %></td>
     <td style="text-align: center;"><%=l item.entry_updated %></td>
     <td style="text-align: center;"><%= item.state_text %></td>
-    <td style="text-align: center;"><%= link_to '表示', item.link_alternate, :target => '_blank' if item.link_alternate %></td>
+    <td style="text-align: center;"><%= link_to '表示', item.link_alternate, target: '_blank' if item.link_alternate %></td>
   <% end %>
-
 </table>
 
 <%= paginate @items %>

@@ -3,7 +3,7 @@ class Sys::Admin::LdapSynchrosController < Cms::Controller::Admin::Base
   
   def pre_dispatch
     return error_auth unless Core.user.has_auth?(:manager)
-    return render(:text=> "LDAPサーバーに接続できません。", :layout => true) unless Core.ldap.connection
+    return render(html: "LDAPサーバーに接続できません。", layout: true) unless Core.ldap.connection
   end
   
   def index
@@ -26,7 +26,7 @@ class Sys::Admin::LdapSynchrosController < Cms::Controller::Admin::Base
   
   def create
     @version = Time.now.strftime('%s')
-    @results = {:group => 0, :user => 0, :error => 0}
+    @results = { group: 0, user: 0, error: 0 }
     error   = nil
     
     begin
@@ -43,10 +43,10 @@ class Sys::Admin::LdapSynchrosController < Cms::Controller::Admin::Base
       messages << "-- ユーザー #{@results[:user]}件"
       messages << "-- エラー #{@results[:error]}件" if @results[:error] > 0
       flash[:notice] = messages.join('<br />').html_safe
-      redirect_to url_for(:action => :show, :id => @version)
+      redirect_to url_for(action: :show, id: @version)
     else
       flash[:notice] = "中間データの作成に失敗しました。［ #{error} ］"
-      redirect_to url_for(:action => :index)
+      redirect_to url_for(action: :index)
     end
   end
   
@@ -57,7 +57,7 @@ class Sys::Admin::LdapSynchrosController < Cms::Controller::Admin::Base
   def destroy
     Sys::LdapSynchro.where(version: params[:id]).delete_all
     flash[:notice] = "削除処理が完了しました。"
-    redirect_to url_for(:action => :index)
+    redirect_to url_for(action: :index)
   end
   
   def synchronize
@@ -66,14 +66,14 @@ class Sys::Admin::LdapSynchrosController < Cms::Controller::Admin::Base
     @items = Sys::LdapSynchro.where(version: @version, parent_id: 0, entry_type: 'group').order(:sort_no, :code)
     
     unless parent = Sys::Group.find_by(parent_id: 0)
-      return render :inline => "グループのRootが見つかりません。", :layout => true
+      return render inline: "グループのRootが見つかりません。", layout: true
     end
     
     Sys::Group.update_all(ldap_version: nil)
     Sys::User.update_all(ldap_version: nil)
     
-    @results = {:group => 0, :gerr => 0, :user => 0, :uerr => 0}
-    @items.each {|group| do_synchro(group, parent)}
+    @results = { group: 0, gerr: 0, user: 0, uerr: 0 }
+    @items.each { |group| do_synchro(group, parent) }
     
     @results[:udel] = Sys::User.where(ldap: 1, ldap_version: nil).destroy_all.size
     @results[:gdel] = Sys::Group.where.not(parent_id: 0).where(ldap: 1, ldap_version: nil).destroy_all.size
@@ -89,7 +89,7 @@ class Sys::Admin::LdapSynchrosController < Cms::Controller::Admin::Base
     messages << "-- 失敗 #{@results[:uerr]}件" if @results[:uerr] > 0
     flash[:notice] = messages.join('<br />').html_safe
     
-    redirect_to(:action => :index)
+    redirect_to(action: :index)
   end
   
 protected
@@ -109,7 +109,7 @@ protected
     sg.ldap_version   = @version
     
     if sg.ldap == 1
-      if sg.save(:validate => false)
+      if sg.save(validate: false)
         @results[:group] += 1
       else
         @results[:gerr] += 1
@@ -155,15 +155,15 @@ protected
       return true
     end
     
-    group = Sys::LdapSynchro.new({
-      :parent_id  => group_id,
-      :version    => @version,
-      :entry_type => 'group',
-      :code       => entry.code,
-      :name       => entry.name,
-      :name_en    => entry.name_en,
-      :email      => entry.email,
-    })
+    group = Sys::LdapSynchro.new(
+      parent_id:  group_id,
+      version:    @version,
+      entry_type: 'group',
+      code:       entry.code,
+      name:       entry.name,
+      name_en:    entry.name_en,
+      email:      entry.email
+    )
     unless group.save
       @results[:error] += 1
       return false
@@ -171,15 +171,15 @@ protected
     @results[:group] += 1
     
     entry.users.each do |e|
-      user = Sys::LdapSynchro.new({
-        :parent_id  => group.id,
-        :version    => @version,
-        :entry_type => 'user',
-        :code       => e.uid,
-        :name       => e.name,
-        :name_en    => e.name_en,
-        :email      => e.email,
-      })
+      user = Sys::LdapSynchro.new(
+        parent_id:  group.id,
+        version:    @version,
+        entry_type: 'user',
+        code:       e.uid,
+        name:       e.name,
+        name_en:    e.name_en,
+        email:      e.email
+      )
       user.save ? @results[:user] += 1 : @results[:error] += 1
     end
     

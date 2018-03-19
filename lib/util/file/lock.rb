@@ -45,11 +45,11 @@ class Util::File::Lock
   def unlock_by_name(name)
     @locked[name].flock(File::LOCK_UN)
     @locked[name].close
-    #::FileUtils.rm("#{@dir}/_#{name}")
+    #FileUtils.rm("#{@dir}/_#{name}")
     
     if rand(100) == 0
       Dir::glob("#{@dir}/_" + "#{name}".gsub(/^(.*_).*/, '\\1*')).each do |path|
-        ::FileUtils.rm_f(path) if path != "#{@dir}/_#{name}"
+        FileUtils.rm_f(path) if path != "#{@dir}/_#{name}"
       end
     end
     

@@ -4,10 +4,10 @@
     <td><%= @item.state_text %></td>
   </tr><tr>
     <th><%= @item.class.human_attribute_name(:type_id) %></th>
-    <td><%= safe{@item.type.title} %></td>
+    <td><%= @item.type.title if @item.type %></td>
   </tr><tr>
     <th><%= @item.class.human_attribute_name(:holiday_date) %></th>
-    <td><%= safe{@item.holiday_date} %></td>
+    <td><%= @item.holiday_date %></td>
   </tr><tr>
     <th>対象条件</th>
     <td>

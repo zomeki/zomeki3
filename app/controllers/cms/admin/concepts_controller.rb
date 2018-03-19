@@ -7,8 +7,8 @@ class Cms::Admin::ConceptsController < Cms::Controller::Admin::Base
     
     unless @parent = Cms::Concept.find_by(id: params[:parent])
       @parent = Cms::Concept.new(
-        :name     => 'コンセプト',
-        :level_no => 0
+        name:     'コンセプト',
+        level_no: 0
       )
       @parent.id = 0
     end
@@ -28,9 +28,9 @@ class Cms::Admin::ConceptsController < Cms::Controller::Admin::Base
 
   def new
     @item = Cms::Concept.new(
-      :parent_id  => @parent.id,
-      :state      => 'public',
-      :sort_no    => 0
+      parent_id: @parent.id,
+      state:     'public',
+      sort_no:   0
     )
   end
   
@@ -81,7 +81,7 @@ class Cms::Admin::ConceptsController < Cms::Controller::Admin::Base
     @layouts = layouts
 
     respond_to do |format|
-      format.html { render :layout => false }
+      format.html { render layout: false }
     end
   end
 

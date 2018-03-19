@@ -10,7 +10,7 @@ class GpCategory::Admin::CategoriesController < Cms::Controller::Admin::Base
 
   def index
     if params[:options]
-      render 'index_options', :layout => false
+      render 'index_options', layout: false
     else
       @items = if @parent_category
                  @parent_category.children

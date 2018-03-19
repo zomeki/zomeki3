@@ -4,7 +4,7 @@
 <table class="show">
   <tr>
     <th><%= @item.class.human_attribute_name :place_id %></th>
-    <td><%= safe{@item.place.title} %></td>
+    <td><%= @item.place.title if @item.place %></td>
   </tr>
   <tr>
     <th><%= @item.class.human_attribute_name :month_number %></th>

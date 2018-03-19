@@ -1,7 +1,7 @@
 class Map::Public::Piece::CategoryTypesController < Sys::Controller::Public::Base
   def pre_dispatch
     @piece = Map::Piece::CategoryType.find_by(id: Page.current_piece.id)
-    return render(:text => '') unless @piece
+    return render plain: '' unless @piece
 
     @item = Page.current_item
   end

@@ -13,13 +13,13 @@ class Cms::Site < ApplicationRecord
   enum_ish :spp_target, [:only_top, :all], default: :only_top
   enum_ish :mobile_feature, [:enabled, :disabled], default: :enabled
 
-  has_many :concepts, -> { order(:sort_no, :name, :id) }
+  has_many :concepts, -> { order(:level_no, :sort_no, :name, :id) }
   has_many :contents, -> { order(:sort_no, :name, :id) }
   has_many :settings, -> { order(:name, :sort_no) }, class_name: 'Cms::SiteSetting'
   has_many :basic_auth_users, -> { order(:name) }, class_name: 'Cms::SiteBasicAuthUser'
   has_many :kana_dictionaries
   has_many :site_belongings
-  has_many :groups, through: :site_belongings, class_name: 'Sys::Group'
+  has_many :groups, -> { order(:level_no, :sort_no, :code, :id) }, through: :site_belongings, class_name: 'Sys::Group'
   has_many :nodes
   has_many :messages, class_name: 'Sys::Message'
   has_many :operation_logs, class_name: 'Sys::OperationLog'
@@ -27,8 +27,6 @@ class Cms::Site < ApplicationRecord
   belongs_to :root_node, foreign_key: :node_id, class_name: 'Cms::Node'
 
   # conditional relations
-  has_many :root_concepts, -> { where(level_no: 1).order(:sort_no, :name, :id) }, class_name: 'Cms::Concept'
-  has_many :public_root_concepts, -> { where(level_no: 1, state: 'public').order(:sort_no, :name, :id) }, class_name: 'Cms::Concept'
   has_many :public_sitemap_nodes, -> { where(state: 'public', model: 'Cms::Sitemap').order(:name) }, class_name: 'Cms::Node'
   has_many :emergency_layout_settings, class_name: 'Cms::SiteSetting::EmergencyLayout'
 
@@ -136,13 +134,11 @@ class Cms::Site < ApplicationRecord
   end
 
   def concepts_for_option
-    @concepts_for_option ||= root_concepts.preload_children.map(&:descendants).flatten(1)
-      .map { |c| [c.tree_name, c.id] }
+    concepts.to_tree.flat_map(&:descendants).map { |c| [c.tree_name, c.id] }
   end
 
   def public_concepts_for_option
-    @public_concepts_for_option ||= public_root_concepts.preload_public_children.map(&:public_descendants).flatten(1)
-      .map { |c| [c.tree_name, c.id] }
+    concepts.where(state: 'public').to_tree.flat_map(&:descendants).map { |c| [c.tree_name, c.id] }
   end
 
   def users
@@ -154,22 +150,11 @@ class Cms::Site < ApplicationRecord
   end
 
   def users_for_option
-    @users_for_option ||=
-      users.where(state: 'enabled').order(:id)
-           .map { |u| [u.name_with_account, u.id] }
+    users.where(state: 'enabled').order(:id).map { |u| [u.name_with_account, u.id] }
   end
 
   def groups_for_option
-    @groups_for_option ||=
-      Sys::Group.in_site(self).where(level_no: 2)
-                .flat_map { |g| g.descendants_in_site(self) }
-                .map { |g| [g.tree_name(depth: -1), g.id] }
-  end
-
-  def groups_for_option_except(group)
-    Sys::Group.roots.in_site(self).where.not(id: group.id)
-              .flat_map { |g| g.descendants_in_site(self) { |rel| rel.where.not(id: group.id) } }
-              .map { |g| [g.tree_name, g.id] }
+    groups.to_tree.flat_map(&:descendants).reject(&:root?).map { |g| [g.tree_name(depth: -1), g.id] }
   end
 
   def smart_phone_layout_same_as_pc?
@@ -245,7 +230,7 @@ class Cms::Site < ApplicationRecord
     dst_path = Rails.root.join("#{public_path}/_common")
     if ::File.exists?(src_path) && (force || !::File.exists?(dst_path))
       FileUtils.mkdir_p(dst_path) unless FileTest.exist?(dst_path)
-      ::FileUtils.cp_r("#{src_path}/.", dst_path)
+      FileUtils.cp_r("#{src_path}/.", dst_path)
     end
   end
 

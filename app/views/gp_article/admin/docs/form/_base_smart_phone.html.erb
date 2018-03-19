@@ -96,7 +96,7 @@
 </div>
 <%- end -%>
 
-<div class="label1"><%= f.label :in_rel_doc_ids %></div>
+<div class="label1"><%= f.label :related_docs %></div>
 <div>
   <div class="label2"><%= Sys::Creator.human_attribute_name(:group_id) %></div>
   <%= select_tag 'rel_group_id', options_for_select(Core.site.groups_for_option, Core.user_group.id), include_blank: true %>

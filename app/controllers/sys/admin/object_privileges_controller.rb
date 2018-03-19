@@ -22,7 +22,7 @@ class Sys::Admin::ObjectPrivilegesController < Cms::Controller::Admin::Base
 
   def new
     @item = Sys::ObjectPrivilege.new(
-      :role_id => @parent.id
+      role_id: @parent.id
     )
   end
 

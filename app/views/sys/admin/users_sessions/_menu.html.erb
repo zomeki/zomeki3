@@ -1,4 +1,4 @@
 <div class="actionMenu">
 <%= action_menu :index %>
-<%= action_menu :destroy if safe{@item.deletable?} %>
+<%= action_menu :destroy if @item && @item.deletable? %>
 </div>

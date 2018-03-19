@@ -8,7 +8,7 @@ class Cms::Admin::PiecesController < Cms::Controller::Admin::Base
   def index
     @items = Cms::Piece.readable.order(:name, :id)
                        .paginate(page: params[:page], per_page: params[:limit])
-                       .preload(:related_objects_for_replace)
+                       .preload(:concept, :related_objects_for_replace)
     _index @items
   end
 
@@ -29,8 +29,8 @@ class Cms::Admin::PiecesController < Cms::Controller::Admin::Base
 
   def new
     @item = Cms::Piece.new(
-      :concept_id => Core.concept(:id),
-      :state      => 'public'
+      concept_id: Core.concept(:id),
+      state: 'public'
     )
 
     @contents = content_options(false)
@@ -85,7 +85,7 @@ class Cms::Admin::PiecesController < Cms::Controller::Admin::Base
     @options.unshift ["// 一覧を更新しました（#{concept_name}#{contents.size + 1}件）", ""]
 
     respond_to do |format|
-      format.html { render :layout => false }
+      format.html { render layout: false }
     end
   end
 
@@ -107,7 +107,7 @@ class Cms::Admin::PiecesController < Cms::Controller::Admin::Base
     @options.unshift ["// 一覧を更新しました（#{content_name}:#{models.size}件）", '']
 
     respond_to do |format|
-      format.html { render :layout => false }
+      format.html { render layout: false }
     end
   end
 

@@ -10,22 +10,6 @@ module ApplicationHelper
     str.gsub(/\r\n|\r|\n/, '<br />').html_safe
   end
 
-  ## safe calling
-  def safe(alt = nil, &block)
-    begin
-      yield
-#    rescue PassiveRecord::RecordNotFound => e
-    rescue NoMethodError => e
-      # nil判定を追加
-      #if e.respond_to? :args and (e.args.nil? or (!e.args.blank? and e.args.first.nil?))
-        alt
-      #else
-        # 原因がnilクラスへのアクセスでない場合は例外スロー
-      #  raise
-      #end
-    end
-  end
-
   # I18n.localize
   def l(object, options = {})
     super(object, options) if object

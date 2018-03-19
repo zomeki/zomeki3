@@ -23,10 +23,10 @@
   <tr>
     <th>リンク先</th>
     <td>
-      <%= select_tag 'target_node', options_for_select(
-                                      @item.content.public_nodes.where(model: 'GpCalendar::SearchEvent').map { |n| ["#{n.title}（#{n.name}）", n.id] },
-                                      @item.target_node.try(:id)
-                                    ), include_blank: true %>
+      <%= select_tag :target_node, options_for_select(
+                                     @item.content.public_nodes.where(model: 'GpCalendar::SearchEvent').map { |n| ["#{n.title}（#{n.name}）", n.id] },
+                                     @item.target_node.try(:id)
+                                   ), include_blank: true %>
     </td>
   </tr>
 </table>
