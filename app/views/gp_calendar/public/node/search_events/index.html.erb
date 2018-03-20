@@ -1,14 +1,12 @@
 <div class="calendarEvents">
   <div class="searchEvents">
-    <link rel="stylesheet" media="screen" href="/_common/css/jquery-ui-themes/smoothness/jquery-ui.min.css" />
-    <script src="/_common/js/jquery-ui.min.js"></script>
-    <link rel="stylesheet" media="screen" href="/_common/css/jquery-ui-timepicker-addon.css" />
-    <script src="/_common/js/jquery-ui-timepicker-addon.js"></script>
-    <%= javascript_include_tag '/_common/js/jquery-ui-datepicker-ja.js' %>
-    <%= javascript_include_tag '/_common/js/jquery-ui-timepicker-addon-ja.js' %>
+    <%= stylesheet_link_tag '/_common/js/flatpickr/themes/light.min.css' %>
+    <%= stylesheet_link_tag '/_common/js/flatpickr/themes/ja.css' %>
+    <%= javascript_include_tag '/_common/js/flatpickr/flatpickr.min.js' %>
+    <%= javascript_include_tag '/_common/js/flatpickr/l10n/ja.js' %>
     <%= javascript_tag do -%>
     $(document).ready(function () {
-      $('input.datepicker').datepicker();
+      flatpickr('input.datepicker', {"locale": "ja"});
     });
     <%- end -%>
 
