@@ -13,7 +13,7 @@ module Cms::Model::Base::Content
                                                    content: self,
                                                    only_path: true }.merge(options))
   rescue ActionController::UrlGenerationError => e
-    error_log e
+    warn_log e
     nil
   end
 
@@ -25,7 +25,7 @@ module Cms::Model::Base::Content
                                                    id: self,
                                                    only_path: true }.merge(options))
   rescue ActionController::UrlGenerationError => e
-    error_log e
+    warn_log e
     nil
   end
 end
