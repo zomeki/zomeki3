@@ -39,19 +39,6 @@ class Organization::Content::Group < Cms::Content
     }
   end
 
-  def article_related?
-    setting_value(:article_relation) == 'enabled'
-  end
-
-  def related_article_content_id
-    setting_extra_value(:article_relation, :gp_article_content_doc_id)
-  end
-
-  def related_article_content
-    return @related_article_content if defined? @related_article_content
-    @related_article_content = GpArticle::Content::Doc.find_by(id: setting_extra_value(:article_relation, :gp_article_content_doc_id))
-  end
-
   def feed_display?
     setting_value(:feed) != 'disabled'
   end

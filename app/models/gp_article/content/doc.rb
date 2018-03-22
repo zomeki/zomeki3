@@ -38,13 +38,6 @@ class GpArticle::Content::Doc < Cms::Content
     end
   end
 
-  def organization_content_related?
-    organization_content = organization_content_group
-    organization_content &&
-      organization_content.article_related? &&
-      organization_content.related_article_content_id == content.id
-  end
-
   def gp_category_content_category_type
     GpCategory::Content::CategoryType.find_by(id: setting_value(:gp_category_content_category_type_id))
   end
