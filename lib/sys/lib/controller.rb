@@ -17,7 +17,7 @@ class Sys::Lib::Controller
 
     def create_request(controller_name, action_name, options)
       options = options.symbolize_keys
-      options[:base_url] ||= 'http://127.0.0.1'
+      options[:base_url] ||= options[:request] ? options[:request].base_url : 'http://127.0.0.1'
       options[:method] ||= 'GET'
       options[:agent_type] ||= :pc
 
@@ -26,10 +26,16 @@ class Sys::Lib::Controller
       params = params.merge(controller: controller_name, action: action_name)
 
       request = ActionDispatch::Request.new(Rack::MockRequest.env_for(options[:base_url]))
-      request.env["REQUEST_METHOD"] = options[:method]
+      request.env['REQUEST_METHOD'] = options[:method]
       request.env['action_dispatch.request.parameters'] = params.symbolize_keys.with_indifferent_access
-      request.env["action_dispatch.cookies"] = options[:cookie] || {}
-      request.env["rack.session"] = options[:session] || {}
+
+      if options[:request]
+        ['rack.session',
+         'rack.request.cookie_hash',
+         'action_dispatch.cookies'].each do |key|
+          request.env[key] = options[:request].env[key]
+        end
+      end
 
       if options[:agent_type] == :smart_phone
         jpmobile_envs_for_smart_phone.each do |key, value|

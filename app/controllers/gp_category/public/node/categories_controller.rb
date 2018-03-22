@@ -51,6 +51,7 @@ class GpCategory::Public::Node::CategoriesController < GpCategory::Public::Node:
       if (tm = @content.template_modules.ci_match(name: $1).first)
         Sys::Lib::Controller.render(
           'gp_category/public/template_module/categories', "#{action_name}_#{tm.module_type}",
+          request: request,
           params: params.merge(content: @content, category_type: @category_type, category: @category, template_module: tm)
         )
       else
@@ -63,6 +64,7 @@ class GpCategory::Public::Node::CategoriesController < GpCategory::Public::Node:
   def render_more_template(template, template_module)
     res = Sys::Lib::Controller.dispatch(
       'gp_category/public/template_module/categories', :more,
+      request: request,
       params: params.merge(content: @content, category_type: @category_type, category: @category, template_module: template_module)
     )
     if res.status == 200

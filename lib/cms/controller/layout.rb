@@ -98,7 +98,7 @@ module Cms::Controller::Layout
       begin
         next if item.content_id && !item.content
         mnames= item.model.underscore.pluralize.split('/')
-        data = Sys::Lib::Controller.render("#{mnames[0]}/public/piece/#{mnames[1]}", 'index', params: params, session: session, cookie: cookies)
+        data = Sys::Lib::Controller.render("#{mnames[0]}/public/piece/#{mnames[1]}", 'index', request: request, params: params)
         if data =~ /^<html/ && Rails.env.to_s == 'production'
           # component error
         else
