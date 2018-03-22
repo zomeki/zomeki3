@@ -1,5 +1,6 @@
 class GpCategory::Public::Node::DocsController < Cms::Controller::Public::Base
   include GpArticle::Controller::Feed
+  include GpArticle::Controller::Public::Scoping
 
   def pre_dispatch
     @content = GpCategory::Content::CategoryType.find_by(id: Page.current_node.content.id)
@@ -10,7 +11,7 @@ class GpCategory::Public::Node::DocsController < Cms::Controller::Public::Base
     categories = @content.public_category_types.inject([]) {|result, ct|
                      result | ct.public_root_categories.inject([]) {|r, c| r | c.descendants }
                    }
-    @docs = GpArticle::Doc.categorized_into(categories.map(&:id)).mobile(::Page.mobile?).public_state
+    @docs = GpArticle::Doc.categorized_into(categories.map(&:id)).public_state
                           .order(display_published_at: :desc, published_at: :desc)
 
     if params[:format].in?(['rss', 'atom'])
@@ -21,7 +22,7 @@ class GpCategory::Public::Node::DocsController < Cms::Controller::Public::Base
     @docs = @docs.paginate(page: params[:page], per_page: @content.doc_docs_number)
     return http_error(404) if @docs.current_page > @docs.total_pages
 
-    if Page.mobile?
+    if request.mobile?
       render :index_mobile
     else
       if (style = @content.doc_style).present?

@@ -119,14 +119,14 @@ class GpCategory::CategoryType < ApplicationRecord
   end
 
   class << self
-    def public_docs_for_template_module(categoty_type, template_module, mobile: false)
+    def public_docs_for_template_module(categoty_type, template_module)
       category_ids = case template_module.module_type
                      when 'docs_1', 'docs_3', 'docs_5', 'docs_7', 'docs_8'
                        categoty_type.public_categories.map(&:id)
                      else
                        []
                      end
-      docs = GpArticle::Doc.categorized_into(category_ids).except(:order).mobile(mobile).public_state
+      docs = GpArticle::Doc.categorized_into(category_ids).except(:order).public_state
       docs = docs.where(content_id: template_module.gp_article_content_ids) if template_module.gp_article_content_ids.present?
       docs
     end

@@ -1,7 +1,8 @@
 require 'will_paginate/array'
-
 class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
   include GpArticle::Controller::Feed
+  include GpArticle::Controller::Public::Scoping
+
   skip_after_action :render_public_layout, only: [:file_content, :qrcode]
 
   def pre_dispatch
@@ -44,7 +45,6 @@ class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
     end
 
     @items = @docs.group_by { |doc| doc[@content.docs_order_column].try(:strftime, @content.date_style) }
-    render :index_mobile if Page.mobile?
   end
 
   def show
@@ -56,11 +56,12 @@ class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
       return http_error(404) unless @item.creator.group == @group.sys_group
     end
     return http_error(404) if @item.external_link?
+
     Page.current_item = @item
-    Page.title = unless Page.mobile?
-                   @item.title
-                 else
+    Page.title = if request.mobile?
                    @item.mobile_title.presence || @item.title
+                 else
+                   @item.title
                  end
   end
 

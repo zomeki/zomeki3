@@ -1,4 +1,6 @@
 class GpCategory::Public::Piece::RecentTabsController < Sys::Controller::Public::Base
+  include GpArticle::Controller::Public::Scoping
+
   def pre_dispatch
     @piece = GpCategory::Piece::RecentTab.find_by(id: Page.current_piece.id)
     render plain: '' unless @piece
@@ -20,15 +22,11 @@ class GpCategory::Public::Piece::RecentTabsController < Sys::Controller::Public:
 
       content_ids = GpArticle::Content::Setting.where(name: 'gp_category_content_category_type_id',
                                                       value: @piece.content.id).pluck(:content_id)
-      docs =
-        unless tab.categories_with_layer.empty?
-          GpArticle::Doc.where(id: tab.public_doc_ids)
-        else
-          GpArticle::Doc
-        end
-      docs = docs.mobile(::Page.mobile?).public_state.where(content_id: content_ids)
-                 .order(display_published_at: :desc, published_at: :desc)
+      docs = GpArticle::Doc.public_state.where(content_id: content_ids)
+      docs = GpArticle::Doc.where(id: tab.public_doc_ids) if tab.categories_with_layer.present?
+      docs = docs.order(display_published_at: :desc, published_at: :desc)
                  .limit(@piece.list_count)
+
       docs = GpArticle::DocsPreloader.new(docs).preload(:public_node_ancestors)
 
       @tabs.push(name: tab.name,

@@ -9,8 +9,6 @@ class GpCategory::Public::Node::CategoryTypesController < GpCategory::Public::No
     @category_types = @content.public_category_types.paginate(page: params[:page], per_page: 20)
     @category_types = GpCategory::CategoryTypesPreloader.new(@category_types).preload(:public_node_ancestors)
     return http_error(404) if @category_types.current_page > @category_types.total_pages
-
-    render :index_mobile if Page.mobile?
   end
 
   def show
@@ -54,7 +52,7 @@ class GpCategory::Public::Node::CategoryTypesController < GpCategory::Public::No
       return http_error(404) if params[:page].to_i > 1
     end
 
-    if Page.mobile?
+    if request.mobile?
       render :show_mobile
     else
       render @content.category_type_style if @content.category_type_style.present?

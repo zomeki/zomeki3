@@ -1,10 +1,10 @@
 module GpCalendar::EventHelper
   def event_replace(event, date, list_style)
-    Formatter.new(event, date).format(list_style, mobile: Page.mobile?)
+    Formatter.new(event, date).format(list_style, mobile: request.mobile?)
   end
 
   def event_table_replace(event, date, table_style, date_style)
-    Formatter.new(event, date).format_table(table_style, date_style, mobile: Page.mobile?)
+    Formatter.new(event, date).format_table(table_style, date_style, mobile: request.mobile?)
   end
 
   class Formatter < ActionView::Base

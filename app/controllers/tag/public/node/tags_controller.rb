@@ -1,4 +1,6 @@
 class Tag::Public::Node::TagsController < Cms::Controller::Public::Base
+  include GpArticle::Controller::Public::Scoping
+
   def pre_dispatch
     @node = Page.current_node
     @content = Tag::Content::Tag.find_by(id: Page.current_node.content.id)

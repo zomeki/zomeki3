@@ -19,12 +19,12 @@ class GpArticle::Content::Doc < Cms::Content
   # draft, approvable, approved, public
   def preview_docs
     table = docs.arel_table
-    docs.mobile(::Page.mobile?).where(table[:state].not_eq('closed'))
+    docs.where(table[:state].not_eq('closed'))
   end
 
   # public
   def public_docs
-    docs.mobile(::Page.mobile?).public_state
+    docs.public_state
   end
 
   def public_docs_for_list

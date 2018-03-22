@@ -1,4 +1,6 @@
 class Gnav::Public::Piece::DocsController < Sys::Controller::Public::Base
+  include GpArticle::Controller::Public::Scoping
+
   def pre_dispatch
     @piece = Gnav::Piece::Doc.find_by(id: Page.current_piece.id)
     render plain: '' unless @piece
@@ -21,14 +23,16 @@ class Gnav::Public::Piece::DocsController < Sys::Controller::Public::Base
         piece_doc_ids
       end
 
-    @docs = GpArticle::Doc.where(id: doc_ids).order(display_published_at: :desc, published_at: :desc)
+    @docs = GpArticle::Doc.where(id: doc_ids)
+                          .order(display_published_at: :desc, published_at: :desc)
                           .limit(@piece.list_count)
+
     @docs = GpArticle::DocsPreloader.new(@docs).preload(:public_node_ancestors)
   end
 
   private
 
   def find_public_docs_by_category_ids(category_ids)
-    GpArticle::Doc.categorized_into(category_ids).mobile(::Page.mobile?).public_state
+    GpArticle::Doc.categorized_into(category_ids).public_state
   end
 end

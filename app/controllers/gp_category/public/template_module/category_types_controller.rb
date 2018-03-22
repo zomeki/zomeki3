@@ -29,7 +29,7 @@ class GpCategory::Public::TemplateModule::CategoryTypesController < GpCategory::
   def index_docs_1
     category_ids = @category_types.flat_map { |ct| ct.public_categories.map(&:id) }
 
-    docs = GpArticle::Doc.public_state.categorized_into(category_ids).mobile(::Page.mobile?).except(:order)
+    docs = GpArticle::Doc.public_state.categorized_into(category_ids).except(:order)
     docs = docs.where(content_id: @template_module.gp_article_content_ids) if @template_module.gp_article_content_ids.present?
     @docs = docs.order(@content.translated_docs_order)
                 .paginate(page: 1, per_page: @template_module.num_docs)
@@ -83,7 +83,7 @@ class GpCategory::Public::TemplateModule::CategoryTypesController < GpCategory::
   end
 
   def show_docs_1
-    @docs = GpCategory::CategoryType.public_docs_for_template_module(@category_type, @template_module, mobile: Page.mobile?)
+    @docs = GpCategory::CategoryType.public_docs_for_template_module(@category_type, @template_module)
                                     .order(@content.translated_docs_order)
                                     .paginate(page: 1, per_page: @template_module.num_docs)
     return render plain: '' if @docs.empty?
@@ -96,7 +96,7 @@ class GpCategory::Public::TemplateModule::CategoryTypesController < GpCategory::
   def show_docs_3
     return render plain: '' unless @category_type.internal_category_type
 
-    docs = GpCategory::CategoryType.public_docs_for_template_module(@category_type, @template_module, mobile: Page.mobile?)
+    docs = GpCategory::CategoryType.public_docs_for_template_module(@category_type, @template_module)
     return render plain: '' if docs.empty?
 
     @categories = @category_type.internal_category_type.public_root_categories
@@ -113,7 +113,7 @@ class GpCategory::Public::TemplateModule::CategoryTypesController < GpCategory::
   end
 
   def show_docs_5
-    docs = GpCategory::CategoryType.public_docs_for_template_module(@category_type, @template_module, mobile: Page.mobile?)
+    docs = GpCategory::CategoryType.public_docs_for_template_module(@category_type, @template_module)
                                    .joins(creator: :group)
     return render plain: '' if docs.empty?
 
@@ -132,7 +132,7 @@ class GpCategory::Public::TemplateModule::CategoryTypesController < GpCategory::
   end
 
   def show_docs_7
-    docs = GpCategory::CategoryType.public_docs_for_template_module(@category_type, @template_module, mobile: Page.mobile?)
+    docs = GpCategory::CategoryType.public_docs_for_template_module(@category_type, @template_module)
     return render plain: '' if docs.empty?
 
     @categories = @category_type.public_root_categories
@@ -151,7 +151,7 @@ class GpCategory::Public::TemplateModule::CategoryTypesController < GpCategory::
   end
 
   def more
-    @docs = GpCategory::CategoryType.public_docs_for_template_module(@category_type, @template_module, mobile: Page.mobile?)
+    @docs = GpCategory::CategoryType.public_docs_for_template_module(@category_type, @template_module)
 
     if (filter = @more_options[1])
       prefix, code_or_name = filter.split('_', 2)

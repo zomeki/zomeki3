@@ -1,4 +1,6 @@
 class GpCategory::Public::Piece::CategoryListsController < Sys::Controller::Public::Base
+  include GpArticle::Controller::Public::Scoping
+
   def pre_dispatch
     @piece = GpCategory::Piece::CategoryList.find_by(id: Page.current_piece.id)
     render plain: '' unless @piece

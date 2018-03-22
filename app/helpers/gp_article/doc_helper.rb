@@ -1,6 +1,6 @@
 module GpArticle::DocHelper
   def doc_replace(doc, doc_style, date_style = '%Y年%m月%d日', time_style = '%H時%M分')
-    Formatter.new(doc).format(doc_style, date_style, time_style, mobile: Page.mobile?)
+    Formatter.new(doc).format(doc_style, date_style, time_style, mobile: request.mobile?)
   end
 
   def og_tags(item)

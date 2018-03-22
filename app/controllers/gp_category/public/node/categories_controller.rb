@@ -31,7 +31,7 @@ class GpCategory::Public::Node::CategoriesController < GpCategory::Public::Node:
     @docs = GpArticle::DocsPreloader.new(@docs).preload(:public_node_ancestors)
     return http_error(404) if @docs.current_page > @docs.total_pages
 
-    if Page.mobile?
+    if request.mobile?
       render :show_mobile
     else
       if @more

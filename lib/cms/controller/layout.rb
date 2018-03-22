@@ -15,7 +15,6 @@ module Cms::Controller::Layout
     Page.initialize
     Page.site   = site
     Page.uri    = path
-    Page.mobile = options[:mobile]
 
     begin
       node = Core.search_node(path)

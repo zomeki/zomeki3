@@ -1,5 +1,7 @@
 class Organization::Public::Node::GroupsController < Cms::Controller::Public::Base
   include GpArticle::Controller::Feed
+  include GpArticle::Controller::Public::Scoping
+
   def pre_dispatch
     @content = Organization::Content::Group.find_by(id: Page.current_node.content.id)
     return http_error(404) unless @content

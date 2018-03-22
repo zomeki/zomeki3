@@ -1,4 +1,6 @@
 class GpArticle::Public::Piece::ArchivesController < Sys::Controller::Public::Base
+  include GpArticle::Controller::Public::Scoping
+
   def pre_dispatch
     @piece = GpArticle::Piece::Archive.find_by(id: Page.current_piece.id)
     return render plain: '' unless @piece

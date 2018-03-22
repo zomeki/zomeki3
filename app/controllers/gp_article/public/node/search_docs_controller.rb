@@ -1,5 +1,7 @@
 require 'will_paginate/array'
 class GpArticle::Public::Node::SearchDocsController < Cms::Controller::Public::Base
+  include GpArticle::Controller::Public::Scoping
+
   def pre_dispatch
     @content = GpArticle::Content::Doc.find_by(id: Page.current_node.content.id)
     return http_error(404) unless @content

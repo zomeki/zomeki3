@@ -111,7 +111,7 @@ class Organization::Content::Group < Cms::Content
   end
 
   def public_docs
-    GpArticle::Doc.mobile(::Page.mobile?).public_state
+    GpArticle::Doc.public_state
                   .where(content_id: article_contents.pluck(:id))
   end
 end

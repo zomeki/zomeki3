@@ -1,6 +1,7 @@
 require 'will_paginate/array'
-
 class Map::Public::Node::NavigationsController < Cms::Controller::Public::Base
+  include GpArticle::Controller::Public::Scoping
+
   skip_after_action :render_public_layout, only: [:file_content]
 
   def pre_dispatch
