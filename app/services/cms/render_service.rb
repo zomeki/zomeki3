@@ -7,7 +7,7 @@ class Cms::RenderService < ApplicationService
     @site = site
   end
 
-  def render_public(path, options = {})
-    render_public_as_string(path, options.merge(site: @site))
+  def render_public(path, agent_type: :pc)
+    render_public_as_string(path, site: @site, agent_type: agent_type)
   end
 end

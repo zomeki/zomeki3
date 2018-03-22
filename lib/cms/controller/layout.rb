@@ -24,7 +24,9 @@ module Cms::Controller::Layout
       act  = opt[:action]
 
       opt[:authenticity_token] = params[:authenticity_token] if params[:authenticity_token]
-      body = Sys::Lib::Controller.render(ctl, act, params: opt, agent_type: options[:agent_type])
+      body = Sys::Lib::Controller.render(ctl, act, base_url: Addressable::URI.join(site.full_uri, node),
+                                                   params: opt,
+                                                   agent_type: options[:agent_type])
 
       info_log("#{URI.join(Page.site.full_uri, path)}: #{Page.error}") if Page.error
     rescue => e
