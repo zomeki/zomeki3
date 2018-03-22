@@ -6,8 +6,6 @@ module Cms::Controller::Layout
     return nil if path =~ /html\.r(\?|$)/ && !site.use_kana?
     return nil if path =~ /html\.mp3(\?|$)/ && !site.use_talk?
 
-    Core.publish = true
-
     qp = {}
     if path =~ /\?/
       qp   = Rack::Utils.parse_query(path.gsub(/.*\?/, ''))
