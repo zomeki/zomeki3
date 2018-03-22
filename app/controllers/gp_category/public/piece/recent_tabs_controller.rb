@@ -23,7 +23,7 @@ class GpCategory::Public::Piece::RecentTabsController < Sys::Controller::Public:
       content_ids = GpArticle::Content::Setting.where(name: 'gp_category_content_category_type_id',
                                                       value: @piece.content.id).pluck(:content_id)
       docs = GpArticle::Doc.public_state.where(content_id: content_ids)
-      docs = GpArticle::Doc.where(id: tab.public_doc_ids) if tab.categories_with_layer.present?
+      docs = docs.where(id: tab.public_doc_ids) if tab.categories_with_layer.present?
       docs = docs.order(display_published_at: :desc, published_at: :desc)
                  .limit(@piece.list_count)
 
