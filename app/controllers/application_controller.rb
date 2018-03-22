@@ -5,8 +5,6 @@ class ApplicationController < ActionController::Base
 #  rescue_from Exception, with: :rescue_exception
 
   def initialize_application
-    Page.mobile = true if request.mobile?
-    Page.smart_phone = true if request.smart_phone?
     return false if Core.dispatched?
     return Core.dispatched
   end
