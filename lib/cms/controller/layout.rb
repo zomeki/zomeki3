@@ -6,8 +6,7 @@ module Cms::Controller::Layout
     return nil if path =~ /html\.r(\?|$)/ && !site.use_kana?
     return nil if path =~ /html\.mp3(\?|$)/ && !site.use_talk?
 
-    Core.publish = true unless options[:preview]
-    mode = Core.set_mode('preview')
+    Core.publish = true
 
     qp = {}
     if path =~ /\?/
@@ -41,8 +40,6 @@ module Cms::Controller::Layout
     Page.site = site
     Page.uri  = path
 
-    Core.set_mode(mode)
-
     return error ? nil : body
   end
 
@@ -72,7 +69,7 @@ module Cms::Controller::Layout
     concepts = Cms::Lib::Layout.inhertited_concepts
 
     ## layout
-    if Core.set_mode('preview') && params[:layout_id]
+    if Core.mode == 'preview' && params[:layout_id]
       Page.layout = Cms::Layout.find(params[:layout_id])
     elsif layout = Cms::Lib::Layout.inhertited_layout
       Page.layout    = layout.clone
@@ -93,7 +90,12 @@ module Cms::Controller::Layout
     body = Page.layout.body_tag(request).clone.to_s
 
     ## render the piece
-    Cms::Lib::Layout.find_design_pieces(body, concepts, params).each do |name, item|
+    pieces = Cms::Lib::Layout.find_design_pieces(body, concepts, params)
+    if Core.mode == 'preview' && params[:piece_id]
+      piece = Cms::Piece.find_by(id: params[:piece_id])
+      pieces[piece.name] = piece if piece
+    end
+    pieces.each do |name, item|
       Page.current_piece = item
       begin
         next if item.content_id && !item.content

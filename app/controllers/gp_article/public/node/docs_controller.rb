@@ -100,24 +100,14 @@ class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
   end
 
   def public_or_preview_docs(id: nil, name: nil)
-    unless Core.mode == 'preview'
-      @content.public_docs.find_by(name: name)
-    else
-      if Core.publish
-        case
-        when id
-          nil
-        when name
-          @content.public_docs.where(name: name).order(:id).first
-        end
-      else
-        case
-        when id
-          @content.docs.find_by(id: id)
-        when name
-          @content.public_docs.find_by(name: name) || @content.preview_docs.find_by(name: name)
-        end
+    if Core.mode == 'preview'
+      if id
+        @content.docs.find_by(id: id)
+      elsif name
+        @content.public_docs.order(:id).find_by(name: name) || @content.preview_docs.order(:id).find_by(name: name)
       end
+    else
+      @content.public_docs.order(:id).find_by(name: name)
     end
   end
 end

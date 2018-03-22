@@ -5,15 +5,12 @@ class Cms::Admin::PreviewController < Cms::Controller::Admin::Base
   def index
     path = Core.request_uri.gsub(/^#{Regexp.escape(cms_preview_path)}/, "")
 
-    render_preview(path, mobile: Page.mobile?, smart_phone: Page.smart_phone?, preview: true)
+    render_preview(path, mobile: Page.mobile?, smart_phone: Page.smart_phone?)
   end
 
   def render_preview(path, options = {})
-    Core.publish = true unless options[:preview]
-    mode = Core.set_mode('preview')
-
     Page.initialize
-    Page.site   = options[:site] || Core.site
+    Page.site   = Core.site
     Page.uri    = path
     Page.mobile = options[:mobile]
     Page.smart_phone = options[:smart_phone]
