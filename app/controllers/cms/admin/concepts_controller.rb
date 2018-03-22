@@ -15,7 +15,7 @@ class Cms::Admin::ConceptsController < Cms::Controller::Admin::Base
   end
   
   def index
-    @items = Cms::Concept.where(site_id: Core.site.id, parent_id: @parent.id).order(:sort_no)
+    @items = Core.site.concepts.where(parent_id: @parent.id)
 
     _index @items
   end
