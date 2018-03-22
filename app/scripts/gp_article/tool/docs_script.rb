@@ -1,6 +1,4 @@
 class GpArticle::Tool::DocsScript < ParametersScript
-  include Cms::Controller::Layout
-
   def rebuild
     content = GpArticle::Content::Doc.find(params[:content_id])
     return unless content
