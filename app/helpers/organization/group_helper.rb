@@ -104,7 +104,7 @@ module Organization::GroupHelper
 
     def replace_note
       if @sys_group && @sys_group.note.present?
-        content_tag :span, @sys_group.note, class: 'note'
+        content_tag :span, @sys_group.note.html_safe, class: 'note'
       end
     end
   end

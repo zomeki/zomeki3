@@ -26,7 +26,7 @@ class Survey::FormAnswer < ApplicationRecord
           at.data = value.read
         elsif value.key?(:name)
           answer = answers.build(form_answer: self, question: question, content: value[:name])
-          if value[:data]
+          if value[:data].present?
             at = answer.build_attachment(site_id: form.content.site_id)
             at.name = Util::File.sanitize_filename(value[:name])
             at.title = value[:name]

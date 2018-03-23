@@ -22,8 +22,8 @@ module FormHelper
       %Q(CKEDITOR.config.#{k} = #{v.kind_of?(String) ? "'#{v}'" : v};)
     })
 
-    [ '<script type="text/javascript" src="/_common/js/ckeditor/ckeditor.js"></script>',
-      javascript_tag(settings.join) ].join.html_safe
+    ['<script type="text/javascript" src="/_common/js/ckeditor/ckeditor.js"></script>',
+     javascript_tag(settings.join)].join.html_safe
   end
 
   def submission_label(name)

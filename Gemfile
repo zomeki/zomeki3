@@ -107,7 +107,7 @@ gem 'octokit', '~> 4.6.2'
 
 gem 'whenever', '~> 0.9.7', require: false
 
-gem 'activerecord_nested_scope', '~> 1.0.3'
+gem 'activerecord_nested_scope', '~> 1.0.4'
 gem 'logical_query_parser', '~> 0.2.0'
 gem 'params_keeper_rails', '~> 1.0.0'
 gem 'datewari', '~> 1.0.2'

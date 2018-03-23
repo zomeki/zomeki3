@@ -13,7 +13,7 @@ class Cms::Site < ApplicationRecord
   enum_ish :spp_target, [:only_top, :all], default: :only_top
   enum_ish :mobile_feature, [:enabled, :disabled], default: :enabled
 
-  has_many :concepts, -> { order(:level_no, :sort_no, :name, :id) }
+  has_many :concepts, -> { order(:sort_no, :id) }
   has_many :contents, -> { order(:sort_no, :name, :id) }
   has_many :settings, -> { order(:name, :sort_no) }, class_name: 'Cms::SiteSetting'
   has_many :basic_auth_users, -> { order(:name) }, class_name: 'Cms::SiteBasicAuthUser'
