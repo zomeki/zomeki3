@@ -1,6 +1,6 @@
 class GpCategory::Public::Node::DocsController < Cms::Controller::Public::Base
-  include GpArticle::Controller::Feed
   include GpArticle::Controller::Public::Scoping
+  include GpArticle::Controller::Feed
 
   def pre_dispatch
     @content = GpCategory::Content::CategoryType.find_by(id: Page.current_node.content.id)
@@ -11,7 +11,7 @@ class GpCategory::Public::Node::DocsController < Cms::Controller::Public::Base
     categories = @content.public_category_types.inject([]) {|result, ct|
                      result | ct.public_root_categories.inject([]) {|r, c| r | c.descendants }
                    }
-    @docs = GpArticle::Doc.categorized_into(categories.map(&:id)).public_state
+    @docs = GpArticle::Doc.categorized_into(categories.map(&:id))
                           .order(display_published_at: :desc, published_at: :desc)
 
     if params[:format].in?(['rss', 'atom'])

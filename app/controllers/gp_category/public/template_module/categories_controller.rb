@@ -31,7 +31,7 @@ class GpCategory::Public::TemplateModule::CategoriesController < GpCategory::Pub
   end
 
   def show_docs_1
-    @docs = GpCategory::Category.public_docs_for_template_module(@category, @template_module)
+    @docs = GpCategory::Category.docs_for_template_module(@category, @template_module)
                                 .order(@content.translated_docs_order)
                                 .paginate(page: 1, per_page: @template_module.num_docs)
     return render plain: '' if @docs.empty?
@@ -46,7 +46,7 @@ class GpCategory::Public::TemplateModule::CategoriesController < GpCategory::Pub
   def show_docs_3
     return render plain: '' unless @category_type.internal_category_type
 
-    docs = GpCategory::Category.public_docs_for_template_module(@category, @template_module)
+    docs = GpCategory::Category.docs_for_template_module(@category, @template_module)
     return render plain: '' if docs.empty?
 
     @categories = @category_type.internal_category_type.public_root_categories
@@ -65,7 +65,7 @@ class GpCategory::Public::TemplateModule::CategoriesController < GpCategory::Pub
   end
 
   def show_docs_5
-    docs = GpCategory::Category.public_docs_for_template_module(@category, @template_module)
+    docs = GpCategory::Category.docs_for_template_module(@category, @template_module)
                                .joins(creator: :group)
     return render plain: '' if docs.empty?
 
@@ -86,7 +86,7 @@ class GpCategory::Public::TemplateModule::CategoriesController < GpCategory::Pub
   end
 
   def show_docs_7
-    docs = GpCategory::Category.public_docs_for_template_module(@category, @template_module)
+    docs = GpCategory::Category.docs_for_template_module(@category, @template_module)
     return render plain: '' if docs.empty?
 
     @categories = @category.public_children
@@ -105,7 +105,7 @@ class GpCategory::Public::TemplateModule::CategoriesController < GpCategory::Pub
   end
 
   def more
-    @docs = GpCategory::Category.public_docs_for_template_module(@category, @template_module)
+    @docs = GpCategory::Category.docs_for_template_module(@category, @template_module)
 
     if (filter = @more_options[1])
       prefix, code_or_name = filter.split('_', 2)

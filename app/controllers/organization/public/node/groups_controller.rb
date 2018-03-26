@@ -1,6 +1,6 @@
 class Organization::Public::Node::GroupsController < Cms::Controller::Public::Base
-  include GpArticle::Controller::Feed
   include GpArticle::Controller::Public::Scoping
+  include GpArticle::Controller::Feed
 
   def pre_dispatch
     @content = Organization::Content::Group.find_by(id: Page.current_node.content.id)
@@ -22,7 +22,8 @@ class Organization::Public::Node::GroupsController < Cms::Controller::Public::Ba
 
     sys_group_ids = @group.public_descendants.map { |g| g.sys_group.id }
 
-    docs = @content.public_docs.organized_into(sys_group_ids)
+    docs = @content.docs
+                   .organized_into(sys_group_ids)
                    .order(@group.inherited_docs_order)
     docs = GpArticle::DocsPreloader.new(docs).preload(:public_node_ancestors)
 

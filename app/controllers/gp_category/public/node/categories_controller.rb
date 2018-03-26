@@ -5,7 +5,7 @@ class GpCategory::Public::Node::CategoriesController < GpCategory::Public::Node:
     return http_error(404) unless @category.try(:state_public?)
 
     if params[:format].in?(['rss', 'atom'])
-      docs = @category.public_docs.order(display_published_at: :desc, published_at: :desc)
+      docs = @category.docs.order(display_published_at: :desc, published_at: :desc)
       docs = docs.display_published_after(@content.feed_docs_period.to_i.days.ago) if @content.feed_docs_period.present?
       docs = docs.paginate(page: params[:page], per_page: @content.feed_docs_number)
       return render_feed(docs)
@@ -26,7 +26,7 @@ class GpCategory::Public::Node::CategoriesController < GpCategory::Public::Node:
 
     per_page = (@more ? 30 : @content.category_docs_number)
 
-    @docs = @category.public_docs.order(display_published_at: :desc, published_at: :desc)
+    @docs = @category.docs.order(display_published_at: :desc, published_at: :desc)
                      .paginate(page: params[:page], per_page: per_page)
     @docs = GpArticle::DocsPreloader.new(@docs).preload(:public_node_ancestors)
     return http_error(404) if @docs.current_page > @docs.total_pages

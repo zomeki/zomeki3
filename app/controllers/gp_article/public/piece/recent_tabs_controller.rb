@@ -20,8 +20,8 @@ class GpArticle::Public::Piece::RecentTabsController < Sys::Controller::Public::
           tab.name
         end
 
-      docs = @piece.content.public_docs_for_list
-      docs = docs.where(id: tab.public_doc_ids) if tab.categories_with_layer.present?
+      docs = @piece.content.docs_for_list
+      docs = docs.where(id: tab.doc_ids) if tab.categories_with_layer.present?
       docs = docs.order(@piece.docs_order_as_sql)
                  .limit(@piece.list_count)
 

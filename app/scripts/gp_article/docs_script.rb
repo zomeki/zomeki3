@@ -11,7 +11,7 @@ class GpArticle::DocsScript < PublicationScript
     if content.doc_list_pagination == 'simple'
       publish_more(@node, common_params.merge(limit: content.doc_publish_more_pages))
     else
-      paginator = content.public_docs_for_list
+      paginator = content.docs_for_list.public_state
                          .date_paginate(content.docs_order_column, content.docs_order_direction, scope: content.doc_list_pagination)
                          .paginator
       if params[:target_date].present?
@@ -44,7 +44,7 @@ class GpArticle::DocsScript < PublicationScript
   end
 
   def publish_doc
-    docs = @node.content.public_docs.where(id: params[:target_doc_id])
+    docs = @node.content.docs.public_state.where(id: params[:target_doc_id])
     docs.find_each do |doc|
       ::Script.progress(doc) do
         doc.rebuild

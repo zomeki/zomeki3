@@ -1,7 +1,7 @@
 require 'will_paginate/array'
 class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
-  include GpArticle::Controller::Feed
   include GpArticle::Controller::Public::Scoping
+  include GpArticle::Controller::Feed
 
   skip_after_action :render_public_layout, only: [:file_content, :qrcode]
 
@@ -25,7 +25,7 @@ class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
   end
 
   def index
-    @docs = @content.public_docs_for_list.order(@content.docs_order_as_hash)
+    @docs = @content.docs_for_list.order(@content.docs_order_as_hash)
     if params[:format].in?(['rss', 'atom'])
       @docs = @docs.date_after(@content.docs_order_column, @content.feed_docs_period.to_i.days.ago.beginning_of_day) if @content.feed_docs_period.present?
       @docs = @docs.paginate(page: params[:page], per_page: @content.feed_docs_number)
@@ -50,7 +50,7 @@ class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
   def show
     params[:filename_base], params[:format] = 'index', 'html' unless params[:filename_base]
 
-    @item = public_or_preview_docs(id: params[:id], name: params[:name])
+    @item = public_or_preview_doc(id: params[:id], name: params[:name])
     return http_error(404) if @item.nil? || @item.filename_base != params[:filename_base]
     if @group
       return http_error(404) unless @item.creator.group == @group.sys_group
@@ -66,7 +66,7 @@ class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
   end
 
   def file_content
-    @doc = public_or_preview_docs(id: params[:id], name: params[:name])
+    @doc = public_or_preview_doc(id: params[:id], name: params[:name])
     return http_error(404) unless @doc
     if @group
       return http_error(404) unless @doc.creator.group == @group.sys_group
@@ -80,7 +80,7 @@ class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
   end
 
   def qrcode
-    @doc = public_or_preview_docs(id: params[:id], name: params[:name])
+    @doc = public_or_preview_doc(id: params[:id], name: params[:name])
     return http_error(404) unless @doc
     return http_error(404) unless @doc.qrcode_visible?
 
@@ -92,6 +92,14 @@ class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
 
   private
 
+  def set_gp_article_public_scoping
+    if Core.mode == 'preview' && params[:action].in?(%w(show file_content qrcode))
+      yield
+    else
+      super
+    end
+  end
+
   def current_date
     if params[:date].present?
       params[:date].size == 6 ? "#{params[:date]}01".to_date : params[:date].to_date
@@ -100,15 +108,11 @@ class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
     end
   end
 
-  def public_or_preview_docs(id: nil, name: nil)
-    if Core.mode == 'preview'
-      if id
-        @content.docs.find_by(id: id)
-      elsif name
-        @content.public_docs.order(:id).find_by(name: name) || @content.preview_docs.order(:id).find_by(name: name)
-      end
-    else
-      @content.public_docs.order(:id).find_by(name: name)
+  def public_or_preview_doc(id: nil, name: nil)
+    if id
+      @content.docs.find_by(id: id)
+    elsif name
+      @content.docs.order(:id).find_by(name: name)
     end
   end
 end

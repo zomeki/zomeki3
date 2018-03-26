@@ -11,7 +11,7 @@ class GpArticle::Public::Node::SearchDocsController < Cms::Controller::Public::B
     @keyword = params.dig(:criteria, :keyword)
     @category_ids = params.dig(:criteria, :category_ids) || []
 
-    @docs = @content.public_docs
+    @docs = @content.docs
     @docs = @docs.search_with_text(:title, :body, @keyword) if @keyword.present?
     @docs = @docs.categorized_into(@category_ids) if @category_ids.present?
     @docs = @docs.order(@content.docs_order_as_hash)

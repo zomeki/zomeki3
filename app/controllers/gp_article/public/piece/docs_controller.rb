@@ -9,7 +9,8 @@ class GpArticle::Public::Piece::DocsController < Sys::Controller::Public::Base
   end
 
   def index
-    @docs = @piece.content.public_docs_for_list.limit(@piece.docs_number)
+    @docs = @piece.content.docs_for_list
+                  .limit(@piece.docs_number)
                   .order(@piece.docs_order_as_sql)
 
     @docs = GpArticle::DocsPreloader.new(@docs).preload(:public_node_ancestors)

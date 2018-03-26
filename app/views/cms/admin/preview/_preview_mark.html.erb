@@ -1,5 +1,27 @@
 <!-- skip reading -->
-<div id="cmsPreviewMark" style="margin: 1px; padding: 5px 10px; border-bottom: 1px solid #fff; background-color: #000; color: #fff; line-height: 1.5; font-family: sans-serif; cursor: pointer; " onclick="document.getElementById('cmsPreviewMark').style.display='none';">
+<div id="cmsPreviewMark" style="margin: 1px; padding: 5px 10px; border-bottom: 1px solid #fff; background-color: #000; color: #fff; line-height: 1.5; font-family: sans-serif;">
+<span style="cursor: pointer;" onclick="document.getElementById('cmsPreviewMark').style.display='none';">
 プレビュー：&nbsp;終了する場合は、ブラウザのタブの×で閉じてください。
+</span>
+<%- if Core.site.use_future_preview? -%>
+  <span style="float: right;">
+  <%= form_tag url_for(path: params[:path]), method: :get, id: 'cmsPreviewForm' do -%>
+    <%= text_field_tag :preview_at, l(Page.preview_at), class: 'datetimepicker', style: 'width: 150px;', placeholder: 'プレビュー日時' %>
+    <%= submit_tag '設定' %>
+  <%- end -%>
+  
+  <%= stylesheet_link_tag '/_common/css/jquery-ui-themes/smoothness/jquery-ui.min.css' -%>
+  <%= javascript_include_tag '/_common/js/jquery-ui.min.js' -%>
+  <%= javascript_include_tag '/_common/js/jquery-ui-datepicker-ja.js' -%>
+  <%= stylesheet_link_tag '/_common/css/jquery-ui-timepicker-addon.css' -%>
+  <%= javascript_include_tag '/_common/js/jquery-ui-timepicker-addon.js' -%>
+  <%= javascript_include_tag '/_common/js/jquery-ui-timepicker-addon-ja.js' -%>
+  <%= javascript_tag do -%>
+  $(document).ready(function() {
+    $('input.datetimepicker').datetimepicker();
+  });
+  <%- end -%>
+  </span>
+<%- end -%>
 </div>
 <!-- /skip reading -->

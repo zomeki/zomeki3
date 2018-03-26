@@ -16,7 +16,7 @@ class GpArticle::Public::Node::ArchivesController < Cms::Controller::Public::Bas
       ended_at = started_at.end_of_year.end_of_day
     end
 
-    @docs = @content.public_docs_for_list
+    @docs = @content.docs_for_list
                     .date_between(@content.docs_order_column, started_at, ended_at)
                     .order(@content.docs_order_as_hash)
 

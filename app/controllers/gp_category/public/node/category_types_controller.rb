@@ -19,7 +19,7 @@ class GpCategory::Public::Node::CategoryTypesController < GpCategory::Public::No
       case @content.category_type_style
       when 'all_docs'
         category_ids = @category_type.public_categories.pluck(:id)
-        @docs = find_public_docs_with_category_id(category_ids).order(display_published_at: :desc, published_at: :desc)
+        @docs = find_docs_with_category_id(category_ids).order(display_published_at: :desc, published_at: :desc)
         @docs = @docs.display_published_after(@content.feed_docs_period.to_i.days.ago) if @content.feed_docs_period.present?
         @docs = @docs.paginate(page: params[:page], per_page: @content.feed_docs_number)
         return render_feed(@docs)
@@ -44,7 +44,7 @@ class GpCategory::Public::Node::CategoryTypesController < GpCategory::Public::No
     case @content.category_type_style
     when 'all_docs'
       category_ids = @category_type.public_categories.pluck(:id)
-      @docs = find_public_docs_with_category_id(category_ids).order(display_published_at: :desc, published_at: :desc)
+      @docs = find_docs_with_category_id(category_ids).order(display_published_at: :desc, published_at: :desc)
                 .paginate(page: params[:page], per_page: @content.category_type_docs_number)
       @docs = GpArticle::DocsPreloader.new(@docs).preload(:public_node_ancestors)
       return http_error(404) if @docs.current_page > @docs.total_pages

@@ -21,7 +21,7 @@ class GpCalendar::Public::Node::SearchEventsController < GpCalendar::Public::Nod
       @events.reject! {|c| c.categories && !c.categories.map{|ct| ct.id.to_s }.include?(category) }
     end
 
-    docs = @content.public_event_docs(@start_date, @end_date, categories)
+    docs = @content.event_docs(@start_date, @end_date, categories)
     @events = merge_docs_into_events(docs, @events)
 
     @holidays = GpCalendar::Holiday.public_state.content_and_criteria(@content, criteria).where(kind: :event)

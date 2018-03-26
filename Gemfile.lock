@@ -332,6 +332,7 @@ GEM
     thor (0.19.1)
     thread_safe (0.3.6)
     tilt (2.0.5)
+    timecop (0.9.1)
     treetop (1.6.8)
       polyglot (~> 0.3)
     tzinfo (1.2.5)
@@ -424,6 +425,7 @@ DEPENDENCIES
   slonik_migration (~> 1.1.1)
   spring
   tamtam (= 0.0.3)
+  timecop (~> 0.9.1)
   tzinfo-data
   uglifier (>= 1.3.0)
   unicorn

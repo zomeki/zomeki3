@@ -7,7 +7,7 @@ class Tag::TagsScript < PublicationScript
     tags = @node.content.tags
     tags = tags.where(id: params[:target_tag_id]) if params[:target_tag_id].present? 
     tags.each do |tag|
-      next if tag.public_docs.blank?
+      next if tag.docs.public_state.blank?
       publish_more(tag, uri: tag.public_uri,
                         path: CGI::unescape(tag.public_path),
                         smart_phone_path: CGI::unescape(tag.public_smart_phone_path))

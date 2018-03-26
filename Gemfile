@@ -88,6 +88,7 @@ gem 'rubyzip', '~> 1.2.1'
 gem 'simple_captcha2', '~> 0.4.2', require: 'simple_captcha'
 gem 'will_paginate', '~> 3.1.6'
 gem 'romaji', '~> 0.2.4'
+gem 'timecop', '~> 0.9.1'
 
 gem 'browser', '~> 2.5.2'
 gem 'dynamic_form', '~> 1.1.4'

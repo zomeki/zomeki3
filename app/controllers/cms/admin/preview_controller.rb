@@ -2,10 +2,20 @@ class Cms::Admin::PreviewController < Cms::Controller::Admin::Base
   after_action :add_preview_mark, if: :preview_as_html?
   after_action :replace_links_for_preview, if: :preview_as_html?
 
+  def pre_dispatch
+    if params[:preview_at]
+      site = params[:site].scan(%r{^\d+[^_]?}).flatten.first
+      if (preview_at = Time.parse(params[:preview_at]) rescue nil)
+        site += "_#{preview_at.strftime('%Y%m%d%H%M')}"
+      end
+      redirect_to "/_preview/#{site}/#{params[:path]}"
+    end
+  end
+
   def index
     path = Core.request_uri.gsub(/^#{Regexp.escape(cms_preview_path)}/, "")
 
-    render_preview(path, mobile: Page.mobile?, smart_phone: Page.smart_phone?)
+    render_preview(path, mobile: Page.mobile?, smart_phone: Page.smart_phone?, preview_at: Page.preview_at)
   end
 
   def render_preview(path, options = {})
@@ -14,6 +24,7 @@ class Cms::Admin::PreviewController < Cms::Controller::Admin::Base
     Page.uri    = path
     Page.mobile = options[:mobile]
     Page.smart_phone = options[:smart_phone]
+    Page.preview_at = options[:preview_at]
 
     if path =~ /^\/_files\//
       ## _files
@@ -76,6 +87,7 @@ private
     public_uri = public_uri_for_replace
     admin_uri = admin_uri_for_replace
     preview_uri = "#{admin_uri}_preview/#{format('%04d', Page.site.id)}#{Page.preview_terminal}"
+    preview_uri << "_#{Page.preview_at.strftime("%Y%m%d%H%M")}" if Page.preview_at
 
     doc = Page.mobile? ?
       Nokogiri::XML(response.body, nil, 'utf-8') :

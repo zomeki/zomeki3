@@ -3,7 +3,7 @@
   <li class="<%= category.name -%>">
     <%= link_to category.title, category.public_uri %>
     <%- if @piece.num_docs_visible? -%><span class="count">
-      <span class="parenthesis">(</span><%= "#{public_docs_with_category_id(category.id).count}" -%><span class="parenthesis">)</span>
+      <span class="parenthesis">(</span><%= "#{@doc_count[category.id].to_i}" -%><span class="parenthesis">)</span>
     </span><%- end -%>
     <%- unless category.public_children.empty? -%>
     <%= render 'categories', categories: category.public_children %>

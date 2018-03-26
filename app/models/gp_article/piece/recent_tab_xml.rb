@@ -37,12 +37,12 @@ class GpArticle::Piece::RecentTabXml < Cms::Model::Base::PieceExtension
     end
   end
 
-  def public_doc_ids
+  def doc_ids
     doc_ids = categories_with_layer.map do |category_with_layer|
       if category_with_layer[:layer] == 'descendants'
-        category_with_layer[:category].descendants.inject([]) {|result, item| result | item.doc_ids }
+        category_with_layer[:category].descendants.inject([]) {|result, c| result | c.docs.pluck(:id) }
       else
-        category_with_layer[:category].doc_ids
+        category_with_layer[:category].docs.pluck(:id)
       end
     end
 

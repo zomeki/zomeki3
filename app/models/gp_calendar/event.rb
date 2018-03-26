@@ -124,16 +124,8 @@ class GpCalendar::Event < ApplicationRecord
 
   class << self
     def from_doc(doc, calendar_content = nil)
-      options = doc.link_to_options
-      doc_uri = unless options.kind_of?(Array)
-                  doc.public_uri
-                else
-                  options[0].to_s
-                end
-
       event = self.new(
         title: doc.title,
-        href: doc_uri,
         target: '_self',
         started_on: doc.event_started_on,
         ended_on: doc.event_ended_on,

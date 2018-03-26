@@ -18,7 +18,7 @@ class Organization::Public::Piece::CategorizedDocsController < Sys::Controller::
                       @item.public_descendants.map { |g| g.sys_group.id }
                     end
 
-    @docs = @piece.content.public_docs
+    @docs = @piece.content.docs
                   .organized_into(sys_group_ids)
                   .categorized_into(@piece.category_ids)
                   .order(@piece.docs_order_as_hash)

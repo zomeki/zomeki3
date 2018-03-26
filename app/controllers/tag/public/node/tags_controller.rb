@@ -23,7 +23,7 @@ class Tag::Public::Node::TagsController < Cms::Controller::Public::Base
     Page.current_item = @item
     Page.title = @node.title
 
-    @docs = @item.public_docs
+    @docs = @item.docs
     @docs = GpArticle::DocsPreloader.new(@docs).preload(:public_node_ancestors)
   end
 end

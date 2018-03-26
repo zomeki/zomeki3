@@ -32,10 +32,10 @@ module GpArticle::DocHelper
     end
 
     def format(doc_style, date_style = '', time_style = '', mobile: false)
-      link_to_options = @doc.link_to_options
+      link_options = @doc.link_to_options(preview: Core.mode == 'preview' && @doc.state != 'public')
 
       contents = {
-        title_link: -> { replace_title_link(link_to_options) },
+        title_link: -> { replace_title_link(link_options) },
         title: -> { replace_title },
         subtitle: -> { replace_subtitle },
         publish_date: -> { replace_publish_date(date_style) },
@@ -47,7 +47,7 @@ module GpArticle::DocHelper
         category_link: -> { replace_category_link },
         category: -> { replace_category },
         image_tag: -> { replace_image_tag },
-        image_link: -> { replace_image_link(link_to_options) },
+        image_link: -> { replace_image_link(link_options) },
         image: -> { replace_image },
         body_beginning: -> { replace_body_beginning },
         body: -> { replace_body },
@@ -55,13 +55,19 @@ module GpArticle::DocHelper
         doc_no: -> { replace_doc_no }
       }
 
-      if mobile
-        contents[:title_link].call
+      html = if mobile
+              contents[:title_link].call
+            else
+              doc_style = doc_style.gsub(/@doc{{@(.+)@}}doc@/m) { |m| link_to($1.html_safe, link_options[0], class: 'doc_link') }
+              doc_style = doc_style.gsub(/@body_(\d+)@/) { |m| content_tag(:span, truncate(strip_tags(@doc.body), length: $1.to_i).html_safe, class: 'body') }
+              doc_style = doc_style.gsub(/@(\w+)@/) { |m| contents[$1.to_sym].try(:call).to_s }
+              doc_style.html_safe
+            end
+
+      if Core.mode == 'preview' && @doc.state != 'public'
+        content_tag :div, html, class: 'preview_future_public'
       else
-        doc_style = doc_style.gsub(/@doc{{@(.+)@}}doc@/m) { |m| link_to($1.html_safe, link_to_options[0], class: 'doc_link') }
-        doc_style = doc_style.gsub(/@body_(\d+)@/) { |m| content_tag(:span, truncate(strip_tags(@doc.body), length: $1.to_i).html_safe, class: 'body') }
-        doc_style = doc_style.gsub(/@(\w+)@/) { |m| contents[$1.to_sym].try(:call).to_s }
-        doc_style.html_safe
+        html
       end
     end
 
@@ -96,8 +102,8 @@ module GpArticle::DocHelper
       end
     end
 
-    def replace_title_link(link_to_options)
-      link = link_to_options ? link_to(*([@doc.title] + link_to_options)) : h(@doc.title)
+    def replace_title_link(link_options)
+      link = link_options ? link_to(*([@doc.title] + link_options)) : h(@doc.title)
       if link.present?
         content_tag(:span, link, class: 'title_link')
       end
@@ -175,10 +181,10 @@ module GpArticle::DocHelper
       doc_image_tag
     end
 
-    def replace_image_link(link_to_options)
+    def replace_image_link(link_options)
       image_tag = doc_image_tag
-      image_link = if image_tag.present? && link_to_options
-                     link_to *([image_tag] + link_to_options)
+      image_link = if image_tag.present? && link_options
+                     link_to *([image_tag] + link_options)
                    else
                      image_tag
                    end

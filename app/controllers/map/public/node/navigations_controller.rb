@@ -30,7 +30,7 @@ class Map::Public::Node::NavigationsController < Cms::Controller::Public::Base
   private
 
   def doc_markers
-    docs = @content.public_marker_docs(@specified_category)
+    docs = @content.marker_docs(@specified_category)
                    .preload(:marker_categories, :files, :marker_icon_category)
     docs.each_with_object([]) do |doc, markers|
       markers << Map::Marker.from_doc(doc)

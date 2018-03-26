@@ -33,13 +33,13 @@ class GpCategory::Category < ApplicationRecord
   has_many :categorizations, dependent: :destroy
   has_many :doc_categorizations, -> { where(categorized_as: 'GpArticle::Doc') }, class_name: 'GpCategory::Categorization'
 
-  has_many :docs, through: :doc_categorizations, source: :categorizable, source_type: 'GpArticle::Doc'
-  has_many :markers, through: :categorizations, source: :categorizable, source_type: 'Map::Marker'
-  has_many :events, -> { order(:started_on, :ended_on) },
-                    through: :categorizations, source: :categorizable, source_type: 'GpCalendar::Event'
+  has_many :categorized_docs, through: :doc_categorizations, source: :categorizable, source_type: 'GpArticle::Doc'
+  has_many :categorized_markers, through: :categorizations, source: :categorizable, source_type: 'Map::Marker'
+  has_many :categorized_events, -> { order(:started_on, :ended_on) },
+                                through: :categorizations, source: :categorizable, source_type: 'GpCalendar::Event'
 
-  has_many :marker_icons, class_name: 'Map::MarkerIcon', as: :relatable, dependent: :destroy
-  has_many :category_sets, class_name: 'Gnav::CategorySet', dependent: :destroy
+  has_many :map_marker_icons, class_name: 'Map::MarkerIcon', as: :relatable, dependent: :destroy
+  has_many :gnav_category_sets, class_name: 'Gnav::CategorySet', dependent: :destroy
 
   # conditional associations
   has_many :public_children, -> { public_state },
@@ -139,10 +139,6 @@ class GpCategory::Category < ApplicationRecord
     Cms::Lib::BreadCrumbs.new(crumbs)
   end
 
-  def public_docs
-    docs.order(inherited_docs_order).public_state
-  end
-
   def public_path
     return '' if (path = category_type.public_path).blank?
     "#{path}#{path_from_root_category}/"
@@ -161,6 +157,10 @@ class GpCategory::Category < ApplicationRecord
   def public_full_uri
     return '' if (uri = category_type.public_full_uri).blank?
     "#{uri}#{path_from_root_category}/"
+  end
+
+  def docs
+    categorized_docs.order(inherited_docs_order)
   end
 
   def inherited_docs_order
@@ -231,14 +231,14 @@ class GpCategory::Category < ApplicationRecord
   end
 
   class << self
-    def public_docs_for_template_module(category, template_module)
+    def docs_for_template_module(category, template_module)
       category_ids = case template_module.module_type
                      when 'docs_1', 'docs_3', 'docs_5', 'docs_7', 'docs_8'
                        category.public_descendants_ids
                      when 'docs_2', 'docs_4', 'docs_6'
                        [category.id]
                      end
-      docs = GpArticle::Doc.categorized_into(category_ids).except(:order).public_state
+      docs = GpArticle::Doc.categorized_into(category_ids).except(:order)
       docs = docs.where(content_id: template_module.gp_article_content_ids) if template_module.gp_article_content_ids.present?
       docs
     end
