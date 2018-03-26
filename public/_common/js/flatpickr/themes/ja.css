@@ -1,0 +1,10 @@
+.flatpickr-current-month {
+  display: flex;
+  justify-content: center;
+}
+.flatpickr-current-month .cur-year {
+  order: 1
+}
+.flatpickr-current-month .cur-month {
+  order: 2
+}
