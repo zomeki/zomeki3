@@ -118,8 +118,8 @@ class GpArticle::Doc < ApplicationRecord
                                              attribute: -> { mobile_body.present? ? :mobile_body : :body } },
                               if: -> { site.use_mobile_feature? }
 
-  validate :name_validity, if: -> { name.present? }
-  validate :event_dates_range
+  validate :validate_name, if: -> { name.present? }
+  validate :validate_event_dates_range
   validate :validate_accessibility_check, if: -> { !state_draft? && errors.blank? }
   validate :validate_broken_link_existence, if: -> { !state_draft? && errors.blank? }
 
@@ -434,12 +434,41 @@ class GpArticle::Doc < ApplicationRecord
 
   private
 
-  def name_validity
+  def validate_name
     errors.add(:name, :invalid) if name !~ /^[\-\w]*$/
 
     doc = self.class.where(content_id: content_id, name: name)
     doc = doc.where.not(serial_no: serial_no) if serial_no
     errors.add(:name, :taken) if doc.exists?
+  end
+
+  def validate_event_dates_range
+    return if self.event_started_on.blank? && self.event_ended_on.blank?
+    self.event_started_on = self.event_ended_on if self.event_started_on.blank?
+    self.event_ended_on = self.event_started_on if self.event_ended_on.blank?
+    errors.add(:event_ended_on, "が#{self.class.human_attribute_name :event_started_on}を過ぎています。") if self.event_ended_on < self.event_started_on
+  end
+
+  def validate_broken_link_existence
+    return unless content.site.link_check_enabled?
+    return if in_ignore_link_check == '1'
+
+    results = check_links
+    if results.any? {|r| !r[:result] }
+      self.link_check_results = results
+      errors.add(:base, 'リンクチェック結果を確認してください。')
+    end
+  end
+
+  def validate_accessibility_check
+    return unless content.site.accessibility_check_enabled?
+
+    modify_accessibility if in_modify_accessibility_check == '1'
+    results = check_accessibility
+    if (results.present? && in_ignore_accessibility_check != '1') || errors.present?
+      self.accessibility_check_results = results
+      errors.add(:base, 'アクセシビリティチェック結果を確認してください。')
+    end
   end
 
   def set_name
@@ -488,43 +517,6 @@ class GpArticle::Doc < ApplicationRecord
     return if self.serial_no.present?
     seq = Util::Sequencer.next_id('gp_article_doc_serial_no', version: self.content_id, site_id: content.site_id)
     self.serial_no = seq
-  end
-
-  def validate_platform_dependent_characters
-    [:title, :body, :mobile_title, :mobile_body].each do |attr|
-      if chars = Util::String.search_platform_dependent_characters(send(attr))
-        errors.add attr, :platform_dependent_characters, chars: chars
-      end
-    end
-  end
-
-  def event_dates_range
-    return if self.event_started_on.blank? && self.event_ended_on.blank?
-    self.event_started_on = self.event_ended_on if self.event_started_on.blank?
-    self.event_ended_on = self.event_started_on if self.event_ended_on.blank?
-    errors.add(:event_ended_on, "が#{self.class.human_attribute_name :event_started_on}を過ぎています。") if self.event_ended_on < self.event_started_on
-  end
-
-  def validate_broken_link_existence
-    return unless content.site.link_check_enabled?
-    return if in_ignore_link_check == '1'
-
-    results = check_links
-    if results.any? {|r| !r[:result] }
-      self.link_check_results = results
-      errors.add(:base, 'リンクチェック結果を確認してください。')
-    end
-  end
-
-  def validate_accessibility_check
-    return unless content.site.accessibility_check_enabled?
-
-    modify_accessibility if in_modify_accessibility_check == '1'
-    results = check_accessibility
-    if (results.present? && in_ignore_accessibility_check != '1') || errors.present?
-      self.accessibility_check_results = results
-      errors.add(:base, 'アクセシビリティチェック結果を確認してください。')
-    end
   end
 
   def replace_public
