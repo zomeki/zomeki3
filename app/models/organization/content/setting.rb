@@ -1,12 +1,4 @@
 class Organization::Content::Setting < Cms::ContentSetting
-  set_config :article_relation,
-    name: '記事URL保持許可',
-    form_type: :radio_buttons,
-    options: [['使用する', 'enabled'], ['使用しない', 'disabled']],
-    default_value: 'disabled',
-    default_extra_values: {
-      gp_article_content_doc_id: nil
-    }
   set_config :list_style,
     name: "#{Organization::Group.model_name.human}一覧表示形式",
     form_type: :text_area,
@@ -48,15 +40,6 @@ class Organization::Content::Setting < Cms::ContentSetting
   belongs_to :content, foreign_key: :content_id, class_name: 'Organization::Content::Group'
 
   validate :validate_value
-
-  def extra_values=(params)
-    ex = extra_values
-    case name
-    when 'article_relation'
-      ex[:gp_article_content_doc_id] = params[:gp_article_content_doc_id].to_i
-    end
-    super(ex)
-  end
 
   private
 

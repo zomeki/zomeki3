@@ -177,9 +177,7 @@ class GpArticle::Doc < ApplicationRecord
 
   def public_uri(without_filename: false, with_closed_preview: false)
     uri =
-      if content.organization_content_related? && organization_group
-        "#{organization_group.public_uri}docs/#{name}/"
-      elsif with_closed_preview && content.main_node && content.main_node.public_uri.present?
+      if with_closed_preview && content.main_node && content.main_node.public_uri.present?
         "#{content.main_node.public_uri}#{name}/"
       elsif !with_closed_preview && content.public_node
         "#{content.public_node.public_uri}#{name}/"
@@ -190,9 +188,7 @@ class GpArticle::Doc < ApplicationRecord
 
   def public_full_uri(without_filename: false)
     uri =
-      if content.organization_content_related? && organization_group
-        "#{organization_group.public_full_uri}docs/#{name}/"
-      elsif content.public_node
+      if content.public_node
         "#{content.public_node.public_full_uri}#{name}/"
       end
     return '' unless uri

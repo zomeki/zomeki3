@@ -6,21 +6,7 @@ class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
   skip_after_action :render_public_layout, only: [:file_content, :qrcode]
 
   def pre_dispatch
-    if (organization_content = Page.current_node.content).kind_of?(Organization::Content::Group)
-      return http_error(404) unless organization_content.article_related?
-      @group = organization_content.find_group_by_path_from_root(params[:group_names])
-      return http_error(404) unless @group
-      @content = organization_content.related_article_content
-    else
-      @content = GpArticle::Content::Doc.find_by(id: Page.current_node.content.id)
-      # Block if organization relation available
-      if (organization_content = @content.organization_content_group) &&
-          organization_content.article_related? &&
-          organization_content.related_article_content == @content
-        return http_error(404)
-      end
-    end
-
+    @content = GpArticle::Content::Doc.find_by(id: Page.current_node.content.id)
     return http_error(404) unless @content
   end
 
@@ -52,9 +38,6 @@ class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
 
     @item = public_or_preview_doc(id: params[:id], name: params[:name])
     return http_error(404) if @item.nil? || @item.filename_base != params[:filename_base]
-    if @group
-      return http_error(404) unless @item.creator.group == @group.sys_group
-    end
     return http_error(404) if @item.external_link?
 
     Page.current_item = @item
@@ -68,9 +51,6 @@ class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
   def file_content
     @doc = public_or_preview_doc(id: params[:id], name: params[:name])
     return http_error(404) unless @doc
-    if @group
-      return http_error(404) unless @doc.creator.group == @group.sys_group
-    end
 
     params[:file] = File.basename(params[:path])
     params[:type] = :thumb if params[:path] =~ /(\/|^)thumb\//
