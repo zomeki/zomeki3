@@ -1,9 +1,5 @@
 <div class="calendarEvents">
   <div class="searchEvents">
-    <%= stylesheet_link_tag '/_common/js/flatpickr/themes/light.min.css' %>
-    <%= stylesheet_link_tag '/_common/js/flatpickr/themes/ja.css' %>
-    <%= javascript_include_tag '/_common/js/flatpickr/flatpickr.min.js' %>
-    <%= javascript_include_tag '/_common/js/flatpickr/l10n/ja.js' %>
     <%= javascript_tag do -%>
     $(document).ready(function () {
       flatpickr('input.datepicker', {"locale": "ja"});

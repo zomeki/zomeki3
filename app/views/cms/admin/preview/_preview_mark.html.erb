@@ -7,19 +7,23 @@
   <span style="float: right;">
   <%= form_tag url_for(path: params[:path]), method: :get, id: 'cmsPreviewForm' do -%>
     <%= text_field_tag :preview_at, l(Page.preview_at), class: 'datetimepicker', style: 'width: 150px;', placeholder: 'プレビュー日時' %>
+    <%-
+    terminals =  [['PC','']]
+    terminals << ['スマホ','s'] if Core.site.use_smart_phone_feature?
+    terminals << ['携帯','m'] if Core.site.use_mobile_feature?
+    -%>
+    <%- terminals.each do |name, value| -%>
+      <%= radio_button_tag :preview_terminal, value, value == Page.preview_terminal %><%= label_tag "preview_terminal_#{value}", name %>
+    <%- end -%>
     <%= submit_tag '設定' %>
   <%- end -%>
-  
-  <%= stylesheet_link_tag '/_common/css/jquery-ui-themes/smoothness/jquery-ui.min.css' -%>
-  <%= javascript_include_tag '/_common/js/jquery-ui.min.js' -%>
-  <%= javascript_include_tag '/_common/js/jquery-ui-datepicker-ja.js' -%>
-  <%= stylesheet_link_tag '/_common/css/jquery-ui-timepicker-addon.css' -%>
-  <%= javascript_include_tag '/_common/js/jquery-ui-timepicker-addon.js' -%>
-  <%= javascript_include_tag '/_common/js/jquery-ui-timepicker-addon-ja.js' -%>
+
+  <%- unless Page.mobile? -%>
   <%= javascript_tag do -%>
-  $(document).ready(function() {
-    $('input.datetimepicker').datetimepicker();
+  document.addEventListener('DOMContentLoaded', function() {
+    flatpickr('input.datetimepicker', { locale: "ja", enableTime: true, time_24hr: true });
   });
+  <%- end -%>
   <%- end -%>
   </span>
 <%- end -%>

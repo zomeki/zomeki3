@@ -416,14 +416,19 @@ class GpArticle::Doc < ApplicationRecord
   end
 
   def link_to_options(preview: false)
+    uri = if preview
+            "#{public_uri(without_filename: true)}/preview/#{id}/"
+          else
+            public_uri
+          end
     if target.present? && href.present?
       if target == 'attached_file' && (file = files.find_by(name: href))
-        ["#{preview ? preview_uri : public_uri}file_contents/#{file.name}", target: '_blank']
+        ["#{uri}file_contents/#{file.name}", target: '_blank']
       else
         [href, target: target]
       end
     else
-      [preview ? preview_uri : public_uri]
+      [uri]
     end
   end
 

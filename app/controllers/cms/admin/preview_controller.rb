@@ -4,9 +4,10 @@ class Cms::Admin::PreviewController < Cms::Controller::Admin::Base
 
   def pre_dispatch
     if params[:preview_at]
-      site = params[:site].scan(%r{^\d+[^_]?}).flatten.first
+      site = params[:site].scan(/^\d+/).flatten.first
+      site << params[:preview_terminal]
       if (preview_at = Time.parse(params[:preview_at]) rescue nil)
-        site += "_#{preview_at.strftime('%Y%m%d%H%M')}"
+        site << "_#{preview_at.strftime('%Y%m%d%H%M')}"
       end
       redirect_to "/_preview/#{site}/#{params[:path]}"
     end
