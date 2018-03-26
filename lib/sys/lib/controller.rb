@@ -19,7 +19,6 @@ class Sys::Lib::Controller
       options = options.symbolize_keys
       options[:base_url] ||= options[:request] ? options[:request].url : 'http://127.0.0.1/'
       options[:method] ||= 'GET'
-      options[:agent_type] ||= :pc
 
       params = options[:params] || {}
       params = params.to_unsafe_h if params.is_a?(ActionController::Parameters)
