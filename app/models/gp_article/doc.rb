@@ -92,13 +92,14 @@ class GpArticle::Doc < ApplicationRecord
   before_save :set_serial_no
   before_save :set_published_at
   before_save :set_display_attributes
-  before_save :replace_public
 
   after_save     GpArticle::Publisher::DocCallbacks.new, if: :changed?
   before_destroy GpArticle::Publisher::DocCallbacks.new
 
   after_save     Cms::SearchIndexerCallbacks.new, if: :changed?
   before_destroy Cms::SearchIndexerCallbacks.new
+
+  after_save :replace_public
 
   attr_accessor :link_check_results, :in_ignore_link_check
   attr_accessor :accessibility_check_results, :in_ignore_accessibility_check, :in_modify_accessibility_check
