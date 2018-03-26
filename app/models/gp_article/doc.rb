@@ -91,7 +91,9 @@ class GpArticle::Doc < ApplicationRecord
   before_save :set_name
   before_save :set_serial_no
   before_save :set_published_at
-  before_save :set_display_attributes
+  before_save :set_display_published_at
+
+  after_save :set_display_updated_at
 
   after_save     GpArticle::Publisher::DocCallbacks.new, if: :changed?
   before_destroy GpArticle::Publisher::DocCallbacks.new
@@ -417,23 +419,15 @@ class GpArticle::Doc < ApplicationRecord
     content.lang_options.rassoc(lang).try(:first)
   end
 
-  def link_to_options
-    if target.present?
-      if href.present?
-        if target == 'attached_file'
-          if (file = files.find_by(name: href))
-            ["#{public_uri}file_contents/#{file.name}", target: '_blank']
-          else
-            nil
-          end
-        else
-          [href, target: target]
-        end
+  def link_to_options(preview: false)
+    if target.present? && href.present?
+      if target == 'attached_file' && (file = files.find_by(name: href))
+        ["#{preview ? preview_uri : public_uri}file_contents/#{file.name}", target: '_blank']
       else
-        nil
+        [href, target: target]
       end
     else
-      [public_uri]
+      [preview ? preview_uri : public_uri]
     end
   end
 
@@ -478,9 +472,15 @@ class GpArticle::Doc < ApplicationRecord
     end
   end
 
-  def set_display_attributes
-    self.display_published_at = published_at if display_published_at.nil?
-    self.display_updated_at = updated_at if display_updated_at.nil? || !keep_display_updated_at
+  def set_display_published_at
+    if (publish_task = tasks.detect(&:publish_task?)) && state == 'approvable'
+      self.display_published_at ||= publish_task.process_at
+    end
+    self.display_published_at ||= published_at
+  end
+
+  def set_display_updated_at
+    update_columns(display_updated_at: updated_at) if display_updated_at.nil? || !keep_display_updated_at
   end
 
   def set_serial_no

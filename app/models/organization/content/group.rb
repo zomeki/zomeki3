@@ -110,8 +110,7 @@ class Organization::Content::Group < Cms::Content
                            .where(site_id: site_id)
   end
 
-  def public_docs
-    GpArticle::Doc.mobile(::Page.mobile?).public_state
-                  .where(content_id: article_contents.pluck(:id))
+  def docs
+    GpArticle::Doc.where(content_id: article_contents.pluck(:id))
   end
 end

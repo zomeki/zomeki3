@@ -39,14 +39,8 @@ module Cms::Lib::Layout
         rel.where(concept_id: [nil] + concepts.map(&:id))
       end
     end
-    pieces = relations.reduce(:union).index_by(&:bracket_description)
 
-    if Core.mode == 'preview' && params[:piece_id]
-      item = Cms::Piece.find_by(id: params[:piece_id])
-      pieces[item.name] = item if item
-    end
-
-    pieces
+    relations.reduce(:union).index_by(&:bracket_description)
   end
 
   def self.find_data_texts(html, concepts)

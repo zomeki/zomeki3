@@ -27,13 +27,13 @@ class Cms::Controller::Public::Base < Sys::Controller::Public::Base
   private
 
   def check_mobile_access
-    http_error(404) if Page.mobile && !Page.site.use_mobile_feature?
+    http_error(404) if request.mobile? && !Page.site.use_mobile_feature?
   end
 
   def http_error(status, message = nil)
     message = default_http_error_message(status, message)
 
-    if Page.mobile
+    if request.mobile?
       file_status = "#{status}_mobile.html"
       file_500 = "500_mobile.html"
     else

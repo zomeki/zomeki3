@@ -12,9 +12,10 @@ class GpArticle::ArchivesScript < PublicationScript
       beginning_of_month += 1.month
     end
 
-    days = @node.content.public_docs.group("TO_CHAR(display_published_at, 'YYYYMM01')")
-                                    .pluck("TO_CHAR(display_published_at, 'YYYYMM01')")
-                                    .map{|d| Time.parse(d).beginning_of_month.to_date }
+    days = @node.content.docs.public_state
+                        .group("TO_CHAR(display_published_at, 'YYYYMM01')")
+                        .pluck("TO_CHAR(display_published_at, 'YYYYMM01')")
+                        .map{|d| Time.parse(d).beginning_of_month.to_date }
     # Not exist pages
     (all_days - days).each do |day|
       path = "#{@node.public_path}#{day.strftime('%Y/%m')}/"

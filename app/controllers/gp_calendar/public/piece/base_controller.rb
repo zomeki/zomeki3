@@ -1,4 +1,6 @@
 class GpCalendar::Public::Piece::BaseController < Sys::Controller::Public::Base
+  include GpArticle::Controller::Public::Scoping
+
   private
 
   def merge_docs_into_events(docs, events)

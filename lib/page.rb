@@ -10,6 +10,7 @@ class Page
   cattr_accessor :current_piece
   cattr_accessor :mobile
   cattr_accessor :smart_phone
+  cattr_accessor :preview_at
   cattr_accessor :ruby
   cattr_accessor :error
 
@@ -25,6 +26,7 @@ class Page
     @@current_piece = nil
     @@mobile        = nil
     @@smart_phone   = nil
+    @@preview_at    = nil
     @@ruby          = nil
     @@error         = nil
   end

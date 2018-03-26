@@ -83,7 +83,7 @@ class GpCategory::CategoryTypesScript < PublicationScript
           publish_link(cat_type, ApplicationController.helpers.category_module_more_link(template_module: tm, ct_or_c: cat_type, category_name: c.name))
         end
       when 'docs_5', 'docs_6'
-        docs = GpCategory::CategoryType.public_docs_for_template_module(cat_type, tm)
+        docs = GpCategory::CategoryType.docs_for_template_module(cat_type, tm).public_state
                                        .select(Sys::Group.arel_table[:id]).distinct
                                        .joins(creator: :group)
         groups = Sys::Group.where(id: docs)
@@ -109,7 +109,7 @@ class GpCategory::CategoryTypesScript < PublicationScript
           publish_link(cat, ApplicationController.helpers.category_module_more_link(template_module: tm, ct_or_c: cat, category_name: c.name))
         end
       when 'docs_5', 'docs_6'
-        docs = GpCategory::Category.public_docs_for_template_module(cat, tm)
+        docs = GpCategory::Category.docs_for_template_module(cat, tm).public_state
                                    .select(Sys::Group.arel_table[:id]).distinct
                                    .joins(creator: :group)
         groups = Sys::Group.where(id: docs)

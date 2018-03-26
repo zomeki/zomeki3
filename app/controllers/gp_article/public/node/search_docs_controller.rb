@@ -1,5 +1,7 @@
 require 'will_paginate/array'
 class GpArticle::Public::Node::SearchDocsController < Cms::Controller::Public::Base
+  include GpArticle::Controller::Public::Scoping
+
   def pre_dispatch
     @content = GpArticle::Content::Doc.find_by(id: Page.current_node.content.id)
     return http_error(404) unless @content
@@ -9,7 +11,7 @@ class GpArticle::Public::Node::SearchDocsController < Cms::Controller::Public::B
     @keyword = params.dig(:criteria, :keyword)
     @category_ids = params.dig(:criteria, :category_ids) || []
 
-    @docs = @content.public_docs
+    @docs = @content.docs
     @docs = @docs.search_with_text(:title, :body, @keyword) if @keyword.present?
     @docs = @docs.categorized_into(@category_ids) if @category_ids.present?
     @docs = @docs.order(@content.docs_order_as_hash)

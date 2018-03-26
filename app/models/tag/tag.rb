@@ -47,10 +47,6 @@ class Tag::Tag < ApplicationRecord
     Cms::Lib::BreadCrumbs.new(crumbs)
   end
 
-  def public_docs
-    docs.mobile(::Page.mobile?).public_state
-  end
-
   def update_last_tagged_at(doc=nil)
     update_column(:last_tagged_at, Time.now)
   end

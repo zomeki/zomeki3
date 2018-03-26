@@ -1,6 +1,6 @@
 module Feed::FeedHelper
   def entry_replace(entry, entry_style, date_style, time_style = '')
-    Formatter.new(entry).format(entry_style, date_style, time_style, mobile: Page.mobile?)
+    Formatter.new(entry).format(entry_style, date_style, time_style, mobile: request.mobile?)
   end
 
   class Formatter < ActionView::Base

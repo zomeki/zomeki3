@@ -5,15 +5,6 @@ class ApplicationController < ActionController::Base
 #  rescue_from Exception, with: :rescue_exception
 
   def initialize_application
-    if Core.publish
-      Page.mobile = false
-      Page.smart_phone = false
-    else
-      Page.mobile = true if request.mobile?
-      Page.smart_phone = true if request.smart_phone?
-      request_as_mobile if Page.mobile? && !request.mobile?
-      request_as_smart_phone if Page.smart_phone? && !request.smart_phone?
-    end
     return false if Core.dispatched?
     return Core.dispatched
   end
@@ -99,14 +90,4 @@ class ApplicationController < ActionController::Base
 #      http_error 500
 #    end
 #  end
-
-  def request_as_mobile
-    user_agent = 'DoCoMo/2.0 ISIM0808(c500;TB;W24H16)'
-    request.env['rack.jpmobile'] = Jpmobile::Mobile::AbstractMobile.carrier('HTTP_USER_AGENT' => user_agent)
-  end
-
-  def request_as_smart_phone
-    user_agent = 'Mozilla/5.0 (iPhone; U; CPU iPhone OS 2_0_1 like Mac OS X; ja-jp) AppleWebKit/525.18.1 (KHTML, like Gecko) Version/3.1.1 Mobile/5B108 Safari/525.20'
-    request.env['rack.jpmobile'] = Jpmobile::Mobile::AbstractMobile.carrier('HTTP_USER_AGENT' => user_agent)
-  end
 end

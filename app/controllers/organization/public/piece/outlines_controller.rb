@@ -1,4 +1,6 @@
 class Organization::Public::Piece::OutlinesController < Sys::Controller::Public::Base
+  include GpArticle::Controller::Public::Scoping
+
   def pre_dispatch
     @piece = Organization::Piece::Outline.where(id: Page.current_piece.id).first
     return render plain: '' unless @piece
