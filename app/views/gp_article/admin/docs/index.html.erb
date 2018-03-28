@@ -4,13 +4,13 @@
 <table class="index">
   <tr>
     <th style="text-align: center; width: 60px;">詳細</th>
-    <th style="text-align: center; width: 60px;">記事番号</th>
-    <th><%= GpArticle::Doc.human_attribute_name :title %></th>
-    <th style="text-align: center; width: 120px"><%= GpArticle::Doc.human_attribute_name :name %></th>
-    <th style="text-align: center; width: 150px">所属</th>
-    <th style="text-align: center; width: 150px">作成者</th>
-    <th style="text-align: center; width: 150px;"><%= GpArticle::Doc.human_attribute_name :updated_at %></th>
-    <th style="text-align: center; width: 100px;"><%= GpArticle::Doc.human_attribute_name :state %></th>
+    <th style="text-align: center; width: 80px;"><%= sort_link '記事番号', sort_key: 'serial_no' %></th>
+    <th><%= sort_link GpArticle::Doc.human_attribute_name(:title), sort_key: 'title' %></th>
+    <th style="text-align: center; width: 120px"><%= sort_link GpArticle::Doc.human_attribute_name(:name), sort_key: 'name' %></th>
+    <th style="text-align: center; width: 120px"><%= sort_link '所属', sort_key: 'sys_groups.name' %></th>
+    <th style="text-align: center; width: 120px"><%= sort_link '作成者', sort_key: 'sys_users.name' %></th>
+    <th style="text-align: center; width: 120px;"><%= sort_link GpArticle::Doc.human_attribute_name(:updated_at), sort_key: 'updated_at' %></th>
+    <th style="text-align: center; width: 100px;"><%= sort_link GpArticle::Doc.human_attribute_name(:state), sort_key: 'state' %></th>
     <th style="text-align: center; width: 100px;">プレビュー</th>
   </tr>
 

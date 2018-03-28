@@ -86,4 +86,21 @@ module LinkHelper
   def data_uri(data, mime_type:)
     "data:#{mime_type};base64,#{Base64.strict_encode64(data)}"
   end
+
+  def sort_link(name, options = {}, html_options = {})
+    curr_key = params[:sort_key]
+    curr_order = params[:sort_order]
+
+    if curr_key.present? && curr_key.to_s == options[:sort_key].to_s
+      if curr_order.blank?
+        order, mark = 'desc', '▲'
+      else
+        order, mark = '', '▼'
+      end
+    end
+
+    link_options = options.merge(params.to_unsafe_h.symbolize_keys)
+                          .merge(sort_key: options[:sort_key], sort_order: order)
+    link_to "#{name}#{mark}".html_safe, link_options, html_options
+  end
 end

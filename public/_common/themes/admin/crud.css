@@ -46,6 +46,9 @@ table.index th {
   text-align: left;
   color: #fff;
 }
+table.index th a {
+  color: #fff;
+}
 table.index td {
   padding: 5px 6px;
   border-left: 1px solid #ccc;
