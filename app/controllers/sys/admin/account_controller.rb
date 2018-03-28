@@ -12,7 +12,7 @@ class Sys::Admin::AccountController < Sys::Controller::Admin::Base
       flash.now[:alert] = 'ユーザーＩＤ・パスワードを正しく入力してください。'
       respond_to do |format|
         format.html { render }
-        format.xml  { render(:xml => '<errors />') }
+        format.xml  { render(xml: '<errors />') }
       end
       return true
     end
@@ -25,17 +25,17 @@ class Sys::Admin::AccountController < Sys::Controller::Admin::Base
     if params[:remember_me] == "1"
       self.current_user.remember_me
       cookies[:auth_token] = {
-        :value   => self.current_user.remember_token,
-        :expires => self.current_user.remember_token_expires_at
+        value: self.current_user.remember_token,
+        expires: self.current_user.remember_token_expires_at
       }
     end
 
     cookies.delete :sys_login_referrer
-    Sys::OperationLog.log(request, :user => current_user)
+    Sys::OperationLog.log(request, user: current_user)
 
     respond_to do |format|
       format.html { redirect_to @uri }
-      format.xml  { render(:xml => current_user.to_xml) }
+      format.xml  { render(xml: current_user.to_xml) }
     end
   end
 
@@ -49,14 +49,14 @@ class Sys::Admin::AccountController < Sys::Controller::Admin::Base
     cookies.delete :cms_site
     reset_session
 
-    Sys::OperationLog.log(request, :user => current_user)
-    redirect_to('action' => 'login')
+    Sys::OperationLog.log(request, user: current_user)
+    redirect_to(action: :login)
   end
 
   def info
     respond_to do |format|
       format.html { render }
-      format.xml  { render :xml => Core.user.to_xml(:root => 'item', :include => :groups) }
+      format.xml  { render xml: Core.user.to_xml(root: 'item', include: :groups) }
     end
   end
 

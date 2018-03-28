@@ -78,11 +78,11 @@ module Cms::Controller::Layout
       Page.layout    = layout.clone
       Page.layout.id = layout.id
     else
-      Page.layout = Cms::Layout.new({
-        :body             => '[[content]]',
-        :mobile_body      => '[[content]]',
-        :smart_phone_body => '[[content]]'
-      })
+      Page.layout = Cms::Layout.new(
+        body:             '[[content]]',
+        mobile_body:      '[[content]]',
+        smart_phone_body: '[[content]]'
+      )
     end
 
     if params[:filename_base] =~ /^more($|_)/i &&
@@ -121,8 +121,8 @@ module Cms::Controller::Layout
       begin
         require 'tamtam'
         body = TamTam.inline(
-          :css  => Page.layout.tamtam_css(request),
-          :body => body
+          css: Page.layout.tamtam_css(request),
+          body: body
         )
       rescue => e #InvalidStyleException
         error_log e

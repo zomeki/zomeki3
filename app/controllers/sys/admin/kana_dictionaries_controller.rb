@@ -24,7 +24,7 @@ class Sys::Admin::KanaDictionariesController < Cms::Controller::Admin::Base
 
   def new
     @item = Cms::KanaDictionary.new(
-      :body => "" +
+      body: "" +
         "# コメント ... 先頭に「#」\n" +
         "# 辞書には登録されません。\n\n" +
         "# 日本語例 ... 「漢字, カタカナ」\n" +

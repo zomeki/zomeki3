@@ -3,7 +3,7 @@ module Sys::Model::Auth::EditableGroup
 
   def creatable?
     return false unless Core.user.has_auth?(:creator)
-    #return Core.user.has_priv?(:create, :item => content.concept)
+    #return Core.user.has_priv?(:create, item: content.concept)
     return true
   end
 

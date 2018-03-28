@@ -1,7 +1,7 @@
 <table class="show">
   <tr>
     <th><%= @item.class.human_attribute_name :concept_id %></th>
-    <td><%= safe{@item.concept.name} %></td>
+    <td><%= @item.concept.name if @item.concept %></td>
   </tr><tr>
     <th><%= @item.class.human_attribute_name :action %></th>
     <td><%= @item.action_names.join('，').force_encoding('utf-8') %></td>

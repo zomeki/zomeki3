@@ -15,7 +15,7 @@ module Feed::Controller::Feed
       elsif params[:format] == "atom"
         data = to_atom(docs) 
       end
-      return render :xml => unescape(data)
+      return render xml: unescape(data)
     end
     return false
   end
@@ -35,7 +35,7 @@ module Feed::Controller::Feed
   end
 
   def to_rss(docs)
-    xml = Builder::XmlMarkup.new(:indent => 2)
+    xml = Builder::XmlMarkup.new(indent: 2)
     xml.instruct!
     xml.rss('version' => '2.0') do
 
@@ -52,7 +52,7 @@ module Feed::Controller::Feed
             xml.description  strimwidth(entry.summary.to_s.gsub(/&nbsp;/, ' '), 500)
             xml.pubDate      entry.entry_updated.rfc822
             unless entry.image_uri.blank?
-              xml.enclosure :url => entry.image_uri, :type => entry.image_type, :length => entry.image_length
+              xml.enclosure url: entry.image_uri, type: entry.image_type, length: entry.image_length
             end
             
             entry.categories.split(/\r\n|\r|\n/).each do |label|
@@ -67,8 +67,8 @@ module Feed::Controller::Feed
   end
   
   def to_atom(docs)
-    xml = Builder::XmlMarkup.new(:indent => 2)
-    xml.instruct! :xml, :version => 1.0, :encoding => 'UTF-8'
+    xml = Builder::XmlMarkup.new(indent: 2)
+    xml.instruct! :xml, version: 1.0, encoding: 'UTF-8'
     xml.feed 'xmlns' => 'http://www.w3.org/2005/Atom' do
 
       updated = (docs[0] && docs[0].try(:published_at)) ? docs[0].published_at : Date.today
@@ -76,8 +76,8 @@ module Feed::Controller::Feed
       xml.id      "tag:#{Page.site.domain},#{Page.site.created_at.strftime('%Y')}:#{Page.current_node.public_uri}"
       xml.title   @feed_name
       xml.updated updated.strftime('%Y-%m-%dT%H:%M:%S%z').sub(/([0-9][0-9])$/, ':\1')
-      xml.link    :rel => 'alternate', :href => @node_uri
-      xml.link    :rel => 'self', :href => @req_uri, :type => 'application/atom+xml', :title => @feed_name
+      xml.link    rel: 'alternate', href: @node_uri
+      xml.link    rel: 'self', href: @req_uri, type: 'application/atom+xml', title: @feed_name
 
       docs.each do |doc|
         @entry_id = doc.id
@@ -95,17 +95,17 @@ module Feed::Controller::Feed
     xml.id      @entry_id
     xml.title   entry.title
     xml.updated entry.entry_updated.strftime('%Y-%m-%dT%H:%M:%S%z').sub(/([0-9][0-9])$/, ':\1') #.rfc822
-    xml.summary(:type => 'html') do |p|
+    xml.summary(type: 'html') do |p|
       p.cdata! strimwidth(entry.summary, 500)
     end
-    xml.link      :rel => 'alternate', :href => entry.public_full_uri
+    xml.link      rel: 'alternate', href: entry.public_full_uri
 
     unless entry.image_uri.blank?
-      xml.link :rel => 'enclosure', :href => entry.image_uri, :type => entry.image_type, :length => entry.image_length
+      xml.link rel: 'enclosure', href: entry.image_uri, type: entry.image_type, length: entry.image_length
     end
     
     entry.categories.split(/\r\n|\r|\n/).each do |label|
-      xml.category :label => label
+      xml.category label: label
     end
     
     xml.author do |auth|

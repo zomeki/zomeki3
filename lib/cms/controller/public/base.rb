@@ -63,8 +63,8 @@ class Cms::Controller::Public::Base < Sys::Controller::Public::Base
 
     render status: status, inline: html, content_type: 'text/html'
     #return respond_to do |format|
-    #  format.html { render :status => status, :inline => html }
-    #  format.xml  { render :status => status, :xml => "<errors><error>#{message}</error></errors>" }
+    #  format.html { render status: status, inline: html }
+    #  format.xml  { render status: status, xml: "<errors><error>#{message}</error></errors>" }
     #end
   end
 end

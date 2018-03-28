@@ -26,13 +26,13 @@
         <a href="<%= url_for(action: :download, concept: item.concept_id, id: item) %>" class="<%= item.css_class %>" target="_blank">File</a>
       <% end %>
     </td>
-    <td><%= safe{item.node.name} %><br /><%= "（#{item.node.title}）" if safe{item.node.title}.to_s != '' %></td>
+    <td><%= item.node.name if item.node %><br /><%= "（#{item.node.title}）" if item.node && item.node.title.present? %></td>
     <td><%= item.name %><br /><%= "（#{item.title}）" if item.name != item.title %></td>
     <td style="text-align: center;"><%= item.eng_unit %><br /><%= item.image_size if item.image_file? %></td>
     <td style="text-align: center;"><%=l item.updated_at %></td>
     
     <% if item.public? %>
-    <td style="text-align: center;"><%= link_to item.state_text, item.public_full_uri, :target => '_blank' %></td>
+    <td style="text-align: center;"><%= link_to item.state_text, item.public_full_uri, target: '_blank' %></td>
     <% else %>
     <td style="text-align: center;"><%= item.state_text %></td>
     <% end %>

@@ -14,7 +14,7 @@ $(function() {
 <table class="show">
   <tr>
     <th><%= f.label :docs_number %></th>
-    <td><%= f.array_text_field 'in_settings[docs_number]', :class => 'name' %></td>
+    <td><%= f.array_text_field 'in_settings[docs_number]', class: 'name' %></td>
   </tr>
   <tr>
     <th><%= f.label :target_date %></th>
@@ -89,17 +89,17 @@ $(function() {
   <tr>
     <th><%= f.label :date_style %></th>
     <td>
-      <%= f.array_text_field 'in_settings[date_style]', :class => 'name' %>
+      <%= f.array_text_field 'in_settings[date_style]', class: 'name' %>
       <strong>年：</strong>%Y <strong>月：</strong>%m <strong>日：</strong>%d <strong>曜日：</strong>%A <strong>曜日（省略）：</strong>%a
     </td>
   </tr>
   <tr>
     <th><%= f.label :more_link_label %></th>
-    <td><%= f.array_text_field 'in_settings[more_link_label]', :class => 'title' %></td>
+    <td><%= f.array_text_field 'in_settings[more_link_label]', class: 'title' %></td>
   </tr>
   <tr>
     <th><%= f.label :more_link_url %></th>
-    <td><%= f.array_text_field 'in_settings[more_link_url]', :class => 'title' %></td>
+    <td><%= f.array_text_field 'in_settings[more_link_url]', class: 'title' %></td>
   </tr>
 </table>
 <%- end -%>

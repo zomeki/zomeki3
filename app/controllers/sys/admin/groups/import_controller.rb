@@ -11,7 +11,7 @@ class Sys::Admin::Groups::ImportController < Cms::Controller::Admin::Base
 
   def import
     if !params[:item] || !params[:item][:file]
-      return redirect_to(:action => :index)
+      return redirect_to(action: :index)
     end
 
     @results = [0, 0, 0]
@@ -28,7 +28,7 @@ class Sys::Admin::Groups::ImportController < Cms::Controller::Admin::Base
       Core.messages << "インポート： ユーザー"
       import_users(csv)
     else
-      return redirect_to(:action => :index)
+      return redirect_to(action: :index)
     end
 
     Core.messages << "-- 追加 #{@results[0]}件"
@@ -36,11 +36,11 @@ class Sys::Admin::Groups::ImportController < Cms::Controller::Admin::Base
     Core.messages << "-- 失敗 #{@results[2]}件"
 
     flash[:notice] = "インポートが終了しました。<br />#{Core.messages.join('<br />')}".html_safe
-    return redirect_to(:action => :index)
+    return redirect_to(action: :index)
   end
 
   def import_groups(csv)
-    CSV.parse(csv, :headers => true, :header_converters => :symbol) do |data|
+    CSV.parse(csv, headers: true, header_converters: :symbol) do |data|
       code        = data[:code]
       parent_code = data[:parent_code]
 
@@ -90,7 +90,7 @@ class Sys::Admin::Groups::ImportController < Cms::Controller::Admin::Base
   end
   
   def import_users(csv)
-    CSV.parse(csv, :headers => true, :header_converters => :symbol) do |data|
+    CSV.parse(csv, headers: true, header_converters: :symbol) do |data|
       account     = data[:account]
       group_code  = data[:group_code]
 

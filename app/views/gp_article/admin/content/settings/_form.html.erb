@@ -15,7 +15,7 @@ $(function() {
 <%- end -%>
 
 <%- if @item.name == 'basic_setting'
-      layouts = Cms::Layout.where(:site_id => Core.site.id).order(:concept_id, :name)
+      layouts = Cms::Layout.where(site_id: Core.site.id).order(:concept_id, :name)
       layouts_for_option = layouts.collect{|i| ["#{i.concept.name} : #{i.title}", i.id]}
     -%>
 <table class="show">
@@ -166,7 +166,7 @@ $(function() {
   <tr>
     <th>コンテンツ</th>
     <td><%= select_tag 'item[extra_values][approval_content_id]',
-                       options_from_collection_for_select(Approval::Content::ApprovalFlow.where(site_id: Page.site.id), :id, :name, @item.extra_values[:approval_content_id]), include_blank: true %></td>
+                       options_from_collection_for_select(Approval::Content::ApprovalFlow.where(site_id: Core.site.id), :id, :name, @item.extra_values[:approval_content_id]), include_blank: true %></td>
   </tr>
   <tr>
     <th>承認後公開</th>
@@ -203,7 +203,7 @@ $(function() {
   <tr>
     <th>コンテンツ</th>
     <td><%= select_tag 'item[extra_values][tag_content_tag_id]',
-                       options_from_collection_for_select(Tag::Content::Tag.where(site_id: Page.site.id), :id, :name, @item.extra_values[:tag_content_tag_id]), include_blank: true %></td>
+                       options_from_collection_for_select(Tag::Content::Tag.where(site_id: Core.site.id), :id, :name, @item.extra_values[:tag_content_tag_id]), include_blank: true %></td>
   </tr>
 </table>
 <%- end -%>

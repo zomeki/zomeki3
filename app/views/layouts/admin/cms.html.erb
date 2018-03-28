@@ -10,6 +10,7 @@
   <%= javascript_include_tag '/_common/js/jquery.min.js' %>
   <%= javascript_include_tag '/_common/js/jquery-migrate.min.js' %>
   <%= javascript_include_tag '/_common/js/jquery_ujs.js' %>
+  <%= javascript_include_tag '/_common/js/jquery.cookie.js' %>
 
   <%= stylesheet_link_tag '/_common/css/jquery-ui-themes/smoothness/jquery-ui.min.css', media: :all %>
   <%= javascript_include_tag '/_common/js/jquery-ui.min.js' %>
@@ -46,6 +47,7 @@
     <!-- /#navi --></nav>
     <div id="main">
       <div id="content">
+        <%= render 'layouts/admin/cms/concept' %>
         <div id="contentContainer">
           <div id="contentHeader">
             <%- if lookup_context.exists?('menu', controller.controller_path, true) -%>

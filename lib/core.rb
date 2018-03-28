@@ -160,12 +160,11 @@ class Core
 
   def self.set_concept(session, concept_id = nil)
     if concept_id
-      @@concept = Cms::Concept.find_by(id: concept_id)
-      @@concept = Cms::Concept.new.readable_children[0] unless @@concept
+      @@concept = Cms::Concept.find_by(id: concept_id) || Core.site.concepts.roots.readable_for(Core.user).first
       session[:cms_concept] = (@@concept ? @@concept.id : nil)
     else
       concept_id = session[:cms_concept]
-      @@concept = Cms::Concept.find_by(id: concept_id) || Cms::Concept.new.readable_children[0]
+      @@concept = Cms::Concept.find_by(id: concept_id) || Core.site.concepts.roots.readable_for(Core.user).first
     end
   end
 

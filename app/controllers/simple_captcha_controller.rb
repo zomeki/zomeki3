@@ -13,6 +13,6 @@ class SimpleCaptchaController < ApplicationController
     jtalk = Cms::Lib::Navi::Jtalk.new
     jtalk.make data.value
     file = jtalk.output
-    send_file(file[:path], :type => file[:mime_type], :filename => 'sound.mp3', :disposition => 'inline')
+    send_file(file[:path], type: file[:mime_type], filename: 'sound.mp3', disposition: 'inline')
   end
 end

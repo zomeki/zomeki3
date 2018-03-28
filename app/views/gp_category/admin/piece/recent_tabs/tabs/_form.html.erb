@@ -1,7 +1,7 @@
 <table class="show">
   <tr>
     <th><%= GpCategory::Piece::RecentTabXml.human_attribute_name(:name) %> <span class="note">※</span></th>
-    <td><%= f.text_field :name, :class => 'id' %></td>
+    <td><%= f.text_field :name, class: 'id' %></td>
   </tr>
   <tr>
     <th><%= GpCategory::Piece::RecentTabXml.human_attribute_name(:title) %> <span class="note">※</span></th>
@@ -54,7 +54,7 @@
   </tr>
   <tr>
     <th><%= GpCategory::Piece::RecentTabXml.human_attribute_name(:sort_no) %> <span class="note">※</span></th>
-    <td><%= f.text_field :sort_no, :class => 'number' %></td>
+    <td><%= f.text_field :sort_no, class: 'number' %></td>
   </tr>
 </table>
 

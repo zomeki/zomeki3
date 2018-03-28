@@ -12,11 +12,11 @@ class Cms::Admin::NodesController < Cms::Controller::Admin::Base
   def index
     @dirs = Cms::Node.where(site_id: Core.site.id, parent_id: @parent.id, directory: 1)
                      .order('sitemap_sort_no IS NULL, sitemap_sort_no, name')
-                     .preload(:site, :parent)
+                     .preload(:site, :concept, :parent)
 
     @pages = Cms::Node.where(site_id: Core.site.id, parent_id: @parent.id, directory: [nil, 0])
                       .order('sitemap_sort_no IS NULL, sitemap_sort_no, name')
-                      .preload(:site, :parent, :related_objects_for_replace)
+                      .preload(:site, :concept, :parent, :related_objects_for_replace)
     _index @pages
   end
 
@@ -26,7 +26,7 @@ class Cms::Admin::NodesController < Cms::Controller::Admin::Base
       .paginate(page: params[:page], per_page: params[:limit])
 
     @skip_navi = true
-    render :action => :search
+    render action: :search
   end
 
   def show
@@ -38,13 +38,12 @@ class Cms::Admin::NodesController < Cms::Controller::Admin::Base
 
   def new
     @item = Cms::Node.new(
-      #:concept_id => @parent.inherited_concept(:id),
-      :concept_id => Core.concept(:id),
-      :site_id    => Core.site.id,
-      :state      => 'public',
-      :parent_id  => @parent.id,
-      :route_id   => @parent.id,
-      :layout_id  => @parent.layout_id
+      concept_id: Core.concept(:id),
+      site_id:    Core.site.id,
+      state:      'public',
+      parent_id:  @parent.id,
+      route_id:   @parent.id,
+      layout_id:  @parent.layout_id
     )
 
     @contents = content_options(false)
@@ -65,7 +64,7 @@ class Cms::Admin::NodesController < Cms::Controller::Admin::Base
 
     _create(@item) do
       @item.name = nil # for validation
-      @item.save(:validate => false)
+      @item.save(validate: false)
       respond_to do |format|
         format.html { return redirect_to(controller: @item.admin_controller, action: :show, id: @item.id) }
       end
@@ -104,7 +103,7 @@ class Cms::Admin::NodesController < Cms::Controller::Admin::Base
     @options.unshift ["// 一覧を更新しました（#{concept_name}#{contents.size + 1}件）", ""]
 
     respond_to do |format|
-      format.html { render :layout => false }
+      format.html { render layout: false }
     end
   end
 
@@ -127,7 +126,7 @@ class Cms::Admin::NodesController < Cms::Controller::Admin::Base
     @options.unshift ["// 一覧を更新しました（#{content_name}:#{models.size}件）", '']
 
     respond_to do |format|
-      format.html { render :layout => false }
+      format.html { render layout: false }
     end
   end
 

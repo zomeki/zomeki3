@@ -3,7 +3,7 @@
   <tr>
     <th><%= Sys::Process.human_attribute_name :title %></th>
     <td>
-      <%= select_tag "s_name", options_for_select(Sys::Process::ALL_PROCESSES, params[:s_name]), { id: nil, include_blank: true } %>
+      <%= select_tag :s_name, options_for_select(Sys::Process::ALL_PROCESSES, params[:s_name]), id: nil, include_blank: true %>
     </td>
     <th>期間</th>
     <td>

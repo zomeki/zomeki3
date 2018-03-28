@@ -3,7 +3,7 @@
 <table class="show">
   <tr>
     <th><%= f.label :parent_id %></th>
-    <td><%= f.select :parent_id, @item.candidate_parents, include_blank: '（ルート階層）' %></td>
+    <td><%= f.select :parent_id, @item.class.parent_options(Core.site, @item.id), include_blank: '（ルート階層）' %></td>
   </tr><tr>
     <th><%= f.label :name %></th>
     <td><%= f.text_field :name, class: 'name' %></td>

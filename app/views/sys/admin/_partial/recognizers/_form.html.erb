@@ -30,8 +30,8 @@ e1_opt  = options_for_select(e1_opt.collect{|u| [u.name_with_account, u.id]})
 e2_opt  = options_for_select(e2_opt.collect{|u| [u.name_with_account, u.id]})
 
 style   = "width: 240px; height: 140px;"
-e1_tag  = select_tag(e1_name, e1_opt, :multiple => true, :onDblClick => e1_evt, :style => style)
-e2_tag  = select_tag(e2_name, e2_opt, :multiple => true, :onDblClick => e2_evt, :style => style)
+e1_tag  = select_tag(e1_name, e1_opt, multiple: true, onDblClick: e1_evt, style: style)
+e2_tag  = select_tag(e2_name, e2_opt, multiple: true, onDblClick: e2_evt, style: style)
 
 %><script type="text/javascript">
 //<![CDATA[

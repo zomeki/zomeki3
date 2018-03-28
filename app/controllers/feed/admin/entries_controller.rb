@@ -47,7 +47,7 @@ protected
   end
 
   def update_entries
-    if @feed.update_feed(:destroy => true)
+    if @feed.update_feed(destroy: true)
       flash[:notice] = "エントリを更新しました。"
     else
       flash[:notice] = "エントリの更新に失敗しました。"

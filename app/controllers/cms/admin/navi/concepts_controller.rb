@@ -3,7 +3,7 @@ class Cms::Admin::Navi::ConceptsController < Cms::Controller::Admin::Base
   
   def index
     no_ajax = request.env['HTTP_X_REQUESTED_WITH'].to_s !~ /XMLHttpRequest/i
-    render :layout => no_ajax
+    render layout: no_ajax
   end
   
   def show

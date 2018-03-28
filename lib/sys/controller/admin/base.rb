@@ -2,7 +2,7 @@ class Sys::Controller::Admin::Base < ApplicationController
   include Jpmobile::ViewSelector
   include Sys::Controller::Admin::Auth
   before_action :pre_dispatch
-  rescue_from ActiveRecord::RecordNotFound, :with => :error_auth
+  rescue_from ActiveRecord::RecordNotFound, with: :error_auth
 
   def initialize_application
     return false unless super

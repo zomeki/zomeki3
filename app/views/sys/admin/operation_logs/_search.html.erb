@@ -2,13 +2,13 @@
 <table>
   <tr>
     <th><%= Sys::OperationLog.human_attribute_name :user_id %></th>
-    <td><%= text_field_tag 's_user_id', params[:s_user_id], style: 'width: 120px; ime-mode: disabled;' %></td>
+    <td><%= text_field_tag :s_user_id, params[:s_user_id], style: 'width: 120px; ime-mode: disabled;' %></td>
     <th><%= Sys::OperationLog.human_attribute_name :action %></th>
     <td>
-      <%= select_tag "s_action", options_for_select(@action_type_options, params[:s_action]), {id: nil, include_blank: true} %>
+      <%= select_tag :s_action, options_for_select(@action_type_options, params[:s_action]), id: nil, include_blank: true %>
     </td>
     <th>キーワード</th>
-    <td><%= text_field_tag 's_keyword', params[:s_keyword], style: 'width: 120px;' %></td>
+    <td><%= text_field_tag :s_keyword, params[:s_keyword], style: 'width: 120px;' %></td>
     <th>期間</th>
     <td>
       <%= text_field_tag :start_date, params[:start_date], class: "datepicker" %>

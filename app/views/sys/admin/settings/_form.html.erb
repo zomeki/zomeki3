@@ -1,21 +1,18 @@
 <%
-
 case @item.form_type
 when :select
   opt = @item.config_options
-  value_form = f.select(:value, opt, :include_blank => "　")
+  value_form = f.select(:value, opt, include_blank: "　")
 when :text
-  value_form = f.text_area(:value, :style => "width: 600px; height: 160px;")
+  value_form = f.text_area(:value, style: "width: 600px; height: 160px;")
 when :radio_buttons
   value_form = f.collection_radio_buttons(:value, @item.config_options, :last, :first)
 else
-  style = @item.style || "width: 400px;"
-  value_form = f.text_field(:value, :style => style)
+  value_form = f.text_field(:value, style: @item.style || "width: 400px;")
 end
 
 upper_text = @item.upper_text ? %Q(<div style="margin: 5px; line-height: 1.2;">#{@item.upper_text}</div>).html_safe : ""
 lower_text = @item.lower_text ? %Q(<div style="margin: 5px; line-height: 1.2;">#{@item.lower_text}</div>).html_safe : ""
-
 %>
 
 <table class="show">
@@ -32,7 +29,7 @@ lower_text = @item.lower_text ? %Q(<div style="margin: 5px; line-height: 1.2;">#
 <table class="show">
   <tr>
     <th>SSL URL</th>
-    <td><%= text_field_tag 'common_ssl_uri', @item.extra_values[:common_ssl_uri], style: 'width: 400px;' %></td>
+    <td><%= text_field_tag :common_ssl_uri, @item.extra_values[:common_ssl_uri], style: 'width: 400px;' %></td>
   </tr>
 </table>
 <%- end -%>

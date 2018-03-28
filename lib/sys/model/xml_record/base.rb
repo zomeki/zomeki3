@@ -97,7 +97,7 @@ class Sys::Model::XmlRecord::Base
   end
   
   def self.human_attribute_name(name, options = {})
-    label = I18n.t name, :scope => [:activerecord, :attributes, model_name.to_s.underscore]
+    label = I18n.t name, scope: [:activerecord, :attributes, model_name.to_s.underscore]
     label =~ /^translation missing:/ ? name.to_s.humanize : label
   end
   
@@ -152,7 +152,7 @@ class Sys::Model::XmlRecord::Base
   end
   
   def locale(name)
-    label = I18n.t name, :scope => [:activerecord, :attributes, self.class.model_name.to_s.underscore]
+    label = I18n.t name, scope: [:activerecord, :attributes, self.class.model_name.to_s.underscore]
     label =~ /^translation missing:/ ? name.to_s.humanize : label
   end
   
@@ -181,7 +181,7 @@ class Sys::Model::XmlRecord::Base
     end
     return false unless before_save
     @_record.send("#{self.class.column_name}=", build_xml.to_s)
-    return false unless @_record.save(:validate => false)
+    return false unless @_record.save(validate: false)
     after_save
     return true
   end
@@ -201,7 +201,7 @@ class Sys::Model::XmlRecord::Base
   def destroy
     return false unless before_destroy
     @_record.send("#{self.class.column_name}=", build_xml(:destroy).to_s)
-    return false unless @_record.save(:validate => false)
+    return false unless @_record.save(validate: false)
     after_destroy
     return true
   end
@@ -226,7 +226,7 @@ class Sys::Model::XmlRecord::Base
           node << e
         end
       else
-        node.add_attributes({"#{name}" => val})
+        node.add_attributes("#{name}" => val)
       end
     end
     node

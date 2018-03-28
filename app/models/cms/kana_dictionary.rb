@@ -83,7 +83,7 @@ class Cms::KanaDictionary < ApplicationRecord
       dic = mecab_dir(site_id).join('cms.dic').to_s
       unless ::File.exists?(dic)
         dir = ::File.dirname(dic)
-        ::FileUtils.mkdir_p(dir) unless ::Dir.exist?(dir)
+        FileUtils.mkdir_p(dir) unless Dir.exist?(dir)
         FileUtils.cp(Rails.root.join("config/mecab/cms.dic.original").to_s, dic)
       end
       dic
@@ -93,7 +93,7 @@ class Cms::KanaDictionary < ApplicationRecord
       rc = mecab_dir(site_id).join("mecabrc").to_s
       unless ::File.exists?(rc)
         dir = ::File.dirname(rc)
-        ::FileUtils.mkdir_p(dir) unless ::Dir.exist?(dir)
+        FileUtils.mkdir_p(dir) unless Dir.exist?(dir)
         data = ::File.read(Rails.root.join("config/mecab/mecabrc").to_s).to_s
                      .gsub(/config\//, "sites/#{format('%04d', site_id)}/config/")
         ::File.write(rc, data)

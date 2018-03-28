@@ -19,7 +19,6 @@ class GpArticle::Doc < ApplicationRecord
   include Cms::Model::Auth::Concept
   include Sys::Model::Auth::EditableGroup
 
-  include GpArticle::Model::Rel::Doc
   include GpArticle::Model::Rel::Category
   include GpArticle::Model::Rel::Tag
   include GpArticle::Model::Rel::RelatedDoc
@@ -62,25 +61,25 @@ class GpArticle::Doc < ApplicationRecord
   has_many :operation_logs, -> { where(item_model: 'GpArticle::Doc') },
            foreign_key: :item_id, class_name: 'Sys::OperationLog'
 
-  belongs_to :prev_edition, :class_name => self.name
-  has_one :next_edition, :foreign_key => :prev_edition_id, :class_name => self.name
+  belongs_to :prev_edition, class_name: self.name
+  has_one :next_edition, foreign_key: :prev_edition_id, class_name: self.name
 
-  belongs_to :marker_icon_category, :class_name => 'GpCategory::Category'
+  belongs_to :marker_icon_category, class_name: 'GpCategory::Category'
 
-  has_many :categorizations, :class_name => 'GpCategory::Categorization', :as => :categorizable, :dependent => :destroy
+  has_many :categorizations, class_name: 'GpCategory::Categorization', as: :categorizable, dependent: :destroy
   has_many :categories, -> { where(GpCategory::Categorization.arel_table[:categorized_as].eq('GpArticle::Doc')) },
-           :class_name => 'GpCategory::Category', :through => :categorizations,
-           :after_add => proc {|d, c|
+           class_name: 'GpCategory::Category', through: :categorizations,
+           after_add: proc {|d, c|
              d.categorizations.where(category_id: c.id, categorized_as: nil).first.update_columns(categorized_as: d.class.name)
            }
   has_many :event_categories, -> { where(GpCategory::Categorization.arel_table[:categorized_as].eq('GpCalendar::Event')) },
-           :class_name => 'GpCategory::Category', :through => :categorizations, :source => :category,
-           :after_add => proc {|d, c|
+           class_name: 'GpCategory::Category', through: :categorizations, source: :category,
+           after_add: proc {|d, c|
              d.categorizations.where(category_id: c.id, categorized_as: nil).first.update_columns(categorized_as: 'GpCalendar::Event')
            }
   has_many :marker_categories, -> { where(GpCategory::Categorization.arel_table[:categorized_as].eq('Map::Marker')) },
-           :class_name => 'GpCategory::Category', :through => :categorizations, :source => :category,
-           :after_add => proc {|d, c|
+           class_name: 'GpCategory::Category', through: :categorizations, source: :category,
+           after_add: proc {|d, c|
              d.categorizations.where(category_id: c.id, categorized_as: nil).first.update_columns(categorized_as: 'Map::Marker')
            }
   has_and_belongs_to_many :tags, ->(doc) {
@@ -93,13 +92,14 @@ class GpArticle::Doc < ApplicationRecord
   before_save :set_serial_no
   before_save :set_published_at
   before_save :set_display_attributes
-  before_save :replace_public
 
   after_save     GpArticle::Publisher::DocCallbacks.new, if: :changed?
   before_destroy GpArticle::Publisher::DocCallbacks.new
 
   after_save     Cms::SearchIndexerCallbacks.new, if: :changed?
   before_destroy Cms::SearchIndexerCallbacks.new
+
+  after_save :replace_public
 
   attr_accessor :link_check_results, :in_ignore_link_check
   attr_accessor :accessibility_check_results, :in_ignore_accessibility_check, :in_modify_accessibility_check
@@ -492,7 +492,7 @@ class GpArticle::Doc < ApplicationRecord
   def validate_platform_dependent_characters
     [:title, :body, :mobile_title, :mobile_body].each do |attr|
       if chars = Util::String.search_platform_dependent_characters(send(attr))
-        errors.add attr, :platform_dependent_characters, :chars => chars
+        errors.add attr, :platform_dependent_characters, chars: chars
       end
     end
   end

@@ -72,7 +72,7 @@ protected
     respond_to do |accepts|
       accepts.html do
         store_location
-        redirect_to :controller => '/account', :action => 'login'
+        redirect_to controller: '/account', action: :login
       end
       accepts.xml do
         headers["Status"]           = "Unauthorized"
@@ -111,7 +111,7 @@ protected
     if user && user.remember_token?
       user.remember_me
       self.current_user = user
-      cookies[:auth_token] = { :value => self.current_user.remember_token , :expires => self.current_user.remember_token_expires_at }
+      cookies[:auth_token] = { value: self.current_user.remember_token, expires: self.current_user.remember_token_expires_at }
       flash[:notice] = "Logged in successfully"
     end
   end

@@ -73,7 +73,7 @@ class Cms::Lib::Navi::Jtalk
 
   def output
     if @mp3 && FileTest.exists?(@mp3.path)
-      return {:path => @mp3.path, :mime_type => 'audio/mp3'}
+      return { path: @mp3.path, mime_type: 'audio/mp3' }
     end
     return nil
   end

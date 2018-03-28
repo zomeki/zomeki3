@@ -83,7 +83,7 @@ class Sys::Publisher < ApplicationRecord
   end
 
   def check_path
-    remove_files(:path => path_was) if !path_was.blank? && path_changed?
+    remove_files(path: path_was) if !path_was.blank? && path_changed?
     return true
   end
 

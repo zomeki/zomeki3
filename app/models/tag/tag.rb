@@ -8,8 +8,10 @@ class Tag::Tag < ApplicationRecord
 
   # Proper
   has_and_belongs_to_many :docs, -> { order(display_published_at: :desc, published_at: :desc) },
-    :class_name => 'GpArticle::Doc', :join_table => 'gp_article_docs_tag_tags',
-    :after_add => :update_last_tagged_at, :after_remove => :update_last_tagged_at
+                                 class_name: 'GpArticle::Doc',
+                                 join_table: 'gp_article_docs_tag_tags',
+                                 after_add: :update_last_tagged_at,
+                                 after_remove: :update_last_tagged_at
 
   def public_uri
     return @public_uri if @public_uri

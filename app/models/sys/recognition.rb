@@ -78,7 +78,7 @@ class Sys::Recognition < ApplicationRecord
     list = []
     recognizers.each do |user|
       date = info(user.id).recognized_at
-      list << { :user => user, :recognized_at => (date.blank? ? nil : date) }
+      list << { user: user, recognized_at: (date.blank? ? nil : date) }
     end
     list
   end

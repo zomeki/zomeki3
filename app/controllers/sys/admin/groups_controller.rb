@@ -33,10 +33,10 @@ class Sys::Admin::GroupsController < Cms::Controller::Admin::Base
 
   def new
     @item = Sys::Group.new(
-      :state      => 'enabled',
-      :parent_id  => @parent.try!(:id),
-      :ldap       => 0,
-      :web_state  => 'public'
+      state: 'enabled',
+      parent_id: @parent.try!(:id),
+      ldap: 0,
+      web_state: 'public'
     )
   end
 

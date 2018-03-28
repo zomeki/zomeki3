@@ -3,7 +3,7 @@
 <table class="show">
   <tr>
     <th><%= @item.class.human_attribute_name :parent_id %></th>
-    <td><%= safe{@item.parent.name} %></td>
+    <td><%= @item.parent.name if @item.parent %></td>
   </tr><tr>
     <th><%= @item.class.human_attribute_name :name %></th>
     <td><%= @item.name %></td>

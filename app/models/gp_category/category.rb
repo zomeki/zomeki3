@@ -25,7 +25,6 @@ class GpCategory::Category < ApplicationRecord
   belongs_to :parent, foreign_key: :parent_id, class_name: self.name, counter_cache: :children_count
   has_many :children, foreign_key: :parent_id, class_name: self.name, dependent: :destroy
 
-
   validates :name, presence: true, uniqueness: { scope: [:category_type_id, :parent_id] },
                    format: { with: /\A[0-9A-Za-z@\.\-_\+\s]+\z/ }
   validates :title, presence: true
@@ -39,14 +38,12 @@ class GpCategory::Category < ApplicationRecord
   has_many :events, -> { order(:started_on, :ended_on) },
                     through: :categorizations, source: :categorizable, source_type: 'GpCalendar::Event'
 
-  has_many :marker_icons, :class_name => 'Map::MarkerIcon', :as => :relatable, :dependent => :destroy
-  has_many :category_sets, :class_name => 'Gnav::CategorySet', :dependent => :destroy
-
-  belongs_to :group, :foreign_key => :group_code, :class_name => 'Sys::Group'
+  has_many :marker_icons, class_name: 'Map::MarkerIcon', as: :relatable, dependent: :destroy
+  has_many :category_sets, class_name: 'Gnav::CategorySet', dependent: :destroy
 
   # conditional associations
   has_many :public_children, -> { public_state },
-    :foreign_key => :parent_id, :class_name => self.name
+                             foreign_key: :parent_id, class_name: self.name
 
   delegate :content, to: :category_type
   delegate :site, to: :content
@@ -64,6 +61,10 @@ class GpCategory::Category < ApplicationRecord
   after_destroy :clean_published_files
 
   nested_scope :in_site, through: :category_type
+
+  def tree_title(prefix: '　　', depth: 0)
+    prefix * [level_no - 1 + depth, 0].max + title
+  end
 
   def descendants(categories=[])
     categories << self
@@ -97,7 +98,7 @@ class GpCategory::Category < ApplicationRecord
   end
 
   def descendants_for_option(categories=[])
-    categories << ["#{'　　' * (level_no - 1)}#{title}", id]
+    categories << [tree_title, id]
     children.includes(:children).each {|c| c.descendants_for_option(categories) } unless children.empty?
     return categories
   end

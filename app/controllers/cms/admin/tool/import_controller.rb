@@ -27,7 +27,7 @@ class Cms::Admin::Tool::ImportController < Cms::Controller::Admin::Base
     ## layouts
     total     = import['layouts'].size
     @results << "" << "# レイアウトのインポート（全#{total}件）"
-    @count    = {:all => total, :create => 0, :update => 0, :error => 0}
+    @count    = { all: total, create: 0, update: 0, error: 0 }
     @errors   = []
     import['layouts'].each {|json| import_layout(json) }
     @results << "作成 #{@count[:create]}件, 更新 #{@count[:update]}件, エラー #{@count[:error]}件"
@@ -35,7 +35,7 @@ class Cms::Admin::Tool::ImportController < Cms::Controller::Admin::Base
     ## pieces
     total = import['pieces'].size
     @results << "" << "# ピースのインポート（全#{total}件）"
-    @count    = {:all => total, :create => 0, :update => 0, :error => 0}
+    @count    = { all: total, create: 0, update: 0, error: 0 }
     @errors   = []
     import['pieces'].each {|json| import_pieces(json) }
     @results << "作成 #{@count[:create]}件, 更新 #{@count[:update]}件, エラー #{@count[:error]}件"

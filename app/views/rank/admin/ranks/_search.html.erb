@@ -1,11 +1,11 @@
-<%= form_tag '', :method => 'get', :class => 'search' do -%>
+<%= form_tag url_for(action: :index), method: :get, class: 'search' do -%>
 <table>
   <tr>
     <td>期間指定</td>
-    <td><%= select_tag('term', options_for_select(@terms, params[:term])) %></td>
-    <td><%= select_tag('gp_category', options_for_select(@gp_categories, @gp_category)) %></td>
-    <td><%= select_tag('category_type', options_for_select(@category_types, @category_type)) %></td>
-    <td><%= select_tag('category', options_for_select(@categories, @category)) %></td>
+    <td><%= select_tag :term, options_for_select(@terms, params[:term]) %></td>
+    <td><%= select_tag :gp_category, options_for_select(@gp_categories, @gp_category) %></td>
+    <td><%= select_tag :category_type, options_for_select(@category_types, @category_type) %></td>
+    <td><%= select_tag :category, options_for_select(@categories, @category) %></td>
     <td><%= submit_tag '適用' %></td>
   </tr>
 </table>

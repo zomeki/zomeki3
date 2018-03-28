@@ -522,5 +522,5 @@ load_demo "gp_article"
 src_path = Rails.root.join("db/seeds/demo/css/_themes")
 dst_path = Rails.root.join("sites/#{format('%04d', site_id)}/public/_themes")
 if ::File.exists?(src_path)
-  ::FileUtils.cp_r(Dir.glob(%Q(#{src_path}/*)), dst_path)
+  FileUtils.cp_r(Dir.glob(%Q(#{src_path}/*)), dst_path)
 end

@@ -20,7 +20,7 @@ class Tool::SiteContent < Tool::Model::Base
       next if name =~ /^\.+/
       path = ::File.join(@full_path, name)
       next if ::FileTest.file?(path)
-      items << self.class.new(@site_url, path, :root => @root, :base_uri => @base_uri)
+      items << self.class.new(@site_url, path, root: @root, base_uri: @base_uri)
     end
     items
   end

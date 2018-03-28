@@ -46,9 +46,9 @@ class Survey::Admin::FormAnswersController < Cms::Controller::Admin::Base
 
   def destroy
     if @item.form.deletable? && @item.destroy
-      redirect_to url_for(:action => :index), notice: "削除処理が完了しました。（#{I18n.l Time.now}）"
+      redirect_to url_for(action: :index), notice: "削除処理が完了しました。（#{I18n.l Time.now}）"
     else
-      redirect_to url_for(:action => :show), alert: '削除処理に失敗しました。'
+      redirect_to url_for(action: :show), alert: '削除処理に失敗しました。'
     end
   end
 

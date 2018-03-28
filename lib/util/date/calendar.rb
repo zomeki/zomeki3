@@ -6,13 +6,13 @@ class Util::Date::Calendar
   cattr_reader  :wday_specs
   
   @@wday_specs = [
-    {:class => 'sun', :label => "日"},
-    {:class => 'mon', :label => "月"},
-    {:class => 'tue', :label => "火"},
-    {:class => 'wed', :label => "水"},
-    {:class => 'thu', :label => "木"},
-    {:class => 'fri', :label => "金"},
-    {:class => 'sat', :label => "土"},
+    { class: 'sun', label: "日" },
+    { class: 'mon', label: "月" },
+    { class: 'tue', label: "火" },
+    { class: 'wed', label: "水" },
+    { class: 'thu', label: "木" },
+    { class: 'fri', label: "金" },
+    { class: 'sat', label: "土" },
   ]
   
   def initialize(year = nil, month = nil)
@@ -47,15 +47,15 @@ class Util::Date::Calendar
     
     sw.times do |i|
       d = pe - (sw - i) + 1
-      day = {:year => py, :month => pm, :day => d, :class => 'prevMonth day'}
+      day = { year: py, month: pm, day: d, class: 'prevMonth day' }
       @days << day
     end
     ed.times do |i|
-      day = {:year => cy, :month => cm, :day => (i + 1), :class => 'day'}
+      day = { year: cy, month: cm, day: (i + 1), class: 'day' }
       @days << day
     end
     (6 - ew).times do |i|
-      day = {:year => ny, :month => nm, :day => (i + 1), :class => 'nextMonth day'}
+      day = { year: ny, month: nm, day: (i + 1), class: 'nextMonth day' }
       @days << day
     end
     

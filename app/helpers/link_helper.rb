@@ -26,28 +26,28 @@ module LinkHelper
     elsif link.class == Array
       return link_to(link[0], link[1], args)
     else
-      return link_to(type, url_for(:action => type), args)
+      return link_to(type, url_for(action: type), args)
     end
   end
 
   def link_to(*args)
     labels = {
-      :up        => '上へ',
-      :index     => '一覧',
-      :list      => '一覧',
-      :show      => '詳細',
-      :new       => '新規作成',
-      :edit      => '編集',
-      :duplicate => '複製',
-      :delete    => '削除',
-      :destroy   => '削除',
-      :set       => '設定',
-      :open      => '公開',
-      :close     => '非公開',
-      :enabale   => '有効化',
-      :disable   => '無効化',
-      :recognize => '承認',
-      :publish   => '公開'
+      up:        '上へ',
+      index:     '一覧',
+      list:      '一覧',
+      show:      '詳細',
+      new:       '新規作成',
+      edit:      '編集',
+      duplicate: '複製',
+      delete:    '削除',
+      destroy:   '削除',
+      set:       '設定',
+      open:      '公開',
+      close:     '非公開',
+      enabale:   '有効化',
+      disable:   '無効化',
+      recognize: '承認',
+      publish:   '公開'
     }
     args[0] = labels[args[0]] if labels.key?(args[0])
 

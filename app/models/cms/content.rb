@@ -57,7 +57,7 @@ class Cms::Content < ApplicationRecord
   end
 
   def new_setting(name = nil)
-    Cms::ContentSetting.new({:content_id => id, :name => name.to_s})
+    Cms::ContentSetting.new(content_id: id, name: name.to_s)
   end
 
   def setting_value(name, default = nil)

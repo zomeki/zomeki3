@@ -34,7 +34,6 @@ class Survey::Admin::AggregationsController < Cms::Controller::Admin::Base
 
       items.each do |item|
         csv << [item.question.title]
-        csv << [self.class.helpers.strip_tags(item.question.description).strip]
         item.sums.each do |option, count|
           csv << [option, count]
         end

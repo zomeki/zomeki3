@@ -22,27 +22,27 @@ module FormHelper
       %Q(CKEDITOR.config.#{k} = #{v.kind_of?(String) ? "'#{v}'" : v};)
     })
 
-    [ '<script type="text/javascript" src="/_common/js/ckeditor/ckeditor.js"></script>',
-      javascript_tag(settings.join) ].join.html_safe
+    ['<script type="text/javascript" src="/_common/js/ckeditor/ckeditor.js"></script>',
+     javascript_tag(settings.join)].join.html_safe
   end
 
   def submission_label(name)
     {
-      :add       => '追加する',
-      :create    => '作成する',
-      :register  => '登録する',
-      :edit      => '編集する',
-      :update    => '更新する',
-      :change    => '変更する',
-      :delete    => '削除する',
-      :make      => '作成する'
+      add:      '追加する',
+      create:   '作成する',
+      register: '登録する',
+      edit:     '編集する',
+      update:   '更新する',
+      change:   '変更する',
+      delete:   '削除する',
+      make:     '作成する'
     }[name]
   end
 
   def submit(*args)
     make_tag = Proc.new do |_name, _label|
       _label ||= submission_label(_name) || _name.to_s.humanize
-      submit_tag _label, :name => "commit_#{_name}"
+      submit_tag _label, name: "commit_#{_name}"
     end
     
     h = '<div class="submitters">'

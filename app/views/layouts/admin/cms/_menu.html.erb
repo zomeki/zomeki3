@@ -6,7 +6,7 @@ def menu_link(auth, key, label, uri, current)
   cls = [key.to_s]
   cls << 'current' if current == key
   content_tag 'li' do
-    link_to(label, uri, :class => cls.join(' '))
+    link_to(label, uri, class: cls.join(' '))
   end
 end
 %>

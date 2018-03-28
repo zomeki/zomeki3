@@ -66,8 +66,8 @@ class Cms::Admin::Piece::BaseController < Cms::Controller::Admin::Base
     else
       flash[:notice] = "複製処理に失敗しました。"
       respond_to do |format|
-        format.html { redirect_to url_for(:action => :show) }
-        format.xml  { render :xml => item.errors, :status => :unprocessable_entity }
+        format.html { redirect_to url_for(action: :show) }
+        format.xml  { render xml: item.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -82,8 +82,8 @@ class Cms::Admin::Piece::BaseController < Cms::Controller::Admin::Base
     else
       flash[:notice] = "複製処理に失敗しました。"
       respond_to do |format|
-        format.html { redirect_to url_for(:action => :show) }
-        format.xml  { render :xml => item.errors, :status => :unprocessable_entity }
+        format.html { redirect_to url_for(action: :show) }
+        format.xml  { render xml: item.errors, status: :unprocessable_entity }
       end
     end
   end

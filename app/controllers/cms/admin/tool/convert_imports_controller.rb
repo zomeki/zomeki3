@@ -19,7 +19,7 @@ class Cms::Admin::Tool::ConvertImportsController < Cms::Controller::Admin::Base
     @item = ::Tool::ConvertImport.new(import_params)
     if @item.creatable? && @item.save
       @item.import
-      redirect_to url_for(:action => :index), notice: "書き込み処理が終了しました。"
+      redirect_to url_for(action: :index), notice: "書き込み処理が終了しました。"
     else
       render :index
     end
@@ -44,7 +44,7 @@ class Cms::Admin::Tool::ConvertImportsController < Cms::Controller::Admin::Base
     else
       filenames = [['', '']] + filenames
     end
-    render text: ApplicationController.helpers.options_for_select(filenames), layout: false
+    render html: ApplicationController.helpers.options_for_select(filenames), layout: false
   end
 
   private

@@ -73,31 +73,31 @@ class Survey::Admin::FormsController < Cms::Controller::Admin::Base
         @item.send_approved_notification_mail
       end
     end
-    redirect_to url_for(:action => :show), notice: '承認処理が完了しました。'
+    redirect_to url_for(action: :show), notice: '承認処理が完了しました。'
   end
 
   def publish
     @item.publish if @item.publishable?
-    redirect_to url_for(:action => :show), notice: '公開処理が完了しました。'
+    redirect_to url_for(action: :show), notice: '公開処理が完了しました。'
   end
 
   def close
     @item.close if @item.closable?
-    redirect_to url_for(:action => :show), notice: '公開終了処理が完了しました。'
+    redirect_to url_for(action: :show), notice: '公開終了処理が完了しました。'
   end
 
   def duplicate(item)
     if dupe_item = item.duplicate
       flash[:notice] = '複製処理が完了しました。'
       respond_to do |format|
-        format.html { redirect_to url_for(:action => :index) }
+        format.html { redirect_to url_for(action: :index) }
         format.xml  { head :ok }
       end
     else
       flash[:notice] = "複製処理に失敗しました。"
       respond_to do |format|
-        format.html { redirect_to url_for(:action => :show) }
-        format.xml  { render :xml => item.errors, :status => :unprocessable_entity }
+        format.html { redirect_to url_for(action: :show) }
+        format.xml  { render xml: item.errors, status: :unprocessable_entity }
       end
     end
   end

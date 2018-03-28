@@ -47,7 +47,7 @@ class Cms::Node < ApplicationRecord
   after_close_files Cms::FileTransferCallbacks.new([:public_path, :public_smart_phone_path])
 
   scope :public_state, -> { where(state: 'public') }
-  scope :sitemap_order, -> { order('sitemap_sort_no IS NULL, sitemap_sort_no, name') }
+  scope :sitemap_order, -> { order(:sitemap_sort_no, :name, :id) }
   scope :rebuildable_models, -> { where(model: ['Cms::Page', 'Cms::Sitemap']) }
   scope :dynamic_models, -> {
     models = Cms::Lib::Modules.modules.flat_map(&:directories).select { |d| d.options[:dynamic] }.map(&:model)
@@ -152,68 +152,12 @@ class Cms::Node < ApplicationRecord
     Cms::Layout.where(id: layout_id).first
   end
 
-  def all_nodes_with_level
-    search = lambda do |current, level|
-      _nodes = {:level => level, :item => current, :children => nil}
-      return _nodes if level >= 10
-      return _nodes if current.children.size == 0
-
-      _tmp = []
-      current.children.each do |child|
-        next unless _c = search.call(child, level + 1)
-        _tmp << _c
-      end
-      _nodes[:children] = _tmp
-      return _nodes
-    end
-
-    search.call(self, 0)
-  end
-
-  def all_nodes_collection(options = {})
-    collection = lambda do |current, level|
-      title = ''
-      if level > 0
-        (level - 0).times {|i| title += options[:indent] || '  '}
-        title += options[:child] || ' ' if level > 0
-      end
-      title += current[:item].title
-      list = [[title, current[:item].id]]
-      return list unless current[:children]
-
-      current[:children].each do |child|
-        list += collection.call(child, level + 1)
-      end
-      return list
-    end
-
-    collection.call(all_nodes_with_level, 0)
-  end
-
   def css_id
     ''
   end
 
   def css_class
     return 'content content' + self.controller.singularize.camelize
-  end
-
-  def candidate_parents
-    nodes = Core.site.root_node.descendants do |child|
-      rel = child.where(directory: 1)
-      rel = rel.where.not(id: id) if new_record?
-      rel
-    end
-    nodes.map{|n| [n.tree_title, n.id]}
-  end
-
-  def candidate_routes
-    nodes = Core.site.root_node.descendants do |child|
-      rel = child.where(directory: 1)
-      rel = rel.where.not(id: id) if new_record?
-      rel
-    end
-    nodes.map{|n| [n.tree_title, n.id]}
   end
 
   def top_page?
@@ -265,6 +209,14 @@ class Cms::Node < ApplicationRecord
     }
   end
 
+  class << self
+    def parent_options(site, origin = nil)
+      nodes = site.nodes.where(directory: 1).sitemap_order
+      nodes = nodes.where.not(id: origin) if origin
+      nodes.to_tree.flat_map(&:descendants).map { |node| [node.tree_title, node.id] }
+    end
+  end
+
   class Directory < Cms::Node
     def close_page(options = {})
       return true
@@ -290,10 +242,7 @@ class Cms::Node < ApplicationRecord
     after_save     Cms::SearchIndexerCallbacks.new, if: :changed?
     before_destroy Cms::SearchIndexerCallbacks.new
 
-#    validate :validate_inquiry,
-#      :if => %Q(state == 'public')
-    validate :validate_recognizers,
-      :if => %Q(state == "recognize")
+    validate :validate_recognizers, if: -> { state == 'recognize' }
 
     def states
       s = [['下書き保存','draft'],['承認待ち','recognize']]
@@ -320,7 +269,7 @@ class Cms::Node < ApplicationRecord
 #      if inquiry != nil && inquiry.group_id == Core.user.group_id
 #        item.in_inquiry = inquiry.attributes
 #      else
-#        item.in_inquiry = {:group_id => Core.user.group_id}
+#        item.in_inquiry = { group_id: Core.user.group_id }
 #      end
 
       inquiries.each_with_index do |inquiry, i|
@@ -330,7 +279,7 @@ class Cms::Node < ApplicationRecord
         item.inquiries.build(attrs)
       end
 
-      return false unless item.save(:validate => false)
+      return false unless item.save(validate: false)
 
       Sys::ObjectRelation.create(source: item, related: self, relation_type: 'replace') if rel_type == :replace
 

@@ -7,9 +7,9 @@
 
 <div class="actionMenu">
 <%= link_to :up, main_app.cms_nodes_path(@parent.parent_id) if params[:action] == "index" && @parent.parent_id > 0 %>
-<%= action_menu :new     if Core.user.has_priv?(:create, :item => @parent.concept) %>
+<%= action_menu :new     if Core.user.has_priv?(:create, item: @parent.concept) %>
 <%= action_menu :index, main_app.cms_nodes_path %>
 <%= action_menu :show %>
-<%= action_menu :edit    if safe{Core.user.has_priv?(:update, :item => @item.concept)} %>
-<%= action_menu :destroy if safe{Core.user.has_priv?(:delete, :item => @parent.concept)} %>
+<%= action_menu :edit    if @item && Core.user.has_priv?(:update, item: @item.concept) %>
+<%= action_menu :destroy if @parent && Core.user.has_priv?(:delete, item: @parent.concept) %>
 </div>

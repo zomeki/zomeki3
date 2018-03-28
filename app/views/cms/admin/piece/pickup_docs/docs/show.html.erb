@@ -1,11 +1,11 @@
 <table class="show">
   <tr>
     <th><%= @item.class.human_attribute_name :content_id %></th>
-    <td><%= safe{@item.doc.content.name} %></td>
+    <td><%= @item.doc&.content&.name %></td>
   </tr>
   <tr>
     <th><%= @item.class.human_attribute_name :doc_name %></th>
-    <td><%= safe{@item.doc.title} %></td>
+    <td><%= @item.doc&.title %></td>
   </tr>
   <tr>
     <th><%= @item.class.human_attribute_name :sort_no %></th>

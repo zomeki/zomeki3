@@ -12,7 +12,7 @@ module GpArticle::Controller::Feed
         when 'rss'; to_rss(docs)
         when 'atom'; to_atom(docs)
         end
-      return render :xml => unescape(data), :layout => false
+      return render xml: unescape(data), layout: false
     end
     return false
   end
@@ -32,7 +32,7 @@ module GpArticle::Controller::Feed
   end
 
   def to_rss(docs)
-    xml = Builder::XmlMarkup.new(:indent => 2)
+    xml = Builder::XmlMarkup.new(indent: 2)
     xml.instruct!
     xml.rss('version' => '2.0') do
 
@@ -54,14 +54,14 @@ module GpArticle::Controller::Feed
             image_file = doc.image_files.detect{|f| f.name == doc.list_image } || doc.image_files.first if doc.list_image.present?
             if image_file
               image_uri = "#{doc.public_full_uri(without_filename: true)}file_contents/#{image_file.name}"
-              xml.enclosure :url => image_uri, :type => image_file.mime_type, :length => image_file.size
+              xml.enclosure url: image_uri, type: image_file.mime_type, length: image_file.size
             else
               unless (img_tags = Nokogiri::HTML.parse(doc.body).css('img[src^="file_contents/"]')).empty?
                 filename = File.basename(img_tags.first.attributes['src'].value)
                 image_file = doc.image_files.detect{|f| f.name == filename }
                 if image_file
                   image_uri = "#{doc.public_full_uri(without_filename: true)}file_contents/#{image_file.name}"
-                  xml.enclosure :url => image_uri, :type => image_file.mime_type, :length => image_file.size
+                  xml.enclosure url: image_uri, type: image_file.mime_type, length: image_file.size
                 end
               end
             end
@@ -82,15 +82,15 @@ module GpArticle::Controller::Feed
       eval("entry.#{updated_at}") rescue Time.now
     end
 
-    xml = Builder::XmlMarkup.new(:indent => 2)
-    xml.instruct! :xml, :version => 1.0, :encoding => 'UTF-8'
+    xml = Builder::XmlMarkup.new(indent: 2)
+    xml.instruct! :xml, version: 1.0, encoding: 'UTF-8'
     xml.feed 'xmlns' => 'http://www.w3.org/2005/Atom' do
 
       xml.id      "tag:#{Page.site.domain},#{Page.site.created_at.strftime('%Y')}:#{Page.current_node.public_uri}"
       xml.title   @feed_name
       xml.updated _feed_updated.call(docs, :display_published_at).strftime('%Y-%m-%dT%H:%M:%S%z').sub(/([0-9][0-9])$/, ':\1')
-      xml.link    :rel => 'alternate', :href => @node_uri
-      xml.link    :rel => 'self', :href => @req_uri, :type => 'application/atom+xml', :title => @feed_name
+      xml.link    rel: 'alternate', href: @node_uri
+      xml.link    rel: 'self', href: @req_uri, type: 'application/atom+xml', title: @feed_name
 
       docs.each do |doc|
         next unless doc.display_published_at
@@ -99,19 +99,19 @@ module GpArticle::Controller::Feed
           xml.id      "tag:#{Page.site.domain},#{doc.created_at.strftime('%Y')}:#{doc.public_uri}"
           xml.title   doc.title
           xml.updated doc.display_published_at.strftime('%Y-%m-%dT%H:%M:%S%z').sub(/([0-9][0-9])$/, ':\1') #.rfc822
-          xml.summary(:type => 'html') do |p|
+          xml.summary(type: 'html') do |p|
             p.cdata! strimwidth(doc.body.clone, 500)
           end
-          xml.link    :rel => 'alternate', :href => doc.public_full_uri
+          xml.link    rel: 'alternate', href: doc.public_full_uri
 
           doc.categories.each do |c|
-            xml.category :term => c.name, :scheme => c.public_full_uri,
-              :label => "カテゴリ/#{c.category_type.try(:title)}/#{c.ancestors.map(&:title).join('/')}"
+            xml.category term: c.name, scheme: c.public_full_uri,
+              label: "カテゴリ/#{c.category_type.try(:title)}/#{c.ancestors.map(&:title).join('/')}"
           end
 
           if doc.event_state == 'visible' && doc.event_started_on && node = doc.content.try(:gp_calendar_content_event).try(:public_node)
-            xml.category :term => 'event', :scheme => node.public_full_uri,
-              :label => "イベント/#{doc.event_started_on.strftime('%Y-%m-%dT%H:%M:%S%z').sub(/([0-9][0-9])$/, ':\1')}"
+            xml.category term: 'event', scheme: node.public_full_uri,
+              label: "イベント/#{doc.event_started_on.strftime('%Y-%m-%dT%H:%M:%S%z').sub(/([0-9][0-9])$/, ':\1')}"
           end
 
           doc.inquiries.each do |inquiry|
@@ -127,26 +127,26 @@ module GpArticle::Controller::Feed
 
           if node = doc.content.try(:tag_content_tag).try(:public_node)
             doc.tags.each do |t|
-              xml.link :rel => 'tag', :href => "#{node.public_full_uri}#{CGI::escape(t.word)}", :type => 'text/xhtml'
+              xml.link rel: 'tag', href: "#{node.public_full_uri}#{CGI::escape(t.word)}", type: 'text/xhtml'
             end
           end
 
           doc.public_relate_docs.each do |doc|
-            xml.link :rel => 'related', :href => "#{doc.public_full_uri}", :type => 'text/xhtml'
+            xml.link rel: 'related', href: "#{doc.public_full_uri}", type: 'text/xhtml'
           end
 
           #image
           image_file = doc.image_files.detect{|f| f.name == doc.list_image } || doc.image_files.first if doc.list_image.present?
           if image_file
             image_uri = "#{doc.public_full_uri(without_filename: true)}file_contents/#{image_file.name}"
-            xml.link :rel => 'enclosure', :href => image_uri, :type => image_file.mime_type, :length => image_file.size
+            xml.link rel: 'enclosure', href: image_uri, type: image_file.mime_type, length: image_file.size
           else
             unless (img_tags = Nokogiri::HTML.parse(doc.body).css('img[src^="file_contents/"]')).empty?
               filename = File.basename(img_tags.first.attributes['src'].value)
               image_file = doc.image_files.detect{|f| f.name == filename }
               if image_file
                 image_uri = "#{doc.public_full_uri(without_filename: true)}file_contents/#{image_file.name}"
-                xml.link :rel => 'enclosure', :href => image_uri, :type => image_file.mime_type, :length => image_file.size
+                xml.link rel: 'enclosure', href: image_uri, type: image_file.mime_type, length: image_file.size
               end
             end
           end
