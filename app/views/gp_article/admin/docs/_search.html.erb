@@ -22,6 +22,7 @@ category_ids = params.dig(:criteria, :category_ids) || []
     <th>カテゴリ種別</th>
     <th>カテゴリ<a href="#" id="addCategory" style="margin-left: 10px; <%= 'display: none;' if params[:detail_flag] != '1' %>">追加</a></th>
     <%- end -%>
+    <th>表示件数</th>
     <td rowspan="2" class="submitters">
       <%= submit_tag '検索', data: { disable_with: false } %>
       <%= submit_tag 'リセット', name: 'reset_criteria', data: { disable_with: false } %>
@@ -30,8 +31,8 @@ category_ids = params.dig(:criteria, :category_ids) || []
     </td>
   </tr>
   <tr>
-    <td><%= text_field_tag 'criteria[serial_no]', params.dig(:criteria, :serial_no), class: 'number', maxlength: 10, style: 'width: 100px;' %></td>
-    <td><%= text_field_tag 'criteria[free_word]', params.dig(:criteria, :free_word), style: 'width: 400px;' %></td>
+    <td><%= text_field_tag 'criteria[serial_no]', params.dig(:criteria, :serial_no), class: 'number', maxlength: 10, style: 'width: 80px;' %></td>
+    <td><%= text_field_tag 'criteria[free_word]', params.dig(:criteria, :free_word), style: 'width: 280px;' %></td>
     <%- if category_types.present? -%>
     <td>
       <%-
@@ -46,6 +47,7 @@ category_ids = params.dig(:criteria, :category_ids) || []
             include_blank: true, id: "criteria_category_ids_0" %>
     </td>
     <%- end -%>
+    <td><%= select_tag 'limit', options_for_select([['30件', '30'], ['100件', '100']], params[:limit]) %></td>
   </tr>
 </table>
 
