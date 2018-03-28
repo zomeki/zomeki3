@@ -165,14 +165,12 @@ class GpArticle::Doc < ApplicationRecord
     "#{content.public_path}/_smartphone#{public_uri(without_filename: true)}#{filename_base}.html"
   end
 
-  def organization_group
-    return @organization_group if defined? @organization_group
-    @organization_group =
-      if content.organization_content_group && creator.group
-        content.organization_content_group.groups.detect{|og| og.sys_group_code == creator.group.code}
-      else
-        nil
-      end
+  def filename_for_uri
+    if filename_base == 'index'
+      ''
+    else
+      "#{filename_base}.html"
+    end
   end
 
   def public_uri(without_filename: false, with_closed_preview: false)
@@ -183,7 +181,7 @@ class GpArticle::Doc < ApplicationRecord
         "#{content.public_node.public_uri}#{name}/"
       end
     return '' unless uri
-    without_filename || filename_base == 'index' ? uri : "#{uri}#{filename_base}.html"
+    without_filename ? uri : "#{uri}#{filename_for_uri}"
   end
 
   def public_full_uri(without_filename: false)
@@ -192,7 +190,7 @@ class GpArticle::Doc < ApplicationRecord
         "#{content.public_node.public_full_uri}#{name}/"
       end
     return '' unless uri
-    without_filename || filename_base == 'index' ? uri : "#{uri}#{filename_base}.html"
+    without_filename ? uri : "#{uri}#{filename_for_uri}"
   end
 
   def preview_uri(terminal: nil, without_filename: false, params: {})
@@ -202,7 +200,7 @@ class GpArticle::Doc < ApplicationRecord
 
     flag = { mobile: 'm', smart_phone: 's' }[terminal]
     query = "?#{params.to_query}" if params.present?
-    filename = without_filename || filename_base == 'index' ? '' : "#{filename_base}.html"
+    filename = without_filename ? '' : filename_for_uri
     "#{site.main_admin_uri}_preview/#{format('%04d', site.id)}#{flag}#{path}preview/#{id}/#{filename}#{query}"
   end
 
@@ -212,6 +210,16 @@ class GpArticle::Doc < ApplicationRecord
     else
       %Q(#{content.admin_uri}/#{id}/file_contents/)
     end
+  end
+
+  def organization_group
+    return @organization_group if defined? @organization_group
+    @organization_group =
+      if content.organization_content_group && creator.group
+        content.organization_content_group.groups.detect{|og| og.sys_group_code == creator.group.code}
+      else
+        nil
+      end
   end
 
   def external_link?
@@ -417,7 +425,7 @@ class GpArticle::Doc < ApplicationRecord
 
   def link_to_options(preview: false)
     uri = if preview
-            "#{public_uri(without_filename: true)}/preview/#{id}/"
+            "#{public_uri(without_filename: true)}/preview/#{id}/#{filename_for_uri}"
           else
             public_uri
           end
