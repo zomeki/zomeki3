@@ -15,7 +15,7 @@ $(document).ready(function () {
         wrapper.append(ut);
       }
       if (banners && banners.length > 0) {
-        var u = $('<ul>', { class: 'ad_banner'} );
+        var u = $('<ul>', { class: 'bannerImages'} );
         $(banners).each(function (index, item) {
           var l = $('<li>', { class: 'banner' });
           var a = $('<a>', { href: item['url'], target: item['target'], data: { token: item['token'] } });
