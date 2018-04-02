@@ -64,7 +64,7 @@ module GpArticle::DocHelper
               doc_style.html_safe
             end
 
-      if Core.mode == 'preview' && @doc.state != 'public'
+      if Core.mode == 'preview' && !@doc.state_public?
         content_tag :div, html, class: 'preview_future_public'
       else
         html
