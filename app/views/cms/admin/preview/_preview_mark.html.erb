@@ -12,8 +12,12 @@
     terminals << ['スマホ','s'] if Core.site.use_smart_phone_feature?
     terminals << ['携帯','m'] if Core.site.use_mobile_feature?
     -%>
-    <%- terminals.each do |name, value| -%>
-      <%= radio_button_tag :preview_terminal, value, value == Page.preview_terminal %><%= label_tag "preview_terminal_#{value}", name %>
+    <%- if terminals.size == 1 -%>
+      <%= hidden_field_tag :preview_terminal, Page.preview_terminal %>
+    <%- else -%>
+      <%- terminals.each do |name, value| -%>
+        <%= radio_button_tag :preview_terminal, value, value == Page.preview_terminal %><%= label_tag "preview_terminal_#{value}", name %>
+      <%- end -%>
     <%- end -%>
     <%= submit_tag '設定' %>
   <%- end -%>
