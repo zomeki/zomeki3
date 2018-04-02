@@ -1,5 +1,4 @@
 class Sys::Process < ApplicationRecord
-  self.table_name = "sys_processes"
   include Sys::Model::Base
   include Cms::Model::Rel::Site
 
@@ -29,27 +28,6 @@ class Sys::Process < ApplicationRecord
   RUNNABLE_PROCESSES = ALL_PROCESSES.select { |p| p.last.in?(RUNNABLE_PROCESS_NAMES) }
 
   enum_ish :state, [:running, :closed, :stop]
-
-  scope :search_with_params, ->(params = {}) {
-    rel = all
-    params.each do |n, v|
-      next if v.to_s == ''
-      case n
-      when 's_id'
-        rel.where!(id: v)
-      when 's_user_id'
-        rel.where!(user_id: v)
-      when 's_name'
-        rel.where!(arel_table[:name].matches("%#{v}"))
-      when 'start_date'
-        rel.where!(arel_table[:started_at].gteq(v))
-      when 'close_date'
-        date = Date.strptime(params[:close_date], "%Y-%m-%d") + 1.days rescue nil
-        rel.where!(arel_table[:started_at].lteq(date)) if date
-      end
-    end
-    rel
-  }
 
   def title
     ALL_PROCESSES.detect { |p| name =~ Regexp.new(p.last) }.try!(:first)

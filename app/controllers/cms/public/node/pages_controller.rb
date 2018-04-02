@@ -22,17 +22,4 @@ class Cms::Public::Node::PagesController < Cms::Controller::Public::Base
       @body = @item.mobile_body if !@item.mobile_body.blank?
     end
   end
-
-  protected
-
-  def render_public_variables
-    response.body.scan(/\{\$[a-z]+\}/i).uniq.each do |name|
-      value = name
-      if name == "{$publishedOn}"
-        value = @item.published_at ? @item.published_at.strftime("%Y年%-m月%-d日") : ""
-      end
-      
-      response.body.gsub!("#{name}", value) if name != value
-    end
-  end
 end

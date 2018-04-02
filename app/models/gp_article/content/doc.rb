@@ -16,19 +16,8 @@ class GpArticle::Content::Doc < Cms::Content
   has_one :public_search_docs_node, -> { public_state.where(model: 'GpArticle::SearchDoc').order(:id) },
                                     foreign_key: :content_id, class_name: 'Cms::Node'
 
-  # draft, approvable, approved, public
-  def preview_docs
-    table = docs.arel_table
-    docs.mobile(::Page.mobile?).where(table[:state].not_eq('closed'))
-  end
-
-  # public
-  def public_docs
-    docs.mobile(::Page.mobile?).public_state
-  end
-
-  def public_docs_for_list
-    public_docs.visible_in_list
+  def docs_for_list
+    docs.visible_in_list
   end
 
   def organization_content_group
@@ -36,13 +25,6 @@ class GpArticle::Content::Doc < Cms::Content
     if organization_content_group_setting
       @organization_content_group ||= organization_content_group_setting.organization_content_group
     end
-  end
-
-  def organization_content_related?
-    organization_content = organization_content_group
-    organization_content &&
-      organization_content.article_related? &&
-      organization_content.related_article_content_id == content.id
   end
 
   def gp_category_content_category_type

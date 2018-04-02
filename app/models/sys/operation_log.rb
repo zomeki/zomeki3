@@ -8,29 +8,6 @@ class Sys::OperationLog < ApplicationRecord
 
   belongs_to :user, required: true
 
-  scope :search_with_params, ->(params = {}) {
-    rel = all
-    params.each do |n, v|
-      next if v.to_s == ''
-      case n
-      when 's_id'
-        rel.where!(id: v)
-      when 's_user_id'
-        rel.where!(user_id: v)
-      when 's_action'
-        rel.where!(action: v == 'recognize' ? ['recognize', 'approve'] : v)
-      when 's_keyword'
-        rel = rel.search_with_text(:item_name, :item_model, v)
-      when 'start_date'
-        rel.where!(arel_table[:created_at].gteq(v))
-      when 'close_date'
-        date = Date.strptime(params[:close_date], "%Y-%m-%d") + 1.days rescue nil
-        rel.where!(arel_table[:created_at].lteq(date)) if date
-      end
-    end
-    rel
-  }
-
   def set_item_info(item)
     self.item_model  = item.class.to_s
     self.item_id     = item.id if item.respond_to?(:id)

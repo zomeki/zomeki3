@@ -1,4 +1,5 @@
 class GpCategory::Public::Node::BaseController < Cms::Controller::Public::Base
+  include GpArticle::Controller::Public::Scoping
   include GpArticle::Controller::Feed
 
   def pre_dispatch
@@ -11,7 +12,7 @@ class GpCategory::Public::Node::BaseController < Cms::Controller::Public::Base
 
   private
 
-  def find_public_docs_with_category_id(category_id)
-    GpArticle::Doc.categorized_into(category_id).except(:order).mobile(::Page.mobile?).public_state
+  def find_docs_with_category_id(category_id)
+    GpArticle::Doc.categorized_into(category_id).except(:order)
   end
 end

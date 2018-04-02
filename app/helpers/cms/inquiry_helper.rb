@@ -1,6 +1,6 @@
 module Cms::InquiryHelper
   def inquiry_replace(inquiry, inquiry_style)
-    Formatter.new(inquiry).format(inquiry_style, mobile: Page.mobile?)
+    Formatter.new(inquiry).format(inquiry_style, mobile: request.mobile?)
   end
 
   class Formatter < ActionView::Base

@@ -1,6 +1,6 @@
 module Reception::CourseHelper
   def course_replace(course, doc_style, datetime_style)
-    Formatter.new(course).format(doc_style, datetime_style, mobile: Page.mobile?)
+    Formatter.new(course).format(doc_style, datetime_style, mobile: request.mobile?)
   end
 
   class Formatter < ActionView::Base

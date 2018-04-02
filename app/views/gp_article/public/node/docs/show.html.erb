@@ -4,7 +4,7 @@
 <div class="body">
   <%-
   body = @item.template ? template_body(@item.template, @item.template_values, @item.files) : @item.body.to_s
-  body.gsub(/("|')file_contents\//, '\1'+%Q(#{Core.publish || Core.mode != 'preview' ? @item.public_uri(without_filename: true) : @item.preview_uri(without_filename: true)}file_contents/))
+  body.gsub(/("|')file_contents\//, '\1'+%Q(#{Core.mode == 'preview' ? @item.preview_uri(without_filename: true) :  @item.public_uri(without_filename: true)}file_contents/))
   -%>
   <div class="text-beginning"><%=raw body %></div>
 
@@ -20,7 +20,7 @@
 <%- end -%>
 
 <%- if (node = @item.content.tag_content_tag.try(:public_node)) &&
-       (tags = !Core.publish && Core.mode == 'preview' ? @item.tags_for_preview : @item.tags).present? -%>
+       (tags = Core.mode == 'preview' ? @item.tags_for_preview : @item.tags).present? -%>
 <%= render 'gp_article/public/node/docs/show/tags', tags: tags %>
 <%- end -%>
 

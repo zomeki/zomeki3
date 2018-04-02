@@ -1,4 +1,6 @@
 class Tag::Public::Node::TagsController < Cms::Controller::Public::Base
+  include GpArticle::Controller::Public::Scoping
+
   def pre_dispatch
     @node = Page.current_node
     @content = Tag::Content::Tag.find_by(id: Page.current_node.content.id)
@@ -21,7 +23,7 @@ class Tag::Public::Node::TagsController < Cms::Controller::Public::Base
     Page.current_item = @item
     Page.title = @node.title
 
-    @docs = @item.public_docs
+    @docs = @item.docs
     @docs = GpArticle::DocsPreloader.new(@docs).preload(:public_node_ancestors)
   end
 end

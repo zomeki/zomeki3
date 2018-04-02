@@ -1,5 +1,5 @@
 <%-
-docs = @category.public_docs
+docs = @category.docs
 docs = GpArticle::DocsPreloader.new(docs).preload(:public_node_ancestors)
 categorize_docs = @piece.categorize_docs(docs)
 -%>
@@ -23,7 +23,7 @@ categorize_docs = @piece.categorize_docs(docs)
     <h3><%= link_to child.title, child.public_uri %></h3>
 
     <%-
-    docs = child.public_docs
+    docs = child.docs
     docs = GpArticle::DocsPreloader.new(docs).preload(:public_node_ancestors)
     categorize_docs = @piece.categorize_docs(docs)
     -%>

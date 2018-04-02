@@ -1,4 +1,6 @@
 class GpCategory::Public::Piece::DocsController < Sys::Controller::Public::Base
+  include GpArticle::Controller::Public::Scoping
+
   def pre_dispatch
     @piece = GpCategory::Piece::Doc.find_by(id: Page.current_piece.id)
     render plain: '' unless @piece
@@ -16,12 +18,12 @@ class GpCategory::Public::Piece::DocsController < Sys::Controller::Public::Base
       gp_article_content_docs = Cms::ContentSetting.joins(:content)
                                                    .where(contents[:model].eq('GpArticle::Doc'))
                                                    .where(conditions).map(&:content)
-      piece_doc_ids = find_public_doc_ids_with_content_ids(gp_article_content_docs.map(&:id))
+      piece_doc_ids = find_doc_ids_with_content_ids(gp_article_content_docs.map(&:id))
     else
       piece_doc_ids = unless (gacds = @piece.gp_article_content_docs).empty?
-                        find_public_doc_ids_with_content_ids_and_category_ids(gacds.map(&:id), piece_categories.map(&:id))
+                        find_doc_ids_with_content_ids_and_category_ids(gacds.map(&:id), piece_categories.map(&:id))
                       else
-                        find_public_doc_ids_with_category_ids(piece_categories.map(&:id))
+                        find_doc_ids_with_category_ids(piece_categories.map(&:id))
                       end
     end
 
@@ -35,7 +37,7 @@ class GpCategory::Public::Piece::DocsController < Sys::Controller::Public::Base
     end
 
     if page_category_ids
-      page_doc_ids = find_public_doc_ids_with_category_ids(page_category_ids)
+      page_doc_ids = find_doc_ids_with_category_ids(page_category_ids)
       doc_ids = piece_doc_ids & page_doc_ids
     else
       doc_ids = piece_doc_ids
@@ -58,25 +60,22 @@ class GpCategory::Public::Piece::DocsController < Sys::Controller::Public::Base
             end
 
     @docs = GpArticle::DocsPreloader.new(@docs).preload(:public_node_ancestors)
-
-    render :index_mobile if Page.mobile?
   end
 
   private
 
-  def find_public_doc_ids_with_content_ids(content_ids)
-    GpArticle::Doc.mobile(::Page.mobile?).public_state.where(content_id: content_ids).pluck(:id)
+  def find_doc_ids_with_content_ids(content_ids)
+    GpArticle::Doc.where(content_id: content_ids).pluck(:id)
   end
 
-  def find_public_doc_ids_with_content_ids_and_category_ids(content_ids, category_ids)
+  def find_doc_ids_with_content_ids_and_category_ids(content_ids, category_ids)
     categorizations = GpCategory::Categorization.arel_table
-    GpArticle::Doc.mobile(::Page.mobile?).public_state.where(content_id: content_ids)
+    GpArticle::Doc.where(content_id: content_ids)
                   .joins(:categorizations).where(categorizations[:category_id].in(category_ids)).pluck(:id)
   end
 
-  def find_public_doc_ids_with_category_ids(category_ids)
+  def find_doc_ids_with_category_ids(category_ids)
     categorizations = GpCategory::Categorization.arel_table
-    GpArticle::Doc.mobile(::Page.mobile?).public_state
-                  .joins(:categorizations).where(categorizations[:category_id].in(category_ids)).pluck(:id)
+    GpArticle::Doc.joins(:categorizations).where(categorizations[:category_id].in(category_ids)).pluck(:id)
   end
 end

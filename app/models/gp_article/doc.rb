@@ -91,7 +91,9 @@ class GpArticle::Doc < ApplicationRecord
   before_save :set_name
   before_save :set_serial_no
   before_save :set_published_at
-  before_save :set_display_attributes
+  before_save :set_display_published_at
+
+  after_save :set_display_updated_at
 
   after_save     GpArticle::Publisher::DocCallbacks.new, if: :changed?
   before_destroy GpArticle::Publisher::DocCallbacks.new
@@ -116,8 +118,8 @@ class GpArticle::Doc < ApplicationRecord
                                              attribute: -> { mobile_body.present? ? :mobile_body : :body } },
                               if: -> { site.use_mobile_feature? }
 
-  validate :name_validity, if: -> { name.present? }
-  validate :event_dates_range
+  validate :validate_name, if: -> { name.present? }
+  validate :validate_event_dates_range
   validate :validate_accessibility_check, if: -> { !state_draft? && errors.blank? }
   validate :validate_broken_link_existence, if: -> { !state_draft? && errors.blank? }
 
@@ -163,38 +165,32 @@ class GpArticle::Doc < ApplicationRecord
     "#{content.public_path}/_smartphone#{public_uri(without_filename: true)}#{filename_base}.html"
   end
 
-  def organization_group
-    return @organization_group if defined? @organization_group
-    @organization_group =
-      if content.organization_content_group && creator.group
-        content.organization_content_group.groups.detect{|og| og.sys_group_code == creator.group.code}
-      else
-        nil
-      end
+  def filename_for_uri
+    if filename_base == 'index'
+      ''
+    else
+      "#{filename_base}.html"
+    end
   end
 
   def public_uri(without_filename: false, with_closed_preview: false)
     uri =
-      if content.organization_content_related? && organization_group
-        "#{organization_group.public_uri}docs/#{name}/"
-      elsif with_closed_preview && content.main_node && content.main_node.public_uri.present?
+      if with_closed_preview && content.main_node && content.main_node.public_uri.present?
         "#{content.main_node.public_uri}#{name}/"
       elsif !with_closed_preview && content.public_node
         "#{content.public_node.public_uri}#{name}/"
       end
     return '' unless uri
-    without_filename || filename_base == 'index' ? uri : "#{uri}#{filename_base}.html"
+    without_filename ? uri : "#{uri}#{filename_for_uri}"
   end
 
   def public_full_uri(without_filename: false)
     uri =
-      if content.organization_content_related? && organization_group
-        "#{organization_group.public_full_uri}docs/#{name}/"
-      elsif content.public_node
+      if content.public_node
         "#{content.public_node.public_full_uri}#{name}/"
       end
     return '' unless uri
-    without_filename || filename_base == 'index' ? uri : "#{uri}#{filename_base}.html"
+    without_filename ? uri : "#{uri}#{filename_for_uri}"
   end
 
   def preview_uri(terminal: nil, without_filename: false, params: {})
@@ -204,7 +200,7 @@ class GpArticle::Doc < ApplicationRecord
 
     flag = { mobile: 'm', smart_phone: 's' }[terminal]
     query = "?#{params.to_query}" if params.present?
-    filename = without_filename || filename_base == 'index' ? '' : "#{filename_base}.html"
+    filename = without_filename ? '' : filename_for_uri
     "#{site.main_admin_uri}_preview/#{format('%04d', site.id)}#{flag}#{path}preview/#{id}/#{filename}#{query}"
   end
 
@@ -214,6 +210,16 @@ class GpArticle::Doc < ApplicationRecord
     else
       %Q(#{content.admin_uri}/#{id}/file_contents/)
     end
+  end
+
+  def organization_group
+    return @organization_group if defined? @organization_group
+    @organization_group =
+      if content.organization_content_group && creator.group
+        content.organization_content_group.groups.detect{|og| og.sys_group_code == creator.group.code}
+      else
+        nil
+      end
   end
 
   def external_link?
@@ -417,34 +423,60 @@ class GpArticle::Doc < ApplicationRecord
     content.lang_options.rassoc(lang).try(:first)
   end
 
-  def link_to_options
-    if target.present?
-      if href.present?
-        if target == 'attached_file'
-          if (file = files.find_by(name: href))
-            ["#{public_uri}file_contents/#{file.name}", target: '_blank']
+  def link_to_options(preview: false)
+    uri = if preview
+            "#{public_uri(without_filename: true)}/preview/#{id}/#{filename_for_uri}"
           else
-            nil
+            public_uri
           end
-        else
-          [href, target: target]
-        end
+    if target.present? && href.present?
+      if target == 'attached_file' && (file = files.find_by(name: href))
+        ["#{uri}file_contents/#{file.name}", target: '_blank']
       else
-        nil
+        [href, target: target]
       end
     else
-      [public_uri]
+      [uri]
     end
   end
 
   private
 
-  def name_validity
+  def validate_name
     errors.add(:name, :invalid) if name !~ /^[\-\w]*$/
 
     doc = self.class.where(content_id: content_id, name: name)
     doc = doc.where.not(serial_no: serial_no) if serial_no
     errors.add(:name, :taken) if doc.exists?
+  end
+
+  def validate_event_dates_range
+    return if self.event_started_on.blank? && self.event_ended_on.blank?
+    self.event_started_on = self.event_ended_on if self.event_started_on.blank?
+    self.event_ended_on = self.event_started_on if self.event_ended_on.blank?
+    errors.add(:event_ended_on, "が#{self.class.human_attribute_name :event_started_on}を過ぎています。") if self.event_ended_on < self.event_started_on
+  end
+
+  def validate_broken_link_existence
+    return unless content.site.link_check_enabled?
+    return if in_ignore_link_check == '1'
+
+    results = check_links
+    if results.any? {|r| !r[:result] }
+      self.link_check_results = results
+      errors.add(:base, 'リンクチェック結果を確認してください。')
+    end
+  end
+
+  def validate_accessibility_check
+    return unless content.site.accessibility_check_enabled?
+
+    modify_accessibility if in_modify_accessibility_check == '1'
+    results = check_accessibility
+    if (results.present? && in_ignore_accessibility_check != '1') || errors.present?
+      self.accessibility_check_results = results
+      errors.add(:base, 'アクセシビリティチェック結果を確認してください。')
+    end
   end
 
   def set_name
@@ -478,52 +510,21 @@ class GpArticle::Doc < ApplicationRecord
     end
   end
 
-  def set_display_attributes
-    self.display_published_at = published_at if display_published_at.nil?
-    self.display_updated_at = updated_at if display_updated_at.nil? || !keep_display_updated_at
+  def set_display_published_at
+    if (publish_task = tasks.detect(&:publish_task?)) && state == 'approvable'
+      self.display_published_at ||= publish_task.process_at
+    end
+    self.display_published_at ||= published_at
+  end
+
+  def set_display_updated_at
+    update_columns(display_updated_at: updated_at) if display_updated_at.nil? || !keep_display_updated_at
   end
 
   def set_serial_no
     return if self.serial_no.present?
     seq = Util::Sequencer.next_id('gp_article_doc_serial_no', version: self.content_id, site_id: content.site_id)
     self.serial_no = seq
-  end
-
-  def validate_platform_dependent_characters
-    [:title, :body, :mobile_title, :mobile_body].each do |attr|
-      if chars = Util::String.search_platform_dependent_characters(send(attr))
-        errors.add attr, :platform_dependent_characters, chars: chars
-      end
-    end
-  end
-
-  def event_dates_range
-    return if self.event_started_on.blank? && self.event_ended_on.blank?
-    self.event_started_on = self.event_ended_on if self.event_started_on.blank?
-    self.event_ended_on = self.event_started_on if self.event_ended_on.blank?
-    errors.add(:event_ended_on, "が#{self.class.human_attribute_name :event_started_on}を過ぎています。") if self.event_ended_on < self.event_started_on
-  end
-
-  def validate_broken_link_existence
-    return unless content.site.link_check_enabled?
-    return if in_ignore_link_check == '1'
-
-    results = check_links
-    if results.any? {|r| !r[:result] }
-      self.link_check_results = results
-      errors.add(:base, 'リンクチェック結果を確認してください。')
-    end
-  end
-
-  def validate_accessibility_check
-    return unless content.site.accessibility_check_enabled?
-
-    modify_accessibility if in_modify_accessibility_check == '1'
-    results = check_accessibility
-    if (results.present? && in_ignore_accessibility_check != '1') || errors.present?
-      self.accessibility_check_results = results
-      errors.add(:base, 'アクセシビリティチェック結果を確認してください。')
-    end
   end
 
   def replace_public
