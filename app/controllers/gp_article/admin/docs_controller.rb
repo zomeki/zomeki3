@@ -11,7 +11,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   before_action :index_options, only: [:index], if: -> { params[:options] }
   before_action :user_options, only: [:index], if: -> { params[:user_options] }
 
-  keep_params :target, :target_state, :target_public
+  keep_params :target, :target_state, :target_public, :sort_key, :sort_order
 
   def pre_dispatch
     @content = GpArticle::Content::Doc.find(params[:content])
@@ -297,6 +297,9 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
       criteria[:target] = params[:target]
       criteria[:target_state] = params[:target_state]
     end
+
+    criteria[:sort_key] = params[:sort_key]
+    criteria[:sort_order] = params[:sort_order]
 
     criteria
   end
