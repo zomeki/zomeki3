@@ -21,9 +21,10 @@ class Cms::Admin::NodesController < Cms::Controller::Admin::Base
   end
 
   def search
-    @items = Cms::Node.where(site_id: Core.site.id).search_with_params(params)
-      .order('parent_id, sitemap_sort_no IS NULL, sitemap_sort_no, name')
-      .paginate(page: params[:page], per_page: params[:limit])
+    @items = Cms::NodesFinder.new(Cms::Node.where(site_id: Core.site.id))
+                             .search(params)
+                             .order('parent_id, sitemap_sort_no IS NULL, sitemap_sort_no, name')
+                             .paginate(page: params[:page], per_page: params[:limit])
 
     @skip_navi = true
     render action: :search
