@@ -26,7 +26,7 @@ class Sys::Admin::Tests::MailController < Cms::Controller::Admin::Base
 
       if @errors.size == 0
         begin
-          send_mail(@item[:from], @item[:to], @item[:subject], @item[:body])
+          CommonMailer.plain(from: @item[:from], to: @item[:to], subject: @item[:subject], body: @item[:body]).deliver_now
         rescue => e
           @errors << "送信に失敗しました。"
           @errors << e.to_s
