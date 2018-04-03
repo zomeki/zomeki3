@@ -1,7 +1,7 @@
 <div class="surveyForm">
   <% if @form_answer.form.description.present? %><div class="body"><%=raw @form_answer.form.description %></div><% end %>
 
-  <%= form_for @form_answer, url: "#{@node.public_uri}#{@form_answer.form.name}/confirm_answers", html: { multipart: true } do |f| -%>
+  <%= form_for @form_answer, url: "#{@form.public_uri}confirm_answers", html: { multipart: true } do |f| -%>
     <%= f.error_messages %>
 
     <div class="questions">
