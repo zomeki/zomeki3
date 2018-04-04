@@ -10,8 +10,8 @@ module Cms::OgpHelper
 
       case key
       when 'image'
-        if (file = item.image_files.detect{|f| f.name == value })
-          tag :meta, property: 'og:image', content: "#{item.content.public_node.public_full_uri}#{item.name}/file_contents/#{url_encode file.name}"
+        if (file = item.image_files.detect { |f| f.name == value })
+          tag :meta, property: 'og:image', content: "#{item.public_full_uri}file_contents/#{url_encode file.name}"
         end
       else
         tag :meta, property: "og:#{key}", content: value.to_s.gsub("\n", ' ')

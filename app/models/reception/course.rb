@@ -129,14 +129,4 @@ class Reception::Course < ApplicationRecord
   def set_name
     update_column(:name, id) if name.blank?
   end
-
-  concerning :File do
-    def replace_file_path_for_admin(text)
-      text.gsub(%r{("|')file_contents/(.+?)("|')}, "\\1#{admin_uri}/file_contents/\\2\\3") if text.present?
-    end
-
-    def replace_file_path_for_public(text)
-      text.gsub(%r{("|')file_contents/(.+?)("|')}, "\\1#{public_uri}file_contents/\\2\\3") if text.present?
-    end
-  end
 end

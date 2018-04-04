@@ -204,11 +204,11 @@ class GpArticle::Doc < ApplicationRecord
     "#{site.main_admin_uri}_preview/#{format('%04d', site.id)}#{flag}#{path}preview/#{id}/#{filename}#{query}"
   end
 
-  def file_content_uri
+  def file_base_uri
     if state_public?
-      %Q(#{public_uri}file_contents/)
+      public_uri
     else
-      %Q(#{content.admin_uri}/#{id}/file_contents/)
+      admin_uri + '/'
     end
   end
 

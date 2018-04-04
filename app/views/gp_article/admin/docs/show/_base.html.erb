@@ -53,12 +53,12 @@
 </table>
 
 <%- if @item.template -%>
-<%= render 'gp_template/admin/shared/show', template: @item.template, template_values: @item.template_values, file_uri: @item.file_content_uri %>
+<%= render 'gp_template/admin/shared/show', template: @item.template, template_values: @item.template_values, file_uri: @item.file_base_uri %>
 <%- else -%>
 <table class="show">
   <tr>
     <td colspan="2" class="cke_editor_wrapper">
-      <%= text_area_tag :body, @item.body.gsub(/("|')file_contents\//, '\1' + %Q(#{@item.file_content_uri})), class: 'ckeditor' %>
+      <%= text_area_tag :body, replace_file_path(@item.body, base: @item.file_base_uri), class: 'ckeditor' %>
     </td>
   </tr>
 </table>
@@ -70,10 +70,10 @@
     <th><%= @item.class.human_attribute_name :body %>に含まれるリンク</th>
     <td>
       <ul>
-        <%- links.each do |link|
-          link_url = link.url.gsub(/\Afile_contents\//, '\1' + %Q(#{@item.file_content_uri}))
-        -%>
-        <li><%= link.body %> (<%= link_to link.url, link_url, target: 'preview' %>)</li>
+        <%- links.each do |link| -%>
+        <li>
+          <%= link.body %> (<%= link_to link.url, replace_file_path_for_link(link.url, base: @item.file_base_uri), target: 'preview' %>)
+        </li>
         <%- end -%>
       </ul>
     </td>

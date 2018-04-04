@@ -6,6 +6,7 @@ module GpArticle::DocHelper
   class Formatter < ActionView::Base
     include ::ApplicationHelper
     include ::DateHelper
+    include ::FileHelper
     include GpArticle::DocLinkHelper
 
     def initialize(doc)
@@ -53,10 +54,6 @@ module GpArticle::DocHelper
     end
 
     private
-
-    def file_path_expanded_body
-      @doc.body.gsub(/("|')file_contents\//){|m| %Q(#{$1}#{@doc.public_uri(without_filename: true)}file_contents/) }
-    end
 
     def doc_image_tag
       if (file = doc_main_image_file(@doc))
@@ -164,14 +161,16 @@ module GpArticle::DocHelper
 
     def replace_body_beginning
       if @doc.body.present?
+        body = replace_file_path(@doc.body, base: @doc.public_uri)
         more = content_tag(:div, link_to(@doc.body_more_link_text, @doc.public_uri), class: 'continues') if @doc.body_more.present?
-        content_tag(:span, "#{file_path_expanded_body}#{more}".html_safe, class: 'body')
+        content_tag(:span, "#{body}#{more}".html_safe, class: 'body')
       end
     end
 
     def replace_body
       if @doc.body.present? || @doc.body_more.present?
-        content_tag(:span, "#{file_path_expanded_body}#{@doc.body_more}".html_safe, class: 'body')
+        body = replace_file_path(@doc.body, base: @doc.public_uri)
+        content_tag(:span, "#{body}#{@doc.body_more}".html_safe, class: 'body')
       end
     end
 

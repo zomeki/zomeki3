@@ -8,7 +8,7 @@
     </tr>
     <tr>
       <td class="cke_editor_wrapper">
-        <%= text_area_tag "template_values[#{item.name}]", template_values[item.name].to_s.gsub(/("|')file_contents\//, '\1' + file_uri), class: 'ckeditor' %>
+        <%= text_area_tag "template_values[#{item.name}]", replace_file_path(template_values[item.name], base: file_uri), class: 'ckeditor' %>
       </td>
     </tr>
   </table>
