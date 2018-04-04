@@ -18,19 +18,6 @@ class BizCalendar::ExceptionHoliday < ApplicationRecord
   nested_scope :in_site, through: :place
 
   scope :public_state, ->{ where(state: 'public') }
-  scope :search_with_params, ->(params = {}) {
-    rel = all
-    params.each do |n, v|
-      next if v.to_s == ''
-      case n
-      when 's_event_date'
-        rel.where!(event_date: v)
-      when 's_title'
-        rel = rel.search_with_text(:title, v)
-      end
-    end
-    rel
-  }
 
   def self.all_with_place_and_criteria(place, criteria)
     holidays = self.arel_table

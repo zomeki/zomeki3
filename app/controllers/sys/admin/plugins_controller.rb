@@ -9,7 +9,7 @@ class Sys::Admin::PluginsController < Cms::Controller::Admin::Base
     return version_options if params[:version_options]
     return title_options if params[:title_options]
 
-    @items = Sys::Plugin.search_with_params(params).order(:name)
+    @items = Sys::Plugin.order(:name)
                         .paginate(page: params[:page], per_page: params[:limit])
     _index @items
   end
