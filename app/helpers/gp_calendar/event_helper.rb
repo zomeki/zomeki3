@@ -10,6 +10,7 @@ module GpCalendar::EventHelper
   class Formatter < ActionView::Base
     include ::ApplicationHelper
     include ::DateHelper
+    include GpArticle::DocLinkHelper
 
     def initialize(event, date)
       @event = event
@@ -69,7 +70,7 @@ module GpCalendar::EventHelper
 
     def event_link_options
       if @event.doc.present?
-        @event.doc.link_to_options(preview: Core.mode == 'preview' && @event.doc.state != 'public')
+        doc_link_options(@event.doc)
       elsif @event.href.present?
         [@event.href, target: @event.target]
       else

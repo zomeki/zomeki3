@@ -423,23 +423,6 @@ class GpArticle::Doc < ApplicationRecord
     content.lang_options.rassoc(lang).try(:first)
   end
 
-  def link_to_options(preview: false)
-    uri = if preview
-            "#{public_uri(without_filename: true)}/preview/#{id}/#{filename_for_uri}"
-          else
-            public_uri
-          end
-    if target.present? && href.present?
-      if target == 'attached_file' && (file = files.find_by(name: href))
-        ["#{uri}file_contents/#{file.name}", target: '_blank']
-      else
-        [href, target: target]
-      end
-    else
-      [uri]
-    end
-  end
-
   private
 
   def validate_name

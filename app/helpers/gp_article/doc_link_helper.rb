@@ -1,4 +1,22 @@
-module GpArticle::DocImageHelper
+module GpArticle::DocLinkHelper
+  def doc_link_options(doc)
+    uri = if Core.mode == 'preview' && !doc.state_public?
+            "#{doc.public_uri(without_filename: true)}preview/#{doc.id}/#{doc.filename_for_uri}"
+          else
+            doc.public_uri
+          end
+
+    if doc.target.present? && doc.href.present?
+      if doc.target == 'attached_file' && (file = doc.files.find_by(name: doc.href))
+        [Addressable::URI.join(uri, "file_contents/#{file.name}").to_s, target: '_blank']
+      else
+        [doc.href, target: doc.target]
+      end
+    else
+      [uri]
+    end
+  end
+
   def doc_main_image_file(doc)
     doc_list_image_file(doc) || doc_template_image_file(doc) || doc_body_first_image_file(doc)
   end

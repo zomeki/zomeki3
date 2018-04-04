@@ -6,14 +6,14 @@ module GpArticle::DocHelper
   class Formatter < ActionView::Base
     include ::ApplicationHelper
     include ::DateHelper
-    include GpArticle::DocImageHelper
+    include GpArticle::DocLinkHelper
 
     def initialize(doc)
       @doc = doc
     end
 
     def format(doc_style, date_style = '', time_style = '', mobile: false)
-      link_options = @doc.link_to_options(preview: Core.mode == 'preview' && @doc.state != 'public')
+      link_options = doc_link_options(@doc)
 
       contents = {
         title_link: -> { replace_title_link(link_options) },
