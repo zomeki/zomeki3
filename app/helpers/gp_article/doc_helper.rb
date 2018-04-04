@@ -26,6 +26,7 @@ module GpArticle::DocHelper
   class Formatter < ActionView::Base
     include ::ApplicationHelper
     include ::DateHelper
+    include GpArticle::DocImageHelper
 
     def initialize(doc)
       @doc = doc
@@ -78,27 +79,8 @@ module GpArticle::DocHelper
     end
 
     def doc_image_tag
-      if @doc.list_image.present? && (image_file = @doc.image_files.detect { |f| f.name == @doc.list_image })
-        image_tag("#{@doc.public_uri(without_filename: true)}file_contents/#{url_encode image_file.name}", alt: image_file.alt)
-      elsif @doc.template &&
-        (attach_item = @doc.template.public_items.where(item_type: 'attachment_file').first) &&
-        (image_file = @doc.image_files.detect { |f| f.name == @doc.template_values[attach_item.name] })
-        image_tag("#{@doc.public_uri(without_filename: true)}file_contents/#{url_encode image_file.name}", alt: image_file.alt)
-      else
-        body =
-          if @doc.template
-            rich_text_names = @doc.template.public_items.where(item_type: 'rich_text').map(&:name)
-            rich_text_names.map { |name| @doc.template_values[name] }.join('')
-          else
-            @doc.body
-          end
-        unless (img_tags = Nokogiri::HTML.parse(body).css('img[src^="file_contents/"]')).empty?
-          filename = File.basename(img_tags.first.attributes['src'].value)
-          alt = img_tags.first.attributes['alt'].value
-          image_tag("#{@doc.public_uri(without_filename: true)}file_contents/#{url_encode filename}", alt: alt)
-        else
-          ''
-        end
+      if (file = doc_main_image_file(@doc))
+        image_tag("#{@doc.public_uri(without_filename: true)}file_contents/#{url_encode file.name}", alt: file.alt)
       end
     end
 

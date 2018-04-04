@@ -50,22 +50,11 @@ module GpArticle::Controller::Feed
             xml.description  strimwidth(doc.body.clone, 500)
             xml.pubDate      doc.display_published_at.rfc822
 
-            #image
-            image_file = doc.image_files.detect{|f| f.name == doc.list_image } || doc.image_files.first if doc.list_image.present?
-            if image_file
-              image_uri = "#{doc.public_full_uri(without_filename: true)}file_contents/#{image_file.name}"
-              xml.enclosure url: image_uri, type: image_file.mime_type, length: image_file.size
-            else
-              unless (img_tags = Nokogiri::HTML.parse(doc.body).css('img[src^="file_contents/"]')).empty?
-                filename = File.basename(img_tags.first.attributes['src'].value)
-                image_file = doc.image_files.detect{|f| f.name == filename }
-                if image_file
-                  image_uri = "#{doc.public_full_uri(without_filename: true)}file_contents/#{image_file.name}"
-                  xml.enclosure url: image_uri, type: image_file.mime_type, length: image_file.size
-                end
-              end
+            if (file = helpers.doc_main_image_file(doc))
+              uri = "#{doc.public_full_uri(without_filename: true)}file_contents/#{file.name}"
+              xml.enclosure url: uri, type: file.mime_type, length: file.size
             end
-                  
+
             doc.categories.each do |category|
               xml.category   category.title
             end
@@ -135,20 +124,9 @@ module GpArticle::Controller::Feed
             xml.link rel: 'related', href: "#{doc.public_full_uri}", type: 'text/xhtml'
           end
 
-          #image
-          image_file = doc.image_files.detect{|f| f.name == doc.list_image } || doc.image_files.first if doc.list_image.present?
-          if image_file
-            image_uri = "#{doc.public_full_uri(without_filename: true)}file_contents/#{image_file.name}"
-            xml.link rel: 'enclosure', href: image_uri, type: image_file.mime_type, length: image_file.size
-          else
-            unless (img_tags = Nokogiri::HTML.parse(doc.body).css('img[src^="file_contents/"]')).empty?
-              filename = File.basename(img_tags.first.attributes['src'].value)
-              image_file = doc.image_files.detect{|f| f.name == filename }
-              if image_file
-                image_uri = "#{doc.public_full_uri(without_filename: true)}file_contents/#{image_file.name}"
-                xml.link rel: 'enclosure', href: image_uri, type: image_file.mime_type, length: image_file.size
-              end
-            end
+          if (file = helpers.doc_main_image_file(doc))
+            uri = "#{doc.public_full_uri(without_filename: true)}file_contents/#{file.name}"
+            xml.link rel: 'enclosure', href: uri, type: file.mime_type, length: file.size
           end
 
         end #entry
