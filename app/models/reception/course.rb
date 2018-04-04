@@ -49,7 +49,7 @@ class Reception::Course < ApplicationRecord
     sql = Reception::Open.select(%Q|MIN("reception_opens"."open_on" + "reception_opens"."start_at")|)
                          .where(%Q|"reception_courses"."id" = "reception_opens"."course_id"|).to_sql
     sort = sort.downcase == 'asc' ? 'ASC' : 'DESC'
-    order("(#{sql}) #{sort}")
+    order(Arel.sql("(#{sql}) #{sort}"))
   }
 
   def applicants

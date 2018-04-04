@@ -25,7 +25,7 @@ class Rank::TotalsFinder < ApplicationFinder
                                         .where(category_id: category_ids).exists)
     end
 
-    ranks = ranks.order('accesses DESC')
+    ranks = ranks.order(Arel.sql('accesses DESC'))
     ranks
   end
 

@@ -54,7 +54,7 @@ class GpCategory::Public::Piece::DocsController < Sys::Controller::Public::Base
             when 'updated_at_asc'
               @docs.order(display_updated_at: :asc, updated_at: :asc)
             when 'random'
-              @docs.order('RANDOM()')
+              @docs.order(Arel.sql('RANDOM()'))
             else
               @docs
             end
