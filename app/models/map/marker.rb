@@ -34,11 +34,6 @@ class Map::Marker < ApplicationRecord
     "#{content.public_node.public_uri}#{name}/"
   end
 
-  def public_file_uri
-    return '' if public_uri.blank? || files.empty?
-    "#{public_uri}file_contents/#{files.first.name}"
-  end
-
   def public_path
     return '' unless content.public_node
     "#{content.public_node.public_path}#{name}/"

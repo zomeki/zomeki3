@@ -89,15 +89,18 @@ class GpCalendar::Event < ApplicationRecord
     GpCalendar::Holiday.public_state.content_and_criteria(content, criteria).first.try(:title)
   end
 
+  def public_uri
+    return '' unless node = content.public_node
+    "#{node.public_uri}#{name}/"
+  end
+
   def public_path
-    node = content.public_nodes.where(model: 'GpCalendar::Event').first
-    return '' unless node
+    return '' unless node = content.public_node
     "#{node.public_path}#{name}/"
   end
 
   def public_smart_phone_path
-    node = content.public_nodes.where(model: 'GpCalendar::Event').first
-    return '' unless node
+    return '' unless node = content.public_node
     "#{node.public_smart_phone_path}#{name}/"
   end
 
