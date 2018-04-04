@@ -27,6 +27,6 @@ module GpArticle::Model::Rel::Tag
       end
     self.tags.each {|t| t.update_last_tagged_at }
 
-    all_tags.each {|t| t.destroy if t.public_docs.empty? }
+    all_tags.each {|t| t.destroy if t.docs.public_state.empty? }
   end
 end

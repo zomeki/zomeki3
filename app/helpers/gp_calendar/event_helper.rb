@@ -1,10 +1,10 @@
 module GpCalendar::EventHelper
   def event_replace(event, date, list_style)
-    Formatter.new(event, date).format(list_style, mobile: Page.mobile?)
+    Formatter.new(event, date).format(list_style, mobile: request.mobile?)
   end
 
   def event_table_replace(event, date, table_style, date_style)
-    Formatter.new(event, date).format_table(table_style, date_style, mobile: Page.mobile?)
+    Formatter.new(event, date).format_table(table_style, date_style, mobile: request.mobile?)
   end
 
   class Formatter < ActionView::Base
@@ -17,35 +17,27 @@ module GpCalendar::EventHelper
     end
 
     def format(list_style, mobile: false)
-      link_to_options = if @event.href.present?
-                          [@event.href, target: @event.target]
-                        else
-                          nil
-                        end
+      link_options = event_link_options
 
       list_style.gsub(/@\w+@/, {
-        '@title_link@' => replace_title_link(link_to_options).to_s,
+        '@title_link@' => replace_title_link(link_options).to_s,
         '@title@' => replace_title.to_s,
         '@category@' => replace_category.to_s
       }).html_safe
     end
 
     def format_table(table_style, date_style = '', mobile: false)
-      link_to_options = if @event.href.present?
-                          [@event.href, target: @event.target]
-                        else
-                          nil
-                        end
+      link_options = event_link_options
 
       contents = {
-        title_link: -> { replace_title_link(link_to_options) },
+        title_link: -> { replace_title_link(link_options) },
         title: -> { replace_title },
         subtitle: -> { replace_subtitle },
         hold_date: -> { replace_hold_date(date_style) },
         summary: -> { replace_summary },
         unit: -> { replace_unit },
         category: -> { replace_category },
-        image_link: -> { replace_image_link(link_to_options) },
+        image_link: -> { replace_image_link(link_options) },
         image: -> { replace_image },
         note: -> { replace_note }
       }
@@ -67,7 +59,7 @@ module GpCalendar::EventHelper
         end
       end
 
-      list_style = list_style.gsub(/@event{{@(.+)@}}event@/m) { |m| link_to($1.html_safe, link_to_options[0], class: 'event_link') }
+      list_style = list_style.gsub(/@event{{@(.+)@}}event@/m) { |m| link_to($1.html_safe, link_options[0], class: 'event_link') }
       list_style = list_style.gsub(/@category_type_(.+?)@/) { |m| replace_category_type($1) }
       list_style = list_style.gsub(/@(\w+)@/) { |m| contents[$1.to_sym].try(:call).to_s }
       list_style.html_safe
@@ -75,13 +67,23 @@ module GpCalendar::EventHelper
 
     private
 
+    def event_link_options
+      if @event.doc.present?
+        @event.doc.link_to_options(preview: Core.mode == 'preview' && @event.doc.state != 'public')
+      elsif @event.href.present?
+        [@event.href, target: @event.target]
+      else
+        nil
+      end
+    end
+
     def replace_title
       content_tag(:span, @event.title)
     end
 
-    def replace_title_link(link_to_options)
-      event_title = if link_to_options
-                      link_to *([@event.title] + link_to_options)
+    def replace_title_link(link_options)
+      event_title = if link_options
+                      link_to *([@event.title] + link_options)
                     else
                       h @event.title
                     end
@@ -165,12 +167,12 @@ module GpCalendar::EventHelper
       end
     end
 
-    def replace_image_link(link_to_options)
+    def replace_image_link(link_options)
       image_tag = event_image_tag
       image_link =
         if image_tag.present?
-          if link_to_options
-            link_to *([image_tag] + link_to_options)
+          if link_options
+            link_to *([image_tag] + link_options)
           else
             image_tag
           end

@@ -9,8 +9,6 @@ class GpCategory::Public::Node::CategoryTypesController < GpCategory::Public::No
     @category_types = @content.public_category_types.paginate(page: params[:page], per_page: 20)
     @category_types = GpCategory::CategoryTypesPreloader.new(@category_types).preload(:public_node_ancestors)
     return http_error(404) if @category_types.current_page > @category_types.total_pages
-
-    render :index_mobile if Page.mobile?
   end
 
   def show
@@ -21,7 +19,7 @@ class GpCategory::Public::Node::CategoryTypesController < GpCategory::Public::No
       case @content.category_type_style
       when 'all_docs'
         category_ids = @category_type.public_categories.pluck(:id)
-        @docs = find_public_docs_with_category_id(category_ids).order(display_published_at: :desc, published_at: :desc)
+        @docs = find_docs_with_category_id(category_ids).order(display_published_at: :desc, published_at: :desc)
         @docs = @docs.display_published_after(@content.feed_docs_period.to_i.days.ago) if @content.feed_docs_period.present?
         @docs = @docs.paginate(page: params[:page], per_page: @content.feed_docs_number)
         return render_feed(@docs)
@@ -46,7 +44,7 @@ class GpCategory::Public::Node::CategoryTypesController < GpCategory::Public::No
     case @content.category_type_style
     when 'all_docs'
       category_ids = @category_type.public_categories.pluck(:id)
-      @docs = find_public_docs_with_category_id(category_ids).order(display_published_at: :desc, published_at: :desc)
+      @docs = find_docs_with_category_id(category_ids).order(display_published_at: :desc, published_at: :desc)
                 .paginate(page: params[:page], per_page: @content.category_type_docs_number)
       @docs = GpArticle::DocsPreloader.new(@docs).preload(:public_node_ancestors)
       return http_error(404) if @docs.current_page > @docs.total_pages
@@ -54,7 +52,7 @@ class GpCategory::Public::Node::CategoryTypesController < GpCategory::Public::No
       return http_error(404) if params[:page].to_i > 1
     end
 
-    if Page.mobile?
+    if request.mobile?
       render :show_mobile
     else
       render @content.category_type_style if @content.category_type_style.present?
@@ -68,6 +66,7 @@ class GpCategory::Public::Node::CategoryTypesController < GpCategory::Public::No
       if (tm = @content.template_modules.ci_match(name: $1).first)
         Sys::Lib::Controller.render(
           'gp_category/public/template_module/category_types', "#{action_name}_#{tm.module_type}",
+          request: request,
           params: params.merge(content: @content, category_type: @category_type, category: @category, template_module: tm)
         )
       else
@@ -80,6 +79,7 @@ class GpCategory::Public::Node::CategoryTypesController < GpCategory::Public::No
   def render_more_template(template, template_module)
     res = Sys::Lib::Controller.dispatch(
       'gp_category/public/template_module/category_types', :more, 
+      request: request,
       params: params.merge(content: @content, category_type: @category_type, category: @category, template_module: template_module)
     )
     if res.status == 200

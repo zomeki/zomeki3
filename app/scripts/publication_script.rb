@@ -1,7 +1,5 @@
 require 'timeout'
 class PublicationScript < ParametersScript
-  include Cms::Controller::Layout
-
   def initialize(params = {})
     super
     initialize_publication
@@ -17,12 +15,12 @@ class PublicationScript < ParametersScript
 
     ::Script.current
 
-    rendered = render_public_as_string(options[:uri], site: site)
+    rendered = Cms::RenderService.new(site).render_public(options[:uri])
     return false unless item.publish_page(rendered, path: options[:path], dependent: options[:dependent])
 
     if options[:smart_phone_path].present? && site.publish_for_smart_phone?(item)
       dep = [options[:dependent].presence, "smart_phone"].compact.join('_')
-      rendered_sp = render_public_as_string(options[:uri], site: site, agent_type: :smart_phone)
+      rendered_sp = Cms::RenderService.new(site).render_public(options[:uri], agent_type: :smart_phone)
       return false unless item.publish_page(rendered_sp, path: options[:smart_phone_path], dependent: dep)
     end
 

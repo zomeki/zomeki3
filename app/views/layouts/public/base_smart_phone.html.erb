@@ -2,21 +2,11 @@
 <html lang="<%= Page.lang %>" prefix="og: http://ogp.me/ns#">
 <head>
   <meta charset="UTF-8" />
-  <title><%= Page.window_title %></title>
-  <%= Page.layout.head_tag(request) %>
-  <%- if Page.current_item.try(:respond_to?, :meta_description) && (meta_description = Page.current_item.meta_description).present? -%>
-  <meta name="description" content="<%= meta_description.gsub(/(\r\n|\r|\n)/, ' ') %>" />
-  <%- end -%>
-  <%- if Page.current_item.try(:respond_to?, :meta_keywords) && (meta_keywords = Page.current_item.meta_keywords).present? -%>
-  <meta name="keywords" content="<%= meta_keywords %>" />
-  <%- end -%>
-  <%= og_tags(Page.current_item) %>
-
+  <%= render 'layouts/public/header' %>
   <%= javascript_include_tag '/_common/js/jquery.browser.js' %>
   <%= javascript_include_tag '/_common/js/jquery.iframe-auto-height.js' %>
   <%= stylesheet_link_tag '/_common/css/simple_tabs.css' %>
   <%= javascript_include_tag '/_common/js/simple_tabs.js' %>
-  <%= javascript_include_tag '/_common/js/bowser.min.js' %>
 </head>
 <body <%= Page.body_id %> <%= Page.body_class %>>
   <%= yield %>

@@ -17,24 +17,30 @@ class Sys::Lib::Controller
 
     def create_request(controller_name, action_name, options)
       options = options.symbolize_keys
-      options[:base_url] ||= 'http://127.0.0.1'
+      options[:base_url] ||= options[:request] ? options[:request].url : 'http://127.0.0.1/'
       options[:method] ||= 'GET'
-      options[:agent_type] ||= :pc
 
       params = options[:params] || {}
       params = params.to_unsafe_h if params.is_a?(ActionController::Parameters)
       params = params.merge(controller: controller_name, action: action_name)
 
       request = ActionDispatch::Request.new(Rack::MockRequest.env_for(options[:base_url]))
-      request.env["REQUEST_METHOD"] = options[:method]
+      request.env['REQUEST_METHOD'] = options[:method]
       request.env['action_dispatch.request.parameters'] = params.symbolize_keys.with_indifferent_access
-      request.env["action_dispatch.cookies"] = options[:cookie] || {}
-      request.env["rack.session"] = options[:session] || {}
 
-      if options[:agent_type] == :smart_phone
-        jpmobile_envs_for_smart_phone.each do |key, value|
-          request.env[key] = value
+      if options[:request]
+        ['HTTP_USER_AGENT',
+         'rack.jpmobile',
+         'rack.session',
+         'rack.request.cookie_hash',
+         'action_dispatch.cookies'].each do |key|
+          request.env[key] = options[:request].env[key]
         end
+      end
+
+      if (agent = pseudo_agent(options[:agent_type]))
+        request.env['HTTP_USER_AGENT'] = agent
+        request.env['rack.jpmobile'] = Jpmobile::Mobile::AbstractMobile.carrier('HTTP_USER_AGENT' => agent)
       end
 
       request
@@ -46,12 +52,15 @@ class Sys::Lib::Controller
       response
     end
 
-    def jpmobile_envs_for_smart_phone
-      user_agent = 'Mozilla/5.0 (iPhone; CPU iPhone OS 7_1_1 like Mac OS X) AppleWebKit/537.51.2 (KHTML, like Gecko) Version/7.0 Mobile/11D201 Safari/9537.53'
-      {
-        'HTTP_USER_AGENT' => user_agent,
-        'rack.jpmobile' => Jpmobile::Mobile::AbstractMobile.carrier('HTTP_USER_AGENT' => user_agent)
-      }
+    def pseudo_agent(agent_type)
+      case agent_type
+      when :pc
+        'Mozilla/5.0'
+      when :mobile
+        'DoCoMo/2.0'
+      when :smart_phone
+        'Mozilla/5.0 (iPhone)'
+      end
     end
   end
 end

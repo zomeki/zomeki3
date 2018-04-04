@@ -7,7 +7,7 @@
     <%- unless @todays_events.empty? -%>
     <ul>
       <%- @todays_events.each do |event| -%>
-      <li><%= link_to_if event.href.present?, event.title, event.href, target: event.target %></li>
+      <li><%= event_replace(event, @today, "@title_link@") %></li>
       <%- end -%>
     </ul>
     <%- end -%>
@@ -16,7 +16,7 @@
     <%- unless @tomorrows_events.empty? -%>
     <ul>
       <%- @tomorrows_events.each do |event| -%>
-      <li><%= link_to_if event.href.present?, event.title, event.href, target: event.target %></li>
+      <li><%= event_replace(event, @tomorrow, "@title_link@") %></li>
       <%- end -%>
     </ul>
     <%- end -%>

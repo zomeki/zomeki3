@@ -1,6 +1,4 @@
 class Cms::Tool::PagesScript < ParametersScript
-  include Cms::Controller::Layout
-
   def rebuild
     nodes = Cms::Node.where(id: params[:node_id])
 

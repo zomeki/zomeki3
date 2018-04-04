@@ -29,7 +29,7 @@
   <%= javascript_tag do -%>
   $(function () {
     if (cms && cms.Page) {
-      cms.Page.smart_phone = <%= Page.smart_phone? ? 'true' : 'false' %>;
+      cms.Page.smart_phone = <%= request.smart_phone? ? 'true' : 'false' %>;
     }
   });
   <%- end -%>

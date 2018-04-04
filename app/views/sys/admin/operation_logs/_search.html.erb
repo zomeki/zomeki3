@@ -2,24 +2,24 @@
 <table>
   <tr>
     <th><%= Sys::OperationLog.human_attribute_name :user_id %></th>
-    <td><%= text_field_tag :s_user_id, params[:s_user_id], style: 'width: 120px; ime-mode: disabled;' %></td>
     <th><%= Sys::OperationLog.human_attribute_name :action %></th>
-    <td>
-      <%= select_tag :s_action, options_for_select(@action_type_options, params[:s_action]), id: nil, include_blank: true %>
-    </td>
     <th>キーワード</th>
-    <td><%= text_field_tag :s_keyword, params[:s_keyword], style: 'width: 120px;' %></td>
     <th>期間</th>
-    <td>
-      <%= text_field_tag :start_date, params[:start_date], class: "datepicker" %>
-      ～ <%= text_field_tag :close_date, params[:close_date], class: "datepicker" %>
-    </td>
-    <td class="submitters">
+    <td rowspan="2" class="submitters">
       <%= submit_tag '検索', name: :search, data: { disable_with: false } %>
       <%= submit_tag 'リセット', name: :reset, data: { disable_with: false } %>
       <span class="separator">|</span>
       <%= submit_tag 'CSV出力', name: :csv, data: { confirm: "CSVを出力します。\n件数が多いと処理に時間がかかることがあります。", disable_with: false } %>
       <%= submit_tag '削除', name: :destroy, data: { confirm: "表示中のログを削除してよろしいですか？\n2ページ目以降のログも削除されます。", disable_with: false } %>
+    </td>
+  </tr>
+  <tr>
+    <td><%= text_field_tag :s_user_id, params[:s_user_id], style: 'width: 120px; ime-mode: disabled;' %></td>
+    <td><%= select_tag :s_action, options_for_select(Sys::OperationLog.action_options, params[:s_action]), id: nil, include_blank: true %></td>
+    <td><%= text_field_tag :s_keyword, params[:s_keyword], style: 'width: 200px;' %></td>
+    <td>
+      <%= text_field_tag :start_date, params[:start_date], class: "datepicker", style: 'width: 120px;' %> ～
+      <%= text_field_tag :close_date, params[:close_date], class: "datepicker", style: 'width: 120px;' %>
     </td>
   </tr>
 </table>

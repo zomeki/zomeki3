@@ -9,4 +9,14 @@ module TagHelper
       ''
     end
   end
+
+  def content_tag_if(condition, tag, options = {})
+    if condition
+      content_tag tag, options do
+        yield
+      end
+    else
+      yield
+    end
+  end
 end

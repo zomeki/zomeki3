@@ -10,17 +10,6 @@ $(function() {
 });
 <%- end -%>
 
-<%- if @item.name == 'article_relation' -%>
-<table class="show">
-  <tr>
-    <th>記事コンテンツ</th>
-    <td><%= select_tag 'item[extra_values][gp_article_content_doc_id]',
-                       options_from_collection_for_select(GpArticle::Content::Doc.where(site_id: Core.site.id), :id, :name,
-                                                          @item.extra_values[:gp_article_content_doc_id]), include_blank: true %></td>
-  </tr>
-</table>
-<%- end -%>
-
 <%- if @item.name == 'feed' -%>
 <table class="show">
   <tr>

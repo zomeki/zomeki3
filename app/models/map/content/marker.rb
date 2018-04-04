@@ -102,7 +102,7 @@ class Map::Content::Marker < Cms::Content
     end
   end
 
-  def public_marker_docs(specified_category = nil)
+  def marker_docs(specified_category = nil)
     contents = GpArticle::Content::Doc.arel_table
     content_settings = Cms::ContentSetting.arel_table
     doc_content_ids = GpArticle::Content::Doc.joins(:settings)
@@ -114,7 +114,7 @@ class Map::Content::Marker < Cms::Content
     if doc_content_ids.blank?
       GpArticle::Doc.none
     else
-      docs = GpArticle::Doc.distinct.joins(maps: :markers).mobile(::Page.mobile?).public_state
+      docs = GpArticle::Doc.distinct.joins(maps: :markers)
                            .where(content_id: doc_content_ids, marker_state: 'visible')
       if specified_category
         cat_ids = GpCategory::Categorization.select(:categorizable_id)

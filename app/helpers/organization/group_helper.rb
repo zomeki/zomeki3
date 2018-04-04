@@ -15,7 +15,7 @@ module Organization::GroupHelper
   end
 
   def group_replace(group, list_style)
-    Formatter.new(group).format(list_style, mobile: Page.mobile?)
+    Formatter.new(group).format(list_style, mobile: request.mobile?)
   end
 
   class Formatter < ActionView::Base

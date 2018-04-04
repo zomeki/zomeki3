@@ -91,6 +91,10 @@ module Cms::Model::Rel::SiteSetting
     setting_value(:zip_download_max_size).to_i * (1024**2)
   end
 
+  def use_future_preview?
+    setting_value(:future_preview) == 'enabled'
+  end
+
   def load_site_settings
     Cms::SiteSetting.configs.keys.each do |name|
       instance_variable_set("@in_setting_site_#{name}", setting_value(name))

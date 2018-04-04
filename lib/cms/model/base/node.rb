@@ -42,7 +42,7 @@ module Cms::Model::Base::Node
                                                    id: id,
                                                    only_path: true }.merge(options))
   rescue ActionController::UrlGenerationError => e
-    error_log e
+    warn_log e
     nil
   end
 

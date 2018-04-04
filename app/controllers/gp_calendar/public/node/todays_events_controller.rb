@@ -5,7 +5,7 @@ class GpCalendar::Public::Node::TodaysEventsController < GpCalendar::Public::Nod
     criteria = {date: @today, kind: :event}
     @events = GpCalendar::Event.public_state.content_and_criteria(@content, criteria).order(:started_on).to_a
 
-    docs = @content.public_event_docs(@today, @today)
+    docs = @content.event_docs(@today, @today)
     @events = merge_docs_into_events(docs, @events)
 
     filter_events_by_specified_category(@events)

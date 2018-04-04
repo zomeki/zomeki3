@@ -1,17 +1,16 @@
 <%- if (approval_content = content.approval_content_approval_flow) -%>
   <%-
-    approval_content.approval_flows.for_user(Core.user).each do |approval_flow|
-      next if item.approval_requests.detect { |ar| ar.approval_flow_id == approval_flow.id }
-      item.approval_requests.build(requester: Core.user, approval_flow: approval_flow, current_index: -1)
+    approval_requests = approval_content.approval_flows.for_user(Core.user).map do |approval_flow|
+      Approval::ApprovalRequest.new(approvable: item, requester: Core.user, approval_flow: approval_flow, current_index: -1)
     end
   -%>
   <table class="show">
     <tr>
       <th><%= Approval::ApprovalFlow.model_name.human %></th>
       <td>
-        <%- if item.approval_requests.present? -%>
+        <%- if approval_requests.present? -%>
         <table class="approval noDesign">
-          <%- item.approval_requests.each do |approval_request| -%>
+          <%- approval_requests.each do |approval_request| -%>
             <%- approval_flow = approval_request.approval_flow -%>
             <tr>
               <td>

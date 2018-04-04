@@ -1,4 +1,6 @@
 class GpCategory::Public::TemplateModule::BaseController < Sys::Controller::Public::Base
+  include GpArticle::Controller::Public::Scoping
+
   before_action :set_more_option
 
   def set_more_option
