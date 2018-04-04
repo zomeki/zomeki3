@@ -38,7 +38,7 @@ class GpCategory::CategoryType < ApplicationRecord
                                     foreign_key: :category_type_id, class_name: 'GpCategory::Category'
 
   validates :name, presence: true, uniqueness: { scope: :content_id },
-                   format: { with: /\A[0-9A-Za-z@\.\-_\+\s]+\z/ }
+                   format: { with: /\A[0-9A-Za-z@\.\-_\+]+\z/ }
   validates :title, presence: true
   validates :state, presence: true
 

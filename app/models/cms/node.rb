@@ -30,7 +30,7 @@ class Cms::Node < ApplicationRecord
   validates :parent_id, :state, :title, presence: true
   validates :name, presence: true,
                    uniqueness: { scope: [:site_id, :parent_id], if: %Q(!replace_page?) },
-                   format: { with: /\A[0-9A-Za-z@\.\-_\+\s]+\z/, message: :not_a_filename, if: %Q(parent_id != 0) }
+                   format: { with: /\A[0-9A-Za-z@\.\-_\+]+\z/, message: :not_a_filename, if: %Q(parent_id != 0) }
   validates :model, presence: true,
                     uniqueness: { scope: [:content_id], if: :content_id? }
 

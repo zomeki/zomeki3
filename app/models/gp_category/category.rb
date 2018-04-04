@@ -26,7 +26,7 @@ class GpCategory::Category < ApplicationRecord
   has_many :children, foreign_key: :parent_id, class_name: self.name, dependent: :destroy
 
   validates :name, presence: true, uniqueness: { scope: [:category_type_id, :parent_id] },
-                   format: { with: /\A[0-9A-Za-z@\.\-_\+\s]+\z/ }
+                   format: { with: /\A[0-9A-Za-z@\.\-_\+]+\z/ }
   validates :title, presence: true
   validates :state, presence: true
 
