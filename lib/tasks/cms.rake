@@ -120,7 +120,7 @@ namespace ZomekiCMS::NAME do
         models.each do |model|
           items = model
           items = items.in_site(ENV['SITE_ID']) if ENV['SITE_ID']
-          items.find_each(&:set_public_name)
+          items.find_each(&:save_publish_urls)
         end
       end
     end
