@@ -336,14 +336,6 @@ class GpArticle::Doc < ApplicationRecord
     state.in?(%w(approved prepared)) && (editable? || approval_participators.include?(Core.user))
   end
 
-  def formated_display_published_at
-    display_published_at.try(:strftime, content.date_style)
-  end
-
-  def formated_display_updated_at
-    display_updated_at.try(:strftime, content.date_style)
-  end
-
   def default_map_position
     [content.map_coordinate, content.site.map_coordinate].lazy.each do |pos|
       p = pos.to_s.split(',').map(&:strip)
