@@ -204,6 +204,8 @@ class Cms::Node < ApplicationRecord
 
     validate :validate_recognizers, if: -> { state == 'recognize' }
 
+    validates_with Sys::TaskValidator, if: -> { state != 'draft' }
+
     def states
       s = [['下書き保存','draft'],['承認待ち','recognize']]
       s << ['公開保存','public'] if Core.user.has_auth?(:manager)

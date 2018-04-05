@@ -33,6 +33,8 @@ class Survey::Form < ApplicationRecord
   validates :title, presence: true
   validates :mail_to, format: { with: /\A.+@.+\z/ }, if: -> { mail_to.present? }
 
+  validates_with Sys::TaskValidator, if: -> { !state_draft? }
+
   after_save     Cms::Publisher::ContentCallbacks.new(belonged: true), if: :changed?
   before_destroy Cms::Publisher::ContentCallbacks.new(belonged: true)
 

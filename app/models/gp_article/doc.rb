@@ -123,10 +123,8 @@ class GpArticle::Doc < ApplicationRecord
   validate :validate_accessibility_check, if: -> { !state_draft? && errors.blank? }
   validate :validate_broken_link_existence, if: -> { !state_draft? && errors.blank? }
 
-  validates_with Cms::ContentNodeValidator, if: -> { state_approvable? },
-                                           message: '記事コンテンツのディレクトリが作成されていないため、承認依頼が行えません。'
-  validates_with Cms::ContentNodeValidator, if: -> { state_public? },
-                                           message: '記事コンテンツのディレクトリが作成されていないため、即時公開が行えません。'
+  validates_with Sys::TaskValidator, if: -> { !state_draft? }
+  validates_with Cms::ContentNodeValidator, if: -> { state_approvable? || state_public? }
 
   scope :public_state, -> { where(state: 'public') }
   scope :mobile, ->(m) { m ? where(terminal_mobile: true) : where(terminal_pc_or_smart_phone: true) }
