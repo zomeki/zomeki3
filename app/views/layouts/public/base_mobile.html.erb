@@ -6,7 +6,6 @@
 <meta http-equiv="content-script-type" content="text/javascript" />
 <title><%= Page.window_title %></title>
 <%= Page.layout.head_tag(request) %>
-<%= stylesheet_link_tag '/_common/themes/admin/preview.css' if Core.mode == 'preview' %>
 </head>
 <body <%= Page.body_id %> <%= Page.body_class %>>
 <%= yield %>

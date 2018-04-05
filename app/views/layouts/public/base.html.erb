@@ -6,7 +6,6 @@
   <title><%= Page.window_title %></title>
   <%= Page.layout.head_tag(request) %>
   <%= render 'layouts/public/header' %>
-  <%= stylesheet_link_tag '/_common/themes/admin/preview.css' if Core.mode == 'preview' %>
 </head>
 <body <%= Page.body_id %> <%= Page.body_class %>>
   <%= yield %>

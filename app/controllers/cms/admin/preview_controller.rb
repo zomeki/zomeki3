@@ -1,5 +1,5 @@
 class Cms::Admin::PreviewController < Cms::Controller::Admin::Base
-  after_action :add_preview_mark, if: :preview_as_html?
+  after_action :add_preview_header, if: :preview_as_html?
   after_action :replace_links_for_preview, if: :preview_as_html?
 
   def pre_dispatch
@@ -77,9 +77,13 @@ private
     response.content_type.in?(%w(text/html application/xhtml+xml))
   end
 
-  def add_preview_mark
+  def add_preview_header
     return if params[:inlining] == 'true'
-    html = render_to_string(partial: 'cms/admin/preview/preview_mark', formats: [:html])
+
+    html = render_to_string(partial: 'cms/admin/preview/header', formats: [:html])
+    response.body = response.body.to_s.sub(/(<\/head>)/i, html + '\\1')
+
+    html = render_to_string(partial: 'cms/admin/preview/mark', formats: [:html])
     response.body = response.body.to_s.sub(/(<body[^>]*?>)/i, '\\1' + html)
   end
 

@@ -5,7 +5,6 @@
   <title><%= Page.window_title %></title>
   <%= Page.layout.head_tag(request) %>
   <%= render 'layouts/public/header' %>
-  <%= stylesheet_link_tag '/_common/themes/admin/preview.css' if Core.mode == 'preview' %>
   <%= javascript_include_tag '/_common/js/jquery.browser.js' %>
   <%= javascript_include_tag '/_common/js/jquery.iframe-auto-height.js' %>
   <%= stylesheet_link_tag '/_common/css/simple_tabs.css' %>
