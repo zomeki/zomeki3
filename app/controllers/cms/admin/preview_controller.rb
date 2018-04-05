@@ -78,6 +78,7 @@ private
   end
 
   def add_preview_mark
+    return if params[:inlining] == 'true'
     html = render_to_string(partial: 'cms/admin/preview/preview_mark', formats: [:html])
     response.body = response.body.to_s.sub(/(<body[^>]*?>)/i, '\\1' + html)
   end
