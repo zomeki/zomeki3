@@ -7,7 +7,7 @@ class Map::Marker < ApplicationRecord
 
   attr_accessor :doc # Not saved to database
 
-  attribute :sort_no, :integer, default: 10
+  column_attribute :sort_no, default: 10
 
   enum_ish :state, [:public, :closed], default: :public
 

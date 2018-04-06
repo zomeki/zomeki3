@@ -30,18 +30,18 @@ class GpArticle::Doc < ApplicationRecord
 
   default_scope { where.not(state: 'archived') }
 
-  attribute :href, :string, default: ''
-  attribute :title, :string, default: ''
-  attribute :mobile_title, :string, default: ''
-  attribute :subtitle, :text, default: ''
-  attribute :summary, :text, default: ''
-  attribute :body, :text, default: ''
-  attribute :mobile_body, :text, default: ''
-  attribute :body_more, :text, default: ''
-  attribute :terminal_pc_or_smart_phone, :boolean, default: true
-  attribute :terminal_mobile, :boolean, default: true
-  attribute :body_more_link_text, :string, default: '続きを読む'
-  attribute :filename_base, :string, default: 'index'
+  column_attribute :href, default: ''
+  column_attribute :title, default: ''
+  column_attribute :mobile_title, default: ''
+  column_attribute :subtitle, default: ''
+  column_attribute :summary, default: ''
+  column_attribute :body, default: ''
+  column_attribute :mobile_body, default: ''
+  column_attribute :body_more, default: ''
+  column_attribute :terminal_pc_or_smart_phone, default: true
+  column_attribute :terminal_mobile, default: true
+  column_attribute :body_more_link_text, default: '続きを読む'
+  column_attribute :filename_base, default: 'index'
 
   enum_ish :state, [:draft, :approvable, :approved, :prepared, :public, :closed, :archived], predicate: true
   enum_ish :target, ['', '_self', '_blank', 'attached_file'], default: ''

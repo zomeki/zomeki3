@@ -8,7 +8,7 @@ class GpCategory::CategoryType < ApplicationRecord
 
   default_scope { order(sort_no: :asc, name: :asc) }
 
-  attribute :sort_no, :integer, default: 10
+  column_attribute :sort_no, default: 10
 
   enum_ish :state, [:public, :closed], default: :public, predicate: true
   enum_ish :docs_order, ['',

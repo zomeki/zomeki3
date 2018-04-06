@@ -2,7 +2,7 @@ class Cms::LinkCheckLog < ApplicationRecord
   include Sys::Model::Base
   include Cms::Model::Rel::Site
 
-  attribute :checked, :boolean, default: false
+  column_attribute :checked, default: false
 
   enum_ish :result_state, [:success, :failure, :skip]
 
