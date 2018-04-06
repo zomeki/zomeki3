@@ -92,8 +92,7 @@ class GpArticle::Doc < ApplicationRecord
   before_save :set_serial_no
   before_save :set_published_at
   before_save :set_display_published_at
-
-  after_save :set_display_updated_at
+  before_save :set_display_updated_at
 
   after_save     GpArticle::Publisher::DocCallbacks.new, if: :changed?
   before_destroy GpArticle::Publisher::DocCallbacks.new
@@ -276,6 +275,7 @@ class GpArticle::Doc < ApplicationRecord
         new_doc.tasks.build(site_id: task.site_id, name: task.name, process_at: task.process_at) if task.state_queued?
       end
       new_doc.creator_attributes = { group_id: creator.group_id, user_id: creator.user_id }
+      new_doc.display_updated_at = nil unless keep_display_updated_at
     else
       new_doc.name = nil
       new_doc.title = new_doc.title.gsub(/^(【複製】)*/, '【複製】')
@@ -477,7 +477,7 @@ class GpArticle::Doc < ApplicationRecord
   end
 
   def set_display_updated_at
-    update_columns(display_updated_at: updated_at) if display_updated_at.nil? || !keep_display_updated_at
+    self.display_updated_at ||= Time.now if state.in?(%w(approvable public))
   end
 
   def set_serial_no
