@@ -65,8 +65,8 @@ class Cms::SiteSetting < ApplicationRecord
              name: 'ZIPダウンロード最大サイズ',
              default_value: 100,
              index: true
-  set_config :future_preview,
-             name: '未来日時プレビュー',
+  set_config :datetime_preview,
+             name: '日時指定プレビュー',
              default_value: 'disabled',
              options: [['使用する', 'enabled'], ['使用しない', 'disabled']],
              index: true

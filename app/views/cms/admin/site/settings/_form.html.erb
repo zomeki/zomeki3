@@ -120,11 +120,11 @@
 </table>
 <%- end -%>
 
-<%- if @item.name == 'future_preview' -%>
+<%- if @item.name == 'datetime_preview' -%>
 <table class="show">
   <tr>
-    <th><%= @site.class.human_attribute_name :in_setting_site_future_preview %></th>
-    <td><%= f.collection_radio_buttons :in_setting_site_future_preview, @item.class.configs[:future_preview][:options], :last, :first %></td>
+    <th><%= @site.class.human_attribute_name :in_setting_site_datetime_preview %></th>
+    <td><%= f.collection_radio_buttons :in_setting_site_datetime_preview, @item.class.configs[:datetime_preview][:options], :last, :first %></td>
   </tr>
 </table>
 <%- end -%>
