@@ -10,7 +10,8 @@ module GpCalendar::EventHelper
   class Formatter < ActionView::Base
     include ::ApplicationHelper
     include ::DateHelper
-    include GpArticle::DocLinkHelper
+    include GpArticle::DocHelper
+    include GpArticle::DocImageHelper
 
     def initialize(event, date)
       @event = event

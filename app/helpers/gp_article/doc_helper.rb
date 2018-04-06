@@ -1,4 +1,22 @@
 module GpArticle::DocHelper
+  def doc_link_options(doc)
+    uri = if Core.mode == 'preview' && !doc.state_public?
+            "#{doc.public_uri(without_filename: true)}preview/#{doc.id}/#{doc.filename_for_uri}"
+          else
+            doc.public_uri
+          end
+
+    if doc.target.present? && doc.href.present?
+      if doc.target == 'attached_file' && (file = doc.files.find_by(name: doc.href))
+        [Addressable::URI.join(uri, "file_contents/#{file.name}").to_s, target: '_blank']
+      else
+        [doc.href, target: doc.target]
+      end
+    else
+      [uri]
+    end
+  end
+
   def doc_replace(doc, doc_style, date_style = '%Y年%m月%d日', time_style = '%H時%M分')
     Formatter.new(doc).format(doc_style, date_style, time_style, mobile: request.mobile?)
   end
@@ -7,7 +25,8 @@ module GpArticle::DocHelper
     include ::ApplicationHelper
     include ::DateHelper
     include ::FileHelper
-    include GpArticle::DocLinkHelper
+    include GpArticle::DocHelper
+    include GpArticle::DocImageHelper
 
     def initialize(doc)
       @doc = doc
