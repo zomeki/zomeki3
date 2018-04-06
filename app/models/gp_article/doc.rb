@@ -106,6 +106,7 @@ class GpArticle::Doc < ApplicationRecord
   attr_accessor :link_check_results, :in_ignore_link_check
   attr_accessor :accessibility_check_results, :in_ignore_accessibility_check, :in_modify_accessibility_check
 
+  validates :name, format: { with: /\A[\-\w]*\z/ }
   validates :title, presence: true, length: { maximum: 200 }
   validates :mobile_title, length: { maximum: 200 }
   validates :body, length: { maximum: Zomeki.config.application['gp_article.body_limit'].to_i }
@@ -396,10 +397,6 @@ class GpArticle::Doc < ApplicationRecord
     super && content && content.qrcode_related?
   end
 
-  def event_state_visible?
-    event_state == 'visible'
-  end
-
   def lang_text
     content.lang_options.rassoc(lang).try(:first)
   end
@@ -407,8 +404,6 @@ class GpArticle::Doc < ApplicationRecord
   private
 
   def validate_name
-    errors.add(:name, :invalid) if name !~ /^[\-\w]*$/
-
     doc = self.class.where(content_id: content_id, name: name)
     doc = doc.where.not(serial_no: serial_no) if serial_no
     errors.add(:name, :taken) if doc.exists?
