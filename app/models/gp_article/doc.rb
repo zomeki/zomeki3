@@ -333,14 +333,6 @@ class GpArticle::Doc < ApplicationRecord
     state.in?(%w(approved prepared)) && (editable? || approval_participators.include?(Core.user))
   end
 
-  def default_map_position
-    [content.map_coordinate, content.site.map_coordinate].lazy.each do |pos|
-      p = pos.to_s.split(',').map(&:strip)
-      return p if p.size == 2
-    end
-    super
-  end
-
   def extract_links
     extracted_links = super
     if template

@@ -20,7 +20,8 @@
       <%- end-%>
     <%- end -%>
 
-    renderMap(<%= @content.default_map_position.first %>, <%= @content.default_map_position.last %>, marker_list);
+    <%- default_position = default_map_position(@content) -%>
+    renderMap(<%= default_position[0] %>, <%= default_position[1] %>, marker_list);
   });
 
 })(jQuery);

@@ -13,12 +13,8 @@ class Map::Content::Marker < Cms::Content
     markers.public_state
   end
 
-  def default_map_position
-    [setting_value(:lat_lng), site.map_coordinate].lazy.each do |pos|
-      p = pos.to_s.split(',').map(&:strip)
-      return p if p.size == 2
-    end
-    Zomeki.config.application["cms.default_map_coordinate"].to_s.split(',').map(&:strip)
+  def map_coordinate
+    setting_value(:lat_lng)
   end
 
   def categories
