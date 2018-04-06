@@ -3,11 +3,6 @@ module Cms::Model::Base::Piece
     state == "public"
   end
 
-  def content_name
-    return content.name if content
-    Cms::Lib::Modules.module_name(:cms)
-  end
-
   def module_name(option = nil)
     name = Cms::Lib::Modules.model_name(:piece, model)
     return name.to_s.gsub(/^.*?\//, '') if option == :short
