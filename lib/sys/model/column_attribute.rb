@@ -10,9 +10,9 @@ module Sys::Model::ColumnAttribute
       self.column_attributes ||= {}
       self.column_attributes[name] = options
     end
-  end
 
-  class_methods do
+    private
+
     def load_schema!
       ret = super
       column_attributes.to_h.each do |name, options|
