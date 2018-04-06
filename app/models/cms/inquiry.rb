@@ -1,7 +1,7 @@
 class Cms::Inquiry < ApplicationRecord
   include Sys::Model::Base
 
-  enum_ish :state, [:visible, :hidden]
+  enum_ish :state, [:visible, :hidden], predicate: true, default: :hidden
 
   belongs_to :inquirable, polymorphic: true
   belongs_to :group, class_name: 'Sys::Group'
@@ -14,8 +14,4 @@ class Cms::Inquiry < ApplicationRecord
   delegate :note, to: :group, allow_nil: true
 
   nested_scope :in_site, through: :inquirable
-
-  def visible?
-    state == 'visible'
-  end
 end
