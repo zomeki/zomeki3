@@ -97,6 +97,8 @@ module LinkHelper
       else
         order, mark = '', '▼'
       end
+    elsif options[:default] == :desc
+      order, mark = 'desc', ''
     end
 
     link_options = options.merge(params.to_unsafe_h.symbolize_keys)
