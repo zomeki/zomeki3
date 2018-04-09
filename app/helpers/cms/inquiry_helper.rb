@@ -1,4 +1,12 @@
 module Cms::InquiryHelper
+  def inquiry_title(content)
+    content && content.inquiry_title || 'お問い合わせ'
+  end
+
+  def inquiry_style(content)
+    content && content.inquiry_style || '@name@@address@@tel@@fax@@email_link@'
+  end
+
   def inquiry_replace(inquiry, inquiry_style)
     Formatter.new(inquiry).format(inquiry_style, mobile: request.mobile?)
   end

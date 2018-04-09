@@ -28,7 +28,7 @@ class Organization::Public::Node::GroupsController < Cms::Controller::Public::Ba
     docs = GpArticle::DocsPreloader.new(docs).preload(:public_node_ancestors)
 
     if params[:format].in?(['rss', 'atom'])
-      docs = docs.display_published_after(@content.feed_docs_period.to_i.days.ago) if @content.feed_docs_period.present?
+      docs = docs.date_after(:display_published_at, @content.feed_docs_period.to_i.days.ago) if @content.feed_docs_period.present?
       docs = docs.paginate(page: params[:page], per_page: @content.feed_docs_number)
       return render_feed(docs)
     end

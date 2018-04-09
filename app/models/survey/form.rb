@@ -12,7 +12,7 @@ class Survey::Form < ApplicationRecord
 
   default_scope { order(:sort_no, :id) }
 
-  attribute :sort_no, :integer, default: 10
+  column_attribute :sort_no, default: 10
 
   enum_ish :state, [:draft, :approvable, :approved, :prepared, :public, :closed], predicate: true
   enum_ish :confirmation, [true, false], default: true
@@ -33,10 +33,29 @@ class Survey::Form < ApplicationRecord
   validates :title, presence: true
   validates :mail_to, format: { with: /\A.+@.+\z/ }, if: -> { mail_to.present? }
 
+  validates_with Sys::TaskValidator, if: -> { !state_draft? }
+
   after_save     Cms::Publisher::ContentCallbacks.new(belonged: true), if: :changed?
   before_destroy Cms::Publisher::ContentCallbacks.new(belonged: true)
 
   scope :public_state, -> { where(state: 'public') }
+
+  def public_uri(with_closed_preview: false)
+    node = if with_closed_preview
+             content.form_node
+           else
+             content.public_node
+           end
+    return nil unless node
+    "#{node.public_uri}#{name}/"
+  end
+
+  def preview_uri(terminal: nil, params: {})
+    return if (path = public_uri(with_closed_preview: true)).blank?
+    flag = { mobile: 'm', smart_phone: 's' }[terminal]
+    query = "?#{params.to_query}" if params.present?
+    "#{site.main_admin_uri}_preview/#{format('%04d', site.id)}#{flag}#{path}#{query}"
+  end
 
   def public_questions
     questions.public_state
@@ -95,23 +114,6 @@ class Survey::Form < ApplicationRecord
     return unless state_public?
     self.state = 'closed'
     save(validate: false)
-  end
-
-  def public_uri(with_closed_preview: false)
-    node = if with_closed_preview
-             content.form_node
-           else
-             content.public_node
-           end
-    return nil unless node
-    "#{node.public_uri}#{name}"
-  end
-
-  def preview_uri(terminal: nil, params: {})
-    return if (path = public_uri(with_closed_preview: true)).blank?
-    flag = { mobile: 'm', smart_phone: 's' }[terminal]
-    query = "?#{params.to_query}" if params.present?
-    "#{site.main_admin_uri}_preview/#{format('%04d', site.id)}#{flag}#{path}#{query}"
   end
 
   def index_visible?

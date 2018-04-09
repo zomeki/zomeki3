@@ -13,10 +13,6 @@ class Sys::Plugin < ApplicationRecord
                       format: { with: %r|\A[^/]+/.+\z| }
   validates :title, presence: true
 
-  scope :search_with_params, ->(params = {}) {
-    all
-  }
-
   def gem_name
     name.split('/').last
   end

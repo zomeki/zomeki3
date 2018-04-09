@@ -1,0 +1,18 @@
+#cmsPreviewMark {
+  margin: 1px;
+  padding: 5px 10px;
+  border-bottom: 1px solid #fff;
+  background-color: #000;
+  color: #fff;
+  line-height: 1.5;
+  font-family: sans-serif;
+}
+#cmsPreviewMark .previewMessage {
+  cursor: pointer;
+}
+#cmsPreviewMark .previewSetting {
+  float: right;
+}
+#cmsPreviewMark .datetimepicker {
+  width: 150px;
+}

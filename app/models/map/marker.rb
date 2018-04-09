@@ -7,7 +7,7 @@ class Map::Marker < ApplicationRecord
 
   attr_accessor :doc # Not saved to database
 
-  attribute :sort_no, :integer, default: 10
+  column_attribute :sort_no, default: 10
 
   enum_ish :state, [:public, :closed], default: :public
 
@@ -32,11 +32,6 @@ class Map::Marker < ApplicationRecord
   def public_uri
     return '' unless content.public_node
     "#{content.public_node.public_uri}#{name}/"
-  end
-
-  def public_file_uri
-    return '' if public_uri.blank? || files.empty?
-    "#{public_uri}file_contents/#{files.first.name}"
   end
 
   def public_path

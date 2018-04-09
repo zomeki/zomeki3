@@ -3,7 +3,7 @@ class Approval::ApprovalFlow < ApplicationRecord
   include Cms::Model::Rel::Content
   include Cms::Model::Auth::Content
 
-  attribute :sort_no, :integer, default: 10
+  column_attribute :sort_no, default: 10
 
   # Content
   belongs_to :content, class_name: 'Approval::Content::ApprovalFlow', required: true

@@ -51,6 +51,11 @@ class GpArticle::DocsFinder < ApplicationFinder
     search_columns = [:name, :title, :body, :subtitle, :summary, :mobile_title, :mobile_body]
     @docs = @docs.search_with_logical_query(*search_columns, criteria[:free_word]) if criteria[:free_word].present?
     @docs = @docs.where(serial_no: criteria[:serial_no]) if criteria[:serial_no].present?
+
+    if criteria[:sort_key].present?
+      @docs = sort_by(criteria[:sort_key], criteria[:sort_order])
+    end
+
     @docs
   end
 
@@ -142,6 +147,24 @@ class GpArticle::DocsFinder < ApplicationFinder
       @docs.date_between(column, dates[0].beginning_of_day, dates[1].end_of_day) if dates[0] && dates[1]
     else
       @docs.none
+    end
+  end
+
+  def sort_by(key, order)
+    order = (order.presence || :asc).to_sym
+
+    if key.index('.')
+      table, column = key.split('.')
+      case table
+      when 'sys_groups'
+        @docs.eager_load(creator: :group).merge(Sys::Group.order(column => order))
+      when 'sys_users'
+        @docs.eager_load(creator: :user).merge(Sys::User.order(column => order))
+      else
+        @docs.none
+      end
+    else
+      @docs.order(key => order)
     end
   end
 end

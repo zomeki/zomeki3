@@ -1,10 +1,10 @@
 <%-
 return if item.inquiries.size == 0
-return unless item.inquiries.any? { |inquiry| inquiry.visible? && inquiry.group }
+return unless item.inquiries.any? { |inquiry| inquiry.state_visible? && inquiry.group }
 -%>
 <div class="inquiry">
-  <div class="h2"><%= item.inquiry_title %></div>
+  <div class="h2"><%= inquiry_title(item.content) %></div>
   <%- item.inquiries.each do |inquiry| -%>
-    <%= inquiry_replace(inquiry, item.inquiry_style) %>
+    <%= inquiry_replace(inquiry, inquiry_style(item.content)) %>
   <%- end -%>
 </div>

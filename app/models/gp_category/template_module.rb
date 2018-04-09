@@ -3,7 +3,7 @@ class GpCategory::TemplateModule < ApplicationRecord
   include Cms::Model::Rel::Content
   include Cms::Model::Auth::Content
 
-  attribute :num_docs, :integer, default: 10
+  column_attribute :num_docs, default: 10
   enum_ish :module_type, [:categories_1, :categories_2, :categories_3,
                           :categories_summary_1, :categories_summary_2, :categories_summary_3,
                           :docs_1, :docs_2, :docs_3, :docs_4, :docs_5, :docs_6, :docs_7, :docs_8],

@@ -30,7 +30,7 @@ class Cms::Node < ApplicationRecord
   validates :parent_id, :state, :title, presence: true
   validates :name, presence: true,
                    uniqueness: { scope: [:site_id, :parent_id], if: %Q(!replace_page?) },
-                   format: { with: /\A[0-9A-Za-z@\.\-_\+\s]+\z/, message: :not_a_filename, if: %Q(parent_id != 0) }
+                   format: { with: /\A[0-9A-Za-z@\.\-_\+]+\z/, message: :not_a_filename, if: %Q(parent_id != 0) }
   validates :model, presence: true,
                     uniqueness: { scope: [:content_id], if: :content_id? }
 
@@ -57,26 +57,6 @@ class Cms::Node < ApplicationRecord
     where(model: models)
   }
 
-  scope :search_with_params, ->(params) {
-    rel = all
-    params.each do |n, v|
-      next if v.to_s == ''
-      case n
-      when 's_state'
-        rel.where!(state: v)
-      when 's_title'
-        rel = rel.search_with_text(:title, v)
-      when 's_body'
-        rel = rel.search_with_text(:body, v)
-      when 's_directory'
-        rel.where!(directory: v)
-      when 's_keyword'
-        rel = rel.search_with_text(:title, :body, v)
-      end
-    end
-    rel
-  }
-
   def states
     [['公開保存','public'],['非公開保存','closed']]
   end
@@ -87,50 +67,27 @@ class Cms::Node < ApplicationRecord
     opts[:prefix] * [level_no - 1 + opts[:depth], 0].max + title
   end
 
-  def self.find_by_uri(path, site_id)
-    return nil if path.to_s == ''
-
-    unless item = self.where(site_id: site_id, parent_id: 0, name: '/').order(:id).first
-      return nil
-    end
-    return item if path == '/'
-
-    path.split('/').each do |p|
-      next if p == ''
-      unless item = self.where(site_id: site_id, parent_id: item.id, name: p).order(:id).first
-        return nil
-      end
-    end
-    return item
-  end
-
   def public_path
-    "#{site.public_path}#{public_uri}".gsub(/\?.*/, '')
-  end
-
-  def public_mobile_path
-    "#{site.public_path}/_mobile#{public_uri}".gsub(/\?.*/, '')
+    "#{site.public_path}#{public_uri}"
   end
 
   def public_smart_phone_path
-    "#{site.public_path}/_smartphone#{public_uri}".gsub(/\?.*/, '')
+    "#{site.public_smart_phone_path}#{public_uri}"
   end
 
   def public_uri
     return @public_uri if @public_uri
-    return unless site
     return '' if name.blank?
     uri = site.uri
-    ancestors.each{|n| uri += "#{n.name}/" if n.name != '/' }
+    ancestors.each { |n| uri += "#{n.name}/" if n.name != '/' }
     uri = uri.gsub(/\/$/, '') if directory == 0
     @public_uri = uri
   end
 
   def public_full_uri
     return @public_full_uri if @public_full_uri
-    return unless site
     uri = site.full_uri
-    ancestors.each{|n| uri += "#{n.name}/" if n.name != '/' }
+    ancestors.each { |n| uri += "#{n.name}/" if n.name != '/' }
     uri = uri.gsub(/\/$/, '') if directory == 0
     @public_full_uri = uri
   end
@@ -246,6 +203,8 @@ class Cms::Node < ApplicationRecord
     before_destroy Cms::SearchIndexerCallbacks.new
 
     validate :validate_recognizers, if: -> { state == 'recognize' }
+
+    validates_with Sys::TaskValidator, if: -> { state != 'draft' }
 
     def states
       s = [['下書き保存','draft'],['承認待ち','recognize']]

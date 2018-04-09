@@ -63,7 +63,7 @@ ja:
         in_setting_site_kana_talk: ふりがな・音声
         in_setting_site_map_coordinate: 地図/デフォルト座標
         in_setting_site_zip_download_max_size: ZIPダウンロード最大サイズ
-        in_setting_site_future_preview: 未来日時プレビュー
+        in_setting_site_datetime_preview: 日時指定プレビュー
 
       cms/site_basic_auth_user:
         state: 状態

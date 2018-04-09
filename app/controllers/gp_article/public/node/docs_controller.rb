@@ -3,6 +3,7 @@ class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
   include GpArticle::Controller::Public::Scoping
   include GpArticle::Controller::Feed
 
+  skip_around_action :set_gp_article_public_scoping, if: -> { Core.mode == 'preview' && action_name.in?(%w(show file_content qrcode)) }
   skip_after_action :render_public_layout, only: [:file_content, :qrcode]
 
   def pre_dispatch
@@ -71,14 +72,6 @@ class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
   end
 
   private
-
-  def set_gp_article_public_scoping
-    if Core.mode == 'preview' && params[:action].in?(%w(show file_content qrcode))
-      yield
-    else
-      super
-    end
-  end
 
   def current_date
     if params[:date].present?

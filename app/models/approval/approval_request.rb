@@ -1,7 +1,7 @@
 class Approval::ApprovalRequest < ApplicationRecord
   include Sys::Model::Base
 
-  attribute :current_index, :integer, default: 0
+  column_attribute :current_index, default: 0
 
   belongs_to :approval_flow, required: true
   belongs_to :requester, foreign_key: :user_id, class_name: 'Sys::User'

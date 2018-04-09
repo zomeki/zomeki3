@@ -10,6 +10,8 @@ module GpCalendar::EventHelper
   class Formatter < ActionView::Base
     include ::ApplicationHelper
     include ::DateHelper
+    include GpArticle::DocHelper
+    include GpArticle::DocImageHelper
 
     def initialize(event, date)
       @event = event
@@ -69,7 +71,7 @@ module GpCalendar::EventHelper
 
     def event_link_options
       if @event.doc.present?
-        @event.doc.link_to_options(preview: Core.mode == 'preview' && @event.doc.state != 'public')
+        doc_link_options(@event.doc)
       elsif @event.href.present?
         [@event.href, target: @event.target]
       else
@@ -200,8 +202,8 @@ module GpCalendar::EventHelper
     def event_image
       if (doc = @event.doc)
         GpArticle::DocHelper::Formatter.new(doc).format("@image_tag@")
-      elsif (f = @event.image_files.first)
-        image_tag("#{f.file_attachable.content.public_node.public_uri}#{f.file_attachable.name}/file_contents/#{url_encode f.name}", alt: f.title, title: f.title)
+      elsif (file = @event.image_files.first)
+        image_tag("#{@event.public_uri}file_contents/#{url_encode file.name}", alt: file.title, title: file.title)
       elsif @event.content.default_image.present?
         image_tag(@event.content.default_image)
       end

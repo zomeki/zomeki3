@@ -7,7 +7,7 @@ class Cms::Public::Node::SitemapsController < Cms::Controller::Public::Base
 
     @items = Cms::Node.public_state.visible_in_sitemap.where(route_id: Page.site.root_node.id)
                       .where.not(name: nil)
-                      .order('directory DESC, sitemap_sort_no IS NULL, sitemap_sort_no, name')
+                      .order(directory: :desc, sitemap_sort_no: :asc, name: :asc)
 
     @items = Cms::NodesPreloader.new(@items).preload(:public_descendants_for_sitemap)
   end

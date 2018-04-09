@@ -20,4 +20,15 @@ module FileHelper
     width, height = Util::Image.reduced_size(src_width, src_height, dst_width, dst_height)
     "width: #{width}px; height: #{height}px;"
   end
+
+  def replace_file_path(html, base:)
+    return html if html.blank?
+    uri = Addressable::URI.join(base, "file_contents/").to_s
+    html.gsub(%r{(["'])file_contents/([^"']+?)(["'])}, "\\1#{uri}\\2\\3")
+  end
+
+  def replace_file_path_for_link(link, base:)
+    return link if link.blank?
+    link.sub(/\Afile_contents\//, "#{base}file_contents/")
+  end
 end

@@ -69,21 +69,14 @@ class Sys::Admin::AccountController < Sys::Controller::Admin::Base
       return
     end
 
-    sender = Core.site.admin_mail_sender
-    user   = Sys::User.where(account: params[:account], email: params[:email]).first
+    user = Sys::User.where(account: params[:account], email: params[:email]).first
 
-    if (email = user.try(:email))
+    if user && user.email.present?
       token = Util::String::Token.generate_unique_token(Sys::User, :reset_password_token)
-      user.update_column(:reset_password_token_expires_at, 12.hours.since)
-      user.update_column(:reset_password_token, token)
+      user.update_columns(reset_password_token_expires_at: 12.hours.since,
+                          reset_password_token: token)
 
-      body = <<-EOT
-パスワード変更を受け付けました。12時間以内に下記URLから変更を行ってください。
-
-#{edit_admin_password_url(token: token)}
-      EOT
-
-      send_mail(sender, email, "【#{Core.site.try(:name).presence || 'CMS'}】パスワード再設定", body)
+      Sys::Admin::AccountMailer.password_reminder(Core.site, user: user).deliver_now
     end
 
     redirect_to admin_login_url, notice: 'メールにてパスワード再設定手順をお送りしました。'

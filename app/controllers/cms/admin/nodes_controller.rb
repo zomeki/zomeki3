@@ -11,19 +11,20 @@ class Cms::Admin::NodesController < Cms::Controller::Admin::Base
 
   def index
     @dirs = Cms::Node.where(site_id: Core.site.id, parent_id: @parent.id, directory: 1)
-                     .order('sitemap_sort_no IS NULL, sitemap_sort_no, name')
+                     .order(:sitemap_sort_no, :name)
                      .preload(:site, :concept, :parent)
 
     @pages = Cms::Node.where(site_id: Core.site.id, parent_id: @parent.id, directory: [nil, 0])
-                      .order('sitemap_sort_no IS NULL, sitemap_sort_no, name')
+                      .order(:sitemap_sort_no, :name)
                       .preload(:site, :concept, :parent, :related_objects_for_replace)
     _index @pages
   end
 
   def search
-    @items = Cms::Node.where(site_id: Core.site.id).search_with_params(params)
-      .order('parent_id, sitemap_sort_no IS NULL, sitemap_sort_no, name')
-      .paginate(page: params[:page], per_page: params[:limit])
+    @items = Cms::NodesFinder.new(Cms::Node.where(site_id: Core.site.id))
+                             .search(params)
+                             .order(:parent_id, :sitemap_sort_no, :name)
+                             .paginate(page: params[:page], per_page: params[:limit])
 
     @skip_navi = true
     render action: :search
@@ -87,7 +88,7 @@ class Cms::Admin::NodesController < Cms::Controller::Admin::Base
     concept_id ||= Core.concept.id
     if concept = Cms::Concept.find_by(id: concept_id)
       concept.ancestors.each do |c|
-        contents += Cms::Content.where(concept_id: c.id).order("sort_no IS NULL, sort_no, name, id").to_a
+        contents += Cms::Content.where(concept_id: c.id).order(:sort_no, :name, :id).to_a
       end
     end
 

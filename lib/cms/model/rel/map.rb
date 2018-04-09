@@ -4,16 +4,12 @@ module Cms::Model::Rel::Map
   included do
     has_many :maps, class_name: 'Cms::Map', dependent: :destroy, as: :map_attachable
     accepts_nested_attributes_for :maps
-    before_validation :prepare_maps, if: -> { @save_maps }
+    before_validation :prepare_maps, if: -> { @maps_attributes_changed }
   end
 
   def maps_attributes=(val)
-    @save_maps = true
+    @maps_attributes_changed = true
     super
-  end
-
-  def default_map_position
-    Zomeki.config.application["cms.default_map_coordinate"].to_s.split(',').map(&:strip)
   end
 
   private

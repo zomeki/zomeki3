@@ -6,7 +6,7 @@ class Feed::Feed < ApplicationRecord
 
   default_scope { order(created_at: :desc) }
 
-  attribute :entry_count, :integer, default: 20
+  column_attribute :entry_count, default: 20
 
   enum_ish :state, [:public, :closed], default: :public
 

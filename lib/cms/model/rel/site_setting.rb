@@ -91,8 +91,8 @@ module Cms::Model::Rel::SiteSetting
     setting_value(:zip_download_max_size).to_i * (1024**2)
   end
 
-  def use_future_preview?
-    setting_value(:future_preview) == 'enabled'
+  def use_datetime_preview?
+    setting_value(:datetime_preview) == 'enabled'
   end
 
   def load_site_settings

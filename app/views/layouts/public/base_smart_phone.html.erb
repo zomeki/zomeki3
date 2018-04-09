@@ -2,6 +2,8 @@
 <html lang="<%= Page.lang %>" prefix="og: http://ogp.me/ns#">
 <head>
   <meta charset="UTF-8" />
+  <title><%= Page.window_title %></title>
+  <%= Page.layout.head_tag(request) %>
   <%= render 'layouts/public/header' %>
   <%= javascript_include_tag '/_common/js/jquery.browser.js' %>
   <%= javascript_include_tag '/_common/js/jquery.iframe-auto-height.js' %>

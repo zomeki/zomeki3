@@ -30,18 +30,18 @@ class GpArticle::Doc < ApplicationRecord
 
   default_scope { where.not(state: 'archived') }
 
-  attribute :href, :string, default: ''
-  attribute :title, :string, default: ''
-  attribute :mobile_title, :string, default: ''
-  attribute :subtitle, :text, default: ''
-  attribute :summary, :text, default: ''
-  attribute :body, :text, default: ''
-  attribute :mobile_body, :text, default: ''
-  attribute :body_more, :text, default: ''
-  attribute :terminal_pc_or_smart_phone, :boolean, default: true
-  attribute :terminal_mobile, :boolean, default: true
-  attribute :body_more_link_text, :string, default: '続きを読む'
-  attribute :filename_base, :string, default: 'index'
+  column_attribute :href, default: ''
+  column_attribute :title, default: ''
+  column_attribute :mobile_title, default: ''
+  column_attribute :subtitle, default: ''
+  column_attribute :summary, default: ''
+  column_attribute :body, default: ''
+  column_attribute :mobile_body, default: ''
+  column_attribute :body_more, default: ''
+  column_attribute :terminal_pc_or_smart_phone, default: true
+  column_attribute :terminal_mobile, default: true
+  column_attribute :body_more_link_text, default: '続きを読む'
+  column_attribute :filename_base, default: 'index'
 
   enum_ish :state, [:draft, :approvable, :approved, :prepared, :public, :closed, :archived], predicate: true
   enum_ish :target, ['', '_self', '_blank', 'attached_file'], default: ''
@@ -92,8 +92,7 @@ class GpArticle::Doc < ApplicationRecord
   before_save :set_serial_no
   before_save :set_published_at
   before_save :set_display_published_at
-
-  after_save :set_display_updated_at
+  before_save :set_display_updated_at
 
   after_save     GpArticle::Publisher::DocCallbacks.new, if: :changed?
   before_destroy GpArticle::Publisher::DocCallbacks.new
@@ -106,6 +105,7 @@ class GpArticle::Doc < ApplicationRecord
   attr_accessor :link_check_results, :in_ignore_link_check
   attr_accessor :accessibility_check_results, :in_ignore_accessibility_check, :in_modify_accessibility_check
 
+  validates :name, format: { with: /\A[\-\w]*\z/ }
   validates :title, presence: true, length: { maximum: 200 }
   validates :mobile_title, length: { maximum: 200 }
   validates :body, length: { maximum: Zomeki.config.application['gp_article.body_limit'].to_i }
@@ -123,14 +123,11 @@ class GpArticle::Doc < ApplicationRecord
   validate :validate_accessibility_check, if: -> { !state_draft? && errors.blank? }
   validate :validate_broken_link_existence, if: -> { !state_draft? && errors.blank? }
 
-  validates_with Cms::ContentNodeValidator, if: -> { state_approvable? },
-                                           message: '記事コンテンツのディレクトリが作成されていないため、承認依頼が行えません。'
-  validates_with Cms::ContentNodeValidator, if: -> { state_public? },
-                                           message: '記事コンテンツのディレクトリが作成されていないため、即時公開が行えません。'
+  validates_with Sys::TaskValidator, if: -> { !state_draft? }
+  validates_with Cms::ContentNodeValidator, if: -> { state_approvable? || state_public? }
 
   scope :public_state, -> { where(state: 'public') }
   scope :mobile, ->(m) { m ? where(terminal_mobile: true) : where(terminal_pc_or_smart_phone: true) }
-  scope :display_published_after, ->(date) { where(arel_table[:display_published_at].gteq(date)) }
   scope :visible_in_list, -> { where(feature_1: true) }
   scope :event_scheduled_between, ->(start_date, end_date, category_ids = nil) {
     rel = dates_intersects(:event_started_on, :event_ended_on, start_date.try(:beginning_of_day), end_date.try(:end_of_day))
@@ -204,11 +201,11 @@ class GpArticle::Doc < ApplicationRecord
     "#{site.main_admin_uri}_preview/#{format('%04d', site.id)}#{flag}#{path}preview/#{id}/#{filename}#{query}"
   end
 
-  def file_content_uri
+  def file_base_uri
     if state_public?
-      %Q(#{public_uri}file_contents/)
+      public_uri
     else
-      %Q(#{content.admin_uri}/#{id}/file_contents/)
+      admin_uri + '/'
     end
   end
 
@@ -278,6 +275,7 @@ class GpArticle::Doc < ApplicationRecord
         new_doc.tasks.build(site_id: task.site_id, name: task.name, process_at: task.process_at) if task.state_queued?
       end
       new_doc.creator_attributes = { group_id: creator.group_id, user_id: creator.user_id }
+      new_doc.display_updated_at = nil unless keep_display_updated_at
     else
       new_doc.name = nil
       new_doc.title = new_doc.title.gsub(/^(【複製】)*/, '【複製】')
@@ -334,22 +332,6 @@ class GpArticle::Doc < ApplicationRecord
 
   def publishable?
     state.in?(%w(approved prepared)) && (editable? || approval_participators.include?(Core.user))
-  end
-
-  def formated_display_published_at
-    display_published_at.try(:strftime, content.date_style)
-  end
-
-  def formated_display_updated_at
-    display_updated_at.try(:strftime, content.date_style)
-  end
-
-  def default_map_position
-    [content.map_coordinate, content.site.map_coordinate].lazy.each do |pos|
-      p = pos.to_s.split(',').map(&:strip)
-      return p if p.size == 2
-    end
-    super
   end
 
   def extract_links
@@ -415,36 +397,13 @@ class GpArticle::Doc < ApplicationRecord
     super && content && content.qrcode_related?
   end
 
-  def event_state_visible?
-    event_state == 'visible'
-  end
-
   def lang_text
     content.lang_options.rassoc(lang).try(:first)
-  end
-
-  def link_to_options(preview: false)
-    uri = if preview
-            "#{public_uri(without_filename: true)}/preview/#{id}/#{filename_for_uri}"
-          else
-            public_uri
-          end
-    if target.present? && href.present?
-      if target == 'attached_file' && (file = files.find_by(name: href))
-        ["#{uri}file_contents/#{file.name}", target: '_blank']
-      else
-        [href, target: target]
-      end
-    else
-      [uri]
-    end
   end
 
   private
 
   def validate_name
-    errors.add(:name, :invalid) if name !~ /^[\-\w]*$/
-
     doc = self.class.where(content_id: content_id, name: name)
     doc = doc.where.not(serial_no: serial_no) if serial_no
     errors.add(:name, :taken) if doc.exists?
@@ -518,7 +477,7 @@ class GpArticle::Doc < ApplicationRecord
   end
 
   def set_display_updated_at
-    update_columns(display_updated_at: updated_at) if display_updated_at.nil? || !keep_display_updated_at
+    self.display_updated_at ||= Time.now if state.in?(%w(approvable public))
   end
 
   def set_serial_no

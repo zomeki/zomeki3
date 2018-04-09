@@ -49,7 +49,7 @@ class Reception::Course < ApplicationRecord
     sql = Reception::Open.select(%Q|MIN("reception_opens"."open_on" + "reception_opens"."start_at")|)
                          .where(%Q|"reception_courses"."id" = "reception_opens"."course_id"|).to_sql
     sort = sort.downcase == 'asc' ? 'ASC' : 'DESC'
-    order("(#{sql}) #{sort}")
+    order(Arel.sql("(#{sql}) #{sort}"))
   }
 
   def applicants
@@ -69,17 +69,17 @@ class Reception::Course < ApplicationRecord
 
   def public_uri
     return nil unless content.public_node
-    "#{content.public_node.public_uri}#{name}"
+    "#{content.public_node.public_uri}#{name}/"
   end
 
   def public_full_uri
     return nil unless content.public_node
-    "#{content.public_node.public_full_uri}#{name}"
+    "#{content.public_node.public_full_uri}#{name}/"
   end
 
   def public_path
     return '' if public_uri.blank?
-    "#{content.public_path}#{public_uri}/index.html"
+    "#{content.public_path}#{public_uri}index.html"
   end
 
   def bread_crumbs(node)
@@ -99,7 +99,7 @@ class Reception::Course < ApplicationRecord
     if content
       if (node = content.public_node)
         crumb = node.bread_crumbs.crumbs.first
-        crumb << [title, "#{self.public_uri}/"]
+        crumb << [title, public_uri]
         crumbs << crumb
       end
     end
@@ -128,19 +128,5 @@ class Reception::Course < ApplicationRecord
 
   def set_name
     update_column(:name, id) if name.blank?
-  end
-
-  concerning :File do
-    def admin_uri
-      "#{content.admin_uri}/#{id}"
-    end
-
-    def replace_file_path_for_admin(text)
-      text.gsub(%r{("|')file_contents/(.+?)("|')}, "\\1#{admin_uri}/file_contents/\\2\\3") if text.present?
-    end
-
-    def replace_file_path_for_public(text)
-      text.gsub(%r{("|')file_contents/(.+?)("|')}, "\\1#{public_uri}/file_contents/\\2\\3") if text.present?
-    end
   end
 end

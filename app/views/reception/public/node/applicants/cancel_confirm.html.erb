@@ -5,7 +5,7 @@
 
   <%= render 'show_token', token: @token %>
 
-  <%= form_for @token, as: :item, url: "#{@course.public_uri}/applicants/#{@token.token}/cancel", html: { method: :patch } do |f| -%>
+  <%= form_for @token, as: :item, url: "#{@course.public_uri}applicants/#{@token.token}/cancel", html: { method: :patch } do |f| -%>
     <%= f.error_messages %>
     <%= hidden_field_tag :seq_no, params[:seq_no] %>
     <div class="submit">

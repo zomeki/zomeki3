@@ -3,7 +3,7 @@ Cms::Lib::Modules::ModuleSet.draw :ad_banner, '広告バナー', 90 do |mod|
   mod.content :banners, '広告バナー', publishable: true
 
   ## directories
-  mod.directory :banners, '広告バナー'
+  mod.directory :banners, '広告バナー', dynamic: true
 
   ## pieces
   mod.piece :banners, '広告バナー一覧'
