@@ -4,6 +4,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
   layout :select_layout
 
+  before_action :protect_unauthorized_params, only: [:index]
   before_action :check_duplicated_document, only: [:edit]
   before_action :hold_document, only: [:edit]
   before_action :check_intercepted, only: [:update]
@@ -232,6 +233,12 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
   protected
 
+  def protect_unauthorized_params
+    unless Core.user.has_auth?(:manager)
+      params[:target] = 'user' if params[:target] == 'all'
+    end
+  end
+
   def select_layout
     if request.smart_phone? && action_name.in?(%w(new create edit update))
       'admin/gp_article'
@@ -285,7 +292,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
         params[:target] = 'all' if params[:target].blank?
         params[:target_state] = 'processing' if params[:target_state].blank?
       else
-        params[:target] = 'user' if params[:target].blank? || params[:target] == 'all'
+        params[:target] = 'user' if params[:target].blank?
         params[:target_state] = 'processing' if params[:target_state].blank?
       end
     end
