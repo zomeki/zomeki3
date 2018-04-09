@@ -19,6 +19,7 @@ namespace ZomekiCMS::NAME do
     task :cleanup => :environment do
       Sys::File.cleanup
       Sys::UsersSession.cleanup
+      Sys::Process.cleanup
     end
 
     namespace :tasks do
