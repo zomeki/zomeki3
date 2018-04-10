@@ -78,7 +78,7 @@ CKEDITOR.editorConfig = function( config ) {
     }
   };
   // table廃止・非推奨属性入力不可
-  config.disallowedContent = 'table[summary,height,cellspacing,cellpadding,align]{height}';
+  config.disallowedContent = 'font;table[summary,height,cellspacing,cellpadding,align]{height}';
 
   // Wordからの貼付で装飾を削除する
   config.pasteFromWordRemoveFontStyles = true;
