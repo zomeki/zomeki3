@@ -25,7 +25,7 @@
     </tr>
   </table>
   
-  <%- if item.state_approvable? && item.approvers.include?(Core.user) && controller.respond_to?(:passback) -%>
+  <%- if item.passbackable?(Core.user) && controller.respond_to?(:passback) -%>
     <%= form_tag url_for(content: content, action: 'passback') do %>
     <table class="show">
       <tr>
@@ -37,7 +37,7 @@
     <%- end -%>
   <%- end -%>
   
-  <%- if item.state_approvable? && item.approval_requesters.include?(Core.user) && controller.respond_to?(:pullback) -%>
+  <%- if item.pullbackable?(Core.user) && controller.respond_to?(:pullback) -%>
     <%= form_tag url_for(content: content, action: 'pullback') do %>
     <table class="show">
       <tr>

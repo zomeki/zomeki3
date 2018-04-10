@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180227094107) do
+ActiveRecord::Schema.define(version: 20180409092530) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -537,7 +537,7 @@ ActiveRecord::Schema.define(version: 20180227094107) do
 
   create_table "cms_pieces", force: :cascade do |t|
     t.integer  "concept_id"
-    t.integer  "site_id",                     null: false
+    t.integer  "site_id",        null: false
     t.string   "state"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -1286,6 +1286,7 @@ ActiveRecord::Schema.define(version: 20180227094107) do
     t.string   "sitemap_state"
     t.string   "index_link"
     t.string   "mail_to"
+    t.datetime "recognized_at"
     t.index ["content_id"], name: "index_survey_forms_on_content_id", using: :btree
   end
 
