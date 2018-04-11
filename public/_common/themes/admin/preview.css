@@ -1,4 +1,6 @@
 #cmsPreviewMark {
+  display: flex;
+  align-items: center;
   margin: 1px;
   padding: 5px 10px;
   border-bottom: 1px solid #fff;
@@ -11,7 +13,8 @@
   cursor: pointer;
 }
 #cmsPreviewMark .previewSetting {
-  float: right;
+  margin-left: auto;
+  order: 2;
 }
 #cmsPreviewMark .datetimepicker {
   width: 150px;
