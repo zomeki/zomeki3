@@ -1,6 +1,7 @@
 require 'csv'
 class Survey::Admin::FormsController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
+  include Approval::Controller::Admin::Approval
 
   keep_params :target, :target_state, :target_public
 
@@ -32,12 +33,11 @@ class Survey::Admin::FormsController < Cms::Controller::Admin::Base
     new_state = params.keys.detect{|k| k =~ /^commit_/ }.try(:sub, /^commit_/, '')
 
     @item = @content.forms.build(form_params)
-
     @item.state = new_state if new_state.present? && @content.form_state_options.any? { |v| v.last == new_state }
 
     location = ->(f){ edit_survey_form_url(@content, f) } if @item.state_draft?
     _create(@item, location: location) do
-      @item.send_approval_request_mail if @item.state_approvable?
+      send_approval_request_mail(@item) if @item.state_approvable?
     end
   end
 
@@ -45,12 +45,11 @@ class Survey::Admin::FormsController < Cms::Controller::Admin::Base
     new_state = params.keys.detect{|k| k =~ /^commit_/ }.try(:sub, /^commit_/, '')
 
     @item.attributes = form_params
-
     @item.state = new_state if new_state.present? && @content.form_state_options.any? { |v| v.last == new_state }
 
     location = url_for(action: 'edit') if @item.state_draft?
     _update(@item, location: location) do
-      @item.send_approval_request_mail if @item.state_approvable?
+      send_approval_request_mail(@item) if @item.state_approvable?
     end
   end
 
@@ -59,21 +58,12 @@ class Survey::Admin::FormsController < Cms::Controller::Admin::Base
   end
 
   def approve
-    if @item.state_approvable? && @item.approvers.include?(Core.user)
-      @item.approve(Core.user) do
-        @item.update_columns(state: (@item.queued_tasks.where(name: 'publish').exists? ? 'prepared' : 'approved'))
-        @item.enqueue_tasks
-        Sys::OperationLog.log(request, item: @item)
-
-        if @item.state_approved? && @content.publish_after_approved?
-          @item.publish
-          Sys::OperationLog.log(request, item: @item, do: 'publish')
-        end
-
-        @item.send_approved_notification_mail
+    _approve @item do
+      if @item.state_approved? && @content.publish_after_approved?
+        @item.publish
+        Sys::OperationLog.log(request, item: @item, do: 'publish')
       end
     end
-    redirect_to url_for(action: :show), notice: '承認処理が完了しました。'
   end
 
   def publish

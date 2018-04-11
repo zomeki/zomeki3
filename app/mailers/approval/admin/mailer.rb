@@ -1,49 +1,49 @@
 class Approval::Admin::Mailer < ApplicationMailer
   def approval_request(options = {})
+    @from = options[:from]
+    @to = options[:to]
     @item = options[:item]
-    @content = @item.content
-    @approval_request = options[:approval_request]
-    @approver = options[:approver]
 
+    @content = @item.content
     @preview_uri = preview_uri
     @approve_uri = approve_uri
 
-    mail from: options[:from], to: options[:to], subject: "#{subject_prefix}：承認依頼メール"
+    mail from: @from.email, to: @to.email, subject: "#{subject_prefix}：承認依頼メール"
   end
 
   def approved_notification(options = {})
+    @from = options[:from]
+    @to = options[:to]
     @item = options[:item]
-    @content = @item.content
-    @approval_request = options[:approval_request]
-    @approver = options[:approver]
 
+    @content = @item.content
     @detail_uri = detail_uri
 
-    mail from: options[:from], to: options[:to], subject: "#{subject_prefix}：承認完了メール"
+    mail from: @from.email, to: @to.email, subject: "#{subject_prefix}：承認完了メール"
   end
 
   def passbacked_notification(options = {})
+    @from = options[:from]
+    @to = options[:to]
     @item = options[:item]
-    @content = @item.content
-    @approval_request = options[:approval_request]
-    @approver = options[:approver]
     @comment = options[:comment]
 
+    @content = @item.content
     @detail_uri = detail_uri
 
-    mail from: options[:from], to: options[:to], subject: "#{subject_prefix}：差し戻しメール"
+    mail from: @from.email, to: @to.email, subject: "#{subject_prefix}：差し戻しメール"
   end
 
   def pullbacked_notification(options = {})
+    @from = options[:from]
+    @to = options[:to]
     @item = options[:item]
-    @content = @item.content
-    @approval_request = options[:approval_request]
-    @approver = options[:approver]
     @comment = options[:comment]
 
+    @content = @item.content
     @detail_uri = detail_uri
 
-    mail from: options[:from], to: options[:to], subject: "#{subject_prefix}：引き戻しメール"
+    mail from: @from.email, to: @to.email, subject: "#{subject_prefix}：引き戻しメール"
   end
 
   private

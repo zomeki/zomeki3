@@ -1,9 +1,11 @@
 class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
   include Sys::Controller::Scaffold::Publication
+  include Approval::Controller::Admin::Approval
 
   layout :select_layout
 
+  before_action :protect_unauthorized_params, only: [:index]
   before_action :check_duplicated_document, only: [:edit]
   before_action :hold_document, only: [:edit]
   before_action :check_intercepted, only: [:update]
@@ -113,11 +115,13 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
     location = ->(d){ edit_gp_article_doc_url(@content, d) } if @item.state_draft?
     _create(@item, location: location) do
-
       @item = @content.docs.find_by(id: @item.id)
-      @item.send_approval_request_mail if @item.state_approvable?
 
-      publish_by_update(@item) if @item.state_public?
+      if @item.state_approvable?
+        send_approval_request_mail(@item)
+      elsif @item.state_public?
+        publish_by_update(@item)
+      end
     end
   end
 
@@ -145,9 +149,12 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     location = url_for(action: 'edit') if @item.state_draft?
     _update(@item, location: location) do
       @item = @content.docs.find_by(id: @item.id)
-      @item.send_approval_request_mail if @item.state_approvable?
 
-      publish_by_update(@item) if @item.state_public?
+      if @item.state_approvable?
+        send_approval_request_mail(@item)
+      elsif @item.state_public?
+        publish_by_update(@item)
+      end
 
       @item.close if !@item.state_public? && !@item.will_replace?
 
@@ -188,49 +195,29 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   end
 
   def approve
-    if @item.approvers.include?(Core.user)
-      @item.approve(Core.user) do
-        @item.update_columns(
-          state: (@item.queued_tasks.where(name: 'publish').exists? ? 'prepared' : 'approved'),
-          recognized_at: Time.now
-        )
-        @item.enqueue_tasks
-        Sys::OperationLog.log(request, item: @item)
-
-        if @item.state_approved? && @content.publish_after_approved?
-          @item.publish
-          Sys::OperationLog.log(request, item: @item, do: 'publish')
-        end
-
-        @item.send_approved_notification_mail
+    _approve @item do
+      if @item.state_approved? && @content.publish_after_approved?
+        @item.publish
+        Sys::OperationLog.log(request, item: @item, do: 'publish')
       end
     end
-    redirect_to url_for(action: :show), notice: '承認処理が完了しました。'
   end
 
   def passback
-    if @item.state_approvable? && @item.approvers.include?(Core.user)
-      @item.passback(Core.user, comment: params[:comment]) do
-        @item.update_column(:state, 'draft')
-      end
-      redirect_to gp_article_doc_url(@content, @item), notice: '差し戻しが完了しました。'
-    else
-      redirect_to gp_article_doc_url(@content, @item), notice: '差し戻しに失敗しました。'
-    end
+    _passback @item
   end
 
   def pullback
-    if @item.state_approvable? && @item.approval_requesters.include?(Core.user)
-      @item.pullback(comment: params[:comment]) do
-        @item.update_column(:state, 'draft')
-      end
-      redirect_to gp_article_doc_url(@content, @item), notice: '引き戻しが完了しました。'
-    else
-      redirect_to gp_article_doc_url(@content, @item), notice: '引き戻しに失敗しました。'
-    end
+    _pullback @item
   end
 
   protected
+
+  def protect_unauthorized_params
+    unless Core.user.has_auth?(:manager)
+      params[:target] = 'user' if params[:target] == 'all'
+    end
+  end
 
   def select_layout
     if request.smart_phone? && action_name.in?(%w(new create edit update))
@@ -285,7 +272,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
         params[:target] = 'all' if params[:target].blank?
         params[:target_state] = 'processing' if params[:target_state].blank?
       else
-        params[:target] = 'user' if params[:target].blank? || params[:target] == 'all'
+        params[:target] = 'user' if params[:target].blank?
         params[:target_state] = 'processing' if params[:target_state].blank?
       end
     end

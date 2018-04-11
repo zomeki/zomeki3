@@ -19,7 +19,7 @@ class Survey::FormsFinder < ApplicationFinder
   def with_target(target)
     case target
     when 'user'
-      @forms.creator_or_approvables
+      @forms.creator_or_approvables(@user)
     when 'group'
       creators = Sys::Creator.arel_table
       @forms.joins(:creator)
