@@ -6,7 +6,7 @@ class AdBanner::Group < ApplicationRecord
 
   default_scope { order(:sort_no, :id) }
 
-  attribute :sort_no, :integer, default: 10
+  column_attribute :sort_no, default: 10
 
   # Content
   belongs_to :content, class_name: 'AdBanner::Content::Banner', required: true

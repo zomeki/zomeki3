@@ -13,19 +13,6 @@ class BizCalendar::HolidayType < ApplicationRecord
   validate :name_validity
   
   scope :visible, -> { where(state: 'visible') }
-  scope :search_with_params, ->(params = {}) {
-    rel = all
-    params.each do |n, v|
-      next if v.to_s == ''
-      case n
-      when 's_event_date'
-        rel.where!(event_date: v)
-      when 's_title'
-        rel = rel.search_with_text(:title, v)
-      end
-    end
-    rel
-  }
 
   def name_validity
     errors.add(:name, :invalid) if self.name && self.name !~ /^[\-\w]*$/

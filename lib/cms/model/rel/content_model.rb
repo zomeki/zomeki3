@@ -1,13 +1,8 @@
 module Cms::Model::Rel::ContentModel
-  def self.included(mod)
-    if !mod.method_defined?(:concept)
-      mod.class_eval do
-        def concept(reload = nil)
-          content ? content.concept(reload) : nil
-        end
-      end
-    end
-    mod.belongs_to :content, foreign_key: :content_id, class_name: 'Cms::Content'
+  extend ActiveSupport::Concern
+
+  included do
+    belongs_to :content, foreign_key: :content_id, class_name: 'Cms::Content'
   end
 
   def content_name
@@ -15,10 +10,9 @@ module Cms::Model::Rel::ContentModel
   end
 
   def content
-    s = super
-    content_class = s.model.split('::', 2).insert(1, 'Content').join('::').constantize
-    content_class.find(s.id)
+    c = super
+    c.becomes(c.model.split('::').insert(1, 'Content').join('::').constantize)
   rescue NameError
-    super
+    c
   end
 end

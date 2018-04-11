@@ -6,13 +6,13 @@ class Cms::PreviewItemsFinder < ApplicationFinder
 
   def search(preview_at)
     tasks = Sys::Task.select(:processable_id)
-                     .where(processable_type: @model.name, state: 'queued')
+                     .where(processable_type: @model.name)
                      .date_before(:process_at, preview_at)
     publiches = tasks.where(name: 'publish')
     closes = tasks.where(name: 'close')
 
     publics = @model.select(:id).where(state: 'public')
-    nonpublics = @model.select(:id).where(state: %w(approvable approved prepared), id: publiches)
+    nonpublics = @model.select(:id).where(state: %w(approvable approved prepared closed), id: publiches)
 
     unless @user.has_auth?(:manager)
       creators = Sys::Creator.arel_table

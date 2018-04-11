@@ -2,9 +2,11 @@ class Survey::Public::Node::FormsController < Cms::Controller::Public::Base
   include SimpleCaptcha::ControllerHelpers
   include Survey::Controller::Public::Scoping
 
+  skip_around_action :set_survey_public_scoping, if: -> { Core.mode == 'preview' && action_name != 'index' }
   before_action :set_form, only: [:show, :confirm_answers, :send_answers, :finish]
-  skip_after_action :render_public_layout
-  after_action :call_render_public_layout
+
+  skip_after_action :render_public_layout, if: -> { @piece }
+  after_action :render_inline_layout, if: -> { @piece }
 
   def pre_dispatch
     @node = Page.current_node
@@ -30,46 +32,37 @@ class Survey::Public::Node::FormsController < Cms::Controller::Public::Base
       remote_addr: request.remote_ip,
       user_agent: request.user_agent
     )
-
-    render_survey_layout
   end
 
   def confirm_answers
     build_answer
 
     if @form_answer.form.confirmation?
-      render_survey_layout(:show) and return unless @content.use_captcha? ? @form_answer.valid_with_captcha? : @form_answer.valid?
+      return render action: :show unless @content.use_captcha? ? @form_answer.valid_with_captcha? : @form_answer.valid?
     else
-      render_survey_layout(:show) and return unless @content.use_captcha? ? @form_answer.save_with_captcha : @form_answer.save
-      send_mail_and_redirect_to_finish and return
+      return render action: :show unless @content.use_captcha? ? @form_answer.save_with_captcha : @form_answer.save
+      return send_mail_and_redirect_to_finish
     end
-
-    render_survey_layout and return
   end
 
   def send_answers
     build_answer
 
     if params[:edit_answers] || !@form_answer.save
-      render_survey_layout(:show)
+      render action: :show
     else
       send_mail_and_redirect_to_finish
     end
   end
 
   def finish
-    render_survey_layout
+  end
+
+  def keeping_params
+    { piece: @piece&.id, u: @current_url, t: @current_url_title }.to_query
   end
 
   private
-
-  def set_survey_public_scoping
-    if Core.mode == 'preview' && params[:action] != 'index'
-      yield
-    else
-      super
-    end
-  end
 
   def set_form
     @form = @content.forms.find_by(name: params[:id])
@@ -77,10 +70,6 @@ class Survey::Public::Node::FormsController < Cms::Controller::Public::Base
 
     Page.current_item = @form
     Page.title = @form.title
-  end
-
-  def call_render_public_layout
-    render_public_layout unless @piece
   end
 
   def build_answer
@@ -108,26 +97,22 @@ class Survey::Public::Node::FormsController < Cms::Controller::Public::Base
                             .deliver_now
     end
 
-    prms = "?piece=#{@piece.try(:id)}&u=#{CGI.escape @current_url}&t=#{CGI.escape @current_url_title}"
     if Core.request_uri =~ /^\/_ssl\/([0-9]+).*/
-      redirect_to ::File.join(Page.site.full_ssl_uri, "#{@node.public_uri}#{@form_answer.form.name}/finish#{prms}")
+      redirect_to ::File.join(Page.site.full_ssl_uri, "#{@form.public_uri}finish?#{keeping_params}")
     else
-      redirect_to "#{@node.public_uri}#{@form_answer.form.name}/finish#{prms}"
+      redirect_to "#{@form.public_uri}finish?#{keeping_params}"
     end
   end
 
-  def render_survey_layout(action = action_name)
-    return render action: action unless @piece
-
-    head_css = @piece.head_css.to_s
+  def render_inline_layout
     Page.layout = Cms::Layout.new(
-      head:             head_css,
-      mobile_head:      head_css,
-      smart_phone_head: head_css,
+      head:             @piece.head_css.to_s,
+      mobile_head:      @piece.head_css.to_s,
+      smart_phone_head: @piece.head_css.to_s,
       body:             '[[content]]',
       mobile_body:      '[[content]]',
       smart_phone_body: '[[content]]'
     )
-    render action: action, layout: 'layouts/public/base'
+    self.response_body = render_to_string(html: response.body.html_safe, layout: 'layouts/public/base')
   end
 end

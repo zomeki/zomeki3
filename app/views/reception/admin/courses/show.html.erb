@@ -12,7 +12,7 @@
   </tr>
   <tr>
     <th><%= @item.class.human_attribute_name :body %></th>
-    <td class="cke_editor_wrapper"><%= text_area_tag :body, @item.replace_file_path_for_admin(@item.body), class: 'ckeditor' %></td>
+    <td class="cke_editor_wrapper"><%= text_area_tag :body, replace_file_path(@item.body, base: "#{@item.admin_uri}/"), class: 'ckeditor' %></td>
   </tr>
   <tr>
     <th><%= @item.class.human_attribute_name :capacity %></th>
@@ -24,7 +24,7 @@
   </tr>
   <tr>
     <th><%= @item.class.human_attribute_name :remark %></th>
-    <td class="cke_editor_wrapper"><%= text_area_tag :remark, @item.replace_file_path_for_admin(@item.remark), class: 'ckeditor' %></td>
+    <td class="cke_editor_wrapper"><%= text_area_tag :remark, replace_file_path(@item.remark, base: "#{@item.admin_uri}/"), class: 'ckeditor' %></td>
   </tr>
   <tr>
     <th><%= @item.class.human_attribute_name :sort_no %></th>
@@ -37,7 +37,7 @@
 <table class="show">
   <tr>
     <th><%= @item.class.human_attribute_name :description %></th>
-    <td class="cke_editor_wrapper"><%= text_area_tag :description, @item.replace_file_path_for_admin(@item.description), class: 'ckeditor' %></td>
+    <td class="cke_editor_wrapper"><%= text_area_tag :description, replace_file_path(@item.description, base: "#{@item.admin_uri}/"), class: 'ckeditor' %></td>
   </tr>
 </table>
 

@@ -1,0 +1,4 @@
+「<%= @item.title %>」についての承認が完了しました。
+次のＵＲＬをクリックして公開処理を行ってください。
+
+<%= Addressable::URI.join(@site.main_admin_uri, @item.admin_uri) %>

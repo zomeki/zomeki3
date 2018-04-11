@@ -6,7 +6,7 @@ class GpTemplate::Template < ApplicationRecord
 
   default_scope { order(:sort_no, :id) }
 
-  attribute :sort_no, :integer, default: 10
+  column_attribute :sort_no, default: 10
 
   enum_ish :state, [:public, :closed], default: :public, predicate: true
 

@@ -14,7 +14,7 @@ class GpArticle::Public::Piece::ArchivesController < Sys::Controller::Public::Ba
     @num_docs = @piece.content.docs_for_list
                               .select("TO_CHAR(display_published_at, 'YYYY-MM')")
                               .group("TO_CHAR(display_published_at, 'YYYY-MM')")
-                              .order("TO_CHAR(display_published_at, 'YYYY-MM') #{order}").count
+                              .order(Arel.sql("TO_CHAR(display_published_at, 'YYYY-MM') #{order}")).count
     @num_docs = case @piece.term
                 when 'year_month'
                   @num_docs.inject({}){|result, item|

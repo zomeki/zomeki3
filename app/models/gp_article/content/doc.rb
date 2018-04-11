@@ -157,6 +157,18 @@ class GpArticle::Content::Doc < Cms::Content
     setting_extra_values(:inquiry_setting) || {}
   end
 
+  def inquiry_default_state
+    inquiry_extra_values[:state]
+  end
+
+  def inquiry_title
+    inquiry_extra_values[:inquiry_title]
+  end
+
+  def inquiry_style
+    inquiry_extra_values[:inquiry_style]
+  end
+
   def approval_content_approval_flow
     Approval::Content::ApprovalFlow.find_by(id: setting_extra_value(:approval_relation, :approval_content_id))
   end

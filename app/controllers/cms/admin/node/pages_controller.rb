@@ -87,35 +87,19 @@ class Cms::Admin::Node::PagesController < Cms::Admin::Node::BaseController
     end
   end
 
-protected
-  def send_recognition_request_mail(item, users = nil)
-    mail_fr = Core.user.email
-    mail_to = nil
-    subject = "ページ（#{item.site.name}）：承認依頼メール"
-    message = "#{Core.user.name}さんより「#{item.title}」についての承認依頼が届きました。\n" +
-      "次の手順により，承認作業を行ってください。\n\n" +
-      "１．PC用記事のプレビューにより文書を確認\n#{item.preview_uri(params: { node_id: item.id })}\n\n" +
-      "２．次のリンクから承認を実施\n" +
-      "#{url_for(action: :show, id: item)}\n"
+  protected
 
-    users ||= item.recognizers
-    users.each {|user| send_mail(mail_fr, user.email, subject, message) }
+  def send_recognition_request_mail(item)
+    item.recognizers.each do |recognizer|
+      next if Core.user.email.blank? || recognizer.email.blank?
+      Sys::Admin::RecognitionMailer.recognition_request(item, from: Core.user, to: recognizer).deliver_now
+    end
   end
 
   def send_recognition_success_mail(item)
-    return true unless item.recognition
-    return true unless item.recognition.user
-    return true if item.recognition.user.email.blank?
-
-    mail_fr = Core.user.email
-    mail_to = item.recognition.user.email
-
-    subject = "ページ（#{item.site.name}）：最終承認完了メール"
-    message = "「#{item.title}」についての承認が完了しました。\n" +
-      "次のＵＲＬをクリックして公開処理を行ってください。\n\n" +
-      "#{url_for(action: :show, id: item.id)}"
-
-    send_mail(mail_fr, mail_to, subject, message)
+    return if Core.user.email.blank?
+    return if item.recognition.blank? || item.recognition.user.blank? || item.recognition.user.email.blank?
+    Sys::Admin::RecognitionMailer.recognition_success(item, from: Core.user, to: item.recognition.user).deliver_now
   end
 
   private

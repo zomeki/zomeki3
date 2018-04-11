@@ -103,7 +103,7 @@ class Tool::Convert
   def self.process_link(conf, updated_at = nil)
     items = Tool::ConvertDoc.in_site(Core.site).where(content_id: conf.content_id)
     items = items.where('updated_at >= ?', updated_at) if updated_at
-    items = items.order('id')
+    items = items.order(:id)
 
     conf.link_total_num = items.count
     conf.save

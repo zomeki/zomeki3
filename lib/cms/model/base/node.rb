@@ -7,11 +7,6 @@ module Cms::Model::Base::Node
     return state == 'public' && !published_at.blank?
   end
 
-  def content_name
-    return content.name if content
-    Cms::Lib::Modules.module_name(:cms)
-  end
-
   def content_model_name(option = nil)
     name = Cms::Lib::Modules.model_name(:node, model).to_s
     case option

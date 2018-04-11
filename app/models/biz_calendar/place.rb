@@ -5,7 +5,7 @@ class BizCalendar::Place < ApplicationRecord
   include Cms::Model::Rel::Content
   include Cms::Model::Auth::Content
 
-  attribute :sort_no, :integer, default: 10
+  column_attribute :sort_no, default: 10
 
   enum_ish :state, [:public, :closed], default: :public, predicate: true
   enum_ish :business_hours_state, [:visible, :hidden], default: :visible

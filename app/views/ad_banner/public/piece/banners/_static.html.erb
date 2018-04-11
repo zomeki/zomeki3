@@ -3,7 +3,7 @@
 <%- end -%>
 
 <%- unless @banners.empty? -%>
-<ul class="ad_banner">
+<ul class="bannerImages">
   <%- @banners.each do |banner| -%>
   <li class="banner">
     <% url = if @piece.content.click_count_related? && request.mobile?

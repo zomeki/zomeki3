@@ -69,7 +69,7 @@ class Cms::Admin::PiecesController < Cms::Controller::Admin::Base
     concept_id ||= Core.concept.id
     if concept = Cms::Concept.find_by(id: concept_id)
       concept.ancestors.each do |c|
-        contents += Cms::Content.where(concept_id: c.id).order("sort_no IS NULL, sort_no, name, id").to_a
+        contents += Cms::Content.where(concept_id: c.id).order(:sort_no, :name, :id).to_a
       end
     end
 

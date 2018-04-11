@@ -9,7 +9,7 @@ item.build_default_inquiry(group: group)
 -%>
 
 <div>
-  <%- item.inquiry_states.each do |(label, value)| -%>
+  <%- Cms::Inquiry.state_options.each do |label, value| -%>
     <%= radio_button_tag :inquiry_state, value, item.inquiries[0].state == value, class: 'status' %>
     <%= label_tag :"inquiry_state_#{value}", label -%>
   <%- end -%>

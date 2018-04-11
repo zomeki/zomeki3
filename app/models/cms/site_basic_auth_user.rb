@@ -9,7 +9,7 @@ class Cms::SiteBasicAuthUser < ApplicationRecord
 
   validates :site_id, :state, :name, :password, presence: true
   validates :target_location, presence: true,
-                              format: { with: /\A[0-9A-Za-z@\.\-_\+\s\/]+\z/, message: :not_a_filename },
+                              format: { with: /\A[0-9A-Za-z@\.\-_\+\/]+\z/, message: :not_a_filename },
                               if: -> { is_directory? }
 
   scope :all_location, -> { where(target_type: 'all') }

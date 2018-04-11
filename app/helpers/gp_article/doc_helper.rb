@@ -1,38 +1,39 @@
 module GpArticle::DocHelper
-  def doc_replace(doc, doc_style, date_style = '%Y年%m月%d日', time_style = '%H時%M分')
-    Formatter.new(doc).format(doc_style, date_style, time_style, mobile: request.mobile?)
+  def doc_link_options(doc)
+    uri = if Core.mode == 'preview' && !doc.state_public?
+            "#{doc.public_uri(without_filename: true)}preview/#{doc.id}/#{doc.filename_for_uri}"
+          else
+            doc.public_uri
+          end
+
+    if doc.target.present? && doc.href.present?
+      if doc.target == 'attached_file' && (file = doc.files.find_by(name: doc.href))
+        [Addressable::URI.join(uri, "file_contents/#{file.name}").to_s, target: '_blank']
+      else
+        [doc.href, target: doc.target]
+      end
+    else
+      [uri]
+    end
   end
 
-  def og_tags(item)
-    return '' if item.nil?
-    %w!type title description image!.map{ |key|
-      unless item.respond_to?("og_#{key}") && (value = item.send("og_#{key}")).present?
-        site = item.respond_to?(:site) ? item.site : item.content.site
-        value = site.try("og_#{key}").to_s.gsub("\n", ' ')
-        next value.present? ? tag(:meta, property: "og:#{key}", content: value) : nil
-      end
-
-      case key
-      when 'image'
-        if (file = item.image_files.detect{|f| f.name == value })
-          tag :meta, property: 'og:image', content: "#{item.content.public_node.public_full_uri}#{item.name}/file_contents/#{url_encode file.name}"
-        end
-      else
-        tag :meta, property: "og:#{key}", content: value.to_s.gsub("\n", ' ')
-      end
-    }.join.html_safe
+  def doc_replace(doc, doc_style, date_style = '%Y年%m月%d日', time_style = '%H時%M分')
+    Formatter.new(doc).format(doc_style, date_style, time_style, mobile: request.mobile?)
   end
 
   class Formatter < ActionView::Base
     include ::ApplicationHelper
     include ::DateHelper
+    include ::FileHelper
+    include GpArticle::DocHelper
+    include GpArticle::DocImageHelper
 
     def initialize(doc)
       @doc = doc
     end
 
     def format(doc_style, date_style = '', time_style = '', mobile: false)
-      link_options = @doc.link_to_options(preview: Core.mode == 'preview' && @doc.state != 'public')
+      link_options = doc_link_options(@doc)
 
       contents = {
         title_link: -> { replace_title_link(link_options) },
@@ -65,7 +66,7 @@ module GpArticle::DocHelper
             end
 
       if Core.mode == 'preview' && !@doc.state_public?
-        content_tag :div, html, class: 'preview_future_public'
+        content_tag :div, html, class: 'preview_public'
       else
         html
       end
@@ -73,32 +74,9 @@ module GpArticle::DocHelper
 
     private
 
-    def file_path_expanded_body
-      @doc.body.gsub(/("|')file_contents\//){|m| %Q(#{$1}#{@doc.public_uri(without_filename: true)}file_contents/) }
-    end
-
     def doc_image_tag
-      if @doc.list_image.present? && (image_file = @doc.image_files.detect { |f| f.name == @doc.list_image })
-        image_tag("#{@doc.public_uri(without_filename: true)}file_contents/#{url_encode image_file.name}", alt: image_file.alt)
-      elsif @doc.template &&
-        (attach_item = @doc.template.public_items.where(item_type: 'attachment_file').first) &&
-        (image_file = @doc.image_files.detect { |f| f.name == @doc.template_values[attach_item.name] })
-        image_tag("#{@doc.public_uri(without_filename: true)}file_contents/#{url_encode image_file.name}", alt: image_file.alt)
-      else
-        body =
-          if @doc.template
-            rich_text_names = @doc.template.public_items.where(item_type: 'rich_text').map(&:name)
-            rich_text_names.map { |name| @doc.template_values[name] }.join('')
-          else
-            @doc.body
-          end
-        unless (img_tags = Nokogiri::HTML.parse(body).css('img[src^="file_contents/"]')).empty?
-          filename = File.basename(img_tags.first.attributes['src'].value)
-          alt = img_tags.first.attributes['alt'].value
-          image_tag("#{@doc.public_uri(without_filename: true)}file_contents/#{url_encode filename}", alt: alt)
-        else
-          ''
-        end
+      if (file = doc_main_image_file(@doc))
+        image_tag("#{@doc.public_uri(without_filename: true)}file_contents/#{url_encode file.name}", alt: file.alt)
       end
     end
 
@@ -202,14 +180,16 @@ module GpArticle::DocHelper
 
     def replace_body_beginning
       if @doc.body.present?
+        body = replace_file_path(@doc.body, base: @doc.public_uri)
         more = content_tag(:div, link_to(@doc.body_more_link_text, @doc.public_uri), class: 'continues') if @doc.body_more.present?
-        content_tag(:span, "#{file_path_expanded_body}#{more}".html_safe, class: 'body')
+        content_tag(:span, "#{body}#{more}".html_safe, class: 'body')
       end
     end
 
     def replace_body
       if @doc.body.present? || @doc.body_more.present?
-        content_tag(:span, "#{file_path_expanded_body}#{@doc.body_more}".html_safe, class: 'body')
+        body = replace_file_path(@doc.body, base: @doc.public_uri)
+        content_tag(:span, "#{body}#{@doc.body_more}".html_safe, class: 'body')
       end
     end
 

@@ -8,9 +8,10 @@ class Sys::Admin::ObjectPrivilegesController < Cms::Controller::Admin::Base
   end
   
   def index
-    @items = Sys::ObjectPrivilege.select('DISTINCT ON (cms_concepts.name, cms_concepts.id) sys_object_privileges.*')
-      .joins(:concept).where(role_id: @parent.id).order('cms_concepts.name')
-      .paginate(page: params[:page], per_page: params[:limit])
+    @items = Sys::ObjectPrivilege.joins(:concept)
+                                 .where(id: Sys::ObjectPrivilege.select('MIN(id) as id').where(role_id: @parent.id).group(:concept_id))
+                                 .order(Cms::Concept.arel_table[:name].asc)
+                                 .paginate(page: params[:page], per_page: params[:limit])
     _index @items
   end
   
