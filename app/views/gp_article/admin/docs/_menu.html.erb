@@ -27,8 +27,7 @@
   <%= link_to '削除', { action: :destroy }, method: :delete, confirm: '削除してよろしいですか？' if @item.deletable? && !@item.state_public? %>
   <%= link_to '更新をキャンセル', { action: :destroy }, method: :delete, confirm: '更新をキャンセルしてよろしいですか？' if @item.deletable? && @item.will_replace? %>
   <%= link_to :duplicate, { do: :duplicate}, confirm: '複製してよろしいですか？' %>
-  <%= link_to '承認', { action: :approve }, method: :post, confirm: '承認してよろしいですか？' if @item.state_approvable? &&
-                                                                                           @item.approvers.include?(Core.user) %>
+  <%= link_to '承認', { action: :approve }, method: :post, confirm: '承認してよろしいですか？' if @item.approvable?(Core.user) %>
   <%-
   task = @item.queued_tasks.find_by(name: 'publish')
   pubmsg = task ? "公開日時が設定されています。\n（ #{l(task.process_at)} ）\n直ちに公開してよろしいですか？" : '公開してよろしいですか？'
