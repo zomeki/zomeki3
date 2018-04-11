@@ -18,8 +18,8 @@
 
 <%= render 'cms/public/_partial/maps/view', item: @item %>
 
-<%- if @item.public_relate_docs.present? -%>
-<%= render 'gp_article/public/node/docs/show/rel_docs', item: @item, content: @content, rel_docs: @item.public_relate_docs %>
+<%- if @item.relate_docs.present? -%>
+<%= render 'gp_article/public/node/docs/show/rel_docs', item: @item, content: @content, rel_docs: @item.relate_docs %>
 <%- end -%>
 
 <%- if (node = @item.content.tag_content_tag.try(:public_node)) &&

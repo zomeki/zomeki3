@@ -2,7 +2,6 @@ class Survey::Public::Node::FormsController < Cms::Controller::Public::Base
   include SimpleCaptcha::ControllerHelpers
   include Survey::Controller::Public::Scoping
 
-  skip_around_action :set_survey_public_scoping, if: -> { Core.mode == 'preview' && action_name != 'index' }
   before_action :set_form, only: [:show, :confirm_answers, :send_answers, :finish]
 
   skip_after_action :render_public_layout, if: -> { @piece }
@@ -65,7 +64,10 @@ class Survey::Public::Node::FormsController < Cms::Controller::Public::Base
   private
 
   def set_form
-    @form = @content.forms.find_by(name: params[:id])
+    forms = @content.forms
+    forms = forms.unscoped if Core.mode == 'preview'
+
+    @form = forms.find_by(name: params[:id])
     return http_error(404) unless @form
 
     Page.current_item = @form

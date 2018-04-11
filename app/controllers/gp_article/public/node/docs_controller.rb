@@ -3,7 +3,6 @@ class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
   include GpArticle::Controller::Public::Scoping
   include GpArticle::Controller::Feed
 
-  skip_around_action :set_gp_article_public_scoping, if: -> { Core.mode == 'preview' && action_name.in?(%w(show file_content qrcode)) }
   skip_after_action :render_public_layout, only: [:file_content, :qrcode]
 
   def pre_dispatch
@@ -82,10 +81,13 @@ class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
   end
 
   def public_or_preview_doc(id: nil, name: nil)
+    docs = @content.docs
+    docs = docs.unscoped if Core.mode == 'preview'
+
     if id
-      @content.docs.find_by(id: id)
+      docs.find_by(id: id)
     elsif name
-      @content.docs.order(:id).find_by(name: name)
+      docs.order(:id).find_by(name: name)
     end
   end
 end

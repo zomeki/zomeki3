@@ -126,6 +126,6 @@ class GpArticle::Publisher::DocCallbacks < PublisherCallbacks
   end
 
   def enqueue_relatee_docs
-    Cms::Publisher.register(@doc.content.site_id, @doc.public_relatee_docs)
+    Cms::Publisher.register(@doc.content.site_id, @doc.relatee_docs.where(state: 'public'))
   end
 end
