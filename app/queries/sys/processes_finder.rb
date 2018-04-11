@@ -18,6 +18,8 @@ class Sys::ProcessesFinder < ApplicationFinder
       when 'close_date'
         close_date = Date.parse(criteria[:close_date]) + 1.days rescue nil
         rel = rel.where(arel_table[:started_at].lteq(close_date)) if close_date
+      when 'keyword'
+        rel = rel.search_with_text(:message, v)
       end
     end
 

@@ -57,15 +57,14 @@ class GpArticle::DocsScript < PublicationScript
   def publish_by_task(item)
     if (item.state_approved? || item.state_prepared?)
       ::Script.current
-      info_log "-- Publish: #{item.class}##{item.id}"
 
       if item.publish
+        ::Script.log "published: #{item.public_uri}"
         Sys::OperationLog.script_log(item: item, site: item.content.site, action: 'publish')
       else
         raise "#{item.class}##{item.id}: failed to publish"
       end
 
-      info_log 'OK: Published'
       ::Script.success
       return true
     elsif item.state_public?
@@ -76,13 +75,12 @@ class GpArticle::DocsScript < PublicationScript
   def close_by_task(item)
     if item.state_public?
       ::Script.current
-      info_log "-- Close: #{item.class}##{item.id}"
 
       if item.close
+        ::Script.log "closed: #{item.public_uri}"
         Sys::OperationLog.script_log(item: item, site: item.content.site, action: 'close')
       end
 
-      info_log 'OK: Finished'
       ::Script.success
       return true
     elsif item.state_closed?

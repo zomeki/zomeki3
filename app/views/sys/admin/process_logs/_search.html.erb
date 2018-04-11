@@ -2,13 +2,15 @@
 <table>
   <tr>
     <th><%= Sys::Process.human_attribute_name :title %></th>
+    <th>キーワード</th>
     <th>期間</th>
   </tr>
   <tr>
     <td><%= select_tag :s_name, options_for_select(Sys::Process::ALL_PROCESSES, params[:s_name]), id: nil, include_blank: true %></td>
+    <td><%= text_field_tag :keyword, params[:keyword], style: 'width: 250px;' %></td>
     <td>
-      <%= text_field_tag :start_date, params[:start_date], class: "datepicker", style: 'width: 120px;' %> ～
-      <%= text_field_tag :close_date, params[:close_date], class: "datepicker", style: 'width: 120px;' %>
+      <%= text_field_tag :start_date, params[:start_date], class: "datepicker", style: 'width: 100px;' %> ～
+      <%= text_field_tag :close_date, params[:close_date], class: "datepicker", style: 'width: 100px;' %>
     </td>
     <td class="submitters">
       <%= submit_tag '検索', name: :search %>
