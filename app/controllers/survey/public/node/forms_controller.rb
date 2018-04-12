@@ -37,9 +37,9 @@ class Survey::Public::Node::FormsController < Cms::Controller::Public::Base
     build_answer
 
     if @form_answer.form.confirmation?
-      return render action: :show unless @content.use_captcha? ? @form_answer.valid_with_captcha? : @form_answer.valid?
+      return render :show unless @content.use_captcha? ? @form_answer.valid_with_captcha? : @form_answer.valid?
     else
-      return render action: :show unless @content.use_captcha? ? @form_answer.save_with_captcha : @form_answer.save
+      return render :show unless @content.use_captcha? ? @form_answer.save_with_captcha : @form_answer.save
       return send_mail_and_redirect_to_finish
     end
   end
@@ -48,7 +48,7 @@ class Survey::Public::Node::FormsController < Cms::Controller::Public::Base
     build_answer
 
     if params[:edit_answers] || !@form_answer.save
-      render action: :show
+      render :show
     else
       send_mail_and_redirect_to_finish
     end

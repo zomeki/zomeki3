@@ -18,7 +18,7 @@ module Sys::Controller::Scaffold::Hold
                       '他のユーザー'
                     end
       flash.now[:alert] = "#{last_editor}さんが記事を編集したため、編集内容を反映できません。"
-      return render action: :edit
+      return render :edit
     end
 
     super do
