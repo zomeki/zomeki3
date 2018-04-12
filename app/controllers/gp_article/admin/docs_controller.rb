@@ -10,7 +10,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   before_action :hold_document, only: [:edit]
   before_action :check_intercepted, only: [:update]
 
-  before_action :index_options, only: [:index], if: -> { params[:options] }
+  before_action :doc_options, only: [:index], if: -> { params[:doc_options] }
   before_action :user_options, only: [:index], if: -> { params[:user_options] }
 
   keep_params :target, :target_state, :target_public, :sort_key, :sort_order
@@ -39,47 +39,6 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     end
 
     _index @items
-  end
-
-  def index_options
-    @items = if params[:category_id].present?
-               if (category = GpCategory::Category.find_by(id: params[:category_id]))
-                 params[:public] ? category.public_docs : category.docs
-               else
-                 category.docs.none
-               end
-             else
-               params[:public] ? @content.public_docs : @content.docs
-             end
-
-    if params[:exclude]
-      docs_table = @items.table
-      @items = @items.where(docs_table[:name].not_eq(params[:exclude]))
-    end
-
-    if params[:group_id] || params[:user_id]
-      inners = []
-      if params[:group_id]
-          groups = Sys::Group.arel_table
-          inners << :group
-      end
-      if params[:user_id]
-          users = Sys::User.arel_table
-          inners << :user
-      end
-      @items = @items.joins(creator: inners)
-
-      @items = @items.where(groups[:id].eq(params[:group_id])) if params[:group_id]
-      @items = @items.where(users[:id].eq(params[:user_id])) if params[:user_id]
-    end
-
-    @items = @items.map { |item| [view_context.truncate(item.title, length: 50), item.id] }
-    render html: view_context.options_for_select([nil] + @items), layout: false
-  end
-
-  def user_options
-    @group = Sys::Group.find(params[:group_id])
-    render html: view_context.options_from_collection_for_select(@group.users, :id, :name), layout: false
   end
 
   def show
@@ -173,6 +132,25 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
   def pullback
     _pullback @item
+  end
+
+  def doc_options
+    items = @content.docs.joins(creator: [:group, :user]).order(serial_no: :desc, id: :desc)
+
+    items = items.where(state: params[:state]) if params[:state].present?
+    items = items.categorized_into(params[:category_id]) if params[:category_id].present?
+    items = items.where.not(name: params[:exclude]) if params[:exclude].present?
+
+    items = items.where(Sys::Group.arel_table[:id].eq(params[:group_id])) if params[:group_id].present?
+    items = items.where(Sys::User.arel_table[:id].eq(params[:user_id])) if params[:user_id].present?
+
+    items = items.map { |item| ["#{item.serial_no}: #{view_context.truncate(item.title, length: 50)}", item.id] }
+    render html: view_context.options_for_select([nil] + items), layout: false
+  end
+
+  def user_options
+    group = Sys::Group.find(params[:group_id])
+    render html: view_context.options_from_collection_for_select(group.users, :id, :name), layout: false
   end
 
   protected

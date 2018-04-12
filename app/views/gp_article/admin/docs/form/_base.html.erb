@@ -259,7 +259,7 @@ $(document).ready(function() {
     var doc_select = $('#rel_doc');
     doc_select.html('<option value="">更新中...</option>');
     $.get('<%= gp_article_docs_path(content: @content) %>', {
-          options: true,
+          doc_options: true,
           exclude: '<%= @item.name %>',
           category_id: category_id,
           group_id: group_id,
