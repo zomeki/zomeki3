@@ -2,15 +2,13 @@ module Sys::Model::Rel::Editor
   extend ActiveSupport::Concern
 
   included do
-    has_many :editors, -> { order(updated_at: :desc, created_at: :desc) },
-      class_name: 'Sys::Editor', dependent: :destroy, as: :editable
+    has_many :editors, -> { order(id: :desc) },
+                       class_name: 'Sys::Editor', dependent: :destroy, as: :editable
 
     after_save :save_editor
   end
 
-  def last_editor
-    editors.first
-  end
+  private
 
   def save_editor
     return if Core.user_group.blank? || Core.user.blank?

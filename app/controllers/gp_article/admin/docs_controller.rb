@@ -1,17 +1,16 @@
 class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
   include Sys::Controller::Scaffold::Publication
+  include Sys::Controller::Scaffold::Hold
   include Approval::Controller::Admin::Approval
 
   layout :select_layout
 
-  before_action :protect_unauthorized_params, only: [:index]
-  before_action :check_duplicated_document, only: [:edit]
-  before_action :hold_document, only: [:edit]
-  before_action :check_intercepted, only: [:update]
-
   before_action :doc_options, only: [:index], if: -> { params[:doc_options] }
   before_action :user_options, only: [:index], if: -> { params[:user_options] }
+
+  before_action :protect_unauthorized_params, only: [:index]
+  before_action :check_duplicated_document, only: [:edit]
 
   keep_params :target, :target_state, :target_public, :sort_key, :sort_order
 
@@ -74,6 +73,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   end
 
   def edit
+    _hold(@item)
   end
 
   def update
@@ -90,8 +90,6 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
       elsif @item.state_public?
         publish_by_update(@item)
       end
-
-      release_document
     end
   end
 
@@ -175,26 +173,6 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
              @item.duplicate(:replace)
            end
     redirect_to url_for(action: :edit, id: item) if item
-  end
-
-  def hold_document
-    Sys::UsersHold.where(user_id: Core.user.id, session_id: session.id, holdable: @item).first_or_create
-
-    if (holds = Sys::UsersHold.where(holdable: @item).where.not(session_id: session.id)).present?
-      alerts = holds.map { |hold| "<li>#{hold.group_and_user_name}さんが#{hold.formatted_updated_at}から編集中です。</li>" }.join
-      flash.now[:alert] = "<ul>#{alerts}</ul>".html_safe
-    end
-  end
-
-  def check_intercepted
-    unless Sys::UsersHold.where(user_id: Core.user.id, session_id: session.id, holdable: @item).exists?
-      flash[:alert] = "#{@item.last_editor.try(:group_and_user_name)}さんが記事を編集したため、編集内容を反映できません。"
-      render action: :edit
-    end
-  end
-
-  def release_document
-    Sys::UsersHold.where(holdable: @item).delete_all
   end
 
   def check_document
