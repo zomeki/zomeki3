@@ -111,10 +111,11 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
   def duplicate(item)
     if item.duplicate
-      redirect_to url_for(action: :index), notice: '複製処理が完了しました。'
+      flash[:notice] = '複製処理が完了しました。'
     else
-      redirect_to url_for(action: :index), alert: '複製処理に失敗しました。'
+      flash[:alert] = '複製処理に失敗しました。'
     end
+    redirect_to url_for(action: :index)
   end
 
   def approve
@@ -168,11 +169,12 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   end
 
   def check_duplicated_document
-    if @item.will_be_replaced?
-      return redirect_to(edit_gp_article_doc_url(@content, @item.next_edition))
-    elsif @item.state_public?
-      return redirect_to(edit_gp_article_doc_url(@content, @item.duplicate(:replace)))
-    end
+    item = if @item.will_be_replaced?
+             @item.next_edition
+           elsif @item.state_public?
+             @item.duplicate(:replace)
+           end
+    redirect_to url_for(action: :edit, id: item) if item
   end
 
   def hold_document
