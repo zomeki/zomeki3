@@ -18,8 +18,8 @@ module Sys::Model::Rel::File
   private
 
   def fix_tmp_files
-    Sys::File.fix_tmp_files(in_tmp_id, self)
-    return true
+    Sys::File.where(tmp_id: in_tmp_id)
+             .update_all(tmp_id: nil, file_attachable_id: id, file_attachable_type: self.class)
   end
 
   def make_file_path_relative
