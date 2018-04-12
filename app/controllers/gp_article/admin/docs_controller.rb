@@ -17,7 +17,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   def pre_dispatch
     @content = GpArticle::Content::Doc.find(params[:content])
     return error_auth unless Core.user.has_priv?(:read, item: @content.concept)
-    return redirect_to url_for(params.permit(:target, :target_state, :target_public).merge(action: :index)) if params[:reset_criteria]
+    return redirect_to url_for(action: :index) if params[:reset_criteria]
 
     @item = @content.docs.find(params[:id]) if params[:id].present?
   end
