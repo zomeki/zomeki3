@@ -25,7 +25,9 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
   def index
     criteria = doc_criteria
-    @items = GpArticle::DocsFinder.new(@content.docs, Core.user).search(criteria).distinct
+    @items = GpArticle::DocsFinder.new(@content.docs, Core.user)
+                                  .search(criteria)
+                                  .distinct
                                   .order(updated_at: :desc)
                                   .preload(:prev_edition, :content, creator: [:user, :group])
 
@@ -99,24 +101,11 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     @item = @content.docs.build(doc_params)
     @item.replace_words_with_dictionary
 
-    if params[:link_check_in_body]
-      @item.link_check_results = @item.check_links
-      return render :new
-    end
+    return render :new if check_document
 
-    if params[:accessibility_check]
-      @item.modify_accessibility if @item.in_modify_accessibility_check == '1'
-      @item.accessibility_check_results = @item.check_accessibility
-      return render :new
-    end
+    @item.state = new_state_from_params
 
-    new_state = params.keys.detect{|k| k =~ /^commit_/ }.try(:sub, /^commit_/, '')
-    @item.state = new_state if new_state.present? && @content.state_options.any?{|v| v.last == new_state }
-
-    location = ->(d){ edit_gp_article_doc_url(@content, d) } if @item.state_draft?
-    _create(@item, location: location) do
-      @item = @content.docs.find_by(id: @item.id)
-
+    _create(@item, location: location_after_save) do
       if @item.state_approvable?
         send_approval_request_mail(@item)
       elsif @item.state_public?
@@ -132,52 +121,27 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     @item.attributes = doc_params
     @item.replace_words_with_dictionary
 
-    if params[:link_check_in_body]
-      @item.link_check_results = @item.check_links
-      return render :edit
-    end
+    return render :edit if check_document
 
-    if params[:accessibility_check]
-      @item.modify_accessibility if @item.in_modify_accessibility_check == '1'
-      @item.accessibility_check_results = @item.check_accessibility
-      return render :edit
-    end
+    @item.state = new_state_from_params
 
-    new_state = params.keys.detect{|k| k =~ /^commit_/ }.try(:sub, /^commit_/, '')
-    @item.state = new_state if new_state.present? && @content.state_options.any?{|v| v.last == new_state }
-
-    location = url_for(action: 'edit') if @item.state_draft?
-    _update(@item, location: location) do
-      @item = @content.docs.find_by(id: @item.id)
-
+    _update(@item, location: location_after_save) do
       if @item.state_approvable?
         send_approval_request_mail(@item)
       elsif @item.state_public?
         publish_by_update(@item)
       end
 
-      @item.close if !@item.state_public? && !@item.will_replace?
-
       release_document
     end
   end
 
   def destroy
-    _destroy(@item) do
-      send_broken_link_notification
-    end
+    _destroy(@item)
   end
 
   def publish
     _publish(@item)
-  end
-
-  def publish_by_update(item)
-    if item.publish
-      flash[:notice] = '公開処理が完了しました。'
-    else
-      flash[:alert] = '公開処理に失敗しました。'
-    end
   end
 
   def close(item)
@@ -251,6 +215,40 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
   def release_document
     Sys::UsersHold.where(holdable: @item).delete_all
+  end
+
+  def check_document
+    if params[:link_check_in_body]
+      @item.link_check_results = @item.check_links
+      return true
+    end
+
+    if params[:accessibility_check]
+      @item.modify_accessibility if @item.in_modify_accessibility_check == '1'
+      @item.accessibility_check_results = @item.check_accessibility
+      return true
+    end
+  end
+
+  def new_state_from_params
+    state = params.keys.detect { |k| k =~ /^commit_/ }.to_s.sub(/^commit_/, '')
+    if @content.doc_state_options(Core.user).map(&:last).include?(state)
+      state
+    else
+      nil
+    end
+  end
+
+  def location_after_save
+    lambda { |doc| url_for(action: :edit, id: doc) } if @item.state_draft?
+  end
+
+  def publish_by_update(item)
+    if item.publish
+      flash[:notice] = '公開処理が完了しました。'
+    else
+      flash[:alert] = '公開処理に失敗しました。'
+    end
   end
 
   def send_broken_link_notification

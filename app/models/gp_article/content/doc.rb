@@ -99,17 +99,11 @@ class GpArticle::Content::Doc < Cms::Content
     setting_value(:save_button_states) || []
   end
 
-  def state_options(user = Core.user)
-    options = if user.has_auth?(:manager) || save_button_states.include?('public')
-                STATE_OPTIONS
-              else
-                STATE_OPTIONS.reject{|so| so.last == 'public' }
-              end
-    if approval_related?
-      options
-    else
-      options.reject{|o| o.last == 'approvable' }
-    end
+  def doc_state_options(user)
+    options = STATE_OPTIONS.clone
+    options.reject! { |o| o.last == 'public' } if !user.has_auth?(:manager) && !save_button_states.include?('public')
+    options.reject! { |o| o.last == 'approvable' } unless approval_related?
+    options
   end
 
   def display_dates(key)

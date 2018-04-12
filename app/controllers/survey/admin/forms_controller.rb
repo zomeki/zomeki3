@@ -13,7 +13,9 @@ class Survey::Admin::FormsController < Cms::Controller::Admin::Base
 
   def index
     criteria = form_criteria
-    @items = Survey::FormsFinder.new(@content.forms, Core.user).search(criteria).distinct
+    @items = Survey::FormsFinder.new(@content.forms, Core.user)
+                                .search(criteria)
+                                .distinct
                                 .reorder(:sort_no)
                                 .paginate(page: params[:page], per_page: params[:limit])
                                 .preload(content: { public_node: :site })
@@ -30,25 +32,19 @@ class Survey::Admin::FormsController < Cms::Controller::Admin::Base
   end
 
   def create
-    new_state = params.keys.detect{|k| k =~ /^commit_/ }.try(:sub, /^commit_/, '')
-
     @item = @content.forms.build(form_params)
-    @item.state = new_state if new_state.present? && @content.form_state_options.any? { |v| v.last == new_state }
+    @item.state = new_state_from_params
 
-    location = ->(f){ edit_survey_form_url(@content, f) } if @item.state_draft?
-    _create(@item, location: location) do
+    _create(@item, location: location_after_save) do
       send_approval_request_mail(@item) if @item.state_approvable?
     end
   end
 
   def update
-    new_state = params.keys.detect{|k| k =~ /^commit_/ }.try(:sub, /^commit_/, '')
-
     @item.attributes = form_params
-    @item.state = new_state if new_state.present? && @content.form_state_options.any? { |v| v.last == new_state }
+    @item.state = new_state_from_params
 
-    location = url_for(action: 'edit') if @item.state_draft?
-    _update(@item, location: location) do
+    _update(@item, location: location_after_save) do
       send_approval_request_mail(@item) if @item.state_approvable?
     end
   end
@@ -93,6 +89,19 @@ class Survey::Admin::FormsController < Cms::Controller::Admin::Base
   end
 
   private
+
+  def new_state_from_params
+    state = params.keys.detect { |k| k =~ /^commit_/ }.to_s.sub(/^commit_/, '')
+    if @content.form_state_options(Core.user).map(&:last).include?(state)
+      state
+    else
+      nil
+    end
+  end
+
+  def location_after_save
+    lambda { |form| url_for(action: :edit, id: form) } if @item.state_draft?
+  end
 
   def form_criteria
     criteria = params[:criteria] ? params[:criteria].to_unsafe_h : {}

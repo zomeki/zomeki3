@@ -1,5 +1,5 @@
 <%= form_for @item, as: :item, url: { action: :create } do |f| %>
   <%= error_messages_for :item %>
   <%= render 'form', f: f %>
-  <%= submit @content.form_state_options %>
+  <%= submit @content.form_state_options(Core.user) %>
 <% end %>
