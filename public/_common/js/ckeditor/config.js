@@ -1,6 +1,6 @@
 /**
- * @license Copyright (c) 2003-2015, CKSource - Frederico Knabben. All rights reserved.
- * For licensing, see LICENSE.md or http://ckeditor.com/license
+ * @license Copyright (c) 2003-2018, CKSource - Frederico Knabben. All rights reserved.
+ * For licensing, see https://ckeditor.com/legal/ckeditor-oss-license
  */
 
 CKEDITOR.editorConfig = function( config ) {
@@ -8,6 +8,7 @@ CKEDITOR.editorConfig = function( config ) {
   // config.language = 'fr';
   // config.uiColor = '#AADC6E';
 
+  config.skin = 'moono';
   config.height = 300;
 
   // ツールバーの設定
@@ -77,7 +78,7 @@ CKEDITOR.editorConfig = function( config ) {
     }
   };
   // table廃止・非推奨属性入力不可
-  config.disallowedContent = 'table[summary,height,cellspacing,cellpadding,align]{height}';
+  config.disallowedContent = 'font;table[summary,height,cellspacing,cellpadding,align]{height}';
 
   // Wordからの貼付で装飾を削除する
   config.pasteFromWordRemoveFontStyles = true;
