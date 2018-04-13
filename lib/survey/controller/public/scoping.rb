@@ -2,7 +2,7 @@ module Survey::Controller::Public::Scoping
   extend ActiveSupport::Concern
 
   included do
-    around_action :set_survey_public_scoping
+    prepend_around_action :set_survey_public_scoping
   end
 
   private
