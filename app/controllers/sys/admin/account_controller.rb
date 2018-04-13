@@ -4,8 +4,7 @@ class Sys::Admin::AccountController < Sys::Controller::Admin::Base
   def login
     return redirect_to(admin_root_path) if logged_in?
 
-    @uri = params[:uri] || cookies[:sys_login_referrer] || admin_root_path
-    @uri = @uri.gsub(/^http:\/\/[^\/]+/, '')
+    @uri = cookies[:sys_login_referrer] || admin_root_path
     return unless request.post?
 
     unless new_login(params[:account], params[:password])
