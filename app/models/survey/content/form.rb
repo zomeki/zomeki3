@@ -62,7 +62,7 @@ class Survey::Content::Form < Cms::Content
     words.uniq
   end
 
-  def form_state_options(user = Core.user)
+  def form_state_options(user)
     options = FORM_STATE_OPTIONS.clone
     options.reject! { |o| o.last == 'public' } unless user.has_auth?(:manager)
     options.reject! { |o| o.last == 'approvable' } unless approval_related?

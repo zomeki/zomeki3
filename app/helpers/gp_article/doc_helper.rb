@@ -95,7 +95,7 @@ module GpArticle::DocHelper
 
     def replace_subtitle
       if @doc.subtitle.present?
-        content_tag(:span, @doc.subtitle, class: 'subtitle')
+        content_tag(:span, hbr(@doc.subtitle), class: 'subtitle')
       end
     end
 
@@ -127,7 +127,7 @@ module GpArticle::DocHelper
 
     def replace_summary
       if @doc.summary.present?
-        content_tag(:span, @doc.summary, class: 'summary')
+        content_tag(:span, hbr(@doc.summary), class: 'summary')
       end
     end
 

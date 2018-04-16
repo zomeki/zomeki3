@@ -8,7 +8,7 @@ module Cms
       def create_configs
         load_sites.each do |site|
           @site = site
-          @locations = Cms::Nginx::Location.make(@site)
+          @locations = Cms::Nginx::LocationBuilder.new(@site).build
           template 'servers/server.conf.erb', @site.nginx_config_path
 
           if @site.admin_full_uri.present?
@@ -51,98 +51,105 @@ module Cms
       include ActiveModel::Model
 
       attr_accessor :site
-      attr_accessor :path, :name, :try_files, :htpasswd_path
+      attr_accessor :path, :try_files, :htpasswd_path
+    end
 
-      class << self
-        def make(site)
-          locations =  make_system_locations(site)
-          locations += make_public_locations(site)
-          locations += make_default_public_locations(site)
-    
-          append_request_uri_for_smartphone(locations) if site.smart_phone_layout_same_as_pc?
-          locations
-        end
+    class LocationBuilder
+      def initialize(site)
+        @site = site
+        @try_files = %w($uri $uri/index.html)
+        @dynamic_dirs = load_dynamic_dirs
+        @basic_auth_dirs = load_basic_auth_dirs
+      end
 
-        private
+      def build
+        locations =  make_system_locations
+        locations += make_public_locations
+        locations += make_public_error_locations if @site.smart_phone_layout_same_as_pc?
+        locations += make_default_public_locations
 
-        def make_system_locations(site)
-          locations = [
-            new(site: site, path: "/#{ZomekiCMS::ADMIN_URL_PREFIX}", name: "/#{ZomekiCMS::ADMIN_URL_PREFIX}", try_files: ['@proxy']),
-            new(site: site, path: "/_preview", name: "/_preview", try_files: ['@proxy'])
-          ]
+        append_request_uri_for_smartphone(locations) if @site.smart_phone_layout_same_as_pc?
 
-          if site.use_basic_auth? && site.basic_auth_users.system_location.enabled.exists?
-            locations.each do |location|
-              location.htpasswd_path = "#{site.basic_auth_htpasswd_path}_system"
-            end
-          end
+        locations
+      end
 
-          locations
-        end
+      private
 
-        def load_dynamic_dirs(site)
-          site.nodes.public_state.dynamic_models
-              .map { |node| node.public_uri.chomp('/') }
-        end
+      def load_dynamic_dirs
+        @site.nodes.public_state.dynamic_models
+             .map { |node| node.public_uri.chomp('/') }
+      end
 
-        def load_basic_auth_dirs(site)
-          site.basic_auth_users.directory_location.enabled
-                                .reorder(:target_location)
-                                .group(:target_location)
-                                .pluck(:target_location)
-                                .map { |d| "/#{d}" }
-                                .map { |d| d.chomp('/') }
-        end
+      def load_basic_auth_dirs
+        return [] unless @site.use_basic_auth?
+        @site.basic_auth_users.directory_location.enabled
+                              .reorder(:target_location)
+                              .group(:target_location)
+                              .pluck(:target_location)
+                              .map { |d| "/#{d}" }
+                              .map { |d| d.chomp('/') }
+      end
 
-        def make_public_locations(site)
-          dynamic_dirs = load_dynamic_dirs(site)
-          basic_auth_dirs = if site.use_basic_auth?
-                              load_basic_auth_dirs(site)
-                            else
-                              []
-                            end
+      def make_system_locations
+        locations = [Location.new(path: "/#{ZomekiCMS::ADMIN_URL_PREFIX}", try_files: @try_files + ['@proxy']),
+                     Location.new(path: "/_preview", try_files: @try_files + ['@proxy'])]
 
-          dirs = (basic_auth_dirs + dynamic_dirs).uniq.sort_by { |d| d.count('/') }.reverse
-          dirs.each_with_object([]) do |dir, array|
-            proxy = if dir.in?(dynamic_dirs) 
-                      '@dynamic'
-                    else
-                      '@proxy'
-                    end
-            htpasswd_path = if site.use_basic_auth? && dir.in?(basic_auth_dirs)
-                              "#{site.basic_auth_htpasswd_path}_#{dir.gsub(%r{^/}, '').gsub('/', '_')}"
-                            elsif site.use_basic_auth? && site.basic_auth_users.all_location.enabled.exists?
-                              site.basic_auth_htpasswd_path
-                            end
-            array << new(site: site, name: dir, path: "/_smartphone#{dir}", try_files: [proxy], htpasswd_path: htpasswd_path)
-            array << new(site: site, name: dir, path: "/_mobile#{dir}", try_files: ['@dynamic'], htpasswd_path: htpasswd_path)
-            array << new(site: site, name: dir, path: "#{dir}", try_files: [proxy], htpasswd_path: htpasswd_path)
-          end
-        end
-
-        def make_default_public_locations(site)
-          locations = [
-            new(site: site, name: '/', path: '/_smartphone', try_files: ['@proxy']),
-            new(site: site, name: '/', path: '/_mobile', try_files: ['@dynamic']),
-            new(site: site, name: '/', path: '/', try_files: ['@proxy'])
-          ]
-
-          if site.use_basic_auth? && site.basic_auth_users.all_location.enabled.exists?
-            locations.each do |location|
-              location.htpasswd_path = site.basic_auth_htpasswd_path
-            end
-          end
-
-          locations
-        end
-
-        def append_request_uri_for_smartphone(locations)
+        if @site.use_basic_auth? && @site.basic_auth_users.system_location.enabled.exists?
           locations.each do |location|
-            if location.path =~ %r{/_smartphone} && location.try_files.include?('@proxy')
-              location.try_files = %w($request_uri $request_uri/index.html) + location.try_files
-            end
+            location.htpasswd_path = "#{@site.basic_auth_htpasswd_path}_system"
           end
-          locations
+        end
+
+        locations
+      end
+
+      def make_public_locations
+        dirs = (@basic_auth_dirs + @dynamic_dirs).uniq.sort_by { |d| d.count('/') }.reverse
+        dirs.each_with_object([]) do |dir, locations|
+          proxy = if dir.in?(@dynamic_dirs)
+                    '@dynamic'
+                  else
+                    '@proxy'
+                  end
+          htpath = if @site.use_basic_auth?
+                     if dir.in?(@basic_auth_dirs)
+                       "#{@site.basic_auth_htpasswd_path}_#{dir.gsub(%r{^/}, '').gsub('/', '_')}"
+                     elsif @site.basic_auth_users.all_location.enabled.exists?
+                       @site.basic_auth_htpasswd_path
+                     end
+                   end
+
+          locations << Location.new(path: "/_smartphone#{dir}", try_files: @try_files + [proxy], htpasswd_path: htpath)
+          locations << Location.new(path: "/_mobile#{dir}", try_files: @try_files + ['@dynamic'], htpasswd_path: htpath)
+          locations << Location.new(path: dir, try_files: @try_files + [proxy], htpasswd_path: htpath)
+        end
+      end
+
+      def make_public_error_locations
+        [Location.new(path: '/_smartphone/404.html', try_files: ['/404.html', '@proxy'])]
+      end
+
+      def make_default_public_locations
+        locations = [Location.new(path: '/_smartphone', try_files: @try_files + ['@proxy']),
+                     Location.new(path: '/_mobile', try_files: @try_files + ['@dynamic']),
+                     Location.new(path: '/', try_files: @try_files + ['@proxy'])]
+
+        if @site.use_basic_auth? && @site.basic_auth_users.all_location.enabled.exists?
+          locations.each do |location|
+            location.htpasswd_path = @site.basic_auth_htpasswd_path
+          end
+        end
+
+        locations
+      end
+
+      def append_request_uri_for_smartphone(locations)
+        locations.each do |location|
+          if location.path =~ %r{/_smartphone} &&
+             location.try_files.include?('@proxy') &&
+             !location.try_files.include?('/404.html')
+            location.try_files = %w($request_uri $request_uri/index.html) + location.try_files
+          end
         end
       end
     end

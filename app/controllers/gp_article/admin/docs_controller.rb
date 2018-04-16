@@ -1,29 +1,32 @@
 class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
   include Sys::Controller::Scaffold::Publication
+  include Sys::Controller::Scaffold::Hold
+  include Approval::Controller::Admin::Approval
 
   layout :select_layout
 
-  before_action :check_duplicated_document, only: [:edit]
-  before_action :hold_document, only: [:edit]
-  before_action :check_intercepted, only: [:update]
-
-  before_action :index_options, only: [:index], if: -> { params[:options] }
+  before_action :doc_options, only: [:index], if: -> { params[:doc_options] }
   before_action :user_options, only: [:index], if: -> { params[:user_options] }
+
+  before_action :protect_unauthorized_params, only: [:index]
+  before_action :check_duplicated_document, only: [:edit]
 
   keep_params :target, :target_state, :target_public, :sort_key, :sort_order
 
   def pre_dispatch
     @content = GpArticle::Content::Doc.find(params[:content])
     return error_auth unless Core.user.has_priv?(:read, item: @content.concept)
-    return redirect_to url_for(params.permit(:target, :target_state, :target_public).merge(action: :index)) if params[:reset_criteria]
+    return redirect_to url_for(action: :index) if params[:reset_criteria]
 
     @item = @content.docs.find(params[:id]) if params[:id].present?
   end
 
   def index
     criteria = doc_criteria
-    @items = GpArticle::DocsFinder.new(@content.docs, Core.user).search(criteria).distinct
+    @items = GpArticle::DocsFinder.new(@content.docs, Core.user)
+                                  .search(criteria)
+                                  .distinct
                                   .order(updated_at: :desc)
                                   .preload(:prev_edition, :content, creator: [:user, :group])
 
@@ -35,47 +38,6 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     end
 
     _index @items
-  end
-
-  def index_options
-    @items = if params[:category_id].present?
-               if (category = GpCategory::Category.find_by(id: params[:category_id]))
-                 params[:public] ? category.public_docs : category.docs
-               else
-                 category.docs.none
-               end
-             else
-               params[:public] ? @content.public_docs : @content.docs
-             end
-
-    if params[:exclude]
-      docs_table = @items.table
-      @items = @items.where(docs_table[:name].not_eq(params[:exclude]))
-    end
-
-    if params[:group_id] || params[:user_id]
-      inners = []
-      if params[:group_id]
-          groups = Sys::Group.arel_table
-          inners << :group
-      end
-      if params[:user_id]
-          users = Sys::User.arel_table
-          inners << :user
-      end
-      @items = @items.joins(creator: inners)
-
-      @items = @items.where(groups[:id].eq(params[:group_id])) if params[:group_id]
-      @items = @items.where(users[:id].eq(params[:user_id])) if params[:user_id]
-    end
-
-    @items = @items.map { |item| [view_context.truncate(item.title, length: 50), item.id] }
-    render html: view_context.options_for_select([nil] + @items), layout: false
-  end
-
-  def user_options
-    @group = Sys::Group.find(params[:group_id])
-    render html: view_context.options_from_collection_for_select(@group.users, :id, :name), layout: false
   end
 
   def show
@@ -97,80 +59,46 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     @item = @content.docs.build(doc_params)
     @item.replace_words_with_dictionary
 
-    if params[:link_check_in_body]
-      @item.link_check_results = @item.check_links
-      return render :new
-    end
+    return render :new if check_document
 
-    if params[:accessibility_check]
-      @item.modify_accessibility if @item.in_modify_accessibility_check == '1'
-      @item.accessibility_check_results = @item.check_accessibility
-      return render :new
-    end
+    @item.state = new_state_from_params
 
-    new_state = params.keys.detect{|k| k =~ /^commit_/ }.try(:sub, /^commit_/, '')
-    @item.state = new_state if new_state.present? && @content.state_options.any?{|v| v.last == new_state }
-
-    location = ->(d){ edit_gp_article_doc_url(@content, d) } if @item.state_draft?
-    _create(@item, location: location) do
-
-      @item = @content.docs.find_by(id: @item.id)
-      @item.send_approval_request_mail if @item.state_approvable?
-
-      publish_by_update(@item) if @item.state_public?
+    _create(@item, location: location_after_save) do
+      if @item.state_approvable?
+        send_approval_request_mail(@item)
+      elsif @item.state_public?
+        publish_by_update(@item)
+      end
     end
   end
 
   def edit
+    _hold(@item)
   end
 
   def update
     @item.attributes = doc_params
     @item.replace_words_with_dictionary
 
-    if params[:link_check_in_body]
-      @item.link_check_results = @item.check_links
-      return render :edit
-    end
+    return render :edit if check_document
 
-    if params[:accessibility_check]
-      @item.modify_accessibility if @item.in_modify_accessibility_check == '1'
-      @item.accessibility_check_results = @item.check_accessibility
-      return render :edit
-    end
+    @item.state = new_state_from_params
 
-    new_state = params.keys.detect{|k| k =~ /^commit_/ }.try(:sub, /^commit_/, '')
-    @item.state = new_state if new_state.present? && @content.state_options.any?{|v| v.last == new_state }
-
-    location = url_for(action: 'edit') if @item.state_draft?
-    _update(@item, location: location) do
-      @item = @content.docs.find_by(id: @item.id)
-      @item.send_approval_request_mail if @item.state_approvable?
-
-      publish_by_update(@item) if @item.state_public?
-
-      @item.close if !@item.state_public? && !@item.will_replace?
-
-      release_document
+    _update(@item, location: location_after_save) do
+      if @item.state_approvable?
+        send_approval_request_mail(@item)
+      elsif @item.state_public?
+        publish_by_update(@item)
+      end
     end
   end
 
   def destroy
-    _destroy(@item) do
-      send_broken_link_notification
-    end
+    _destroy(@item)
   end
 
   def publish
     _publish(@item)
-  end
-
-  def publish_by_update(item)
-    if item.publish
-      flash[:notice] = '公開処理が完了しました。'
-    else
-      flash[:alert] = '公開処理に失敗しました。'
-    end
   end
 
   def close(item)
@@ -181,56 +109,56 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
   def duplicate(item)
     if item.duplicate
-      redirect_to url_for(action: :index), notice: '複製処理が完了しました。'
+      flash[:notice] = '複製処理が完了しました。'
     else
-      redirect_to url_for(action: :index), alert: '複製処理に失敗しました。'
+      flash[:alert] = '複製処理に失敗しました。'
     end
+    redirect_to url_for(action: :index)
   end
 
   def approve
-    if @item.approvers.include?(Core.user)
-      @item.approve(Core.user) do
-        @item.update_columns(
-          state: (@item.queued_tasks.where(name: 'publish').exists? ? 'prepared' : 'approved'),
-          recognized_at: Time.now
-        )
-        @item.enqueue_tasks
-        Sys::OperationLog.log(request, item: @item)
-
-        if @item.state_approved? && @content.publish_after_approved?
-          @item.publish
-          Sys::OperationLog.log(request, item: @item, do: 'publish')
-        end
-
-        @item.send_approved_notification_mail
+    _approve @item do
+      if @item.state_approved? && @content.publish_after_approved?
+        @item.publish
+        Sys::OperationLog.log(request, item: @item, do: 'publish')
       end
     end
-    redirect_to url_for(action: :show), notice: '承認処理が完了しました。'
   end
 
   def passback
-    if @item.state_approvable? && @item.approvers.include?(Core.user)
-      @item.passback(Core.user, comment: params[:comment]) do
-        @item.update_column(:state, 'draft')
-      end
-      redirect_to gp_article_doc_url(@content, @item), notice: '差し戻しが完了しました。'
-    else
-      redirect_to gp_article_doc_url(@content, @item), notice: '差し戻しに失敗しました。'
-    end
+    _passback @item
   end
 
   def pullback
-    if @item.state_approvable? && @item.approval_requesters.include?(Core.user)
-      @item.pullback(comment: params[:comment]) do
-        @item.update_column(:state, 'draft')
-      end
-      redirect_to gp_article_doc_url(@content, @item), notice: '引き戻しが完了しました。'
-    else
-      redirect_to gp_article_doc_url(@content, @item), notice: '引き戻しに失敗しました。'
-    end
+    _pullback @item
+  end
+
+  def doc_options
+    items = @content.docs.joins(creator: [:group, :user]).order(serial_no: :desc, id: :desc)
+
+    items = items.where(state: params[:state]) if params[:state].present?
+    items = items.categorized_into(params[:category_id]) if params[:category_id].present?
+    items = items.where.not(name: params[:exclude]) if params[:exclude].present?
+
+    items = items.where(Sys::Group.arel_table[:id].eq(params[:group_id])) if params[:group_id].present?
+    items = items.where(Sys::User.arel_table[:id].eq(params[:user_id])) if params[:user_id].present?
+
+    items = items.map { |item| ["#{item.serial_no}: #{view_context.truncate(item.title, length: 50)}", item.id] }
+    render html: view_context.options_for_select([nil] + items), layout: false
+  end
+
+  def user_options
+    group = Sys::Group.find(params[:group_id])
+    render html: view_context.options_from_collection_for_select(group.users, :id, :name), layout: false
   end
 
   protected
+
+  def protect_unauthorized_params
+    unless Core.user.has_auth?(:manager)
+      params[:target] = 'user' if params[:target] == 'all'
+    end
+  end
 
   def select_layout
     if request.smart_phone? && action_name.in?(%w(new create edit update))
@@ -239,31 +167,46 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   end
 
   def check_duplicated_document
-    if @item.will_be_replaced?
-      return redirect_to(edit_gp_article_doc_url(@content, @item.next_edition))
-    elsif @item.state_public?
-      return redirect_to(edit_gp_article_doc_url(@content, @item.duplicate(:replace)))
+    item = if @item.will_be_replaced?
+             @item.next_edition
+           elsif @item.state_public?
+             @item.duplicate(:replace)
+           end
+    redirect_to url_for(action: :edit, id: item) if item
+  end
+
+  def check_document
+    if params[:link_check_in_body]
+      @item.link_check_results = @item.check_links
+      return true
+    end
+
+    if params[:accessibility_check]
+      @item.modify_accessibility if @item.in_modify_accessibility_check == '1'
+      @item.accessibility_check_results = @item.check_accessibility
+      return true
     end
   end
 
-  def hold_document
-    Sys::UsersHold.where(user_id: Core.user.id, session_id: session.id, holdable: @item).first_or_create
-
-    if (holds = Sys::UsersHold.where(holdable: @item).where.not(session_id: session.id)).present?
-      alerts = holds.map { |hold| "<li>#{hold.group_and_user_name}さんが#{hold.formatted_updated_at}から編集中です。</li>" }.join
-      flash.now[:alert] = "<ul>#{alerts}</ul>".html_safe
+  def new_state_from_params
+    state = params.keys.detect { |k| k =~ /^commit_/ }.to_s.sub(/^commit_/, '')
+    if @content.doc_state_options(Core.user).map(&:last).include?(state)
+      state
+    else
+      nil
     end
   end
 
-  def check_intercepted
-    unless Sys::UsersHold.where(user_id: Core.user.id, session_id: session.id, holdable: @item).exists?
-      flash[:alert] = "#{@item.last_editor.try(:group_and_user_name)}さんが記事を編集したため、編集内容を反映できません。"
-      render action: :edit
-    end
+  def location_after_save
+    lambda { |doc| url_for(action: :edit, id: doc) } if @item.state_draft?
   end
 
-  def release_document
-    Sys::UsersHold.where(holdable: @item).delete_all
+  def publish_by_update(item)
+    if item.publish
+      flash[:notice] = '公開処理が完了しました。'
+    else
+      flash[:alert] = '公開処理に失敗しました。'
+    end
   end
 
   def send_broken_link_notification
@@ -285,7 +228,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
         params[:target] = 'all' if params[:target].blank?
         params[:target_state] = 'processing' if params[:target_state].blank?
       else
-        params[:target] = 'user' if params[:target].blank? || params[:target] == 'all'
+        params[:target] = 'user' if params[:target].blank?
         params[:target_state] = 'processing' if params[:target_state].blank?
       end
     end

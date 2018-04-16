@@ -24,8 +24,8 @@ centos() {
 
   . /etc/profile.d/rbenv.sh
 
-  rbenv install 2.3.1
-  rbenv global 2.3.1
+  rbenv install 2.3.7
+  rbenv global 2.3.7
   rbenv rehash
   ruby -v
 

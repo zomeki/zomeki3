@@ -94,7 +94,7 @@ class Cms::Admin::Tool::SearchController < Cms::Controller::Admin::Base
     non_publics = GpArticle::Doc.where.not(state: 'public').where(content_id: content.id)
     items = [publics,
              non_publics.editable,
-             non_publics.creator_or_approvables].reduce(:union)
+             non_publics.creator_or_approvables(Core.user)].reduce(:union)
     items = items.search_with_text(:title, :subtitle, :summary, :body, :mobile_title, :mobile_body, criteria[:keyword])
                  .order(:id)
     items.map { |c|

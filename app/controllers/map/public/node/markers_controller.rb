@@ -11,6 +11,7 @@ class Map::Public::Node::MarkersController < Cms::Controller::Public::Base
 
     category = params[:category] ? params[:category] : params[:escaped_category].to_s.gsub('@', '/')
     @specified_category = find_category_by_specified_path(category)
+    Page.title += " #{@specified_category.title}" if @specified_category
   end
 
   def index

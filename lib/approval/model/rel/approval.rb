@@ -13,7 +13,7 @@ module Approval::Model::Rel::Approval
       validate :validate_approval_assignments
     end
 
-    scope :creator_or_approvables, ->(user = Core.user) {
+    scope :creator_or_approvables, ->(user) {
       creators = Sys::Creator.arel_table
       approval_requests = Approval::ApprovalRequest.arel_table
       assignments = Approval::Assignment.arel_table
@@ -39,76 +39,35 @@ module Approval::Model::Rel::Approval
     approval_requests.map(&:participators).flatten.compact.uniq
   end
 
-  def approve(user)
-    return unless state_approvable?
+  def approvable?(user)
+    state_approvable? && approvers.include?(user)
+  end
 
+  def passbackable?(user)
+    state_approvable? && approvers.include?(user)
+  end
+
+  def pullbackable?(user)
+    state_approvable? && approval_requesters.include?(user)
+  end
+
+  def approve(user)
     approval_requests.each do |approval_request|
       approval_request.approve(user) do |state|
-        case state
-        when 'progress'
-          send_approval_request_mail
-        when 'finish'
-          #send_approved_notification_mail
-        end
+        yield(approval_request) if block_given?
       end
-    end
-
-    if approval_requests.all?(&:finished?)
-      yield if block_given?
     end
   end
 
   def passback(approver, comment: '')
-    return unless state_approvable?
     approval_requests.each do |approval_request|
-      send_passbacked_notification_mail(approval_request: approval_request, approver: approver, comment: comment)
       approval_request.passback(approver, comment: comment)
     end
-    yield if block_given?
   end
 
   def pullback(comment: '')
-    return unless state_approvable?
     approval_requests.each do |approval_request|
-      send_pullbacked_notification_mail(approval_request: approval_request, comment: comment)
       approval_request.pullback(comment: comment)
-    end
-    yield if block_given?
-  end
-
-  def send_approval_request_mail
-    approval_requests.each do |approval_request|
-      approval_request.current_approvable_approvers.each do |approver|
-        next if approval_request.requester.email.blank? || approver.email.blank?
-
-        Approval::Admin::Mailer.approval_request(from: approval_request.requester.email, to: approver.email,
-          approval_request: approval_request, approver: approver, item: self).deliver_now
-      end
-    end
-  end
-
-  def send_approved_notification_mail
-    approval_requests.each do |approval_request|
-      approver = approval_request.current_assignments.reorder(approved_at: :desc).first.user
-      next if approver.email.blank? || approval_request.requester.email.blank?
-
-      Approval::Admin::Mailer.approved_notification(from: approver.email, to: approval_request.requester.email,
-        approval_request: approval_request, approver: approver, item: self).deliver_now
-    end
-  end
-
-  def send_passbacked_notification_mail(approval_request: nil, approver: nil, comment: '')
-    return if approver.email.blank? || approval_request.requester.email.blank?
-
-    Approval::Admin::Mailer.passbacked_notification(from: approver.email, to: approval_request.requester.email,
-      approval_request: approval_request, approver: approver, comment: comment, item: self).deliver_now
-  end
-
-  def send_pullbacked_notification_mail(approval_request: nil, comment: '')
-    approval_request.current_approvers.each do |approver|
-      next if approver.email.blank? || approval_request.requester.email.blank?
-      Approval::Admin::Mailer.pullbacked_notification(from: approval_request.requester.email, to: approver.email,
-        approval_request: approval_request, comment: comment, item: self).deliver_now
     end
   end
 

@@ -27,7 +27,6 @@ class Cms::Admin::NodesController < Cms::Controller::Admin::Base
                              .paginate(page: params[:page], per_page: params[:limit])
 
     @skip_navi = true
-    render action: :search
   end
 
   def show
