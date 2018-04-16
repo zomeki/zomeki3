@@ -20,6 +20,7 @@ namespace ZomekiCMS::NAME do
       Sys::File.cleanup
       Sys::UsersSession.cleanup
       Sys::Process.cleanup
+      GpArticle::Doc.cleanup
     end
 
     namespace :tasks do

@@ -1,5 +1,5 @@
 module Sys::Controller::Scaffold::Base
-  ALLOWED_DO_PARAMS = %w(recognize publish close duplicate duplicate_for_replace download)
+  ALLOWED_DO_PARAMS = %w(recognize publish close duplicate duplicate_for_replace download trash untrash)
 
   def edit
     show

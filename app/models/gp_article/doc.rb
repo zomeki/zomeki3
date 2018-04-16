@@ -43,7 +43,7 @@ class GpArticle::Doc < ApplicationRecord
   column_attribute :body_more_link_text, default: '続きを読む'
   column_attribute :filename_base, default: 'index'
 
-  enum_ish :state, [:draft, :approvable, :approved, :prepared, :public, :closed, :archived], predicate: true
+  enum_ish :state, [:draft, :approvable, :approved, :prepared, :public, :closed, :trashed, :archived], predicate: true
   enum_ish :target, ['', '_self', '_blank', 'attached_file'], default: ''
   enum_ish :event_state, [:visible, :hidden], default: :hidden
   enum_ish :marker_state, [:visible, :hidden], default: :hidden
@@ -61,8 +61,8 @@ class GpArticle::Doc < ApplicationRecord
   has_many :operation_logs, -> { where(item_model: 'GpArticle::Doc') },
            foreign_key: :item_id, class_name: 'Sys::OperationLog'
 
-  belongs_to :prev_edition, class_name: self.name
-  has_one :next_edition, foreign_key: :prev_edition_id, class_name: self.name
+  belongs_to :prev_edition, -> { where.not(state: 'trashed') }, class_name: self.name
+  has_one :next_edition, -> { where.not(state: 'trashed') }, foreign_key: :prev_edition_id, class_name: self.name
 
   belongs_to :marker_icon_category, class_name: 'GpCategory::Category'
 
@@ -401,6 +401,20 @@ class GpArticle::Doc < ApplicationRecord
     content.lang_options.rassoc(lang).try(:first)
   end
 
+  def trash
+    self.state = 'trashed'
+    save(validate: false)
+  end
+
+  def untrash
+    if prev_edition_id && self.class.where(prev_edition_id: prev_edition_id).where.not(id: id, state: 'trashed').exists?
+      errors.add(:next_edition, :taken)
+      return false
+    end
+    self.state = 'draft'
+    save(validate: false)
+  end
+
   private
 
   def validate_name
@@ -490,9 +504,21 @@ class GpArticle::Doc < ApplicationRecord
     prev_edition.destroy if state_public? && prev_edition
   end
 
+  class << self
+    def cleanup
+      days = Sys::Setting.trash_keep_days
+      return unless days
+
+      docs = self.where(state: 'trashed').date_before(:updated_at, days.days.ago)
+      docs.find_each(batch_size: 100) do |doc|
+        doc.destroy
+      end
+    end
+  end
+
   concerning :Publication do
     included do
-      after_destroy :close_page
+      after_destroy :close_page, if: -> { state_public? }
 
       define_model_callbacks :publish_files
       after_publish_files Cms::FileTransferCallbacks.new([:public_path, :public_smart_phone_path], recursive: true)
