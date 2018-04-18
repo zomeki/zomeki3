@@ -312,7 +312,7 @@ class GpArticle::Doc < ApplicationRecord
     end
 
     transaction do
-      new_doc.save!
+      new_doc.save(validate: false)
 
       files.each do |f|
         f.duplicate(file_attachable: new_doc)

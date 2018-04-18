@@ -29,7 +29,7 @@ class Sys::File < ApplicationRecord
     new_item.skip_upload
 
     transaction do
-      new_item.save!
+      new_item.save(validate: false)
 
       if ::File.exist?(upload_path)
         Util::File.put(new_item.upload_path, src: upload_path, mkdir: true)
