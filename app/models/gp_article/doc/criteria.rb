@@ -21,7 +21,7 @@ class GpArticle::Doc::Criteria
   attr_accessor(*ATTRIBUTES)
 
   enum_ish :target, [:user, :group, :all]
-  enum_ish :target_state, [:processing, :public, :closed, :all]
+  enum_ish :target_state, [:processing, :public, :closed, :all, :trashed]
   enum_ish :date_column, [:created_at, :updated_at, :recognized_at, :published_at]
   enum_ish :date_operation, [:today, :this_week, :last_week, :equal, :before, :after, :between]
   enum_ish :state, [:draft, :approvable, :approved, :prepared, :public, :closed]
