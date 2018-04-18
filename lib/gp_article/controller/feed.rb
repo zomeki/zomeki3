@@ -120,7 +120,7 @@ module GpArticle::Controller::Feed
             end
           end
 
-          doc.public_relate_docs.each do |doc|
+          doc.relate_docs.each do |doc|
             xml.link rel: 'related', href: "#{doc.public_full_uri}", type: 'text/xhtml'
           end
 

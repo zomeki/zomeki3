@@ -94,4 +94,14 @@ class Sys::Process < ApplicationRecord
       return item.interrupt.blank? ? nil : item.interrupt
     end
   end
+
+  class << self
+    def cleanup
+      days = Sys::Setting.process_log_keep_days
+      return unless days
+
+      Sys::Process.date_before(:created_at, days.days.ago)
+                  .find_each(&:destroy)
+    end
+  end
 end

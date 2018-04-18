@@ -23,7 +23,7 @@
     <td><%= item.creator&.group&.name %></td>
     <td><%= item.creator&.user&.name %></td>
     <td style="text-align: center;"><%=l item.updated_at %></td>
-    <td style="text-align: center;" class="<%= 'approvable' if item.state_approvable? && item.approvers.include?(Core.user) %>"><%= item.state_text %></td>
+    <td style="text-align: center;" class="<%= 'approvable' if item.approvable?(Core.user) %>"><%= item.state_text %></td>
     <td style="text-align: center;">
       <%= preview_links(item.site, item.preview_uri,
                                    item.preview_uri(terminal: :smart_phone),

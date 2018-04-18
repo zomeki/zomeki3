@@ -12,7 +12,7 @@ server {
 
   <%- @locations.each do |location| -%>
   location ~ ^<%= location.path %> {
-    try_files $uri $uri/index.html <%= location.try_files.join(' ') %>;
+    try_files <%= location.try_files.join(' ') %>;
     <%- if location.htpasswd_path.present? -%>
     auth_basic_user_file <%= location.htpasswd_path %>;
     auth_basic "Please enter your ID and password";

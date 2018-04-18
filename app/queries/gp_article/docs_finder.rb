@@ -68,7 +68,7 @@ class GpArticle::DocsFinder < ApplicationFinder
   def with_target(target)
     case target
     when 'user'
-      @docs.creator_or_approvables
+      @docs.creator_or_approvables(@user)
     when 'group'
       @docs.editable
     when 'all'

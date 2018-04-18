@@ -32,7 +32,7 @@ class GpCategory::Admin::DocsController < Cms::Controller::Admin::Base
         redirect_to url_for(action: :index), notice: '更新処理が完了しました。'
       else
         flash.now[:alert] = '更新処理に失敗しました。'
-        render action: :edit
+        render :edit
       end
     else
       redirect_to url_for(action: :show), alert: '更新処理に失敗しました。'

@@ -37,10 +37,9 @@ module Sys::Controller::Scaffold::Base
         format.xml  { render(xml: item.to_xml(dasherize: false), status: status, location: location) }
       end
     else
-      failed_template = options[:failed_template] || { action: :new }
       flash.now[:alert] = '登録処理に失敗しました。'
       respond_to do |format|
-        format.html { render failed_template }
+        format.html { render :new }
         format.xml  { render xml: item.errors, status: :unprocessable_entity }
       end
     end
@@ -58,10 +57,9 @@ module Sys::Controller::Scaffold::Base
         format.xml  { head :ok }
       end
     else
-      failed_template = options[:failed_template] || { action: :edit }
       flash.now[:alert] = '更新処理に失敗しました。'
       respond_to do |format|
-        format.html { render failed_template }
+        format.html { render :edit }
         format.xml  { render xml: item.errors, status: :unprocessable_entity }
       end
     end
@@ -80,7 +78,7 @@ module Sys::Controller::Scaffold::Base
     else
       flash.now[:alert] = '削除処理に失敗しました。'
       respond_to do |format|
-        format.html { render action: :show }
+        format.html { render :show }
         format.xml  { render xml: item.errors, status: :unprocessable_entity }
       end
     end

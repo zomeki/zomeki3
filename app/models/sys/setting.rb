@@ -17,6 +17,10 @@ class Sys::Setting < ApplicationRecord
              name: '禁止語句',
              form_type: :text,
              lower_text: 'スペースまたは改行で複数指定できます。'
+  set_config :process_log_keep_days,
+             name: 'プロセスログ保存期間',
+             comment: '日',
+             default_value: 10
 
   validates :name, presence: true
 
@@ -59,6 +63,11 @@ class Sys::Setting < ApplicationRecord
 
     def block_words
       setting_value(:block_word).to_s.split(/(\r\n|\n|\t| |　)+/).uniq.map(&:strip).select(&:present?)
+    end
+
+    def process_log_keep_days
+      days = setting_value(:process_log_keep_days)
+      days.to_i if days.present?
     end
 
     private

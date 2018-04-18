@@ -2,8 +2,8 @@ module GpArticle::Controller::Public::Scoping
   extend ActiveSupport::Concern
 
   included do
-    around_action :set_gp_article_mobile_scoping
-    around_action :set_gp_article_public_scoping
+    prepend_around_action :set_gp_article_mobile_scoping
+    prepend_around_action :set_gp_article_public_scoping
   end
 
   private

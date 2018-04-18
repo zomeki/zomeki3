@@ -10,12 +10,6 @@ class Sys::File < ApplicationRecord
 
   nested_scope :in_site, through: :file_attachable
 
-  ## Remove the temporary flag.
-  def self.fix_tmp_files(tmp_id, file_attachable)
-    file_attachable.files = where(tmp_id: tmp_id).each(&:skip_upload)
-    file_attachable.files.update_all(tmp_id: nil)
-  end
-
   def duplicated
     c_tmp_id, c_file_attachable_type, c_file_attachable_id = if tmp_id
                                                                [tmp_id, nil, nil]
