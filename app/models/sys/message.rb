@@ -4,6 +4,8 @@ class Sys::Message < ApplicationRecord
   include Cms::Model::Rel::Site
   include Cms::Model::Auth::Site
 
+  column_attribute :body, html: true
+
   enum_ish :state, [:public, :closed]
 
   belongs_to :site, class_name: 'Cms::Site'

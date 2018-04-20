@@ -6,6 +6,10 @@ class Reception::Course < ApplicationRecord
   include Cms::Model::Auth::Content
   include GpCategory::Model::Rel::Category
 
+  column_attribute :body, html: true
+  column_attribute :remark, html: true
+  column_attribute :description, html: true
+
   enum_ish :state, [:draft, :public, :closed], default: :public, predicate: true
 
   # Content

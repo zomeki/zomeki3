@@ -12,6 +12,9 @@ class Survey::Form < ApplicationRecord
 
   default_scope { order(:sort_no, :id) }
 
+  column_attribute :summary, html: true
+  column_attribute :description, html: true
+  column_attribute :receipt, html: true
   column_attribute :sort_no, default: 10
 
   enum_ish :state, [:draft, :approvable, :approved, :prepared, :public, :closed], predicate: true

@@ -25,9 +25,6 @@ class GpArticle::Doc < ApplicationRecord
   include Approval::Model::Rel::Approval
   include GpTemplate::Model::Rel::Template
 
-  self.linkable_columns = [:body, :mobile_body, :body_more]
-  self.searchable_columns = [:body]
-
   default_scope { where.not(state: 'archived') }
 
   column_attribute :href, default: ''
@@ -35,9 +32,9 @@ class GpArticle::Doc < ApplicationRecord
   column_attribute :mobile_title, default: ''
   column_attribute :subtitle, default: ''
   column_attribute :summary, default: ''
-  column_attribute :body, default: ''
-  column_attribute :mobile_body, default: ''
-  column_attribute :body_more, default: ''
+  column_attribute :body, default: '', html: true, fts: true
+  column_attribute :mobile_body, default: '', html: true
+  column_attribute :body_more, default: '', html: true
   column_attribute :terminal_pc_or_smart_phone, default: true
   column_attribute :terminal_mobile, default: true
   column_attribute :body_more_link_text, default: '続きを読む'

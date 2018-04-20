@@ -12,6 +12,8 @@ class Cms::Node < ApplicationRecord
   include Cms::Model::Auth::Concept
   include Cms::Model::Base::Node
 
+  column_attribute :body, html: true
+
   enum_ish :state, [:draft, :recognize, :recognized, :public, :closed]
 
   belongs_to :parent, class_name: self.name
@@ -194,8 +196,7 @@ class Cms::Node < ApplicationRecord
     include Cms::Model::Rel::PublishUrl
     include Cms::Model::Rel::SearchText
 
-    self.linkable_columns = [:body]
-    self.searchable_columns = [:body]
+    column_attribute :body, html: true, fts: true
 
     after_save :replace_public_page
 
