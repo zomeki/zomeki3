@@ -12,7 +12,7 @@ class Cms::Node < ApplicationRecord
   include Cms::Model::Auth::Concept
   include Cms::Model::Base::Node
 
-  column_attribute :body, html: true
+  column_attribute :body, html: true, fts: true
 
   enum_ish :state, [:draft, :recognize, :recognized, :public, :closed]
 
@@ -195,8 +195,6 @@ class Cms::Node < ApplicationRecord
     include Cms::Model::Rel::Link
     include Cms::Model::Rel::PublishUrl
     include Cms::Model::Rel::SearchText
-
-    column_attribute :body, html: true, fts: true
 
     after_save :replace_public_page
 
