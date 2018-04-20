@@ -1,8 +1,6 @@
 class Organization::Public::Piece::AllGroupsController < Organization::Public::PieceController
   def pre_dispatch
-    @piece = Organization::Piece::AllGroup.where(id: Page.current_piece.id).first
-    return render plain: '' unless @piece
-
+    @piece = Organization::Piece::AllGroup.find(Page.current_piece.id)
     @item = Page.current_item
   end
 

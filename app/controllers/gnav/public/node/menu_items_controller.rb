@@ -1,7 +1,6 @@
 class Gnav::Public::Node::MenuItemsController < Gnav::Public::NodeController
   def pre_dispatch
-    @content = Gnav::Content::MenuItem.find_by(id: Page.current_node.content.id)
-    return http_error(404) unless @content
+    @content = Gnav::Content::MenuItem.find(Page.current_node.content_id)
   end
 
   def index
@@ -13,8 +12,7 @@ class Gnav::Public::Node::MenuItemsController < Gnav::Public::NodeController
   def show
     http_error(404) if params[:page]
 
-    @menu_item = @content.public_menu_items.find_by(name: params[:name])
-    return http_error(404) unless @menu_item
+    @menu_item = @content.public_menu_items.find_by!(name: params[:name])
 
     Page.current_item = @menu_item
     Page.title = @menu_item.title

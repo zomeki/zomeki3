@@ -1,2 +1,2 @@
-class AdBanner::Public::PieceController < Sys::Controller::Public::Base
+class AdBanner::Public::PieceController < Cms::Controller::Public::Piece
 end

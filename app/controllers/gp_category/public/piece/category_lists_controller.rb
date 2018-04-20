@@ -1,16 +1,13 @@
 class GpCategory::Public::Piece::CategoryListsController < GpCategory::Public::PieceController
   def pre_dispatch
-    @piece = GpCategory::Piece::CategoryList.find_by(id: Page.current_piece.id)
-    render plain: '' unless @piece
-
+    @piece = GpCategory::Piece::CategoryList.find(Page.current_piece.id)
     @item = Page.current_item
   end
 
   def index
     if @piece.setting_state == 'enabled'
       if @piece.category_type_id && @piece.category_id
-        @category = @piece.category_type.categories.find_by(id: @piece.category_id)
-        return render plain: '' unless @category
+        @category = @piece.category_type.categories.find(@piece.category_id)
         render :category
       elsif @piece.category_type_id
         @category_type = @piece.category_type

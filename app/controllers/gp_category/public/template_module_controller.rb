@@ -1,4 +1,4 @@
-class GpCategory::Public::TemplateModuleController < Sys::Controller::Public::Base
+class GpCategory::Public::TemplateModuleController < Cms::Controller::Public::Piece
   include GpArticle::Controller::Public::Scoping
 
   before_action :set_more_option

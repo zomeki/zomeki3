@@ -4,8 +4,7 @@ class Map::Public::Node::NavigationsController < Map::Public::NodeController
 
   def pre_dispatch
     @node = Page.current_node
-    @content = Map::Content::Marker.find_by(id: @node.content.id)
-    return http_error(404) unless @content
+    @content = Map::Content::Marker.find(@node.content_id)
 
     category = params[:category] ? params[:category] : params[:escaped_category].to_s.gsub('@', '/')
     @specified_category = find_category_by_specified_path(category)

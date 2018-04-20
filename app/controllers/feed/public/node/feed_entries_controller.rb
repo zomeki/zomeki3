@@ -3,8 +3,7 @@ class Feed::Public::Node::FeedEntriesController < Feed::Public::NodeController
 
   def pre_dispatch
     @node = Page.current_node
-    @content = Feed::Content::Feed.find_by(id: @node.content.id)
-    return http_error(404) unless @content
+    @content = Feed::Content::Feed.find(@node.content_id)
   end
 
   def index

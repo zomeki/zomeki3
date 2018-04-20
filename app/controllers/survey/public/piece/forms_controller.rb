@@ -1,15 +1,11 @@
 class Survey::Public::Piece::FormsController < Survey::Public::PieceController
   def pre_dispatch
-    @piece = Survey::Piece::Form.find_by(id: Page.current_piece.id)
-    return render plain: '' unless @piece
-
+    @piece = Survey::Piece::Form.find(Page.current_piece.id)
     @item = Page.current_item
+    render plain: '' unless @piece.content.public_node
   end
 
   def index
-    public_node = @piece.content.public_node
-    return render plain: '' unless public_node
-
     @form = @piece.target_form
     return render plain: '' unless @form
   end

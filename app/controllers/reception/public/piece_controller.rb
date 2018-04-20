@@ -1,2 +1,2 @@
-class Reception::Public::PieceController < Sys::Controller::Public::Base
+class Reception::Public::PieceController < Cms::Controller::Public::Piece
 end

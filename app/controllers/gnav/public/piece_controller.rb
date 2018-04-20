@@ -1,3 +1,3 @@
-class Gnav::Public::PieceController < Sys::Controller::Public::Base
+class Gnav::Public::PieceController < Cms::Controller::Public::Piece
   include GpArticle::Controller::Public::Scoping
 end

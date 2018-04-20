@@ -1,3 +1,3 @@
-class GpArticle::Public::PieceController < Sys::Controller::Public::Base
+class GpArticle::Public::PieceController < Cms::Controller::Public::Piece
   include GpArticle::Controller::Public::Scoping
 end

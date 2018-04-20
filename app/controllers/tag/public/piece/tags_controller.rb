@@ -1,12 +1,10 @@
 class Tag::Public::Piece::TagsController < Tag::Public::PieceController
   def pre_dispatch
-    @piece = Tag::Piece::Tag.find_by(id: Page.current_piece.id)
-    render plain: '' unless @piece
+    @piece = Tag::Piece::Tag.find(Page.current_piece.id)
   end
 
   def index
     @tags = @piece.content.tags
     @tags = Cms::ContentsPreloader.new(@tags).preload(:public_node_ancestors)
-    render plain: '' if @tags.empty?
   end
 end

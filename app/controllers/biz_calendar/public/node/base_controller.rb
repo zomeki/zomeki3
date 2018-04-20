@@ -1,8 +1,7 @@
 class BizCalendar::Public::Node::BaseController < BizCalendar::Public::NodeController
   def pre_dispatch
     @node = Page.current_node
-    @content = BizCalendar::Content::Place.find_by(id: @node.content.id)
-    return http_error(404) unless @content
+    @content = BizCalendar::Content::Place.find(@node.content_id)
 
     @today = Date.today
     @min_date = 1.year.ago(@today.beginning_of_month)

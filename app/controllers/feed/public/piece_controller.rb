@@ -1,2 +1,2 @@
-class Feed::Public::PieceController < Sys::Controller::Public::Base
+class Feed::Public::PieceController < Cms::Controller::Public::Piece
 end

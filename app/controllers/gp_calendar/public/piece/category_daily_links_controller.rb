@@ -1,8 +1,6 @@
 class GpCalendar::Public::Piece::CategoryDailyLinksController < GpCalendar::Public::Piece::BaseController
   def pre_dispatch
-    @piece = GpCalendar::Piece::CategoryDailyLink.find_by(id: Page.current_piece.id)
-    return render plain: '' unless @piece
-
+    @piece = GpCalendar::Piece::CategoryDailyLink.find(Page.current_piece.id)
     @item = Page.current_item
   end
 

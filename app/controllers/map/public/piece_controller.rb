@@ -1,3 +1,3 @@
-class Map::Public::PieceController < Sys::Controller::Public::Base
+class Map::Public::PieceController < Cms::Controller::Public::Piece
   include GpArticle::Controller::Public::Scoping
 end

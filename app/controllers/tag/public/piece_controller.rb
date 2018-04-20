@@ -1,3 +1,3 @@
-class Tag::Public::PieceController < Sys::Controller::Public::Base
+class Tag::Public::PieceController < Cms::Controller::Public::Piece
   include GpArticle::Controller::Public::Scoping
 end

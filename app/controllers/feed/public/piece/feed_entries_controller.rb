@@ -1,16 +1,13 @@
 class Feed::Public::Piece::FeedEntriesController < Feed::Public::PieceController
   def pre_dispatch
-    @piece = Feed::Piece::FeedEntry.find_by(id: Page.current_piece.id)
-    return render plain: '' unless @piece
-    
+    @piece = Feed::Piece::FeedEntry.find(Page.current_piece.id)
+    @content = Feed::Content::Feed.find(Page.current_piece.content_id)
     @item = Page.current_item
   end
 
   def index
-    @content = Feed::Content::Feed.find(Page.current_piece.content_id)
-
     item = @content.public_entries
-    
+
     list_type = nil
     list_html = ''
     page_html = nil

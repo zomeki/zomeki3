@@ -2,8 +2,7 @@ class AdBanner::Public::Node::BannersController < AdBanner::Public::NodeControll
   skip_after_action :render_public_layout, only: :index
 
   def pre_dispatch
-    @content = AdBanner::Content::Banner.find_by(id: Page.current_node.content.id)
-    return http_error(404) unless @content
+    @content = AdBanner::Content::Banner.find(Page.current_node.content_id)
   end
 
   def index

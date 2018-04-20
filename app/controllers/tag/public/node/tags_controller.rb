@@ -1,8 +1,7 @@
 class Tag::Public::Node::TagsController < Tag::Public::NodeController
   def pre_dispatch
     @node = Page.current_node
-    @content = Tag::Content::Tag.find_by(id: Page.current_node.content.id)
-    return http_error(404) unless @content
+    @content = Tag::Content::Tag.find(Page.current_node.content_id)
   end
 
   def index
@@ -15,8 +14,7 @@ class Tag::Public::Node::TagsController < Tag::Public::NodeController
   def show
     http_error(404) if params[:page]
 
-    @item = @content.tags.find_by(word: params[:word])
-    return http_error(404) unless @item
+    @item = @content.tags.find_by!(word: params[:word])
 
     Page.current_item = @item
     Page.title = @node.title

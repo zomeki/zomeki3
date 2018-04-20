@@ -1,4 +1,4 @@
-class Cms::Public::Piece::BreadCrumbsController < Sys::Controller::Public::Base
+class Cms::Public::Piece::BreadCrumbsController < Cms::Controller::Public::Piece
   def index
     @piece = Page.current_piece
     @item = Page.current_item

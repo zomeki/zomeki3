@@ -1,7 +1,6 @@
 class GpArticle::Public::Node::ArchivesController < GpArticle::Public::NodeController
   def pre_dispatch
-    @content = GpArticle::Content::Doc.find_by(id: Page.current_node.content.id)
-    return http_error(404) unless @content
+    @content = GpArticle::Content::Doc.find(Page.current_node.content_id)
     return http_error(404) unless validate_date
   end
 

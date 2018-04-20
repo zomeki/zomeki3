@@ -2,8 +2,7 @@ class Organization::Public::Node::GroupsController < Organization::Public::NodeC
   include GpArticle::Controller::Feed
 
   def pre_dispatch
-    @content = Organization::Content::Group.find_by(id: Page.current_node.content.id)
-    return http_error(404) unless @content
+    @content = Organization::Content::Group.find(Page.current_node.content_id)
     @more = (params[:filename_base] =~ /^more($|_)/i)
   end
 

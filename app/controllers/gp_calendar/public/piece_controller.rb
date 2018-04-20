@@ -1,3 +1,3 @@
-class GpCalendar::Public::PieceController < Sys::Controller::Public::Base
+class GpCalendar::Public::PieceController < Cms::Controller::Public::Piece
   include GpArticle::Controller::Public::Scoping
 end

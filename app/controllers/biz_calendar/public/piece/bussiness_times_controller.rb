@@ -1,14 +1,11 @@
 class BizCalendar::Public::Piece::BussinessTimesController < BizCalendar::Public::PieceController
   def pre_dispatch
-    @piece = BizCalendar::Piece::BussinessTime.find_by(id: Page.current_piece.id)
-    return render plain: '' unless @piece
-
+    @piece = BizCalendar::Piece::BussinessTime.find(Page.current_piece.id)
     @item = Page.current_item
   end
 
   def index
-    node = @piece.content.public_nodes.first
-    return render plain: '' unless node
+    node = @piece.content.public_nodes.first!
 
     unless @piece.page_filter == 'through'
       if @item.class.to_s == "BizCalendar::Place"

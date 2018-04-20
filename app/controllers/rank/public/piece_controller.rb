@@ -1,2 +1,2 @@
-class Rank::Public::PieceController < Sys::Controller::Public::Base
+class Rank::Public::PieceController < Cms::Controller::Public::Piece
 end

@@ -41,8 +41,8 @@ class Reception::Public::Node::ApplicantsController < Reception::Public::NodeCon
   end
 
   def cancel
-    @token = @course.applicant_tokens.find_by(token: params[:token])
-    return http_error(404) if @token.nil? || !@token.cancelable?
+    @token = @course.applicant_tokens.find_by!(token: params[:token])
+    return http_error(404) unless @token.cancelable?
     return render :cancel if request.get?
 
     if @token.seq_no != params[:seq_no].to_i

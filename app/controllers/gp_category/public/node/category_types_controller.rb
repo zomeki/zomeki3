@@ -2,8 +2,7 @@ class GpCategory::Public::Node::CategoryTypesController < GpCategory::Public::No
   include GpArticle::Controller::Feed
 
   def pre_dispatch
-    @content = GpCategory::Content::CategoryType.find_by(id: Page.current_node.content.id)
-    return http_error(404) unless @content
+    @content = GpCategory::Content::CategoryType.find(Page.current_node.content_id)
 
     @more = (params[:file] =~ /^more($|@)/i)
     @more_options = params[:file].split('@', 3).drop(1) if @more
@@ -22,8 +21,7 @@ class GpCategory::Public::Node::CategoryTypesController < GpCategory::Public::No
   end
 
   def show
-    @category_type = @content.public_category_types.find_by(name: params[:name])
-    return http_error(404) unless @category_type
+    @category_type = @content.public_category_types.find_by!(name: params[:name])
 
     if params[:format].in?(['rss', 'atom'])
       case @content.category_type_style
