@@ -1,4 +1,4 @@
-class Reception::Public::Node::ApplicantsController < Cms::Controller::Public::Base
+class Reception::Public::Node::ApplicantsController < Reception::Public::NodeController
   before_action :check_applicable, only: [:index]
 
   def pre_dispatch

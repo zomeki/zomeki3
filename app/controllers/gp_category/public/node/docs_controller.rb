@@ -1,5 +1,4 @@
-class GpCategory::Public::Node::DocsController < Cms::Controller::Public::Base
-  include GpArticle::Controller::Public::Scoping
+class GpCategory::Public::Node::DocsController < GpCategory::Public::NodeController
   include GpArticle::Controller::Feed
 
   def pre_dispatch

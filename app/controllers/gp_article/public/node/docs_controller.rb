@@ -1,6 +1,5 @@
 require 'will_paginate/array'
-class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
-  include GpArticle::Controller::Public::Scoping
+class GpArticle::Public::Node::DocsController < GpArticle::Public::NodeController
   include GpArticle::Controller::Feed
 
   skip_after_action :render_public_layout, only: [:file_content, :qrcode]

@@ -1,4 +1,4 @@
-class BizCalendar::Public::Node::BaseController < Cms::Controller::Public::Base
+class BizCalendar::Public::Node::BaseController < BizCalendar::Public::NodeController
   def pre_dispatch
     @node = Page.current_node
     @content = BizCalendar::Content::Place.find_by(id: @node.content.id)

@@ -1,6 +1,4 @@
-class Organization::Public::Piece::CategorizedDocsController < Sys::Controller::Public::Base
-  include GpArticle::Controller::Public::Scoping
-
+class Organization::Public::Piece::CategorizedDocsController < Organization::Public::PieceController
   def pre_dispatch
     @piece = Organization::Piece::CategorizedDoc.where(id: Page.current_piece.id).first
     return render plain: '' unless @piece

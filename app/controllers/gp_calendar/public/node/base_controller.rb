@@ -1,6 +1,4 @@
-class GpCalendar::Public::Node::BaseController < Cms::Controller::Public::Base
-  include GpArticle::Controller::Public::Scoping
-
+class GpCalendar::Public::Node::BaseController < GpCalendar::Public::NodeController
   def pre_dispatch
     @node = Page.current_node
     @content = GpCalendar::Content::Event.find_by(id: @node.content.id)

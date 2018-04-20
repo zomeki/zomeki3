@@ -1,6 +1,4 @@
-class Survey::Public::Piece::FormsController < Sys::Controller::Public::Base
-  include Survey::Controller::Public::Scoping
-
+class Survey::Public::Piece::FormsController < Survey::Public::PieceController
   def pre_dispatch
     @piece = Survey::Piece::Form.find_by(id: Page.current_piece.id)
     return render plain: '' unless @piece

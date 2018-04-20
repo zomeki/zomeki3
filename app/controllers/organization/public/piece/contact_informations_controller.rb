@@ -1,6 +1,4 @@
-class Organization::Public::Piece::ContactInformationsController < Sys::Controller::Public::Base
-  include GpArticle::Controller::Public::Scoping
-
+class Organization::Public::Piece::ContactInformationsController < Organization::Public::PieceController
   def pre_dispatch
     @piece = Organization::Piece::ContactInformation.where(id: Page.current_piece.id).first
     return render plain: '' unless @piece

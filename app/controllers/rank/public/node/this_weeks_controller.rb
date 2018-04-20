@@ -1,4 +1,4 @@
-class Rank::Public::Node::ThisWeeksController < Cms::Controller::Public::Base
+class Rank::Public::Node::ThisWeeksController < Rank::Public::NodeController
   def pre_dispatch
     @node = Page.current_node
     @content = Rank::Content::Rank.find_by(id: Page.current_node.content.id)

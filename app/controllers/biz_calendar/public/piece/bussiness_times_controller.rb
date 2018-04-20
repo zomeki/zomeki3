@@ -1,4 +1,4 @@
-class BizCalendar::Public::Piece::BussinessTimesController < BizCalendar::Public::Piece::BaseController
+class BizCalendar::Public::Piece::BussinessTimesController < BizCalendar::Public::PieceController
   def pre_dispatch
     @piece = BizCalendar::Piece::BussinessTime.find_by(id: Page.current_piece.id)
     return render plain: '' unless @piece

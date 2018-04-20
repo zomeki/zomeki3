@@ -1,6 +1,4 @@
-class GpCategory::Public::Piece::FeedsController < Sys::Controller::Public::Base
-  include GpArticle::Controller::Public::Scoping
-
+class GpCategory::Public::Piece::FeedsController < GpCategory::Public::PieceController
   def pre_dispatch
     @piece = GpCategory::Piece::Feed.find_by(id: Page.current_piece.id)
     render plain: '' unless @piece

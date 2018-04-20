@@ -1,4 +1,4 @@
-class Reception::Public::Piece::CoursesController < Sys::Controller::Public::Base
+class Reception::Public::Piece::CoursesController < Reception::Public::PieceController
   def pre_dispatch
     @piece = Reception::Piece::Course.find_by(id: Page.current_piece.id)
     render plain: '' unless @piece

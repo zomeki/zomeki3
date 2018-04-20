@@ -1,4 +1,4 @@
-class Rank::Public::Piece::RanksController < Sys::Controller::Public::Base
+class Rank::Public::Piece::RanksController < Rank::Public::PieceController
   def pre_dispatch
     @piece = Rank::Piece::Rank.find_by(id: Page.current_piece.id)
     render plain: '' unless @piece

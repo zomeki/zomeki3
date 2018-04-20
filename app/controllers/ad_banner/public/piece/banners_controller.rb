@@ -1,4 +1,4 @@
-class AdBanner::Public::Piece::BannersController < Sys::Controller::Public::Base
+class AdBanner::Public::Piece::BannersController < AdBanner::Public::PieceController
   def pre_dispatch
     @piece = AdBanner::Piece::Banner.find_by(id: Page.current_piece.id)
     render plain: '' if @piece.nil? || @piece.content.public_node.nil?

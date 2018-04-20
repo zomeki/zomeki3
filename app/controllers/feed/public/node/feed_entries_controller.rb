@@ -1,4 +1,4 @@
-class Feed::Public::Node::FeedEntriesController < Cms::Controller::Public::Base
+class Feed::Public::Node::FeedEntriesController < Feed::Public::NodeController
   include Feed::Controller::Feed
 
   def pre_dispatch

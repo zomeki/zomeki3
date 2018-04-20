@@ -1,4 +1,14 @@
-class GpCategory::Public::Node::CategoryTypesController < GpCategory::Public::Node::BaseController
+class GpCategory::Public::Node::CategoryTypesController < GpCategory::Public::NodeController
+  include GpArticle::Controller::Feed
+
+  def pre_dispatch
+    @content = GpCategory::Content::CategoryType.find_by(id: Page.current_node.content.id)
+    return http_error(404) unless @content
+
+    @more = (params[:file] =~ /^more($|@)/i)
+    @more_options = params[:file].split('@', 3).drop(1) if @more
+  end
+
   def index
     # template module
     if (template = @content.index_template)
@@ -19,7 +29,8 @@ class GpCategory::Public::Node::CategoryTypesController < GpCategory::Public::No
       case @content.category_type_style
       when 'all_docs'
         category_ids = @category_type.public_categories.pluck(:id)
-        @docs = find_docs_with_category_id(category_ids).order(display_published_at: :desc, published_at: :desc)
+        @docs = GpArticle::Doc.categorized_into(category_ids).except(:order)
+                              .order(display_published_at: :desc, published_at: :desc)
         @docs = @docs.date_after(:display_published_at, @content.feed_docs_period.to_i.days.ago) if @content.feed_docs_period.present?
         @docs = @docs.paginate(page: params[:page], per_page: @content.feed_docs_number)
         return render_feed(@docs)
@@ -44,7 +55,8 @@ class GpCategory::Public::Node::CategoryTypesController < GpCategory::Public::No
     case @content.category_type_style
     when 'all_docs'
       category_ids = @category_type.public_categories.pluck(:id)
-      @docs = find_docs_with_category_id(category_ids).order(display_published_at: :desc, published_at: :desc)
+      @docs = GpArticle::Doc.categorized_into(category_ids).except(:order)
+                            .order(display_published_at: :desc, published_at: :desc)
                 .paginate(page: params[:page], per_page: @content.category_type_docs_number)
       @docs = GpArticle::DocsPreloader.new(@docs).preload(:public_node_ancestors)
       return http_error(404) if @docs.current_page > @docs.total_pages

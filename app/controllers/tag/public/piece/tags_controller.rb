@@ -1,6 +1,4 @@
-class Tag::Public::Piece::TagsController < Sys::Controller::Public::Base
-  include GpArticle::Controller::Public::Scoping
-
+class Tag::Public::Piece::TagsController < Tag::Public::PieceController
   def pre_dispatch
     @piece = Tag::Piece::Tag.find_by(id: Page.current_piece.id)
     render plain: '' unless @piece

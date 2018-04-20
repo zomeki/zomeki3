@@ -1,4 +1,4 @@
-class AdBanner::Public::Node::BannersController < Cms::Controller::Public::Base
+class AdBanner::Public::Node::BannersController < AdBanner::Public::NodeController
   skip_after_action :render_public_layout, only: :index
 
   def pre_dispatch

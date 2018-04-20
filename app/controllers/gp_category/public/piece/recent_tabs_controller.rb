@@ -1,6 +1,4 @@
-class GpCategory::Public::Piece::RecentTabsController < Sys::Controller::Public::Base
-  include GpArticle::Controller::Public::Scoping
-
+class GpCategory::Public::Piece::RecentTabsController < GpCategory::Public::PieceController
   def pre_dispatch
     @piece = GpCategory::Piece::RecentTab.find_by(id: Page.current_piece.id)
     render plain: '' unless @piece

@@ -1,6 +1,5 @@
-class Survey::Public::Node::FormsController < Cms::Controller::Public::Base
+class Survey::Public::Node::FormsController < Survey::Public::NodeController
   include SimpleCaptcha::ControllerHelpers
-  include Survey::Controller::Public::Scoping
 
   before_action :set_form, only: [:show, :confirm_answers, :send_answers, :finish]
 

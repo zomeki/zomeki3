@@ -1,6 +1,4 @@
-class Gnav::Public::Node::MenuItemsController < Cms::Controller::Public::Base
-  include GpArticle::Controller::Public::Scoping
-
+class Gnav::Public::Node::MenuItemsController < Gnav::Public::NodeController
   def pre_dispatch
     @content = Gnav::Content::MenuItem.find_by(id: Page.current_node.content.id)
     return http_error(404) unless @content

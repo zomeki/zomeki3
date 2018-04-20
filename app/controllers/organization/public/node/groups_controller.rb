@@ -1,5 +1,4 @@
-class Organization::Public::Node::GroupsController < Cms::Controller::Public::Base
-  include GpArticle::Controller::Public::Scoping
+class Organization::Public::Node::GroupsController < Organization::Public::NodeController
   include GpArticle::Controller::Feed
 
   def pre_dispatch

@@ -1,6 +1,4 @@
-class Gnav::Public::Piece::CategoryTypesController < Sys::Controller::Public::Base
-  include GpArticle::Controller::Public::Scoping
-
+class Gnav::Public::Piece::CategoryTypesController < Gnav::Public::PieceController
   def pre_dispatch
     @piece = Gnav::Piece::CategoryType.find_by(id: Page.current_piece.id)
     render plain: '' unless @piece
