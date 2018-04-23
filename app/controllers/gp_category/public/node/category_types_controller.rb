@@ -83,7 +83,8 @@ class GpCategory::Public::Node::CategoryTypesController < GpCategory::Public::No
         ''
       end
     end
-    render html: view_context.content_tag(:div, rendered.html_safe, class: 'contentGpCategory contentGpCategoryCategory').html_safe
+    cls = action_name == 'index' ? 'contentGpCategoryCategoryTypes' : 'contentGpCategoryCategoryType'
+    render html: view_context.content_tag(:div, rendered.html_safe, class: "contentGpCategory #{cls}").html_safe
   end
 
   def render_more_template(template, template_module)
@@ -93,7 +94,7 @@ class GpCategory::Public::Node::CategoryTypesController < GpCategory::Public::No
       params: params.merge(content: @content, category_type: @category_type, category: @category, template_module: template_module)
     )
     if res.status == 200
-      render html: view_context.content_tag(:div, res.body.html_safe, class: 'contentGpCategory contentGpCategoryCategory').html_safe
+      render html: view_context.content_tag(:div, res.body.html_safe, class: 'contentGpCategory contentGpCategoryCategoryType').html_safe
     else
       http_error(res.status)
     end
