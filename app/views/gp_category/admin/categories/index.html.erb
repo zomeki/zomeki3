@@ -2,7 +2,7 @@
 
 <table class="index">
   <tr>
-    <th style="text-align: center; width: 60px;">詳細</th>
+    <th class="action_link">詳細</th>
     <th style="text-align: center; width: 60px;"><%= GpArticle::Doc.model_name.human %>一覧</th>
     <th><%= @category_type.title %>ID</th>
     <th><%= @category_type.title %>名</th>
@@ -13,9 +13,9 @@
 
   <% @items.each do |item| %>
   <tr class="<%= cycle '', 'cycle' %>">
-    <td style="text-align: center;"><%= link_to :show, { action: :show, category_type_id: @category_type.id,
-                                                                        category_id: @parent_category.try(:id).to_i,
-                                                                        id: item } %></td>
+    <td class="action_link"><%= link_to :show, { action: :show, category_type_id: @category_type.id,
+                                                            category_id: @parent_category.try(:id).to_i,
+                                                            id: item } %></td>
     <td style="text-align: center;"><%= link_to :index, gp_category_category_type_category_docs_path(content: @content,
                                                                                                      category_type_id: @category_type.id,
                                                                                                      category_id: item.id) %></td>

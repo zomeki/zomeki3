@@ -1,7 +1,7 @@
 <table class="index">
   
   <tr>
-    <th style="width: 60px; text-align: center;">詳細</th>
+    <th class="action_link">詳細</th>
     <th style="width: ;">レイアウト名</th>
     <th style="width: 80px; text-align: right;">並び順</th>
     <th style="width: 120px; text-align: center;">更新日時</th>
@@ -11,7 +11,7 @@
   
   <% @items.each do |item| %>
   <tr class="<%= cycle '', 'cycle' %>">
-    <td style="text-align: center;"><%= link_to :show, { action: :show, id: item.id } %></td>
+    <td class="action_link"><%= link_to :show, { action: :show, id: item.id } %></td>
     <td><%= item.layout.title if item.layout %></td>
     <td style="text-align: right;"><%= item.sort_no %></td>
     <td style="text-align: center;"><%=l item.layout.updated_at if item.layout %></td>

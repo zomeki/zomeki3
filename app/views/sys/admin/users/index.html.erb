@@ -4,7 +4,7 @@
 
 <table class="index">
   <tr>
-    <th style="width: 60px; text-align: center;">詳細</th>
+    <th class="action_link">詳細</th>
     <th style="width: 160px;">ユーザーID</th>
     <th style="width: 160px;">氏名</th>
     <th style="width: ;">グループ</th>
@@ -16,7 +16,7 @@
   </tr>
   <% @items.each do |item| %>
   <tr class="<%= cycle '', 'cycle' %>">
-    <td style="text-align: center;"><%= link_to :show, { action: :show, id: item } %></td>
+    <td class="action_link"><%= link_to :show, { action: :show, id: item } %></td>
     <td><%= item.account %></td>
     <td><%= item.name %></td>
     <td><%= item.group.try!(:full_name) %></td>

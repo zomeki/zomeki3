@@ -1,6 +1,6 @@
 <table class="index">
   <tr>
-    <th style="width: 60px; text-align: center;">設定</th>
+    <th class="action_link">設定</th>
     <th style="width: 250px;">設定名</th>
     <th>設定値</th>
   </tr>
@@ -13,7 +13,7 @@
     <%- reset_cycle -%>
     <%- items.each do |item| -%>
       <tr class="<%= cycle '', 'cycle' %>">
-        <td style="text-align: center;"><%= link_to :set, { action: :edit, id: item.name } %></td>
+        <td class="action_link"><%= link_to :set, { action: :edit, id: item.name } %></td>
         <td><%= item.config_name %></td>
         <td><%= truncate(item.value_name, length: 60) %></td>
       </tr>

@@ -1,6 +1,6 @@
 <table class="index directories">
   <tr>
-    <th style="width: 60px; text-align: center;">詳細</th>
+    <th class="action_link">詳細</th>
     <th>ファイル名</th>
     <th style="width: 80px; text-align: right;">サイズ</th>
     <th style="width: 120px; text-align: center;">更新日時</th>
@@ -10,7 +10,7 @@
     <%- path = item.relative_path_from(::Tool::Convert::SITE_BASE_DIR) -%>
     <%- if item.directory_entry? -%>
       <tr class="directory <%= cycle 'cycle', '' %>">
-        <td style="text-align: center;"><%= link_to :show, { path: path, do: 'show' } %></td>
+        <td class="action_link"><%= link_to :show, { path: path, do: 'show' } %></td>
         <td class="name"><%= link_to h(item.name), cms_tool_convert_files_path(path: path) %></td>
         <td> </td>
         <td style="text-align: center;"><%=l item.mtime %></td>
@@ -18,7 +18,7 @@
       </tr>
     <%- else -%>
       <tr class="file <%= cycle 'cycle', '' %>">
-        <td style="text-align: center;"><%= link_to :show, { path: path, do: 'show' } %> </td>
+        <td class="action_link"><%= link_to :show, { path: path, do: 'show' } %> </td>
         <td class="name"><%= link_to h(item.name), { path: path, do: 'show' } %></td>
         <td style="text-align: right;"><%= item.kb_size %> KB</td>
         <td style="text-align: center;"><%=l item.mtime %></td>
