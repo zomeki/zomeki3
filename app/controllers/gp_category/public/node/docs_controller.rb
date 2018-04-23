@@ -1,10 +1,8 @@
-class GpCategory::Public::Node::DocsController < Cms::Controller::Public::Base
-  include GpArticle::Controller::Public::Scoping
+class GpCategory::Public::Node::DocsController < GpCategory::Public::NodeController
   include GpArticle::Controller::Feed
 
   def pre_dispatch
-    @content = GpCategory::Content::CategoryType.find_by(id: Page.current_node.content.id)
-    return http_error(404) unless @content
+    @content = GpCategory::Content::CategoryType.find(Page.current_node.content_id)
   end
 
   def index

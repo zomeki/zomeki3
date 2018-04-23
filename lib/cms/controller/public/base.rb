@@ -1,6 +1,8 @@
 class Cms::Controller::Public::Base < Sys::Controller::Public::Base
   include Cms::Controller::Layout
 
+  rescue_from ActiveRecord::RecordNotFound, with: -> { http_error(404) }
+
   before_action :initialize_params
   before_action :check_mobile_access
   after_action :render_public_variables

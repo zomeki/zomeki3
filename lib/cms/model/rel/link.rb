@@ -4,15 +4,12 @@ module Cms::Model::Rel::Link
   included do
     has_many :links, class_name: 'Cms::Link', dependent: :destroy, as: :linkable
     after_save :save_links
-
-    class_attribute :linkable_columns
-    self.linkable_columns = [:body]
   end
 
   def extract_links
-    self.class.linkable_columns.map do |column|
-      links = Util::Link.extract_links(read_attribute(column))
-      links.each { |link| link[:column] = column }
+    self.class.html_columns.map do |column|
+      links = Util::Link.extract_links(read_attribute(column.name))
+      links.each { |link| link[:column] = column.name }
       links
     end.flatten
   end

@@ -1,9 +1,6 @@
-class GpArticle::Public::Piece::RecentTabsController < Sys::Controller::Public::Base
-  include GpArticle::Controller::Public::Scoping
-
+class GpArticle::Public::Piece::RecentTabsController < GpArticle::Public::PieceController
   def pre_dispatch
-    @piece = GpArticle::Piece::RecentTab.find_by(id: Page.current_piece.id)
-    render plain: '' unless @piece
+    @piece = GpArticle::Piece::RecentTab.find(Page.current_piece.id)
   end
 
   def index

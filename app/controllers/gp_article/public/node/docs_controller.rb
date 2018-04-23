@@ -1,13 +1,11 @@
 require 'will_paginate/array'
-class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
-  include GpArticle::Controller::Public::Scoping
+class GpArticle::Public::Node::DocsController < GpArticle::Public::NodeController
   include GpArticle::Controller::Feed
 
   skip_after_action :render_public_layout, only: [:file_content, :qrcode]
 
   def pre_dispatch
-    @content = GpArticle::Content::Doc.find_by(id: Page.current_node.content.id)
-    return http_error(404) unless @content
+    @content = GpArticle::Content::Doc.find(Page.current_node.content_id)
   end
 
   def index
@@ -37,7 +35,7 @@ class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
     params[:filename_base], params[:format] = 'index', 'html' unless params[:filename_base]
 
     @item = public_or_preview_doc(id: params[:id], name: params[:name])
-    return http_error(404) if @item.nil? || @item.filename_base != params[:filename_base]
+    return http_error(404) if @item.filename_base != params[:filename_base]
     return http_error(404) if @item.external_link?
 
     Page.current_item = @item
@@ -50,7 +48,6 @@ class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
 
   def file_content
     @doc = public_or_preview_doc(id: params[:id], name: params[:name])
-    return http_error(404) unless @doc
 
     params[:file] = File.basename(params[:path])
     params[:type] = :thumb if params[:path] =~ /(\/|^)thumb\//
@@ -61,7 +58,6 @@ class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
 
   def qrcode
     @doc = public_or_preview_doc(id: params[:id], name: params[:name])
-    return http_error(404) unless @doc
     return http_error(404) unless @doc.qrcode_visible?
 
     qrcode = Util::Qrcode.create(@doc.public_full_uri)
@@ -85,9 +81,9 @@ class GpArticle::Public::Node::DocsController < Cms::Controller::Public::Base
     docs = docs.unscoped if Core.mode == 'preview'
 
     if id
-      docs.find_by(id: id)
+      docs.find_by!(id: id)
     elsif name
-      docs.order(:id).find_by(name: name)
+      docs.order(:id).find_by!(name: name)
     end
   end
 end

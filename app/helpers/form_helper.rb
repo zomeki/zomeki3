@@ -10,6 +10,7 @@ module FormHelper
       settings.push(<<-EOS)
         CKEDITOR.on('instanceReady', function (e) {
           $('#'+e.editor.id+'_top').hide();
+          $('div.cke_wordcount').hide();
           var links = $('#'+e.editor.id+'_contents > iframe:first').contents().find('a');
           for (var i = 0; i < links.length; i++) {
             $(links[i]).click(function (ee) { location.href = ee.target.href; });

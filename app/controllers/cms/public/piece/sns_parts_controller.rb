@@ -1,5 +1,5 @@
-class Cms::Public::Piece::SnsPartsController < Sys::Controller::Public::Base
+class Cms::Public::Piece::SnsPartsController < Cms::Controller::Public::Piece
   def pre_dispatch
-    render plain: '' unless @piece = Cms::Piece::SnsPart.find_by(id: Page.current_piece.id)
+    @piece = Cms::Piece::SnsPart.find(Page.current_piece.id)
   end
 end

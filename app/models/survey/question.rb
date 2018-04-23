@@ -4,6 +4,7 @@ class Survey::Question < ApplicationRecord
 
   default_scope { order(:sort_no, :id) }
 
+  column_attribute :description, html: true
   column_attribute :sort_no, default: 10
 
   enum_ish :state, [:public, :closed], default: :public

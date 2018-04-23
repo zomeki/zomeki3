@@ -1,5 +1,5 @@
 <%-
-return '' unless node.sitemap_visible?
+return '' unless node.sitemap_state_visible?
 css_class += [File.basename(node.name.to_s, '.*').camelize(:lower)]
 -%>
 <li class="level<%= level %> <%= css_class.join('-') %>">

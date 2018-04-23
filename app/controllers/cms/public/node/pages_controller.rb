@@ -1,14 +1,13 @@
 class Cms::Public::Node::PagesController < Cms::Controller::Public::Base
   def pre_dispatch
-    return http_error(404) unless @item = Cms::Node::Page.find_by(id: Page.current_node.id)
+    @item = Cms::Node::Page.find(Page.current_node.id)
   end
 
   def index
     return http_error(404) if params[:page]
 
     if Core.mode == 'preview' && params[:node_id]
-      @item = Cms::Node::Page.find_by(id: params[:node_id], parent_id: @item.parent_id, name: @item.name)
-      return http_error(404) unless @item
+      @item = Cms::Node::Page.find_by!(id: params[:node_id], parent_id: @item.parent_id, name: @item.name)
     end
     
     Page.current_node = @item

@@ -8,11 +8,14 @@
 <%= action_menu :show %>
 <%= action_menu :edit    if @item && @item.editable? %>
 <%= action_menu :destroy if @item && @item.deletable? %>
-<span class="separator"></span>
-<% if @site.use_basic_auth? %>
-<%= link_to "認証ON（更新）", enable_auth_cms_site_basic_auth_users_path(@site.id), confirm: "Basic認証を有効にしますか？" %>
-<%= link_to "認証OFF", disable_auth_cms_site_basic_auth_users_path(@site.id), confirm: "Basic認証を無効にしますか？" %>
-<% else %>
-<%= link_to "認証ON", enable_auth_cms_site_basic_auth_users_path(@site.id), confirm: "Basic認証を有効にしますか？" %>
-<% end %>
+<%- case action_name -%>
+<%- when 'index' -%> 
+  <span class="separator"></span>
+  <%- if @site.use_basic_auth? -%>
+  <%= link_to "認証ON（更新）", url_for(action: :enable), confirm: "Basic認証を有効にしますか？" %>
+  <%= link_to "認証OFF", url_for(action: :disable), confirm: "Basic認証を無効にしますか？" %>
+  <%- else -%>
+  <%= link_to "認証ON", url_for(action: :enable), confirm: "Basic認証を有効にしますか？" %>
+  <%- end -%>
+<%- end -%>
 </div>

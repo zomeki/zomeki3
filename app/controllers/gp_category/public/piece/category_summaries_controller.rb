@@ -1,10 +1,6 @@
-class GpCategory::Public::Piece::CategorySummariesController < Sys::Controller::Public::Base
-  include GpArticle::Controller::Public::Scoping
-
+class GpCategory::Public::Piece::CategorySummariesController < GpCategory::Public::PieceController
   def pre_dispatch
-    @piece = GpCategory::Piece::CategorySummary.find_by(id: Page.current_piece.id)
-    render plain: '' unless @piece
-
+    @piece = GpCategory::Piece::CategorySummary.find(Page.current_piece.id)
     @item = Page.current_item
   end
 

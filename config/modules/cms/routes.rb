@@ -33,8 +33,7 @@ ZomekiCMS::Application.routes.draw do
       :controller  => "admin/site/basic_auth_users",
       :path        => ":site/basic_auth_users" do
         collection do
-          get :enable_auth
-          get :disable_auth
+          get :enable, :disable
         end
       end
     resources :site_settings,

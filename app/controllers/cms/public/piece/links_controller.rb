@@ -1,4 +1,4 @@
-class Cms::Public::Piece::LinksController < Sys::Controller::Public::Base
+class Cms::Public::Piece::LinksController < Cms::Controller::Public::Piece
   def index
     @piece = Cms::Piece::Link.find(Page.current_piece.id)
   end

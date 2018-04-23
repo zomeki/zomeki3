@@ -1,13 +1,10 @@
 require 'will_paginate/array'
-class Map::Public::Node::MarkersController < Cms::Controller::Public::Base
-  include GpArticle::Controller::Public::Scoping
-
+class Map::Public::Node::MarkersController < Map::Public::NodeController
   skip_after_action :render_public_layout, only: [:file_content]
 
   def pre_dispatch
     @node = Page.current_node
-    @content = Map::Content::Marker.find_by(id: @node.content.id)
-    return http_error(404) unless @content
+    @content = Map::Content::Marker.find(@node.content_id)
 
     category = params[:category] ? params[:category] : params[:escaped_category].to_s.gsub('@', '/')
     @specified_category = find_category_by_specified_path(category)
@@ -32,8 +29,7 @@ class Map::Public::Node::MarkersController < Cms::Controller::Public::Base
 
   def file_content
     @marker = @content.markers.find_by!(name: params[:name])
-    file = @marker.files.first
-    return http_error(404) unless file
+    file = @marker.files.first!
 
     send_file file.upload_path, filename: file.name
   end

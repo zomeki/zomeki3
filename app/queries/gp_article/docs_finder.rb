@@ -86,8 +86,10 @@ class GpArticle::DocsFinder < ApplicationFinder
       @docs.where(state: 'public')
     when 'closed'
       @docs.where(state: 'closed')
+    when 'trashed'
+      @docs.where(state: 'trashed')
     when 'all'
-      @docs.all
+      @docs.all.where.not(state: 'trashed')
     else
       @docs.none
     end

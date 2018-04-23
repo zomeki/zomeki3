@@ -1,4 +1,4 @@
-class Cms::Public::Piece::PageTitlesController < Sys::Controller::Public::Base
+class Cms::Public::Piece::PageTitlesController < Cms::Controller::Public::Piece
   def index
     @title = Page.title
   end

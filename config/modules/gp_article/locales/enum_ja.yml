@@ -8,6 +8,7 @@ ja:
         prepared: 公開日時待ち
         public: 公開
         closed: 公開終了
+        trashed: 削除予定
       target:
         '': 無効
         _self: 同一ウィンドウ
@@ -34,6 +35,7 @@ ja:
         public: 公開中
         closed: 公開終了
         all: 全記事
+        trashed: ごみ箱
       date_column:
         created_at: 作成
         updated_at: 更新

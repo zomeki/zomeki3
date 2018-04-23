@@ -66,7 +66,7 @@ CKEDITOR.editorConfig = function( config ) {
   config.templates_replaceContent = false;
 
   // プラグイン
-  config.extraPlugins = 'youtube,audio,video,zomekilink';
+  config.extraPlugins = 'youtube,audio,video,wordcount,zomekilink';
 
   // tagの許可
   config.allowedContent = {
@@ -83,6 +83,15 @@ CKEDITOR.editorConfig = function( config ) {
   // Wordからの貼付で装飾を削除する
   config.pasteFromWordRemoveFontStyles = true;
   config.pasteFromWordRemoveStyles = true;
+
+  // wordcountプラグイン
+  config.wordcount = {
+    showParagraphs: false,
+    showWordCount: false,
+    showCharCount: true,
+    countSpacesAsChars: true,
+    countHTML: true
+  };
 };
 
 CKEDITOR.on('dialogDefinition', function(ev){
