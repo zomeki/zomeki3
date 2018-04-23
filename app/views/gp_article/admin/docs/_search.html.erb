@@ -10,7 +10,8 @@ category_ids = params.dig(:criteria, :category_ids) || []
 </div>
 
 <%= form_tag url_for(action: :index), method: :get, class: 'search' do -%>
-<%- [:target, :target_state, :target_public, :detail_flag, :sort_key, :sort_order].each do |key| -%>
+<%= hidden_field_tag :detail_flag, params[:detail_flag] %>
+<%- controller.keep_params_keys.each do |key| -%>
   <%= hidden_field_tag key, params[key] %>
 <%- end -%>
 <table>

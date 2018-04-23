@@ -153,6 +153,24 @@ form.search td.submitters input {
  font-size: 85%;
 }
 
+/* Batch.
+----------------------------------------------- */
+div.batchMenu {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+div.batchMenu div {
+  display: flex;
+}
+div.batchMenu input {
+  width: 70px;
+  font-size: 90%;
+}
+div.batchMenu select {
+  font-size: 90%;
+}
+
 /* Detail.
 ----------------------------------------------- */
 .detailMenu {

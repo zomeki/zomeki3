@@ -134,6 +134,54 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     _pullback @item
   end
 
+  def batch
+    items = GpArticle::Doc.where(id: params.dig(:item, :id)).order(:id)
+
+    case params[:batch_action]
+    when 'trash'
+      batch_trash(items)
+    when 'untrash'
+      batch_untrash(items)
+    when 'destroy'
+      batch_destroy(items)
+    else
+      redirect_to url_for(action: :index)
+    end
+  end
+
+  def batch_trash(items)
+    num = 0
+    items.each do |item|
+      if item.deletable? && !item.state_public? && item.trash
+        Sys::OperationLog.log(request, item: item, do: 'trash')
+        num += 1
+      end
+    end
+    redirect_to url_for(action: :index), notice: "ごみ箱への移動が完了しました。（#{I18n.l Time.now}）（#{num}件）"
+  end
+
+  def batch_untrash(items)
+    num = 0
+    items.each do |item|
+      if item.deletable? && item.state_trashed? && item.untrash
+        Sys::OperationLog.log(request, item: item, do: 'untrash')
+        num += 1
+      end
+    end
+    redirect_to url_for(action: :index), notice: "ごみ箱からの復元が完了しました。（#{I18n.l Time.now}）（#{num}件）"
+  end
+
+  def batch_destroy(items)
+    num = 0
+    items.each do |item|
+      if item.deletable? && item.state_trashed? && item.destroy
+        Sys::OperationLog.log(request, item: item, do: 'destroy')
+        num += 1
+      end
+    end
+    redirect_to url_for(action: :index), notice: "削除処理が完了しました。（#{I18n.l Time.now}）（#{num}件）"
+  end
+
   def doc_options
     items = @content.docs.joins(creator: [:group, :user])
                     .where.not(state: 'trashed')
