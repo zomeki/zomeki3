@@ -65,6 +65,11 @@ table.index td.action_link {
   width: 45px;
   text-align: center;
 }
+table.index th.checkbox,
+table.index td.checkbox {
+  width: 20px;
+  text-align: center;
+}
 
 /* Show
 --------------------------------------------------------- */
