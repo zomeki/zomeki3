@@ -116,22 +116,26 @@ Navigation.ruby = function(flag, type) {
     type = $.cookie('navigation_ruby_type');
   }
 
+  var path;
+
   if (flag == 'on') {
     if (location.pathname.search(/\/$/i) != -1) {
-      location.href = location.pathname + "index.html.r" + location.search;
-      return;
+      path = location.pathname + "index.html.r";
     } else if (location.pathname.search(/\.html\.mp3$/i) != -1) {
-      location.href = location.pathname.replace(/\.html\.mp3$/, ".html.r") + location.search;
-      return;
+      path = location.pathname.replace(/\.html\.mp3$/, ".html.r");
     } else if (location.pathname.search(/\.html$/i) != -1) {
-      location.href = location.pathname.replace(/\.html$/, ".html.r") + location.search;
-      return;
+      path = location.pathname.replace(/\.html$/, ".html.r");
     }
   } else if (flag == 'off') {
     if (location.pathname.search(/\.html\.r$/i) != -1) {
-      location.href = location.pathname.replace(/\.html\.r$/, ".html") + location.search;
-      return;
+      path = location.pathname.replace(/\.html\.r$/, ".html");
     }
+  }
+
+  if (path) {
+    var host = location.protocol + "//" + location.hostname + (location.port ? ':' + location.port : '');
+    location.href = host + path + location.search;
+    return;
   }
 
   var elem = $(Navigation.settings['ruby']);

@@ -78,7 +78,11 @@ $(document).ready(function() {
     }
   });
   $('#genRandomPass').on('click', function() {
-    var pass = Math.random().toString(36).slice(-8);
+    var str = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'.split('');
+    var pass = '';
+    for (var i=0; i<8; i++) {
+      pass += str[Math.floor(Math.random() * str.length)];
+    }
     $('#item_password').val(pass);
   });
 });
