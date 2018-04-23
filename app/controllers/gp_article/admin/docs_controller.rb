@@ -32,7 +32,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
                                   .preload(:prev_edition, :content, creator: [:user, :group])
 
     if params[:csv]
-      csv = generate_csv(@items, GpArticle::Doc::Criteria.new(criteria))
+      csv = GpArticle::DocCsvService.new(@content, @items, GpArticle::Doc::Criteria.new(criteria)).generate
       return send_data platform_encode(csv), type: 'text/csv', filename: "gp_article_docs_#{Time.now.to_i}.csv"
     else
       @items = @items.paginate(page: params[:page], per_page: params[:limit])
@@ -271,25 +271,6 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     ).tap do |permitted|
       [:in_file_names, :in_category_ids, :in_event_category_ids, :in_marker_category_ids, :in_approval_assignment_ids].each do |key|
         permitted[key] = params[:item][key].to_unsafe_h if params[:item][key]
-      end
-    end
-  end
-
-  def generate_csv(items, criteria)
-    require 'csv'
-    CSV.generate(force_quotes: true) do |csv|
-      csv << [criteria.to_csv_string]
-      csv << ['記事番号', 'タイトル', 'ディレクトリ名', '所属', '作成者', '更新日時', '状態']
-      items.each do |item|
-        csv << [
-          item.serial_no,
-          item.title,
-          item.name,
-          item.creator.group.try(:name),
-          item.creator.user.try(:name),
-          item.updated_at ? I18n.l(item.updated_at) : nil,
-          item.state_text
-        ]
       end
     end
   end
