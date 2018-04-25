@@ -47,7 +47,7 @@ module Cms
       end
 
       def load_sites
-        sites = Cms::Site.order(:id)
+        sites = Cms::Site.where(state: 'public').order(:id)
         sites.where!(id: options[:site_id]) if options[:site_id].present?
         sites
       end

@@ -10,12 +10,12 @@
     <td><%= @item.full_uri %></td>
   </tr>
   <tr>
-    <th><%= @item.class.human_attribute_name :mobile_full_uri %></th>
-    <td><%= @item.mobile_full_uri %></td>
-  </tr>
-  <tr>
     <th><%= @item.class.human_attribute_name :admin_full_uri %></th>
     <td><%= @item.admin_full_uri %></td>
+  </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :state %></th>
+    <td><%= @item.state_text %></td>
   </tr>
 </table>
 
@@ -26,6 +26,10 @@
   <tr>
     <th><%= @item.class.human_attribute_name :mobile_feature %></th>
     <td><%= @item.mobile_feature_text %></td>
+  </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :mobile_full_uri %></th>
+    <td><%= @item.mobile_full_uri %></td>
   </tr>
 </table>
 

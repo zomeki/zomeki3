@@ -12,12 +12,18 @@
     <td><%= f.text_field :full_uri, class: 'url' %></td>
   </tr>
   <tr>
-    <th><%= f.label :mobile_full_uri %></th>
-    <td><%= f.text_field :mobile_full_uri, class: 'url' %></td>
-  </tr>
-  <tr>
     <th><%= f.label :admin_full_uri %></th>
     <td><%= f.text_field :admin_full_uri, class: 'url' %></td>
+  </tr>
+  <tr>
+    <th><%= f.label :state %></th>
+    <td>
+      <%- if Core.user.root? -%>
+        <%= f.collection_radio_buttons :state, @item.class.state_options, :last, :first %>
+      <%- else -%>
+        <%= @item.state_text %><%= f.hidden_field :state %>
+      <%- end -%>
+    </td>
   </tr>
   <%- if false && @item.new_record? -%>
   <tr>
@@ -36,6 +42,10 @@
   <tr>
     <th><%= f.label :mobile_feature %></th>
     <td><%= f.collection_radio_buttons :mobile_feature, @item.class.mobile_feature_options, :last, :first %></td>
+  </tr>
+  <tr>
+    <th><%= f.label :mobile_full_uri %></th>
+    <td><%= f.text_field :mobile_full_uri, class: 'url' %></td>
   </tr>
 </table>
 
