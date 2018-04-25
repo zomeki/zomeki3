@@ -9,12 +9,25 @@ module Cms
         load_sites.each do |site|
           @site = site
           @locations = Cms::Nginx::LocationBuilder.new(@site).build
-          template 'servers/server.conf.erb', @site.nginx_config_path
+          paths = conf_paths(@site.id)
+
+          template 'servers/server.conf.erb', paths[:public]
+          if @site.full_uri =~ /^https:/
+            template 'servers/server.conf.erb', paths[:public_ssl], ssl: true
+          else
+            remove_file paths[:public_ssl]
+          end
 
           if @site.admin_full_uri.present?
-            template 'servers/admin_server.conf.erb', @site.nginx_admin_config_path
+            template 'servers/server.conf.erb', paths[:admin], admin: true
+            if @site.admin_full_uri =~ /^https:/
+              template 'servers/server.conf.erb', paths[:admin_ssl], admin: true, ssl: true
+            else
+              remove_file paths[:admin_ssl]
+            end
           else
-            remove_file site.nginx_admin_config_path if ::File.exist?(site.nginx_admin_config_path)
+            remove_file paths[:admin]
+            remove_file paths[:admin_ssl]
           end
         end
       end
@@ -22,15 +35,17 @@ module Cms
       def delete_configs
         deleted_site_ids = conf_site_ids - load_sites.pluck(:id)
         deleted_site_ids.each do |site_id|
-          files = ["config/nginx/servers/site_#{'%04d' % site_id}.conf",
-                   "config/nginx/admin_servers/site_#{'%04d' % site_id}.conf"]
-          files.each do |file|
-            remove_file file if ::File.exist?(file)
+          conf_paths(site_id).values.each do |path|
+            remove_file path
           end
         end
       end
 
       private
+
+      def remove_file(path)
+        super if ::File.exist?(path)
+      end
 
       def load_sites
         sites = Cms::Site.order(:id)
@@ -42,8 +57,17 @@ module Cms
         if options[:site_id].present?
           [options[:site_id].to_i]
         else
-          Dir.glob('config/apache/virtual_hosts/*.conf').map { |file| file.scan(/site_(\d+)\.conf/).flatten.first.to_i }
+          Dir.glob('config/nginx/servers/site_*.conf').map { |file| file.scan(/site_(\d+)\.conf/).flatten.first.to_i }
         end
+      end
+
+      def conf_paths(site_id)
+        {
+          public:     "config/nginx/servers/site_#{format('%04d', site_id)}.conf",
+          public_ssl: "config/nginx/servers/ssl_site_#{format('%04d', site_id)}.conf",
+          admin:      "config/nginx/admin_servers/site_#{format('%04d', site_id)}.conf",
+          admin_ssl:  "config/nginx/admin_servers/ssl_site_#{format('%04d', site_id)}.conf"
+        }
       end
     end
 

@@ -1,12 +1,17 @@
+<%-
+site_id = format('%04d', @site.id)
+admin_prefix = 'admin_' if config[:admin]
+ssl_prefix = 'ssl_' if config[:ssl]
+-%>
 server {
-  listen 80;
-  server_name <%= @site.public_domains.join(' ') %>;
+  listen <%= config[:ssl] ? '443 ssl http2' : '80' %>;
+  server_name <%= (config[:admin] ? @site.admin_domains : @site.public_domains).join(' ') %>;
   root <%= @site.public_path %>;
-  access_log /var/log/nginx/<%= "#{Rails.root.basename}_" %>access_site_<%= format('%04d', @site.id) %>.log main;
-  error_log /var/log/nginx/<%= "#{Rails.root.basename}_" %>error_site_<%= format('%04d', @site.id) %>.log warn;
+  access_log /var/log/nginx/<%= "#{Rails.root.basename}_" %>access_site_<%= site_id %>.log main;
+  error_log /var/log/nginx/<%= "#{Rails.root.basename}_" %>error_site_<%= site_id %>.log warn;
 
-  include <%= Rails.root %>/config/nginx/servers/site_<%= format('%04d', @site.id) %>.d/*.conf;
-  include <%= Rails.root %>/config/nginx/servers/site.d/*.conf;
+  include <%= Rails.root %>/config/nginx/<%= admin_prefix %>servers/<%= ssl_prefix %>site_<%= site_id %>.d/*.conf;
+  include <%= Rails.root %>/config/nginx/<%= admin_prefix %>servers/<%= ssl_prefix %>site.d/*.conf;
   include <%= Rails.root %>/config/nginx/rewrite.conf;
   include <%= Rails.root %>/config/nginx/servers_common.conf;
 

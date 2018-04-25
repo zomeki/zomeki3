@@ -8,12 +8,25 @@ module Cms
       def create_configs
         load_sites.each do |site|
           @site = site
-          template 'virtual_hosts/virtual_host.conf.erb', site.apache_config_path
+          paths = conf_paths(@site.id)
 
-          if site.admin_full_uri.present?
-            template 'virtual_hosts/admin_virtual_host.conf.erb', site.apache_admin_config_path
+          template 'virtual_hosts/virtual_host.conf.erb', paths[:public]
+          if @site.full_uri =~ /^https:/
+            template 'virtual_hosts/virtual_host.conf.erb', paths[:public_ssl], ssl: true
           else
-            remove_file site.apache_admin_config_path if File.exist?(site.apache_admin_config_path)
+            remove_file paths[:public_ssl]
+          end
+
+          if @site.admin_full_uri.present?
+            template 'virtual_hosts/virtual_host.conf.erb', paths[:admin], admin: true
+            if @site.admin_full_uri =~ /^https:/
+              template 'virtual_hosts/virtual_host.conf.erb', paths[:admin_ssl], admin: true, ssl: true
+            else
+              remove_file paths[:admin_ssl]
+            end
+          else
+            remove_file paths[:admin]
+            remove_file paths[:admin_ssl]
           end
         end
       end
@@ -21,15 +34,17 @@ module Cms
       def delete_configs
         deleted_site_ids = conf_site_ids - load_sites.pluck(:id)
         deleted_site_ids.each do |site_id|
-          files = ["config/apache/virtual_hosts/site_#{'%04d' % site_id}.conf",
-                   "config/apache/admin_virtual_hosts/site_#{'%04d' % site_id}.conf"]
-          files.each do |file|
-            remove_file file if ::File.exist?(file)
+          conf_paths(site_id).values.each do |path|
+            remove_file path
           end
         end
       end
 
       private
+
+      def remove_file(path)
+        super if ::File.exist?(path)
+      end
 
       def load_sites
         sites = Cms::Site.order(:id)
@@ -43,6 +58,15 @@ module Cms
         else
           Dir.glob('config/apache/virtual_hosts/*.conf').map { |file| file.scan(/site_(\d+)\.conf/).flatten.first.to_i }
         end
+      end
+
+      def conf_paths(site_id)
+        {
+          public:     "config/apache/virtual_hosts/site_#{format('%04d', site_id)}.conf",
+          public_ssl: "config/apache/virtual_hosts/ssl_site_#{format('%04d', site_id)}.conf",
+          admin:      "config/apache/admin_virtual_hosts/site_#{format('%04d', site_id)}.conf",
+          admin_ssl:  "config/apache/admin_virtual_hosts/ssl_site_#{format('%04d', site_id)}.conf"
+        }
       end
     end
   end

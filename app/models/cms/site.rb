@@ -185,22 +185,6 @@ class Cms::Site < ApplicationRecord
     smart_phone_layout == 'smart_phone'
   end
 
-  def apache_config_path
-    "config/apache/virtual_hosts/site_#{'%04d' % id}.conf"
-  end
-
-  def apache_admin_config_path
-    "config/apache/admin_virtual_hosts/site_#{'%04d' % id}.conf"
-  end
-
-  def nginx_config_path
-    "config/nginx/servers/site_#{'%04d' % id}.conf"
-  end
-
-  def nginx_admin_config_path
-    "config/nginx/admin_servers/site_#{'%04d' % id}.conf"
-  end
-
   def basic_auth_htaccess_path
     "#{::File.dirname(public_path)}/.htaccess"
   end
