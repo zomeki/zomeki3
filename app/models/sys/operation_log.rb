@@ -4,7 +4,7 @@ class Sys::OperationLog < ApplicationRecord
 
   default_scope { order(id: :desc) }
 
-  enum_ish :action, [:create, :update, :recognize, :approve, :destroy, :publish, :close, :expire, :login, :logout]
+  enum_ish :action, [:create, :update, :recognize, :approve, :destroy, :publish, :close, :expire, :trash, :untrash, :login, :logout]
 
   belongs_to :user, required: true
 

@@ -1,4 +1,4 @@
-class Reception::Public::Node::Courses::FilesController < Cms::Controller::Public::Base
+class Reception::Public::Node::Courses::FilesController < Reception::Public::NodeController
   skip_after_action :render_public_layout
 
   def pre_dispatch

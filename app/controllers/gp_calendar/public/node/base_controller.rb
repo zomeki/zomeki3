@@ -1,10 +1,7 @@
-class GpCalendar::Public::Node::BaseController < Cms::Controller::Public::Base
-  include GpArticle::Controller::Public::Scoping
-
+class GpCalendar::Public::Node::BaseController < GpCalendar::Public::NodeController
   def pre_dispatch
     @node = Page.current_node
-    @content = GpCalendar::Content::Event.find_by(id: @node.content.id)
-    return http_error(404) unless @content
+    @content = GpCalendar::Content::Event.find(@node.content_id)
 
     @today = Date.today
     @min_date = 1.year.ago(@today.beginning_of_month)

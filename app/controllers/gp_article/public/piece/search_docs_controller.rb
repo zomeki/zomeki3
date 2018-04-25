@@ -1,10 +1,6 @@
-class GpArticle::Public::Piece::SearchDocsController < Sys::Controller::Public::Base
-  include GpArticle::Controller::Public::Scoping
-
+class GpArticle::Public::Piece::SearchDocsController < GpArticle::Public::PieceController
   def pre_dispatch
-    @piece = GpArticle::Piece::SearchDoc.find_by(id: Page.current_piece.id)
-    return render plain: '' unless @piece
-
+    @piece = GpArticle::Piece::SearchDoc.find(Page.current_piece.id)
     @node = @piece.content.public_search_docs_node
     return render plain: '' unless @node
   end

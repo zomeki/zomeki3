@@ -27,6 +27,8 @@ ja:
         recognize: 承認
         approve: 承認
         destroy: 削除
+        trash: ごみ箱へ移動
+        untrash: ごみ箱から復元
         publish: 公開
         close: 非公開
         expire: 期限切れ

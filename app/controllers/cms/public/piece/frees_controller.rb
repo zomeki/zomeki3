@@ -1,4 +1,4 @@
-class Cms::Public::Piece::FreesController < Sys::Controller::Public::Base
+class Cms::Public::Piece::FreesController < Cms::Controller::Public::Piece
   def index
   end
 end

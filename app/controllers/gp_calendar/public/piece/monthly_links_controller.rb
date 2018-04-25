@@ -1,8 +1,6 @@
 class GpCalendar::Public::Piece::MonthlyLinksController < GpCalendar::Public::Piece::BaseController
   def pre_dispatch
-    @piece = GpCalendar::Piece::MonthlyLink.find_by(id: Page.current_piece.id)
-    return render plain: '' unless @piece
-
+    @piece = GpCalendar::Piece::MonthlyLink.find(Page.current_piece.id)
     @node = @piece.target_node
     return render plain: '' unless @node
 

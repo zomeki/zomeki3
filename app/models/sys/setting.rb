@@ -21,6 +21,10 @@ class Sys::Setting < ApplicationRecord
              name: 'プロセスログ保存期間',
              comment: '日',
              default_value: 10
+  set_config :trash_keep_days,
+             name: 'ごみ箱保存期間',
+             comment: '日',
+             default_value: 10
 
   validates :name, presence: true
 
@@ -67,6 +71,11 @@ class Sys::Setting < ApplicationRecord
 
     def process_log_keep_days
       days = setting_value(:process_log_keep_days)
+      days.to_i if days.present?
+    end
+
+    def trash_keep_days
+      days = setting_value(:trash_keep_days)
       days.to_i if days.present?
     end
 

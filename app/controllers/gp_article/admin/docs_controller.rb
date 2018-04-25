@@ -1,5 +1,6 @@
 class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
+  include Sys::Controller::Scaffold::Trash
   include Sys::Controller::Scaffold::Publication
   include Sys::Controller::Scaffold::Hold
   include Approval::Controller::Admin::Approval
@@ -134,7 +135,9 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   end
 
   def doc_options
-    items = @content.docs.joins(creator: [:group, :user]).order(serial_no: :desc, id: :desc)
+    items = @content.docs.joins(creator: [:group, :user])
+                    .where.not(state: 'trashed')
+                    .order(serial_no: :desc, id: :desc)
 
     items = items.where(state: params[:state]) if params[:state].present?
     items = items.categorized_into(params[:category_id]) if params[:category_id].present?

@@ -1,10 +1,6 @@
-class Map::Public::Piece::CategoryTypesController < Sys::Controller::Public::Base
-  include GpArticle::Controller::Public::Scoping
-
+class Map::Public::Piece::CategoryTypesController < Map::Public::PieceController
   def pre_dispatch
-    @piece = Map::Piece::CategoryType.find_by(id: Page.current_piece.id)
-    return render plain: '' unless @piece
-
+    @piece = Map::Piece::CategoryType.find(Page.current_piece.id)
     @item = Page.current_item
   end
 

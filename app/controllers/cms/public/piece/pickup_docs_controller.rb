@@ -1,7 +1,6 @@
-class Cms::Public::Piece::PickupDocsController < Sys::Controller::Public::Base
+class Cms::Public::Piece::PickupDocsController < Cms::Controller::Public::Piece
   def pre_dispatch
-    @piece = Cms::Piece::PickupDoc.find_by(id: Page.current_piece.id)
-    render plain: '' unless @piece
+    @piece = Cms::Piece::PickupDoc.find(Page.current_piece.id)
   end
 
   def index

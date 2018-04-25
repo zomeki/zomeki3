@@ -1,4 +1,4 @@
-class GpCategory::Public::TemplateModule::CategoryTypesController < GpCategory::Public::TemplateModule::BaseController
+class GpCategory::Public::TemplateModule::CategoryTypesController < GpCategory::Public::TemplateModuleController
   def pre_dispatch
     @content = params.delete(:content)
     @template_module = params.delete(:template_module)

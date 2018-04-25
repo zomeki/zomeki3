@@ -1,6 +1,5 @@
-class Survey::Public::Node::FormsController < Cms::Controller::Public::Base
+class Survey::Public::Node::FormsController < Survey::Public::NodeController
   include SimpleCaptcha::ControllerHelpers
-  include Survey::Controller::Public::Scoping
 
   before_action :set_form, only: [:show, :confirm_answers, :send_answers, :finish]
 
@@ -9,8 +8,7 @@ class Survey::Public::Node::FormsController < Cms::Controller::Public::Base
 
   def pre_dispatch
     @node = Page.current_node
-    @content = Survey::Content::Form.find_by(id: @node.content.id)
-    return http_error(404) unless @content
+    @content = Survey::Content::Form.find(@node.content_id)
 
     @piece = Survey::Piece::Form.find_by(id: params[:piece])
 
@@ -67,8 +65,7 @@ class Survey::Public::Node::FormsController < Cms::Controller::Public::Base
     forms = @content.forms
     forms = forms.unscoped if Core.mode == 'preview'
 
-    @form = forms.find_by(name: params[:id])
-    return http_error(404) unless @form
+    @form = forms.find_by!(name: params[:id])
 
     Page.current_item = @form
     Page.title = @form.title

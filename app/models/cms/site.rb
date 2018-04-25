@@ -213,18 +213,6 @@ class Cms::Site < ApplicationRecord
     settings.where(name: 'basic_auth_state', value: 'enabled').exists?
   end
 
-  def enable_basic_auth
-    self.load_site_settings
-    self.in_setting_site_basic_auth_state = 'enabled'
-    self.save
-  end
-
-  def disable_basic_auth
-    self.load_site_settings
-    self.in_setting_site_basic_auth_state = 'disabled'
-    self.save
-  end
-
   def copy_common_directory(force: false)
     src_path = Rails.public_path.join("_common")
     dst_path = Rails.root.join("#{public_path}/_common")

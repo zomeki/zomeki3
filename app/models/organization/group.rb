@@ -8,6 +8,9 @@ class Organization::Group < ApplicationRecord
 
   default_scope { order(:sort_no, :sys_group_code) }
 
+  column_attribute :outline, html: true
+  column_attribute :business_outline, html: true
+  column_attribute :contact_information, html: true
   column_attribute :sort_no, default: 10
 
   enum_ish :state, [:public, :closed], default: :public, predicate: true

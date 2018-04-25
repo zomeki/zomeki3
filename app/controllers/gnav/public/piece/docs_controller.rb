@@ -1,10 +1,6 @@
-class Gnav::Public::Piece::DocsController < Sys::Controller::Public::Base
-  include GpArticle::Controller::Public::Scoping
-
+class Gnav::Public::Piece::DocsController < Gnav::Public::PieceController
   def pre_dispatch
-    @piece = Gnav::Piece::Doc.find_by(id: Page.current_piece.id)
-    render plain: '' unless @piece
-
+    @piece = Gnav::Piece::Doc.find(Page.current_piece.id)
     @item = Page.current_item
   end
 

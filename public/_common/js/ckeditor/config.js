@@ -66,7 +66,7 @@ CKEDITOR.editorConfig = function( config ) {
   config.templates_replaceContent = false;
 
   // プラグイン
-  config.extraPlugins = 'youtube,audio,video,zomekilink';
+  config.extraPlugins = 'youtube,audio,video,wordcount,zomekilink';
 
   // tagの許可
   config.allowedContent = {
@@ -78,12 +78,37 @@ CKEDITOR.editorConfig = function( config ) {
     }
   };
   // table廃止・非推奨属性入力不可
-  config.disallowedContent = 'font;table[summary,height,cellspacing,cellpadding,align]{height}';
+  config.disallowedContent = 'font;table[summary,height,cellspacing,cellpadding,align]{height};script;*[on*];*[data-*]';
 
   // Wordからの貼付で装飾を削除する
   config.pasteFromWordRemoveFontStyles = true;
   config.pasteFromWordRemoveStyles = true;
+
+  // wordcountプラグイン
+  config.wordcount = {
+    showParagraphs: false,
+    showWordCount: false,
+    showCharCount: true,
+    countSpacesAsChars: true,
+    countHTML: true
+  };
 };
+
+CKEDITOR.on('instanceReady', function(ev) {
+  var rules = {
+    elements: {
+      a: function(element) {
+        // hrefからjavascriptプロトコルを除去
+        var href = element.attributes.href;
+        if (href && href.match(/^javascript:/i)) {
+          element.attributes['data-cke-saved-href'] = '';
+        }
+      }
+    }
+  };
+  ev.editor.dataProcessor.htmlFilter.addRules(rules);
+  ev.editor.dataProcessor.dataFilter.addRules(rules);
+});
 
 CKEDITOR.on('dialogDefinition', function(ev){
   var dialogName = ev.data.name;

@@ -4,9 +4,6 @@ module Cms::Model::Rel::SearchText
   included do
     has_many :search_texts, class_name: 'Cms::SearchText', dependent: :destroy, as: :searchable
     after_save :save_search_texts
-
-    class_attribute :searchable_columns
-    self.searchable_columns = [:body]
   end
 
   def rebuild_search_texts
@@ -22,9 +19,9 @@ module Cms::Model::Rel::SearchText
 
     renderer = Cms::BracketRenderService.new(site, inherited_concept)
 
-    searchable_columns.each do |column|
-      st = search_texts.detect { |s| s.searchable_column == column.to_s } || search_texts.build(searchable_column: column)
-      st.body = renderer.render_data_texts_and_files(read_attribute(column).to_s)
+    self.class.fts_columns.each do |column|
+      st = search_texts.detect { |s| s.searchable_column == column.name } || search_texts.build(searchable_column: column.name)
+      st.body = renderer.render_data_texts_and_files(read_attribute(column.name).to_s)
       st.save
     end
 

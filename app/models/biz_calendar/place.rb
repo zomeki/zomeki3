@@ -5,6 +5,8 @@ class BizCalendar::Place < ApplicationRecord
   include Cms::Model::Rel::Content
   include Cms::Model::Auth::Content
 
+  column_attribute :summary, html: true
+  column_attribute :description, html: true
   column_attribute :sort_no, default: 10
 
   enum_ish :state, [:public, :closed], default: :public, predicate: true

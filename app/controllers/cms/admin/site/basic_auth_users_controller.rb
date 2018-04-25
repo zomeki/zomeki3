@@ -39,27 +39,37 @@ class Cms::Admin::Site::BasicAuthUsersController < Cms::Controller::Admin::Base
     _destroy @item
   end
 
-  def enable_auth
-    @site.enable_basic_auth
+  def enable
+    enable_auth
     update_configs
 
-    flash[:notice] = 'Basic認証を有効にしました。'
-    redirect_to cms_site_basic_auth_users_path(@site)
+    redirect_to url_for(action: :index), notice: 'Basic認証を有効にしました。'
   end
 
-  def disable_auth
-    @site.disable_basic_auth
+  def disable
+    disable_auth
     update_configs
 
-    flash[:notice] = 'Basic認証を無効にしました。'
-    redirect_to cms_site_basic_auth_users_path(@site)
+    redirect_to url_for(action: :index), notice: 'Basic認証を無効にしました。'
   end
 
   private
 
+  def enable_auth
+    @site.load_site_settings
+    @site.in_setting_site_basic_auth_state = 'enabled'
+    @site.save
+  end
+
+  def disable_auth
+    @site.load_site_settings
+    @site.in_setting_site_basic_auth_state = 'disabled'
+    @site.save
+  end
+
   def refresh_auth
     if @site.basic_auth_users.where(state: 'enabled').empty?
-      @site.disable_basic_auth
+      disable_auth
       flash[:notice] = 'Basic認証を無効にしました。'
     end
 

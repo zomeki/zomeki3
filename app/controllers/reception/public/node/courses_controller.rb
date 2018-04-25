@@ -1,4 +1,4 @@
-class Reception::Public::Node::CoursesController < Cms::Controller::Public::Base
+class Reception::Public::Node::CoursesController < Reception::Public::NodeController
   def pre_dispatch
     @node = Page.current_node
     @content = Reception::Content::Course.find(@node.content_id)

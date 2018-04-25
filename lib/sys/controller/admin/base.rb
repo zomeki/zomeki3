@@ -40,7 +40,7 @@ private
     return false if request.env['PATH_INFO'] =~ Regexp.new("^#{admin_password_path}")
     uri  = request.env['PATH_INFO']
     uri += "?#{request.env['QUERY_STRING']}" if !request.env['QUERY_STRING'].blank?
-    cookies[:sys_login_referrer] = uri
+    cookies[:sys_login_referrer] = { value: uri, httponly: true }
     respond_to do |format|
       format.any  { redirect_to(admin_login_path) }
       format.html { redirect_to(admin_login_path) }

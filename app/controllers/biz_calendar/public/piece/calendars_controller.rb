@@ -1,8 +1,6 @@
-class BizCalendar::Public::Piece::CalendarsController < BizCalendar::Public::Piece::BaseController
+class BizCalendar::Public::Piece::CalendarsController < BizCalendar::Public::PieceController
   def pre_dispatch
-    @piece = BizCalendar::Piece::Calendar.find_by(id: Page.current_piece.id)
-    return render plain: '' unless @piece
-
+    @piece = BizCalendar::Piece::Calendar.find(Page.current_piece.id)
     @item = Page.current_item
   end
 

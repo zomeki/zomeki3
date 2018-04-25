@@ -43,7 +43,7 @@ class BizCalendar::Public::Node::PlacesController < BizCalendar::Public::Node::B
   end
 
   def show
-    http_error(404) unless @place = @content.public_places.where(url: params[:name]).first
+    @place = @content.public_places.find_by!(url: params[:name])
 
     Page.current_item = @place
     Page.title = "#{@place.title}"
@@ -85,13 +85,12 @@ class BizCalendar::Public::Node::PlacesController < BizCalendar::Public::Node::B
 
 
   def bussiness_times
-    @piece = BizCalendar::Piece::BussinessTime.find_by(id: params[:piece])
-    return http_error(404) if params[:piece].blank? || @piece.blank?
+    @piece = BizCalendar::Piece::BussinessTime.find(params[:piece])
 
     @places = @content.public_places
     
     if params[:name].present?
-      return http_error(404) unless place = @content.public_places.where(url: params[:name]).first
+      place = @content.public_places.find_by!(url: params[:name])
       @places = [place]
     end
 
@@ -126,14 +125,13 @@ class BizCalendar::Public::Node::PlacesController < BizCalendar::Public::Node::B
   end
 
   def bussiness_holidays
-    @piece = BizCalendar::Piece::BussinessHoliday.find_by(id: params[:piece])
-    return http_error(404) if params[:piece].blank? || @piece.blank?
+    @piece = BizCalendar::Piece::BussinessHoliday.find(params[:piece])
     return http_error(404) unless @piece.target_next?
 
     @places = @content.public_places
 
     if params[:name].present?
-      return http_error(404) unless place = @content.public_places.where(url: params[:name]).first
+      place = @content.public_places.find_by!(url: params[:name])
       @places = [place]
     end
 

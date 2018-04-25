@@ -1,10 +1,6 @@
-class GpArticle::Public::Piece::ArchivesController < Sys::Controller::Public::Base
-  include GpArticle::Controller::Public::Scoping
-
+class GpArticle::Public::Piece::ArchivesController < GpArticle::Public::PieceController
   def pre_dispatch
-    @piece = GpArticle::Piece::Archive.find_by(id: Page.current_piece.id)
-    return render plain: '' unless @piece
-
+    @piece = GpArticle::Piece::Archive.find(Page.current_piece.id)
     @node = @piece.content.public_archives_node
     return render plain: '' unless @node
   end
