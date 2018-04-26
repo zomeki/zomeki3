@@ -15,7 +15,7 @@
     <td><%= item.user.account if item.user %></td>
     <td><%= item.user.name if item.user %></td>
     <td><%= item.user.sites.map(&:name).join(', ') if item.user %></td>
-    <td><%= item.session_id.gsub(/.{24}$/, '*'*24) %></td>
+    <td><%= item.session_id.gsub(/.{28}$/, '*'*28) %></td>
     <td style="text-align: center;"><%=l item.updated_at if item.updated_at %></td>
   </tr>
   <% end %>
