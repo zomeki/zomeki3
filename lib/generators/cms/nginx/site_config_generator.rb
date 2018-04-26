@@ -75,22 +75,25 @@ module Cms
       include ActiveModel::Model
 
       attr_accessor :site
-      attr_accessor :path, :try_files, :htpasswd_path
+      attr_accessor :path, :try_files, :htpasswd_path, :ips
+
+      def initialize(atts = {})
+        self.ips = []
+        super
+      end
     end
 
     class LocationBuilder
       def initialize(site)
         @site = site
         @try_files = %w($uri $uri/index.html)
-        @dynamic_dirs = load_dynamic_dirs
-        @basic_auth_dirs = load_basic_auth_dirs
       end
 
       def build
         locations =  make_system_locations
         locations += make_public_locations
         locations += make_public_error_locations if @site.smart_phone_layout_same_as_pc?
-        locations += make_default_public_locations
+        locations += make_public_default_locations
 
         append_request_uri_for_smartphone(locations) if @site.smart_phone_layout_same_as_pc?
 
@@ -104,64 +107,63 @@ module Cms
              .map { |node| node.public_uri.chomp('/') }
       end
 
-      def load_basic_auth_dirs
-        return [] unless @site.use_basic_auth?
-        @site.basic_auth_users.directory_location.enabled
-                              .reorder(:target_location)
-                              .group(:target_location)
-                              .pluck(:target_location)
-                              .map { |d| "/#{d}" }
-                              .map { |d| d.chomp('/') }
+      def load_access_controls_for_directory
+        return {} unless @site.use_access_control?
+        @site.access_controls.where(state: 'enabled', target_type: 'directory')
+                             .reorder(:target_location)
+                             .group_by { |c| "/#{c.target_location}".chomp('/') }
       end
 
       def make_system_locations
         locations = [Location.new(path: "/#{ZomekiCMS::ADMIN_URL_PREFIX}", try_files: @try_files + ['@proxy']),
                      Location.new(path: "/_preview", try_files: @try_files + ['@proxy'])]
 
-        if @site.use_basic_auth? && @site.basic_auth_users.system_location.enabled.exists?
-          locations.each do |location|
-            location.htpasswd_path = "#{@site.basic_auth_htpasswd_path}_system"
-          end
+        if @site.use_access_control?
+          controls = @site.access_controls.where(state: 'enabled', target_type: '_system').order(:id)
+          set_control_options(locations, controls, "#{@site.basic_auth_htpasswd_path}_system")
         end
 
         locations
       end
 
       def make_public_locations
-        dirs = (@basic_auth_dirs + @dynamic_dirs).uniq.sort_by { |d| d.count('/') }.reverse
-        dirs.each_with_object([]) do |dir, locations|
-          proxy = if dir.in?(@dynamic_dirs)
-                    '@dynamic'
-                  else
-                    '@proxy'
-                  end
-          htpath = if @site.use_basic_auth?
-                     if dir.in?(@basic_auth_dirs)
-                       "#{@site.basic_auth_htpasswd_path}_#{dir.gsub(%r{^/}, '').gsub('/', '_')}"
-                     elsif @site.basic_auth_users.all_location.enabled.exists?
-                       @site.basic_auth_htpasswd_path
-                     end
-                   end
+        dynamic_dirs = load_dynamic_dirs
+        access_controls_by_dir = load_access_controls_for_directory
 
-          locations << Location.new(path: "/_smartphone#{dir}", try_files: @try_files + [proxy], htpasswd_path: htpath)
-          locations << Location.new(path: "/_mobile#{dir}", try_files: @try_files + ['@dynamic'], htpasswd_path: htpath)
-          locations << Location.new(path: dir, try_files: @try_files + [proxy], htpasswd_path: htpath)
+        locations = []
+
+        dirs = (dynamic_dirs + access_controls_by_dir.keys).uniq.sort_by { |d| d.count('/') }.reverse
+        dirs.each do |dir|
+          proxy = dir.in?(dynamic_dirs) ? '@dynamic' : '@proxy'
+          dir_locations = [Location.new(path: "/_smartphone#{dir}", try_files: @try_files + [proxy]),
+                           Location.new(path: "/_mobile#{dir}", try_files: @try_files + ['@dynamic']),
+                           Location.new(path: dir, try_files: @try_files + [proxy])]
+
+          if @site.use_access_control?
+            controls = access_controls_by_dir[dir] || @site.access_controls.where(state: 'enabled', target_type: 'all').order(:id)
+            htpasswd_path = @site.basic_auth_htpasswd_path
+            htpasswd_path += "_#{dir.gsub(%r{^/}, '').gsub('/', '_')}" if controls.any?(&:target_type_directory?)
+            set_control_options(dir_locations, controls, htpasswd_path)
+          end
+
+          locations += dir_locations
         end
+
+        locations
       end
 
       def make_public_error_locations
         [Location.new(path: '/_smartphone/404.html', try_files: ['/404.html', '@proxy'])]
       end
 
-      def make_default_public_locations
+      def make_public_default_locations
         locations = [Location.new(path: '/_smartphone', try_files: @try_files + ['@proxy']),
                      Location.new(path: '/_mobile', try_files: @try_files + ['@dynamic']),
                      Location.new(path: '/', try_files: @try_files + ['@proxy'])]
 
-        if @site.use_basic_auth? && @site.basic_auth_users.all_location.enabled.exists?
-          locations.each do |location|
-            location.htpasswd_path = @site.basic_auth_htpasswd_path
-          end
+        if @site.use_access_control?
+          controls = @site.access_controls.where(state: 'enabled', target_type: 'all').order(:id)
+          set_control_options(locations, controls, @site.basic_auth_htpasswd_path)
         end
 
         locations
@@ -173,6 +175,27 @@ module Cms
              location.try_files.include?('@proxy') &&
              !location.try_files.include?('/404.html')
             location.try_files = %w($request_uri $request_uri/index.html) + location.try_files
+          end
+        end
+      end
+
+      def set_control_options(locations, controls, htpasswd_path)
+        return if locations.blank? || controls.blank?
+
+        controls.each do |control|
+          locations.each do |location|
+            case control.ip_order
+            when 'allow'
+              location.ips += control.ips.map { |ip| "allow #{ip}" } + ["deny all"]
+            when 'deny'
+              location.ips += control.ips.map { |ip| "deny #{ip}" } + ["allow all"]
+            end
+          end
+        end
+
+        if controls.any? { |c| c.basic_auths.present? }
+          locations.each do |location|
+            location.htpasswd_path = htpasswd_path
           end
         end
       end

@@ -8,6 +8,7 @@
     <th style="width: ;"><%= Cms::Site.human_attribute_name :full_uri %></th>
     <th style="width: ;"><%= Cms::Site.human_attribute_name :admin_full_uri %></th>
     <th style="width: 60px; text-align: center;"><%= Cms::Site.human_attribute_name :state %></th>
+    <th style="width: 80px; text-align: center;">アクセス制御</th>
   </tr>
   <% @items.each do |item| %>
   <tr class="<%= cycle '', 'cycle' %>">
@@ -17,6 +18,7 @@
     <td><%= item.full_uri %></td>
     <td><%= item.admin_full_uri %></td>
     <td style="text-align: center;"><%= item.state_text %></td>
+    <td style="text-align: center;"><%= link_to '設定', cms_site_access_controls_path(item) %></td>
   </tr>
   <% end %>
 </table>

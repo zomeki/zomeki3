@@ -9,25 +9,25 @@ module Cms
         load_sites.each do |site|
           @site = site
 
-          if @site.basic_auth_state_enabled?
+          if @site.use_access_control?
             template 'basic_auth/htaccess.erb', site.basic_auth_htaccess_path
           else
             remove_file site.basic_auth_htaccess_path
           end
 
-          @basic_auth_users = @site.basic_auth_users.all_location.enabled
-          template 'basic_auth/htpasswd.erb', site.basic_auth_htpasswd_path
+          @controls = @site.access_controls.where(state: 'enabled', target_type: '_system').order(:id)
+          template 'basic_auth/htpasswd.erb', "#{site.basic_auth_htpasswd_path}_system" if @controls.present?
 
-          @basic_auth_users = @site.basic_auth_users.system_location.enabled
-          template 'basic_auth/htpasswd.erb', "#{site.basic_auth_htpasswd_path}_system"
+          @controls = @site.access_controls.where(state: 'enabled', target_type: 'all').order(:id)
+          template 'basic_auth/htpasswd.erb', site.basic_auth_htpasswd_path if @controls.present?
 
-          locations = @site.basic_auth_users.directory_location
-                           .reorder(:target_location)
-                           .group(:target_location)
-                           .pluck(:target_location)
+          dir_controls = @site.access_controls.where(state: 'enabled', target_type: 'directory').order(:id)
+          locations = dir_controls.reorder(:target_location)
+                                  .group(:target_location)
+                                  .pluck(:target_location)
           locations.each do |location|
-            @basic_auth_users = @site.basic_auth_users.directory_location.where(target_location: location).enabled
-            template 'basic_auth/htpasswd.erb', "#{@site.basic_auth_htpasswd_path}_#{location.gsub('/', '_')}"
+            @controls = dir_controls.where(target_location: location)
+            template 'basic_auth/htpasswd.erb', "#{@site.basic_auth_htpasswd_path}_#{location.gsub('/', '_')}" if @controls.present?
           end
         end
       end

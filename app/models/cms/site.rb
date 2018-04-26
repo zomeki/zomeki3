@@ -16,7 +16,7 @@ class Cms::Site < ApplicationRecord
   has_many :concepts, -> { order(:sort_no, :id) }
   has_many :contents, -> { order(:sort_no, :name, :id) }
   has_many :settings, -> { order(:name, :sort_no) }, class_name: 'Cms::SiteSetting'
-  has_many :basic_auth_users, -> { order(:name) }, class_name: 'Cms::SiteBasicAuthUser'
+  has_many :access_controls, class_name: 'Cms::SiteAccessControl'
   has_many :kana_dictionaries
   has_many :site_belongings
   has_many :groups, -> { order(:level_no, :sort_no, :code, :id) }, through: :site_belongings, class_name: 'Sys::Group'
@@ -191,10 +191,6 @@ class Cms::Site < ApplicationRecord
 
   def basic_auth_htpasswd_path
     "#{::File.dirname(public_path)}/.htpasswd"
-  end
-
-  def basic_auth_state_enabled?
-    settings.where(name: 'basic_auth_state', value: 'enabled').exists?
   end
 
   def copy_common_directory(force: false)

@@ -84,21 +84,4 @@
   </tr>
 </table>
 
-<br />
-<p class="form">Basic認証</p>
-<div class="actionMenu">
-  <%= link_to "編集", cms_site_basic_auth_users_path(@item.id) %>
-</div>
-
-<% if @item.basic_auth_users %>
-<table class="show">
-  <% @item.basic_auth_users.each do |user| %>
-  <tr>
-    <th><%= user.name %></th>
-    <td><%= user.state_text %></td>
-  </tr>
-  <% end %>
-</table>
-<% end %>
-
 <%= creator_view @item %>

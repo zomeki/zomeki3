@@ -4,8 +4,8 @@ class Cms::SiteSetting < ApplicationRecord
   include Cms::Model::Rel::Site
   include Cms::Model::Auth::Site
 
-  set_config :basic_auth_state,
-             name: 'ベーシック認証',
+  set_config :access_control_state,
+             name: 'アクセス制御',
              default_value: 'disabled'
   set_config :common_ssl,
              name: '共有SSL',

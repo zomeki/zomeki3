@@ -18,6 +18,9 @@ server {
   <%- @locations.each do |location| -%>
   location ~ ^<%= location.path %> {
     try_files <%= location.try_files.join(' ') %>;
+    <%- location.ips.each do |ip| -%>
+    <%= ip %>;
+    <%- end -%>
     <%- if location.htpasswd_path.present? -%>
     auth_basic_user_file <%= location.htpasswd_path %>;
     auth_basic "Please enter your ID and password";
