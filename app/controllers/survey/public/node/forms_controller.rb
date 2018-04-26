@@ -62,10 +62,9 @@ class Survey::Public::Node::FormsController < Survey::Public::NodeController
   private
 
   def set_form
-    forms = @content.forms
+    forms = Survey::Form.all
     forms = forms.unscoped if Core.mode == 'preview'
-
-    @form = forms.find_by!(name: params[:id])
+    @form = forms.where(content_id: @content.id).find_by!(name: params[:id])
 
     Page.current_item = @form
     Page.title = @form.title
