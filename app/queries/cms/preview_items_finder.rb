@@ -22,6 +22,6 @@ class Cms::PreviewItemsFinder < ApplicationFinder
     items = [@model.where(id: publics),
              @model.where(id: nonpublics)].reduce(:or).where.not(id: closes)
 
-    @model.where(id: items.select('MAX(id) as id').group(:name).reorder(nil))
+    @model.where(id: items.select('MAX(id) as id').group(:content_id, :name).reorder(nil))
   end
 end
