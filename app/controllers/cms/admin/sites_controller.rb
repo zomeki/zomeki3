@@ -55,7 +55,7 @@ class Cms::Admin::SitesController < Cms::Controller::Admin::Base
   protected
 
   def update_configs
-    Cms::SiteConfigUpdateService.new(@item).update
+    Cms::SiteConfigService.new(@item).update
   end
 
   private

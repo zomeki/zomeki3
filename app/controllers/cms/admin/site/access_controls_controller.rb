@@ -83,7 +83,7 @@ class Cms::Admin::Site::AccessControlsController < Cms::Controller::Admin::Base
   end
 
   def update_configs
-    Cms::SiteConfigUpdateService.new(@site).update
+    Cms::SiteConfigService.new(@site).update
     Cms::FileTransferCallbacks.new(:basic_auth_htpasswd_path).enqueue(@site)
   end
 

@@ -38,8 +38,7 @@ class Cms::Site < ApplicationRecord
   before_validation :fix_full_uri
 
   after_save :generate_files
-  before_destroy :destroy_related_records
-  after_destroy :destroy_files
+  before_destroy :destroy_related_data
 
   after_create :make_concept
   after_create :make_site_belonging
@@ -217,12 +216,8 @@ class Cms::Site < ApplicationRecord
     FileUtils.touch "#{config_path}/rewrite.conf"
   end
 
-  def destroy_related_records
+  def destroy_related_data
     Cms::SiteDestroyService.new(self).destroy
-  end
-
-  def destroy_files
-    FileUtils.rm_rf root_path
   end
 
   def make_concept
@@ -259,14 +254,6 @@ class Cms::Site < ApplicationRecord
     def all_with_full_uri(full_uri)
       uri = Addressable::URI.parse(full_uri)
       matches_to_domain(uri.host).order(:id)
-    end
-
-    def reload_servers
-      FileUtils.touch reload_servers_text_path
-    end
-
-    def reload_servers_text_path
-      Rails.root.join('tmp/reload_servers.txt')
     end
   end
 end
