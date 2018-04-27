@@ -1,8 +1,10 @@
 .flatpickr-current-month {
   display: flex;
   justify-content: center;
+  align-items: center;
+  padding: 3px 0;
 }
-.flatpickr-current-month .cur-year {
+.flatpickr-current-month .numInputWrapper {
   order: 1
 }
 .flatpickr-current-month .cur-month {
