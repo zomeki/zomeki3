@@ -11,7 +11,7 @@ class Cms::DataFileNode < ApplicationRecord
   validate :validate_name
 
   after_save     Cms::Publisher::BracketeeCallbacks.new, if: :changed?
-  before_destroy Cms::Publisher::BracketeeCallbacks.new
+  before_destroy Cms::Publisher::BracketeeCallbacks.new, prepend: true
 
   after_destroy :remove_files
 

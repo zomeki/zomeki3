@@ -29,7 +29,7 @@ class Organization::Group < ApplicationRecord
   belongs_to :content, class_name: 'Organization::Content::Group', required: true
 
   after_save     Organization::Publisher::GroupCallbacks.new, if: :changed?
-  before_destroy Organization::Publisher::GroupCallbacks.new
+  before_destroy Organization::Publisher::GroupCallbacks.new, prepend: true
 
   validates :sys_group_code, presence: true, uniqueness: { scope: :content_id }
   validates :name, presence: true, format: /\A[0-9A-Za-z\._-]*\z/i

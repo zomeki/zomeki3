@@ -11,7 +11,7 @@ class Cms::DataText < ApplicationRecord
   belongs_to :concept
 
   after_save     Cms::Publisher::BracketeeCallbacks.new, if: :changed?
-  before_destroy Cms::Publisher::BracketeeCallbacks.new
+  before_destroy Cms::Publisher::BracketeeCallbacks.new, prepend: true
 
   validates :state, :title, :body, presence: true
   validates :name, presence: true,

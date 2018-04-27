@@ -199,7 +199,7 @@ class Cms::Node < ApplicationRecord
     after_save :replace_public_page
 
     after_save     Cms::SearchIndexerCallbacks.new, if: :changed?
-    before_destroy Cms::SearchIndexerCallbacks.new
+    before_destroy Cms::SearchIndexerCallbacks.new, prepend: true
 
     validate :validate_recognizers, if: -> { state == 'recognize' }
 

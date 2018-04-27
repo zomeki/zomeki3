@@ -27,7 +27,7 @@ class AdBanner::Banner < ApplicationRecord
   before_validation :set_token
 
   after_save     Cms::Publisher::ContentCallbacks.new(belonged: true), if: :changed?
-  before_destroy Cms::Publisher::ContentCallbacks.new(belonged: true)
+  before_destroy Cms::Publisher::ContentCallbacks.new(belonged: true), prepend: true
 
   scope :published, -> {
     now = Time.now
