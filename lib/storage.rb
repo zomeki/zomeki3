@@ -1,5 +1,4 @@
 module Storage
-  require "mime/types"
   require "nkf"
   
   @@env_key  = :file
@@ -73,7 +72,7 @@ module Storage
   end
   
   def self.mime_type(path)
-    mime   = MIME::Types.type_for(path).first.content_type rescue nil
+    mime   = MiniMime.lookup_by_filename(path).content_type rescue nil
     mime ||= "text/html" if path =~ /\.html\.r$/
     mime
   end
