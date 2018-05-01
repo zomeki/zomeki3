@@ -63,7 +63,7 @@ class Survey::Public::Node::FormsController < Survey::Public::NodeController
 
   def set_form
     forms = @content.forms
-    forms = forms.unscoped if Core.mode == 'preview'
+    forms = forms.unscoped if Core.preview_mode?
 
     @form = forms.find_by!(name: params[:id])
 

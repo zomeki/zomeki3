@@ -68,7 +68,7 @@ module Cms::Controller::Layout
     concepts = Cms::Lib::Layout.inhertited_concepts
 
     ## layout
-    if Core.mode == 'preview' && params[:layout_id]
+    if Core.preview_mode? && params[:layout_id]
       Page.layout = Cms::Layout.find(params[:layout_id])
     elsif layout = Cms::Lib::Layout.inhertited_layout
       Page.layout    = layout.clone
@@ -90,7 +90,7 @@ module Cms::Controller::Layout
 
     ## render the piece
     pieces = Cms::Lib::Layout.find_design_pieces(body, concepts, params)
-    if Core.mode == 'preview' && params[:piece_id]
+    if Core.preview_mode? && params[:piece_id]
       piece = Cms::Piece.find_by(id: params[:piece_id])
       pieces[piece.name] = piece if piece
     end

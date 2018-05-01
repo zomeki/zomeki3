@@ -1,3 +1,3 @@
 <div class="qrcode">
-  <img src="<%= Core.mode == 'preview' ? item.qrcode_preview_uri : item.qrcode_public_uri %>" />
+  <img src="<%= Core.preview_mode? ? item.qrcode_preview_uri : item.qrcode_public_uri %>" />
 </div>

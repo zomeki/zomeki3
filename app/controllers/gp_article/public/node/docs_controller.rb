@@ -78,7 +78,7 @@ class GpArticle::Public::Node::DocsController < GpArticle::Public::NodeControlle
 
   def public_or_preview_doc(id: nil, name: nil)
     docs = @content.docs
-    docs = docs.unscoped if Core.mode == 'preview'
+    docs = docs.unscoped if Core.preview_mode?
 
     if id
       docs.find_by!(id: id)
