@@ -19,3 +19,9 @@
 #cmsPreviewMark .datetimepicker {
   width: 150px;
 }
+
+/* previewPublicItem
+----------------------------------------------- */
+.previewPublicItem {
+  background-color: #fee;
+}

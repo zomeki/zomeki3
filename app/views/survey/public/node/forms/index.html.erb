@@ -3,7 +3,7 @@
   <%- next unless form.index_visible? -%>
   <div class="form">
     <h2 class="name">
-      <%= content_tag_if !form.state_public?, :div, class: 'preview_public' do %>
+      <%= content_tag_if !form.state_public?, :div, class: 'previewPublicItem' do %>
         <%= link_to form.title, form.public_uri %>
       <%- end -%>
     </h2>
