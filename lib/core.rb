@@ -166,8 +166,8 @@ class Core
     end
   end
 
-  def self.mode_system?
-    @@mode == ZomekiCMS::ADMIN_URL_PREFIX.sub(/\A_/, '')
+  def self.preview_mode?
+    @@mode == 'preview'
   end
 
 private

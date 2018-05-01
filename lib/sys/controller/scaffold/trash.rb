@@ -7,10 +7,18 @@ module Sys::Controller::Scaffold::Trash
     _untrash(item)
   end
 
+  def batch_trash(items)
+    _batch_trash(items)
+  end
+
+  def batch_untrash(items)
+    _batch_untrash(items)
+  end
+
   protected
 
   def _trash(item, options = {}, &block)
-    if item.deletable? && item.trash
+    if item.trashable? && item.trash
       location       = options[:location].is_a?(Proc) ? options[:location].call(item) : options[:location] || url_for(action: :index)
       flash[:notice] = options[:notice] || "ごみ箱への移動が完了しました。（#{I18n.l Time.now}）"
       Sys::OperationLog.log(request, item: item)
@@ -29,7 +37,7 @@ module Sys::Controller::Scaffold::Trash
   end
 
   def _untrash(item, options = {}, &block)
-    if item.deletable? && item.untrash
+    if item.untrashable? && item.untrash
       location       = options[:location].is_a?(Proc) ? options[:location].call(item) : options[:location] || url_for(action: :index)
       flash[:notice] = options[:notice] || "ごみ箱からの復元処理が完了しました。（#{I18n.l Time.now}）"
       Sys::OperationLog.log(request, item: item)
@@ -46,5 +54,27 @@ module Sys::Controller::Scaffold::Trash
         format.xml  { render xml: item.errors, status: :unprocessable_entity }
       end
     end
+  end
+
+  def _batch_trash(items)
+    num = 0
+    items.each do |item|
+      if item.trashable? && item.trash
+        Sys::OperationLog.log(request, item: item, do: 'trash')
+        num += 1
+      end
+    end
+    redirect_to url_for(action: :index), notice: "ごみ箱への移動が完了しました。（#{num}件）（#{I18n.l Time.now}）"
+  end
+
+  def _batch_untrash(items)
+    num = 0
+    items.each do |item|
+      if item.untrashable? && item.untrash
+        Sys::OperationLog.log(request, item: item, do: 'untrash')
+        num += 1
+      end
+    end
+    redirect_to url_for(action: :index), notice: "ごみ箱からの復元が完了しました。（#{num}件）（#{I18n.l Time.now}）"
   end
 end

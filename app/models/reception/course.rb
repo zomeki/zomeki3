@@ -21,7 +21,7 @@ class Reception::Course < ApplicationRecord
   after_save :set_name
 
   after_save     Cms::Publisher::ContentCallbacks.new(belonged: true), if: :changed?
-  before_destroy Cms::Publisher::ContentCallbacks.new(belonged: true)
+  before_destroy Cms::Publisher::ContentCallbacks.new(belonged: true), prepend: true
 
   validates :title, presence: true
   validates :name, exclusion: { in: %w(categories) }

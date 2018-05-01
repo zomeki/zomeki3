@@ -13,6 +13,7 @@ class Cms::Admin::StylesheetsController < Cms::Controller::Admin::Base
 
     @item = Sys::Storage::Entry.from_path(path)
     return http_error(404) if @item.nil? || !@item.exists?
+    return error_auth unless @item.readable?
 
     @parent = @item.parent
     return http_error(404) unless @parent.exists?

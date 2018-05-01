@@ -20,7 +20,7 @@ class Cms::Stylesheets::Directory < Sys::Storage::Directory
   end
 
   def stylesheet
-    @stylesheet ||= Cms::Stylesheet.find_by(site_id: site_id, path: path_from_themes_root) if path_from_themes_root.present?
+    @stylesheet ||= Cms::Stylesheet.find_by(site_id: site_id, path: path_from_themes_root) if site_id.present? && path_from_themes_root.present?
   end
 
   private

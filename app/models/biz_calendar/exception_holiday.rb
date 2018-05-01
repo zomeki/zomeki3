@@ -13,7 +13,7 @@ class BizCalendar::ExceptionHoliday < ApplicationRecord
   validate :dates_range
   
   after_save     Cms::Publisher::ContentCallbacks.new(belonged: true), if: :changed?
-  before_destroy Cms::Publisher::ContentCallbacks.new(belonged: true)
+  before_destroy Cms::Publisher::ContentCallbacks.new(belonged: true), prepend: true
 
   nested_scope :in_site, through: :place
 

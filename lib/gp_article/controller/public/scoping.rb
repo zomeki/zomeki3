@@ -13,7 +13,7 @@ module GpArticle::Controller::Public::Scoping
   end
 
   def set_gp_article_public_scoping
-    if Core.mode == 'preview' && Page.preview_at
+    if Core.preview_mode? && Page.preview_at
       Cms::PreviewItemsFinder.new(GpArticle::Doc, Core.user).search(Page.preview_at).scoping { yield }
     else
       GpArticle::Doc.public_state.scoping { yield }

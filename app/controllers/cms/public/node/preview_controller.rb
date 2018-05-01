@@ -2,7 +2,7 @@
 class Cms::Public::Node::PreviewController < Cms::Controller::Public::Base
   def index
     ## only preview
-    return http_error(404) if Core.mode != 'preview'
+    return http_error(404) unless Core.preview_mode?
     return http_error(404) unless params[:layout_id]
     return http_error(404) if params[:path].to_s !~ /\*\.html\Z/
     layout = Cms::Layout.find(params[:layout_id])

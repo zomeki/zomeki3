@@ -23,7 +23,7 @@
 <%- end -%>
 
 <%- if (node = @item.content.tag_content_tag.try(:public_node)) &&
-       (tags = Core.mode == 'preview' ? @item.tags_for_preview : @item.tags).present? -%>
+       (tags = Core.preview_mode? ? @item.tags_for_preview : @item.tags).present? -%>
 <%= render 'gp_article/public/node/docs/show/tags', tags: tags %>
 <%- end -%>
 

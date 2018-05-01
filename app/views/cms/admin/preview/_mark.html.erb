@@ -25,7 +25,12 @@
   <%- unless Page.mobile? -%>
   <%= javascript_tag do -%>
   document.addEventListener('DOMContentLoaded', function() {
-    flatpickr('input.datetimepicker', { locale: "ja", enableTime: true, time_24hr: true });
+    flatpickr('input.datetimepicker', {
+      locale: "ja",
+      enableTime: true,
+      time_24hr: true,
+      plugins: [new scrollPlugin({})]
+    });
   });
   <%- end -%>
   <%- end -%>

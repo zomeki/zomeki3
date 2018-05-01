@@ -1,77 +1,35 @@
 <p class="form">検索</p>
-<%= form_tag url_for(action: :index), method: :post do |f| %>
-<%= hidden_field_tag :do, 'search' %>
-<table>
-  <tr>
-    <th>検索対象</th>
-    <td colspan="2">
-      <%= check_box_tag 'target[gp_article]', true, false, checked: params[:target] ? params[:target][:gp_article].present? : true %>
-      <label for="target_gp_article">記事コンテンツ</label>
-      <%- if Core.user.has_auth?(:designer) -%>
-      <%= check_box_tag 'target[node_page]', true, false, checked: params[:target] ? params[:target][:node_page].present? : true %>
-      <label for="target_node_page">固定ページ</label>
-      <%= check_box_tag 'target[piece]', true, false, checked: params[:target] ? params[:target][:piece].present? : true %>
-      <label for="target_piece">ピース</label>
-      <%= check_box_tag 'target[layout]', true, false, checked: params[:target] ? params[:target][:layout].present? : true %>
-      <label for="target_layout">レイアウト</label>
-      <%- end -%>
-      <%= check_box_tag 'target[data_text]', true, false, checked: params[:target] ? params[:target][:data_text].present? : true %>
-      <label for="target_data_text">テキスト</label>
-      <%= check_box_tag 'target[data_file]', true, false, checked: params[:target] ? params[:target][:data_file].present? : true %>
-      <label for="target_data_file">ファイル</label>
-    </td>
-  </tr>
-  <tr>
-    <th>キーワード</th>
-    <td><%= text_field_tag :keyword, params[:keyword], style: "width: 400px;" %></td>
-    <td><%= select_tag :target_concept, options_for_select([['現在のコンセプトから','current'], ['すべてのコンセプトから','all']], params[:target_concept]) %></td>
-    <td class="submitters">
-      <%= submit_tag '検索', name: :search %>
-      <%= submit_tag 'リセット', name: :reset %>
-    </td>
-  </tr>
-</table>
-<% end %>
 
-<% if @results.size > 0 %>
-  <br />
+<%= render 'search' %>
+
+<%- if @results.size > 0 -%>
   <p class="form">検索結果</p>
-<% end %>
-
-<% @results.each do |result| %>
-<%- reset_cycle -%>
-<p style="margin: 10px 0px; padding: 2px 5px; border-left: 4px solid #bbb;"><%= result[:title] %></p>
-<%- if result[:items].size > 0 -%>
-<div class="pageEntryInfo">
-  <%= result[:items].size %>件表示
-</div>
+  <div><%= @count > 0 ? "#{@count}件見つかりました。" : "見つかりませんでした。" -%></div>
 <%- end -%>
-<table class="index">
-  <tr>
-    <th style="width: 70px; text-align: right;">ID</th>
-    <th>タイトル</th>
-    <th style="width: 120px;">コンセプト</th>
-    <th style="width: 80px;">状態</th>
-    <th style="width: 33%;">公開URL</th>
-  </tr>
-  <% if result[:items].size == 0 %>
+
+<%- @results.each do |result| -%>
+  <%- next if result[:count] == 0 -%>
+  <%- reset_cycle -%>
+  <p style="margin: 10px 0px; padding: 2px 5px; border-left: 4px solid #bbb;"><%= result[:title] %></p>
+  <%- if result[:count] > 0 -%>
+  <div class="pageEntryInfo"><%= result[:count] %>件</div>
+  <%- end -%>
+  <table class="index">
     <tr>
-      <td style="text-align: right;">-</td>
-      <td>見つかりませんでした。</td>
-      <td></td>
-      <td></td>
-      <td></td>
+      <th style="width: 70px; text-align: right;">ID</th>
+      <th>タイトル</th>
+      <th style="width: 120px;">コンセプト</th>
+      <th style="width: 80px;">状態</th>
+      <th style="width: 33%;">公開URL</th>
     </tr>
-  <% else %>
-    <% result[:items].each do |item| %>
-    <tr class="<%= cycle '', 'cycle' %>">
-      <td style="text-align: right;"><%= item[:id] %></td>
-      <td><%= link_to item[:title], item[:admin_uri] %></td>
-      <td><%= item[:concept].name %></td>
-      <td><%= item[:state_text] %></td>
-      <td><%= link_to_if item[:state] == 'public', item[:public_uri], item[:public_uri], target: '_blank' if item[:public_uri] %></td>
-    </tr>
-    <% end %>
-  <% end %>
-</table>
-<% end %>
+    <%- result[:items].each do |item| -%>
+      <tr class="<%= cycle '', 'cycle' %>">
+        <td style="text-align: right;"><%= item[:id] %></td>
+        <td><%= link_to item[:title], item[:admin_uri], target: '_blank' %></td>
+        <td><%= item[:concept].name %></td>
+        <td><%= item[:state_text] %></td>
+        <td><%= link_to_if item[:state] == 'public', item[:public_uri], item[:public_uri], target: '_blank' if item[:public_uri] %></td>
+      </tr>
+    <%- end -%>
+  </table>
+<%- end -%>

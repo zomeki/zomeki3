@@ -6,7 +6,7 @@ class Cms::Public::Node::PagesController < Cms::Controller::Public::Base
   def index
     return http_error(404) if params[:page]
 
-    if Core.mode == 'preview' && params[:node_id]
+    if Core.preview_mode? && params[:node_id]
       @item = Cms::Node::Page.find_by!(id: params[:node_id], parent_id: @item.parent_id, name: @item.name)
     end
     

@@ -9,7 +9,7 @@ class GpCategory::Template < ApplicationRecord
   has_many :categories
 
   after_save     GpCategory::Publisher::TemplateCallbacks.new, if: :changed?
-  before_destroy GpCategory::Publisher::TemplateCallbacks.new
+  before_destroy GpCategory::Publisher::TemplateCallbacks.new, prepend: true
 
   validates :name, presence: true, uniqueness: { scope: :content_id, case_sensitive: false }
   validates :title, presence: true

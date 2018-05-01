@@ -15,6 +15,9 @@ ZomekiCMS::Application.routes.draw do
       :controller => 'admin/docs',
       :path       => ':content/docs') do
       get 'file_contents/(*path)' => 'admin/docs/files#content'
+      collection do
+        post :batch
+      end
       member do
         post :approve
         post :passback

@@ -9,6 +9,7 @@ class Cms::Admin::Tool::ConvertFilesController < Cms::Controller::Admin::Base
     FileUtils.mkdir(::Tool::Convert::SITE_BASE_DIR) unless ::File.exist?(::Tool::Convert::SITE_BASE_DIR)
     @path = ::File.join(::Tool::Convert::SITE_BASE_DIR, params[:path].to_s).to_s
     @item = Sys::Storage::Entry.from_path(@path)
+    return error_auth unless @item.path.start_with?(::Tool::Convert::SITE_BASE_DIR)
   end
 
   def index

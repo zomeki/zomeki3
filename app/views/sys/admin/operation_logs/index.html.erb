@@ -4,7 +4,7 @@
 
 <table class="index">
   <tr>
-    <th style="width: 60px; padding: 0px; text-align: center;">詳細</th>
+    <th class="action_link">詳細</th>
     <th style="width: 200px;"><%= Sys::OperationLog.human_attribute_name :user_name %></th>
     <th style="width: 200px;"><%= Sys::OperationLog.human_attribute_name :action %></th>
     <th style="width: ;"><%= Sys::OperationLog.human_attribute_name :item %></th>
@@ -13,7 +13,7 @@
   </tr>
   <% @items.each do |item| %>
   <tr class="<%= cycle '', 'cycle' %>">
-    <td style="text-align: center;"><%= link_to :show, { action: :show, id: item } %></td>
+    <td class="action_link"><%= link_to :show, { action: :show, id: item } %></td>
     <td><%= item.user_name %></td>
     <td><%= item.action_text %></td>
     <td><%= item.item_model %><%= " (#{truncate(item.item_name, length: 20)})" if item.item_name %></td>

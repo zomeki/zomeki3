@@ -2,7 +2,7 @@
 
 <table class="index">
   <tr>
-    <th style="text-align: center; width: 60px;">詳細</th>
+    <th class="action_link">詳細</th>
     <th><%= AdBanner::Group.human_attribute_name :name %></th>
     <th><%= AdBanner::Group.human_attribute_name :title %></th>
     <th><%= AdBanner::Group.human_attribute_name :sort_no %></th>
@@ -11,7 +11,7 @@
 
   <%- @items.each do |item| -%>
   <tr class="<%= cycle '', 'cycle' %>">
-    <td style="text-align: center;"><%= link_to :show, { action: :show, id: item } %></td>
+    <td class="action_link"><%= link_to :show, { action: :show, id: item } %></td>
     <td style="text-align: left;"><%= item.name %></td>
     <td style="text-align: left;"><%= item.title %></td>
     <td style="text-align: right; width: 100px;"><%= item.sort_no %></td>
