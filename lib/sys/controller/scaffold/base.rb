@@ -5,6 +5,10 @@ module Sys::Controller::Scaffold::Base
     show
   end
 
+  def batch_destroy(items)
+    _batch_destroy(items)
+  end
+
   protected
 
   def _index(items)
@@ -82,5 +86,16 @@ module Sys::Controller::Scaffold::Base
         format.xml  { render xml: item.errors, status: :unprocessable_entity }
       end
     end
+  end
+
+  def _batch_destroy(items)
+    num = 0
+    items.each do |item|
+      if item.deletable? && item.destroy
+        Sys::OperationLog.log(request, item: item, do: 'destroy')
+        num += 1
+      end
+    end
+    redirect_to url_for(action: :index), notice: "削除処理が完了しました。（#{num}件）（#{I18n.l Time.now}）"
   end
 end
