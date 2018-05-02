@@ -28,12 +28,6 @@ class Map::Marker < ApplicationRecord
   before_destroy Cms::Publisher::ContentCallbacks.new(belonged: true)
 
   scope :public_state, -> { where(state: 'public') }
-  scope :categorized_into, ->(category_ids) {
-    cats = GpCategory::Categorization.arel_table
-    where(id: GpCategory::Categorization.select(:categorizable_id)
-                                        .where(categorizable_type: self)
-                                        .where(cats[:category_id].in(category_ids)))
-  }
 
   def public_uri
     return '' unless content.public_node

@@ -21,7 +21,7 @@ class GpArticle::DocsFinder < ApplicationFinder
     end
 
     if criteria[:category_ids].present? && (category_ids = criteria[:category_ids].select(&:present?)).present?
-      @docs = @docs.categorized_into_all(category_ids)
+      @docs = @docs.categorized_into(category_ids, alls: true)
     end
 
     if criteria[:user_operation].present?

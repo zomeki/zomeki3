@@ -44,11 +44,6 @@ class Reception::Course < ApplicationRecord
             .where(state: 'public')
             .merge(Reception::Open.available_period)
   }
-  scope :categorized_into, ->(categories) {
-    cats = GpCategory::Categorization.arel_table
-    where(id: GpCategory::Categorization.select(:categorizable_id)
-                                        .where(cats[:category_id].in(Array(categories).map(&:id))))
-  }
   scope :order_by_min_open_at, ->(sort = 'asc') {
     sql = Reception::Open.select(%Q|MIN("reception_opens"."open_on" + "reception_opens"."start_at")|)
                          .where(%Q|"reception_courses"."id" = "reception_opens"."course_id"|).to_sql

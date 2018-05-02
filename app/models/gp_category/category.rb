@@ -88,10 +88,6 @@ class GpCategory::Category < ApplicationRecord
     return categories
   end
 
-  def public_descendants_ids
-    public_descendants_with_preload.map(&:id)
-  end
-
   def public_descendants_with_preload
     GpCategory::CategoriesPreloader.new(self).preload(:public_descendants)
     public_descendants
@@ -232,13 +228,13 @@ class GpCategory::Category < ApplicationRecord
 
   class << self
     def docs_for_template_module(category, template_module)
-      category_ids = case template_module.module_type
-                     when 'docs_1', 'docs_3', 'docs_5', 'docs_7', 'docs_8'
-                       category.public_descendants_ids
-                     when 'docs_2', 'docs_4', 'docs_6'
-                       [category.id]
-                     end
-      docs = GpArticle::Doc.categorized_into(category_ids).except(:order)
+      categories = case template_module.module_type
+                   when 'docs_1', 'docs_3', 'docs_5', 'docs_7', 'docs_8'
+                     category.public_descendants
+                   when 'docs_2', 'docs_4', 'docs_6'
+                     [category]
+                   end
+      docs = GpArticle::Doc.categorized_into(categories).except(:order)
       docs = docs.where(content_id: template_module.gp_article_content_ids) if template_module.gp_article_content_ids.present?
       docs
     end

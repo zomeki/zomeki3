@@ -12,10 +12,10 @@ class Map::Public::Node::MarkersController < Map::Public::NodeController
 
   def index
     markers = @content.public_markers
-    markers = markers.categorized_into(@specified_category.public_descendants_ids) if @specified_category
+    markers = markers.categorized_into(@specified_category.public_descendants) if @specified_category
 
     docs = @content.marker_docs
-    docs = docs.categorized_into(@specified_category.public_descendants_ids, categorized_as: 'Map::Marker') if @specified_category
+    docs = docs.categorized_into(@specified_category.public_descendants, categorized_as: 'Map::Marker') if @specified_category
     doc_markers = docs.preload(:marker_categories, :files, :marker_icon_category)
                       .flat_map { |doc| Map::Marker.from_doc(doc) }
                       .compact
