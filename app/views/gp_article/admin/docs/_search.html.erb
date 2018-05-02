@@ -178,7 +178,7 @@ $(function() {
   $(document).on('change', 'select[name="criteria[category_type_ids][]"]', function() {
     var id = $(this).attr('id').replace(/category_type/, 'category');
     $('#' + id).html('<option value="">更新中...</option>');
-    $('form').submit();
+    $('form.search').submit();
   });
 });
 </script>
