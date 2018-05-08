@@ -33,20 +33,20 @@
                            include_blank: true %>
           <%- when 'radio_button' -%>
             <%= hidden_field_tag "question_answers[#{question.id}][]" %>
-            <%- question.form_options_for_select.each do |option| -%>
-              <label><%= radio_button_tag "question_answers[#{question.id}]", option,
-                                          option == answer&.content %> <%= option %></label>
+            <%- question.form_options_for_select.each_with_index do |option, i| -%>
+              <%= radio_button_tag "question_answers[#{question.id}]", option, option == answer&.content, id: "question_answers_#{question.id}_#{i}" %>
+              <%= label_tag "question_answers_#{question.id}_#{i}", option %>
             <%- end -%>
           <%- when 'check_box' -%>
             <%= hidden_field_tag "question_answers[#{question.id}][]" %>
-            <%- question.form_options_for_select.each do |option| -%>
-              <label><%= check_box_tag "question_answers[#{question.id}][]", option,
-                                       answer&.content&.split(',')&.include?(option) %> <%= option %></label>
+            <%- question.form_options_for_select.each_with_index do |option, i| -%>
+              <%= check_box_tag "question_answers[#{question.id}][]", option, answer&.content&.split(',')&.include?(option), id: "question_answers_#{question.id}_#{i}" %>
+              <%= label_tag "question_answers_#{question.id}_#{i}", option %>
             <%- end -%>
           <%- when 'attachment' -%>
+            <%= file_field_tag "question_answers[#{question.id}]" %>
             <%= hidden_field_tag "question_answers[#{question.id}][name]" %>
             <%= hidden_field_tag "question_answers[#{question.id}][data]" %>
-            <%= file_field_tag "question_answers[#{question.id}]" %>
             <span class="max_length">（最大<%= question.form_file_max_size || 1 %> MB）</span>
           <%- end -%>
         </div>

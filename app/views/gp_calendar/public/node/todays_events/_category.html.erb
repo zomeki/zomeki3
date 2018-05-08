@@ -10,7 +10,7 @@
   <thead>
     <tr>
     <%- @content.today_list_style.each do |header| -%>
-      <th><%= header[:header].html_safe %></th>
+      <th scope="col"><%= header[:header].html_safe %></th>
     <%- end -%>
     </tr>
   </thead>

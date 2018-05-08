@@ -4,7 +4,7 @@
   <thead>
     <tr>
     <%- @piece.table_style.each do |header| -%>
-      <th><%= header[:header].html_safe %></th>
+      <th scope="col"><%= header[:header].html_safe %></th>
     <%- end -%>
     </tr>
   </thead>
