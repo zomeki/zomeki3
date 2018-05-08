@@ -105,6 +105,7 @@ gem 'faraday_middleware', '~> 0.11.0.1'
 gem 'garb', '~> 0.9.8'
 gem 'google-oauth2-installed', '0.0.3'
 gem 'octokit', '~> 4.6.2'
+gem 'tika-client', '~> 0.2.0', require: false
 
 gem 'whenever', '~> 0.9.7', require: false
 

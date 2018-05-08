@@ -1,4 +1,4 @@
-module Sys::Model::TextExtraction
+module Sys::Model::Base::TextExtraction
   extend ActiveSupport::Concern
 
   EXTNAMES = [
@@ -23,13 +23,12 @@ module Sys::Model::TextExtraction
   def extract_text
     return unless Zomeki.config.application['sys.file_text_extraction']
     return unless has_attribute?(:extracted_text)
-    return unless respond_to?(:mime_type) && respond_to?(:path)
-    return unless File.extname(path.to_s).in?(EXTNAMES) && File.exists?(path.to_s) && mime_type.in?(MIME_TYPES)
+    return unless respond_to?(:mime_type)
+    return unless filepath = respond_to?(:upload_path) && upload_path
+    return unless File.exists?(filepath)
+    return unless File.extname(filepath).in?(EXTNAMES) && mime_type.in?(MIME_TYPES)
 
-    jar = Rails.root.join('vendor/tika/tika-app.jar')
-    result = `java -XX:TieredStopAtLevel=1 -Xverify:none -jar #{jar} --text #{path}`
+    result = Util::Tika.get_text(filepath)
     update_column :extracted_text, result
-  rescue => e
-    warn_log e.message
   end
 end

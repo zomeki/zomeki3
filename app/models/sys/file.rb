@@ -1,6 +1,7 @@
 class Sys::File < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Base::File
+  include Sys::Model::Base::TextExtraction
   include Sys::Model::Rel::Creator
   include Sys::Model::Auth::Free
 
