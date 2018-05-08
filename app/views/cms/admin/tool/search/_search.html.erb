@@ -3,22 +3,17 @@
 <table class="search">
   <tr>
     <th>検索対象</th>
-    <td colspan="2">
+    <td colspan="3">
       <%= hidden_field_tag 'target[]', '' %>
-      <%= check_box_tag 'target[]', 'gp_article', params[:target].include?('gp_article'), id: 'target_gp_article' %>
-      <label for="target_gp_article">記事コンテンツ</label>
+      <%= check_box_tag 'check_all', 'check_all', params[:check_all].present?, id: 'check_all' %><label for="check_all">すべて選択</label><br />
+      <%= check_box_tag 'target[]', 'gp_article', params[:target].include?('gp_article'), id: 'target_gp_article' %><label for="target_gp_article">記事コンテンツ</label>
       <%- if Core.user.has_auth?(:designer) -%>
-      <%= check_box_tag 'target[]', 'node_page', params[:target].include?('node_page'), id: 'target_node_page' %>
-      <label for="target_node_page">固定ページ</label>
-      <%= check_box_tag 'target[]', 'piece', params[:target].include?('piece'), id: 'target_piece' %>
-      <label for="target_piece">ピース</label>
-      <%= check_box_tag 'target[]', 'layout', params[:target].include?('layout'), id: 'target_layout' %>
-      <label for="target_layout">レイアウト</label>
+      <%= check_box_tag 'target[]', 'node_page', params[:target].include?('node_page'), id: 'target_node_page' %><label for="target_node_page">固定ページ</label>
+      <%= check_box_tag 'target[]', 'piece', params[:target].include?('piece'), id: 'target_piece' %><label for="target_piece">ピース</label>
+      <%= check_box_tag 'target[]', 'layout', params[:target].include?('layout'), id: 'target_layout' %><label for="target_layout">レイアウト</label>
       <%- end -%>
-      <%= check_box_tag 'target[]', 'data_text', params[:target].include?('data_text'), id: 'target_data_text' %>
-      <label for="target_data_text">テキスト</label>
-      <%= check_box_tag 'target[]', 'data_file', params[:target].include?('data_file'), id: 'target_data_file' %>
-      <label for="target_data_file">ファイル</label>
+      <%= check_box_tag 'target[]', 'data_text', params[:target].include?('data_text'), id: 'target_data_text' %><label for="target_data_text">テキスト</label>
+      <%= check_box_tag 'target[]', 'data_file', params[:target].include?('data_file'), id: 'target_data_file' %><label for="target_data_file">ファイル</label>
     </td>
   </tr>
   <tr>
@@ -42,3 +37,12 @@
   <%- end -%>
 </table>
 <%- end -%>
+
+<script type="text/javascript">
+$(function() {
+  $('#check_all').on('click', function() {
+    var checked = $('#check_all').prop('checked');
+    $('input[id^=target_]').prop('checked', checked);
+  });
+});
+</script>

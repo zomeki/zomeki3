@@ -6,6 +6,7 @@ class Cms::Admin::Tool::SearchController < Cms::Controller::Admin::Base
     return redirect_to(action: :index) if params[:reset]
 
     if params[:target].nil?
+      params[:check_all] = 'check_all'
       params[:target] = ['gp_article', 'node_page', 'piece', 'layout', 'data_text', 'data_file']
     end
   end
