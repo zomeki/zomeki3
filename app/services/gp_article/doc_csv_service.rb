@@ -39,7 +39,7 @@ class GpArticle::DocCsvService < ApplicationService
 
   def doc_header
     # 基本情報
-    data = ['_ID', '記事番号', '状態', '公開URL', 'タイトル', '本文', '記事一覧表示',
+    data = ['_ID', '記事番号', '状態', '公開URL', 'タイトル', '記事一覧表示',
             'ディレクトリ名', '所属', '作成者', '作成日時', '更新日時']
     data += @category_types.map(&:title)
 
@@ -58,7 +58,7 @@ class GpArticle::DocCsvService < ApplicationService
     data += @marker_category_types.map(&:title)
 
     # 携帯
-    data += ['携帯タイトル', '携帯本文']
+    data += ['携帯タイトル']
 
     data
   end
@@ -72,7 +72,6 @@ class GpArticle::DocCsvService < ApplicationService
     data << doc.state_text
     data << doc.public_uri
     data << doc.title
-    data << doc.body
     data << doc.feature_1_text
     data << doc.name
     data << doc.creator&.group&.name
@@ -123,7 +122,6 @@ class GpArticle::DocCsvService < ApplicationService
 
     # 携帯
     data << doc.mobile_title
-    data << doc.mobile_body
 
     data
   end
