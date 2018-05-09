@@ -14,10 +14,6 @@ module Sys::Model::Base::File
   attr_accessor :file, :allowed_types, :image_resize
 
   included do
-    include Sys::Model::TextExtraction
-
-    alias :path :upload_path
-
     validates :file, presence: true, unless: :skip_upload?
     validates :name, :title, presence: true
     validate :validate_file_name, if: -> { name.present? }
