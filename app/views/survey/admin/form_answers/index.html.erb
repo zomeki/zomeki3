@@ -4,7 +4,7 @@
 
 <table class="index">
   <tr>
-    <th style="text-align: center; width: 60px;">詳細</th>
+    <th class="action_link">詳細</th>
     <th style="text-align: right; width: 60px;"><%= Survey::FormAnswer.human_attribute_name :id %></th>
     <th style="text-align: center; width: 120px;"><%= Survey::FormAnswer.human_attribute_name :created_at %></th>
     <th style="text-align: left;"><%= Survey::FormAnswer.human_attribute_name :answered_url %></th>
@@ -13,7 +13,7 @@
   </tr>
   <%- @items.each do |item| -%>
   <tr class="<%= cycle '', 'cycle' %>">
-    <td style="text-align: center;"><%= link_to :show, { action: :show, id: item } %></td>
+    <td class="action_link"><%= link_to :show, { action: :show, id: item } %></td>
     <td style="text-align: right;"><%= item.id %></td>
     <td style="text-align: center;"><%=l item.created_at %></td>
     <td style="text-align: left;"><%= link_to item.answered_url_title, item.answered_full_uri, target: 'preview' %></td>

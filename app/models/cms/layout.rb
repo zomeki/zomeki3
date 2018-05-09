@@ -9,7 +9,7 @@ class Cms::Layout < ApplicationRecord
   enum_ish :state, [:public, :closed], default: :public
 
   after_save     Cms::Publisher::LayoutCallbacks.new, if: :changed?
-  before_destroy Cms::Publisher::LayoutCallbacks.new
+  before_destroy Cms::Publisher::LayoutCallbacks.new, prepend: true
 
   validates :state, :title, presence: true
   validates :name, presence: true,

@@ -13,7 +13,7 @@
   </tr>
   <tr>
     <th><%= @item.class.human_attribute_name :session_id %></th>
-    <td><%= @item.session_id.gsub(/.{24}$/, '*'*24) %></td>
+    <td><%= @item.session_id.gsub(/.{28}$/, '*'*28) %></td>
   </tr>
   <tr>
     <th><%= @item.class.human_attribute_name :updated_at %></th>

@@ -13,7 +13,7 @@ class GpCategory::TemplateModule < ApplicationRecord
   belongs_to :content, class_name: 'GpCategory::Content::CategoryType', required: true
 
   after_save     GpCategory::Publisher::TemplateModuleCallbacks.new, if: :changed?
-  before_destroy GpCategory::Publisher::TemplateModuleCallbacks.new
+  before_destroy GpCategory::Publisher::TemplateModuleCallbacks.new, prepend: true
 
   validates :name, presence: true, uniqueness: { scope: :content_id, case_sensitive: false },
                    format: { with: /\A[0-9A-Za-z\-_]+\z/, if: -> { name.present? } }

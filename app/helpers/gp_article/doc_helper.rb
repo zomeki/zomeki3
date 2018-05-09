@@ -1,6 +1,6 @@
 module GpArticle::DocHelper
   def doc_link_options(doc)
-    uri = if Core.mode == 'preview' && !doc.state_public?
+    uri = if Core.preview_mode? && !doc.state_public?
             "#{doc.public_uri(without_filename: true)}preview/#{doc.id}/#{doc.filename_for_uri}"
           else
             doc.public_uri
@@ -65,8 +65,8 @@ module GpArticle::DocHelper
               doc_style.html_safe
             end
 
-      if Core.mode == 'preview' && !@doc.state_public?
-        content_tag :div, html, class: 'preview_public'
+      if Core.preview_mode? && !@doc.state_public?
+        content_tag :div, html, class: 'previewPublicItem'
       else
         html
       end

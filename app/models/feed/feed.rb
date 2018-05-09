@@ -20,7 +20,7 @@ class Feed::Feed < ApplicationRecord
   validates :uri, presence: true
 
   after_save     Cms::Publisher::ContentCallbacks.new(belonged: true), if: :changed?
-  before_destroy Cms::Publisher::ContentCallbacks.new(belonged: true)
+  before_destroy Cms::Publisher::ContentCallbacks.new(belonged: true), prepend: true
 
   def safe(alt = nil, &block)
     begin

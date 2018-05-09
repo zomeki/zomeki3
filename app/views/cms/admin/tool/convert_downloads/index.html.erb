@@ -27,7 +27,7 @@
 <p class="form">ダウンロード一覧</p>
 <table class="index">
   <tr>
-    <th style="text-align: center; width: 60px;">詳細</th>
+    <th class="action_link">詳細</th>
     <th style="text-align: left;"><%= Tool::ConvertDownload.human_attribute_name :site_url %></th>
     <th style="text-align: left; width: 180px;"><%= Tool::ConvertDownload.human_attribute_name :include_dir %></th>
     <th style="text-align: center; width: 60px;"><%= Tool::ConvertDownload.human_attribute_name :state %></th>
@@ -37,7 +37,7 @@
   </tr>
   <%- @items.each do |item| -%>
   <tr class="<%= cycle('cycle', '') %>">
-    <td style="text-align: center;"><%= link_to :show, cms_tool_convert_download_path(item.id) %></td>
+    <td class="action_link"><%= link_to :show, cms_tool_convert_download_path(item.id) %></td>
     <td style="text-align: left;"><%= item.site_url %></td>
     <td style="text-align: left;"><%= item.include_dir %></td>
     <td style="text-align: center;"><%= item.state_label %></td>

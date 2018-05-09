@@ -90,18 +90,4 @@ class GpArticle::Doc::Criteria
     end
     strs.compact.join(' ')
   end
-
-  def to_csv_string
-    headers = []
-    headers << "所属:#{target_text}" if target_text.present?
-    headers << "公開:#{target_state_text_for_csv}" if target_state_text_for_csv.present?
-    headers << "記事番号:#{serial_no}" if serial_no.present?
-    headers << "キーワード:#{free_word}" if free_word.present?
-    headers << "カテゴリ:#{category_texts.join(' ')}" if category_texts.present?
-    headers << "日付:#{date_options_text}" if date_options_text.present?
-    headers << "状態:#{state_text}" if state_text.present?
-    headers << "ユーザー:#{user_options_text}" if user_options_text.present?
-    headers << check_box_options_text if check_box_options_text.present?
-    headers.join(' ')
-  end
 end

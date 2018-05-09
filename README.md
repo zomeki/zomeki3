@@ -7,8 +7,8 @@ ZOMEKI（ぞめき)は、自治体サイト向けに開発された国産オー�
 | Software  | Version        |
 |:----------|:---------------|
 | OS        | CentOS 7.2     |
-| Webサーバ | nginx 1.10     |
-| Appサーバ | unicorn 5.1    |
+| Webサーバ | nginx 1.12     |
+| Appサーバ | unicorn 5.4    |
 | Database  | PostgreSQL 9.5 |
 | Ruby      | 2.3            |
 | Rails     | 5.0            |

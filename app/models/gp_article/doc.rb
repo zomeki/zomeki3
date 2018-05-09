@@ -17,6 +17,7 @@ class GpArticle::Doc < ApplicationRecord
   include Cms::Model::Rel::Importation
 
   include Cms::Model::Auth::Concept
+  include Sys::Model::Auth::Trash
   include Sys::Model::Auth::EditableGroup
 
   include GpArticle::Model::Rel::Category
@@ -92,10 +93,10 @@ class GpArticle::Doc < ApplicationRecord
   before_save :set_display_updated_at
 
   after_save     GpArticle::Publisher::DocCallbacks.new, if: :changed?
-  before_destroy GpArticle::Publisher::DocCallbacks.new
+  before_destroy GpArticle::Publisher::DocCallbacks.new, prepend: true
 
   after_save     Cms::SearchIndexerCallbacks.new, if: :changed?
-  before_destroy Cms::SearchIndexerCallbacks.new
+  before_destroy Cms::SearchIndexerCallbacks.new, prepend: true
 
   after_save :replace_public
 
@@ -148,6 +149,10 @@ class GpArticle::Doc < ApplicationRecord
   scope :organized_into, ->(group_ids) {
     joins(creator: :group).where(Sys::Group.arel_table[:id].in(group_ids))
   }
+
+  def deletable?
+    super && !state_public?
+  end
 
   def public_path
     return '' if public_uri.blank?

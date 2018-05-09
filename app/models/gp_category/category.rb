@@ -52,7 +52,7 @@ class GpCategory::Category < ApplicationRecord
   before_validation :set_attributes_from_parent
 
   after_save     GpCategory::Publisher::CategoryCallbacks.new, if: :changed?
-  before_destroy GpCategory::Publisher::CategoryCallbacks.new
+  before_destroy GpCategory::Publisher::CategoryCallbacks.new, prepend: true
 
   scope :with_root, -> { where(parent_id: nil) }
   scope :public_state, -> { where(state: 'public') }

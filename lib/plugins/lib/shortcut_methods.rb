@@ -1,19 +1,31 @@
 def debug_log(message)
-  Rails.logger.debug "[#{Time.now.strftime('%Y-%m-%d %H:%M:%S')}] DEBUG  #{message.pretty_inspect}"
+  Timecop.return do
+    Rails.logger.debug build_log_message(message.pretty_inspect, "DEBUG")
+  end
 end
 
 def info_log(message)
-  Rails.logger.info "[#{Time.now.strftime('%Y-%m-%d %H:%M:%S')}] INFO  #{message}"
+  Timecop.return do
+    Rails.logger.info build_log_message(message, "INFO")
+  end
 end
 
 def warn_log(message)
-  message = "#{message}: #{message.backtrace.join("\n")}" if message.is_a?(Exception) && message.backtrace.present?
-  Rails.logger.warn "[#{Time.now.strftime('%Y-%m-%d %H:%M:%S')}] WARN  #{message}"
+  Timecop.return do
+    Rails.logger.warn build_log_message(message, "WARN")
+  end
 end
 
 def error_log(message)
+  Timecop.return do
+    Rails.logger.error build_log_message(message, "ERROR")
+  end
+end
+
+def build_log_message(message, level)
+  message = "[#{Time.now.strftime('%Y-%m-%d %H:%M:%S')}] #{level} #{message}" if Rails.env.development?
   message = "#{message}: #{message.backtrace.join("\n")}" if message.is_a?(Exception) && message.backtrace.present?
-  Rails.logger.error "[#{Time.now.strftime('%Y-%m-%d %H:%M:%S')}] ERROR  #{message}"
+  message
 end
 
 class String

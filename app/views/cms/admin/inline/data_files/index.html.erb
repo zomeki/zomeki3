@@ -11,7 +11,7 @@ end
 
 <table class="index">
   <tr>
-    <th style="width: 40px; text-align: center;">詳細</th>
+    <th class="action_link">詳細</th>
     <th style="width: 40px; text-align: center;">挿入</th>
     <th style="width: 90px; text-align: center;">サムネイル</th>
     <th style="width: 20%;">フォルダ名</th>
@@ -22,7 +22,7 @@ end
   </tr>
   <%- @items.each_with_index do |item, i| -%>
   <tr class="<%= cycle '', 'cycle' %>">
-    <td style="text-align: center;"><%= link_to :show, { action: :show, id: item } %></td>
+    <td class="action_link"><%= link_to :show, { action: :show, id: item } %></td>
     <td style="text-align: center;">
       <%= hidden_field_tag "node_name[]", item.node.try(:name), id: "nodeName#{item.id}" %>
       <%= hidden_field_tag "item_name[]", item.name, id: "itemName#{item.id}" %>

@@ -2,7 +2,7 @@
 
 <table class="index directories">
   <tr>
-    <th style="width: 60px; text-align: center;">詳細</th>
+    <th class="action_link">詳細</th>
     <th style="">ファイル名</th>
     <th style="width: 80px; text-align: right;">サイズ</th>
     <th style="width: 120px; text-align: center;">更新日時</th>
@@ -11,14 +11,14 @@
   <%- @items.each do |item| -%>
     <%- if item.directory_entry? -%>
       <tr class="directory <%= cycle '', 'cycle' %>">
-        <td style="text-align: center;"><%= link_to :show, { path: "#{item.path_from_site_root}/", do: :show } %></td>
+        <td class="action_link"><%= link_to :show, { path: "#{item.path_from_site_root}/", do: :show } %></td>
         <td class="name"><%= link_to item.name, { path: "#{item.path_from_site_root}/" } %></td>
         <td style="text-align: right;"></td>
         <td style="text-align: center;"><%=l item.mtime %></td>
       </tr>
     <%- else -%>
       <tr class="file <%= cycle '', 'cycle' %>">
-        <td style="text-align: center;"><br /></td>
+        <td class="action_link"><br /></td>
         
         <td class="name"><%= link_to item.name, { path: item.path_from_site_root, do: :show } %></td>
         <td style="text-align: right;"><%= item.kb_size %> KB</td>

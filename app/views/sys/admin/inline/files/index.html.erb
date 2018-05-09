@@ -8,7 +8,7 @@ display_embed_link = @content.respond_to?(:attachment_embed_link) ? @content.att
 %>
 <table class="index">
   <tr>
-    <th style="width: 60px; text-align: center;">詳細</th>
+    <th class="action_link">詳細</th>
     <th style="width: 60px; text-align: center;">番号</th>
     <%- if display_embed_link -%>
     <th style="width: 60px; text-align: center;">添付</th>
@@ -24,7 +24,7 @@ display_embed_link = @content.respond_to?(:attachment_embed_link) ? @content.att
       thumb_embed_path = "/_system/sys/#{params[:content]}/#{params[:parent]}/inline_files/#{item.id}/file_contents/thumb/#{item.escaped_name}"
     -%>
     <tr>
-      <td style="text-align: center;"><%= link_to :show, { action: :show, id: item } %></td>
+      <td class="action_link"><%= link_to :show, { action: :show, id: item } %></td>
       <td style="text-align: center;"><%= item.id %></td>
       <%- if display_embed_link -%>
         <td style="text-align: center;">

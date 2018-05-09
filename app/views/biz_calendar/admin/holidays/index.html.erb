@@ -3,7 +3,7 @@
 <table class="index">
 
   <tr>
-    <th style="width: 60px; text-align: center;">詳細</th>
+    <th class="action_link">詳細</th>
     <th style="width: 200px; text-align: center;">イベント種別</th>
     <th style="width: ; text-align: center;">休業日</th>
     <th style="width: 120px; text-align: center;">更新日時</th>
@@ -12,7 +12,7 @@
 
   <% @items.each do |item| %>
   <tr class="<%= cycle '', 'cycle' %>">
-    <td style="text-align: center;"><%= link_to :show, { action: :show, id: item } %></td>
+    <td class="action_link"><%= link_to :show, { action: :show, id: item } %></td>
     <td style="text-align: center;"><%= item.type.title if item.type %></td>
     <td style="text-align: center;"><%= item.target_date_label("%Y-%m-%d", true) %></td>
     <td style="text-align: center;"><%=l item.updated_at %></td>

@@ -2,7 +2,7 @@
 
 <table class="index">
   <tr>
-    <th style="text-align: center; width: 60px;">詳細</th>
+    <th class="action_link">詳細</th>
     <th><%= Survey::Question.human_attribute_name :title %></th>
     <th><%= Survey::Question.human_attribute_name :form_type %></th>
     <th><%= Survey::Question.human_attribute_name :required %></th>
@@ -10,7 +10,7 @@
   </tr>
   <%- @items.each do |item| -%>
   <tr class="<%= cycle '', 'cycle' %>">
-    <td style="text-align: center;"><%= link_to :show, { action: :show, id: item } %></td>
+    <td class="action_link"><%= link_to :show, { action: :show, id: item } %></td>
     <td style="text-align: left;"><%= item.title %></td>
     <td style="text-align: left;"><%= item.form_type_text %></td>
     <td style="text-align: left;"><%= item.required_text %></td>

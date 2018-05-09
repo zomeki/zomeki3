@@ -19,7 +19,7 @@ class Sys::Controller::Public::Base < ApplicationController
   end
 
   def freeze_preview_time
-    if Core.mode == 'preview' && Page.preview_at
+    if Core.preview_mode? && Page.preview_at
       Timecop.freeze(Page.preview_at) { yield }
     else
       yield

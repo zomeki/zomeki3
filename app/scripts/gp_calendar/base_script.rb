@@ -32,20 +32,25 @@ class GpCalendar::BaseScript < PublicationScript
       ct.public_categories.map { |c| "index_#{c.category_type.name}@#{c.path_from_root_category.gsub('/', '@')}" }
     }.flatten
 
-    publish_more(@node, uri: uri, path: path, smart_phone_path: smart_phone_path)
+    publish_page(@node, uri: uri,
+                        path: path,
+                        smart_phone_path: smart_phone_path)
     files.each do |file|
-      publish_more(@node, uri: uri, path: path, smart_phone_path: smart_phone_path, file: file, dependent: file)
+      publish_page(@node, uri: "#{uri}#{file}.html",
+                          path: "#{path}#{file}.html",
+                          smart_phone_path: "#{smart_phone_path}#{file}.html",
+                          dependent: file)
     end
     prms.each do |prm|
-      publish_more(@node, uri: "#{uri}#{prm}",
+      publish_page(@node, uri: "#{uri}#{prm}",
                           path: "#{path}#{prm}",
                           smart_phone_path: "#{smart_phone_path}#{prm}",
                           dependent: prm)
       files.each do |file|
-        publish_more(@node, uri: "#{uri}#{prm}",
-                            path: "#{path}#{prm}",
-                            smart_phone_path: "#{smart_phone_path}#{prm}",
-                            file: file, dependent: "#{prm}#{file}")
+        publish_page(@node, uri: "#{uri}#{prm}#{file}.html",
+                            path: "#{path}#{prm}#{file}.html",
+                            smart_phone_path: "#{smart_phone_path}#{prm}#{file}.html",
+                            dependent: "#{prm}#{file}")
       end
     end
 
@@ -54,7 +59,7 @@ class GpCalendar::BaseScript < PublicationScript
   end
 
   def publish_without_months
-    publish_more(@node, uri: @node.public_uri,
+    publish_page(@node, uri: @node.public_uri,
                         path: @node.public_path,
                         smart_phone_path: @node.public_smart_phone_path)
   end

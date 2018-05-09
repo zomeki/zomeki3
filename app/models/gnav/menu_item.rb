@@ -23,7 +23,7 @@ class Gnav::MenuItem < ApplicationRecord
   validates :title, presence: true
 
   after_save     Cms::Publisher::ContentCallbacks.new(belonged: true), if: :changed?
-  before_destroy Cms::Publisher::ContentCallbacks.new(belonged: true)
+  before_destroy Cms::Publisher::ContentCallbacks.new(belonged: true), prepend: true
 
   def public_uri
     return '' unless node = content.public_node

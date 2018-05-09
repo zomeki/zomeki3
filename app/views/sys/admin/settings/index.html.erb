@@ -1,14 +1,14 @@
 <table class="index">
 
   <tr>
-    <th style="width: 60px; text-align: center;">編集</th>
+    <th class="action_link">編集</th>
     <th style="width: 300px;">設定名</th>
     <th style="">設定値</th>
   </tr>
 
   <% @items.each do |item| %>
     <tr class="<%= cycle '', 'cycle' %>">
-      <td style="text-align: center;"><%= link_to :edit, { action: :edit, id: item.name } %></td>
+      <td class="action_link"><%= link_to :edit, { action: :edit, id: item.name } %></td>
       <td><%= item.config_name %></td>
       <td><%= truncate(item.value_name, length: 60) %></td>
     </tr>

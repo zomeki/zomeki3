@@ -2,7 +2,7 @@
 
 <table class="index">
   <tr>
-    <th style="width: 60px; text-align: center;">詳細</th>
+    <th class="action_link">詳細</th>
     <th style="text-align: left;"><%= Tool::ConvertSetting.human_attribute_name :site_url %></th>
     <th style="width: 200px; text-align: left;"><%= Tool::ConvertSetting.human_attribute_name :title_tag %></th>
     <th style="width: 200px; text-align: left;"><%= Tool::ConvertSetting.human_attribute_name :body_tag %></th>
@@ -11,7 +11,7 @@
   </tr>
   <%- @items.each do |item| -%>
     <tr class="<%= cycle('cycle', '')%>">
-      <td style="text-align: center;"><%= link_to :show, cms_tool_convert_setting_path(id: item.id) %> </td>
+      <td class="action_link"><%= link_to :show, cms_tool_convert_setting_path(id: item.id) %> </td>
       <td style="text-align: left;"><%= item.site_url %></td>
       <td style="text-align: left;"><%= item.title_tag %></td>
       <td style="text-align: left;"><%= item.body_tag %></td>

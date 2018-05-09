@@ -21,7 +21,7 @@ class GpCalendar::Event < ApplicationRecord
   before_destroy :close_files
 
   after_save     GpCalendar::Publisher::EventCallbacks.new, if: :changed?
-  before_destroy GpCalendar::Publisher::EventCallbacks.new
+  before_destroy GpCalendar::Publisher::EventCallbacks.new, prepend: true
 
   validates :state, presence: true
   validates :started_on, presence: true

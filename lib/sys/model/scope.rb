@@ -7,7 +7,7 @@ module Sys::Model::Scope
     }
     scope :search_with_text, ->(*args) {
       words = args.pop.to_s.split(/[ 　]+/)
-      columns = args
+      columns = args.flatten
       where(words.map{|w| columns.map{|c| arel_table[c].matches("%#{escape_like(w)}%") }.reduce(:or) }.reduce(:and))
     }
     scope :search_with_logical_query, ->(*args) {

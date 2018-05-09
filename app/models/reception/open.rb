@@ -14,7 +14,7 @@ class Reception::Open < ApplicationRecord
   before_save :prepare_expire_task
 
   after_save     Cms::Publisher::ContentCallbacks.new(belonged: true), if: :changed?
-  before_destroy Cms::Publisher::ContentCallbacks.new(belonged: true)
+  before_destroy Cms::Publisher::ContentCallbacks.new(belonged: true), prepend: true
 
   validates :title, presence: true
   validates :open_on, presence: true
