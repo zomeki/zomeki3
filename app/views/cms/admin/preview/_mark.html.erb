@@ -6,6 +6,7 @@
 <%- if Core.site.use_datetime_preview? -%>
   <span class="previewSetting">
   <%= form_tag url_for(path: params[:path]), method: :get, id: 'cmsPreviewForm' do -%>
+    <%= hidden_field_tag :query_string, request.query_string %>
     <%= text_field_tag :preview_at, l(Page.preview_at), class: 'datetimepicker', placeholder: 'プレビュー日時' %>
     <%-
     terminals =  [['PC','']]

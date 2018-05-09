@@ -9,7 +9,7 @@ class Cms::Admin::PreviewController < Cms::Controller::Admin::Base
       if (preview_at = Time.parse(params[:preview_at]) rescue nil)
         site << "_#{preview_at.strftime('%Y%m%d%H%M')}"
       end
-      redirect_to "/_preview/#{site}/#{params[:path]}"
+      redirect_to "/_preview/#{site}/#{params[:path]}?#{params[:query_string]}"
     end
   end
 
