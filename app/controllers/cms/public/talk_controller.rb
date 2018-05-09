@@ -15,7 +15,9 @@ class Cms::Public::TalkController < Cms::Controller::Public::Data
     uri = "#{Core.script_uri.gsub(/\A(.*?\/\/.*?)\/.*/, '\1')}#{uri}"
 
     header = {}
-    header.merge!('Cookie' => request.headers['Cookie']) if request.headers['Cookie'].present?
+    %w(Cookie Authorization).each do |key|
+      header.merge!(key => request.headers[key]) if request.headers[key].present?
+    end
     res = Util::Http::Request.get(uri, header: header)
     return http_error(404) if res.status != 200
 
