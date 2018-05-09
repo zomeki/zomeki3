@@ -54,7 +54,7 @@ class Cms::SiteSetting < ApplicationRecord
              index: true
   set_config :kana_talk,
              name: 'ふりがな・音声',
-             default_value: 'enabled',
+             default_value: 'disabled',
              options: [['ふりがなと音声を書き出し', 'enabled'], ['ふりがなのみ書き出し', 'kana_only'], ['書き出さない', 'disabled']],
              index: true
   set_config :map_coordinate,
