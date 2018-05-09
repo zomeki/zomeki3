@@ -36,7 +36,6 @@ Cms::Lib::Modules::ModuleSet.draw :cms, '標準機能', 1 do |mod|
   mod.public_model :piece_settings
   mod.public_model :pieces
   mod.public_model :publish_urls
-  mod.public_model :site_basic_auth_users
   mod.public_model :site_belongings
   mod.public_model :site_settings
   mod.public_model :sites

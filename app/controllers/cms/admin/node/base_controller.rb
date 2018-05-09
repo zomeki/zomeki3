@@ -67,7 +67,7 @@ class Cms::Admin::Node::BaseController < Cms::Controller::Admin::Base
 
   def update_site_configs
     unless @item.model.in?(Cms::Lib::Modules.modules.flat_map(&:pages).map(&:model))
-      Cms::SiteConfigUpdateService.new(@item.site).update
+      Cms::SiteConfigService.new(@item.site).update
     end
   end
 

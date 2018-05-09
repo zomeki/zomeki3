@@ -1,0 +1,10 @@
+[Unit]
+Description=Apache Tika server
+After=network.target
+Requires=network.target
+
+[Service]
+ExecStart=/bin/java -jar /usr/local/sbin/tika-server.jar
+
+[Install]
+WantedBy=multi-user.target

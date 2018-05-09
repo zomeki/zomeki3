@@ -24,8 +24,7 @@ class GpCategory::Publisher::CategoryTypeCallbacks < PublisherCallbacks
   end
 
   def enqueue_docs
-    category_ids = @category_type.public_categories.pluck(:id)
-    docs = GpArticle::Doc.public_state.categorized_into(category_ids).select(:id)
+    docs = GpArticle::Doc.public_state.categorized_into(@category_type.public_categories.pluck(:id)).select(:id)
     Cms::Publisher.register(@category_type.content.site_id, docs)
   end
 end

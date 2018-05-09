@@ -51,7 +51,7 @@ class GpCategory::Public::TemplateModule::CategoriesController < GpCategory::Pub
 
     @categories = @category_type.internal_category_type.public_root_categories
     @category_docs = @categories.each_with_object({}) do |category, hash|
-      hash[category.id] = docs.categorized_into(category.public_descendants_ids)
+      hash[category.id] = docs.categorized_into(category.public_descendants)
                               .order(@content.translated_docs_order)
                               .paginate(page: 1, per_page: @template_module.num_docs)
     end
@@ -91,7 +91,7 @@ class GpCategory::Public::TemplateModule::CategoriesController < GpCategory::Pub
 
     @categories = @category.public_children
     @category_docs = @categories.each_with_object({}) do |category, hash|
-      hash[category.id] = docs.categorized_into(category.public_descendants_ids)
+      hash[category.id] = docs.categorized_into(category.public_descendants)
                               .order(@content.translated_docs_order)
                               .paginate(page: 1, per_page: @template_module.num_docs)
     end
@@ -114,7 +114,7 @@ class GpCategory::Public::TemplateModule::CategoriesController < GpCategory::Pub
         return render plain: '', status: 404 unless @category_type.internal_category_type
         internal_category = @category_type.internal_category_type.public_root_categories.find_by(name: code_or_name)
         return render plain: '', status: 404 unless internal_category
-        @docs = @docs.categorized_into(internal_category.public_descendants_ids)
+        @docs = @docs.categorized_into(internal_category.public_descendants)
       when 'g'
         group = Sys::Group.in_site(Page.site).where(code: code_or_name).first
         return render plain: '', status: 404 unless group

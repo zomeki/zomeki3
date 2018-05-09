@@ -5,6 +5,16 @@ module GpCategory::Model::Rel::Category
     has_many :categorizations, class_name: 'GpCategory::Categorization', as: :categorizable, dependent: :destroy
     has_many :categories, class_name: 'GpCategory::Category', through: :categorizations
     after_save :save_categories, if: -> { defined? @in_category_ids }
+
+    scope :categorized_into, ->(categories, categorized_as: nil, alls: false) {
+      cats = GpCategory::Categorization.select(:categorizable_id)
+                                       .where(categorizable_type: self.to_s, categorized_as: categorized_as)
+      if alls
+        Array(categories).inject(all) { |rel, c| rel.where(id: cats.where(category_id: c)) }
+      else
+        where(id: cats.where(category_id: categories))
+      end
+    }
   end
 
   def in_category_ids=(val)

@@ -10,8 +10,8 @@ module Cms::Model::Rel::SiteSetting
     after_save :save_site_settings
   end
 
-  def use_basic_auth?
-    setting_value(:basic_auth_state) == 'enabled'
+  def use_access_control?
+    setting_value(:access_control_state) == 'enabled'
   end
 
   def use_common_ssl?
