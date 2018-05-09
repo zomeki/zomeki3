@@ -86,7 +86,6 @@ module Cms
     class LocationBuilder
       def initialize(site)
         @site = site
-        @try_files = %w($uri $uri/index.html)
       end
 
       def build
@@ -115,8 +114,8 @@ module Cms
       end
 
       def make_system_locations
-        locations = [Location.new(path: "/#{ZomekiCMS::ADMIN_URL_PREFIX}", try_files: @try_files + ['@proxy']),
-                     Location.new(path: "/_preview", try_files: @try_files + ['@proxy'])]
+        locations = [Location.new(path: "/#{ZomekiCMS::ADMIN_URL_PREFIX}", try_files: %W($uri $uri/index.html @proxy)),
+                     Location.new(path: "/_preview", try_files: %W($uri $uri/index.html @proxy))]
 
         if @site.use_access_control?
           controls = @site.access_controls.where(state: 'enabled', target_type: '_system').order(:id)
@@ -135,9 +134,11 @@ module Cms
         dirs = (dynamic_dirs + access_controls_by_dir.keys).uniq.sort_by { |d| d.count('/') }.reverse
         dirs.each do |dir|
           proxy = dir.in?(dynamic_dirs) ? '@dynamic' : '@proxy'
-          dir_locations = [Location.new(path: "/_smartphone#{dir}", try_files: @try_files + [proxy]),
-                           Location.new(path: "/_mobile#{dir}", try_files: @try_files + ['@dynamic']),
-                           Location.new(path: dir, try_files: @try_files + [proxy])]
+          dir_locations = []
+          dir_locations += [Location.new(path: "#{dir}/.*\\.html\\.(r|mp3)$", try_files: %W($uri @dynamic))] if proxy == '@proxy'
+          dir_locations += [Location.new(path: "/_smartphone#{dir}", try_files: %W($uri $uri/index.html #{proxy})),
+                            Location.new(path: "/_mobile#{dir}", try_files: %W($uri $uri/index.html @dynamic)),
+                            Location.new(path: dir, try_files: %W($uri $uri/index.html #{proxy}))]
 
           if @site.use_access_control?
             controls = access_controls_by_dir[dir] || @site.access_controls.where(state: 'enabled', target_type: 'all').order(:id)
@@ -153,13 +154,14 @@ module Cms
       end
 
       def make_public_error_locations
-        [Location.new(path: '/_smartphone/404.html', try_files: ['/404.html', '@proxy'])]
+        [Location.new(path: '/_smartphone/404.html', try_files: %W(/404.html @proxy))]
       end
 
       def make_public_default_locations
-        locations = [Location.new(path: '/_smartphone', try_files: @try_files + ['@proxy']),
-                     Location.new(path: '/_mobile', try_files: @try_files + ['@dynamic']),
-                     Location.new(path: '/', try_files: @try_files + ['@proxy'])]
+        locations = [Location.new(path: '/.*\.html\.(r|mp3)$', try_files: %W($uri @dynamic)),
+                     Location.new(path: '/_smartphone', try_files: %W($uri $uri/index.html @proxy)),
+                     Location.new(path: '/_mobile', try_files: %W($uri $uri/index.html @dynamic)),
+                     Location.new(path: '/', try_files: %W($uri $uri/index.html @proxy))]
 
         if @site.use_access_control?
           controls = @site.access_controls.where(state: 'enabled', target_type: 'all').order(:id)
@@ -174,7 +176,7 @@ module Cms
           if location.path =~ %r{/_smartphone} &&
              location.try_files.include?('@proxy') &&
              !location.try_files.include?('/404.html')
-            location.try_files = %w($request_uri $request_uri/index.html) + location.try_files
+            location.try_files = %W($request_uri $request_uri/index.html) + location.try_files
           end
         end
       end
