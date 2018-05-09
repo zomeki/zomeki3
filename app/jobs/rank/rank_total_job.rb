@@ -36,7 +36,7 @@ class Rank::RankTotalJob < ApplicationJob
                               pageviews:   result.pageviews,
                               visitors:    result.visitors)
         end
-        Rank::Total.import(totals)
+        Rank::Total.bulk_import(totals)
       end
     end
   end
@@ -57,7 +57,7 @@ class Rank::RankTotalJob < ApplicationJob
                                      page_path:   doc.public_uri,
                                      category_id: category.id)
         end
-        Rank::Category.import(cats)
+        Rank::Category.bulk_import(cats)
       end
     end
   end

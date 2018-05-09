@@ -72,7 +72,7 @@ gem 'hpricot', '0.8.6'
 gem 'tamtam', '0.0.3'
 
 gem 'active_record_union', '~> 1.3.0'
-gem 'activerecord-import', '~> 0.22.0'
+gem 'activerecord-import', '~> 0.23.0'
 gem 'addressable', '~> 2.5.2'
 gem 'holiday_jp', '~> 0.7.0'
 gem 'jpmobile', '~> 5.0.0'

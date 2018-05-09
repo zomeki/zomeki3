@@ -24,7 +24,7 @@ class Cms::SearchIndexer < ApplicationRecord
                pub.priority = 10
                pub
              end
-      self.import(pubs)
+      self.bulk_import(pubs)
     end
   end
 end
