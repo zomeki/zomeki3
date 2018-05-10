@@ -104,7 +104,7 @@ gem 'faraday-cookie_jar', '~> 0.0.6'
 gem 'faraday_middleware', '~> 0.11.0.1'
 gem 'garb', '~> 0.9.8'
 gem 'google-oauth2-installed', '0.0.3'
-gem 'octokit', '~> 4.8.0'
+gem 'octokit', '~> 4.9.0', require: false
 gem 'tika-client', '~> 0.2.0', require: false
 
 gem 'whenever', '~> 0.10.0', require: false
