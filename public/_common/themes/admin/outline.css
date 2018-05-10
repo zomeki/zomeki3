@@ -1,4 +1,4 @@
-/* =========================================================
+﻿/* =========================================================
     Outline.
 ========================================================= */
 
@@ -85,7 +85,7 @@
 }
 #navi .mainMenu {
   display: flex;
-  height: 32px;
+  min-height: 32px;
   background-color: #000;
   overflow: auto;
 }
@@ -105,13 +105,32 @@
   color: #fff;
   text-decoration: none;
   display: block;
-  height: 24px;
+  min-height: 24px;
   padding: 8px 0 0 0;
 }
 #navi .mainMenu li a.current {
   background-color: #fff;
   color: #003295;
   font-weight: bold;
+}
+#navi .mainMenu li > ul {
+  display: none;
+  width: 100px;
+  position: absolute;
+  background-color: #000;
+}
+#navi .mainMenu li:hover > ul {
+  display: flex;
+  flex-direction: column;
+}
+#navi .mainMenu li > a.current + ul {
+  display: none;
+}
+#navi .mainMenu li > ul > li {
+  flex: 0 0 32px;
+}
+#navi .mainMenu li > ul > li:hover {
+  background-color: #555;
 }
 #navi .contentMenu {
   display: flex;
