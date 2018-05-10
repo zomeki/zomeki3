@@ -3,13 +3,16 @@ class Cms::Admin::PreviewController < Cms::Controller::Admin::Base
   after_action :replace_links_for_preview, if: :preview_as_html?
 
   def pre_dispatch
-    if params[:preview_at]
+    if params[:commit]
       site = params[:site].scan(/^\d+/).flatten.first
       site << params[:preview_terminal]
-      if (preview_at = Time.parse(params[:preview_at]) rescue nil)
-        site << "_#{preview_at.strftime('%Y%m%d%H%M')}"
+      if params[:preview_at].present?
+        preview_at = Time.parse(params[:preview_at]) rescue nil
+        site << "_#{preview_at.strftime('%Y%m%d%H%M')}" if preview_at
       end
-      redirect_to "/_preview/#{site}/#{params[:path]}?#{params[:query_string]}"
+      url = "/_preview/#{site}/#{params[:path]}"
+      url << "?#{params[:query_string]}" if params[:query_string].present?
+      redirect_to url
     end
   end
 
