@@ -117,14 +117,12 @@
   display: none;
   width: 100px;
   position: absolute;
+  z-index: 999;
   background-color: #000;
 }
 #navi .mainMenu li:hover > ul {
   display: flex;
   flex-direction: column;
-}
-#navi .mainMenu li > a.current + ul {
-  display: none;
 }
 #navi .mainMenu li > ul > li {
   flex: 0 0 32px;
