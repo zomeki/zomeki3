@@ -114,15 +114,19 @@
   font-weight: bold;
 }
 #navi .mainMenu li > ul {
-  display: none;
+  display: flex;
+  flex-direction: column;
+  visibility: hidden;
   width: 100px;
   position: absolute;
   z-index: 999;
   background-color: #000;
+  transition-property: visibility;
+  transition-delay: 0.3s;
 }
 #navi .mainMenu li:hover > ul {
-  display: flex;
-  flex-direction: column;
+  visibility: visible;
+  transition-delay: 0.05s;
 }
 #navi .mainMenu li > ul > li {
   flex: 0 0 32px;
