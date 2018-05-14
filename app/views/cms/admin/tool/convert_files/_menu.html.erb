@@ -15,6 +15,6 @@
 <%- when 'show' -%>
   <%- parent_path = (@item.directory_entry? ? @item : @item.parent).relative_path_from(::Tool::Convert::SITE_BASE_DIR) -%>
   <%= link_to :index, { path: parent_path } %>
-  <%= link_to :destroy, { path: parent_path, do: :destroy }, method: :delete, confirm: '削除してよろしいですか？' %>
+  <%= link_to :destroy, { path: params[:path], do: :destroy }, method: :delete, confirm: '削除してよろしいですか？' %>
 <%- end -%>
 </div>
