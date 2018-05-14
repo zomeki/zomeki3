@@ -41,6 +41,7 @@ end
     <%= menu_link :log, 'ログ', main_app.sys_operation_logs_path(parent: 0), current -%>
     <ul class="subMenu"><%= render 'layouts/admin/cms/navi/log', current: nil %></ul>
   </li>
+  <%- if Core.user.root? -%>
   <%- if Zomeki.config.application['sys.show_tool_menu'] -%>
   <li>
     <%= menu_link :tool, 'ツール', main_app.cms_tool_convert_downloads_path, current -%>
@@ -51,4 +52,5 @@ end
     <%= menu_link :setting, 'システム', main_app.sys_maintenances_path, current -%>
     <ul class="subMenu"><%= render 'layouts/admin/cms/navi/setting', current: nil %></ul>
   </li>
+  <%- end -%>
 <%- end -%>
