@@ -1,0 +1,18 @@
+<%= render 'search' %>
+
+<%= page_entries_info @items %>
+
+<table class="index">
+  <tr>
+    <th class="action_link">詳細</th>
+    <th><%= Sys::Publisher.human_attribute_name :path %></th>
+  </tr>
+  <% @items.each do |item| %>
+  <tr class="<%= cycle '', 'cycle' %>">
+    <td class="action_link"><%= link_to :show, { action: :show, id: item } %></td>
+    <td><%= item.path %></td>
+  </tr>
+  <% end %>
+</table>
+
+<%= paginate @items %>

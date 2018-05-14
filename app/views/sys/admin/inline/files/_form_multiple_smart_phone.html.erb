@@ -57,15 +57,18 @@ $(document).ready(function () {
     }
   });
 
-  $('#file_form').on('submit', function (event) {
+  $('#file_form').on('submit', function() {
+    var existings = [];
     for (var i=0; i<$('input.fileName').length; i++) {
       var name = $('input.fileName')[i].value;
-      if ($('.item_name[item_name="' + name + '"]').length > 0) {
-        if (!confirm("この保存ファイル名は既に存在しています。\n上書きしてもよろしいですか？")) {
-          return false;
-        }
+      if ($('.item_name[data-name="' + name + '"]').length > 0) {
+        existings.push(name);
       }
     }
+    if (existings.length == 0 || confirm("次のファイルは既に存在しています。上書きしてもよろしいですか？\n" + existings.join("\n"))) {
+      return true;
+    }
+    return false;
   });
 });
 <% end %>

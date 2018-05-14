@@ -33,7 +33,7 @@ class GpCategory::Public::Node::CategoriesController < GpCategory::Public::NodeC
       end
     end
 
-    per_page = (@more ? 30 : @content.category_docs_number)
+    per_page = (@more ? @content.category_more_docs_number : @content.category_docs_number)
 
     @docs = @category.docs.order(display_published_at: :desc, published_at: :desc)
                      .paginate(page: params[:page], per_page: per_page)

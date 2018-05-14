@@ -7,3 +7,4 @@
 <%= content_tag('li') { link_to '設定', cms_site_settings_path(Core.site), class: (current == :setting ? 'current' : '') } -%>
 <%= content_tag('li') { link_to '非常時', cms_emergencies_path, class: (current == :emergency ? 'current' : '') } -%>
 <%= content_tag('li') { link_to 'メッセージ', sys_messages_path, class: (current == :message ? 'current' : '') } -%>
+<%= content_tag('li') { link_to '書出ファイル', sys_publishers_path, class: (current == :publisher ? 'current' : '') } -%>

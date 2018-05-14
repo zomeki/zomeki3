@@ -1,0 +1,20 @@
+<%= form_for :item, url: { action: :index },  html: { method: :get, class: 'search' } do |f| %>
+<table>
+  <tr>
+    <th>パス</th>
+    <th>種別</th>
+    <th>表示件数</th>
+    <td rowspan="2" class="submitters">
+      <%= submit_tag '検索', name: :search, data: { disable_with: false } %>
+      <%= submit_tag 'リセット', name: :reset, data: { disable_with: false } %>
+      <span class="separator">|</span>
+      <%= submit_tag '削除', name: :destroy, data: { confirm: "書出済みファイルを削除します。本当によろしいですか？", disable_with: false } %>
+    </td>
+  </tr>
+  <tr>
+    <td><%= text_field_tag 'criteria[path]', params.dig(:criteria, :path), style: 'width: 300px;' %></td>
+    <td><%= select_tag 'criteria[dependent]', options_for_select([['ふりがな', 'ruby'], ['音声', 'talk']], params.dig(:criteria, :dependent)), include_blank: true %></td>
+    <td><%= select_tag 'limit', options_for_select([['30件', '30'], ['すべて', '2147483647']], params[:limit]) %></td>
+  </tr>
+</table>
+<%- end -%>

@@ -13,12 +13,12 @@ class Cms::LinkChecksScript < ParametersScript
       GpArticle::Content::Doc.where(site_id: site.id).each do |content|
         content.docs.public_state.preload(:links).find_each do |doc|
           logs = make_link_check_logs(site, doc, doc.title, doc.links)
-          Cms::LinkCheckLog.import(logs)
+          Cms::LinkCheckLog.bulk_import(logs)
         end
       end
       Cms::Node::Page.public_state.where(site_id: site.id).preload(:links).find_each do |page|
         logs = make_link_check_logs(site, page, page.title, page.links)
-        Cms::LinkCheckLog.import(logs)
+        Cms::LinkCheckLog.bulk_import(logs)
       end
     end
   end

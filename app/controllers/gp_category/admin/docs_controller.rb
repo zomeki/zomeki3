@@ -43,7 +43,7 @@ class GpCategory::Admin::DocsController < Cms::Controller::Admin::Base
 
   def find_docs
     criteria = params[:criteria] || {}
-    docs = GpArticle::Doc.categorized_into(@category.id)
+    docs = GpArticle::Doc.categorized_into(@category)
     GpArticle::DocsFinder.new(docs, Core.user).search(criteria)
   end
 

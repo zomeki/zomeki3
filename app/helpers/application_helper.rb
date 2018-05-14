@@ -1,7 +1,7 @@
 module ApplicationHelper
   ## nl2br
   def br(str)
-    str.gsub(/\r\n|\r|\n/, '<br />')
+    str.to_s.gsub(/\r\n|\r|\n/, '<br />')
   end
 
   ## nl2br and escape

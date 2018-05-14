@@ -24,7 +24,8 @@ class GpCategory::Content::Setting < Cms::ContentSetting
     options: [['カテゴリ一覧＋記事一覧', 'categories_and_docs'], ['カテゴリ＋記事', 'categories_with_docs']],
     default_extra_values: {
       category_doc_style: '@title_link@',
-      category_docs_number: nil
+      category_docs_number: nil,
+      category_more_docs_number: 30
     }
   set_config :doc_style,
     name: '新着記事一覧表示形式',
@@ -67,6 +68,7 @@ class GpCategory::Content::Setting < Cms::ContentSetting
     when 'category_style'
       ex[:category_doc_style] = params[:category_doc_style]
       ex[:category_docs_number] = params[:category_docs_number]
+      ex[:category_more_docs_number] = params[:category_more_docs_number]
     when 'doc_style'
       ex[:doc_doc_style] = params[:doc_doc_style]
       ex[:doc_docs_number] = params[:doc_docs_number]

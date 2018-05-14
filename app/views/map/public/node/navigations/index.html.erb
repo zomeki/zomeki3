@@ -13,7 +13,7 @@
         item_id: "marker<%= i %>",
         lat: <%= marker.latitude %>,
         lng: <%= marker.longitude %>,
-        icon_url: '<%= @content.icon_image(marker.icon_category || (marker.categories.include?(@specified_category) ? @specified_category : marker.categories.first), true) %>'
+        icon_url: '<%= @content.icon_image(marker.icon_category || marker.categories.first, true) %>'
       };
       <%- if marker.doc -%>
       marker_list["marker<%= i %>"]["url"] = "<%= marker.doc.public_uri %>";

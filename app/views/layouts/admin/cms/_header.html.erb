@@ -1,7 +1,8 @@
 <h1><a href="<%= main_app.admin_root_path(concept: 0) %>">CMS</a></h1>
 <div class="menu">
-  <span class="loginGroup"><%= Core.user_group.try!(:name) %></span>
-  <span class="loginUser"><%= Core.user.try!(:name_with_account) %></span>
-  <a class="web" href="<%= Core.site.try!(:full_uri) %>" target="_blank">公開画面</a>
+  <span class="loginGroup"><%= Core.user_group.name if Core.user_group %></span>
+  <span class="loginUser"><%= Core.user.name_with_account if Core.user %></span>
+  <a class="web" href="<%= Core.site.full_uri if Core.site %>" target="_blank">公開画面</a>
+  <a class="preview" href="/_preview/<%= format('%04d', Core.site.id) if Core.site %>/" target="_blank">プレビュー</a>
   <a class="logout" href="<%= main_app.admin_logout_path %>">ログアウト</a>
 </div>

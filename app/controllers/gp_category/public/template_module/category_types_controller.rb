@@ -27,9 +27,9 @@ class GpCategory::Public::TemplateModule::CategoryTypesController < GpCategory::
   end
 
   def index_docs_1
-    category_ids = @category_types.flat_map { |ct| ct.public_categories.map(&:id) }
+    categories = @category_types.flat_map(&:public_categories)
 
-    docs = GpArticle::Doc.categorized_into(category_ids).except(:order)
+    docs = GpArticle::Doc.categorized_into(categories).except(:order)
     docs = docs.where(content_id: @template_module.gp_article_content_ids) if @template_module.gp_article_content_ids.present?
     @docs = docs.order(@content.translated_docs_order)
                 .paginate(page: 1, per_page: @template_module.num_docs)
@@ -101,7 +101,7 @@ class GpCategory::Public::TemplateModule::CategoryTypesController < GpCategory::
 
     @categories = @category_type.internal_category_type.public_root_categories
     @category_docs = @categories.each_with_object({}) do |category, hash|
-      hash[category.id] = docs.categorized_into(category.public_descendants_ids)
+      hash[category.id] = docs.categorized_into(category.public_descendants)
                               .order(@content.translated_docs_order)
                               .paginate(page: 1, per_page: @template_module.num_docs)
     end
@@ -137,7 +137,7 @@ class GpCategory::Public::TemplateModule::CategoryTypesController < GpCategory::
 
     @categories = @category_type.public_root_categories
     @category_docs = @categories.each_with_object({}) do |category, hash|
-      hash[category.id] = docs.categorized_into(category.public_descendants_ids)
+      hash[category.id] = docs.categorized_into(category.public_descendants)
                               .order(@content.translated_docs_order)
                               .paginate(page: 1, per_page: @template_module.num_docs)
     end
@@ -160,7 +160,7 @@ class GpCategory::Public::TemplateModule::CategoryTypesController < GpCategory::
         return render plain: '', status: 404 unless @category_type.internal_category_type
         internal_category = @category_type.internal_category_type.public_root_categories.find_by(name: code_or_name)
         return render plain: '', status: 404 unless internal_category
-        @docs = @docs.categorized_into(internal_category.public_descendants_ids)
+        @docs = @docs.categorized_into(internal_category.public_descendants)
       when 'g'
         group = Sys::Group.in_site(Page.site).where(code: code_or_name).first
         return render plain: '', status: 404 unless group

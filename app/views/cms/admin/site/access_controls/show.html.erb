@@ -1,0 +1,29 @@
+<p class="form">基本設定</p>
+
+<table class="show">
+  <tr>
+    <th><%= @item.class.human_attribute_name :state %></th>
+    <td><%= @item.state_text %></td>
+  </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :target_type %></th>
+    <td>
+      <%= @item.target_type_text %>
+      <span style="margin-left: 10px;"><%= link_to "/#{@item.target_location}", "#{@site.full_uri}#{@item.target_location}", target: '_blank' if @item.target_type == 'directory' %></span>
+    </td>
+  </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :basic_auth %></th>
+    <td><%=hbr @item.basic_auth %></td>
+  </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :ip_order %></th>
+    <td><%= @item.ip_order_text %></td>
+  </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :ip %></th>
+    <td><%=hbr @item.ip %></td>
+  </tr>
+</table>
+
+<%= creator_view @item %>

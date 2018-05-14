@@ -33,6 +33,12 @@
       <%= text_field_tag 'item[extra_values][category_docs_number]', @item.extra_values[:category_docs_number], class: 'number' %>
     </td>
   </tr>
+  <tr>
+    <th><%= GpArticle::Doc.model_name.human %>一覧表示件数</th>
+    <td>
+      <%= text_field_tag 'item[extra_values][category_more_docs_number]', @item.extra_values[:category_more_docs_number], class: 'number' %>
+    </td>
+  </tr>
 </table>
 <%- end -%>
 

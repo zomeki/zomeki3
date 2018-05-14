@@ -67,6 +67,10 @@ class GpCategory::Content::CategoryType < Cms::Content
     (setting_extra_value(:category_style, :category_docs_number).presence || 1000).to_i
   end
 
+  def category_more_docs_number
+    (setting_extra_value(:category_style, :category_more_docs_number).presence || 1000).to_i
+  end
+
   def doc_style
     setting_value(:doc_style).to_s
   end

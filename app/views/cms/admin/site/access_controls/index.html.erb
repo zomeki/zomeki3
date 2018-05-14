@@ -1,0 +1,24 @@
+<table class="index">
+  <tr>
+    <th class="action_link">詳細</th>
+    <th style="width: 300px;"><%= Cms::SiteAccessControl.human_attribute_name :target_type %></th>
+    <th style="width: ">Basic認証ユーザー</th>
+    <th style="width: 120px"><%= Cms::SiteAccessControl.human_attribute_name :ip_order %></th>
+    <th style="width: "><%= Cms::SiteAccessControl.human_attribute_name :ip %></th>
+    <th style="width: 120px; text-align: center;"><%= Cms::SiteAccessControl.human_attribute_name :updated_at %></th>
+    <th style="width: 60px; text-align: center;"><%= Cms::SiteAccessControl.human_attribute_name :state %></th>
+  </tr>
+  <% @items.each do |item| %>
+  <tr class="<%= cycle '', 'cycle' %>">
+    <td class="action_link"><%= link_to :show, { action: :show, id: item } %></td>
+    <td><%= item.target_type == 'directory' ? "/#{item.target_location}" : item.target_type_text %></td>
+    <td><%= item.basic_auths.map { |ba| ba[:user] }.join(', ') %></td>
+    <td><%= item.ip_order_text %></td>
+    <td><%= item.ips.join(', ') %></td>
+    <td style="text-align: center;"><%=l item.updated_at %></td>
+    <td style="text-align: center;"><%= item.state_text %></td>
+  </tr>
+  <% end %>
+</table>
+
+<%= paginate @items %>

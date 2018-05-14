@@ -4,8 +4,8 @@ class Cms::SiteSetting < ApplicationRecord
   include Cms::Model::Rel::Site
   include Cms::Model::Auth::Site
 
-  set_config :basic_auth_state,
-             name: 'ベーシック認証',
+  set_config :access_control_state,
+             name: 'アクセス制御',
              default_value: 'disabled'
   set_config :common_ssl,
              name: '共有SSL',
@@ -54,7 +54,7 @@ class Cms::SiteSetting < ApplicationRecord
              index: true
   set_config :kana_talk,
              name: 'ふりがな・音声',
-             default_value: 'enabled',
+             default_value: 'disabled',
              options: [['ふりがなと音声を書き出し', 'enabled'], ['ふりがなのみ書き出し', 'kana_only'], ['書き出さない', 'disabled']],
              index: true
   set_config :map_coordinate,

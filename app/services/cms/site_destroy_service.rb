@@ -22,5 +22,8 @@ class Cms::SiteDestroyService < ApplicationService
       next if Sys::UsersGroup.where(user_id: user_id).exists?
       Sys::User.where(id: user_id).destroy_all
     end
+
+    # files
+    FileUtils.rm_rf @site.root_path
   end
 end

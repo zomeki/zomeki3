@@ -37,6 +37,8 @@ class GpArticle::Public::Node::DocsController < GpArticle::Public::NodeControlle
     @item = public_or_preview_doc(id: params[:id], name: params[:name])
     return http_error(404) if @item.filename_base != params[:filename_base]
     return http_error(404) if @item.external_link?
+    return http_error(404) if !@item.terminal_mobile? && request.mobile?
+    return http_error(404) if !@item.terminal_pc_or_smart_phone? && !request.mobile?
 
     Page.current_item = @item
     Page.title = if request.mobile?

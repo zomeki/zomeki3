@@ -29,9 +29,9 @@ ZomekiCMS::Application.routes.draw do
           get :hide_portal
         end
       end
-    resources :site_basic_auth_users,
-      :controller  => "admin/site/basic_auth_users",
-      :path        => ":site/basic_auth_users" do
+    resources :site_access_controls,
+      :controller  => "admin/site/access_controls",
+      :path        => ":site/access_controls" do
         collection do
           get :enable, :disable
         end

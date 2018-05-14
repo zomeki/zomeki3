@@ -36,7 +36,7 @@ class Rank::RankTotalJob < ApplicationJob
                               pageviews:   result.pageviews,
                               visitors:    result.visitors)
         end
-        Rank::Total.import(totals)
+        Rank::Total.bulk_import(totals)
       end
     end
   end
@@ -51,13 +51,13 @@ class Rank::RankTotalJob < ApplicationJob
       Rank::Category.where(content_id: @content.id).delete_all
       public_categories.each do |category|
         cats = []
-        docs = GpArticle::Doc.categorized_into(category.id).public_state
+        docs = GpArticle::Doc.categorized_into(category).public_state
         docs.find_each do |doc|
           cats << Rank::Category.new(content_id:  @content.id,
                                      page_path:   doc.public_uri,
                                      category_id: category.id)
         end
-        Rank::Category.import(cats)
+        Rank::Category.bulk_import(cats)
       end
     end
   end

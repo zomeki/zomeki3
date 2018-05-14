@@ -29,7 +29,7 @@ class Cms::Publisher < ApplicationRecord
                pub.priority = determine_priority(item)
                pub
              end
-      self.import(pubs)
+      self.bulk_import(pubs)
 
       Cms::PublisherJob.perform_later unless Cms::PublisherJob.queued?
     end

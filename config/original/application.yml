@@ -35,9 +35,9 @@ cms:
   lame_opts: "-q 7 -V 9 --silent" # LQ
   talk_bin: "/usr/local/bin/open_jtalk"
   talk_dic: "/usr/local/share/open_jtalk/dic"
-  talk_voice: "config/voices/mei_normal/mei_normal.htsvoice"
+  talk_voice: "config/voices/tohoku-f01/tohoku-f01-neutral.htsvoice"
   #talk_opts: "-s 48000 -p 240 -r 1.1" # HQ
-  talk_opts: "-s 40000 -p 200 -a 0.47 -r 1.1" # LQ
+  talk_opts: "-s 24000 -p 120 -a 0.25 -r 1.1" # LQ
   talk_strlen: 100
   talk_text_limit: 102400
   talk_thread_num: 2

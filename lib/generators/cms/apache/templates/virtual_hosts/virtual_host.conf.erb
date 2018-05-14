@@ -1,5 +1,9 @@
-<VirtualHost *:80>
-    ServerName <%= @site.domain %>
+<%-
+site_id = format('%04d', @site.id)
+admin_prefix = 'admin_' if config[:admin]
+-%>
+<VirtualHost *:<%= config[:ssl] ? 443 : 80 %>>
+    ServerName <%= config[:admin] ? @site.admin_domain : @site.domain %>
     <%- if @site.mobile_domain.present? -%>
     ServerAlias <%= @site.mobile_domain %>
     SetEnvIf Host <%=Regexp.quote @site.mobile_domain %> MOBILE_SITE
@@ -8,5 +12,8 @@
     Alias /_common/ <%= Rails.root %>/public/_common/
     DocumentRoot <%= @site.public_path %>
     Include <%= Rails.root %>/config/apache/rewrite_base.conf
+    <%- if config[:ssl] -%>
+    Include <%= Rails.root %>/config/apache/rewrite_ssl.conf
+    <%- end -%>
     Include <%= @site.config_path %>/rewrite.conf
 </VirtualHost>
