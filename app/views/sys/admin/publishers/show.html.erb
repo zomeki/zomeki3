@@ -1,0 +1,14 @@
+<table class="show">
+  <tr>
+    <th><%= @item.class.human_attribute_name :path %></th>
+    <td><%= @item.path %></td>
+  </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :created_at %></th>
+    <td><%=l @item.created_at %></td>
+  </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :updated_at %></th>
+    <td><%=l @item.updated_at %></td>
+  </tr>
+</table>
