@@ -10,9 +10,10 @@ class Cms::Admin::Tool::LinkCheckController < Cms::Controller::Admin::Base
 
   def index
     logs = Cms::LinkCheckLog.where(site_id: Core.site.id)
-
-    @logs = logs.search_with_params(params[:criteria] || {}).order(:id)
-                .preload(link_checkable: [:content, creator: :group])
+    @logs = Cms::LinkCheckLogsFinder.new(logs)
+                                    .search(params[:criteria])
+                                    .order(:id)
+                                    .preload(link_checkable: [:content, creator: :group])
 
     if params[:csv]
       csv = generate_csv(@logs)

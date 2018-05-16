@@ -16,7 +16,7 @@ class Cms::Site < ApplicationRecord
   has_many :concepts, -> { order(:sort_no, :id) }
   has_many :contents, -> { order(:sort_no, :name, :id) }
   has_many :settings, -> { order(:name, :sort_no) }, class_name: 'Cms::SiteSetting'
-  has_many :basic_auth_users, -> { order(:name) }, class_name: 'Cms::SiteBasicAuthUser'
+  has_many :access_controls, class_name: 'Cms::SiteAccessControl'
   has_many :kana_dictionaries
   has_many :site_belongings
   has_many :groups, -> { order(:level_no, :sort_no, :code, :id) }, through: :site_belongings, class_name: 'Sys::Group'
@@ -38,8 +38,7 @@ class Cms::Site < ApplicationRecord
   before_validation :fix_full_uri
 
   after_save :generate_files
-  before_destroy :destroy_related_records
-  after_destroy :destroy_files
+  before_destroy :destroy_related_data
 
   after_create :make_concept
   after_create :make_site_belonging
@@ -185,32 +184,12 @@ class Cms::Site < ApplicationRecord
     smart_phone_layout == 'smart_phone'
   end
 
-  def apache_config_path
-    "config/apache/virtual_hosts/site_#{'%04d' % id}.conf"
-  end
-
-  def apache_admin_config_path
-    "config/apache/admin_virtual_hosts/site_#{'%04d' % id}.conf"
-  end
-
-  def nginx_config_path
-    "config/nginx/servers/site_#{'%04d' % id}.conf"
-  end
-
-  def nginx_admin_config_path
-    "config/nginx/admin_servers/site_#{'%04d' % id}.conf"
-  end
-
   def basic_auth_htaccess_path
     "#{::File.dirname(public_path)}/.htaccess"
   end
 
   def basic_auth_htpasswd_path
     "#{::File.dirname(public_path)}/.htpasswd"
-  end
-
-  def basic_auth_state_enabled?
-    settings.where(name: 'basic_auth_state', value: 'enabled').exists?
   end
 
   def copy_common_directory(force: false)
@@ -237,12 +216,8 @@ class Cms::Site < ApplicationRecord
     FileUtils.touch "#{config_path}/rewrite.conf"
   end
 
-  def destroy_related_records
+  def destroy_related_data
     Cms::SiteDestroyService.new(self).destroy
-  end
-
-  def destroy_files
-    FileUtils.rm_rf root_path
   end
 
   def make_concept
@@ -279,14 +254,6 @@ class Cms::Site < ApplicationRecord
     def all_with_full_uri(full_uri)
       uri = Addressable::URI.parse(full_uri)
       matches_to_domain(uri.host).order(:id)
-    end
-
-    def reload_servers
-      FileUtils.touch reload_servers_text_path
-    end
-
-    def reload_servers_text_path
-      Rails.root.join('tmp/reload_servers.txt')
     end
   end
 end

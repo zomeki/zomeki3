@@ -1,26 +1,56 @@
 <%
 return '' unless Core.user
 
-def menu_link(auth, key, label, uri, current)
-  return '' unless Core.user.has_auth?(auth)
+def menu_link(key, label, uri, current)
   cls = [key.to_s]
   cls << 'current' if current == key
-  content_tag 'li' do
-    link_to(label, uri, class: cls.join(' '))
-  end
+  link_to(label, uri, class: cls.join(' '))
 end
 %>
 
-<%- if Core.concept -%>
-<%= menu_link :creator, :content, 'コンテンツ', main_app.cms_contents_path, current -%>
-<%= menu_link :creator, :data, 'データ', main_app.cms_data_texts_path, current -%>
-<%= menu_link :designer, :design, 'デザイン', main_app.cms_pieces_path, current -%>
-<%= menu_link :designer, :directory, 'ディレクトリ', main_app.cms_nodes_path(parent: 0), current -%>
+<%- if Core.user.has_auth?(:creator) -%>
+  <li>
+    <%= menu_link :content, 'コンテンツ', main_app.cms_contents_path, current -%>
+    <ul class="subMenu"><%= render 'layouts/admin/cms/navi/component', current: nil %></ul>
+  </li>
+  <li>
+    <%= menu_link :data, 'データ', main_app.cms_data_texts_path, current -%>
+    <ul class="subMenu"><%= render 'layouts/admin/cms/navi/data', current: nil %></ul>
+  </li>
 <%- end -%>
-<%= menu_link :manager, :site, 'サイト', main_app.cms_concepts_path(parent: 0), current -%>
-<%= menu_link :manager, :user, 'ユーザー', main_app.sys_groups_path(parent: 0), current -%>
-<%= menu_link :manager, :log, 'ログ', main_app.sys_operation_logs_path(parent: 0), current -%>
-<%- if Core.user.root? -%>
-<%= menu_link :manager, :tool, 'ツール', main_app.cms_tool_convert_downloads_path, current if Zomeki.config.application['sys.show_tool_menu'] -%>
-<%= menu_link :manager, :setting, 'システム', main_app.sys_maintenances_path, current -%>
+<%- if Core.user.has_auth?(:designer) -%>
+  <li>
+    <%= menu_link :design, 'デザイン', main_app.cms_pieces_path, current -%>
+    <ul class="subMenu"><%= render 'layouts/admin/cms/navi/design', current: nil %></ul>
+  </li>
+  <li>
+    <%= menu_link :directory, 'ディレクトリ', main_app.cms_nodes_path(parent: 0), current -%>
+    <ul class="subMenu"><%= render 'layouts/admin/cms/navi/directory', current: nil %></ul>
+  </li>
+<%- end -%>
+<%- if Core.user.has_auth?(:manager) -%>
+  <li>
+    <%= menu_link :site, 'サイト', main_app.cms_concepts_path(parent: 0), current -%>
+    <ul class="subMenu"><%= render 'layouts/admin/cms/navi/site', current: nil %></ul>
+  </li>
+  <li>
+    <%= menu_link :user, 'ユーザー', main_app.sys_groups_path(parent: 0), current -%>
+    <ul class="subMenu"><%= render 'layouts/admin/cms/navi/user', current: nil %></ul>
+  </li>
+  <li>
+    <%= menu_link :log, 'ログ', main_app.sys_operation_logs_path(parent: 0), current -%>
+    <ul class="subMenu"><%= render 'layouts/admin/cms/navi/log', current: nil %></ul>
+  </li>
+  <%- if Core.user.root? -%>
+  <%- if Zomeki.config.application['sys.show_tool_menu'] -%>
+  <li>
+    <%= menu_link :tool, 'ツール', main_app.cms_tool_convert_downloads_path, current -%>
+    <ul class="subMenu"><%= render 'layouts/admin/cms/navi/tool', current: nil %></ul>
+  </li>
+  <%- end -%>
+  <li>
+    <%= menu_link :setting, 'システム', main_app.sys_maintenances_path, current -%>
+    <ul class="subMenu"><%= render 'layouts/admin/cms/navi/setting', current: nil %></ul>
+  </li>
+  <%- end -%>
 <%- end -%>

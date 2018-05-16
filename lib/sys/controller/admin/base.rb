@@ -16,7 +16,7 @@ class Sys::Controller::Admin::Base < ApplicationController
       Core.user_group    = current_user.groups[0]
 
       users_session = Sys::UsersSession.new(user_id: Core.user.id, session_id: session.id)
-      Sys::UsersSession.import [users_session], on_duplicate_key_update: { conflict_target: [:user_id, :session_id] }
+      Sys::UsersSession.bulk_import [users_session], on_duplicate_key_update: { conflict_target: [:user_id, :session_id] }
     end
     return true
   end

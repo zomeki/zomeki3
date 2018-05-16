@@ -71,7 +71,7 @@ namespace ZomekiCMS::NAME do
         out2 = `bundle exec rails g cms:apache:site_config --force`
         puts out2
         if (out1 + out2) =~ /^\s*(force|create|remove)/
-          Cms::Site.reload_servers
+          FileUtils.touch Rails.root.join('tmp/reload_servers.txt')
         end
       end
     end

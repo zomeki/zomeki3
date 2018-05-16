@@ -33,12 +33,14 @@ class Sys::Plugin < ApplicationRecord
 
   class << self
     def search_repos
+      require 'octokit'
       result = Octokit.search_repositories("user:#{GITHUB_USER} topic:#{GITHUB_TOPIC}")
       repos = result[:items].map { |item| item.to_h.slice(:full_name, :description) }
       repos.uniq
     end
 
     def version_options(name)
+      require 'octokit'
       tags = Octokit.tags(name)
       branches = Octokit.branches(name)
       tags.map { |tag| "tag/#{tag[:name]}" } + branches.map { |branch| "branch/#{branch[:name]}" }
@@ -48,6 +50,7 @@ class Sys::Plugin < ApplicationRecord
     end
 
     def title_options(name)
+      require 'octokit'
       Octokit.repository(name)[:description]
     rescue => e
       error_log e

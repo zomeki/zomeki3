@@ -72,7 +72,7 @@ gem 'hpricot', '0.8.6'
 gem 'tamtam', '0.0.3'
 
 gem 'active_record_union', '~> 1.3.0'
-gem 'activerecord-import', '~> 0.22.0'
+gem 'activerecord-import', '~> 0.23.0'
 gem 'addressable', '~> 2.5.2'
 gem 'holiday_jp', '~> 0.7.0'
 gem 'jpmobile', '~> 5.0.0'
@@ -104,7 +104,8 @@ gem 'faraday-cookie_jar', '~> 0.0.6'
 gem 'faraday_middleware', '~> 0.11.0.1'
 gem 'garb', '~> 0.9.8'
 gem 'google-oauth2-installed', '0.0.3'
-gem 'octokit', '~> 4.8.0'
+gem 'octokit', '~> 4.9.0', require: false
+gem 'tika-client', '~> 0.2.0', require: false
 
 gem 'whenever', '~> 0.10.0', require: false
 

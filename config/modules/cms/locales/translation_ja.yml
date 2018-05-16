@@ -5,7 +5,7 @@ ja:
       cms/piece: ピース
       cms/layout: レイアウト
       cms/site: サイト
-      cms/site_basic_auth: Basic認証
+      cms/site_access_control: アクセス制御
 
       tool/convert_download: ダウンロード
       tool/convert_setting: 変換設定
@@ -65,13 +65,16 @@ ja:
         in_setting_site_zip_download_max_size: ZIPダウンロード最大サイズ
         in_setting_site_datetime_preview: 日時指定プレビュー
 
-      cms/site_basic_auth_user:
-        state: 状態
+      cms/site_access_control:
         site_id: サイト
-        name: ユーザーID
-        password: パスワード
+        state: 状態
         target_type: 対象
         target_location: ディレクトリ
+        basic_auth: Basic認証
+        ip_order: IP制限
+        ip: IPリスト
+        created_at: 作成日時
+        updated_at: 更新日時
 
       cms/site_setting:
 

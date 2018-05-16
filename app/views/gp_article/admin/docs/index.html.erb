@@ -8,8 +8,8 @@
   <div>
     <%-
       actions = []
-      actions += [['ごみ箱へ移動する', 'trash']] if params[:target_state].in?(%w(processing closed all))
-      actions += [['ごみ箱から復元する', 'untrash'], ['削除する', 'destroy']] if params[:target_state].in?(%w(trashed))
+      actions += [['削除', 'trash']] if params[:target_state].in?(%w(processing closed all))
+      actions += [['ごみ箱から復元', 'untrash'], ['ごみ箱から削除', 'destroy']] if params[:target_state].in?(%w(trashed))
     -%>
     <%= select_tag :batch_action, options_for_select(actions), prompt: '（一括処理を選択）' %>
     <%= submit_tag '実行', name: :batch %>

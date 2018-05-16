@@ -39,7 +39,7 @@ class Cms::FileTransfer < ApplicationRecord
         item.recursive = options[:recursive]
         item
       end
-      self.import(items)
+      self.bulk_import(items)
 
       Cms::FileTransferJob.perform_later unless Cms::FileTransferJob.queued?
     end

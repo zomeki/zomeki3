@@ -1,0 +1,19 @@
+<h2><%= @site.name %> ： アクセス制御</h2>
+
+<div class="actionMenu">
+<%= action_menu :new     if Core.user.has_priv?(:create, item: Core.concept) %>
+<%= action_menu :index %>
+<%= action_menu :show %>
+<%= action_menu :edit    if @item && @item.editable? %>
+<%= action_menu :destroy if @item && @item.deletable? %>
+<%- case action_name -%>
+<%- when 'index' -%>
+  <span class="separator"></span>
+  <%- if @site.use_access_control? -%>
+  <%= link_to "アクセス制御ON（更新）", url_for(action: :enable), confirm: "アクセス制御を有効にしてよろしいですか？" %>
+  <%= link_to "アクセス制御OFF", url_for(action: :disable), confirm: "アクセス制御を無効にしてよろしいですか？" %>
+  <%- else -%>
+  <%= link_to "アクセス制御ON", url_for(action: :enable), confirm: "アクセス制御を有効にしてよろしいですか？" %>
+  <%- end -%>
+<%- end -%>
+</div>

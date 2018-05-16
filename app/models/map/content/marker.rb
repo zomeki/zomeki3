@@ -98,7 +98,7 @@ class Map::Content::Marker < Cms::Content
     end
   end
 
-  def marker_docs(specified_category = nil)
+  def marker_docs
     contents = GpArticle::Content::Doc.arel_table
     content_settings = Cms::ContentSetting.arel_table
     doc_content_ids = GpArticle::Content::Doc.joins(:settings)
@@ -112,13 +112,6 @@ class Map::Content::Marker < Cms::Content
     else
       docs = GpArticle::Doc.distinct.joins(maps: :markers)
                            .where(content_id: doc_content_ids, marker_state: 'visible')
-      if specified_category
-        cat_ids = GpCategory::Categorization.select(:categorizable_id)
-                                            .where(categorized_as: 'Map::Marker')
-                                            .where(category_id: specified_category.public_descendants.map(&:id))
-        docs = docs.where(id: cat_ids)
-      end
-      docs
     end
   end
 end

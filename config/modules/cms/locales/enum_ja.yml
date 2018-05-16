@@ -41,11 +41,15 @@ ja:
       mobile_feature:
         enabled: 使用する
         disabled: 使用しない
-    cms/site_basic_auth_user:
+    cms/site_access_control:
       target_type:
-        all: サイト全体
         _system: 管理画面
-        directory: ディレクトリ
+        all: 公開画面
+        directory: 公開画面ディレクトリ
+      ip_order:
+        none: 使用しない
+        allow: 許可IPを設定
+        deny: 禁止IPを設定
     cms/link_check_log:
       result_state:
         success: 成功

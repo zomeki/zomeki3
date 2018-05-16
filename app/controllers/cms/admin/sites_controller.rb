@@ -29,7 +29,6 @@ class Cms::Admin::SitesController < Cms::Controller::Admin::Base
 
   def create
     @item = Cms::Site.new(site_params)
-    @item.state = 'public'
     @item.portal_group_state = 'visible'
     _create(@item, notice: "登録処理が完了しました。 （反映にはWebサーバーの再起動が必要です。）") do
       update_configs
@@ -41,7 +40,9 @@ class Cms::Admin::SitesController < Cms::Controller::Admin::Base
     @item.attributes = site_params
     _update @item do
       update_configs
-      FileUtils.rm_rf Pathname.new(@item.public_smart_phone_path).children if ::File.exist?(@item.public_smart_phone_path) && !@item.smart_phone_publication?
+      unless @item.smart_phone_publication?
+        Sys::Publisher.in_site(@item.id).with_smartphone_dependent.find_each(&:destroy)
+      end
     end
   end
 
@@ -56,15 +57,15 @@ class Cms::Admin::SitesController < Cms::Controller::Admin::Base
   protected
 
   def update_configs
-    Cms::SiteConfigUpdateService.new(@item).update
+    Cms::SiteConfigService.new(@item).update
   end
 
   private
 
   def site_params
     params.require(:item).permit(
-      :body, :full_uri, :mobile_full_uri, :admin_full_uri,
-      :name, :og_description, :og_image, :og_title, :og_type,
+      :name, :state, :body, :full_uri, :mobile_full_uri, :admin_full_uri,
+      :og_description, :og_image, :og_title, :og_type,
       :smart_phone_layout, :smart_phone_publication, :spp_target, :mobile_feature,
       :google_map_api_key,
       :in_root_group_id,

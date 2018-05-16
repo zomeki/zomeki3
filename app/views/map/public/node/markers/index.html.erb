@@ -45,12 +45,12 @@
   <%- unless @markers.empty? -%>
   <table>
     <tr>
-      <th>カテゴリ</th>
+      <th scope="col">カテゴリ</th>
       <%- if @content.show_images? -%>
-      <th>画像</th>
+      <th scope="col">画像</th>
       <%- end -%>
-      <th>名称</th>
-      <th>地図</th>
+      <th scope="col">名称</th>
+      <th scope="col">地図</th>
     </tr>
     <%- @markers.each do |marker| -%>
     <tr>

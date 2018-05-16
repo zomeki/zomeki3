@@ -150,6 +150,11 @@ ja:
         created_at: 作成日時
         updated_at: 最終アクセス日時
 
+      sys/publisher:
+        path: パス
+        created_at: 作成日時
+        updated_at: 更新日時
+
   activemodel:
     attributes:
       sys/storage/entry:

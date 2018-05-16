@@ -171,7 +171,7 @@ class Util::Date::Calendar
     html += '<thead class="wdays">' + "\n"
     html += '<tr>' + "\n"
     @wdays.each do |w|
-      html += '<th class="' + w[:class] + '">' + w[:label].to_s + '</th>' + "\n"
+      html += '<th scope="col" class="' + w[:class] + '">' + w[:label].to_s + '</th>' + "\n"
     end
     html += '</tr>' + "\n"
     html += '</thead>' + "\n"
