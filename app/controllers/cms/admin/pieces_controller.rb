@@ -11,7 +11,7 @@ class Cms::Admin::PiecesController < Cms::Controller::Admin::Base
     if params[:sort_key].present?
       @items.order!(params[:sort_key] => params[:sort_order].presence || :asc)
     else
-      @items.order!(name: :asc, id: :asc)
+      @items.order!(updated_at: :desc, name: :asc, id: :asc)
     end
 
     @items = @items.paginate(page: params[:page], per_page: params[:limit] || 100)
