@@ -6,9 +6,16 @@ class Cms::Admin::PiecesController < Cms::Controller::Admin::Base
   end
 
   def index
-    @items = Cms::Piece.readable.order(:name, :id)
-                       .paginate(page: params[:page], per_page: params[:limit] || 100)
-                       .preload(:concept, :related_objects_for_replace)
+    @items = Cms::Piece.readable
+
+    if params[:sort_key].present?
+      @items.order!(params[:sort_key] => params[:sort_order].presence || :asc)
+    else
+      @items.order!(name: :asc, id: :asc)
+    end
+
+    @items = @items.paginate(page: params[:page], per_page: params[:limit] || 100)
+                   .preload(:concept, :related_objects_for_replace)
     _index @items
   end
 

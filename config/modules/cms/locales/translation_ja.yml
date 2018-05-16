@@ -123,6 +123,8 @@ ja:
         head: ヘッダー
         body: 本文
         sort_no: 並び順
+        created_at: 作成日時
+        updated_at: 更新日時
 
       cms/piece_link_item:
         state: 状態
