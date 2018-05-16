@@ -28,6 +28,10 @@ class Cms::Piece < ApplicationRecord
 
   scope :public_state, -> { where(state: 'public') }
 
+  def deletable?
+    super && state != 'public'
+  end
+
   def owner_layouts
     Cms::Layout.where(id: bracketees.select(:owner_id).where(owner_type: 'Cms::Layout'))
                .order(:concept_id, :name)
