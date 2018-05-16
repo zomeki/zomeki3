@@ -1,2 +1,2 @@
-<%= content_tag('li') { link_to 'テキスト', cms_data_texts_path, class: (current == :text ? 'current' : '') } -%>
-<%= content_tag('li') { link_to 'ファイル', cms_data_files_path(0), class: (current == :file ? 'current' : '') } -%>
+<%= content_tag('li') { link_to 'テキスト', main_app.cms_data_texts_path, class: (current == :text ? 'current' : '') } -%>
+<%= content_tag('li') { link_to 'ファイル', main_app.cms_data_files_path(0), class: (current == :file ? 'current' : '') } -%>
