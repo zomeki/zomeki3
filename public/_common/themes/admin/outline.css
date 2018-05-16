@@ -121,12 +121,13 @@
   position: absolute;
   z-index: 999;
   background-color: #000;
+  border-top: 1px solid #fff;
   transition-property: visibility;
   transition-delay: 0.3s;
 }
 #navi .mainMenu li:hover > ul {
   visibility: visible;
-  transition-delay: 0.05s;
+  transition-delay: 0.1s;
 }
 #navi .mainMenu li > ul > li {
   flex: 0 0 32px;
