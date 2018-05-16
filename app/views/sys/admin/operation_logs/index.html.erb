@@ -5,8 +5,9 @@
 <table class="index">
   <tr>
     <th class="action_link">詳細</th>
-    <th style="width: 200px;"><%= Sys::OperationLog.human_attribute_name :user_name %></th>
-    <th style="width: 200px;"><%= Sys::OperationLog.human_attribute_name :action %></th>
+    <th style="width: 180px;"><%= Sys::OperationLog.human_attribute_name :user_account %></th>
+    <th style="width: 180px;"><%= Sys::OperationLog.human_attribute_name :user_name %></th>
+    <th style="width: 120px;"><%= Sys::OperationLog.human_attribute_name :action %></th>
     <th style="width: ;"><%= Sys::OperationLog.human_attribute_name :item %></th>
     <th style="width: 120px; text-align: center;"><%= Sys::OperationLog.human_attribute_name :ipaddr %></th>
     <th style="width: 120px; text-align: center;"><%= Sys::OperationLog.human_attribute_name :created_at %></th>
@@ -14,6 +15,7 @@
   <% @items.each do |item| %>
   <tr class="<%= cycle '', 'cycle' %>">
     <td class="action_link"><%= link_to :show, { action: :show, id: item } %></td>
+    <td><%= item.user_account %></td>
     <td><%= item.user_name %></td>
     <td><%= item.action_text %></td>
     <td><%= item.item_model %><%= " (#{truncate(item.item_name, length: 20)})" if item.item_name %></td>

@@ -10,8 +10,8 @@ class Sys::OperationLogsFinder < ApplicationFinder
     criteria.each do |n, v|
       next if v.to_s == ''
       case n
-      when 's_user_id'
-        rel = rel.where(user_id: v)
+      when 's_user_account'
+        rel = rel.where(user_account: v)
       when 's_action'
         rel = rel.where(action: v == 'recognize' ? ['recognize', 'approve'] : v)
       when 's_keyword'

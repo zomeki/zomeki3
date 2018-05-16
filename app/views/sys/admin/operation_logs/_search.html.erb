@@ -1,7 +1,7 @@
 <%= form_for :item, url: { action: :index },  html: { method: :get, class: 'search' } do |f| %>
 <table>
   <tr>
-    <th><%= Sys::OperationLog.human_attribute_name :user_id %></th>
+    <th><%= Sys::OperationLog.human_attribute_name :user_account %></th>
     <th><%= Sys::OperationLog.human_attribute_name :action %></th>
     <th>キーワード</th>
     <th>期間</th>
@@ -14,7 +14,7 @@
     </td>
   </tr>
   <tr>
-    <td><%= text_field_tag :s_user_id, params[:s_user_id], style: 'width: 120px; ime-mode: disabled;' %></td>
+    <td><%= text_field_tag :s_user_account, params[:s_user_account], style: 'width: 120px; ime-mode: disabled;' %></td>
     <td><%= select_tag :s_action, options_for_select(Sys::OperationLog.action_options, params[:s_action]), id: nil, include_blank: true %></td>
     <td><%= text_field_tag :s_keyword, params[:s_keyword], style: 'width: 200px;' %></td>
     <td>
