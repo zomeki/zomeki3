@@ -75,15 +75,6 @@
 </table>
 <%- end -%>
 
-<%- if @item.name == 'accessibility_check' -%>
-<table class="show">
-  <tr>
-    <th><%= @site.class.human_attribute_name :in_setting_site_accessibility_check %></th>
-    <td><%= f.collection_radio_buttons :in_setting_site_accessibility_check, @item.class.configs[:accessibility_check][:options], :last, :first %></td>
-  </tr>
-</table>
-<%- end -%>
-
 <%- if @item.name == 'adobe_reader_link' -%>
 <table class="show">
   <tr>

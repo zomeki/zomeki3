@@ -67,10 +67,6 @@ module Cms::Model::Rel::SiteSetting
     regexps.present? ? Regexp.union(regexps) : nil
   end
 
-  def accessibility_check_enabled?
-    setting_value(:accessibility_check) == 'enabled'
-  end
-
   def adobe_reader_link_enabled?
     setting_value(:adobe_reader_link) == 'enabled'
   end
