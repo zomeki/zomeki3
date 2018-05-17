@@ -4,7 +4,7 @@ class Cms::Admin::Tool::ConvertDocsController < Cms::Controller::Admin::Base
 
   def pre_dispatch
     return error_auth unless Core.user.has_auth?(:manager)
-    return redirect_to(request.env['PATH_INFO']) if params[:reset]
+    return redirect_to url_for(action: :index) if params[:reset]
     @item = ::Tool::ConvertDoc.find(params[:id]) if params[:id].present?
   end
 
