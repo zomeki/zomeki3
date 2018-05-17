@@ -111,7 +111,8 @@ ja:
         id: ID
         created_at: 操作日時
         updated_at: 更新日時
-        user_id: ユーザーID（内部ID）
+        user_id: ユーザー識別番号
+        user_account: ユーザーID
         user_name: ユーザー名
         ipaddr: IPアドレス
         uri: URL
