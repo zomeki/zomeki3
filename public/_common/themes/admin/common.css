@@ -159,6 +159,7 @@ div.batchMenu {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
+  margin: 2px 0;
 }
 div.batchMenu div {
   display: flex;
@@ -166,6 +167,7 @@ div.batchMenu div {
 div.batchMenu input {
   width: 70px;
   font-size: 90%;
+  margin-left: 4px;
 }
 div.batchMenu select {
   font-size: 90%;

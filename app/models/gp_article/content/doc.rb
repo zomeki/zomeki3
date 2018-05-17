@@ -354,4 +354,12 @@ class GpArticle::Content::Doc < Cms::Content
   def related_doc_enabled?
     setting_value(:related_doc) == 'enabled'
   end
+
+  def link_check_enabled?
+    setting_value(:link_check) == 'enabled'
+  end
+
+  def accessibility_check_enabled?
+    setting_value(:accessibility_check) == 'enabled'
+  end
 end
