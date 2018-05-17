@@ -6,7 +6,7 @@ class Cms::DataFile < ApplicationRecord
   include Cms::Model::Rel::Site
   include Cms::Model::Rel::Concept
   include Cms::Model::Rel::Bracketee
-  include Cms::Model::Auth::Concept::Creator
+  include Cms::Model::Auth::Concept
 
   enum_ish :state, [:public, :closed]
 
