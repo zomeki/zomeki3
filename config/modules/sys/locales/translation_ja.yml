@@ -104,8 +104,12 @@ ja:
       sys/file:
         file: ファイル
         name: 保存ファイル名
-        title: 表示ファイル名
-        alt_text: 代替テキスト
+        title: 表示ファイル名（TITLE）
+        alt_text: 代替テキスト（ALT）
+        size: ファイルサイズ
+        mime_type: ファイル種別
+        created_at: 作成日時
+        updated_at: 更新日時
 
       sys/operation_log:
         id: ID
