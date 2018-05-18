@@ -145,7 +145,10 @@ class Cms::Node < ApplicationRecord
     path_changes.each do |src, dest|
       next unless Dir.exist?(src)
 
+      dest_dir = ::File.dirname(dest)
+      FileUtils.mkdir_p(dest_dir) unless Dir.exist?(dest_dir)
       FileUtils.move(src, dest)
+
       src = src.gsub(Rails.root.to_s, '.')
       dest = dest.gsub(Rails.root.to_s, '.')
       Sys::Publisher.where(Sys::Publisher.arel_table[:path].matches("#{src}%"))
