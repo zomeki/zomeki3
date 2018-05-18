@@ -63,7 +63,7 @@ $(function() {
   });
   $('form.batch').on('submit', function(e) {
     var selected = $('form.batch option:selected');
-    if (confirm("次の処理を実行します。本当によろしいですか？\n「" + selected.text() + "」")) {
+    if (selected.val() != '' && confirm("次の処理を実行します。本当によろしいですか？\n「" + selected.text() + "」")) {
       return true;
     }
     return false;
