@@ -428,7 +428,7 @@ class GpArticle::Doc < ApplicationRecord
   end
 
   def validate_broken_link_existence
-    return unless content.site.link_check_enabled?
+    return unless content.link_check_enabled?
     return if in_ignore_link_check == '1'
 
     results = check_links
@@ -439,7 +439,7 @@ class GpArticle::Doc < ApplicationRecord
   end
 
   def validate_accessibility_check
-    return unless content.site.accessibility_check_enabled?
+    return unless content.accessibility_check_enabled?
 
     modify_accessibility if in_modify_accessibility_check == '1'
     results = check_accessibility

@@ -129,26 +129,56 @@ class GpArticle::DocsFinder < ApplicationFinder
 
   def search_date_column(column, operation, dates = nil)
     dates = Array.wrap(dates)
+
+    if column.in?(%w(task_publish_at task_close_at))
+      search_date_column_for_task(column, operation, dates)
+    else
+      search_date_column_for_doc(column, operation, dates)
+    end
+  end
+
+  def search_date_column_for_doc(column, operation, dates)
+    build_date_conditions(@docs, column, operation, dates)
+  end
+
+  def search_date_column_for_task(column, operation, dates)
+    tasks = Sys::Task.where(processable_type: 'GpArticle::Doc')
+
+    case column
+    when 'task_publish_at'
+      tasks.where!(name: 'publish')
+    when 'task_close_at'
+      tasks.where!(name: 'close')
+    end
+
+    tasks = build_date_conditions(tasks, :process_at, operation, dates)
+    @docs.joins(:tasks).where(id: tasks.select(:processable_id))
+  end
+
+  def build_date_conditions(rels, column, operation, dates)
     case operation
     when 'today'
       today = Date.today
-      @docs.date_between(column, today.beginning_of_day, today.end_of_day)
+      rels.date_between(column, today.beginning_of_day, today.end_of_day)
     when 'this_week'
       today = Date.today
-      @docs.date_between(column, today.beginning_of_week, today.end_of_week)
+      rels.date_between(column, today.beginning_of_week, today.end_of_week)
     when 'last_week'
       last_week = 1.week.ago
-      @docs.date_between(column, last_week.beginning_of_week, last_week.end_of_week)
+      rels.date_between(column, last_week.beginning_of_week, last_week.end_of_week)
+    when 'next_week'
+      next_week = 1.week.since
+      rels.date_between(column, next_week.beginning_of_week, next_week.end_of_week)
     when 'equal'
-      @docs.date_between(column, dates[0].beginning_of_day, dates[0].end_of_day) if dates[0]
+      rels.date_between(column, dates[0].beginning_of_day, dates[0].end_of_day) if dates[0]
     when 'before'
-      @docs.date_before(column, dates[0].end_of_day) if dates[0]
+      rels.date_before(column, dates[0].end_of_day) if dates[0]
     when 'after'
-      @docs.date_after(column, dates[0].beginning_of_day) if dates[0]
+      rels.date_after(column, dates[0].beginning_of_day) if dates[0]
     when 'between'
-      @docs.date_between(column, dates[0].beginning_of_day, dates[1].end_of_day) if dates[0] && dates[1]
+      rels.date_between(column, dates[0].beginning_of_day, dates[1].end_of_day) if dates[0] && dates[1]
     else
-      @docs.none
+      rels.none
     end
   end
 

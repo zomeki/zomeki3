@@ -22,8 +22,8 @@ class GpArticle::Doc::Criteria
 
   enum_ish :target, [:user, :group, :all]
   enum_ish :target_state, [:processing, :public, :closed, :all, :trashed]
-  enum_ish :date_column, [:created_at, :updated_at, :recognized_at, :published_at]
-  enum_ish :date_operation, [:today, :this_week, :last_week, :equal, :before, :after, :between]
+  enum_ish :date_column, [:created_at, :updated_at, :recognized_at, :published_at, :task_publish_at, :task_close_at]
+  enum_ish :date_operation, [:today, :last_week, :this_week, :next_week, :equal, :before, :after, :between]
   enum_ish :state, [:draft, :approvable, :approved, :prepared, :public, :closed]
   enum_ish :user_operation, [:create, :approve, :publish]
 

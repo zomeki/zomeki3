@@ -2,10 +2,7 @@ class Cms::Admin::DataFileNodesController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 
   def pre_dispatch
-    return error_auth unless Core.user.has_auth?(:creator)
-  end
-
-  def pre_dispatch
+    return error_auth unless Core.user.has_auth?(:designer)
     @parent = params[:parent] || '0'
   end
 

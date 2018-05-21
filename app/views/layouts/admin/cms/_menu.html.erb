@@ -13,12 +13,12 @@ end
     <%= menu_link :content, 'コンテンツ', main_app.cms_contents_path, current -%>
     <ul class="subMenu"><%= render 'layouts/admin/cms/navi/component', current: nil %></ul>
   </li>
+<%- end -%>
+<%- if Core.user.has_auth?(:designer) -%>
   <li>
     <%= menu_link :data, 'データ', main_app.cms_data_texts_path, current -%>
     <ul class="subMenu"><%= render 'layouts/admin/cms/navi/data', current: nil %></ul>
   </li>
-<%- end -%>
-<%- if Core.user.has_auth?(:designer) -%>
   <li>
     <%= menu_link :design, 'デザイン', main_app.cms_pieces_path, current -%>
     <ul class="subMenu"><%= render 'layouts/admin/cms/navi/design', current: nil %></ul>

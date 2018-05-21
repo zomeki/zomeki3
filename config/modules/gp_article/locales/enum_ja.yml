@@ -41,10 +41,13 @@ ja:
         updated_at: 更新
         recognized_at: 承認
         published_at: 公開
+        task_publish_at: 公開開始日時
+        task_close_at: 公開終了日時
       date_operation:
         today: 本日
-        this_week: 今週
         last_week: 先週
+        this_week: 今週
+        next_week: 来週
         equal: 指定日
         before: 以前
         after: 以後

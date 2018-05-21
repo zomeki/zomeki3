@@ -5,7 +5,11 @@ class Cms::Admin::Tool::LinkCheckController < Cms::Controller::Admin::Base
     return error_auth unless Core.user.has_auth?(:creator)
     return redirect_to(action: :index) if params[:reset]
 
-    params[:limit] ||= '30'
+    if params[:criteria].blank?
+      params[:criteria] = {}
+      params[:criteria][:group_id] = Core.user_group.id unless Core.user.has_auth?(:manager)
+      params[:criteria][:result_state] = 'failure'
+    end
   end
 
   def index

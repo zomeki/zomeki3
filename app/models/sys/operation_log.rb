@@ -29,9 +29,11 @@ class Sys::OperationLog < ApplicationRecord
     if user = options[:user]
       log.user_id   = user.id
       log.user_name = user.name
+      log.user_account = user.account
     elsif user = Core.user
       log.user_id   = user.id
       log.user_name = user.name
+      log.user_account = user.account
     end
 
     log.set_item_info(options[:item]) if options[:item]

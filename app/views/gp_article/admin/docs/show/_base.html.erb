@@ -8,7 +8,7 @@
     <td colspan="3"><%= link_to_if @item.public_full_uri.present?,
                                    @item.public_full_uri, @item.public_full_uri, target: 'preview' %></td>
   </tr>
-  <%- if @item.template -%>
+  <%- if @item.template && @content.templates.size != 1 -%>
   <tr>
     <th><%= @item.class.human_attribute_name :template_id %></th>
     <td colspan="3"><%= @item.template.title %></td>

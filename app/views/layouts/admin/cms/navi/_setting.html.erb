@@ -1,7 +1,7 @@
-<%= content_tag('li') { link_to 'メンテナンス', sys_maintenances_path, class: (current == :maintenace ? 'current' : '') } -%>
-<%= content_tag('li') { link_to 'セッション', sys_users_sessions_path, class: (current == :users_session ? 'current' : '') } -%>
-<%= content_tag('li') { link_to 'モード設定', edit_sys_setting_path(id: 'maintenance_mode'), class: (current == :maintenance_mode ? 'current' : '') } -%>
-<%= content_tag('li') { link_to '辞書', sys_kana_dictionaries_path, class: (current == :dictionary ? 'current' : '') } -%>
-<%= content_tag('li') { link_to 'メール', sys_tests_path, class: (current == :test ? 'current' : '') } -%>
-<%= content_tag('li') { link_to 'SSL', edit_sys_setting_path(id: 'common_ssl'), class: (current == :common_ssl ? 'current' : '') } -%>
-<%= content_tag('li') { link_to '設定', sys_settings_path, class: (current == :setting ? 'current' : '') } -%>
+<%= content_tag('li') { link_to 'メンテナンス', main_app.sys_maintenances_path, class: (current == :maintenace ? 'current' : '') } -%>
+<%= content_tag('li') { link_to 'セッション', main_app.sys_users_sessions_path, class: (current == :users_session ? 'current' : '') } -%>
+<%= content_tag('li') { link_to 'モード設定', main_app.edit_sys_setting_path(id: 'maintenance_mode'), class: (current == :maintenance_mode ? 'current' : '') } -%>
+<%= content_tag('li') { link_to '辞書', main_app.sys_kana_dictionaries_path, class: (current == :dictionary ? 'current' : '') } -%>
+<%= content_tag('li') { link_to 'メール', main_app.sys_tests_path, class: (current == :test ? 'current' : '') } -%>
+<%= content_tag('li') { link_to 'SSL', main_app.edit_sys_setting_path(id: 'common_ssl'), class: (current == :common_ssl ? 'current' : '') } -%>
+<%= content_tag('li') { link_to '設定', main_app.sys_settings_path, class: (current == :setting ? 'current' : '') } -%>

@@ -42,11 +42,6 @@ class Cms::SiteSetting < ApplicationRecord
   set_config :link_check_exclusion,
              name: 'リンクチェック対象外URL',
              default_value: ''
-  set_config :accessibility_check,
-             name: 'アクセシビリティチェック機能',
-             default_value: 'enabled',
-             options: [['使用する', 'enabled'], ['使用しない', 'disabled']],
-             index: true
   set_config :adobe_reader_link,
              name: 'Adobe Acrobat Reader リンク',
              default_value: 'enabled',

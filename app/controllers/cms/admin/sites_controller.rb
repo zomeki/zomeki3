@@ -41,7 +41,7 @@ class Cms::Admin::SitesController < Cms::Controller::Admin::Base
     _update @item do
       update_configs
       unless @item.smart_phone_publication?
-        Sys::Publisher.in_site(@item.id).with_smartphone_dependent.find_each(&:destroy)
+        Sys::Publisher.in_site(@item).with_smartphone_dependent.find_each(&:destroy)
       end
     end
   end

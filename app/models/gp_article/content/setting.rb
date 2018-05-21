@@ -66,6 +66,16 @@ class GpArticle::Content::Setting < Cms::ContentSetting
     form_type: :radio_buttons,
     options: [['使用する', 'enabled'], ['使用しない', 'disabled']],
     default_value: 'enabled'
+  set_config :link_check, menu: :form,
+    name: 'リンクチェック',
+    form_type: :radio_buttons,
+    options: [['使用する', 'enabled'], ['使用しない', 'disabled']],
+    default_value: 'enabled'
+  set_config :accessibility_check, menu: :form,
+    name: 'アクセシビリティチェック',
+    form_type: :radio_buttons,
+    options: [['使用する', 'enabled'], ['使用しない', 'disabled']],
+    default_value: 'enabled'
 
   # menu: :index
   set_config :pagination_label, menu: :index,
