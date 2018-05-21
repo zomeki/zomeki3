@@ -59,7 +59,7 @@ module GpArticle::DocHelper
       html = if mobile
               contents[:title_link].call
             else
-              doc_style = doc_style.gsub(/@doc{{@(.+)@}}doc@/m) { |m| link_to($1.html_safe, link_options[0], class: 'doc_link') }
+              doc_style = doc_style.gsub(/@doc{{@(.+)@}}doc@/m) { |m| link_to($1.html_safe, link_options[0], (link_options[1] || {}).merge(class: 'doc_link')) }
               doc_style = doc_style.gsub(/@body_(\d+)@/) { |m| content_tag(:span, truncate(strip_tags(@doc.body), length: $1.to_i).html_safe, class: 'body') }
               doc_style = doc_style.gsub(/@(\w+)@/) { |m| contents[$1.to_sym].try(:call).to_s }
               doc_style.html_safe
