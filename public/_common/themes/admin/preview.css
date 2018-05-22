@@ -25,3 +25,50 @@
 .previewPublicItem {
   background-color: #fee;
 }
+
+/* previewEditable > previewAction
+----------------------------------------------- */
+.previewEditable {
+  position: relative;
+}
+.previewEditable:hover {
+  outline: 1px dotted #00d;
+}
+.previewEditable > .previewActionMenu {
+  display: none;
+  position: absolute;
+  top: 0;
+  right: 3px;
+  z-index: 100;
+}
+.previewEditable:hover > .previewActionMenu {
+  display: block;
+}
+.previewEditable > .previewActionMenu a {
+  padding: 0 4px;
+  background-color: #66f;
+  font-size: 0.8em;
+  color: #fff;
+  text-decoration: none;
+}
+
+/* previewEdit
+----------------------------------------------- */
+div.previewEdit {
+  outline: 1px dotted #777;
+}
+input.previewEdit,
+textarea.previewEdit,
+select.previewEdit {
+  border: 1px dotted #777;
+}
+input.previewEdit[type=text],
+textarea.previewEdit {
+  width: 50%;
+}
+
+/* data-ac
+----------------------------------------------- */
+*[data-ac-description] {
+  outline: 2px solid #f0f;
+}

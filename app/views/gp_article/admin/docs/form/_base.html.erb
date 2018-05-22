@@ -48,19 +48,25 @@
   </tr>
 </table>
 
-<div id="normal_body_form" style="<%= 'display:none;' if @item.template %>">
-  <table class="show">
-    <tr>
-      <td class="cke_editor_wrapper">
-        <%= f.text_area :body, class: 'body ckeditor' %>
-      </td>
-    </tr>
-  </table>
-</div>
+<%- if @content.public_node -%>
+<div class="resizable" style="height: 500px;">
+  <div id="normal_body_form" style="display: none;">
+    <%= f.text_area :body, class: 'body ckeditor', data: { type: 'rich_text', sync: true } %>
+  </div>
+  <div id="template_body_form" style="display: none;">
+    <%= render 'gp_template/admin/shared/form', template: @item.template, template_values: @item.template_values if @item.template %>
+  </div>
 
-<div id="template_body_form">
-  <%= render 'gp_template/admin/shared/form', template: @item.template, template_values: @item.template_values if @item.template %>
+  <%- preview_uri = "/_preview/#{format('%04d', @content.site_id)}#{@content.public_node.public_uri}0/preview/0/?editing=true&title=#{@item.title}&template_id=#{@item.template_id}" -%>
+  <iframe id="body_iframe" src="<%= preview_uri %>" style="width: 100%; height: 100%;"></iframe>
 </div>
+<%- else -%>
+<table class="show">
+  <tr>
+    <td><span class="note">記事ディレクトリが未作成のため表示できません。記事ディレクトリを作成してください。</span></td>
+  </tr>
+</table>
+<%- end -%>
 
 <table class="show">
   <tr>
@@ -190,21 +196,99 @@ $(document).ready(function() {
   }).on('change', function() {
     if (!confirm('テンプレートを変更してよろしいですか？')) {
       $(this).val(prevTemplateId);
+      return;
     }
+    var preview_uri = "/_preview/<%= "#{format('%04d', @content.site_id)}#{@content.nodes.first.public_uri}" %>0/preview/0/?editing=true&title=_TITLE_&template_id=_TEMPLATE_ID_"
+                        .replace(/_TITLE_/, $('#item_title').val())
+                        .replace(/_TEMPLATE_ID_/, this.value)
     if (this.value) {
       $.post('<%= build_gp_template_template_forms_path(@content.gp_temlate_content_template, template_id: '_ID_') %>'.replace(/_ID_/, this.value), $('form').serialize(), function(data) {
         $('#template_body_form').html(data);
+        $('#body_iframe').attr('src', preview_uri);
       });
-      $('#normal_body_form').hide();
-      $('#template_body_form').show();
     } else {
-      $('#normal_body_form').show();
-      $('#template_body_form').hide().html('');
+      $('#template_body_form').html('');
+      $('#body_iframe').attr('src', preview_uri);
     }
   });
 });
 </script>
 <%- end -%>
+
+<script type="text/javascript">
+$(document).ready(function() {
+  var iframe = $('#body_iframe');
+
+  if (iframe.length > 0) {
+    iframe.css('visibility', 'hidden');
+
+    $(".resizable").resizable({
+      handles: 's',
+      start: function(e) {
+        iframe.css('pointer-events', 'none');
+      },
+      stop: function(e) {
+        iframe.css('pointer-events', 'auto');
+      }
+    });
+
+    iframe.on('load', function() {
+      $('*[data-sync="true"]').each(function() {
+        var id = $(this).attr('id');
+        var type = $(this).attr('data-type');
+        switch (type) {
+        case 'text_field':
+        case 'text_area':
+        case 'attachment_file':
+          iframe.contents().find('#' + id).val($(this).val());
+          break;
+        case 'select':
+          iframe.contents().find('#' + id).prop('selected', $(this).prop('selected'));
+          break;
+        case 'radio_button':
+          iframe.contents().find('#' + id).prop('checked', $(this).prop('checked'));
+          break;
+        case 'rich_text':
+          var windowInstance = CKEDITOR.instances[id]
+          var iframeInstance = iframe.get(0).contentWindow.CKEDITOR.instances[id];
+          if (windowInstance && iframeInstance) { iframeInstance.setData(windowInstance.getData()); }
+          break;
+        }
+      });
+      iframe.css('visibility', 'visible');
+    });
+
+    $('#new_item, #edit_item').on('submit', function() {
+      $('*[data-sync="true"]').each(function() {
+        var id = $(this).attr('id');
+        var type = $(this).attr('data-type');
+        switch (type) {
+        case 'text_field':
+        case 'text_area':
+        case 'attachment_file':
+          var value = iframe.contents().find('#' + id).val();
+          $(this).val(value);
+          break;
+        case 'select':
+          var selected = iframe.contents().find('#' + id).prop('selected');
+          $(this).prop('selected', selected);
+          break;
+        case 'radio_button':
+          var checked = iframe.contents().find('#' + id).prop('checked');
+          $(this).prop('checked', checked);
+          break;
+        case 'rich_text':
+          var windowInstance = CKEDITOR.instances[id]
+          var iframeInstance = iframe.get(0).contentWindow.CKEDITOR.instances[id];
+          if (windowInstance && iframeInstance) { windowInstance.setData(iframeInstance.getData()); }
+          break;
+        } 
+      });
+      return true;
+    });
+  }
+});
+</script>
 
 <%- if @content.related_doc_enabled? -%>
 <table id="rel_docs_template" style="display: none;">

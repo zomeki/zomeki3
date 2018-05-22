@@ -74,15 +74,26 @@ display_embed_link = @content.respond_to?(:attachment_embed_link) ? @content.att
 <script type="text/javascript">
 //<![CDATA[
 function ckeInsertContent(value) {
-  if (!parent || !parent.CKEDITOR) { return; }
-  if (parent.CKEDITOR.currentInstance) {
-    parent.CKEDITOR.currentInstance.insertHtml(value);
-  } else {
-    for (var i in parent.CKEDITOR.instances) {
-      var instance = parent.CKEDITOR.instances[i];
-      if (instance.container.isVisible()) {
-        instance.insertHtml(value);
-        break;
+  if (!parent) { return; }
+
+  var containers = [parent];
+
+  var iframe = $(parent.document).find('#body_iframe').get(0);
+  if (iframe && iframe.contentWindow) {
+    containers.unshift(iframe.contentWindow);
+  }
+
+  for (var i in containers) {
+    var currentInsntance = containers[i].CKEDITOR.currentInstance;
+    if (currentInsntance) {
+      currentInsntance.insertHtml(value);
+    } else {
+      for (var j in containers[i].CKEDITOR.instances) {
+        var instance = containers[i].CKEDITOR.instances[j];
+        if (instance.container.isVisible()) {
+          instance.insertHtml(value);
+          break;
+        }
       }
     }
   }

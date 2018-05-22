@@ -34,11 +34,15 @@ class GpArticle::Public::Node::DocsController < GpArticle::Public::NodeControlle
   def show
     params[:filename_base], params[:format] = 'index', 'html' unless params[:filename_base]
 
-    @item = public_or_preview_doc(id: params[:id], name: params[:name])
-    return http_error(404) if @item.filename_base != params[:filename_base]
-    return http_error(404) if @item.external_link?
-    return http_error(404) if !@item.terminal_mobile? && request.mobile?
-    return http_error(404) if !@item.terminal_pc_or_smart_phone? && !request.mobile?
+    if Core.preview_mode? && params[:id] == '0' && params[:name] == '0'
+      @item = GpArticle::Doc.new(content: @content, title: params[:title], template_id: params[:template_id])
+    else
+      @item = public_or_preview_doc(id: params[:id], name: params[:name])
+      return http_error(404) if @item.filename_base != params[:filename_base]
+      return http_error(404) if @item.external_link?
+      return http_error(404) if !@item.terminal_mobile? && request.mobile?
+      return http_error(404) if !@item.terminal_pc_or_smart_phone? && !request.mobile?
+    end
 
     Page.current_item = @item
     Page.title = if request.mobile?

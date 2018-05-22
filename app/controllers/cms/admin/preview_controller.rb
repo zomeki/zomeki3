@@ -81,10 +81,10 @@ private
   end
 
   def add_preview_header
-    return if params[:inlining] == 'true'
-
     html = render_to_string(partial: 'cms/admin/preview/header', formats: [:html])
     response.body = response.body.to_s.sub(/(<\/head>)/i, html + '\\1')
+
+    return if params[:inlining] == 'true' || params[:editing] == 'true'
 
     html = render_to_string(partial: 'cms/admin/preview/mark', formats: [:html])
     response.body = response.body.to_s.sub(/(<body[^>]*?>)/i, '\\1' + html)

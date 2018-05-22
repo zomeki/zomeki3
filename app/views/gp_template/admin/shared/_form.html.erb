@@ -1,6 +1,12 @@
 <%- return '' unless defined?(template) && defined?(template_values) -%>
 
 <%- template.items.public_state.each do |item| -%>
+  <%-
+    id = "item_template_values_#{item.name}"
+    name = "item[template_values][#{item.name}]"
+    value = template_values[item.name]
+    html_attr = { id: id, style: item.style_attribute, data: { type: item.item_type, sync: true } }
+  -%>
   <%- if item.item_type == 'rich_text' -%>
   <table class="show">
     <tr>
@@ -8,9 +14,9 @@
     </tr>
     <tr>
       <td class="cke_editor_wrapper">
-        <%= text_area_tag "item[template_values][#{item.name}]", template_values[item.name], style: item.style_attribute, class: 'body' %>
+        <%= text_area_tag name, value, html_attr.merge(class: 'body') %>
         <%= javascript_tag do %>
-          CKEDITOR.replace('item_template_values_<%= item.name %>');
+          CKEDITOR.replace('<%= id %>');
         <%- end -%>
       </td>
     </tr>
@@ -22,20 +28,19 @@
       <td>
         <%- case item.item_type -%>
         <%- when 'text_field' -%>
-          <%= text_field_tag "item[template_values][#{item.name}]", template_values[item.name], style: item.style_attribute %>
+          <%= text_field_tag name, value, html_attr %>
         <%- when 'text_area' -%>
-          <%= text_area_tag "item[template_values][#{item.name}]", template_values[item.name], style: item.style_attribute, class: 'body' %>
+          <%= text_area_tag name, value, html_attr.merge(class: 'body') %>
         <%- when 'select' -%>
-          <%= select_tag "item[template_values][#{item.name}]",
-                         options_for_select(item.item_options_for_select, template_values[item.name]), style: item.style_attribute,
-                         include_blank: true %>
+          <%- options = item.item_options_for_select.map.with_index { |opt, i| [opt, opt, html_attr.merge(id: "#{id}_#{i}")] } -%>
+          <%= select_tag name, options_for_select(options, value), include_blank: true %>
         <%- when 'radio_button' -%>
-          <%- item.item_options_for_select.each do |option| -%>
-            <label><%= radio_button_tag "item[template_values][#{item.name}]", option,
-                                        option == template_values[item.name], style: item.style_attribute %> <%= option %></label>
+          <%- item.item_options_for_select.each_with_index do |option, i| -%>
+            <%= radio_button_tag name, option, option == value, html_attr.merge(id: "#{id}_#{i}") %>
+            <%= label_tag "#{id}_#{i}", option %>
           <%- end -%>
         <%- when 'attachment_file' -%>
-          <%= text_field_tag "item[template_values][#{item.name}]", template_values[item.name], style: item.style_attribute %>
+          <%= text_field_tag name, value, html_attr %>
         <%- end -%>
       </td>
     </tr>

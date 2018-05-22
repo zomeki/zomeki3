@@ -47,6 +47,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
   def new
     @item = @content.docs.build
+    @item.body = '<p><br></p><p><br></p><p><br></p>'
 
     if @content.default_category
       @item.in_category_ids = { @content.default_category.category_type_id.to_s => [@content.default_category.id.to_s] }

@@ -2,14 +2,25 @@
 <%= render 'gp_article/public/node/docs/show/date', item: @item, content: @content %>
 
 <div class="body">
-  <%-
-  body = if @item.template
-           template_body(@item.template, @item.template_values, @item.files)
-         else
-           @item.body
-         end
-  -%>
-  <div class="text-beginning"><%=raw body %></div>
+  <%- if @item.template -%>
+    <div class="text-beginning">
+      <%- if Core.preview_mode? && params[:editing] == 'true' -%>
+        <%=raw template_form(@item.template, @item.template_values) %>
+      <%- else -%>
+        <%=raw template_body(@item.template, @item.template_values, @item.files) %>
+      <%- end -%>
+    </div>
+  <%- else -%>
+    <%- if Core.preview_mode? && params[:editing] == 'true' -%>
+      <div class="text-beginning previewEdit" id="item_body" data-type="rich_text" contenteditable="true">
+        <%=raw @item.body %>
+      </div>
+    <%- else -%>
+      <div class="text-beginning">
+        <%=raw @item.body %>
+      </div>
+    <%- end -%>
+  <%- end -%>
 
   <%- if @content.blog_functions_available? -%>
   <%= render 'gp_article/public/node/docs/show/blog_function', item: @item, content: @content %>
