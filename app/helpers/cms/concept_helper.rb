@@ -19,7 +19,7 @@ module Cms::ConceptHelper
         url = if request.fullpath.split('/')[2].in?(%w(sys cms plugins))
                 { action: :index, concept: concept.id }
               else
-                main_app.cms_contents_path(concept.id)
+                main_app.cms_contents_path(concept: concept.id)
               end
         html << link_to(concept.name, url, id: "naviConceptItem#{concept.id}", class: item_cls.join(' '))
 
