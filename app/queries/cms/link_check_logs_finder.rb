@@ -20,10 +20,16 @@ class Cms::LinkCheckLogsFinder < ApplicationFinder
     models = @logs.group(:link_checkable_type)
                   .pluck(:link_checkable_type)
                   .map(&:safe_constantize).compact
+
     logs = models.map do |model|
              creatable_ids = Sys::Creator.select(:creatable_id).where(creatable_type: model, group_id: group_id) 
              @logs.where(link_checkable_type: model, link_checkable_id: model.where(id: creatable_ids))
            end
-    logs.compact.reduce(:union)
+
+    if logs.blank?
+      @logs
+    else
+      logs.compact.reduce(:union)
+    end
   end
 end
