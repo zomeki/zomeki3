@@ -17,8 +17,8 @@ module GpArticle::DocHelper
     end
   end
 
-  def doc_replace(doc, doc_style, date_style = '%Y年%m月%d日', time_style = '%H時%M分')
-    Formatter.new(doc).format(doc_style, date_style, time_style, mobile: request.mobile?)
+  def doc_replace(doc, doc_style, date_style = '%Y年%m月%d日', time_style = '%H時%M分', options = {})
+    Formatter.new(doc).format(doc_style, date_style, time_style, options.merge(mobile: request.mobile?))
   end
 
   class Formatter < ActionView::Base
@@ -32,7 +32,7 @@ module GpArticle::DocHelper
       @doc = doc
     end
 
-    def format(doc_style, date_style = '', time_style = '', mobile: false)
+    def format(doc_style, date_style = '', time_style = '', mobile: false, highlight: true)
       link_options = doc_link_options(@doc)
 
       contents = {
@@ -59,13 +59,13 @@ module GpArticle::DocHelper
       html = if mobile
               contents[:title_link].call
             else
-              doc_style = doc_style.gsub(/@doc{{@(.+)@}}doc@/m) { |m| link_to($1.html_safe, link_options[0], class: 'doc_link') }
+              doc_style = doc_style.gsub(/@doc{{@(.+)@}}doc@/m) { |m| link_to($1.html_safe, link_options[0], (link_options[1] || {}).merge(class: 'doc_link')) }
               doc_style = doc_style.gsub(/@body_(\d+)@/) { |m| content_tag(:span, truncate(strip_tags(@doc.body), length: $1.to_i).html_safe, class: 'body') }
               doc_style = doc_style.gsub(/@(\w+)@/) { |m| contents[$1.to_sym].try(:call).to_s }
               doc_style.html_safe
             end
 
-      if Core.preview_mode? && !@doc.state_public?
+      if Core.preview_mode? && Page.preview_at && !@doc.state_public? && highlight
         content_tag :div, html, class: 'previewPublicItem'
       else
         html

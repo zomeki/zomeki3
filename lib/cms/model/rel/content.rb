@@ -17,7 +17,7 @@ module Cms::Model::Rel::Content
     Rails.application.routes.url_helpers.url_for({ controller: controller,
                                                    action: :show,
                                                    content: content,
-                                                   concept: content.concept,
+                                                   concept: content.concept_id,
                                                    id: id,
                                                    only_path: true }.merge(options))
   rescue ActionController::UrlGenerationError => e

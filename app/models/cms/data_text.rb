@@ -13,6 +13,7 @@ class Cms::DataText < ApplicationRecord
   after_save     Cms::Publisher::BracketeeCallbacks.new, if: :changed?
   before_destroy Cms::Publisher::BracketeeCallbacks.new, prepend: true
 
+  validates :concept_id, presence: true
   validates :state, :title, :body, presence: true
   validates :name, presence: true,
                    uniqueness: { scope: :concept_id, case_sensitive: false },

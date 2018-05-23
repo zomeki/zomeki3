@@ -35,11 +35,16 @@ class GpArticle::DocsFinder < ApplicationFinder
     end
 
     if criteria[:assocs].present?
-      criteria[:assocs].select(&:present?).each { |assoc| @docs = @docs.joins(assoc.to_sym) }
+      criteria[:assocs].select(&:present?).each do |assoc|
+        @docs = @docs.joins(assoc.to_sym)
+      end
     end
 
     if criteria[:tasks].present?
-      criteria[:tasks].select(&:present?).each { |task| @docs = @docs.with_task_name(task) }
+      criteria[:tasks].select(&:present?).each do |task|
+        tasks = Sys::Task.where(name: task, processable_type: 'GpArticle::Doc')
+        @docs = @docs.where(id: tasks.select(:processable_id))
+      end
     end
 
     if criteria[:texts].present?

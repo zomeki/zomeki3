@@ -11,6 +11,7 @@ class Cms::Layout < ApplicationRecord
   after_save     Cms::Publisher::LayoutCallbacks.new, if: :changed?
   before_destroy Cms::Publisher::LayoutCallbacks.new, prepend: true
 
+  validates :concept_id, presence: true
   validates :state, :title, presence: true
   validates :name, presence: true,
                    uniqueness: { scope: :concept_id, case_sensitive: false },

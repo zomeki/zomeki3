@@ -23,7 +23,7 @@ class Cms::Admin::Node::BaseController < Cms::Controller::Admin::Base
   end
 
   def index
-    exit
+    redirect_to cms_nodes_path
   end
 
   def show
