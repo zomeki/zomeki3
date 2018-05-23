@@ -89,7 +89,7 @@ class Tool::Convert::PageParser
             end
 
     user = if group
-             Sys::User.in_site(Core.site).where("name like '#{group.name}%'").first
+             Sys::User.in_site(Core.site).where(Sys::User.arel_table[:name].matches("#{group.name}%")).first
            else
              nil
            end

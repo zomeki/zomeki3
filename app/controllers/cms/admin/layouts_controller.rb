@@ -6,7 +6,9 @@ class Cms::Admin::LayoutsController < Cms::Controller::Admin::Base
   end
 
   def index
-    @items = Cms::Layout.readable.order(:name, :id).paginate(page: params[:page], per_page: params[:limit])
+    @items = Cms::Layout.readable
+                        .order(:name, :id)
+                        .paginate(page: params[:page], per_page: params[:limit] || 100)
 
     _index @items
   end

@@ -16,10 +16,10 @@ module Cms::ConceptHelper
         html << link_to(icon_mark, "#", id: "naviConceptIcon#{concept.id}", class: icon_cls.join(' '))
         html << " "
 
-        url = if request.fullpath.split('/')[2].in?(%w(sys cms))
+        url = if request.fullpath.split('/')[2].in?(%w(sys cms plugins))
                 { action: :index, concept: concept.id }
               else
-                cms_contents_path(concept.id)
+                main_app.cms_contents_path(concept.id)
               end
         html << link_to(concept.name, url, id: "naviConceptItem#{concept.id}", class: item_cls.join(' '))
 

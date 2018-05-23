@@ -1,7 +1,7 @@
-<%= content_tag('li') { link_to 'グループ', sys_groups_path(0), class: (current == :group ? 'current' : '') } -%>
-<%= content_tag('li') { link_to 'ユーザー', sys_users_path, class: (current == :user ? 'current' : '') } -%>
-<%= content_tag('li') { link_to 'ロール', sys_role_names_path, class: (current == :role ? 'current' : '') } -%>
-<%#= content_tag('li') { link_to 'LDAP', sys_ldap_groups_path(0), class: (current == :ldap ? 'current' : '') } %>
-<%#= content_tag('li') { link_to 'LDAP同期', sys_ldap_synchros_path, class: (current == :ldap_synchro ? 'current' : '') } -%>
-<%= content_tag('li') { link_to 'エクスポート', sys_export_groups_path, class: (current == :export ? 'current' : '') } -%>
-<%= content_tag('li') { link_to 'インポート', sys_import_groups_path, class: (current == :import ? 'current' : '') } -%>
+<%= content_tag('li') { link_to 'グループ', main_app.sys_groups_path(0), class: (current == :group ? 'current' : '') } -%>
+<%= content_tag('li') { link_to 'ユーザー', main_app.sys_users_path, class: (current == :user ? 'current' : '') } -%>
+<%= content_tag('li') { link_to 'ロール', main_app.sys_role_names_path, class: (current == :role ? 'current' : '') } -%>
+<%#= content_tag('li') { link_to 'LDAP', main_app.sys_ldap_groups_path(0), class: (current == :ldap ? 'current' : '') } %>
+<%#= content_tag('li') { link_to 'LDAP同期', main_app.sys_ldap_synchros_path, class: (current == :ldap_synchro ? 'current' : '') } -%>
+<%= content_tag('li') { link_to 'エクスポート', main_app.sys_export_groups_path, class: (current == :export ? 'current' : '') } -%>
+<%= content_tag('li') { link_to 'インポート', main_app.sys_import_groups_path, class: (current == :import ? 'current' : '') } -%>

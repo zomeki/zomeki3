@@ -137,8 +137,13 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
   def batch
     items = GpArticle::Doc.where(id: params.dig(:item, :id)).order(:id)
 
-    if respond_to?("batch_#{params[:batch_action]}")
-      send("batch_#{params[:batch_action]}", items)
+    case params[:batch_action]
+    when 'trash'
+      batch_trash(items)
+    when 'untrash'
+      batch_untrash(items)
+    when 'destroy'
+      batch_destroy(items)
     else
       redirect_to url_for(action: :index)
     end

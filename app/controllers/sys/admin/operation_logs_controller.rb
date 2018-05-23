@@ -48,7 +48,7 @@ protected
 
   def generate_csv(items)
     CSV.generate do |csv|
-      fields = ["ログID", :created_at, :user_id, :user_name, :ipaddr, :uri, :action, :item_model, :item_id, :item_name]
+      fields = ["ログID", :created_at, :user_id, :user_account, :user_name, :ipaddr, :uri, :action, :item_model, :item_id, :item_name]
       csv << fields.map {|c| c.is_a?(Symbol) ? Sys::OperationLog.human_attribute_name(c) : c }
 
       items.each do |item|
@@ -56,6 +56,7 @@ protected
         row << item.id
         row << item.created_at.strftime("%Y-%m-%d %H:%M:%S")
         row << item.user_id
+        row << item.user_account
         row << item.user_name
         row << item.ipaddr
         row << item.uri

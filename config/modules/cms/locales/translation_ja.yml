@@ -123,6 +123,8 @@ ja:
         head: ヘッダー
         body: 本文
         sort_no: 並び順
+        created_at: 作成日時
+        updated_at: 更新日時
 
       cms/piece_link_item:
         state: 状態
@@ -177,9 +179,9 @@ ja:
         node_id: フォルダ
         file: ファイル
         name: 保存ファイル名
-        title: 表示ファイル名
+        title: 表示ファイル名（TITLE）
+        alt_text: 代替テキスト（ALT）
         size: サイズ
-        alt_text: 代替テキスト
 
       cms/data_file_node:
         concept_id: コンセプト

@@ -1,9 +1,14 @@
 <%- if @content.template_available? -%>
-<div>
-  <div class="label1"><%= f.label :template_id %></div>
-  <%= f.select :template_id, @content.templates.map {|t| [t.title, t.id] }, include_blank: true %>
-</div>
+  <%- if @content.templates.size == 1 && @item.template -%>
+    <%= f.hidden_field :template_id %>
+  <%- else -%>
+    <div>
+      <div class="label1"><%= f.label :template_id %></div>
+      <%= f.select :template_id, @content.templates.map {|t| [t.title, t.id] }, include_blank: true %>
+    </div>
+  <%- end -%>
 <%- end -%>
+
 <div>
   <div class="label1"><%= f.label :title %> <span class="note">※</span></div>
   <%= f.text_field :title, class: 'title', style: 'width: 290px;' %>
@@ -45,8 +50,8 @@
 </div>
 
 <div>
-  <%= submit_tag 'リンクチェック', name: 'link_check_in_body' if @content.site.link_check_enabled? %>
-  <%= submit_tag 'アクセシビリティチェック', name: 'accessibility_check' if @content.site.accessibility_check_enabled? %>
+  <%= submit_tag 'リンクチェック', name: 'link_check_in_body' if @content.link_check_enabled? %>
+  <%= submit_tag 'アクセシビリティチェック', name: 'accessibility_check' if @content.accessibility_check_enabled? %>
 </div>
 
 <%- if @content.blog_functions_available? -%>

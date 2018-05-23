@@ -3,7 +3,7 @@ class Cms::DataFileNode < ApplicationRecord
   include Sys::Model::Rel::Creator
   include Cms::Model::Rel::Site
   include Cms::Model::Rel::Concept
-  include Cms::Model::Auth::Concept::Creator
+  include Cms::Model::Auth::Concept
 
   has_many :files, foreign_key: :node_id, class_name: 'Cms::DataFile'
 
