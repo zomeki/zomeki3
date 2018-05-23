@@ -16,7 +16,7 @@ module Cms::Model::Base::Piece
   def admin_uri(options = {})
     Rails.application.routes.url_helpers.url_for({ controller: admin_controller,
                                                    action: :show,
-                                                   concept: concept,
+                                                   concept: concept_id,
                                                    id: id,
                                                    only_path: true }.merge(options))
   rescue ActionController::UrlGenerationError => e
