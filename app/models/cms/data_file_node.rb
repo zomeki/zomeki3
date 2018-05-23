@@ -7,6 +7,7 @@ class Cms::DataFileNode < ApplicationRecord
 
   has_many :files, foreign_key: :node_id, class_name: 'Cms::DataFile'
 
+  validates :concept_id, presence: true
   validates :name, presence: true, uniqueness: { scope: :concept_id, case_sensitive: false }
   validate :validate_name
 

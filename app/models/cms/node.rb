@@ -29,6 +29,7 @@ class Cms::Node < ApplicationRecord
   has_many :public_children_for_sitemap, -> { public_state.visible_in_sitemap.sitemap_order },
                                          foreign_key: :route_id, class_name: self.name
 
+  validates :concept_id, presence: true
   validates :parent_id, :state, :title, presence: true
   validates :name, presence: true,
                    uniqueness: { scope: [:site_id, :parent_id], if: %Q(!replace_page?) },
