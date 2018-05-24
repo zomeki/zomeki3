@@ -39,15 +39,15 @@ table.index {
 }
 table.index th {
   padding: 6px;
-  border: 1px solid #fff;
-  background-color: #000;
+  border: 1px solid #bbb;
+  background-color: #ddd;
   color: #000;
   font-weight: lighter;
   text-align: left;
-  color: #fff;
+  color: #000;
 }
 table.index th a {
-  color: #fff;
+  color: #000;
 }
 table.index td {
   padding: 5px 6px;
