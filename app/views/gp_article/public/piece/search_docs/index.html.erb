@@ -1,14 +1,16 @@
 <form method="get" action="<%= @node.public_uri %>">
   <%- if @piece.category_types.present? -%>
   <div class="categories">
+    <fieldset>
     <%- @piece.category_types.each do |category_type| -%>
-      <label for="criteria_category_ids"><%= category_type.title %>で探す</label>
+      <legend><%= category_type.title %>で探す</legend>
       <div class="checkboxes">
         <div class="checkboxesContainer">
           <%= render 'categories', categories: category_type.public_root_categories %>
         </div>
       </div>
     <%- end -%>
+    </fieldset>
   </div>
   <%- end -%>
   <div class="keyword">
