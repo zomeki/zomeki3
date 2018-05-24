@@ -181,35 +181,37 @@ Navigation.talk = function(flag) {
     elem.removeClass('talkOff');
     elem.addClass('talkOn');
   }
-   
-  var uri = location.pathname;
-  if (uri.match(/\/$/)) uri += 'index.html';
-  uri = uri.replace(/\.html\.r$/, '.html');
-  
+
+  var host = location.protocol + "//" + location.hostname + (location.port ? ':' + location.port : '');
+  var path = location.pathname;
   var now   = new Date();
   var param = '?85' + now.getDay() + now.getHours();
-  
-  if (player) {
-    uri += '.mp3' + param;
-    if (player.html() == '') {
-      html = '<div id="navigationTalkCreatingFileNotice" style="display: none;">ただいま音声ファイルを作成しています。しばらくお待ちください。</div>';
-      html += '<audio src=" ' + uri + '" id="naviTalkPlayer" controls autoplay />';
-      player.html(html);
 
-      $.ajax({type: "HEAD", url: uri, data: {file_check: '1'}, success: function(data, status, xhr) {
-        var type = xhr.getResponseHeader('Content-Type');
-        if (type.match(/^audio/)) {
-          $('#navigationTalkCreatingFileNotice').hide();
-        } else { 
-          $('#navigationTalkCreatingFileNotice').show();
-        }
-      }});
-    } else {
-      player.html('');
-      if ($.cookie('navigation_ruby') != 'on') Navigation.notice('off');
-    }
+  if (path.match(/\/$/)) path += 'index.html';
+  path = path.replace(/\.html\.r$/, '.html');
+  path += '.mp3' + param;
+
+  if (!player) {
+    location.href = host + path;
+    return false;
+  }
+
+  if (player.html() == '') {
+    html = '<div id="navigationTalkCreatingFileNotice" style="display: none;">ただいま音声ファイルを作成しています。しばらくお待ちください。</div>';
+    html += '<audio src=" ' + host + path + '" id="naviTalkPlayer" controls autoplay />';
+    player.html(html);
+
+    $.ajax({type: "HEAD", url: host + path, data: {file_check: '1'}, success: function(data, status, xhr) {
+      var type = xhr.getResponseHeader('Content-Type');
+      if (type.match(/^audio/)) {
+        $('#navigationTalkCreatingFileNotice').hide();
+      } else { 
+        $('#navigationTalkCreatingFileNotice').show();
+      }
+    }});
   } else {
-    location.href = uri;
+    player.html('');
+    if ($.cookie('navigation_ruby') != 'on') Navigation.notice('off');
   }
 };
 
