@@ -159,7 +159,7 @@ div.batchMenu {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  margin: 2px 0;
+  margin: 4px 0;
 }
 div.batchMenu div {
   display: flex;
