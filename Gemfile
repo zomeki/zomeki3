@@ -100,7 +100,6 @@ gem 'delayed_job_active_record', '~> 4.1.3'
 gem 'delayed_job_master', '~> 1.1.0', require: false
 
 gem 'faraday', '~> 0.9.2'
-gem 'faraday-cookie_jar', '~> 0.0.6'
 gem 'faraday_middleware', '~> 0.11.0.1'
 gem 'garb', '~> 0.9.8'
 gem 'google-oauth2-installed', '0.0.3'
