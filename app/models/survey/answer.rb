@@ -39,7 +39,7 @@ class Survey::Answer < ApplicationRecord
   end
 
   def validate_email_format
-    if content !~ /\A.+@.+\z/
+    if content.present? && content !~ /\A.+@.+\z/
       errors.add(:base, "#{question.title}を正しく入力してください。")
     end
   end
