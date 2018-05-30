@@ -44,7 +44,7 @@
               <%= label_tag "question_answers_#{question.id}_#{i}", option %>
             <%- end -%>
           <%- when 'attachment' -%>
-            <%= file_field_tag "question_answers[#{question.id}]" %>
+            <%= file_field_tag "question_answers[#{question.id}][file]", id: "question_answers_#{question.id}" %>
             <%= hidden_field_tag "question_answers[#{question.id}][name]" %>
             <%= hidden_field_tag "question_answers[#{question.id}][data]" %>
             <span class="max_length">（最大<%= question.form_file_max_size || 1 %> MB）</span>
