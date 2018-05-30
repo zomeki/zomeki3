@@ -14,7 +14,7 @@ class Sys::Admin::PublishersController < Cms::Controller::Admin::Base
     if params[:destroy]
       num = @items.count
       @items.find_each(&:destroy)
-      return redirect_to url_for(action: :index), notice: '削除処理が完了しました。（#{num}件）'
+      return redirect_to url_for(action: :index), notice: "削除処理が完了しました。（#{num}件）"
     end
 
     @items = @items.paginate(page: params[:page], per_page: params[:limit])

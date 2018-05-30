@@ -157,12 +157,13 @@ class Core
   end
 
   def self.set_concept(session, concept_id = nil)
+    concepts = Core.site.concepts.where(state: 'public')
     if concept_id
-      @@concept = Cms::Concept.find_by(id: concept_id) || Core.site.concepts.roots.readable_for(Core.user).first
+      @@concept = concepts.find_by(id: concept_id) || concepts.roots.readable_for(Core.user).first
       session[:cms_concept] = (@@concept ? @@concept.id : nil)
     else
       concept_id = session[:cms_concept]
-      @@concept = Cms::Concept.find_by(id: concept_id) || Core.site.concepts.roots.readable_for(Core.user).first
+      @@concept = concepts.find_by(id: concept_id) || concepts.roots.readable_for(Core.user).first
     end
   end
 

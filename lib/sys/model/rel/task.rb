@@ -7,11 +7,6 @@ module Sys::Model::Rel::Task
 
     before_save :prepare_tasks, if: -> { @tasks_attributes_changed }
     after_save :enqueue_tasks, if: -> { state.in?(%w(recognized approved prepared public)) }
-
-    scope :with_task_name, ->(name) {
-      tasks = Sys::Task.arel_table
-      joins(:tasks).where(tasks[:name].eq(name))
-    }
   end
 
   def queued_tasks

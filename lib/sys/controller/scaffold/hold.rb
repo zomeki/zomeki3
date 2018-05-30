@@ -4,9 +4,11 @@ module Sys::Controller::Scaffold::Hold
   def _hold(item)
     item.users_holds.where(user_id: Core.user.id, session_id: session.id).first_or_create
 
-    if (holds = item.users_holds.where.not(session_id: session.id)).present?
-      alerts = holds.map { |hold| "<li>#{hold.group_and_user_name}さんが#{hold.formatted_updated_at}から編集中です。</li>" }.join
-      flash.now[:alert] = "<ul>#{alerts}</ul>".html_safe
+    if (holds = item.users_holds.where.not(user_id: Core.user.id)).present?
+      alert = holds.sort_by(&:updated_at)
+                   .uniq(&:user_id)
+                   .map { |hold| "<li>#{hold.group_and_user_name}さんが#{hold.formatted_updated_at}から編集中です。</li>" }.join
+      flash.now[:alert] = "<ul>#{alert}</ul>".html_safe
     end
   end
 

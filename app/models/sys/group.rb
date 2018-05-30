@@ -45,9 +45,7 @@ class Sys::Group < ApplicationRecord
   end
   
   def full_name
-    n = name
-    n = "#{parent.name}　#{n}" if parent && parent.level_no > 1
-    n
+    ancestors.drop(1).map(&:name).join('　')
   end
 
   def tree_name(prefix: '　　', depth: 0)

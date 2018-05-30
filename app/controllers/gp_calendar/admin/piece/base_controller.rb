@@ -7,10 +7,4 @@ class GpCalendar::Admin::Piece::BaseController < Cms::Admin::Piece::BaseControll
     params[:item][:in_settings] = item_in_settings
     super
   end
-
-  private
-
-  def find_piece
-    model.readable.find(params[:id])
-  end
 end

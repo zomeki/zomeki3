@@ -236,7 +236,7 @@ module Sys::Model::Base::File
   end
 
   def remove_exif_from_image
-    if image_file?
+    if image_file? && mime_type =~ %r{^image/(jpeg|png)}
       { size: upload_path, thumb_size: upload_path(type: :thumb) }.each do |column, path|
         if ::File.exist?(path)
           Util::File.remove_exif(path)

@@ -2,6 +2,9 @@ module Cms::ConceptHelper
   def concept_tree(concepts = nil)
     concepts ||= Core.site.concepts.readable_for(Core.user).to_tree
 
+    cont_paths = params[:controller].split('/')
+    full_paths = request.fullpath.split('/')
+
     concepts.map do |concept|
       children = concept.children
 
@@ -16,10 +19,12 @@ module Cms::ConceptHelper
         html << link_to(icon_mark, "#", id: "naviConceptIcon#{concept.id}", class: icon_cls.join(' '))
         html << " "
 
-        url = if request.fullpath.split('/')[2].in?(%w(sys cms plugins))
+        url = if cont_paths[0].in?(%w(sys cms)) || cont_paths[2].in?(%w(piece node))
                 { action: :index, concept: concept.id }
+              elsif full_paths[2].in?(%w(plugins))
+                "#{full_paths[0..3].compact.join('/')}?concept=#{concept.id}"
               else
-                main_app.cms_contents_path(concept.id)
+                main_app.cms_contents_path(concept: concept.id)
               end
         html << link_to(concept.name, url, id: "naviConceptItem#{concept.id}", class: item_cls.join(' '))
 

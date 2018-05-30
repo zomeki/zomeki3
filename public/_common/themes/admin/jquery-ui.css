@@ -1,5 +1,11 @@
 @charset "UTF-8";
 
+/* ui-widget
+--------------------------- */
+.ui-widget {
+  font-size: inherit;
+}
+
 /* form
 --------------------------- */
 input.js-date {
@@ -12,19 +18,11 @@ input.js-datetime {
   font-family: "MS PGothic", sans-serif;
 }
 
-/* date picker
+/* datepicker
 --------------------------- */
-.ui-datepicker {
+.ui-datepicker select.ui-datepicker-year {
+  width: 60px;
 }
-.ui-datepicker table td {
-}
-
-/* datetime picker
---------------------------- */
-.ui-datetime {
-  font-size: 95%;
-}
-.ui-datetime table td {
-  padding: 0px;
-  line-height: 1.3;
+.ui-datepicker select.ui-datepicker-month {
+  width: 60px;
 }

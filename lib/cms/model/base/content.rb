@@ -9,7 +9,7 @@ module Cms::Model::Base::Content
     controller = model.tableize.sub('/', '/admin/')
     Rails.application.routes.url_helpers.url_for({ controller: controller,
                                                    action: :index,
-                                                   concept: concept,
+                                                   concept: concept_id,
                                                    content: self,
                                                    only_path: true }.merge(options))
   rescue ActionController::UrlGenerationError => e
@@ -21,7 +21,7 @@ module Cms::Model::Base::Content
     controller = model.tableize.split('/').first + '/admin/content/base'
     Rails.application.routes.url_helpers.url_for({ controller: controller,
                                                    action: :show,
-                                                   concept: concept,
+                                                   concept: concept_id,
                                                    id: self,
                                                    only_path: true }.merge(options))
   rescue ActionController::UrlGenerationError => e

@@ -9,7 +9,7 @@ module Cms::Model::Rel::Concept
     controller = self.class.name.tableize.sub('/', '/admin/')
     Rails.application.routes.url_helpers.url_for({ controller: controller,
                                                    action: :show,
-                                                   concept: concept,
+                                                   concept: concept_id,
                                                    id: id,
                                                    only_path: true }.merge(options))
   rescue ActionController::UrlGenerationError => e

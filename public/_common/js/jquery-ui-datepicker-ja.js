@@ -13,6 +13,8 @@ $.datepicker.regional['ja'] = {
   firstDay: 0,
   isRTL: false,
   showMonthAfterYear: true,
-  yearSuffix: '年'
+  yearSuffix: '年',
+  changeMonth: true,
+  changeYear: true
 };
 $.datepicker.setDefaults($.datepicker.regional['ja']);
