@@ -8,10 +8,10 @@ class Script
     end
 
     ruby   = "#{RbConfig::CONFIG["bindir"]}/ruby"
-    runner = "#{Rails.root}/bin/rails runner"
-    opts   = options.merge(process_id: proc.id).inspect
-    cmd    = "#{ruby} #{runner} -e #{Rails.env} \"Script.run('#{path}', #{opts})\""
-    system("#{cmd} >/dev/null &")
+    rails  = "#{Rails.root}/bin/rails"
+    script = "Script.run('#{path}', #{options.merge(process_id: proc.id).inspect})"
+    pid = spawn(ruby, rails, 'runner', '-e', Rails.env, script, out: '/dev/null')
+    Process.detach(pid) if pid
     return true
   end
 
