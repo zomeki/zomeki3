@@ -1,5 +1,5 @@
 GIT
-  remote: git://github.com/zomeki/zplugin3-sitebk.git
+  remote: https://github.com/zomeki/zplugin3-sitebk
   revision: d2ab16e3345765a9b9f5f4e1d699a1540d9d7f06
   tag: v1.0.0
   specs:

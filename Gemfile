@@ -115,7 +115,7 @@ gem 'datewari', '~> 1.0.2'
 gem 'enum_ish', '~> 1.0.0'
 gem 'slonik_migration', '~> 1.1.1'
 
-gem 'zplugin3-sitebk', github: 'zomeki/zplugin3-sitebk', tag: 'v1.0.0'
+gem 'zplugin3-sitebk', git: 'https://github.com/zomeki/zplugin3-sitebk', tag: 'v1.0.0'
 
 Dir[File.join(File.dirname(__FILE__), 'config/plugins/**/Gemfile')].each do |file|
   instance_eval File.read(file)
