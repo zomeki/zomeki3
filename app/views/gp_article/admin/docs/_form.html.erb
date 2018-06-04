@@ -2,17 +2,7 @@
 <script type="text/javascript">
 $(document).ready(function () {
   $('#tabs').tabs({
-    active: ($('#tabs > ul > li').length - 1),
-    show: function (event, ui) {
-      if ((typeof map) !== 'undefined' && map) {
-        google.maps.event.trigger(map, 'resize');
-        var lat = $('#centerDispLat').val();
-        var lng = $('#centerDispLat').val();
-        if (lat && lng) {
-          map.setCenter(new google.maps.LatLng($('#centerDispLat').val(), $('#centerDispLng').val()));
-        }
-      }
-    }
+    active: ($('#tabs > ul > li').length - 1)
   });
   $('#tabs .ui-tabs-nav > li').css('float', 'right');
   $('#tabs').show();

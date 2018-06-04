@@ -6,71 +6,96 @@ map_lng  = map.map_lng.presence || default_position[1]
 map_zoom = map.map_zoom.presence || 14
 markers = map.markers
 -%>
-<%- if item.state != 'closed' -%>
-<%= javascript_include_tag "https://maps.googleapis.com/maps/api/js?key=#{item.site.google_map_api_key}&region=jp" %>
+
 <script type="text/javascript">
 //<![CDATA[
 var map = null;
 
 $(function() {
-  var mapOptions = {
-    center: new google.maps.LatLng(<%= map_lat %>, <%= map_lng %>),
-    zoom: <%= map_zoom %>,
-    mapTypeId: google.maps.MapTypeId.ROADMAP,
-    scaleControl: true,
-    scrollwheel: false
-  };
-  map = new google.maps.Map(document.getElementById("map1"), mapOptions);
+  var mapLoaded = false;
 
-  <% markers.each_with_index do |marker, idx| %>
-    var marker<%= idx %> = new google.maps.Marker({
-      //title: '<%= marker.name.gsub(/'/, "\\\\'") %>'
-      position: new google.maps.LatLng(<%= marker.lat %>, <%= marker.lng %>),
-      map: map
-    });
-    var infowindow<%= idx %> = new google.maps.InfoWindow({
-      content: '<%= marker.name.gsub(/'/, "\\\\'").gsub(/\r\n|\r|\n/, "<br />") %>',
-      disableAutoPan: false
-    });
-    google.maps.event.addListener(marker<%= idx %>, 'click', function() {
-      infowindow<%= idx %>.open(map, marker<%= idx %>);
-    });
-  <% end %>
+  $('#showMap').on('click', function() {
+    if (mapLoaded) {
+      showMap();
+    } else {
+      var script = document.createElement('script');
+      script.src = 'https://maps.googleapis.com/maps/api/js?key=<%= item.site.google_map_api_key %>&region=jp';
+      script.onload = showMap;
+      document.body.appendChild(script);
+      mapLoaded = true;
+    }
+  });
+
+  function showMap() {
+    var mapOptions = {
+      center: new google.maps.LatLng(<%= map_lat %>, <%= map_lng %>),
+      zoom: <%= map_zoom %>,
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      scaleControl: true,
+      scrollwheel: false
+    };
+    var map = new google.maps.Map(document.getElementById("map1"), mapOptions);
+
+    <% markers.each_with_index do |marker, idx| %>
+      var marker<%= idx %> = new google.maps.Marker({
+        //title: '<%= marker.name.gsub(/'/, "\\\\'") %>'
+        position: new google.maps.LatLng(<%= marker.lat %>, <%= marker.lng %>),
+        map: map
+      });
+      var infowindow<%= idx %> = new google.maps.InfoWindow({
+        content: '<%= marker.name.gsub(/'/, "\\\\'").gsub(/\r\n|\r|\n/, "<br />") %>',
+        disableAutoPan: false
+      });
+      google.maps.event.addListener(marker<%= idx %>, 'click', function() {
+        infowindow<%= idx %>.open(map, marker<%= idx %>);
+      });
+    <% end %>
+  }
 });
 //]]>
 </script>
-<%- end -%>
 
-<div style="padding: 5px 10px;">
-  <div id="map1" style="width: 100%; height: 400px;">
-  <%- if item.state == 'closed' -%>
-    <div style="width: 100%; display: table;">
-      <div style="height: 400px; display: table-cell; background-color: #dcdcdc; text-align: center; vertical-align: middle;">
-        <span>公開終了状態のため地図は表示されません</span>
-      </div>
-    </div>
-  <%- end -%>
+<div id="mapForm" class="articleMapForm">
+  <div style="margin: 10px;">
+    <%= button_tag '地図を表示', type: :button, id: 'showMap' %>
+  </div>
+  <div style="margin: 10px;">
+    <div id="map1" class="mapCanvas"></div>
   </div>
 </div>
+
 <p class="form">マップの設定</p>
-<table class="show mapForm">
+<table class="show">
   <tr>
-    <th style="width: 90px;">マップ名</th>
+    <th>マップ名</th>
     <td class="name"><%= map.title %></td>
-  </tr><tr>
-    <th style="width: 90px;">座標</th>
+  </tr>
+  <tr>
+    <th>座標</th>
     <td class="point">
       <%- if map.map_lat.present? && map.map_lng.present? -%>
-        <%= map.map_lat %>, <!--
-        --><%= map.map_lng %>
+        <%= map.map_lat %>, <%= map.map_lng %>
       <%- end -%>
-      <input id="centerDispLat" name="centerDispLat" type="hidden" value="<%= map.map_lat %>" />
-      <input id="centerDispLng" name="centerDispLng" type="hidden" value="<%= map.map_lng %>"/>
-    </td>
-  </tr><tr>
-    <th style="width: 90px;">縮尺</th>
-    <td class="zoom">
-      <%= map.map_zoom %>
     </td>
   </tr>
+  <tr>
+    <th>縮尺</th>
+    <td class="zoom"><%= map.map_zoom %></td>
+  </tr>
 </table>
+
+<%- if markers.present? -%>
+<p class="form">マーカーの設定</p>
+<table class="show">
+  <tbody>
+  <%- markers.each do |marker| %>
+    <tr>
+      <th class="name">名称</th>
+      <td class="name"><%= marker.name %></td>
+      <th class="point">座標</th>
+      <td class="point"><%= marker.lat %>, <%= marker.lng %></td>
+    </tr>
+  <%- end -%>
+  </tbody>
+</table>
+<%- end -%>
