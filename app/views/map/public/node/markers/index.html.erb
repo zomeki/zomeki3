@@ -26,17 +26,17 @@
                      result
                    } -%>
     map = new MapViewer('map_canvas', <%= bounds[:min][:lat] %>, <%= bounds[:min][:lon] %>,
-                                       <%= bounds[:max][:lat] %>, <%= bounds[:max][:lon] %>);
+                                      <%= bounds[:max][:lat] %>, <%= bounds[:max][:lon] %>);
     <%- else -%>
     <%- default_position = default_map_position(@content) -%>
-    map = new MapViewer('map_canvas', <%= default_position[0] %>, <%= default_position[1] %>);
+    map = new MapViewer('map_canvas', <%= default_position[0].to_f %>, <%= default_position[1].to_f %>);
     <%- end -%>
 
     <%- @all_markers.each do |marker| -%>
-      map.set_marker('<%= "#{marker.latitude}_#{marker.longitude}" %>', <%= marker.latitude %>, <%= marker.longitude %>, '<%= marker.title %>',
-                     '<%=raw simple_format(marker.window_text, {}, sanitize: false).gsub(/\r|\n/, '').gsub("'", '&#x27;') %>',
-                     '<%= @content.icon_image(marker.icon_category || (marker.categories.include?(@specified_category) ? @specified_category
-                                                                                                                       : marker.categories.first), true) %>');
+      map.set_marker('<%= "#{marker.latitude}_#{marker.longitude}" %>', <%= marker.latitude.to_f %>, <%= marker.longitude.to_f %>, '<%==j marker.title %>',
+                     '<%==j br(marker.window_text) %>',
+                     '<%==j @content.icon_image(marker.icon_category || (marker.categories.include?(@specified_category) ? @specified_category
+                                                                                                                         : marker.categories.first), true) %>');
 
     <%- end -%>
   });
