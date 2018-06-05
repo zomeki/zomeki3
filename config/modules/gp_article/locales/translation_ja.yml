@@ -63,6 +63,10 @@ ja:
         inquiries/email: 連絡先（メールアドレス）
         inquiries/note: 連絡先（備考）
         related_docs: 関連記事
+      gp_article/doc/maps:
+        map_lat: 緯度
+        map_lng: 経度
+        map_zoom: 縮尺
       gp_article/doc/maps/markers:
         lat: 緯度
         lng: 経度

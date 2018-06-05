@@ -3,7 +3,7 @@ class Cms::MapMarker < ApplicationRecord
 
   belongs_to :map
 
-  validates :lat, :lng, presence: true
+  validates :lat, :lng, presence: true, numericality: true
 
   nested_scope :in_site, through: :map
 

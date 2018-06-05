@@ -32,7 +32,7 @@ $(function() {
     // map
     var mapOptions = {
       center: new google.maps.LatLng(<%= map_lat.to_f %>, <%= map_lng.to_f %>),
-      zoom: <%= map_zoom %>,
+      zoom: <%= map_zoom.to_i %>,
       mapTypeId: google.maps.MapTypeId.ROADMAP,
       scaleControl: true,
       scrollwheel: false
@@ -49,12 +49,11 @@ $(function() {
     <% map.markers.each_with_index do |marker, idx| %>
       <%- next if marker.lat.blank? || marker.lng.blank? -%>
       var marker<%= idx %> = new google.maps.Marker({
-        //title: '<%= marker.name.to_s.gsub(/'/, "\\\\'") %>'
-        position: new google.maps.LatLng(<%= marker.lat %>, <%= marker.lng %>),
+        position: new google.maps.LatLng(<%= marker.lat.to_f %>, <%= marker.lng.to_f %>),
         map: map
       });
       var infowindow<%= idx %> = new google.maps.InfoWindow({
-        content: '<%= marker.name.to_s.gsub(/'/, "\\\\'").gsub(/\r\n|\r|\n/, "<br />") %>',
+        content: '<%==j marker.name.gsub(/\r\n|\r|\n/, "<br />") %>',
         disableAutoPan: false
       });
       google.maps.event.addListener(marker<%= idx %>, 'click', function() {

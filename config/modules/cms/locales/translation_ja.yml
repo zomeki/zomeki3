@@ -222,6 +222,11 @@ ja:
         email: メールアドレス
         note: 備考
 
+      cms/map:
+        map_lat: 緯度
+        map_lng: 経度
+        map_zoom: 縮尺
+
       ## tool
       cms/model/tool/export:
         concept_id: コンセプト
