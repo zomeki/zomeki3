@@ -84,10 +84,10 @@ private
     return if params[:inlining] == 'true'
 
     html = render_to_string(partial: 'cms/admin/preview/header', formats: [:html])
-    response.body = response.body.to_s.sub(/(<\/head>)/i, html + '\\1')
+    response.body = response.body.to_s.sub(/(<\/head>)/i) { html + $1.html_safe }
 
     html = render_to_string(partial: 'cms/admin/preview/mark', formats: [:html])
-    response.body = response.body.to_s.sub(/(<body[^>]*?>)/i, '\\1' + html)
+    response.body = response.body.to_s.sub(/(<body[^>]*?>)/i) { $1.html_safe + html }
   end
 
   def replace_links_for_preview
@@ -116,7 +116,7 @@ private
     [%w(a href), %w(img src)].each do |tag, attr|
       doc.css(%Q!#{tag}[#{attr}^="#{public_uri}"]!).each do |node|
         next if node[attr].blank?
-        node[attr] = node[attr].sub(public_uri, admin_uri)
+        node[attr] = node[attr].sub(public_uri) { admin_uri }
       end
     end
 
