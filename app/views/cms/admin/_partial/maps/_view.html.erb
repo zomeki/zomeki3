@@ -19,7 +19,7 @@ $(function() {
       showMap();
     } else {
       var script = document.createElement('script');
-      script.src = 'https://maps.googleapis.com/maps/api/js?key=<%= item.site.google_map_api_key %>&region=jp';
+      script.src = 'https://maps.googleapis.com/maps/api/js?key=<%==j item.site.google_map_api_key %>&region=jp';
       script.onload = showMap;
       document.body.appendChild(script);
       mapLoaded = true;

@@ -34,7 +34,7 @@ addEvent(window, 'load', function() {
     });
 
     <%- if item.content.respond_to?(:map_content_marker) && (map_content = item.content.map_content_marker) -%>
-    marker<%= idx %>.setIcon('<%= map_content.icon_image(item.marker_icon_category || item.marker_categories.first) %>');
+    marker<%= idx %>.setIcon('<%==j map_content.icon_image(item.marker_icon_category || item.marker_categories.first) %>');
     <%- end -%>
 
     var infowindow<%= idx %> = new google.maps.InfoWindow({
