@@ -20,6 +20,10 @@ class Cms::BracketRenderService < ApplicationService
 
   private
 
+  def h(html)
+    ERB::Util.html_escape(html);
+  end
+
   def render_data_texts(html)
     Cms::Lib::Layout.find_data_texts(html, @concepts).each do |name, item|
       html.gsub!("[[text/#{name}]]") { item.body }
@@ -29,7 +33,7 @@ class Cms::BracketRenderService < ApplicationService
   def render_data_files(html)
     Cms::Lib::Layout.find_data_files(html, @concepts).each do |name, item|
       data = if item.image_file?
-               %Q|<img src="#{item.public_uri}" alt="#{item.alt_text}" title="#{item.title}" />|
+               %Q|<img src="#{item.public_uri}" alt="#{h(item.alt_text)}" title="#{h(item.title)}" />|
              else
                %Q|<a href="#{item.public_uri}" class="#{item.css_class}" target="_blank">#{item.united_name}</a>|
              end
