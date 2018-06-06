@@ -7,7 +7,7 @@ $(document).ready(function () {
 
   <%- if (active_tab = params[:active_tab]) -%>
   $('#tabs > ul > li').each(function (index, item) {
-    if ($(item).hasClass('<%= active_tab %>')) {
+    if ($(item).hasClass('<%==j active_tab %>')) {
       active_tab_index = index;
       return false;
     }
@@ -15,17 +15,7 @@ $(document).ready(function () {
   <%- end -%>
 
   $('#tabs').tabs({
-    active: active_tab_index,
-    show: function (event, ui) {
-      if ((typeof map) !== 'undefined' && map) {
-        google.maps.event.trigger(map, 'resize');
-        var lat = $('#centerDispLat').val();
-        var lng = $('#centerDispLat').val();
-        if (lat && lng) {
-          map.setCenter(new google.maps.LatLng($('#centerDispLat').val(), $('#centerDispLng').val()));
-        }
-      }
-    }
+    active: active_tab_index
   });
   $('#tabs .ui-tabs-nav > li').css('float', 'right');
   $('#tabs').show();

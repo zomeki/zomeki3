@@ -55,8 +55,7 @@ class Cms::Layout < ApplicationRecord
 
     concepts = Cms::Lib::Layout.inhertited_concepts
     Cms::Lib::Layout.find_data_texts(tag, concepts).each do |name, item|
-      data = item.body
-      tag.gsub!("[[text/#{name}]]", data)
+      tag.gsub!("[[text/#{name}]]") { item.body }
     end
     tag.gsub!(/\[\[text\/[^\]]+\]\]/, '')
 

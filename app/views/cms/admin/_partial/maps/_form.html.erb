@@ -7,7 +7,6 @@ map_lat  = map.map_lat.presence || default_position[0]
 map_lng  = map.map_lng.presence || default_position[1]
 map_zoom = map.map_zoom.presence || 14
 -%>
-<%= javascript_include_tag "https://maps.googleapis.com/maps/api/js?key=#{item.site.google_map_api_key}&region=jp" %>
 <%= javascript_include_tag "/_common/modules/cms/js/map.js" %>
 <script type="text/javascript">
 //<![CDATA[
@@ -15,47 +14,64 @@ var map = null;
 var me = null;
 
 $(function() {
-  // map
-  var mapOptions = {
-    center: new google.maps.LatLng(<%= map_lat.to_f %>, <%= map_lng.to_f %>),
-    zoom: <%= map_zoom %>,
-    mapTypeId: google.maps.MapTypeId.ROADMAP,
-    scaleControl: true,
-    scrollwheel: false
-  };
-  map = new google.maps.Map(document.getElementById("map1"), mapOptions);
+  var mapLoaded = false;
 
-  me = new MapEditor(map);
-  me.syncMap();
-  google.maps.event.addListener(map, 'dragend', function(){ me.syncMap(); } );
-  google.maps.event.addListener(map, 'zoom_changed', function(){ me.syncMap(); } );
-  google.maps.event.addListener(map, 'click', function(event){ me.syncClick(event); } );
-
-  // markers
-  <% map.markers.each_with_index do |marker, idx| %>
-    <%- next if marker.lat.blank? || marker.lng.blank? -%>
-    var marker<%= idx %> = new google.maps.Marker({
-      //title: '<%= marker.name.to_s.gsub(/'/, "\\\\'") %>'
-      position: new google.maps.LatLng(<%= marker.lat %>, <%= marker.lng %>),
-      map: map
-    });
-    var infowindow<%= idx %> = new google.maps.InfoWindow({
-      content: '<%= marker.name.to_s.gsub(/'/, "\\\\'").gsub(/\r\n|\r|\n/, "<br />") %>',
-      disableAutoPan: false
-    });
-    google.maps.event.addListener(marker<%= idx %>, 'click', function() {
-      infowindow<%= idx %>.open(map, marker<%= idx %>);
-    });
-
-    // registers to a editor
-    me.markers['item_maps_attributes_0_markers_attributes_<%= idx %>'] = marker<%= idx %>;
-  <%- end -%>
-
-  // hidden
-  google.maps.event.addListener(map, 'tilesloaded', function() {
-    google.maps.event.clearListeners(map, 'tilesloaded');
+  $('#showMap').on('click', function() {
+    if (mapLoaded) {
+      showMap();
+    } else {
+      var script = document.createElement('script');
+      script.src = 'https://maps.googleapis.com/maps/api/js?key=<%==j item.site.google_map_api_key %>&region=jp';
+      script.onload = showMap;
+      document.body.appendChild(script);
+      mapLoaded = true;
+    }
   });
 
+  function showMap() {
+    // map
+    var mapOptions = {
+      center: new google.maps.LatLng(<%= map_lat.to_f %>, <%= map_lng.to_f %>),
+      zoom: <%= map_zoom.to_i %>,
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      scaleControl: true,
+      scrollwheel: false
+    };
+    map = new google.maps.Map(document.getElementById("map1"), mapOptions);
+
+    me = new MapEditor(map);
+    me.syncMap();
+    google.maps.event.addListener(map, 'dragend', function(){ me.syncMap(); } );
+    google.maps.event.addListener(map, 'zoom_changed', function(){ me.syncMap(); } );
+    google.maps.event.addListener(map, 'click', function(event){ me.syncClick(event); } );
+
+    // markers
+    <% map.markers.each_with_index do |marker, idx| %>
+      <%- next if marker.lat.blank? || marker.lng.blank? -%>
+      var marker<%= idx %> = new google.maps.Marker({
+        position: new google.maps.LatLng(<%= marker.lat.to_f %>, <%= marker.lng.to_f %>),
+        map: map
+      });
+      var infowindow<%= idx %> = new google.maps.InfoWindow({
+        content: '<%==j marker.name.gsub(/\r\n|\r|\n/, "<br />") %>',
+        disableAutoPan: false
+      });
+      google.maps.event.addListener(marker<%= idx %>, 'click', function() {
+        infowindow<%= idx %>.open(map, marker<%= idx %>);
+      });
+
+      // registers to a editor
+      me.markers['item_maps_attributes_0_markers_attributes_<%= idx %>'] = marker<%= idx %>;
+    <%- end -%>
+
+    // hidden
+    google.maps.event.addListener(map, 'tilesloaded', function() {
+      google.maps.event.clearListeners(map, 'tilesloaded');
+    });
+  }
+});
+
+$(function() {
   $('#addMarkerForm').on('click', function() {
     var idx = $('#markerFormTbody tr').length;
     var elem = $('#markerFormTbody tr:last').clone();
@@ -66,13 +82,17 @@ $(function() {
       .replace(/\[markers_attributes\]\[\d+\]/g, "[markers_attributes][" + idx + "]");
     $('#markerFormTbody').append( $('<tr>').append(html) );
     return false;
+  
   });
 });
 //]]>
 </script>
 
 <div id="mapForm" class="articleMapForm">
-  <div id="map1" class="mapCanvas"></div>
+  <div id="map1" class="mapCanvas">
+    <%= button_tag '地図を表示', type: :button, id: 'showMap' %>
+  </div>
+
   <table class="show mapInfo">
     <caption>表示中のマップ情報</caption>
     <tr>
@@ -80,7 +100,7 @@ $(function() {
       <td>
         <input id="searchAddr" name="searchAddr" type="text" value="" style="width: 150px"
          onkeydown="me.search('searchAddr', event);" />
-        <button type="button" onclick="me.search('searchAddr'); return false;">検索</button>
+        <button type="button" onclick="me && me.search('searchAddr'); return false;">検索</button>
       </td>
     </tr><tr>
       <th style="width: 90px;">現在の座標</th>
@@ -115,7 +135,7 @@ $(function() {
         <th style="width: 90px;">縮尺</th>
         <td class="zoom">
           <%= f2.text_field :map_zoom, id: 'item_maps_attributes_0_mapZoom' %>
-          <a href="#" onclick="me.setMapInfo('item_maps_attributes_0_map'); return false;">≪現在の座標と縮尺を設定する</a>
+          <a href="#" onclick="me && me.setMapInfo('item_maps_attributes_0_map'); return false;">≪現在の座標と縮尺を設定する</a>
         </td>
       </tr>
     </table>
@@ -135,8 +155,8 @@ $(function() {
             --><%= f3.text_field :lng, id: "item_maps_attributes_0_markers_attributes_#{f3.index}Lng" %>
           </td>
           <td class="action">
-            <a href="#" onclick="me.setMarker('item_maps_attributes_0_markers_attributes_<%= f3.index %>'); return false;">≪クリックした座標を設定する</a>
-            <a href="#" onclick="me.unsetMarker('item_maps_attributes_0_markers_attributes_<%= f3.index %>'); return false;">≪クリア</a>
+            <a href="#" onclick="me && me.setMarker('item_maps_attributes_0_markers_attributes_<%= f3.index %>'); return false;">≪クリックした座標を設定する</a>
+            <a href="#" onclick="me && me.unsetMarker('item_maps_attributes_0_markers_attributes_<%= f3.index %>'); return false;">≪クリア</a>
           </td>
         </tr>
       <%- end -%>

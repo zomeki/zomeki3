@@ -59,7 +59,11 @@ class Survey::Content::Setting < Cms::ContentSetting
   def validate_value
     case name
     when 'mail_from', 'mail_to'
-      errors.add :value, :blank if value.blank?
+      if value.blank?
+        errors.add :value, :blank
+      elsif value !~ /\A.+@.+\z/
+        errors.add :value, :email
+      end
     end
   end
 end

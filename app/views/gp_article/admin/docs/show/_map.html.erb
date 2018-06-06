@@ -1,12 +1,20 @@
 <table class="show">
-  <tr>
-    <th><%= @item.class.human_attribute_name :marker_state %></th>
-    <td><%= @item.marker_state_text %></td>
-  </tr>
-  <tr>
-    <th><%= @item.class.human_attribute_name :marker_icon_category_id %></th>
-    <td><%= @item.marker_icon_category.try(:title) %></td>
-  </tr>
+  <%- if @content.map_content_marker -%>
+    <tr>
+      <th><%= @item.class.human_attribute_name :marker_state %></th>
+      <td><%= @item.marker_state_text %></td>
+    </tr>
+    <tr>
+      <th><%= @item.class.human_attribute_name :marker_sort_no %></th>
+      <td><%= @item.marker_sort_no %></td>
+    </tr>
+    <%- if @content.marker_icon_category_enabled? -%>
+    <tr>
+      <th><%= @item.class.human_attribute_name :marker_icon_category_id %></th>
+      <td><%= @item.marker_icon_category.try(:title) %></td>
+    </tr>
+    <%- end -%>
+  <%- end -%>
   <%- @content.marker_category_types.each do |category_type| -%>
   <tr>
     <th><%= category_type.title %></th>

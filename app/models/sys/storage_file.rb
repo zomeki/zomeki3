@@ -41,8 +41,7 @@ class Sys::StorageFile < ApplicationRecord
   end
 
   def set_mime_type
-    result = `file -b --mime #{path}`
-    self.mime_type = result.split(/[:;]\s+/).first
+    self.mime_type = Util::File.mime_type(path)
   rescue => e
     warn_log e.message
   end

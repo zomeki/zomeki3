@@ -6,11 +6,17 @@
 
 /* map form */
 .articleMapForm .mapCanvas {
-  float: left;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 900px;
   height: 450px;
-  margin: 20px 20px 0 0;
+  margin: 10px 10px 0 0;
   border: 1px solid #666;
+  background-color: #ddd;
+}
+.articleMapForm .mapCanvas button {
+  padding: 10px 20px;
 }
 .articleMapForm table.mapInfo caption,
 .articleMapForm table.mapForm caption,

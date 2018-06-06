@@ -10,7 +10,7 @@ class Cms::WordDictionaryService < ApplicationService
 
   def replace(text)
     return text if text.blank?
-    @words.each { |src, dst| text = text.gsub(src, dst) }
+    @words.each { |src, dst| text = text.gsub(src) { dst } }
     text
   end
 end

@@ -19,8 +19,8 @@ function addEvent(element, listener, func) {
 
 addEvent(window, 'load', function() {
   var mapOptions = {
-    center: new google.maps.LatLng(<%= map.map_lat %>, <%= map.map_lng %>),
-    zoom: <%= map.map_zoom %>,
+    center: new google.maps.LatLng(<%= map.map_lat.to_f %>, <%= map.map_lng.to_f %>),
+    zoom: <%= map.map_zoom.to_i %>,
     mapTypeId: google.maps.MapTypeId.ROADMAP,
     scaleControl: true,
     scrollwheel: false
@@ -29,17 +29,16 @@ addEvent(window, 'load', function() {
 
   <% markers.each_with_index do |marker, idx| %>
     var marker<%= idx %> = new google.maps.Marker({
-      //title: '<%= marker.name.gsub(/'/, "\\\\'") %>'
-      position: new google.maps.LatLng(<%= marker.lat %>, <%= marker.lng %>),
+      position: new google.maps.LatLng(<%= marker.lat.to_f %>, <%= marker.lng.to_f %>),
       map: map
     });
 
     <%- if item.content.respond_to?(:map_content_marker) && (map_content = item.content.map_content_marker) -%>
-    marker<%= idx %>.setIcon('<%= map_content.icon_image(item.marker_icon_category || item.marker_categories.first) %>');
+    marker<%= idx %>.setIcon('<%==j map_content.icon_image(item.marker_icon_category || item.marker_categories.first) %>');
     <%- end -%>
 
     var infowindow<%= idx %> = new google.maps.InfoWindow({
-      content: '<%= marker.name.gsub(/'/, "\\\\'").gsub(/\r\n|\r|\n/, "<br />") %>',
+      content: '<%==j marker.name.gsub(/\r\n|\r|\n/, "<br />") %>',
       disableAutoPan: false
     });
     google.maps.event.addListener(marker<%= idx %>, 'click', function() {

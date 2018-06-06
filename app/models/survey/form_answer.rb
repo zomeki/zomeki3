@@ -18,13 +18,13 @@ class Survey::FormAnswer < ApplicationRecord
       next unless question = form.questions.detect { |q| q.id == key.to_i }
       case question.form_type
       when 'attachment'
-        if value.respond_to?(:original_filename)  # UploadedFile
-          answer = answers.build(form_answer: self, question: question, content: value.original_filename)
+        if (file = value[:file]) && file.respond_to?(:original_filename)  # UploadedFile
+          answer = answers.build(form_answer: self, question: question, content: file.original_filename)
           at = answer.build_attachment(site_id: form.content.site_id)
-          at.name = at.title = value.original_filename
-          at.file = value
-          at.data = value.read
-        elsif value.key?(:name)
+          at.name = at.title = file.original_filename
+          at.file = file
+          at.data = file.read
+        elsif value[:name]
           answer = answers.build(form_answer: self, question: question, content: value[:name])
           if value[:data].present?
             at = answer.build_attachment(site_id: form.content.site_id)

@@ -3,6 +3,8 @@ engines:
     enabled: true
   brakeman:
     enabled: true
+  bundler-audit:
+    enabled: true
   eslint:
     enabled: true
   csslint:

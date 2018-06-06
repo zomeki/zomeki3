@@ -14,26 +14,30 @@ class Cms::BracketRenderService < ApplicationService
     render_data_files(html)
     render_adobe_reader_link(html)
 
-    html.gsub!(/\[\[[a-z]+\/[^\]]+\]\]/, '')
+    html.gsub!(/\[\[[a-z]+\/[^\]]+\]\]/) { '' }
     html
   end
 
   private
 
+  def h(html)
+    ERB::Util.html_escape(html);
+  end
+
   def render_data_texts(html)
     Cms::Lib::Layout.find_data_texts(html, @concepts).each do |name, item|
-      html.gsub!("[[text/#{name}]]", item.body)
+      html.gsub!("[[text/#{name}]]") { item.body }
     end
   end
 
   def render_data_files(html)
     Cms::Lib::Layout.find_data_files(html, @concepts).each do |name, item|
       data = if item.image_file?
-               %Q|<img src="#{item.public_uri}" alt="#{item.alt_text}" title="#{item.title}" />|
+               %Q|<img src="#{item.public_uri}" alt="#{h(item.alt_text)}" title="#{h(item.title)}" />|
              else
                %Q|<a href="#{item.public_uri}" class="#{item.css_class}" target="_blank">#{item.united_name}</a>|
              end
-      html.gsub!("[[file/#{name}]]", data)
+      html.gsub!("[[file/#{name}]]") { data }
     end
   end
 
@@ -41,7 +45,7 @@ class Cms::BracketRenderService < ApplicationService
     return unless html.include?('@adobe-reader-link@')
 
     if (@mobile && !@mobile.smart_phone?) || !@site.adobe_reader_link_enabled?
-      html.gsub!('@adobe-reader-link@', '')
+      html.gsub!('@adobe-reader-link@') { '' }
     else
       body = Nokogiri::HTML.fragment(html).xpath("descendant::div[@class='body']").inner_html
       link = if Util::Link.include_pdf_link?(body)
@@ -49,7 +53,7 @@ class Cms::BracketRenderService < ApplicationService
              else
                ''
              end
-      html.gsub!('@adobe-reader-link@', link)
+      html.gsub!('@adobe-reader-link@') { link }
     end
   end
 end

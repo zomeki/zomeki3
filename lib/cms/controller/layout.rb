@@ -103,7 +103,7 @@ module Cms::Controller::Layout
         if data =~ /^<html/ && Rails.env.to_s == 'production'
           # component error
         else
-          body.gsub!("[[piece/#{name}]]", piece_container_html(item, data))
+          body.gsub!("[[piece/#{name}]]") { piece_container_html(item, data) }
         end
       rescue => e
         error_log e
@@ -111,7 +111,7 @@ module Cms::Controller::Layout
     end
 
     ## render the content
-    body.gsub!("[[content]]", Page.content)
+    body.gsub!("[[content]]") { Page.content }
 
     ## render other brackets
     body = Cms::BracketRenderService.new(Page.site, concepts, mobile: request.mobile)

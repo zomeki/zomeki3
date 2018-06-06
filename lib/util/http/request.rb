@@ -1,46 +1,58 @@
 class Util::Http::Request
-  def self.head(url, options = {})
-    uri = Addressable::URI.parse(url).normalize
-    rescue_timeout do
-      Faraday.head(uri) do |req|
-        set_request_from_options(req, options)
+  class << self
+    def head(url, options = {})
+      rescue_error do
+        uri = Addressable::URI.parse(url).normalize
+        return Faraday::Response.new if invalid_uri?(uri)
+
+        Faraday.head(uri) do |req|
+          set_request_from_options(req, options)
+        end
       end
     end
-  end
 
-  def self.get(url, options = {})
-    uri = Addressable::URI.parse(url).normalize
-    rescue_timeout do
-      Faraday.get(uri) do |req|
-        set_request_from_options(req, options)
+    def get(url, options = {})
+      rescue_error do
+        uri = Addressable::URI.parse(url).normalize
+        return Faraday::Response.new if invalid_uri?(uri)
+
+        Faraday.get(uri) do |req|
+          set_request_from_options(req, options)
+        end
       end
     end
-  end
 
-  def self.post(url, body, options = {})
-    uri = Addressable::URI.parse(url).normalize
-    rescue_timeout do
-      Faraday.post(uri, body) do |req|
-        set_request_from_options(req, options)
+    def post(url, body, options = {})
+      rescue_error do
+        uri = Addressable::URI.parse(url).normalize
+        return Faraday::Response.new if invalid_uri?(uri)
+
+        Faraday.post(uri, body) do |req|
+          set_request_from_options(req, options)
+        end
       end
     end
-  end
 
-  private
+    private
 
-  def self.rescue_timeout
-    yield
-  rescue Faraday::TimeoutError => e
-    Faraday::Response.new(status: 408)
-  rescue => e
-    warn_log e
-    Faraday::Response.new
-  end
+    def invalid_uri?(uri)
+      uri.scheme.blank? || uri.host.blank?
+    end
 
-  def self.set_request_from_options(req, options)
-    req.headers = options[:header] if options[:header]
-    req.headers['User-Agent'] ||= "Mozilla/5.0 (CMS/#{Zomeki.version})"
-    req.options.timeout = options[:timeout] || 30
-    req.options.open_timeout = options[:timeout] || 30
+    def rescue_error
+      yield
+    rescue Faraday::TimeoutError => e
+      Faraday::Response.new(status: 408)
+    rescue => e
+      warn_log e
+      Faraday::Response.new
+    end
+
+    def set_request_from_options(req, options)
+      req.headers = options[:header] if options[:header]
+      req.headers['User-Agent'] ||= "Mozilla/5.0 (CMS/#{Zomeki.version})"
+      req.options.timeout = options[:timeout] || 30
+      req.options.open_timeout = options[:timeout] || 30
+    end
   end
 end
