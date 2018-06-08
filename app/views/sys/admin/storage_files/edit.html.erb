@@ -1,4 +1,4 @@
-<%= form_for :item, url: "?do=update", html: { method: :post } do |f| %>
+<%= form_for :item, url: '?do=update', html: { method: :patch } do |f| %>
   <%= error_messages_for :item  %>
 
   <%- if @item.file_entry? -%>

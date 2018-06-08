@@ -32,7 +32,7 @@ $(function(){
 <%- when 'show' -%>
   <%= link_to :index, { path: @parent.path_from_site_root } %>
   <%= link_to :edit, { path: @item.path_from_site_root, do: :edit } if @item.editable? && @item.file_entry? && @item.text_file? %>
-  <%= link_to :destroy, { path: @item.path_from_site_root, do: :destroy }, confirm: '削除してよろしいですか？' if @item.deletable? %>
+  <%= link_to :destroy, { path: @item.path_from_site_root }, method: :delete, confirm: '削除してよろしいですか？' if @item.deletable? %>
   <%= link_to 'ダウンロード', { path: @item.path_from_site_root, do: :download }, confirm: 'ディレクトリ内のファイルを圧縮してダウンロードします。よろしいですか？' if @item.directory_entry? %>
 <%- when 'edit', 'update' -%>
   <%= link_to :index, { path: @parent.path_from_site_root } %>
