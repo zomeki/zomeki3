@@ -14,7 +14,13 @@
     <td><%= @item.module_name(:short) %></td>
   </tr><tr>
     <th><%= f.label :name %></th>
-    <td><%= f.text_field :name, class: 'id' %></td>
+    <td>
+      <%- if @item.replace_page? -%>
+        <%= @item.name %>
+      <%- else -%>
+        <%= f.text_field :name, class: 'id' %>
+      <%- end -%>
+    </td>
   </tr><tr>
     <th><%= f.label :title %></th>
     <td><%= f.text_field :title, class: 'name' %></td>
