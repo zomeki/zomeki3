@@ -60,6 +60,10 @@ class Cms::Node < ApplicationRecord
     where(model: models)
   }
 
+  def deletable?
+    parent && Core.user.has_priv?(:delete, item: parent.concept) && state != 'public'
+  end
+
   def states
     [['公開保存','public'],['非公開保存','closed']]
   end
