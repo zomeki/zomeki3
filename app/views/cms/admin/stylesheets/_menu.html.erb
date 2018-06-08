@@ -26,7 +26,7 @@
   <%= link_to :index, { path: @parent.path_from_themes_root } %>
   <%= link_to :edit, { path: @item.path_from_themes_root, do: :edit } if @item.editable? %>
   <%= link_to '移動', { path: @item.path_from_themes_root, do: :move }  if @item.editable? %>
-  <%= link_to :destroy, { path: @item.path_from_themes_root, do: :destroy }, confirm: '削除してよろしいですか？'  if @item.deletable? %>
+  <%= link_to :destroy, { path: @item.path_from_themes_root }, method: :delete, confirm: '削除してよろしいですか？'  if @item.deletable? %>
 <%- when 'edit', 'update' -%>
   <%= link_to :index, { path: @parent.path_from_themes_root } %>
   <%= link_to :show, { path: @item.path_from_themes_root, do: :show } %>
