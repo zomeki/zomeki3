@@ -11,7 +11,7 @@ class Cms::Content < ApplicationRecord
   has_many :nodes, dependent: :destroy
 
   # conditional
-  has_one :main_node, -> { order(:id) }, class_name: 'Cms::Node'
+  has_one :node, -> { order(:id) }, class_name: 'Cms::Node'
   has_many :public_nodes, -> { public_state }, class_name: 'Cms::Node'
   has_many :public_pieces, -> { public_state }, class_name: 'Cms::Piece'
 
@@ -29,7 +29,7 @@ class Cms::Content < ApplicationRecord
   }
 
   def inherited_concept
-    main_node.try!(:inherited_concept) || concept
+    node.try!(:inherited_concept) || concept
   end
 
   def readable?

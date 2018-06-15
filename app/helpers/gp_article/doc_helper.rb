@@ -1,7 +1,7 @@
 module GpArticle::DocHelper
   def doc_link_options(doc)
     uri = if Core.preview_mode? && !doc.state_public?
-            "#{doc.public_uri(without_filename: true)}preview/#{doc.id}/#{doc.filename_for_uri}"
+            "#{doc.public_dir}preview/#{doc.id}/#{doc.filename_for_uri}"
           else
             doc.public_uri
           end
@@ -76,7 +76,7 @@ module GpArticle::DocHelper
 
     def doc_image_tag
       if (file = doc_main_image_file(@doc))
-        image_tag("#{@doc.public_uri(without_filename: true)}file_contents/#{url_encode file.name}", alt: file.alt)
+        image_tag("#{@doc.public_dir}file_contents/#{url_encode file.name}", alt: file.alt)
       end
     end
 

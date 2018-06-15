@@ -59,13 +59,8 @@ class Organization::Group < ApplicationRecord
   end
 
   def public_uri
-    return '' unless content.public_node
-    "#{content.public_node.public_uri}#{path_from_root}/"
-  end
-
-  def public_full_uri
-    return '' unless content.public_node
-    "#{content.public_node.public_full_uri}#{path_from_root}/"
+    return unless node = content.node
+    "#{node.public_uri}#{path_from_root}/"
   end
 
   def ancestors(groups=[])

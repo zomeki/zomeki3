@@ -53,7 +53,7 @@ class Approval::Admin::Mailer < ApplicationMailer
   end
 
   def preview_uri
-    @item.preview_uri
+    Addressable::URI.join(@item.content.site.main_admin_uri, @item.preview_uri).to_s
   end
 
   def detail_uri

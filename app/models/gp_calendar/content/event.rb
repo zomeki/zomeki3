@@ -6,6 +6,8 @@ class GpCalendar::Content::Event < Cms::Content
   has_many :holidays, foreign_key: :content_id, class_name: 'GpCalendar::Holiday', dependent: :destroy
 
   # node
+  has_one :node, -> { where(model: 'GpCalendar::Event').order(:id) },
+                 foreign_key: :content_id, class_name: 'Cms::Node'
   has_one :public_node, -> { public_state.where(model: 'GpCalendar::Event').order(:id) },
                         foreign_key: :content_id, class_name: 'Cms::Node'
 

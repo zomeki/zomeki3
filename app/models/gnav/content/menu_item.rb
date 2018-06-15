@@ -6,6 +6,8 @@ class Gnav::Content::MenuItem < Cms::Content
                         foreign_key: :content_id, class_name: 'Gnav::MenuItem', dependent: :destroy
 
   # node
+  has_one :node, -> { where(model: 'Gnav::MenuItem').order(:id) },
+                 foreign_key: :content_id, class_name: 'Cms::Node'
   has_one :public_node, -> { public_state.where(model: 'Gnav::MenuItem').order(:id) },
                         foreign_key: :content_id, class_name: 'Cms::Node'
 
