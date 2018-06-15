@@ -41,6 +41,7 @@ class Cms::Node < ApplicationRecord
     errors.add :parent_id, :invalid if id != nil && id == parent_id
     errors.add :route_id, :invalid if id != nil && id == route_id
   }
+  validate :validate_confliction, if: :name_changed?
 
   after_initialize :set_defaults
   after_update :move_directory, if: :path_changed?
@@ -144,6 +145,10 @@ class Cms::Node < ApplicationRecord
 
   def set_defaults
     self.directory = (model_type == :directory) if self.has_attribute?(:directory) && directory.nil?
+  end
+
+  def validate_confliction
+    errors.add(:base, 'ファイルまたはディレクトリが既に存在します。') if ::File.exist?(public_path)
   end
 
   def move_directory
