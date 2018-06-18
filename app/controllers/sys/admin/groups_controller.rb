@@ -56,6 +56,7 @@ class Sys::Admin::GroupsController < Cms::Controller::Admin::Base
     @item.level_no = @item.parent.try!(:level_no).to_i + 1
     @item.sites << Core.site if @item.sites.empty?
     _update @item do
+      update_level_no
       Organization::GroupRefreshJob.perform_now(@item.sites)
     end
   end
@@ -85,5 +86,11 @@ class Sys::Admin::GroupsController < Cms::Controller::Admin::Base
       :address, :code, :email, :fax, :ldap, :name, :name_en, :note,
       :parent_id, :sort_no, :state, :tel, :tel_attend, :site_ids => []
     )
+  end
+
+  def update_level_no
+    @item.descendants.each do |child|
+      child.update_columns(level_no: child.ancestors.size)
+    end
   end
 end
