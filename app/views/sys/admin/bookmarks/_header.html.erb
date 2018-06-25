@@ -4,5 +4,5 @@
 
 <ul class="contentMenu">
 <%= render 'layouts/admin/cms/bookmarks', bookmarks: @bookmarks %>
-<li><%= link_to '[ブックマーク管理]', sys_bookmarks_path(parent: 0) %></li>
+<li><%= link_to '[ブックマーク管理]', sys_bookmarks_path(parent: 0), class: 'current' %></li>
 </ul>

@@ -6,8 +6,9 @@ ja:
       sys/role_name: ロール
       sys/object_privilege: 権限
       sys/plugin: プラグイン
-    attributes:
+      sys/bookmark: ブックマーク
 
+    attributes:
       sys/sequence:
         created_at: 作成日時
         updated_at: 更新日時
@@ -158,6 +159,14 @@ ja:
       sys/publisher:
         path: パス
         created_at: 作成日時
+        updated_at: 更新日時
+
+      sys/bookmark:
+        id: ID
+        parent_id: 上位ブックマーク
+        title: リンクタイトル
+        url: リンクURL
+        sort_no: 並び順
         updated_at: 更新日時
 
   activemodel:

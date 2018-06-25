@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180516021926) do
+ActiveRecord::Schema.define(version: 20180611015309) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1319,6 +1319,19 @@ ActiveRecord::Schema.define(version: 20180516021926) do
     t.integer  "form_file_max_size"
     t.string   "form_file_extension"
     t.index ["form_id"], name: "index_survey_questions_on_form_id", using: :btree
+  end
+
+  create_table "sys_bookmarks", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "parent_id"
+    t.string   "title"
+    t.string   "url"
+    t.integer  "level_no"
+    t.integer  "sort_no"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["parent_id"], name: "index_sys_bookmarks_on_parent_id", using: :btree
+    t.index ["user_id"], name: "index_sys_bookmarks_on_user_id", using: :btree
   end
 
   create_table "sys_cache_sweepers", force: :cascade do |t|

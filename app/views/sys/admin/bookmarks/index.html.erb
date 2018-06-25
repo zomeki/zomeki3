@@ -1,0 +1,24 @@
+<%= page_entries_info @items -%>
+
+<table class="index">
+  <tr>
+    <th class="action_link">詳細</th>
+    <th style="width: 60px;"><%= Sys::Bookmark.human_attribute_name :id %></th>
+    <th style="width: 200px;"><%= Sys::Bookmark.human_attribute_name :title %></th>
+    <th><%= Sys::Bookmark.human_attribute_name :url %></th>
+    <th style="width: 80px;"><%= Sys::Bookmark.human_attribute_name :sort_no %></th>
+    <th style="text-align: center; width: 120px;"><%= Sys::Bookmark.human_attribute_name :updated_at %></th>
+  </tr>
+  <% @items.each do |item| %>
+  <tr class="<%= cycle '', 'cycle' %>">
+    <td class="action_link"><%= link_to :show, { action: :show, id: item.id } %></td>
+    <td><%= item.id %></td>
+    <td><%= link_to item.title, { action: :index, parent: item.id } %></td>
+    <td><%= link_to item.url, item.url, target: '_blank' %></td>
+    <td><%= item.sort_no %></td>
+    <td style="text-align: center;"><%=l item.updated_at %></td>
+  </tr>
+  <% end %>
+</table>
+
+<%= paginate @items %>
