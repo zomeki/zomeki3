@@ -31,10 +31,10 @@ class Cms::Lib::BreadCrumbs
         if c[0].class == Array
           l = []
           c.each do |c2|
-            links << content_tag(:li, link_to(c2[0], c2[1]))
+            links << content_tag(:li, link_to(c2[0], c2[1].to_s))
           end
         else
-          links << content_tag(:li, link_to(c[0], c[1]))
+          links << content_tag(:li, link_to(c[0], c[1].to_s))
         end
       end
       h << content_tag(:ol, links.html_safe)

@@ -7,8 +7,8 @@ class GpArticle::Content::Doc < Cms::Content
   has_many :docs, foreign_key: :content_id, class_name: 'GpArticle::Doc', dependent: :destroy
 
   # node
-  has_one :main_node, -> { where(model: 'GpArticle::Doc').order(:id) },
-                      foreign_key: :content_id, class_name: 'Cms::Node'
+  has_one :node, -> { where(model: 'GpArticle::Doc').order(:id) },
+                 foreign_key: :content_id, class_name: 'Cms::Node'
   has_one :public_node, -> { public_state.where(model: 'GpArticle::Doc').order(:id) },
                         foreign_key: :content_id, class_name: 'Cms::Node'
   has_one :public_archives_node, -> { public_state.where(model: 'GpArticle::Archive').order(:id) },
@@ -216,10 +216,6 @@ class GpArticle::Content::Doc < Cms::Content
 
   def notify_broken_link?
     setting_value(:broken_link_notification) == 'enabled'
-  end
-
-  def public_path
-    site.public_path
   end
 
   def feature_settings_enabled?

@@ -75,29 +75,13 @@ class Cms::Node < ApplicationRecord
     opts[:prefix] * [level_no - 1 + opts[:depth], 0].max + title
   end
 
-  def public_path
-    "#{site.public_path}#{public_uri}"
-  end
-
-  def public_smart_phone_path
-    "#{site.public_smart_phone_path}#{public_uri}"
-  end
-
   def public_uri
     return @public_uri if @public_uri
-    return '' if name.blank?
+    return if name.blank?
     uri = site.uri
     ancestors.each { |n| uri += "#{n.name}/" if n.name != '/' }
     uri = uri.gsub(/\/$/, '') if directory == 0
     @public_uri = uri
-  end
-
-  def public_full_uri
-    return @public_full_uri if @public_full_uri
-    uri = site.full_uri
-    ancestors.each { |n| uri += "#{n.name}/" if n.name != '/' }
-    uri = uri.gsub(/\/$/, '') if directory == 0
-    @public_full_uri = uri
   end
 
   def inherited_concept(key = nil)

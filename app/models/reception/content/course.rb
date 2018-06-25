@@ -5,12 +5,10 @@ class Reception::Content::Course < Cms::Content
   has_many :courses, foreign_key: :content_id, class_name: 'Reception::Course', dependent: :destroy
 
   # node
+  has_one :node, -> { where(model: 'Reception::Course').order(:id) },
+                 foreign_key: :content_id, class_name: 'Cms::Node'
   has_one :public_node, -> { public_state.where(model: 'Reception::Course').order(:id) },
                         foreign_key: :content_id, class_name: 'Cms::Node'
-
-  def public_path
-    site.public_path
-  end
 
   def public_courses
     courses.public_state

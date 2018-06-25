@@ -6,6 +6,8 @@ class BizCalendar::Content::Place < Cms::Content
   has_many :types, foreign_key: :content_id, class_name: 'BizCalendar::HolidayType', dependent: :destroy
 
   # node
+  has_one :node, -> { where(model: 'BizCalendar::Place').order(:id) },
+                 foreign_key: :content_id, class_name: 'Cms::Node'
   has_one :public_node, -> { public_state.where(model: 'BizCalendar::Place').order(:id) },
                         foreign_key: :content_id, class_name: 'Cms::Node'
 

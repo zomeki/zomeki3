@@ -51,7 +51,7 @@ module GpArticle::Controller::Feed
             xml.pubDate      doc.display_published_at.rfc822
 
             if (file = helpers.doc_main_image_file(doc))
-              uri = "#{doc.public_full_uri(without_filename: true)}file_contents/#{file.name}"
+              uri = Addressable::URI.join(doc.public_full_uri, "file_contents/#{file.name}").to_s
               xml.enclosure url: uri, type: file.mime_type, length: file.size
             end
 
@@ -125,7 +125,7 @@ module GpArticle::Controller::Feed
           end
 
           if (file = helpers.doc_main_image_file(doc))
-            uri = "#{doc.public_full_uri(without_filename: true)}file_contents/#{file.name}"
+            uri = Addressable::URI.join(doc.public_full_uri, "file_contents/#{file.name}").to_s
             xml.link rel: 'enclosure', href: uri, type: file.mime_type, length: file.size
           end
 

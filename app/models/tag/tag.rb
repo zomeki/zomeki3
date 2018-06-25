@@ -14,19 +14,8 @@ class Tag::Tag < ApplicationRecord
                                  after_remove: :update_last_tagged_at
 
   def public_uri
-    return @public_uri if @public_uri
-    return '' unless node = content.public_node
-    @public_uri = "#{node.public_uri}#{ERB::Util.url_encode(word)}/"
-  end
-
-  def public_path
-    return '' if public_uri.blank?
-    "#{content.public_path}#{public_uri}"
-  end
-
-  def public_smart_phone_path
-    return '' if public_uri.blank?
-    "#{content.public_path}/_smartphone#{public_uri}"
+    return unless node = content.node
+    "#{node.public_uri}#{ERB::Util.url_encode(word)}/"
   end
 
   def bread_crumbs(tag_node)

@@ -90,18 +90,18 @@ class GpCalendar::Event < ApplicationRecord
   end
 
   def public_uri
-    return '' unless node = content.public_node
+    return unless node = content.node
     "#{node.public_uri}#{name}/"
   end
 
   def public_path
-    return '' unless node = content.public_node
-    "#{node.public_path}#{name}/"
+    return unless uri = public_uri
+    "#{site.public_path}#{uri}"
   end
 
   def public_smart_phone_path
-    return '' unless node = content.public_node
-    "#{node.public_smart_phone_path}#{name}/"
+    return unless uri = public_uri
+    "#{site.public_smart_phone_path}#{uri}"
   end
 
   def publish_files

@@ -30,18 +30,18 @@ class Map::Marker < ApplicationRecord
   scope :public_state, -> { where(state: 'public') }
 
   def public_uri
-    return '' unless content.public_node
-    "#{content.public_node.public_uri}#{name}/"
+    return unless node = content.node
+    "#{node.public_uri}#{name}/"
   end
 
   def public_path
-    return '' unless content.public_node
-    "#{content.public_node.public_path}#{name}/"
+    return unless uri = public_uri
+    "#{site.public_path}#{uri}"
   end
 
   def public_smart_phone_path
-    return '' unless content.public_node
-    "#{content.public_node.public_smart_phone_path}#{name}/"
+    return unless uri = public_uri
+    "#{site.public_smart_phone_path}#{uri}"
   end
 
   def publish_files

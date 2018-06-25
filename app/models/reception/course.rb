@@ -67,18 +67,8 @@ class Reception::Course < ApplicationRecord
   end
 
   def public_uri
-    return nil unless content.public_node
-    "#{content.public_node.public_uri}#{name}/"
-  end
-
-  def public_full_uri
-    return nil unless content.public_node
-    "#{content.public_node.public_full_uri}#{name}/"
-  end
-
-  def public_path
-    return '' if public_uri.blank?
-    "#{content.public_path}#{public_uri}index.html"
+    return unless node = content.node
+    "#{node.public_uri}#{name}/"
   end
 
   def bread_crumbs(node)

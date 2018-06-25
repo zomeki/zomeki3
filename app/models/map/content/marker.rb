@@ -6,6 +6,8 @@ class Map::Content::Marker < Cms::Content
   has_many :marker_icons, foreign_key: :content_id, class_name: 'Map::MarkerIcon', dependent: :destroy
 
   # node
+  has_one :node, -> { where(model: 'Map::Marker').order(:id) },
+                 foreign_key: :content_id, class_name: 'Cms::Node'
   has_one :public_node, -> { public_state.where(model: 'Map::Marker').order(:id) },
                         foreign_key: :content_id, class_name: 'Cms::Node'
 
