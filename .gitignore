@@ -10,6 +10,7 @@
 
 /log/*.log
 /log/*.log-*
+/public/assets
 /sites
 /tmp
 /upload
@@ -27,4 +28,3 @@
 /config/plugins/Gemfile
 /config/slony/*.conf
 
-/vendor/tika/*

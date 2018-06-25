@@ -17,13 +17,16 @@ module Cms::Model::Rel::Link
   def check_links
     ex_links = extract_links
     ex_links.map { |link|
-      uri = Addressable::URI.parse(link[:url])
-      url = if uri.relative?
-              next unless uri.path =~ /^\//
-              "#{site.full_uri.chomp('/')}#{uri.path}"
-            else
+      uri = Addressable::URI.parse(link[:url]) rescue nil
+      next unless uri
+      url = if uri.absolute?
               uri.to_s
+            elsif uri.path =~ /^\/#{ZomekiCMS::ADMIN_URL_PREFIX}/
+              "#{site.main_admin_uri.chomp('/')}#{uri.path}"
+            elsif uri.path =~ /^\//
+              "#{site.full_uri.chomp('/')}#{uri.path}"
             end
+      next unless url
       res = Util::LinkChecker.check_url(url)
       { column: link[:column], body: link[:body], url: url, status: res[:status], reason: res[:reason], result: res[:result] }
     }.compact

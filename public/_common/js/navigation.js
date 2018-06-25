@@ -209,6 +209,10 @@ Navigation.talk = function(flag) {
         $('#navigationTalkCreatingFileNotice').show();
       }
     }});
+
+    $('#naviTalkPlayer').on('canplaythrough', function(e) {
+      $('#navigationTalkCreatingFileNotice').hide();
+    });
   } else {
     player.html('');
     if ($.cookie('navigation_ruby') != 'on') Navigation.notice('off');
