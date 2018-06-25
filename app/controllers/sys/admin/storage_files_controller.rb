@@ -94,8 +94,13 @@ class Sys::Admin::StorageFilesController < Cms::Controller::Admin::Base
   end
 
   def update
-    if @item.file_entry?
-      @item.body = params[:body]
+    if (item_params = params[:item])
+      if @item.file_entry?
+        @item.name = item_params[:name]
+        @item.body = item_params[:body] if item_params.key?(:body)
+      elsif @item.directory_entry?
+        @item.name = item_params[:name]
+      end
     end
 
     if @item.save
