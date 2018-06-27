@@ -43,21 +43,16 @@ class Survey::Form < ApplicationRecord
 
   scope :public_state, -> { where(state: 'public') }
 
-  def public_uri(with_closed_preview: false)
-    node = if with_closed_preview
-             content.form_node
-           else
-             content.public_node
-           end
-    return nil unless node
+  def public_uri
+    return unless node = content.node
     "#{node.public_uri}#{name}/"
   end
 
   def preview_uri(terminal: nil, params: {})
-    return if (path = public_uri(with_closed_preview: true)).blank?
+    return unless uri = public_uri
     flag = { mobile: 'm', smart_phone: 's' }[terminal]
     query = "?#{params.to_query}" if params.present?
-    "#{site.main_admin_uri}_preview/#{format('%04d', site.id)}#{flag}#{path}#{query}"
+    "/_preview/#{format('%04d', site.id)}#{flag}#{uri}#{query}"
   end
 
   def public_questions

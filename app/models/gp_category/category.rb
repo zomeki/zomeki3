@@ -135,24 +135,24 @@ class GpCategory::Category < ApplicationRecord
     Cms::Lib::BreadCrumbs.new(crumbs)
   end
 
-  def public_path
-    return '' if (path = category_type.public_path).blank?
-    "#{path}#{path_from_root_category}/"
-  end
-
-  def public_smart_phone_path
-    return '' if (path = category_type.public_smart_phone_path).blank?
-    "#{path}#{path_from_root_category}/"
-  end
-
   def public_uri
-    return '' if (uri = category_type.public_uri).blank?
+    return if (uri = category_type.public_uri).blank?
     "#{uri}#{path_from_root_category}/"
   end
 
-  def public_full_uri
-    return '' if (uri = category_type.public_full_uri).blank?
-    "#{uri}#{path_from_root_category}/"
+  def admin_uri(options = {})
+    controller = self.class.name.tableize.sub('/', '/admin/')
+    Rails.application.routes.url_helpers.url_for({ controller: controller,
+                                                   action: :show,
+                                                   content: content,
+                                                   concept: content.concept_id,
+                                                   category_type_id: category_type_id,
+                                                   category_id: parent_id,
+                                                   id: id,
+                                                   only_path: true }.merge(options))
+  rescue ActionController::UrlGenerationError => e
+    warn_log e
+    nil
   end
 
   def docs

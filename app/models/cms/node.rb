@@ -41,6 +41,7 @@ class Cms::Node < ApplicationRecord
     errors.add :parent_id, :invalid if id != nil && id == parent_id
     errors.add :route_id, :invalid if id != nil && id == route_id
   }
+  validate :validate_confliction, if: :name_changed?
 
   after_initialize :set_defaults
   after_update :move_directory, if: :path_changed?
@@ -60,6 +61,10 @@ class Cms::Node < ApplicationRecord
     where(model: models)
   }
 
+  def deletable?
+    parent && Core.user.has_priv?(:delete, item: parent.concept) && state != 'public'
+  end
+
   def states
     [['公開保存','public'],['非公開保存','closed']]
   end
@@ -70,29 +75,13 @@ class Cms::Node < ApplicationRecord
     opts[:prefix] * [level_no - 1 + opts[:depth], 0].max + title
   end
 
-  def public_path
-    "#{site.public_path}#{public_uri}"
-  end
-
-  def public_smart_phone_path
-    "#{site.public_smart_phone_path}#{public_uri}"
-  end
-
   def public_uri
     return @public_uri if @public_uri
-    return '' if name.blank?
+    return if name.blank?
     uri = site.uri
     ancestors.each { |n| uri += "#{n.name}/" if n.name != '/' }
     uri = uri.gsub(/\/$/, '') if directory == 0
     @public_uri = uri
-  end
-
-  def public_full_uri
-    return @public_full_uri if @public_full_uri
-    uri = site.full_uri
-    ancestors.each { |n| uri += "#{n.name}/" if n.name != '/' }
-    uri = uri.gsub(/\/$/, '') if directory == 0
-    @public_full_uri = uri
   end
 
   def inherited_concept(key = nil)
@@ -140,6 +129,10 @@ class Cms::Node < ApplicationRecord
 
   def set_defaults
     self.directory = (model_type == :directory) if self.has_attribute?(:directory) && directory.nil?
+  end
+
+  def validate_confliction
+    errors.add(:base, 'ファイルまたはディレクトリが既に存在します。') if ::File.exist?(public_path)
   end
 
   def move_directory

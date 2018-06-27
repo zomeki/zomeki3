@@ -11,10 +11,6 @@ module Sys::Model::Rel::ObjectRelation
     has_many :related_objects_for_replace, through: :object_relations_for_replace, source: :related, source_type: name
   end
 
-  def object_related?
-    object_relations.present?
-  end
-
   def replace_page
     object_relations.where(relation_type: 'replace').first.try!(:related)
   end

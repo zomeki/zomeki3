@@ -23,7 +23,13 @@
   <% end %>
   <tr>
     <th><%= f.label :name %></th>
-    <td><%= f.text_field :name, class: 'nameEn' %></td>
+    <td>
+      <%- if item.replace_page? -%>
+        <%= item.name %>
+      <%- else -%>
+        <%= f.text_field :name, class: 'nameEn' %>
+      <%- end -%>
+    </td>
   </tr><tr>
     <th><%= f.label :title %></th>
     <td><%= f.text_field :title, class: 'title' %></td>

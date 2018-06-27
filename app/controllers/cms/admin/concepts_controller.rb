@@ -51,7 +51,9 @@ class Cms::Admin::ConceptsController < Cms::Controller::Admin::Base
     parent = Cms::Concept.find_by(id: @item.parent_id)
     @item.level_no = (parent ? parent.level_no + 1 : 1)
     
-    _update @item
+    _update @item do
+      update_level_no
+    end
   end
   
   def destroy
@@ -89,5 +91,11 @@ class Cms::Admin::ConceptsController < Cms::Controller::Admin::Base
 
   def concept_params
     params.require(:item).permit(:name, :parent_id, :sort_no, :state, :creator_attributes => [:id, :group_id, :user_id])
+  end
+
+  def update_level_no
+    @item.descendants.each do |child|
+      child.update_columns(level_no: child.ancestors.size)
+    end
   end
 end

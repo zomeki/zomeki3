@@ -2,6 +2,7 @@ class GpArticle::Tool::DocsScript < ParametersScript
   def rebuild
     content = GpArticle::Content::Doc.find(params[:content_id])
     return unless content
+    return unless content.public_node
 
     doc_ids = content.docs.public_state.order(content.docs_order_as_hash).pluck(:id)
     doc_ids.each_slice(100) do |sliced_doc_ids|

@@ -1,34 +1,45 @@
 <%= form_tag url_for(action: :index), method: :get, class: 'search' do -%>
+<%= hidden_field_tag :target, params[:target] %>
 <table>
   <tr>
-    <td>期間指定</td>
+    <td>期間</td>
+    <td>カテゴリ</td>
+  </tr>
+  <tr>
     <td><%= select_tag :term, options_for_select(@terms, params[:term]) %></td>
-    <td><%= select_tag :gp_category, options_for_select(@gp_categories, @gp_category) %></td>
-    <td><%= select_tag :category_type, options_for_select(@category_types, @category_type) %></td>
-    <td><%= select_tag :category, options_for_select(@categories, @category) %></td>
-    <td><%= submit_tag '適用' %></td>
+    <td>
+      <%= select_tag :category_content_id, options_for_select(@category_contents, params[:category_content_id]) %>
+      <%= select_tag :category_type_id, options_for_select(@category_types, params[:category_type_id]) %>
+      <%= select_tag :category_id, options_for_select(@categories, params[:category_id]) %>
+    </td>
+    <td rowspan="2" class="submitters">
+      <%= submit_tag '検索' %>
+      <%= submit_tag 'リセット', name: :reset_criteria %>
+    </td>
   </tr>
 </table>
 <%- end -%>
 
 <%= javascript_tag do -%>
-$('#gp_category').on('change', function (event) {
-  var gp_category_id = parseInt(event.target.value);
-  var category_type = $('#category_type');
-  var category = $('#category');
-    category.html('<option value="">すべて</option>');
-    category_type.html('<option value="">更新中...</option>');
-    $.get('<%= rank_ranks_path(content: @content) %>/remote/' + gp_category_id, function (data) {
-      category_type.html(data);
+$(function() {
+  $('#category_content_id').on('change', function(event) {
+    var category_content_id = $(event.target).val();
+    var category_type_id = $('#category_type_id');
+    var category_id = $('#category_id');
+    category_id.html('<option value="">すべて</option>');
+    category_type_id.html('<option value="">更新中...</option>');
+    $.get('<%= rank_ranks_path(content: @content) %>', { options: true, category_content_id: category_content_id }, function(data) {
+      category_type_id.html(data);
     });
-});
-$('#category_type').on('change', function (event) {
-  var gp_category_id = parseInt($('#gp_category').value);
-  var category_type_id = parseInt(event.target.value);
-  var category = $('#category');
-    category.html('<option value="">更新中...</option>');
-    $.get('<%= rank_ranks_path(content: @content) %>/remote/' + gp_category_id + '/' + category_type_id, function (data) {
-      category.html(data);
+  });
+  $('#category_type_id').on('change', function(event) {
+    var category_content_id = $('#category_content_id').val();
+    var category_type_id = $(event.target).val();
+    var category_id = $('#category_id');
+    category_id.html('<option value="">更新中...</option>');
+    $.get('<%= rank_ranks_path(content: @content) %>', { options: true, category_content_id: category_content_id, category_type_id: category_type_id }, function(data) {
+      category_id.html(data);
     });
+  });
 });
 <%- end -%>

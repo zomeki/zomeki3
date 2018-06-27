@@ -64,24 +64,9 @@ class GpCategory::CategoryType < ApplicationRecord
     }
   end
 
-  def public_path
-    return '' unless node = content.public_node
-    "#{node.public_path}#{name}/"
-  end
-
-  def public_smart_phone_path
-    return '' unless node = content.public_node
-    "#{node.public_smart_phone_path}#{name}/"
-  end
-
   def public_uri
-    return '' unless node = content.public_node
+    return unless node = content.node
     "#{node.public_uri}#{name}/"
-  end
-
-  def public_full_uri
-    return '' unless node = content.public_node
-    "#{node.public_full_uri}#{name}/"
   end
 
   def bread_crumbs(category_type_node)

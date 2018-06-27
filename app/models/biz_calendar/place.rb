@@ -65,18 +65,8 @@ class BizCalendar::Place < ApplicationRecord
   end
 
   def public_uri
-    return '' unless node = content.public_node
+    return unless node = content.node
     "#{node.public_uri}#{url}/"
-  end
-
-  def public_path
-    return '' unless node = content.public_node
-    "#{node.public_path}#{url}/"
-  end
-
-  def public_smart_phone_path
-    return '' unless node = content.public_node
-    "#{node.public_smart_phone_path}#{url}/"
   end
 
   def next_holiday(sdate=Date.today)

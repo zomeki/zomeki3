@@ -1,9 +1,14 @@
 class Rank::Admin::RanksController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 
+  before_action :options, if: -> { params[:options] }
+
+  keep_params :target
+
   def pre_dispatch
     @content = Rank::Content::Rank.find(params[:content])
     return error_auth unless Core.user.has_priv?(:read, item: @content.concept)
+    return redirect_to(action: :index) if params[:reset_criteria]
   end
 
   def index
@@ -12,18 +17,21 @@ class Rank::Admin::RanksController < Cms::Controller::Admin::Base
     @term    = param_check(@terms,   params[:term])
     @target  = param_check(@targets, params[:target])
 
-    options
+    set_options
 
     @ranks = Rank::TotalsFinder.new(@content.ranks)
-                               .search(@content, @term, @target, gp_category: @gp_category, category_type: @category_type, category: @category)
+                               .search(@content, @term, @target, gp_category: params[:category_content_id],
+                                                                 category_type: params[:category_type_id],
+                                                                 category: params[:category_id])
                                .paginate(page: params[:page], per_page: params[:limit])
 
     _index @ranks
   end
 
-  def remote
-    @options = options
-    render partial: 'remote'
+  def options
+    set_options
+    options = params[:category_type_id].present? ? @categories : @category_types
+    render html: view_context.options_for_select(options)
   end
 
   private
@@ -33,34 +41,26 @@ class Rank::Admin::RanksController < Cms::Controller::Admin::Base
     str
   end
 
-  def option_default
-    [['すべて', '']]
+  def set_options
+    @category_contents = [['すべて', '']]
+    @category_contents += category_content_options
+
+    @category_types = [['すべて', '']]
+    @category_types += category_type_options(params[:category_content_id]) if params[:category_content_id].present?
+
+    @categories = [['すべて', '']]
+    @categories += category_options(params[:category_type_id]) if params[:category_type_id].present?
   end
 
-  def options
-    @gp_category = params[:gp_category].to_i
-    @gp_categories = option_default + gp_categories
-
-    @category_type = params[:category_type].to_i
-    @category_types = option_default
-    @category_types = @category_types + category_types(@gp_category) if @gp_category > 0
-
-    @category = params[:category].to_i
-    @categories = option_default
-    @categories = @categories + categories(@category_type) if @category_type > 0
-
-    @category_type != 0 ? @categories : @category_types
+  def category_content_options
+    GpCategory::Content::CategoryType.where(site_id: Core.site.id).map { |co| [co.name, co.id] }
   end
 
-  def gp_categories
-    GpCategory::Content::CategoryType.where(site_id: Core.site.id).map{|co| [co.name, co.id] }
+  def category_type_options(content_id)
+    GpCategory::Content::CategoryType.find(content_id).category_types_for_option
   end
 
-  def category_types(gp_category)
-    GpCategory::Content::CategoryType.find_by(id: gp_category).category_types_for_option
-  end
-
-  def categories(category_type)
-    GpCategory::CategoryType.find(category_type).categories_for_option
+  def category_options(category_type_id)
+    GpCategory::CategoryType.find(category_type_id).categories_for_option
   end
 end

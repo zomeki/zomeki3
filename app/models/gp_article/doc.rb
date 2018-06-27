@@ -149,16 +149,6 @@ class GpArticle::Doc < ApplicationRecord
     super && !state_public?
   end
 
-  def public_path
-    return '' if public_uri.blank?
-    "#{content.public_path}#{public_uri(without_filename: true)}#{filename_base}.html"
-  end
-
-  def public_smart_phone_path
-    return '' if public_uri.blank?
-    "#{content.public_path}/_smartphone#{public_uri(without_filename: true)}#{filename_base}.html"
-  end
-
   def filename_for_uri
     if filename_base == 'index'
       ''
@@ -167,35 +157,34 @@ class GpArticle::Doc < ApplicationRecord
     end
   end
 
-  def public_uri(without_filename: false, with_closed_preview: false)
-    uri =
-      if with_closed_preview && content.main_node && content.main_node.public_uri.present?
-        "#{content.main_node.public_uri}#{name}/"
-      elsif !with_closed_preview && content.public_node
-        "#{content.public_node.public_uri}#{name}/"
-      end
-    return '' unless uri
-    without_filename ? uri : "#{uri}#{filename_for_uri}"
+  def public_dir
+    return unless node = content.node
+    "#{node.public_uri}#{name}/"
   end
 
-  def public_full_uri(without_filename: false)
-    uri =
-      if content.public_node
-        "#{content.public_node.public_full_uri}#{name}/"
-      end
-    return '' unless uri
-    without_filename ? uri : "#{uri}#{filename_for_uri}"
+  def public_uri
+    return unless dir = public_dir
+    "#{dir}#{filename_for_uri}"
   end
 
-  def preview_uri(terminal: nil, without_filename: false, params: {})
+  def public_path
+    return unless dir = public_dir
+    "#{site.public_path}#{dir}#{filename_base}.html"
+  end
+
+  def public_smart_phone_path
+    return unless dir = public_dir
+    "#{site.public_smart_phone_path}#{dir}#{filename_base}.html"
+  end
+
+  def preview_uri(terminal: nil, params: {})
     return if terminal == :mobile && !terminal_mobile
     return if terminal.in?([nil, :pc, :smart_phone]) && !terminal_pc_or_smart_phone
-    return if (path = public_uri(without_filename: true, with_closed_preview: true)).blank?
+    return if (dir = public_dir).blank?
 
     flag = { mobile: 'm', smart_phone: 's' }[terminal]
     query = "?#{params.to_query}" if params.present?
-    filename = without_filename ? '' : filename_for_uri
-    "#{site.main_admin_uri}_preview/#{format('%04d', site.id)}#{flag}#{path}preview/#{id}/#{filename}#{query}"
+    "/_preview/#{format('%04d', site.id)}#{flag}#{dir}preview/#{id}/#{filename_for_uri}#{query}"
   end
 
   def file_base_uri
