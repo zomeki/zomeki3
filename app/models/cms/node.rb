@@ -174,6 +174,13 @@ class Cms::Node < ApplicationRecord
       nodes = nodes.where.not(id: origin) if origin
       nodes.to_tree.flat_map(&:descendants).map { |node| [node.tree_title, node.id] }
     end
+
+    def find_nodes_by_path(site, path)
+      node = site.root_node
+      path.split('/').map do |path|
+        node = Cms::Node.where(site_id: site.id, parent_id: node.id, name: path).first if node
+      end
+    end
   end
 
   class Directory < Cms::Node

@@ -1,8 +1,11 @@
-<%= form_for :item, url: "?do=update", html: { method: :post } do |f| %>
+<%= form_for :item, url: '?do=update', html: { method: :patch } do |f| %>
   <%= error_messages_for :item  %>
 
+  <p class="form">基本情報</p>
   <%- if @item.file_entry? -%>
     <%= render 'form_file', f: f %>
+  <%- elsif @item.directory_entry? -%>
+    <%= render 'form_dir', f: f %>
   <%- end -%>
   
   <%= submit :edit %>
