@@ -17,7 +17,7 @@
   <tr>
     <th>表示カテゴリ</th>
     <td>
-      <%- if (category_content = @piece.content.category_content) -%>
+      <%- if (category_content = @item.content.category_content) -%>
         <table class="show">
           <%- category_content.category_types.each do |category_type| -%>
           <tr>
@@ -53,7 +53,7 @@
 </table>
 <%- end -%>
 
-<%- if (category_content = @piece.content.category_content) -%>
+<%- if (category_content = @item.content.category_content) -%>
 <%= javascript_tag do -%>
 function set_click_event_handler(category_type_id, prefix) {
   if (prefix === undefined) { prefix = ''; }

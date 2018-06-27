@@ -26,7 +26,7 @@
 </div>
 
 <table class="show">
-  <%- Cms::Piece::PickupDocXml.find(:all, @piece, order: :sort_no).each_with_index do |item, idx| -%>
+  <%- Cms::Piece::PickupDocXml.find(:all, @item, order: :sort_no).each_with_index do |item, idx| -%>
   <tr>
     <th>ピックアップ <%= idx + 1 %></th>
     <td><%= item.doc.title if item.doc %></td>

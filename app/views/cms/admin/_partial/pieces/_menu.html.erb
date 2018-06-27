@@ -1,10 +1,17 @@
-<%= action_menu :new if Core.user.has_priv?(:create, item: Core.concept) %>
-<%= action_menu :index, main_app.cms_pieces_path %>
-<%= action_menu :show %>
-<%= action_menu :edit if item && item.editable? && !item.replaced_page? %>
-<%= action_menu :destroy if item && item.deletable? %>
-<% if params[:action] == 'show' %>
-  <% if Core.user.has_priv?(:create, item: Core.concept) %>
-  <%= link_to :duplicate, { do: :duplicate }, data: {confirm: '複製してよろしいですか？'} %>
-  <% end %>
-<% end %>
+<%- case action_name -%>
+<%- when 'index' -%>
+  <%= link_to :new, { action: :new } if Core.user.has_priv?(:create, item: Core.concept) %>
+<%- when 'show' -%>
+  <%= link_to :index, cms_pieces_path %>
+  <%- dupmsg = '編集用のピースを作成します。よろしいですか？' if item.state == 'public' && item.model == 'Cms::Free' -%>
+  <%= link_to :edit, { action: :edit }, confirm: dupmsg if item.editable? && !item.replaced_page? %>
+  <%= link_to :destroy, { action: :destroy }, method: :delete, confirm: '削除してよろしいですか？' if item.deletable? %>
+  <%= link_to :publish, { do: :publish }, confirm: '公開してよろしいですか？' if item.state == 'closed' && item.editable? %>
+  <%= link_to :close, { do: :close }, confirm: '公開を終了してよろしいですか？' if item.state == 'public' &&item.editable? %>
+  <%= link_to :duplicate, { do: :duplicate }, confirm: '複製してよろしいですか？' if Core.user.has_priv?(:create, item: Core.concept) %>
+<%- when 'new', 'create' -%>
+  <%= link_to :index, cms_pieces_path %>
+<%- when 'edit', 'update' -%>
+  <%= link_to :index, cms_pieces_path %>
+  <%= link_to :show, { action: :show } %>
+<%- end -%>
