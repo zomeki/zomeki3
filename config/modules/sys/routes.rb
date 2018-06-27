@@ -98,6 +98,9 @@ ZomekiCMS::Application.routes.draw do
       :controller => "admin/users_sessions"
     resources :publishers,
       :controller => "admin/publishers"
+    resources :bookmarks,
+      :controller  => "admin/bookmarks",
+      :path        => ":parent/bookmarks"
   end
 
   get "#{ZomekiCMS::ADMIN_URL_PREFIX}/#{mod}/:parent/inline_files/files/:name.:format" => 'sys/admin/inline/files#download'
