@@ -28,9 +28,9 @@ class Sys::Admin::GroupUsersController < Cms::Controller::Admin::Base
     @item = Sys::User.new(
       state: 'enabled',
       ldap: 0,
-      auth_no: 2,
-      in_group_id: @parent.id
+      auth_no: 2
     )
+    @item.users_groups.build(group_id: @parent.id)
   end
   
   def create
@@ -54,8 +54,9 @@ class Sys::Admin::GroupUsersController < Cms::Controller::Admin::Base
 
   def user_params
     params.require(:item).permit(
-      :account, :admin_creatable, :auth_no, :email, :in_group_id,
-      :ldap, :name, :name_en, :password, :state, :role_name_ids => []
+      :account, :admin_creatable, :auth_no, :email, :ldap, :name, :name_en, :password, :state,
+      :role_name_ids => [],
+      :users_groups_attributes => [:id, :group_id]
     )
   end
 end

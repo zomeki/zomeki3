@@ -1,8 +1,12 @@
 <table class="show">
+  <%- @item.users_groups.build if @item.users_groups.blank? -%>
+  <%= f.fields_for :users_groups do |f2| %>
   <tr>
-    <th><%= f.label :in_group_id %></th>
-    <td><%= f.select :in_group_id, Core.site.groups_for_option, include_blank: true %></td>
-  </tr><tr>
+    <th><%= f2.label :group_id %></th>
+    <td><%= f2.select :group_id, f2.object.class.group_options(Core.site), include_blank: true %></td>
+  </tr>
+  <%- end -%>
+  <tr>
     <th><%= f.label :account %></th>
     <td><%= f.text_field :account, class: 'id' %></td>
   </tr><tr>

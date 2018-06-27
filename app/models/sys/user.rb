@@ -9,26 +9,23 @@ class Sys::User < ApplicationRecord
   enum_ish :ldap_state, [1, 0]
   enum_ish :admin_creatable, [true, false]
 
-  has_many :users_groups, foreign_key: :user_id, class_name: 'Sys::UsersGroup', dependent: :destroy
+  has_many :users_groups, foreign_key: :user_id, dependent: :destroy
   has_many :groups, through: :users_groups, source: :group
-  has_many :users_roles, foreign_key: :user_id, class_name: 'Sys::UsersRole', dependent: :destroy
+  has_many :users_roles, foreign_key: :user_id, dependent: :destroy
   has_many :role_names, through: :users_roles, source: :role_name
-  has_many :operation_logs, class_name: 'Sys::OperationLog'
+  has_many :operation_logs
   has_many :users_holds, dependent: :delete_all
   has_many :users_sessions, dependent: :delete_all
 
-  attr_accessor :in_group_id
+  accepts_nested_attributes_for :users_groups
 
   validates :state, :name, :ldap, presence: true
-  validates :in_group_id, presence: true, if: -> { in_group_id == '' }
   validate :admin_auth_no_fixation
 
   validates :account, presence: true,
                       format: { with: /\A[\x20-\x7F]*\z/ },
                       uniqueness: { if: :root? }
-  validate :validate_account_uniqueness_in_site, if: -> { !root? && @in_group_id }
-
-  after_save :save_group, if: -> { @_in_group_id_changed }
+  validate :validate_account_uniqueness_in_site, if: -> { !root? && users_groups.present? }
 
   before_destroy :block_root_deletion
 
@@ -84,25 +81,12 @@ class Sys::User < ApplicationRecord
     "#{name}（#{account}）"
   end
 
-  def group(load = nil)
-    return @group if @group && load
-    @group = groups(load).size == 0 ? nil : groups[0]
+  def group
+    groups[0]
   end
 
-  def group_id(load = nil)
-    (g = group(load)) ? g.id : nil
-  end
-
-  def in_group_id
-    unless @in_group_id
-      @in_group_id = group.try(:id)
-    end
-    @in_group_id
-  end
-
-  def in_group_id=(value)
-    @_in_group_id_changed = true
-    @in_group_id = value
+  def group_id
+    group ? group.id : nil
   end
 
   def has_auth?(name)
@@ -126,11 +110,6 @@ class Sys::User < ApplicationRecord
 
     role_ids = Sys::ObjectPrivilege.where(action: action.to_s, privilegable: options[:item]).pluck(:role_id)
     users_roles.where(role_id: role_ids).exists?
-  end
-
-  def delete_group_relations
-    Sys::UsersGroup.where(user_id: id).delete_all
-    return true
   end
 
   ## -----------------------------------
@@ -204,44 +183,13 @@ class Sys::User < ApplicationRecord
   protected
 
   def validate_account_uniqueness_in_site
-    group = Sys::Group.find_by(id: in_group_id)
-
-    users = self.class.where(account: account)
-    users = users.in_site(group.sites) if group && group.sites
+    users = self.class.in_site(sites).where(account: account)
     users = users.where.not(id: id) if persisted?
     root_users = self.class.where(account: account, id: ROOT_ID)
 
     if [users, root_users].reduce(:union).exists?
       errors.add(:account, :taken_in_site)
     end
-  end
-
-  def password_required?
-    password.blank?
-  end
-
-  def save_group
-    exists = (users_groups.size > 0)
-
-    users_groups.each_with_index do |rel, idx|
-      if idx == 0 && !in_group_id.blank?
-        if rel.group_id != in_group_id
-          rel.class.where(user_id: rel.user_id, group_id: rel.group_id).update_all(group_id: in_group_id)
-          rel.group_id = in_group_id
-        end
-      else
-        rel.class.where(user_id: rel.user_id, group_id: rel.group_id).delete_all
-      end
-    end
-
-    if !exists && !in_group_id.blank?
-      rel = Sys::UsersGroup.create(
-        user_id: id,
-        group_id: in_group_id
-      )
-    end
-
-    return true
   end
 
   def block_root_deletion
