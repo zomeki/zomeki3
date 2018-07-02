@@ -55,7 +55,7 @@ class Cms::Node < ApplicationRecord
 
   scope :public_state, -> { where(state: 'public') }
   scope :sitemap_order, -> { order(:sitemap_sort_no, :name, :id) }
-  scope :rebuildable_models, -> { where(model: ['Cms::Page', 'Cms::Sitemap']) }
+  scope :rebuildable_models, -> { where(model: ['Cms::Page', 'Cms::Sitemap', 'Cms::SitemapXml']) }
   scope :dynamic_models, -> {
     models = Cms::Lib::Modules.modules.flat_map(&:directories).select { |d| d.options[:dynamic] }.map(&:model)
     where(model: models)
@@ -192,6 +192,9 @@ class Cms::Node < ApplicationRecord
   class Sitemap < Cms::Node
   end
 
+  class SitemapXml < Cms::Node
+  end
+
   class Page < Cms::Node
     include Sys::Model::Rel::Recognition
     include Cms::Model::Rel::Inquiry
@@ -277,7 +280,7 @@ class Cms::Node < ApplicationRecord
           rendered = Cms::RenderService.new(site).render_public(public_uri)
           return true unless publish_page(rendered, path: public_path)
 
-          if site.use_kana?
+          if site.use_kana? && name =~ /\.html$/i
             rendered = Cms::Lib::Navi::Kana.convert(rendered, site_id)
             publish_page(rendered, path: "#{public_path}.r", dependent: :ruby)
           end

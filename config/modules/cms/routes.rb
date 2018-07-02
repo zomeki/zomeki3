@@ -149,6 +149,9 @@ ZomekiCMS::Application.routes.draw do
     resources :node_sitemaps,
       :controller  => "admin/node/sitemaps",
       :path        => ":parent/node_sitemaps"
+    resources :node_sitemap_xmls,
+      :controller  => "admin/node/sitemap_xmls",
+      :path        => ":parent/node_sitemap_xmls"
 
     ## piece
     resources :piece_frees,
@@ -180,6 +183,8 @@ ZomekiCMS::Application.routes.draw do
     get "node_pages/"    => "public/node/pages#index",
       :as => nil
     get "node_sitemaps/" => "public/node/sitemaps#index",
+      :as => nil
+    get "node_sitemap_xmls/" => "public/node/sitemap_xmls#index",
       :as => nil
   end
 
