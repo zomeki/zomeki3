@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180611015309) do
+ActiveRecord::Schema.define(version: 20180704040450) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1102,6 +1102,7 @@ ActiveRecord::Schema.define(version: 20180611015309) do
     t.datetime "updated_at"
     t.integer  "more_layout_id"
     t.text     "outline"
+    t.string   "title"
     t.index ["sys_group_code"], name: "index_organization_groups_on_sys_group_code", using: :btree
   end
 

@@ -1,6 +1,8 @@
 class Organization::GroupRefreshJob < ApplicationJob
-  def perform(site_ids)
-    Organization::Content::Group.where(site_id: site_ids).each do |content|
+  def perform(site)
+    @site = site
+
+    Organization::Content::Group.where(site: @site).each do |content|
       refresh_groups(content)
     end
   end
@@ -8,19 +10,16 @@ class Organization::GroupRefreshJob < ApplicationJob
   private
 
   def refresh_groups(content)
-    sys_groups = content.site.groups.to_tree.flat_map(&:descendants).reject(&:root?)
+    sys_groups = @site.groups.to_tree.flat_map(&:descendants).reject(&:root?)
     sys_groups.each do |sys_group|
       group = content.groups.where(sys_group_code: sys_group.code).first_or_initialize
       group.name = sys_group.name_en
-      unless group.valid?
-        group.name = "#{sys_group.name_en}_#{sys_group.code}"
-      end
+      group.title = sys_group.name
       group.save
     end
 
     content.groups.each do |group|
-      sys_group = group.sys_group
-      group.destroy if sys_group.nil? || !sys_group.sites.include?(content.site)
+      group.destroy unless sys_groups.detect { |sg| sg.code == group.sys_group_code }
     end
   end
 end

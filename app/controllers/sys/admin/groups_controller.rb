@@ -46,7 +46,7 @@ class Sys::Admin::GroupsController < Cms::Controller::Admin::Base
     @item.level_no = @item.parent.try!(:level_no).to_i + 1
     @item.sites << Core.site if @item.sites.empty?
     _create @item do
-      Organization::GroupRefreshJob.perform_now(@item.sites)
+      refresh_organization_groups(@item.sites)
     end
   end
 
@@ -57,7 +57,7 @@ class Sys::Admin::GroupsController < Cms::Controller::Admin::Base
     @item.sites << Core.site if @item.sites.empty?
     _update @item do
       update_level_no
-      Organization::GroupRefreshJob.perform_now(@item.sites)
+      refresh_organization_groups(@item.sites)
     end
   end
 
@@ -75,7 +75,7 @@ class Sys::Admin::GroupsController < Cms::Controller::Admin::Base
     end
 
     _destroy @item do
-      Organization::GroupRefreshJob.perform_now(@item.sites)
+      refresh_organization_groups(@item.sites)
     end
   end
 
@@ -91,6 +91,12 @@ class Sys::Admin::GroupsController < Cms::Controller::Admin::Base
   def update_level_no
     @item.descendants.each do |child|
       child.update_columns(level_no: child.ancestors.size)
+    end
+  end
+
+  def refresh_organization_groups(sites)
+    sites.each do |site|
+      Organization::GroupRefreshJob.perform_now(site)
     end
   end
 end

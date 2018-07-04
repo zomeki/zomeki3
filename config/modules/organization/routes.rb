@@ -11,12 +11,13 @@ ZomekiCMS::Application.routes.draw do
       :path       => ':content/content_settings'
 
     ## contents
-    resources(:groups, :only => [:index, :show, :edit, :update],
+    resources :groups, :only => [:index, :show, :edit, :update],
       :controller => 'admin/groups',
-      :path       => ':content/groups') do
-      resources :groups, :only => [:index, :show, :edit, :update],
-        :controller => 'admin/groups'
-    end
+      :path       => ':content/groups'
+    resources :groups, :only => [:index, :show, :edit, :update],
+      :controller => 'admin/groups',
+      :path       => ':content/groups/:parent/groups',
+      :as         => nil
 
     ## nodes
     resources :node_groups,

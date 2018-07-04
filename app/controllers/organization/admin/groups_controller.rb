@@ -4,20 +4,20 @@ class Organization::Admin::GroupsController < Cms::Controller::Admin::Base
   def pre_dispatch
     @content = Organization::Content::Group.find(params[:content])
     return error_auth unless Core.user.has_priv?(:read, item: @content.concept)
-    @parent_sys_group = Core.site.groups.find_by(code: params[:group_id])
-    @item = @content.groups.find_by(id: params[:id])
+
+    @parent = @content.groups.find_by(sys_group_code: params[:parent]) if params[:parent]
+    @item = @content.groups.find_by(id: params[:id]) if params[:id]
   end
 
   def index
-    sys_group_codes = if @parent_sys_group
-                        @parent_sys_group.children.pluck(:code)
-                      else
-                        @content.top_layer_sys_group_codes
-                      end
+    @items = if @parent
+               @parent.children
+             else
+               @content.groups.where(sys_group_code: @content.top_layer_sys_group_codes)
+             end
 
-    @items = @content.groups
-                     .where(sys_group_code: sys_group_codes)
-                     .paginate(page: params[:page], per_page: params[:limit])
+    @items = @items.paginate(page: params[:page], per_page: params[:limit])
+
     _index @items
   end
 
