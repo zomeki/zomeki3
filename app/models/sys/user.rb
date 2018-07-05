@@ -6,6 +6,7 @@ class Sys::User < ApplicationRecord
   ROOT_ID = 1
 
   enum_ish :state, [:enabled, :disabled]
+  enum_ish :auth_no, [2, 4, 5]
   enum_ish :ldap_state, [1, 0]
   enum_ish :admin_creatable, [true, false]
 
@@ -57,20 +58,6 @@ class Sys::User < ApplicationRecord
 
   def deletable_user?
     !root?
-  end
-
-  def authes
-    #[['なし',0], ['投稿者',1], ['作成者',2], ['編集者',3], ['設計者',4], ['管理者',5]]
-    [['作成者',2], ['設計者',4], ['管理者',5]]
-  end
-
-  def authes_exclude_admin
-    [['作成者',2], ['設計者',4]]
-  end
-
-  def auth_name
-    authes.each {|a| return a[0] if a[1] == auth_no }
-    return nil
   end
 
   def name_with_id

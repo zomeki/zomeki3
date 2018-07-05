@@ -31,19 +31,19 @@
     <th><%= f.label :auth_no %></th>
     <td>
       <%- if @item.root? -%>
-        <%= @item.auth_name %>
+        <%= @item.auth_no_text %>
       <%- else -%>
         <%- if Core.user.root? || Core.user.admin_creatable? || Core.user == @item -%>
-          <%= f.collection_radio_buttons :auth_no, @item.authes, :last, :first %>
+          <%= f.collection_radio_buttons :auth_no, @item.class.auth_no_options, :last, :first %>
         <%- else -%>
           <%- if @item.has_auth?(:manager) -%>
             <%- if @item.admin_creatable? -%>
-              <%= @item.auth_name %>
+              <%= @item.auth_no_text %>
             <%- else -%>
-              <%= f.collection_radio_buttons :auth_no, @item.authes, :last, :first %>
+              <%= f.collection_radio_buttons :auth_no, @item.class.auth_no_options, :last, :first %>
             <%- end -%>
           <%- else -%>
-            <%= f.collection_radio_buttons :auth_no, @item.authes_exclude_admin, :last, :first %>
+            <%= f.collection_radio_buttons :auth_no, @item.class.auth_no_options(except: 5), :last, :first %>
           <%- end -%>
         <%- end -%>
       <%- end -%>

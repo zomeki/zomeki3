@@ -11,6 +11,13 @@ ja:
       ldap_state:
         0: 非同期
         1: 同期
+      auth_no:
+        #0: なし
+        #1: 投稿者
+        2: 作成者
+        #3: 編集者
+        4: 設計者
+        5: 管理者
       admin_creatable:
         true: 許可する
         false: 許可しない

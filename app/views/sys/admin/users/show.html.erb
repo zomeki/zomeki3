@@ -20,7 +20,7 @@
   </tr><tr>
     <th><%= @item.class.human_attribute_name :auth_no %></th>
     <td>
-      <%= @item.auth_name %>
+      <%= @item.auth_no_text %>
       <%- if Core.user.root? && @item.auth_no == 5 -%>
       <table class="noDesign" style="margin-top: 10px;">
         <tr>
