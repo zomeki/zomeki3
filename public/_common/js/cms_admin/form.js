@@ -30,8 +30,10 @@ jQuery(function() {
     });
   }
   jQuery('form.new_item, form.edit_item').on('change', beforeunload);
-  for (var i in CKEDITOR.instances) {
-    CKEDITOR.instances[i].on('change', beforeunload);
+  if (typeof CKEDITOR != 'undefined') {
+    for (var i in CKEDITOR.instances) {
+      CKEDITOR.instances[i].on('change', beforeunload);
+    }
   }
   jQuery('form.new_item input[type=submit], form.edit_item input[type=submit]').on('click', function(e) {
     jQuery(window).off('beforeunload');
