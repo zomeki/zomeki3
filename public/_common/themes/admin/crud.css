@@ -238,6 +238,9 @@ table.show td textarea.head {
   clear: both;
 }
 
+.crudTree .tree ul.root > li {
+  margin-left: 0;
+}
 .crudTree .tree li .icon {
   display: inline-block;
   width: 16px;
