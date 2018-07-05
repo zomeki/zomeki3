@@ -1,6 +1,6 @@
 class Sys::Admin::GroupUsersController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
-  
+
   def pre_dispatch
     return error_auth unless Core.user.has_auth?(:manager)
     return redirect_to(action: :index) if params[:reset]
@@ -13,7 +13,7 @@ class Sys::Admin::GroupUsersController < Cms::Controller::Admin::Base
     if params[:options]
       render 'index_options', layout: false
     else
-      redirect_to(sys_groups_path(@parent))
+      redirect_to url_for(controller: :groups, parent: @parent)
     end
   end
   
@@ -36,18 +36,18 @@ class Sys::Admin::GroupUsersController < Cms::Controller::Admin::Base
   def create
     @item = Sys::User.new(user_params)
     @item.ldap = 0
-    _create(@item, location: sys_groups_path(@parent))
+    _create(@item, location: url_for(controller: :groups, parent: @parent))
   end
   
   def update
     @item = Sys::User.find(params[:id])
     @item.attributes = user_params
-    _update(@item, location: sys_groups_path(@parent))
+    _update(@item, location: url_for(controller: :groups, parent: @parent))
   end
   
   def destroy
     @item = Sys::User.find(params[:id])
-    _destroy(@item, location: sys_groups_path(@parent))
+    _destroy(@item, location: url_for(controller: :groups, parent: @parent))
   end
 
   private

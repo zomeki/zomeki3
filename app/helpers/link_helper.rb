@@ -21,7 +21,7 @@ module LinkHelper
       args[:method] = :delete
     end
 
-    if link.class == String
+    if link.class == String || link.class == Hash
       return link_to(type, link, args)
     elsif link.class == Array
       return link_to(link[0], link[1], args)

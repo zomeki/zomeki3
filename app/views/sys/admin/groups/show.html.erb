@@ -11,6 +11,9 @@
     <th><%= @item.class.human_attribute_name :state %></th>
     <td><%= @item.state_text %></td>
   </tr><tr>
+    <th><%= @item.class.human_attribute_name :parent_id %></th>
+    <td><%= @item.parent.name if @item.parent %></td>
+  </tr><tr>
     <th><%= @item.class.human_attribute_name :code %></th>
     <td><%= @item.code %></td>
   </tr><tr>
@@ -25,17 +28,16 @@
   </tr>
 </table>
 
-<br /><p class="form">グループ設定</p>
+<p class="form">グループ設定</p>
 
 <table class="show">
   <tr>
     <th><%= @item.class.human_attribute_name :address %></th>
     <td><%= @item.address %></td>
-  </tr> <tr>
+  </tr><tr>
     <th><%= @item.class.human_attribute_name :tel %></th>
-    <td><%= @item.tel %>
-        <%= @item.tel_attend %></td>
-  </tr> <tr>
+    <td><%= @item.tel %> <%= @item.tel_attend %></td>
+  </tr><tr>
     <th><%= @item.class.human_attribute_name :fax %></th>
     <td><%= @item.fax %></td>
   </tr><tr>
