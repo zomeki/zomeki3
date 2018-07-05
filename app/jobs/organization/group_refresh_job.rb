@@ -10,16 +10,18 @@ class Organization::GroupRefreshJob < ApplicationJob
   private
 
   def refresh_groups(content)
-    sys_groups = @site.groups.to_tree.flat_map(&:descendants).reject(&:root?)
-    sys_groups.each do |sys_group|
-      group = content.groups.where(sys_group_code: sys_group.code).first_or_initialize
+    sys_group_map = @site.groups.to_tree.flat_map(&:descendants).reject(&:root?).index_by(&:code)
+    group_map = content.groups.index_by(&:sys_group_code)
+
+    sys_group_map.each do |code, sys_group|
+      group = group_map[code] || content.groups.build(sys_group_code: code)
       group.name = sys_group.name_en
       group.title = sys_group.name
-      group.save
+      group.save if group.changed?
     end
 
-    content.groups.each do |group|
-      group.destroy unless sys_groups.detect { |sg| sg.code == group.sys_group_code }
+    group_map.each do |code, group|
+      group.destroy unless sys_group_map[code]
     end
   end
 end

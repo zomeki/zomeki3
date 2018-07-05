@@ -74,8 +74,10 @@ class Sys::Admin::GroupsController < Cms::Controller::Admin::Base
       return redirect_to action: :show
     end
 
+    sites = @item.sites.to_a
+
     _destroy @item do
-      refresh_organization_groups(@item.sites)
+      refresh_organization_groups(sites)
     end
   end
 
