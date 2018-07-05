@@ -32,7 +32,10 @@ class Sys::User < ApplicationRecord
 
   nested_scope :in_site, through: :users_groups
 
-  scope :in_group, ->(group) { joins(:users_groups).where(sys_users_groups: { group_id: group.id }) }
+  scope :in_group, ->(group) {
+    klass = reflect_on_association(:users_groups).klass
+    joins(:users_groups).where(klass.table_name.to_sym => { group_id: group })
+  }
 
   def creatable?
     Core.user.has_auth?(:manager)

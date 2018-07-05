@@ -31,7 +31,7 @@ class Sys::Group < ApplicationRecord
 
   nested_scope :in_site, through: :site_belongings
 
-  scope :in_group, ->(group) { where(parent_id: group.id) }
+  scope :in_group, ->(group) { where(parent_id: group) }
 
   def deletable_group?
     group_ids = descendants.map(&:id)
