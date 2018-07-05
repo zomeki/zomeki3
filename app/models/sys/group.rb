@@ -85,10 +85,6 @@ class Sys::Group < ApplicationRecord
   end
 
   class << self
-    def readable
-      all
-    end
-
     def parent_options(site, origin = nil)
       groups = site.groups
       groups = groups.where.not(id: origin) if origin

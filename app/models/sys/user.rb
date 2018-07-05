@@ -1,4 +1,3 @@
-require 'digest/sha1'
 class Sys::User < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Auth::Manager
@@ -21,11 +20,11 @@ class Sys::User < ApplicationRecord
   accepts_nested_attributes_for :users_groups
 
   validates :state, :name, :ldap, presence: true
-  validate :admin_auth_no_fixation
-
   validates :account, presence: true,
                       format: { with: /\A[\x20-\x7F]*\z/ },
                       uniqueness: { if: :root? }
+
+  validate :validate_auth_for_root
   validate :validate_account_uniqueness_in_site, if: -> { !root? && users_groups.present? }
 
   before_destroy :block_root_deletion
@@ -182,24 +181,18 @@ class Sys::User < ApplicationRecord
     end
   end
 
-  def block_root_deletion
-    raise "Root user can't be deleted." if self.root?
-  end
-
-  def admin_auth_no_fixation
-    return unless self.root?
-
-    unless self.auth_no == 5
+  def validate_auth_for_root
+    if root? && auth_no != 5
       errors.add(:base, 'システム管理者の権限は変更出来ません。')
       self.auth_no = 5
     end
   end
 
-  class << self
-    def readable
-      all
-    end
+  def block_root_deletion
+    raise "Root user can't be deleted." if root?
+  end
 
+  class << self
     def root
       self.where(id: ROOT_ID).first
     end

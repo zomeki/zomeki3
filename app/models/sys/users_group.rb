@@ -4,7 +4,6 @@ class Sys::UsersGroup < ApplicationRecord
 
   belongs_to :user
   belongs_to :group
-  has_many :site_belongings, class_name: 'Cms::SiteBelonging', primary_key: :group_id, foreign_key: :group_id
 
   validates :group_id, presence: true
 
