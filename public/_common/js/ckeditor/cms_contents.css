@@ -1,21 +1,21 @@
 body
 {
-	/* Font */
-	font-family: Arial, Verdana, sans-serif;
-	font-size: 12px;
+  /* Font */
+  font-family: Arial, Verdana, sans-serif;
+  font-size: 12px;
 
-	/* Text color */
-	color: #222;
+  /* Text color */
+  color: #222;
 
-	/* Remove the background color to make it transparent */
-	background-color: #fff;
+  /* Remove the background color to make it transparent */
+  background-color: #fff;
 }
 
 ol,ul,dl
 {
-	/* IE7: reset rtl list margin. (#7334) */
-	*margin-right:0px;
-	/* preserved spaces for list items with text direction other than the list. (#6249,#8049)*/
+  /* IE7: reset rtl list margin. (#7334) */
+  *margin-right:0px;
+  /* preserved spaces for list items with text direction other than the list. (#6249,#8049)*/
     padding:0 40px;
 }
 
@@ -37,11 +37,16 @@ ol,ul,dl
 .temp1 p, temp2 p {
   margin: 0 0 1em;
 }
-.temp3 dl, .temp4 dl {
-  float: left;
-  margin: 0 5px 0 0;
+.temp3,
+.temp4 {
+  display: flex;
+  justify-content: center;
+}
+.temp3 dl,
+.temp4 dl {
+  margin: 0 5px;
   padding: 0;
-  text-align: center;
+  vertical-align: bottom;
 }
 .temp3 dl dt, .temp4 dl dt {
   margin-bottom: 5px;
