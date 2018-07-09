@@ -3,7 +3,7 @@
 <table class="index">
   <tr>
     <th class="action_link">詳細</th>
-    <th><%= Organization::Group.human_attribute_name :name %></th>
+    <th style="width: 250px;"><%= Organization::Group.human_attribute_name :name %></th>
     <th><%= Organization::Group.human_attribute_name :title %></th>
     <th style="text-align: center; width: 60px;"><%= Organization::Group.human_attribute_name :sort_no %></th>
     <th style="text-align: center; width: 150px;"><%= Organization::Group.human_attribute_name :updated_at %></th>
@@ -14,7 +14,7 @@
   <tr class="<%= cycle '', 'cycle' %>">
     <td class="action_link"><%= link_to :show, { action: :show, id: item } %></td>
     <td><%= item.name %></td>
-    <td><%= link_to item.sys_group.name, { action: :index, group_id: item.sys_group_code } %></td>
+    <td><%= link_to item.title, { action: :index, parent: item.sys_group_code } %></td>
     <td style="text-align: right;"><%= item.sort_no %></td>
     <td style="text-align: center;"><%=l item.updated_at %></td>
     <td style="text-align: center;"><%= item.state_text %></td>

@@ -2,7 +2,6 @@ class Sys::Admin::StorageFilesController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 
   before_action :force_html_format
-  before_action :filter_by_do_param
 
   def pre_dispatch
     return error_auth unless Core.user.has_auth?(:designer)
@@ -29,6 +28,8 @@ class Sys::Admin::StorageFilesController < Cms::Controller::Admin::Base
   end
 
   def index
+    return if filter_actions
+
     @current = @item
     return http_error(404) unless @current.directory_entry?
 
@@ -93,8 +94,13 @@ class Sys::Admin::StorageFilesController < Cms::Controller::Admin::Base
   end
 
   def update
-    if @item.file_entry?
-      @item.body = params[:body]
+    if (item_params = params[:item])
+      if @item.file_entry?
+        @item.name = item_params[:name]
+        @item.body = item_params[:body] if item_params.key?(:body)
+      elsif @item.directory_entry?
+        @item.name = item_params[:name]
+      end
     end
 
     if @item.save
@@ -122,19 +128,17 @@ class Sys::Admin::StorageFilesController < Cms::Controller::Admin::Base
     request.format = :html
   end
 
-  def filter_by_do_param
+  def filter_actions
+    actions = { 'show' => :show, 'edit' => :edit, 'download' => :download,
+                'POST' => :create, 'PATCH' => :update, 'DELETE' => :destroy }
+
     @do = params[:do].presence || 'index'
-    case @do
-    when 'show'
-      show
-    when 'edit'
-      edit
-    when 'update'
-      update
-    when 'destroy'
-      destroy
-    when 'download'
-      download
+
+    if (action = actions[@do] || actions[request.request_method])
+      public_send(action)
+      return true
     end
+
+    false
   end
 end

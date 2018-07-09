@@ -1,6 +1,5 @@
 class Organization::Admin::Piece::CategorizedDocsController < Cms::Admin::Piece::BaseController
   def update
-    @item = model.find(params[:id])
     @item.attributes = base_params
     @item.updated_at = Time.now
     @item.category_ids = if params[:categories]

@@ -6,10 +6,7 @@ class Cms::Admin::Piece::BaseController < Cms::Controller::Admin::Base
   def pre_dispatch_piece
     return error_auth unless Core.user.has_auth?(:designer)
 
-    if params[:id].present?
-      @piece = find_piece
-      return error_auth unless @piece
-    end
+    @item = model.find(params[:id]) if params[:id].present?
   end
 
   def model
@@ -25,21 +22,11 @@ class Cms::Admin::Piece::BaseController < Cms::Controller::Admin::Base
   end
 
   def show
-    @item = model.find(params[:id])
     return error_auth unless @item.readable?
     _show @item
   end
 
-  def new
-    exit
-  end
-
-  def create
-    exit
-  end
-
   def update
-    @item = model.find(params[:id])
     @item.attributes = base_params
     @item.updated_at = Time.now
 
@@ -52,12 +39,21 @@ class Cms::Admin::Piece::BaseController < Cms::Controller::Admin::Base
   end
 
   def destroy
-    @item = model.find(params[:id])
     _destroy @item do
       respond_to do |format|
         format.html { return redirect_to(cms_pieces_path) }
       end
     end
+  end
+
+  def publish(item)
+    item.state = 'public'
+    _update item
+  end
+
+  def close(item)
+    item.state = 'closed'
+    _update item
   end
 
   def duplicate(item)
@@ -76,27 +72,7 @@ class Cms::Admin::Piece::BaseController < Cms::Controller::Admin::Base
     end
   end
 
-  def duplicate_for_replace(item)
-    if item.editable? && dupe_item = item.duplicate(:replace)
-      flash[:notice] = '複製処理が完了しました。'
-      respond_to do |format|
-        format.html { redirect_to cms_pieces_path }
-        format.xml  { head :ok }
-      end
-    else
-      flash[:notice] = "複製処理に失敗しました。"
-      respond_to do |format|
-        format.html { redirect_to url_for(action: :show) }
-        format.xml  { render xml: item.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
   private
-
-  def find_piece
-    model.readable.find(params[:id]) if params[:id].present?
-  end
 
   def base_params
     nested = {creator_attributes: base_params_item_in_creator,

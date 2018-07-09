@@ -20,6 +20,8 @@ class Cms::Admin::Node::BaseController < Cms::Controller::Admin::Base
 
     id      = params[:parent] == '0' ? Core.site.node_id : params[:parent]
     @parent = Cms::Node.find(id)
+
+    @item = model.find(params[:id]) if params[:id].present?
   end
 
   def index
@@ -32,16 +34,7 @@ class Cms::Admin::Node::BaseController < Cms::Controller::Admin::Base
     _show @item
   end
 
-  def new
-    exit
-  end
-
-  def create
-    exit
-  end
-
   def update
-    @item = model.find(params[:id])
     @item.attributes = base_params
     @item.state      = params[:commit_public] ? 'public' : 'closed'
 
@@ -55,7 +48,6 @@ class Cms::Admin::Node::BaseController < Cms::Controller::Admin::Base
   end
 
   def destroy
-    @item = model.find(params[:id])
     _destroy @item do
       respond_to do |format|
         format.html { return redirect_to(main_app.cms_nodes_path) }

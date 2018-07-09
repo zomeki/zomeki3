@@ -1,3 +1,22 @@
-<h2><%= menu_header @content.name, @item ? @item.sys_group.name : nil, Organization::Group.model_name.human %></h2>
+<h2><%= menu_header @content.name, @item ? @item.title : nil, Organization::Group.model_name.human %></h2>
 
-<%= render 'organization/admin/shared/menu' %>
+<div class="navi">
+  <%= link_to 'TOP', { action: :index, parent: nil } %>
+  <%- if @parent -%>
+    <%- @parent.ancestors.each do |group| -%>
+    <span class="separator">&gt;</span>
+    <%= link_to group.title, { action: :index, parent: group.sys_group_code } %>
+  <%- end -%>
+  <%- end -%>
+</div>
+
+<div class="actionMenu">
+<%- case action_name -%>
+<%- when 'show' -%>
+  <%= link_to :index, { action: :index } %>
+  <%= link_to :edit, { action: :edit } if @item.editable? %>
+<%- when 'edit', 'update' -%>
+  <%= link_to :index, { action: :index } %>
+  <%= link_to :show, { action: :show } %>
+<%- end -%>
+</div>

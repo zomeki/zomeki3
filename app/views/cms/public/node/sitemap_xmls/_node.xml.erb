@@ -1,0 +1,15 @@
+<%- case node.model -%>
+<%- when 'Cms::Page' -%>
+<url>
+<loc><%= node.public_full_uri %></loc>
+<lastmod><%= (file_mtime(node.public_path) || Time.now).iso8601 %></lastmod>
+<priority>0.5</priority>
+</url>
+<%- else -%>
+<%- names = node.model.split('::').map(&:underscore)
+    path = "#{names[0]}/public/sitemap_xmls/#{names[1].to_s.pluralize}" -%>
+<%= render "#{path}/index", node: node if lookup_context.exists?('index', path, true) -%>
+<%- end -%>
+<%- if node.public_children.present? -%>
+<%= render partial: 'node', collection: node.public_children %>
+<%- end -%>

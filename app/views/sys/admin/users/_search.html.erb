@@ -13,7 +13,7 @@
     <td><%= text_field_tag :name, params[:name], style: 'width: 150px;' %></td>
     <td><%= select_tag :group_id, options_for_select(Core.site.groups_for_option, params[:group_id]), include_blank: true %></td>
     <td><%= text_field_tag :email, params[:email], style: 'width: 150px;' %></td>
-    <td><%= select_tag :auth_no, options_for_select(Sys::User.new.authes, params[:auth_no]), include_blank: true %></td>
+    <td><%= select_tag :auth_no, options_for_select(Sys::User.auth_no_options, params[:auth_no]), include_blank: true %></td>
     <td><%= select_tag :state, options_for_select([['有効','enabled'], ['無効','disabled']], params[:state]), include_blank: true %></td>
     <td class="submitters">
       <%= submit_tag '検索', name: :search %>

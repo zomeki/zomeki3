@@ -10,6 +10,9 @@ ZomekiCMS::Application.routes.draw do
     match "tests_link_check" => "admin/tests/link_check#index",
       :as => :tests_link_check, via: [:get, :post]
 
+    match "storage_files(/*path)" => "admin/storage_files#index",
+      as: :storage_files, format: false, via: [:get, :post, :put, :patch, :delete]
+
     resources :settings,
       :controller  => "admin/settings"
     resources :maintenances,
@@ -78,10 +81,6 @@ ZomekiCMS::Application.routes.draw do
           get :view
         end
       end
-    resources :storage_files,
-      :controller => "admin/storage_files",
-      :path       => "storage_files(/*path)",
-      :format     => false
     resources :operation_logs,
       :controller => "admin/operation_logs"
     resources :processes,
@@ -98,6 +97,9 @@ ZomekiCMS::Application.routes.draw do
       :controller => "admin/users_sessions"
     resources :publishers,
       :controller => "admin/publishers"
+    resources :bookmarks,
+      :controller  => "admin/bookmarks",
+      :path        => ":parent/bookmarks"
   end
 
   get "#{ZomekiCMS::ADMIN_URL_PREFIX}/#{mod}/:parent/inline_files/files/:name.:format" => 'sys/admin/inline/files#download'

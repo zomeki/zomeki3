@@ -1,0 +1,17 @@
+<div class="navi">
+  <%= link_to 'ルート', { action: :index, parent: 0 } %>
+  <%- if @parent -%>
+    <%- @parent.ancestors.each do |parent| -%>
+      <span class="separator">&gt;</span>
+      <%= link_to parent.title, { action: :index, parent: parent } %>
+    <%- end -%>
+  <%- end -%>
+</div>
+
+<div class="actionMenu">
+<%= action_menu :new %>
+<%= action_menu :index %>
+<%= action_menu :show %>
+<%= action_menu :edit    if @item && @item.editable? %>
+<%= action_menu :destroy if @item && @item.deletable? %>
+</div>

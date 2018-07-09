@@ -1,0 +1,8 @@
+<%- bookmarks.each do |bookmark| -%>
+<li>
+  <%= link_to bookmark.title, bookmark.url %>
+  <%- if bookmark.children.present? && bookmark.level_no <= 1 -%>
+    <ul class="subMenu"><%= render 'layouts/admin/cms/bookmarks', bookmarks: bookmark.children %></ul>
+  <%- end -%>
+</li>
+<%- end -%>

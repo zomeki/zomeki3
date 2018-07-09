@@ -238,6 +238,25 @@ table.show td textarea.head {
   clear: both;
 }
 
+.crudTree .tree ul.root > li {
+  margin-left: 0;
+}
+.crudTree .tree li .icon {
+  display: inline-block;
+  width: 16px;
+  background-color: #eee;
+  text-align: center;
+  text-decoration: none;
+}
+.crudTree .tree li .opend {
+}
+.crudTree .tree li .closed {
+  background-color: #ddd;
+}
+.crudTree .tree li a.current {
+  color: #f0d;
+}
+
 /* Contents > Search
 --------------------------------------------------------- */
 form.searchTool table.search td,

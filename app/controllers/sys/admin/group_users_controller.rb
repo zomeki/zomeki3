@@ -1,6 +1,6 @@
 class Sys::Admin::GroupUsersController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
-  
+
   def pre_dispatch
     return error_auth unless Core.user.has_auth?(:manager)
     return redirect_to(action: :index) if params[:reset]
@@ -13,7 +13,7 @@ class Sys::Admin::GroupUsersController < Cms::Controller::Admin::Base
     if params[:options]
       render 'index_options', layout: false
     else
-      redirect_to(sys_groups_path(@parent))
+      redirect_to url_for(controller: :groups, parent: @parent)
     end
   end
   
@@ -28,34 +28,35 @@ class Sys::Admin::GroupUsersController < Cms::Controller::Admin::Base
     @item = Sys::User.new(
       state: 'enabled',
       ldap: 0,
-      auth_no: 2,
-      in_group_id: @parent.id
+      auth_no: 2
     )
+    @item.users_groups.build(group_id: @parent.id)
   end
   
   def create
     @item = Sys::User.new(user_params)
     @item.ldap = 0
-    _create(@item, location: sys_groups_path(@parent))
+    _create(@item, location: url_for(controller: :groups, parent: @parent))
   end
   
   def update
     @item = Sys::User.find(params[:id])
     @item.attributes = user_params
-    _update(@item, location: sys_groups_path(@parent))
+    _update(@item, location: url_for(controller: :groups, parent: @parent))
   end
   
   def destroy
     @item = Sys::User.find(params[:id])
-    _destroy(@item, location: sys_groups_path(@parent))
+    _destroy(@item, location: url_for(controller: :groups, parent: @parent))
   end
 
   private
 
   def user_params
     params.require(:item).permit(
-      :account, :admin_creatable, :auth_no, :email, :in_group_id,
-      :ldap, :name, :name_en, :password, :state, :role_name_ids => []
+      :account, :admin_creatable, :auth_no, :email, :ldap, :name, :name_en, :password, :state,
+      :role_name_ids => [],
+      :users_groups_attributes => [:id, :group_id]
     )
   end
 end

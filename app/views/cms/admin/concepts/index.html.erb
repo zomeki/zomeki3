@@ -1,22 +1,16 @@
 <div class="crudTree">
 <div class="tree">
-  
   <p>
     <%= link_to :show, { action: :show, parent: @parent.parent_id, id: @parent } if @parent.id != 0 %>
-    <%= @parent.name %></p>
-  
+    <%= @parent.name %>
+  </p>
   <div class="links">
-    <div>
-      <%= link_to :up, { action: :index, parent: @parent.parent_id } if @parent.id != 0 %></div>
-    
-    <% @items.each do |item| %>
-    <%= link_to :show, { action: :show, id: item } %>
-    <%= link_to item.name, { action: :index, parent: item } %>
-    <span class="remark"><%= item.sort_no %></span><br />
-    <% end %>
+    <ul class="root">
+      <%= render 'concepts', items: @items %>
+    </ul>
   </div>
-  
 </div>
+
 <div class="content">
 
   <table class="index">
@@ -66,3 +60,9 @@
 </div>
 <div class="footer"></div>
 </div>
+
+<script type="text/javascript">
+$(function() {
+  $('.tree').simpleTree();
+});
+</script>
