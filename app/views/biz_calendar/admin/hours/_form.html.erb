@@ -91,8 +91,7 @@ $(document).ready(function () {
   $('input.datepicker').datepicker();
   $('input.timepicker').timepicker();
 
-  $('#item_repeat_type').on('change', function (event) {
-    var repeat_type = event.target.value;
+  function changeRepeatTypeForm(repeat_type) {
     if (repeat_type == 'daily') {
       $('#intervalTr').show();
       $('#criterionTr').hide();
@@ -118,8 +117,12 @@ $(document).ready(function () {
       $('#criterionTr').hide();
       $('#weekTr').hide();
     }
+  }
+
+  $('#item_repeat_type').on('change', function(event) {
+    changeRepeatTypeForm(event.target.value)
   });
-  $("#item_repeat_type").trigger("change");
+  changeRepeatTypeForm($('#item_repeat_type').val());
 });
 
 <%- end -%>
