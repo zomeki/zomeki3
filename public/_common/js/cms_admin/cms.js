@@ -14,17 +14,23 @@
 
 // simple tree
 jQuery.extend(jQuery.fn, {
-  simpleTree: function() {
+  simpleTree: function(options) {
     var tree = jQuery(this);
-    tree.find('.openAll').on('click', function() {
+    var setting = jQuery.extend({
+      openAll: '.openAll',
+      closeAll: '.closeAll',
+      icon: 'a.icon'
+    }, options);
+
+    tree.find(setting.openAll).on('click', function() {
       tree.find('a.closed ~ ul').show();
       tree.find('a.closed').html('-').removeClass('closed').addClass('opened');
     });
-    tree.find('.closeAll').on('click', function() {
+    tree.find(setting.closeAll).on('click', function() {
       tree.find('a.opened ~ ul').hide();
       tree.find('a.opened').html('+').removeClass('opened').addClass('closed');
     });
-    tree.find('a.icon').on('click', function() {
+    tree.find(setting.icon).on('click', function() {
       var ul = jQuery(this).siblings('ul');
       ul.toggle();
       if (ul.is(':visible')) {

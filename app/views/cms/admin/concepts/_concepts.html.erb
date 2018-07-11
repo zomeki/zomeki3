@@ -1,3 +1,4 @@
+<ul class="<%= 'root' unless parent %>">
 <%- items.each do |item| -%>
 <li>
   <%- if item.children.present? -%>
@@ -8,10 +9,7 @@
   <%= link_to :show, { action: :show, id: item } %>
   <%= link_to item.name, { action: :index, parent: item }, class: "#{'current' if item.id == @parent.id }" %>
   <span class="remark"><%= item.sort_no %></span><br />
-  <%- if item.children.present? -%>
-    <ul>
-      <%= render 'concepts', items: item.children %>
-    </ul>
-  <%- end -%>
+  <%= render 'concepts', items: item.children, parent: item if item.children.present? %>
 </li>
 <%- end -%>
+</ul>

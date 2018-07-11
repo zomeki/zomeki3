@@ -1,3 +1,4 @@
+<ul class="<%= 'root' unless parent %>">
 <%- groups.each do |group| -%>
 <li>
   <%- if group.children.present? -%>
@@ -10,8 +11,9 @@
   <span class="remark"><%= group.sort_no %></span><br />
   <%- if group.children.present? -%>
     <ul>
-      <%= render 'groups', groups: group.children %>
+      <%= render 'groups', groups: group.children, parent: group %>
     </ul>
   <%- end -%>
 </li>
 <%- end -%>
+</ul>

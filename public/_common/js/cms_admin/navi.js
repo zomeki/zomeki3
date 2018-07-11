@@ -26,24 +26,4 @@ $(function() {
     $('#naviConcepts').toggle();
     $.cookie("naviConceptsVisible", $('#naviConcepts').is(':visible'), { path: '/' });
   });
-
-  addHandler_onClickConceptIcon();
 });
-
-function addHandler_onClickConceptIcon() {
-  $('#naviConcepts a.icon').click(function(){
-    var iconId = $(this).attr('id');
-    var listId = iconId.replace(/Icon/, 'List');
-    $('#' + listId).toggle();
-    if (mark = $('#' + listId).css('display') == 'none') {
-      $('#' + iconId).html('+');
-      $('#' + iconId).addClass('closedChildren');
-      $('#' + iconId).removeClass('openedChildren');
-    } else {
-      $('#' + iconId).html('-');
-      $('#' + iconId).addClass('openedChildren');
-      $('#' + iconId).removeClass('closedChildren');
-    }
-    return false;
-  });
-}

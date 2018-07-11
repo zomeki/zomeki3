@@ -7,9 +7,7 @@
   </p>
   <%- end -%>
   <div class="links">
-    <ul class="root">
-      <%= render 'groups', groups: @groups %>
-    </ul>
+    <%= render 'groups', groups: @groups, parent: nil %>
   </div>
 </div>
 
@@ -22,6 +20,6 @@
 
 <script type="text/javascript">
 $(function() {
-  $('.tree').simpleTree();
+  $('.tree .links').simpleTree();
 });
 </script>
