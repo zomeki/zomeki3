@@ -104,20 +104,34 @@
   <tr>
     <th><%= category_type.title %></th>
     <td>
-      <div id="category_type_<%= category_type.id %>_categories">
+      <span id="categories_<%= category_type.id %>">
         <%- category_ids = @item.in_category_ids[category_type.id.to_s].to_a
             category_ids += [''] unless category_ids.include?('') -%>
         <%- category_ids.each do |cid| -%>
-          <span>
+          <span class="category_<%= category_type.id %>">
             <%= select_tag "item[in_category_ids][#{category_type.id}][]", 
                            options_for_select(category_type.categories_for_option, cid), include_blank: true %>
           </span>
         <%- end -%>
-        <span><%= button_tag '追加', type: 'button', class: 'add_category' %></span>
-      </div>
+      </span>
+      <span><%= button_tag '追加', type: 'button', id: "add_category_#{category_type.id}" %></span>
     </td>
   </tr>
   <%- end -%>
+</table>
+
+<script type="text/javascript">
+$(function() {
+  <%- @content.visible_category_types.each do |category_type| -%>
+  $("#add_category_<%= category_type.id %>").addFields({
+    container: "#categories_<%= category_type.id %>",
+    fields: ".category_<%= category_type.id %>"
+  });
+  <%- end -%>
+});
+</script>
+
+<table class="show">
   <%- if @content.feature_settings_enabled? -%>
   <tr>
     <th><%= f.label :feature_1 %></th>

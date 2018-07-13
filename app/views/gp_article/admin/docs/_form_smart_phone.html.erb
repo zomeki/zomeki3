@@ -53,27 +53,3 @@ $(document).ready(function () {
   $('input.datetimepicker').datetimepicker();
 });
 </script>
-
-<script type="text/javascript">
-$(document).ready(function () {
-  function set_click_event_handler(category_type_id, prefix) {
-    if (prefix === undefined) { prefix = ''; }
-    var wrapper = $('#' + prefix + 'category_type_' + category_type_id + '_categories');
-    wrapper.find('.add_category').on('click', function () {
-      var new_category = wrapper.children(':first-child').clone(true);
-      new_category.find('option').removeAttr('selected');
-      new_category.insertBefore(wrapper.children(':last-child'));
-    });
-  }
-
-  <%- @content.visible_category_types.each do |category_type| -%>
-  set_click_event_handler('<%= category_type.id %>');
-  <%- end -%>
-  <%- @content.event_category_types.each do |category_type| -%>
-  set_click_event_handler('<%= category_type.id %>', 'event_');
-  <%- end -%>
-  <%- @content.marker_category_types.each do |category_type| -%>
-  set_click_event_handler('<%= category_type.id %>', 'marker_');
-  <%- end -%>
-});
-</script>

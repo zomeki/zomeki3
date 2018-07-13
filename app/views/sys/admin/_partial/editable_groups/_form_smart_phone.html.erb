@@ -7,12 +7,16 @@ all_editable_groups << item.editable_groups.build if all_editable_groups.blank?
 
 <div>
   <div class="label1"><%= f.label :editable_groups %></div>
-  <div id="editable_groups">
-    <%- editable_groups.each_with_index do |eg, idx| -%>
-      <%= f.fields_for :editable_groups, eg, child_index: idx + 1 do |f2| %>
-        <%= f2.select :group_id, Core.site.groups_for_option, include_blank: true %>
+  <div>
+    <span id="editable_groups">
+      <%- editable_groups.each_with_index do |eg, idx| -%>
+        <%= f.fields_for :editable_groups, eg, child_index: idx + 1 do |f2| %>
+          <span class="editable_group">
+            <%= f2.select :group_id, Core.site.groups_for_option, include_blank: true %>
+          </span>
+        <%- end -%>
       <%- end -%>
-    <%- end -%>
+    </span>
     <span><%= button_tag '追加', type: 'button', id: 'add_editable_group' %></span>
   </div>
   <div>
@@ -27,15 +31,10 @@ all_editable_groups << item.editable_groups.build if all_editable_groups.blank?
 
 <script type="text/javascript">
 $(function() {
-  $('#add_editable_group').on('click', function () {
-    var wrapper = $('#editable_groups');
-    var idx = wrapper.children('select').length + 1;
-    var new_options = wrapper.children('select:last').clone(true);
-    new_options.find('option').removeAttr('selected')
-    var html = $('<p>').append(new_options).html()
-      .replace(/editable_groups_attributes_\d+/, 'editable_groups_attributes_' + idx)
-      .replace(/\[editable_groups_attributes\]\[\d+\]/, '[editable_groups_attributes][' + idx + ']');
-    wrapper.find('span:last').before(html);
+  $('#add_editable_group').addFields({
+    container: '#editable_groups',
+    fields: '.editable_group',
+    startIndex: 1
   });
 });
 </script>

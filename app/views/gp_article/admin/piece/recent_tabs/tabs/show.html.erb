@@ -12,14 +12,22 @@
     <td><%= @item.more %></td>
   </tr>
   <tr>
-    <th>条件</th>
+    <th><%= @item.class.human_attribute_name :sort_no %></th>
+    <td><%= @item.sort_no %></td>
+  </tr>
+</table>
+
+<p class="form">条件</p>
+
+<table class="show">
+  <tr>
+    <th><%= @item.class.human_attribute_name :condition %></th>
+    <td><%= @item.condition_name %></td>
+  </tr>
+  <tr>
+    <th>表示カテゴリ</th>
     <td>
       <table class="noDesign">
-        <tr>
-          <td><%= @item.class.human_attribute_name :condition %></td>
-          <td><%= @item.condition_name %></td>
-          <td>&nbsp;</td>
-        </tr>
         <%- @item.categories_with_layer.each do |category_with_layer| -%>
         <tr>
           <td><%= category_with_layer[:category].category_type.title -%></td>
@@ -29,9 +37,5 @@
         <%- end -%>
       </table>
     </td>
-  </tr>
-  <tr>
-    <th><%= @item.class.human_attribute_name :sort_no %></th>
-    <td><%= @item.sort_no %></td>
   </tr>
 </table>

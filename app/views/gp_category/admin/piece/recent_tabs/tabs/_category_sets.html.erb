@@ -1,0 +1,68 @@
+<%-
+category_types_for_option = @piece.category_types_for_option
+-%>
+
+<div id="category_sets">
+<%- category_sets.each_with_index do |cs, index| -%>
+  <%- 
+    if cs[:category]
+      category_type_id = cs[:category].category_type.id
+      categories_for_option = cs[:category].category_type.categories_for_option
+      category_id = cs[:category].id
+    else
+      category_type_id = nil
+      categories_for_option = []
+      category_id = nil
+    end
+  -%>
+  <table class="noDesign category_set">
+    <tbody>
+      <tr>
+        <td colspan="2">
+          <%- @item.class::LAYER_OPTIONS.each do |lfo| -%>
+          <label>
+            <%= radio_button_tag "layers[#{index}]", lfo.last, lfo.last == cs[:layer], id: nil %>
+            <%= lfo.first %>
+          </label>
+          <%- end -%>
+        </td>
+      </tr>
+      <tr>
+        <td class="category_type" style="width: 300px;">
+          <%= select_tag nil, options_for_select(category_types_for_option, category_type_id), include_blank: true, id: nil %>
+        </td>
+        <td class="category">
+          <%= select_tag "categories[#{index}]", options_for_select(categories_for_option, category_id), include_blank: true, id: nil %>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+<%- end -%>
+</div>
+<div style="margin: 10px;">
+  <%= button_tag '追加', type: 'button', id: 'add_category_set' %>
+</div>
+
+
+<script type="text/javascript">
+$(function() {
+  $('#add_category_set').addFields({
+    container: '#category_sets',
+    fields: '.category_set',
+    indexName: ['categories', 'layers']
+  });
+
+  $('.category_set tbody > tr > td.category_type > select').on('change', function(event) {
+    var category_type_id = parseInt(event.target.value);
+    var category_select = $(event.target).closest('tr').find('td.category > select');
+    if (isNaN(category_type_id)) {
+      category_select.html('<option value=""></option>');
+    } else {
+      category_select.html('<option value="">更新中...</option>');
+      $.get('<%= gp_category_category_type_categories_path(content: @piece.content, category_type_id: 'CATEGORY_TYPE_ID') %>?options=true'.replace('CATEGORY_TYPE_ID', category_type_id), function(data) {
+        category_select.html(data);
+      });
+    }
+  });
+});
+</script>

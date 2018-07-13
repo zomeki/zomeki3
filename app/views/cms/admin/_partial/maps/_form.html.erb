@@ -72,17 +72,11 @@ $(function() {
 });
 
 $(function() {
-  $('#addMarkerForm').on('click', function() {
-    var idx = $('#markerFormTbody tr').length;
-    var elem = $('#markerFormTbody tr:last').clone();
-    elem.find('input:text').removeAttr('value');
-
-    var html = elem.html()
-      .replace(/markers_attributes_\d+/g, "markers_attributes_" + idx)
-      .replace(/\[markers_attributes\]\[\d+\]/g, "[markers_attributes][" + idx + "]");
-    $('#markerFormTbody').append( $('<tr>').append(html) );
-    return false;
-  
+  $('#addMarkerForm').addFields({
+    container: '#markerForm tbody',
+    fields: 'tr',
+    indexName: 'markers_attributes',
+    extraReplaceTags: { a: ['onclick'] }
   });
 });
 //]]>

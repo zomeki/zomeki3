@@ -1,5 +1,5 @@
+// toggle open
 jQuery.extend(jQuery.fn, {
-  // toggle open
   toggleOpen: function(target, openLabel, closeLabel, speed) {
     if (openLabel == undefined)  openLabel  = "開く▼";
     if (closeLabel == undefined) closeLabel = "閉じる▲";
@@ -16,6 +16,128 @@ jQuery.extend(jQuery.fn, {
     } else {
       jQuery(target).slideToggle(speed);
     }
+  }
+});
+
+// add fields
+jQuery.extend(jQuery.fn, {
+  addFields: function(options) {
+    var button = jQuery(this);
+    var setting = jQuery.extend({
+      container: '.container',
+      fields: '.fields',
+      startIndex: 0,
+      indexName: '_attributes',
+      replaceTags: [{
+        input: ['id', 'name'],
+        textarea: ['id', 'name'],
+        select: ['id', 'name'],
+        label: ['for']
+      }],
+      extraReplaceTags: undefined,
+      beforeAdd: undefined,
+      afterAdd: undefined
+    }, options);
+
+    if (Array.isArray(setting.indexName)) {
+      setting.indexNames = setting.indexName;
+    } else {
+      setting.indexNames = [setting.indexName];
+    }
+
+    if (setting.extraReplaceTags) {
+      jQuery.extend(setting.replaceTags, setting.extraReplaceTags);
+    };
+
+    button.on('click', function(e) {
+      e.preventDefault();
+
+      var clone = jQuery(setting.container).find(setting.fields + ':last').clone(true);
+      clearInputValue(clone);
+      replaceIndex(clone);
+
+      if (setting.beforeAdd) {
+        setting.beforeAdd(clone);
+      }
+
+      jQuery(setting.container).append(clone);
+
+      if (setting.afterAdd) {
+        setting.afterAdd(clone);
+      }
+    });
+
+    var clearInputValue = function(clone) {
+      clone.find('textarea').text('');
+      clone.find('input[type="text"]').val('').removeAttr('value');
+      clone.find('input[type="checkbox"], input[type="radio"]').removeAttr('checked');
+      clone.find('option').removeAttr('selected');
+
+      // check first radio button
+      var names = findRadioButtonNames(clone);
+      names.forEach(function(name) {
+        clone.find('input[type="radio"][name="' + name +'"]').first().prop('checked', true);
+      });
+
+      // remove hidden field for nested form
+      var regexps = makeRegexpsForNestedFormID();
+      clone.find('input[type="hidden"]').each(function() {
+        var elem = $(this);
+        var id = elem.attr('id');
+        regexps.forEach(function(regexp) {
+          if (id =~ regexp) {
+            elem.remove();
+            return;
+          }
+        });
+      });
+    };
+
+    var findRadioButtonNames = function(clone) {
+      var names = [];
+      clone.find('input[type="radio"]').each(function() {
+        var name = $(this).attr('name');
+        if (names.indexOf(name) == -1) { names.push(name); }
+      });
+      return names;
+    };
+
+    var makeRegexpsForNestedFormID = function() {
+      return setting.indexNames.map(function(name) {
+        new RegExp(name + '_\\d+_id');
+      });
+    };
+
+    var replaceIndex = function(clone) {
+      var nextID = jQuery(setting.container).find(setting.fields).length + setting.startIndex;
+      var regs = makeRegexpsForReplace();
+
+      for (tag in setting.replaceTags) {
+        var attrs = setting.replaceTags[tag];
+        clone.find(tag).each(function() {
+          var elem = jQuery(this);
+          attrs.forEach(function(attr) {
+            var value = elem.attr(attr);
+            if (value) {
+              regs.forEach(function(reg) {
+                value = value.replace(reg, '$1' + nextID);
+              });
+              elem.attr(attr, value);
+            }
+          });
+        });
+      }
+    };
+
+    var makeRegexpsForReplace = function() {
+      var regexps = [];
+      setting.indexNames.forEach(function(name) {
+        regexps.push(new RegExp('(' + name + '_)\\d+'));
+        regexps.push(new RegExp('(' + name + '\\[)\\d+'));
+        regexps.push(new RegExp('(' + name + '\\]\\[)\\d+'));
+      });
+      return regexps;
+    };
   }
 });
 

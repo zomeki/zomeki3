@@ -17,23 +17,34 @@
 <%- @content.event_category_types.each do |category_type| -%>
 <div>
   <div class="label1"><%= category_type.title %></div>
-  <div id="event_category_type_<%= category_type.id %>_categories">
+  <span id="event_categories_<%= category_type.id %>">
     <%- category_ids = @item.in_event_category_ids[category_type.id.to_s].to_a
         category_ids += [''] unless category_ids.include?('') -%>
     <%- category_ids.each do |cid| -%>
-      <span>
+      <span class="event_category_<%= category_type.id %>">
         <%= select_tag "item[in_event_category_ids][#{category_type.id}][]", 
                        options_for_select(category_type.categories_for_option, cid), include_blank: true %>
       </span>
     <%- end -%>
-    <span><%= button_tag '追加', type: 'button', class: 'add_category' %></span>
-  </div>
+  </span>
+  <span><%= button_tag '追加', type: 'button', id: "add_event_category_#{category_type.id}" %></span>
 </div>
 <%- end -%>
 <div>
   <div class="label1"><%= f.label :event_note %></div>
   <%= f.text_area :event_note, size: '100x3' %>
 </div>
+
+<script type="text/javascript">
+$(function() {
+  <%- @content.event_category_types.each do |category_type| -%>
+  $("#add_event_category_<%= category_type.id %>").addFields({
+    container: "#event_categories_<%= category_type.id %>",
+    fields: ".event_category_<%= category_type.id %>"
+  });
+  <%- end -%>
+});
+</script>
 
 <script type="text/javascript">
 $(document).ready(function() {
