@@ -37,13 +37,15 @@ class Cms::Site < ApplicationRecord
 
   before_validation :fix_full_uri
 
-  after_save :generate_files
-  before_destroy :destroy_related_data
-
   after_create :make_concept
+  after_create :make_node
   after_create :make_site_belonging
-  after_save :make_node
-  after_save :copy_common_directory
+  after_create :generate_files
+  after_create :copy_common_directory
+
+  after_update :update_root_node_title
+
+  before_destroy :destroy_related_data
 
   nested_scope :in_site
   scope :matches_to_domain, ->(domain) {
@@ -209,6 +211,31 @@ class Cms::Site < ApplicationRecord
     end
   end
 
+  def make_concept
+    concepts.create!(name: name, parent_id: 0, state: 'public', level_no: 1, sort_no: 1)
+  end
+
+  def make_node
+    node = nodes.create!(concept: concepts.first, state: 'public', published_at: Time.current,
+                         parent_id: 0, route_id: 0, model: 'Cms::Directory',
+                         directory: 1, name: '/', title: name)
+    top = nodes.create!(concept: concepts.first, state: 'public', published_at: Time.current,
+                        parent_id: node.id, route_id: node.id, model: 'Cms::Page',
+                        directory: 0, name: 'index.html', title: name, body: Core.title)
+
+    update_column(:node_id, node.id)
+  end
+
+  def make_site_belonging
+    if in_root_group_id.blank?
+      group = Sys::Group.new(state: 'enabled', parent_id: 0, level_no: 1, code: 'root', name: name, name_en: 'top', ldap: 0)
+      group.sites << self
+      group.save!
+    else
+      site_belongings.create!(group_id: in_root_group_id)
+    end
+  end
+
   def generate_files
     FileUtils.mkdir_p public_path
     FileUtils.mkdir_p "#{public_path}/_themes"
@@ -216,38 +243,14 @@ class Cms::Site < ApplicationRecord
     FileUtils.touch "#{config_path}/rewrite.conf"
   end
 
+  def update_root_node_title
+    if root_node && root_node.title != name
+      root_node.update_attribute(:title, name)
+    end
+  end
+
   def destroy_related_data
     Cms::SiteDestroyService.new(self).destroy
-  end
-
-  def make_concept
-    concepts.create(name: name, parent_id: 0, state: 'public', level_no: 1, sort_no: 1)
-  end
-
-  def make_node
-    if (node = root_node)
-      node.update_attribute(:title, name) unless node.title == name
-      return
-    end
-
-    node = nodes.create(concept: concepts.first, state: 'public', published_at: Time.current,
-                        parent_id: 0, route_id: 0, model: 'Cms::Directory',
-                        directory: 1, name: '/', title: name)
-    top = nodes.create(concept: concepts.first, state: 'public', published_at: Time.current,
-                       parent_id: node.id, route_id: node.id, model: 'Cms::Page',
-                       directory: 0, name: 'index.html', title: name, body: Core.title)
-
-    update_column(:node_id, node.id)
-  end
-
-  def make_site_belonging
-    if in_root_group_id == 0
-      group = Sys::Group.new(state: 'enabled', parent_id: 0, level_no: 1, code: 'root', name: name, name_en: 'top', ldap: 0)
-      group.sites << self
-      group.save
-    else
-      site_belongings.create(group_id: in_root_group_id)
-    end
   end
 
   class << self

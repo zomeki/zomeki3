@@ -25,15 +25,9 @@
       <%- end -%>
     </td>
   </tr>
-  <%- if false && @item.new_record? -%>
-  <tr>
-    <th><%= f.label :in_root_group_id %></th>
-    <td><%= f.select :in_root_group_id, options_for_select([['(新規作成)',0]] + Sys::Group.roots.pluck(:name, :id)) %></td>
-  </tr>
-  <%- end -%>
 </table>
 
-<%= f.hidden_field :in_root_group_id, value: 0 %>
+<%= f.hidden_field :in_root_group_id if @item.new_record? %>
 
 <br />
 <p class="form">携帯サイト</p>

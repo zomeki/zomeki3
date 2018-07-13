@@ -1,22 +1,8 @@
 ## ---------------------------------------------------------
 ## sys
 
-if @create_base
-  first_group = Sys::Group.new(
-    :parent_id => 0,
-    :level_no  => 1,
-    :sort_no   => 1,
-    :state     => 'enabled',
-    :web_state => 'closed',
-    :ldap      => 0,
-    :code      => "#{@code_prefix}root",
-    :name      => 'トップ',
-    :name_en   => "#{@code_prefix}top"
-  )
-  first_group.save(validate: false)
-else
-  first_group = Sys::Group.find(1)
-end
+first_group = @site.groups.roots.first
+
 cms_group = Sys::Group.new(
   :parent_id => first_group.id,
   :level_no  => 2,
@@ -28,6 +14,7 @@ cms_group = Sys::Group.new(
   :name      => 'ぞめき',
   :name_en   => 'cms'
 )
+cms_group.sites << @site
 cms_group.save(validate: false)
 
 first_user = Sys::User.create!(
@@ -43,9 +30,6 @@ Sys::UsersGroup.create!(group: cms_group, user: first_user)
 
 Core.user_group = cms_group
 Core.user       = first_user
-
-@site.groups << first_group
-@site.groups << cms_group
 
 
 if @create_base

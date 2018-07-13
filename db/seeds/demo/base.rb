@@ -40,7 +40,7 @@ def create(site, parent, level_no, sort_no, code, name, name_en)
   return group
 end
 
-r = Sys::Group.find(1)
+r = @site.groups.roots.first
 
 p       = create @site, r, 2, 10, "1", "総務部", "somu"
           create @site, p, 3, 20, "1001", "職員課", "shokuin"
