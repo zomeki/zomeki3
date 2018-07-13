@@ -28,12 +28,12 @@ jQuery.extend(jQuery.fn, {
       fields: '.fields',
       startIndex: 0,
       indexName: '_attributes',
-      replaceTags: [{
+      replaceTags: {
         input: ['id', 'name'],
         textarea: ['id', 'name'],
         select: ['id', 'name'],
         label: ['for']
-      }],
+      },
       extraReplaceTags: undefined,
       beforeAdd: undefined,
       afterAdd: undefined
@@ -70,8 +70,8 @@ jQuery.extend(jQuery.fn, {
     var clearInputValue = function(clone) {
       clone.find('textarea').text('');
       clone.find('input[type="text"]').val('').removeAttr('value');
-      clone.find('input[type="checkbox"], input[type="radio"]').removeAttr('checked');
-      clone.find('option').removeAttr('selected');
+      clone.find('input[type="checkbox"], input[type="radio"]').prop('checked', false);
+      clone.find('option').prop('selected', false);
 
       // check first radio button
       var names = findRadioButtonNames(clone);
@@ -206,7 +206,7 @@ jQuery.extend(jQuery.fn, {
 });
 
 jQuery(function() {
-  jQuery('form.new_item, form.edit_item').on('keypress', function (e) {
+  jQuery('form.new_item, form.edit_item').on('keypress', function(e) {
     if (e.target.type !== 'textarea' && e.which === 13) return false;
   });
 
