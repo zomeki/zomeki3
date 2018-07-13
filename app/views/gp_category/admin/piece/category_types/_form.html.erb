@@ -25,10 +25,10 @@
   </tr>
 </table>
 
-<%= javascript_tag do -%>
-$(document).ready(function () {
-  $('#item_in_settings_category_type_id').on('change', function (event) {
-    var category_type_id = parseInt(event.target.value);
+<script type="text/javascript">
+$(function() {
+  $('#item_in_settings_category_type_id').on('change', function(e) {
+    var category_type_id = parseInt(e.target.value);
     if (isNaN(category_type_id)) {
       $('#item_in_settings_category_id').html('<option value=""></option>');
     } else {
@@ -39,16 +39,16 @@ $(document).ready(function () {
     }
   });
 });
-<%- end -%>
-<%- end -%>
+</script>
 
 <%= render 'gp_article/admin/shared/doc_style_tags' %>
-
-<%= javascript_tag do -%>
-$(document).ready(function () {
+<script type="text/javascript">
+$(function() {
   $('a.show_dialog').on('click', function() {
     $('#doc_style_tags').dialog({width: 400});
     return false;
   });
 });
+</script>
+
 <%- end -%>

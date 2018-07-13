@@ -49,14 +49,14 @@ $(function() {
     indexName: ['categories', 'layers']
   });
 
-  $('.category_set tbody > tr > td.category_type > select').on('change', function(event) {
-    var category_type_id = parseInt(event.target.value);
-    var category_select = $(event.target).closest('tr').find('td.category > select');
+  $('.category_set tbody > tr > td.category_type > select').on('change', function(e) {
+    var category_type_id = parseInt(e.target.value);
+    var category_select = $(e.target).closest('tr').find('td.category > select');
     if (isNaN(category_type_id)) {
       category_select.html('<option value=""></option>');
     } else {
       category_select.html('<option value="">更新中...</option>');
-      $.get('<%= gp_category_category_type_categories_path(content: @piece.content.gp_category_content_category_type, category_type_id: 'CATEGORY_TYPE_ID') %>?options=true'.replace('CATEGORY_TYPE_ID', category_type_id), function (data) {
+      $.get('<%= gp_category_category_type_categories_path(content: @piece.content.gp_category_content_category_type, category_type_id: 'CATEGORY_TYPE_ID') %>?options=true'.replace('CATEGORY_TYPE_ID', category_type_id), function(data) {
         category_select.html(data);
       });
     }

@@ -43,7 +43,7 @@ $(function() {
     me.syncMap();
     google.maps.event.addListener(map, 'dragend', function(){ me.syncMap(); } );
     google.maps.event.addListener(map, 'zoom_changed', function(){ me.syncMap(); } );
-    google.maps.event.addListener(map, 'click', function(event){ me.syncClick(event); } );
+    google.maps.event.addListener(map, 'click', function(e){ me.syncClick(e); } );
 
     // markers
     <% map.markers.each_with_index do |marker, idx| %>

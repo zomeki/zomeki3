@@ -83,9 +83,8 @@ types = @content.visible_types.order(:id).collect{|c| [c.title, c.id]}
 
 <%= creator_form f %>
 
-<%= javascript_tag do -%>
-
-$(document).ready(function () {
+<script type="text/javascript">
+$(function() {
   $('input.datepicker').datepicker();
 
   function changeRepeatTypeForm(repeat_type) {
@@ -116,10 +115,9 @@ $(document).ready(function () {
     }
   }
 
-  $('#item_repeat_type').on('change', function(event) {
-    changeRepeatTypeForm(event.target.value);
+  $('#item_repeat_type').on('change', function(e) {
+    changeRepeatTypeForm(e.target.value);
   });
   changeRepeatTypeForm($("#item_repeat_type").val());
 });
-
-<%- end -%>
+</script>

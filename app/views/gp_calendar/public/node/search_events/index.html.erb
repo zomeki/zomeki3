@@ -1,10 +1,10 @@
 <div class="calendarEvents">
   <div class="searchEvents">
-    <%= javascript_tag do -%>
-    $(document).ready(function () {
+    <script type="text/javascript">
+    $(function() {
       flatpickr('input.datepicker', {"locale": "ja"});
     });
-    <%- end -%>
+    </script>
 
     <%= form_for :item, url: "#{@node.public_uri}",  html: { method: :get, class: 'search' } do |f| %>
     <%= hidden_field_tag :all, 1 %>

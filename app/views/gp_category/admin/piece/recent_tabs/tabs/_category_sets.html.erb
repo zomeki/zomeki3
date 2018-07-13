@@ -52,9 +52,9 @@ $(function() {
     indexName: ['categories', 'layers']
   });
 
-  $('.category_set tbody > tr > td.category_type > select').on('change', function(event) {
-    var category_type_id = parseInt(event.target.value);
-    var category_select = $(event.target).closest('tr').find('td.category > select');
+  $('.category_set tbody > tr > td.category_type > select').on('change', function(e) {
+    var category_type_id = parseInt(e.target.value);
+    var category_select = $(e.target).closest('tr').find('td.category > select');
     if (isNaN(category_type_id)) {
       category_select.html('<option value=""></option>');
     } else {

@@ -1,6 +1,6 @@
 <%= init_ckeditor baseHref: "#{gp_article_doc_path(@content, @item.id.to_i)}/" %>
 <script type="text/javascript">
-$(document).ready(function () {
+$(function() {
   $('#tabs').tabs({
     active: ($('#tabs > ul > li').length - 1)
   });
@@ -48,25 +48,8 @@ $(document).ready(function () {
 </div>
 
 <script type="text/javascript">
-$(document).ready(function () {
+$(function() {
   $('input.datepicker').datepicker();
   $('input.datetimepicker').datetimepicker();
-});
-</script>
-
-<script src="/_common/js/jquery.iframe-auto-height.js"></script>
-<script src="/_common/js/jquery.browser.js"></script>
-<script type="text/javascript">
-$(document).ready(function () {
-  var fileFormLoaded = false;
-
-  $('#fileUploadForm').iframeAutoHeight({ heightOffset: 50, callback: firstCloseOnLoad});
-
-  function firstCloseOnLoad() {
-    if (fileFormLoaded != true) {
-      fileFormLoaded = true;
-      $('#inline_files').hide();
-    }
-  }
 });
 </script>

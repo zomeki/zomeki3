@@ -3,9 +3,9 @@
 
   <%= javascript_include_tag "https://maps.googleapis.com/maps/api/js?key=#{@content.site.google_map_api_key}&region=jp" %>
   <%= javascript_include_tag '/_common/modules/map/js/map.js' %>
-  <%= javascript_tag do -%>
+  <script type="text/javascript">
   var map;
-  google.maps.event.addDomListener(window, 'load', function (event) {
+  google.maps.event.addDomListener(window, 'load', function(e) {
     <%- unless @all_markers.empty?
           bounds = @all_markers.inject(min: {}, max: {}){|result, marker|
                      min = result[:min]
@@ -40,7 +40,7 @@
 
     <%- end -%>
   });
-  <%- end -%>
+  </script>
 
   <%- unless @markers.empty? -%>
   <table>

@@ -28,16 +28,16 @@
 <%- end -%>
 
 <%- if @piece.content.click_count_related? && !request.mobile? -%>
-<%= javascript_tag do -%>
+<script type="text/javascript">
 $(function() {
   $('#<%= @piece.css_id %> li.banner a').on('click', function() {
     $.get('/_api/ad_banner/piece_clicks', { piece_id: <%= @piece.id %>, token: $(this).data('token') });
   });
 });
-<%- end -%>
+</script>
 <%- end -%>
 
-<%= javascript_tag do -%>
+<script type="text/javascript">
 $(function() {
   if (bowser && bowser.mobile) {
     $('#<%= @piece.css_id %> li.banner a').each(function() {
@@ -48,4 +48,4 @@ $(function() {
     });
   }
 });
-<%- end -%>
+</script>

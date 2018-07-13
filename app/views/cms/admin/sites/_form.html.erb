@@ -103,11 +103,11 @@
 
 <%= creator_form f %>
 
-<%= javascript_tag do -%>
+<script type="text/javascript">
 function confirm_smart_phone_deletion(radio) {
   if ($(radio).val() !== 'yes' && !confirm("書き出しずみのファイルはすべて削除されます。\nよろしいですか？")) {
     var selector = "input[name='" + $(radio).prop('name') + "'][value='yes']";
     $(selector).prop('checked', true);
   }
 }
-<%- end -%>
+</script>

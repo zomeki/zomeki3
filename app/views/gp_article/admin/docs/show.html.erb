@@ -2,11 +2,11 @@
 <%= render 'gp_article/admin/docs/shared/replacement_notification' %>
 
 <script type="text/javascript">
-$(document).ready(function () {
+$(function() {
   var active_tab_index = $('#tabs > ul > li').length - 1;
 
   <%- if (active_tab = params[:active_tab]) -%>
-  $('#tabs > ul > li').each(function (index, item) {
+  $('#tabs > ul > li').each(function(index, item) {
     if ($(item).hasClass('<%==j active_tab %>')) {
       active_tab_index = index;
       return false;

@@ -1,6 +1,6 @@
 <%= init_ckeditor baseHref: "#{gp_article_doc_path(@content, @item.id.to_i)}/" %>
 <script type="text/javascript">
-$(document).ready(function () {
+$(function() {
   $('#tabs').tabs({
     active: 0
   });
@@ -48,7 +48,7 @@ $(document).ready(function () {
 </div>
 
 <script type="text/javascript">
-$(document).ready(function () {
+$(function() {
   $('input.datepicker').datepicker();
   $('input.datetimepicker').datetimepicker();
 });

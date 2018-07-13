@@ -1,18 +1,18 @@
 <%- if @ranks.present? -%>
-<%= javascript_tag do -%>
-$(document).ready(function () {
+<script type="text/javascript">
+$(function() {
   $.ajax({
     url: '/_api/rank/piece_ranks',
     type: 'GET',
     data: {'piece_id': <%= @piece.id %>, 'current_item_class': '<%= Page.current_item.try(:class) %>',
                                          'current_item_id': <%= Page.current_item.try(:id) %>, 'version': '20150401'},
-    success: function (data) {
+    success: function(data) {
       var wrapper = $('#<%= @piece.css_id %> > .pieceContainer > .pieceBody');
       var ranks = data['ranks'];
       var more = data['more'];
       if (ranks && ranks.length > 0) {
         var u = $('<ul>');
-        $(ranks).each(function (index, item) {
+        $(ranks).each(function(index, item) {
           var i = index + 1;
           var l = $('<li>');
           if (i <= 10) l.attr('class', 'ranking'+i);
@@ -35,11 +35,11 @@ $(document).ready(function () {
         wrapper.append(d);
       }
     },
-    error: function (data)  {
+    error: function(data)  {
       var wrapper = $('#<%= @piece.css_id %> > .pieceContainer > .pieceBody');
       wrapper.text('現在表示できません。');
     }
   });
 });
-<%- end -%>
+</script>
 <%- end -%>

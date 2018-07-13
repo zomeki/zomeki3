@@ -51,9 +51,9 @@ $(function() {
 </script>
 
 <script type="text/javascript">
-$(document).ready(function() {
+$(function() {
   function set_copy_date(from, to) {
-    $(from).on('change', function () {
+    $(from).on('change', function() {
       if ($(to).val() === '') { $(to).val($(from).val()); }
     });
   }

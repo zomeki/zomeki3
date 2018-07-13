@@ -32,14 +32,14 @@
   <%= button_tag '追加', type: 'button', id: 'add_category' %>
 </div>
 
-<%= javascript_tag do -%>
+<script type="text/javascript">
 $(function() {
   $("#add_category").addFields({
     container: "#categories > tbody",
     fields: "tr.category"
   });
 
-  $('#item_value').on('change', function (event) {
+  $('#item_value').on('change', function(e) {
     $('#categories > tbody > tr:not(:first-child)').remove();
     var category_tr = $('#categories > tbody > tr:first-child');
 
@@ -59,9 +59,9 @@ $(function() {
     }
   });
 
-  $('#categories > tbody > tr > td.category_type > select').on('change', function (event) {
+  $('#categories > tbody > tr > td.category_type > select').on('change', function(e) {
     var content_id = parseInt($('#item_value').val());
-    var category_type_select = $(event.target);
+    var category_type_select = $(e.target);
     var category_type_id = parseInt(category_type_select.val());
     var category_select = category_type_select.closest('tr').find('td.category > select');
 
@@ -80,5 +80,5 @@ $(function() {
     }
   });
 });
-<%- end -%>
+</script>
 <%- end -%>

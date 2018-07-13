@@ -1,19 +1,15 @@
-
 <div id="bussinessTimeBox<%= @piece.id %>" class="bussinessTimeBox">
 </div>
 
-<%= javascript_tag do -%>
-
-$(document).ready(function () {
+<script type="text/javascript">
+$(function() {
   $.ajax({
     url: '<%= @biz_calendar_node_uri %><%= @piece.id %>/bussiness_times<%= "/#{@place_name}" if @place_name.present? %>',
     type: 'GET',
     success: writeBussinnesTime<%= @piece.id %>
   });
+  function writeBussinnesTime<%= @piece.id %>(data) {
+    $('#bussinessTimeBox<%= @piece.id %>').html(data);
+  }
 });
-
-function writeBussinnesTime<%= @piece.id %>(data) {
-  $('#bussinessTimeBox<%= @piece.id %>').html(data);
-}
-
-<%- end -%>
+</script>

@@ -77,12 +77,11 @@ $(function() {
 </table>
 
 <%= render 'gp_article/admin/shared/doc_style_tags' %>
-
-<%= javascript_tag do -%>
-$(document).ready(function () {
+<script type="text/javascript">
+$(function() {
   $('a.show_dialog').on('click', function() {
     $('#doc_style_tags').dialog({width: 400});
     return false;
   });
 });
-<%- end -%>
+</script>

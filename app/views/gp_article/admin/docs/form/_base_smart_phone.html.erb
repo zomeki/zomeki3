@@ -156,7 +156,7 @@ $(function() {
 
 <%- if @content.template_available? -%>
 <script type="text/javascript">
-$(document).ready(function() {
+$(function() {
   var prevTemplateId;
   $('#item_template_id').on('click', function() {
     prevTemplateId = $(this).val();
@@ -192,27 +192,27 @@ $(document).ready(function() {
 </div>
 
 <script type="text/javascript">
-$(document).ready(function() {
+$(function() {
   searchRelatedDocs();
 
-  $('#rel_group_id').on('change', function (event) {
-    var group_id = parseInt(event.target.value);
+  $('#rel_group_id').on('change', function(e) {
+    var group_id = parseInt(e.target.value);
     if (isNaN(group_id)) {
       $('#rel_user_id').html('<option value=""></option>');
     } else {
       $('#rel_user_id').html('<option value="">更新中...</option>');
-      $.get('<%= gp_article_docs_path(content: @content) %>', { user_options: true, group_id: group_id }, function (data) {
+      $.get('<%= gp_article_docs_path(content: @content) %>', { user_options: true, group_id: group_id }, function(data) {
         $('#rel_user_id').html('<option value=""></option>' + data);
         searchRelatedDocs();
       });
     }
   });
-  $('#rel_user_id').on('change', function (event) {
+  $('#rel_user_id').on('change', function(e) {
     searchRelatedDocs();
   });
   <%- if @content.gp_category_content_category_type -%>
-  $('#rel_category_type').on('change', function (event) {
-    var category_type_id = parseInt(event.target.value);
+  $('#rel_category_type').on('change', function(e) {
+    var category_type_id = parseInt(e.target.value);
     var category_select = $('#rel_category');
     var doc_select = $('#rel_doc');
     if (isNaN(category_type_id)) {
@@ -221,13 +221,13 @@ $(document).ready(function() {
     } else {
       category_select.html('<option value="">更新中...</option>');
       doc_select.html('<option value=""></option>');
-      $.get('<%= gp_category_category_type_categories_path(content: @content.gp_category_content_category_type, category_type_id: 'CATEGORY_TYPE_ID') %>'.replace('CATEGORY_TYPE_ID', category_type_id), { options: true }, function (data) {
+      $.get('<%= gp_category_category_type_categories_path(content: @content.gp_category_content_category_type, category_type_id: 'CATEGORY_TYPE_ID') %>'.replace('CATEGORY_TYPE_ID', category_type_id), { options: true }, function(data) {
         category_select.html(data);
       });
     }
   });
 
-  $('#rel_category').on('change', function (event) {
+  $('#rel_category').on('change', function(e) {
     searchRelatedDocs();
   });
   <%- end -%>
@@ -243,23 +243,23 @@ $(document).ready(function() {
           exclude: '<%==j @item.name %>',
           category_id: category_id,
           group_id: group_id,
-          user_id: user_id }, function (data) {
+          user_id: user_id }, function(data) {
       doc_select.html(data);
     });
   }
 
-  $('#add_rel_doc').on('click', function () {
+  $('#add_rel_doc').on('click', function() {
     var rel_doc = $('#rel_doc');
     if (rel_doc.val() === '') {
       alert('記事を選択してください。');
       return;
     }
 
-    $.get('<%= gp_article_related_doc_path(content: @content, id: '_ID_') %>.json'.replace(/_ID_/, rel_doc.val()), function (data) {
+    $.get('<%= gp_article_related_doc_path(content: @content, id: '_ID_') %>.json'.replace(/_ID_/, rel_doc.val()), function(data) {
       var next_index = $('#rel_docs').find('div').length;
       var template = $('#rel_docs_template').clone(true);
 
-      template.find('input').removeAttr('disabled');
+      template.find('input').prop('disabled', false);
       template.find('.rel_doc_name').val(data.name);
       template.find('.rel_doc_content_id').val(data.content_id);
       template.find('.rel_doc_link').html(data.link);
@@ -272,7 +272,7 @@ $(document).ready(function() {
     });
   });
 
-  $('#rel_docs').on("click", "a.remove_related_doc", function (e) {
+  $('#rel_docs').on("click", "a.remove_related_doc", function(e) {
     var wrapper = $(this).parent().parent();
     wrapper.find('input').each(function() {
       if ($(this).attr('id') && $(this).attr('id').match(/destroy/)) {

@@ -1,8 +1,3 @@
-<%= javascript_include_tag '/_common/modules/gp_article/js/doc_tabs.js' -%>
-<%= javascript_tag do -%>
-var docTabs<%= @piece.id %> = new ArticleDocTabs('<%= @piece.css_id %>');
-<%- end -%>
-
 <nav class="tabs">
   <ul>
     <%- @tabs.each do |tab| -%>
@@ -36,3 +31,8 @@ var docTabs<%= @piece.id %> = new ArticleDocTabs('<%= @piece.css_id %>');
     <%- end -%>
   </div>
 <!-- end .wrapper --></div>
+
+<%= javascript_include_tag '/_common/modules/gp_article/js/doc_tabs.js' -%>
+<script type="text/javascript">
+var docTabs<%= @piece.id %> = new ArticleDocTabs('<%= @piece.css_id %>');
+</script>

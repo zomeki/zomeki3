@@ -5,17 +5,13 @@
 <%- end -%>
 
 <%- if @piece.sort.last == 'random' -%>
-  <%= javascript_tag do %>
-  function shuffle_children(id) {
-    var parent = $(id);
+  <script type="text/javascript">
+  $(function() {
+    var parent = $('#<%= @piece.css_id %> ul.bannerImages');
     var children = parent.children();
-    for (var i = 0; i < children.length; i++) {
+    for (var i=0; i<children.length; i++) {
       $(children[Math.floor(Math.random() * children.length)]).appendTo(parent);
     }
-  }
-
-  $(document).ready(function () {
-    shuffle_children('#<%= @piece.css_id %> ul.bannerImages');
   });
-  <% end %>
+  </script>
 <%- end -%>

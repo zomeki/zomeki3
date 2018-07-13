@@ -36,8 +36,8 @@ e1_opt, e2_opt = user_opts.partition { |opt| !e2_list.include?(opt[1].to_s) }
   </tr>
 </table>
 
-<%= javascript_tag do -%>
-$(document).ready(function () {
+<script type="text/javascript">
+$(function() {
   function moveSelectOptions(srcId, dstId) {
     $(srcId + ' option:selected').each(function() {
       var exist = false;
@@ -77,4 +77,4 @@ $(document).ready(function () {
     $('#<%= "item_in_approval_assignment_ids_#{approval_flow.id}_#{approval.id}" %>').val(ids.join(' '));
   });
 });
-<%- end -%>
+</script>

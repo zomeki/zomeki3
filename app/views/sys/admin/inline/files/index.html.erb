@@ -88,10 +88,10 @@ function ckeInsertContent(value) {
   }
 }
 $(function() {
-  $(".insertCsv").on('click', function (event) {
-    event.preventDefault();
+  $(".insertCsv").on('click', function(e) {
+    e.preventDefault();
     var editor = parent.CKEDITOR.currentInstance;
-    $.get($(this).attr("href"), {convert: 'csv:table'}, function (data) {
+    $.get($(this).attr("href"), {convert: 'csv:table'}, function(data) {
       if (editor) {
         editor.insertHtml(data);
       } else {

@@ -34,10 +34,10 @@
 
 <%= creator_form f %>
 
-<%= javascript_tag do -%>
-$(document).ready(function () {
+<script type="text/javascript">
+$(function() {
   $('input.datetimepicker').datetimepicker();
   $('input.datepicker').datepicker();
   $('input.timepicker').timepicker({stepMinute: 5});
 });
-<%- end -%>
+</script>
