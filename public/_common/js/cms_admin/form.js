@@ -141,6 +141,70 @@ jQuery.extend(jQuery.fn, {
   }
 });
 
+// simple multi select
+jQuery.extend(jQuery.fn, {
+  simpleMultiSelect: function(options) {
+   var form = $(this);
+    var setting = jQuery.extend({
+      source: '.source',
+      destination: '.destination',
+      add: '.add',
+      remove: '.remove',
+      beforeAdd: undefined,
+      afterAdd: undefined,
+      afterRemove: undefined,
+      afterRemove: undefined,
+    }, options);
+
+    form.on('submit', function() {
+      form.find(setting.source).find('option').prop('selected', false);
+      form.find(setting.destination).find('option').prop('selected', true);
+    });
+    form.find(setting.add).on('click', function() {
+      addSelectedOptions();
+    });
+    form.find(setting.source).on('dblclick', function() {
+      addSelectedOptions();
+    });
+    form.find(setting.remove).on('click', function() {
+      removeSelectedOptions();
+    });
+    form.find(setting.destination).on('dblclick', function() {
+      removeSelectedOptions();
+    });
+
+    var addSelectedOptions = function() {
+      var from = form.find(setting.source);
+      var to = form.find(setting.destination);
+      from.find('option:selected').each(function() {
+        var option = $(this);
+        if (to.find('option[value="' + option.val() + '"]').length == 0) {
+          option.prop('selected', false);
+
+          if (setting.beforeAdd && setting.beforeAdd(option) == false) { return; }
+          to.append(option);
+          if (setting.afterAdd && setting.afterAdd(option) == false) { return; }
+        }
+      });
+    };
+
+    var removeSelectedOptions = function() {
+      var from = form.find(setting.destination);
+      var to = form.find(setting.source);
+      from.find('option:selected').each(function() {
+        var option = $(this);
+        if (to.find('option[value="' + option.val() + '"]').length == 0) {
+          option.prop('selected', false);
+
+          if (setting.beforeRemove && setting.beforeRemove(option) == false) { return; }
+          to.append(option);
+          if (setting.afterRemove && setting.afterRemove(option) == false) { return; }
+        }
+      });
+    };
+  }
+});
+
 jQuery(function() {
   jQuery('form.new_item, form.edit_item').on('keypress', function (e) {
     if (e.target.type !== 'textarea' && e.which === 13) return false;

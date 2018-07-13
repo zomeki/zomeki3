@@ -95,7 +95,7 @@ class Cms::Admin::Node::PagesController < Cms::Admin::Node::BaseController
 
   def page_params
     params.require(:item).permit(
-      :body, :concept_id, :in_recognizer_ids,
+      :body, :concept_id,
       :layout_id, :mobile_body, :mobile_title, :name, :parent_id, :published_at,
       :route_id, :sitemap_sort_no, :sitemap_state, :title,
       :creator_attributes => [:id, :group_id, :user_id],

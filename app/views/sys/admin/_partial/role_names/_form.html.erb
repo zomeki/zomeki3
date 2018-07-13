@@ -1,74 +1,36 @@
 <%
-in_name = "role_name_ids"
-e1_name = 'role_names1'
-e2_name = 'role_names2'
-
-e1_opt, e2_opt =
-  Sys::RoleName.where(site_id: Core.site.id).order(:name).partition { |c| !item.role_name_ids.include?(c.id) }
-e1_opt = e1_opt.map { |c| [c.title, c.id] }
-e2_opt = e2_opt.map { |c| [c.title, c.id] }
+opts1, opts2 = Sys::RoleName.where(site_id: Core.site.id).order(:name)
+                              .partition { |c| !item.role_name_ids.include?(c.id) }
+opts1 = opts1.map { |c| [c.title, c.id] }
+opts2 = opts2.map { |c| [c.title, c.id] }
 %>
 <br />
 
 <table class="noDesign">
   <tr>
     <td>
-      <%= select_tag e1_name, options_for_select(e1_opt), multiple: true, style: "width: 240px; height: 140px;" %>
+      <%= select_tag 'role_name_candidates', options_for_select(opts1), multiple: true, style: "width: 240px; height: 140px;" %>
     </td>
     <td>
-      <input type="button" value="追加 →" id="add_<%= in_name %>" /><br /><br />
-      <input type="button" value="← 除外" id="remove_<%= in_name %>" />
+      <input type="button" value="追加 →" id="add_role_names" /><br /><br />
+      <input type="button" value="← 除外" id="remove_role_names" />
     </td>
     <td>
       <div class="<%= 'field_with_errors' if @item.errors['ロール権限'].size > 0 %>">
-        <%= select_tag e2_name, options_for_select(e2_opt), multiple: true, style: "width: 240px; height: 140px;" %>
+        <%= f.select :role_name_ids, options_for_select(opts2), {}, multiple: true, style: "width: 240px; height: 140px;" %>
       </div>
     </td>
   </tr>
 </table>
-<div id="<%= in_name %>">
-  <input type="hidden" name="item[<%= in_name %>][]" />
-</div>
 
 <script type="text/javascript">
 //<![CDATA[
 $(function() {
-  function moveSelectOptions(srcId, dstId) {
-    $(srcId + ' option:selected').each(function() {
-      var exist = false;
-      var srcOpt = $(this);
-      $(dstId + ' option').each(function() {
-        if ($(this).val() == srcOpt.val()) {
-          exist = true;
-          return;
-        }
-      });
-      if (!exist) {
-        $(dstId).append('<option value="' + srcOpt.val() + '">' + srcOpt.text() + '</option>');
-        srcOpt.remove();
-      }
-    });
-  }
-
-  $('#<%= e1_name %>').on('dblclick', function() {
-    moveSelectOptions('#<%= e1_name %>', '#<%= e2_name %>');
-  }); 
-  $('#add_<%= in_name %>').on('click', function() {
-    moveSelectOptions('#<%= e1_name %>', '#<%= e2_name %>');
-  }); 
-  $('#<%= e2_name %>').on('dblclick', function() {
-    moveSelectOptions('#<%= e2_name %>', '#<%= e1_name %>');
-  }); 
-  $('#remove_<%= in_name %>').on('click', function() {
-    moveSelectOptions('#<%= e2_name %>', '#<%= e1_name %>');
-  }); 
-
-  $('form').on('submit', function() {
-    $('#<%= e2_name %> option').each(function() {
-      $('#<%= in_name %>').append(
-        $('#<%= in_name %> input:first').clone().val( $(this).val() )
-      );
-    });
+  $('form').simpleMultiSelect({
+    source: '#role_name_candidates',
+    destination: '#item_role_name_ids',
+    add: '#add_role_names',
+    remove: '#remove_role_names'
   });
 });
 //]]>
