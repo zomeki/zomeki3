@@ -1,5 +1,5 @@
 $(function() {
-  $('#currentNaviSite').click(function() {
+  $('#currentNaviSite').on('click', function() {
     $('#naviConcepts').hide();
 
     var view = $('#naviSites');
@@ -14,14 +14,13 @@ $(function() {
         url: uri,
         success: function(data, dataType) {
           $('#content').prepend(data);
-          addHandler_onClickConceptIcon();
         }
       });
     }
     return false;
   });
 
-  $('#currentNaviConcept').click(function() {
+  $('#currentNaviConcept').on('click', function() {
     $('#naviSites').hide();
     $('#naviConcepts').toggle();
     $.cookie("naviConceptsVisible", $('#naviConcepts').is(':visible'), { path: '/' });
