@@ -1,19 +1,15 @@
 class Cms::Admin::Node::PagesController < Cms::Admin::Node::BaseController
   set_model Cms::Node::Page
 
+  before_action :check_duplicated_page, only: [:edit]
+
   def edit
-    @item = model.find(params[:id])
-    #return error_auth unless @item.readable?
-
-#    @item.in_inquiry = @item.default_inquiry if @item.in_inquiry == {}
-
     @item.name ||= 'index.html'
 
     _show @item
   end
 
   def update
-    @item = model.find(params[:id])
     @item.attributes = page_params
     @item.state      = "draft"
     @item.state      = "recognize" if params[:commit_recognize]
@@ -71,23 +67,16 @@ class Cms::Admin::Node::PagesController < Cms::Admin::Node::BaseController
     end
   end
 
-  def duplicate_for_replace(item)
-    if dupe_item = item.duplicate(:replace)
-      flash[:notice] = '複製処理が完了しました。'
-      respond_to do |format|
-        format.html { redirect_to(cms_nodes_path) }
-        format.xml  { head :ok }
-      end
-    else
-      flash[:notice] = "複製処理に失敗しました。"
-      respond_to do |format|
-        format.html { redirect_to url_for(action: :show) }
-        format.xml  { render xml: item.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
   protected
+
+  def check_duplicated_page
+    item = if @item.replaced_page?
+             @item.replaced_page
+           elsif @item.state == 'public'
+             @item.duplicate(:replace)
+           end
+    redirect_to url_for(action: :edit, id: item) if item
+  end
 
   def send_recognition_request_mail(item)
     item.recognizers.each do |recognizer|
@@ -106,7 +95,7 @@ class Cms::Admin::Node::PagesController < Cms::Admin::Node::BaseController
 
   def page_params
     params.require(:item).permit(
-      :body, :concept_id, :in_recognizer_ids,
+      :body, :concept_id,
       :layout_id, :mobile_body, :mobile_title, :name, :parent_id, :published_at,
       :route_id, :sitemap_sort_no, :sitemap_state, :title,
       :creator_attributes => [:id, :group_id, :user_id],

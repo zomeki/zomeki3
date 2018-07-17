@@ -39,13 +39,13 @@
 
 <script type="text/javascript">
 $(function() {
-  $('#plugins').on('change', function () {
+  $('#plugins').on('change', function() {
     var selected = $(this).find('option:selected')
     $('#item_name').val(selected.val());
-    $('#item_name').change();
+    $('#item_name').trigger('change');
     $('#item_title').val(selected.attr('title'));
   });
-  $('#item_name').on('change', function () {
+  $('#item_name').on('change', function() {
     $('#versions').html('<option>検索中...</option>');
     $.get('<%= url_for(action: :index, version_options: true) %>', { name: $(this).val() }, function(data) {
       $('#versions').html(data);
@@ -55,7 +55,7 @@ $(function() {
       $('#item_title').val(data);
     });
   });
-  $('#versions').on('change', function () {
+  $('#versions').on('change', function() {
     $('#item_version').val($(this).find('option:selected').val());
   });
 });

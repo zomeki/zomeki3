@@ -129,8 +129,10 @@ protected
         su.email          = user.email
         su.ldap         ||= 1
         su.ldap_version   = @version
-        su.in_group_id    = sg.id
-        
+
+        ug = user.users_groups[0] || user.users_groups.build
+        ug.group = sg
+
         if su.ldap == 1
           if su.save
             @results[:user] += 1

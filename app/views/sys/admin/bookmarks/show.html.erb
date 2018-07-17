@@ -1,0 +1,18 @@
+<table class="show">
+  <tr>
+    <th><%= @item.class.human_attribute_name :parent_id %></th>
+    <td><%= @item.parent.title if @item.parent %></td>
+  </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :title %></th>
+    <td><%= @item.title %></td>
+  </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :url %></th>
+    <td><%= @item.url %></td>
+  </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :sort_no %></th>
+    <td><%= @item.sort_no %></td>
+  </tr>
+</table>

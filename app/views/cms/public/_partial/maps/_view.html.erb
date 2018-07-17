@@ -7,7 +7,6 @@ return if map.map_lat.blank? || map.map_lng.blank?
 <%- if item.state != 'closed' -%>
 <%= javascript_include_tag "https://maps.googleapis.com/maps/api/js?key=#{item.site.google_map_api_key}&region=jp" %>
 <script type="text/javascript">
-//<![CDATA[
 
 function addEvent(element, listener, func) {
   try {
@@ -46,8 +45,6 @@ addEvent(window, 'load', function() {
     });
   <% end %>
 });
-
-//]]>
 </script>
 <%- end -%>
 

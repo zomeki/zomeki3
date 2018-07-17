@@ -3,5 +3,5 @@
 </ul>
 
 <ul class="contentMenu">
-<%= content_tag('li') { link_to "#{GpTemplate::Template.model_name.human}一覧", gp_template_templates_path(content: @content), class: 'fixed' } -%>
+<%= content_tag('li') { link_to "テンプレート一覧", gp_template_templates_path(content: @content), class: current == :template ? 'current' : '' } -%>
 </ul>

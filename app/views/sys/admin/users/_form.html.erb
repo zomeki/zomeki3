@@ -1,8 +1,12 @@
 <table class="show">
+  <%- @item.users_groups.build if @item.users_groups.blank? -%>
+  <%= f.fields_for :users_groups do |f2| %>
   <tr>
-    <th><%= f.label :in_group_id %></th>
-    <td><%= f.select :in_group_id, Core.site.groups_for_option, include_blank: true %></td>
-  </tr><tr>
+    <th><%= f2.label :group_id %></th>
+    <td><%= f2.select :group_id, f2.object.class.group_options(Core.site), include_blank: true %></td>
+  </tr>
+  <%- end -%>
+  <tr>
     <th><%= f.label :account %></th>
     <td><%= f.text_field :account, class: 'id' %></td>
   </tr><tr>
@@ -27,19 +31,19 @@
     <th><%= f.label :auth_no %></th>
     <td>
       <%- if @item.root? -%>
-        <%= @item.auth_name %>
+        <%= @item.auth_no_text %>
       <%- else -%>
         <%- if Core.user.root? || Core.user.admin_creatable? || Core.user == @item -%>
-          <%= f.collection_radio_buttons :auth_no, @item.authes, :last, :first %>
+          <%= f.collection_radio_buttons :auth_no, @item.class.auth_no_options, :last, :first %>
         <%- else -%>
           <%- if @item.has_auth?(:manager) -%>
             <%- if @item.admin_creatable? -%>
-              <%= @item.auth_name %>
+              <%= @item.auth_no_text %>
             <%- else -%>
-              <%= f.collection_radio_buttons :auth_no, @item.authes, :last, :first %>
+              <%= f.collection_radio_buttons :auth_no, @item.class.auth_no_options, :last, :first %>
             <%- end -%>
           <%- else -%>
-            <%= f.collection_radio_buttons :auth_no, @item.authes_exclude_admin, :last, :first %>
+            <%= f.collection_radio_buttons :auth_no, @item.class.auth_no_options(except: 5), :last, :first %>
           <%- end -%>
         <%- end -%>
       <%- end -%>
@@ -69,7 +73,7 @@
 </table>
 
 <script type="text/javascript">
-$(document).ready(function() {
+$(function() {
   $('input[name="item[auth_no]"]').on('change', function() {
     if ($(this).val() == '5') {
       $('#auth_extra_settings').show();

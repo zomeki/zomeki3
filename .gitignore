@@ -23,6 +23,7 @@
 /config/apache/virtual_hosts
 /config/apache/admin_virtual_hosts
 /config/nginx/*.conf
+/config/nginx/certs/*
 /config/nginx/servers
 /config/nginx/admin_servers
 /config/plugins/Gemfile

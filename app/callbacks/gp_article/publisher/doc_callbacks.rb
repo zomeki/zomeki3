@@ -1,6 +1,8 @@
 class GpArticle::Publisher::DocCallbacks < PublisherCallbacks
   def enqueue(doc)
     @doc = doc
+    @content = doc.content
+    @site = doc.site
     return unless enqueue?
     enqueue_pieces
     enqueue_nodes
@@ -10,6 +12,7 @@ class GpArticle::Publisher::DocCallbacks < PublisherCallbacks
     enqueue_maps
     enqueue_tags
     enqueue_relatee_docs
+    enqueue_sitemaps
   end
 
   private
@@ -20,31 +23,31 @@ class GpArticle::Publisher::DocCallbacks < PublisherCallbacks
   end
 
   def enqueue_pieces
-    pieces = @doc.content.public_pieces.sort { |p| p.model == 'GpArticle::RecentTab' ? 1 : 9 }
+    pieces = @content.public_pieces.sort { |p| p.model == 'GpArticle::RecentTab' ? 1 : 9 }
     Cms::Publisher::PieceCallbacks.new.enqueue(pieces)
   end
 
   def enqueue_nodes
     extra_flag =
-      if @doc.content.simple_pagination?
+      if @content.simple_pagination?
         {}
       else
-        column = @doc.content.docs_order_columns.first
+        column = @content.docs_order_columns.first
         changed_dates = [@doc.read_attribute(column)]
         changed_dates << @doc.prev_edition.read_attribute(column) if @doc.prev_edition
         changed_dates =
-          if @doc.content.monthly_pagination?
+          if @content.monthly_pagination?
             changed_dates.compact.map(&:beginning_of_month)
           else
             changed_dates.compact.map(&:beginning_of_week)
           end
         { target_date: changed_dates.uniq.sort.map { |d| d.strftime('%Y-%m-%d') } }
       end
-    Cms::Publisher.register(@doc.content.site_id, @doc.content.public_nodes, extra_flag)
+    Cms::Publisher.register(@site.id, @content.public_nodes, extra_flag)
   end
 
   def enqueue_organizations
-    return unless organization_content = @doc.content.organization_content_group
+    return unless organization_content = @content.organization_content_group
     return unless @doc.organization_group
 
     changed_ogs = [@doc.organization_group]
@@ -52,13 +55,13 @@ class GpArticle::Publisher::DocCallbacks < PublisherCallbacks
     changed_ogs.uniq!
 
     if changed_ogs.present?
-      Cms::Publisher.register(@doc.content.site_id, changed_ogs)
+      Cms::Publisher.register(@site.id, changed_ogs)
       Cms::Publisher::PieceCallbacks.new.enqueue(organization_content.public_pieces)
     end
   end
 
   def enqueue_categories
-    category_content = @doc.content.gp_category_content_category_type
+    category_content = @content.gp_category_content_category_type
     return unless category_content
 
     changed_cats = @doc.categories.flat_map(&:ancestors)
@@ -66,15 +69,15 @@ class GpArticle::Publisher::DocCallbacks < PublisherCallbacks
     changed_cats.uniq!
 
     if changed_cats.present?
-      Cms::Publisher.register(@doc.content.site_id, changed_cats)
+      Cms::Publisher.register(@site.id, changed_cats)
       Cms::Publisher::PieceCallbacks.new.enqueue(category_content.public_pieces_for_doc_list)
     end
   end
 
   def enqueue_calendars
-    return unless @doc.content.calendar_related?
+    return unless @content.calendar_related?
 
-    calendar_content = @doc.content.gp_calendar_content_event
+    calendar_content = @content.gp_calendar_content_event
     return unless calendar_content
 
     changed_dates = [@doc.event_started_on, @doc.event_ended_on]
@@ -85,7 +88,7 @@ class GpArticle::Publisher::DocCallbacks < PublisherCallbacks
       min_date = changed_dates.min.beginning_of_month
       max_date = changed_dates.max.beginning_of_month
 
-      Cms::Publisher.register(@doc.content.site_id, calendar_content.public_nodes,
+      Cms::Publisher.register(@site.id, calendar_content.public_nodes,
                               target_min_date: min_date.strftime('%Y-%m-%d'),
                               target_max_date: max_date.strftime('%Y-%m-%d'))
       Cms::Publisher::PieceCallbacks.new.enqueue(calendar_content.public_pieces)
@@ -93,9 +96,9 @@ class GpArticle::Publisher::DocCallbacks < PublisherCallbacks
   end
 
   def enqueue_maps
-    return unless @doc.content.map_related?
+    return unless @content.map_related?
 
-    map_content = @doc.content.map_content_marker
+    map_content = @content.map_content_marker
     return unless map_content
     return unless @doc.maps[0]
 
@@ -104,15 +107,15 @@ class GpArticle::Publisher::DocCallbacks < PublisherCallbacks
     changed_markers.uniq!
 
     if changed_markers.present?
-      Cms::Publisher.register(@doc.content.site_id, map_content.public_nodes)
+      Cms::Publisher.register(@site.id, map_content.public_nodes)
       Cms::Publisher::PieceCallbacks.new.enqueue(map_content.public_pieces)
     end
   end
 
   def enqueue_tags
-    return unless @doc.content.tag_related?
+    return unless @content.tag_related?
 
-    tag_content = @doc.content.tag_content_tag
+    tag_content = @content.tag_content_tag
     return unless tag_content
 
     changed_tags = @doc.tags.to_a
@@ -120,12 +123,17 @@ class GpArticle::Publisher::DocCallbacks < PublisherCallbacks
     changed_tags.uniq!
 
     if changed_tags.present?
-      Cms::Publisher.register(@doc.content.site_id, changed_tags)
+      Cms::Publisher.register(@site.id, changed_tags)
       Cms::Publisher::PieceCallbacks.new.enqueue(tag_content.public_pieces)
     end
   end
 
   def enqueue_relatee_docs
-    Cms::Publisher.register(@doc.content.site_id, @doc.relatee_docs.where(state: 'public'))
+    Cms::Publisher.register(@site.id, @doc.relatee_docs.where(state: 'public'))
   end
+
+  def enqueue_sitemaps
+    nodes = @site.nodes.where(model: 'Cms::SitemapXml')
+    Cms::Publisher.register(@site.id, nodes)
+   end
 end

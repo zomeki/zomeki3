@@ -4,23 +4,25 @@
   <tr>
     <th class="action_link">詳細</th>
     <th style="">ファイル名</th>
+    <th style="width: 200px;">ディレクトリのタイトル</th>
     <th style="width: 80px; text-align: right;">サイズ</th>
     <th style="width: 120px; text-align: center;">更新日時</th>
   </tr>
-  
+
   <%- @items.each do |item| -%>
     <%- if item.directory_entry? -%>
       <tr class="directory <%= cycle '', 'cycle' %>">
         <td class="action_link"><%= link_to :show, { path: "#{item.path_from_site_root}/", do: :show } %></td>
         <td class="name"><%= link_to item.name, { path: "#{item.path_from_site_root}/" } %></td>
+        <td><%= item.related_node.title if item.related_node %></td>
         <td style="text-align: right;"></td>
         <td style="text-align: center;"><%=l item.mtime %></td>
       </tr>
     <%- else -%>
       <tr class="file <%= cycle '', 'cycle' %>">
         <td class="action_link"><br /></td>
-        
         <td class="name"><%= link_to item.name, { path: item.path_from_site_root, do: :show } %></td>
+        <td><%= item.related_node.title if item.related_node %></td>
         <td style="text-align: right;"><%= item.kb_size %> KB</td>
         <td style="text-align: center;"><%=l item.mtime %></td>
       </tr>

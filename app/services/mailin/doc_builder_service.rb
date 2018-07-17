@@ -70,7 +70,7 @@ class Mailin::DocBuilderService < ApplicationService
                            email: mail_address,
                            auth_no: 2,
                            ldap: 0)
-      user.in_group_id = group.id
+      user.users_groups.build(group: group)
       user.save(validate: false)
       user
     end

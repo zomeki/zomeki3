@@ -14,7 +14,7 @@ module GpTemplate::TemplateHelper
     when 'attachment_file'
       if file = files.detect {|f| f.name == value }
         if file.image_is == 1
-          value = content_tag('image', '', src: "file_contents/#{file.name}", title: file.title) 
+          value = tag('img', src: "file_contents/#{file.name}", title: file.title, alt: file.alt_text) 
         else
           value = content_tag('a', file.united_name, href: "file_contents/#{file.name}", class: file.css_class)
         end

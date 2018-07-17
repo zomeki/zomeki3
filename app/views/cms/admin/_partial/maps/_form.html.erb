@@ -9,7 +9,6 @@ map_zoom = map.map_zoom.presence || 14
 -%>
 <%= javascript_include_tag "/_common/modules/cms/js/map.js" %>
 <script type="text/javascript">
-//<![CDATA[
 var map = null;
 var me = null;
 
@@ -43,7 +42,7 @@ $(function() {
     me.syncMap();
     google.maps.event.addListener(map, 'dragend', function(){ me.syncMap(); } );
     google.maps.event.addListener(map, 'zoom_changed', function(){ me.syncMap(); } );
-    google.maps.event.addListener(map, 'click', function(event){ me.syncClick(event); } );
+    google.maps.event.addListener(map, 'click', function(e){ me.syncClick(e); } );
 
     // markers
     <% map.markers.each_with_index do |marker, idx| %>
@@ -72,20 +71,13 @@ $(function() {
 });
 
 $(function() {
-  $('#addMarkerForm').on('click', function() {
-    var idx = $('#markerFormTbody tr').length;
-    var elem = $('#markerFormTbody tr:last').clone();
-    elem.find('input:text').removeAttr('value');
-
-    var html = elem.html()
-      .replace(/markers_attributes_\d+/g, "markers_attributes_" + idx)
-      .replace(/\[markers_attributes\]\[\d+\]/g, "[markers_attributes][" + idx + "]");
-    $('#markerFormTbody').append( $('<tr>').append(html) );
-    return false;
-  
+  $('#addMarkerForm').addFields({
+    container: '#markerForm tbody',
+    fields: 'tr',
+    indexName: 'markers_attributes',
+    extraReplaceTags: { a: ['onclick'] }
   });
 });
-//]]>
 </script>
 
 <div id="mapForm" class="articleMapForm">

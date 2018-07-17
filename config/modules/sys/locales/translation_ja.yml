@@ -6,8 +6,9 @@ ja:
       sys/role_name: ロール
       sys/object_privilege: 権限
       sys/plugin: プラグイン
-    attributes:
+      sys/bookmark: ブックマーク
 
+    attributes:
       sys/sequence:
         created_at: 作成日時
         updated_at: 更新日時
@@ -50,7 +51,8 @@ ja:
         outline_uri: 業務概要URL
         note: 備考
 
-      sys/group_user:
+      sys/users_group:
+        group_id: グループ
         created_at: 作成日時
         updated_at: 更新日時
 
@@ -71,10 +73,11 @@ ja:
         remember_token: トークン
         remember_token_expires_at: トークン有効期限
         group_id: グループ
-        in_group_id: グループ
         role_name: ロール権限
         admin_creatable: サイト管理者作成
         sites: 所属サイト
+      sys/user/users_groups:
+        group_id: グループ
 
       sys/role_name:
         name: ロールID
@@ -158,6 +161,14 @@ ja:
       sys/publisher:
         path: パス
         created_at: 作成日時
+        updated_at: 更新日時
+
+      sys/bookmark:
+        id: ID
+        parent_id: 上位ブックマーク
+        title: リンクタイトル
+        url: リンクURL
+        sort_no: 並び順
         updated_at: 更新日時
 
   activemodel:

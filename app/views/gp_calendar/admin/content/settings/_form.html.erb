@@ -2,7 +2,7 @@
 
 <%= render 'gp_calendar/admin/shared/doc_style_tags' %>
 <%= render 'gp_calendar/admin/shared/doc_style_calendar_tags' %>
-<%= javascript_tag do %>
+<script type="text/javascript">
 $(function() {
   <%- if @item.name == "calendar_list_style" -%>
      $('a.show_dialog').on('click', function() {
@@ -16,7 +16,7 @@ $(function() {
      });
   <%- end -%>
 });
-<% end %>
+</script>
 
 <%- if @item.name == 'gp_category_content_category_type_id'
       content = GpCategory::Content::CategoryType.find_by_id(@item.value)
@@ -39,15 +39,15 @@ $(function() {
   </tr>
 </table>
 
-<%= javascript_tag do -%>
-$(document).ready(function () {
-  $('#item_value').on('change', function (event) {
-    var content_id = parseInt(event.target.value);
+<script type="text/javascript">
+$(function() {
+  $('#item_value').on('change', function(e) {
+    var content_id = parseInt(e.target.value);
     if (isNaN(content_id)) {
       $('#category_types').html('');
     } else {
       $('#category_types').html('更新中...');
-      $.get('<%= gp_category_category_types_path(content: 'CONTENT_ID') %>?check_boxes=true'.replace('CONTENT_ID', content_id), function (data) {
+      $.get('<%= gp_category_category_types_path(content: 'CONTENT_ID') %>?check_boxes=true'.replace('CONTENT_ID', content_id), function(data) {
         $('#category_types').html(
           data.replace(/category_types\[\]/g, 'item[extra_values][category_type_ids][]')
         );
@@ -55,5 +55,5 @@ $(document).ready(function () {
     }
   });
 });
-<%- end -%>
+</script>
 <%- end -%>

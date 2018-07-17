@@ -20,7 +20,7 @@ class Cms::Admin::Tool::RebuildController < Cms::Controller::Admin::Base
     contents = Cms::Content.where(id: params[:target_content_ids])
     return redirect_to(url_for(action: 'index'), alert: '対象を選択してください。') if contents.empty?
 
-    Cms::RebuildJob.perform_later(site_id: Core.site.id, target_content_ids: contents.map(&:id))
+    Cms::RebuildJob.perform_later(Core.site, target_content_ids: contents.map(&:id))
 
     redirect_to url_for(action: 'index'), notice: '再構築を開始しました。完了までに時間がかかる場合があります。'
   end
@@ -29,7 +29,7 @@ class Cms::Admin::Tool::RebuildController < Cms::Controller::Admin::Base
     nodes = Cms::Node.where(id: params[:target_node_ids])
     return redirect_to(url_for(action: 'index'), alert: '対象を選択してください。') if nodes.empty?
 
-    Cms::RebuildJob.perform_later(site_id: Core.site.id, target_node_ids: nodes.map(&:id))
+    Cms::RebuildJob.perform_later(Core.site, target_node_ids: nodes.map(&:id))
 
     redirect_to url_for(action: 'index'), notice: '再構築を開始しました。完了までに時間がかかる場合があります。'
   end

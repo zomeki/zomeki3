@@ -25,6 +25,10 @@ class GpCalendar::Content::Event < Cms::Content
     public_nodes.where(model: %w(GpCalendar::Event GpCalendar::CalendarStyledEvent))
   end
 
+  def category_content
+    GpCategory::Content::CategoryType.find_by(id: category_content_id)
+  end
+
   def category_content_id
     setting_value(:gp_category_content_category_type_id).to_i
   end

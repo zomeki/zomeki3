@@ -4,6 +4,8 @@ class Sys::Admin::FrontController < Cms::Controller::Admin::Base
 
     @maintenances = Sys::Maintenance.where(state: 'public').order(published_at: :desc)
 
+    @bookmarks = Sys::Bookmark.roots.where(user_id: Core.user.id).order(:sort_no, :id)
+
     #@calendar = Util::Date::Calendar.new(nil, nil)
   end
 end

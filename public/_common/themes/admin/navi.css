@@ -55,9 +55,9 @@
   text-align: center;
   text-decoration: none;
 }
-#naviConcepts li .opendChildren {
+#naviConcepts li .opened {
 }
-#naviConcepts li .closedChildren {
+#naviConcepts li .closed {
   background-color: #ddd;
 }
 #naviConcepts li a.current {

@@ -16,6 +16,16 @@ log_file "#{rails_root}/log/#{rails_env}_delayed_job_master.log"
 # log level
 log_level :info
 
+# default
+add_worker do |worker|
+  worker.queues %w(default)
+  worker.control :dynamic
+  worker.count (ENV['DEFAULT_WORKERS'] || 1).to_i
+  worker.max_memory 512
+  worker.max_run_time 3600
+  worker.read_ahead 1
+end
+
 # task
 add_worker do |worker|
   worker.queues %w(sys_tasks)
@@ -28,7 +38,7 @@ end
 
 # rebuild
 add_worker do |worker|
-  worker.queues %w(default cms_rebuild)
+  worker.queues %w(cms_rebuild)
   worker.control :dynamic
   worker.count (ENV['REBUILD_WORKERS'] || 1).to_i
   worker.max_memory 512

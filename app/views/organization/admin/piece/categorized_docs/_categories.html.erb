@@ -1,0 +1,29 @@
+<table class="show">
+  <%- category_content.category_types.each do |ct| -%>
+  <tr>
+    <th><%= ct.title %></th>
+    <td>
+      <span id="categories_<%= ct.id %>">
+        <%- categories = @item.categories.select { |c| c.category_type_id == ct.id }.presence || [nil] -%>
+        <%- categories.each do |category| -%>
+          <span class="category_<%= ct.id %>">
+            <%= select_tag "categories[#{ct.id}][]", options_for_select(ct.categories_for_option, category&.id), include_blank: true, id: nil %>
+          </span>
+        <%- end -%>
+      </span>
+      <span><%= button_tag '追加', type: 'button', id: "add_category_#{ct.id}" %></span>
+    </td>
+  </tr>
+  <%- end -%>
+</table>
+
+<script type="text/javascript">
+$(function() {
+  <%- category_content.category_types.each do |ct| -%>
+    $('#add_category_<%= ct.id %>').addFields({
+      container: '#categories_<%= ct.id %>',
+      fields: '.category_<%= ct.id %>'
+    });
+  <%- end -%>
+});
+</script>

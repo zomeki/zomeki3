@@ -27,22 +27,24 @@
       <span id="gp_article_contents">
         <%- content_ids = @item.gp_article_content_ids.presence || [nil] -%>
         <%- content_ids.each do |content_id| -%>
+          <span class="gp_article_content">
           <%= select_tag 'item[gp_article_content_ids][]',
                           options_from_collection_for_select(@content.gp_article_contents, :id, :name, content_id), include_blank: true %>
+          </span>
         <%- end -%>
       </span>
-      <span><%= button_tag '追加', type: 'button', id: 'add_gp_article_contents' %></span>
+      <span><%= button_tag '追加', type: 'button', id: 'add_gp_article_content' %></span>
     </td>
   </tr>
 </table>
 
 <script type="text/javascript">
-  $('#add_gp_article_contents').on('click', function () {
-    var wrapper = $('#gp_article_contents');
-    var elm = wrapper.children(':first-child').clone(true);
-    elm.find('option').prop('selected', false);
-    wrapper.append(elm);
+$(function() {
+  $('#add_gp_article_content').addFields({
+    container: '#gp_article_contents',
+    fields: '.gp_article_content'
   });
+});
 </script>
 
 <p class="form">記事表示形式</p>
@@ -75,12 +77,11 @@
 </table>
 
 <%= render 'gp_article/admin/shared/doc_style_tags' %>
-
-<%= javascript_tag do -%>
-$(document).ready(function () {
+<script type="text/javascript">
+$(function() {
   $('a.show_dialog').on('click', function() {
     $('#doc_style_tags').dialog({width: 400});
     return false;
   });
 });
-<%- end -%>
+</script>

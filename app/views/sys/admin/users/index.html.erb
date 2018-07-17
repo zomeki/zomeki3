@@ -21,7 +21,7 @@
     <td><%= item.name %></td>
     <td><%= item.group.try!(:full_name) %></td>
     <td><%= item.email %></td>
-    <td><%= item.auth_name %></td>
+    <td><%= item.auth_no_text %></td>
     <td><%= item.role_names.map(&:title).join('，') %></td>
     <td style="text-align: center;"><%=l item.updated_at %></td>
     <td style="text-align: center;"><%= item.state_text %></td>

@@ -32,7 +32,7 @@
           </tr>
           <tr>
             <td><%= GpCategory::Category.model_name.human %>階層</td>
-            <td><%= @item.class::LAYER_OPTIONS.detect{|o| o.last == category_set[:layer] }.try(:first) %></td>
+            <td colspan="3"><%= @item.class::LAYER_OPTIONS.detect{|o| o.last == category_set[:layer] }.try(:first) %></td>
           </tr>
           <%- end -%>
         </tbody>
