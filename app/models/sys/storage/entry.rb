@@ -175,7 +175,7 @@ class Sys::Storage::Entry
 
     dir_path = relative_path_from(site.public_path)
     dir_path.gsub!(/^(_mobile|_smartphone)\//, '')
-    dir_path.gsub(/(.html.r|.html.mp3)$/, '.html')
+    dir_path.gsub!(/(.html.r|.html.mp3)$/, '.html')
 
     nodes = Cms::Node.find_nodes_by_path(site, dir_path)
     if nodes.last
