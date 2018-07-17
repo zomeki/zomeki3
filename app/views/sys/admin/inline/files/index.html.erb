@@ -72,7 +72,6 @@ display_embed_link = @content.respond_to?(:attachment_embed_link) ? @content.att
 <%= paginate @items %>
 
 <script type="text/javascript">
-//<![CDATA[
 function ckeInsertContent(value) {
   if (!parent || !parent.CKEDITOR) { return; }
   if (parent.CKEDITOR.currentInstance) {
@@ -100,5 +99,4 @@ $(function() {
     });
   });
 });
-//]]>
 </script>
