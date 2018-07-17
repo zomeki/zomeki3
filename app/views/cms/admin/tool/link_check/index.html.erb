@@ -2,6 +2,18 @@
 
 <%- if @running -%>
 <div id="reload_count"></div>
+<script type="text/javascript">
+$(function() {
+  var count = 10;
+  var interval_id = setInterval(function() {
+      $('#reload_count').text(count + '秒後に更新します。');
+      if (--count < 1) {
+        clearInterval(interval_id);
+        location.reload();
+      }
+    }, 1000);
+});
+</script>
 <%- end -%>
 
 <%= page_entries_info @logs %>
@@ -38,20 +50,3 @@
 </table>
 
 <%= paginate @logs %>
-
-<%- if @running -%>
-<%= javascript_tag do -%>
-$(document).ready(function () {
-  (function () {
-    var count = 10;
-    var interval_id = setInterval(function () {
-        $('#reload_count').text(count + '秒後に更新します。');
-        if (--count < 1) {
-          clearInterval(interval_id);
-          location.reload();
-        }
-      }, 1000);
-  })();
-});
-<%- end -%>
-<%- end -%>

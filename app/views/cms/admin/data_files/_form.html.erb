@@ -1,16 +1,16 @@
-<%= javascript_tag do %>
+<script type="text/javascript">
 $(function() {
-    $('#item_file').change(function(e){
-        var name = $(this).val().replace(/\\/g, '/').replace(/.*\//, '');
-        <%- if Zomeki.config.application['upload.allow_japanese_filename'] -%>
-          $('#item_name').val(name);
-        <%- else -%>
-          $('#item_name').val(name.replace(/[^0-9a-z\.\-_\\+@#]/ig, ''));
-        <%- end -%>
-        $('#item_title').val(name.replace(/(.*)\.[a-z]+$/i, '$1'));
-    });
+  $('#item_file').on('change', function(e) {
+    var name = $(this).val().replace(/\\/g, '/').replace(/.*\//, '');
+    <%- if Zomeki.config.application['upload.allow_japanese_filename'] -%>
+      $('#item_name').val(name);
+    <%- else -%>
+      $('#item_name').val(name.replace(/[^0-9a-z\.\-_\\+@#]/ig, ''));
+    <%- end -%>
+    $('#item_title').val(name.replace(/(.*)\.[a-z]+$/i, '$1'));
+  });
 });
-<% end %>
+</script>
 
 <%#= f.hidden_field :concept_id  %>
 

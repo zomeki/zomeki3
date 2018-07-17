@@ -6,7 +6,7 @@ $(function(){
     $(this).closest('.inquiryForm').hide();
   });
   $('#addInquiryForm').on('click', function(e) {
-    var no  = $('.inquiryForm').size();
+    var no  = $('.inquiryForm').length;
     var elm = $('.inquiryForm:last').clone();
     elm.find('input, select').each(function() {
       $(this).attr({

@@ -1,10 +1,10 @@
-<%= javascript_tag do -%>
-$(document).ready(function () {
+<script type="text/javascript">
+$(function() {
   $.ajax({
     url: '/_api/ad_banner/piece_banners',
     type: 'GET',
     data: {'piece_id': <%= @piece.id %>, 'version': '20150401'},
-    success: function (data) {
+    success: function(data) {
       var wrapper = $('#<%= @piece.css_id %> > .pieceContainer > .pieceBody');
       var upper_text = data['upper_text'];
       var banners = data['banners'];
@@ -16,7 +16,7 @@ $(document).ready(function () {
       }
       if (banners && banners.length > 0) {
         var u = $('<ul>', { class: 'bannerImages'} );
-        $(banners).each(function (index, item) {
+        $(banners).each(function(index, item) {
           var l = $('<li>', { class: 'banner' });
           var a = $('<a>', { href: item['url'], target: item['target'], data: { token: item['token'] } });
           a.append($('<img>', { src: item['image_url'], alt: item['alt_text'], title: item['title'] }));
@@ -31,20 +31,20 @@ $(document).ready(function () {
         wrapper.append(lt);
       }
     },
-    error: function (data)  {
+    error: function(data)  {
       var wrapper = $('#<%= @piece.css_id %> > .pieceContainer > .pieceBody');
       wrapper.text('現在表示できません。');
     }
   });
 });
-<%- end -%>
+</script>
 
 <%- if !request.mobile? && @piece.content.click_count_related? -%>
-<%= javascript_tag do -%>
+<script type="text/javascript">
 $(function() {
   $(document).on('click', '#<%= @piece.css_id %> li.banner a', function() {
     $.get('/_api/ad_banner/piece_clicks', { piece_id: <%= @piece.id %>, token: $(this).data('token') });
   });
 });
-<%- end -%>
+</script>
 <%- end -%>

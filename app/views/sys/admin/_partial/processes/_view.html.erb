@@ -28,7 +28,7 @@
 </style>
 
 <% if proc.state == 'running' %>
-  <%= javascript_tag do %>
+  <script type="text/javascript">
   var reloadTimer = 10;
   var reloadTimerId = setInterval(function(){
     reloadTimer -= 1;
@@ -38,7 +38,7 @@
       location.reload();
     }
   }, 1000);
-  <% end %>
+  </script>
 <% end %>
 
 <div class="processView">

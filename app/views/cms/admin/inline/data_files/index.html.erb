@@ -67,7 +67,7 @@ end
 
 <%= paginate @items %>
 
-<%= javascript_tag do %>
+<script type="text/javascript">
 function ckeInsertContent(value) {
   if (parent.CKEDITOR) {
     if (parent.CKEDITOR.currentInstance) {
@@ -85,9 +85,9 @@ function ckeInsertContent(value) {
     parent.setText(parent.document.getElementById('item_body'), value);
   }
 }
-$(document).ready(function () {
-  $(".insertAttach").on('click', function (event) {
-    event.preventDefault();
+$(function() {
+  $(".insertAttach").on('click', function(e) {
+    e.preventDefault();
     var fileId = $(this).attr("id").replace(/link_attach/, "");
     var node_name = '';
     if ($("#nodeName" + fileId).val()) {
@@ -98,4 +98,4 @@ $(document).ready(function () {
     ckeInsertContent(insertItem);
   });
 });
-<%- end -%>
+</script>

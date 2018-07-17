@@ -25,7 +25,6 @@
 <%= creator_form f %>
 
 <script type="text/javascript">
-//<![CDATA[
 $(function() {
   $('#item_concept_id').on('change', function() {
     $.get('<%= url_for(action: :content_options) %>', { concept_id: $(this).val() }, function(html) {
@@ -41,5 +40,4 @@ $(function() {
     });
   });
 });
-//]]>
 </script>

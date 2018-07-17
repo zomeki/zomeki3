@@ -19,6 +19,10 @@ class Gnav::MenuItem < ApplicationRecord
 
   has_many :category_sets
 
+  accepts_nested_attributes_for :category_sets, allow_destroy: true
+
+  before_save :mark_destruction_for_blank_category_sets
+
   validates :name, presence: true, uniqueness: { scope: :content_id }
   validates :title, presence: true
 
@@ -71,5 +75,13 @@ class Gnav::MenuItem < ApplicationRecord
     end
 
     Cms::Lib::BreadCrumbs.new(crumbs)
+  end
+
+  private
+
+  def mark_destruction_for_blank_category_sets
+    category_sets.each do |cs|
+      cs.mark_for_destruction if cs.category_id.blank?
+    end
   end
 end

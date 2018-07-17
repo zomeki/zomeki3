@@ -114,9 +114,10 @@ class Sys::Admin::Inline::FilesController < Cms::Controller::Admin::Base
     return error_auth unless @item.image_file?
 
     if request.post?
-      if params[:x].to_i != 0 || params[:y].to_i != 0
+      coordinates = [params[:x], params[:y], params[:w], params[:h]]
+      if coordinates.all?(&:present?)
         @item.thumbnail_size = get_thumbnail_size
-        if @item.crop(params[:x].to_i, params[:y].to_i, params[:w].to_i, params[:h].to_i)
+        if @item.crop(*coordinates.map(&:to_i))
           flash[:notice] = "トリミングしました。"
         else
           flash[:alert]  = "トリミングに失敗しました。"

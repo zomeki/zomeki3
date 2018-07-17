@@ -78,8 +78,8 @@
 
 <%= creator_form f %>
 
-<%= javascript_tag do -%>
-$(document).ready(function () {
+<script type="text/javascript">
+$(function() {
   $('input.datetimepicker').datetimepicker();
 });
-<%- end -%>
+</script>

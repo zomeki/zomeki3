@@ -18,14 +18,14 @@
     <td><%= f.array_text_field 'in_settings[date_style]', size: 50 %> 年：%Y 月：%m 日：%d 時：%H 分：%M 秒：%S</td>
   </tr>
 </table>
-<%= javascript_tag do %>
+
+<%= render 'feed/admin/shared/doc_style_tags' %>
+<script type="text/javascript">
 $(function() {
   $('#show_dialog').on('click', function() {
     $('#doc_style_tags').dialog({width: 400});
     return false;
   });
 });
-<% end %>
+</script>
 <%- end -%>
-
-<%= render 'feed/admin/shared/doc_style_tags' %>

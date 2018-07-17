@@ -232,7 +232,7 @@ class Cms::Node < ApplicationRecord
         item.title         = item.title.gsub(/^(【複製】)*/, "【複製】")
       end
 
-      item.in_recognizer_ids  = recognition.recognizer_ids if recognition
+      item.in_recognizer_ids  = in_recognizer_ids if in_recognizer_ids.present?
 
 #      if inquiry != nil && inquiry.group_id == Core.user.group_id
 #        item.in_inquiry = inquiry.attributes

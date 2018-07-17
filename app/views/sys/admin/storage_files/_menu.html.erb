@@ -11,14 +11,14 @@
   <%- end -%>
 </div>
 
-<%= javascript_tag do %>
+<script type="text/javascript">
 // change root directory
 $(function(){
-  $('#naviPath').change(function(){
+  $('#naviPath').on('change', function() {
     location.href = '<%= sys_storage_files_path.gsub(/\?.*/, '') %>/' + $(this).val();
   });
 });
-<% end %>
+</script>
 
 <div class="actionMenu">
 <%- case @do -%>

@@ -42,17 +42,16 @@
 
 <%= creator_form f %>
 
-<%= javascript_tag do -%>
-function set_copy_date(from, to) {
-  $(from).on('change', function () {
-    if ($(to).val() === '') { $(to).val($(from).val()); }
-  });
-}
-
-$(document).ready(function () {
+<script type="text/javascript">
+$(function() {
   $('input.datepicker').datepicker();
 
+  function set_copy_date(from, to) {
+    $(from).on('change', function() {
+      if ($(to).val() === '') { $(to).val($(from).val()); }
+    });
+  }
   set_copy_date('#item_started_on', '#item_ended_on');
   set_copy_date('#item_ended_on', '#item_started_on');
 });
-<%- end -%>
+</script>

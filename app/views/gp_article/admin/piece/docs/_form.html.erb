@@ -33,12 +33,12 @@
 
 <%= render 'gp_article/admin/shared/doc_style_tags' %>
 
-<%= javascript_tag do %>
+<script type="text/javascript">
 $(function() {
   $('#show_dialog').on('click', function() {
     $('#doc_style_tags').dialog({width: 400});
     return false;
   });
 });
-<%- end -%>
+</script>
 <%- end -%>
