@@ -13,14 +13,14 @@ class Sys::Admin::GroupsController < Cms::Controller::Admin::Base
   end
 
   def index
-    if @parent
-      @groups = Core.site.groups.order(:sort_no, :code, :id).to_tree.flat_map(&:children)
-      @users = Core.site.users.in_group(@parent).order(:account)
-    else
-      @groups = Core.site.groups.order(:sort_no, :code, :id).to_tree
-      return redirect_to url_for(action: :index, parent: @groups.first.id) if @groups.size == 1
-      @users = []
-    end
+    @root = Core.site.groups.roots.first if Core.site.groups.roots.size == 1
+    return redirect_to url_for(action: :index, parent: @root.id) if @root && params[:parent] == '0'
+
+    @groups = Core.site.groups.order(:sort_no, :code, :id).to_tree
+    @groups = @groups.flat_map(&:children) if @root
+
+    @users = []
+    @users = Core.site.users.in_group(@parent).order(:account) if @parent
 
     _index @groups
   end
