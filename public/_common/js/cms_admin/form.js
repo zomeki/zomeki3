@@ -86,8 +86,10 @@
         var regexps = makeRegexpsForNestedFormID();
         $clone.find('input[type="hidden"]').each(function() {
           var $elem = $(this);
+          var id = $elem.attr('id');
+          if (!id) { return; }
           regexps.forEach(function(regexp) {
-            if ($elem.attr('id').match(regexp)) {
+            if (id.match(regexp)) {
               $elem.remove();
               return;
             }
