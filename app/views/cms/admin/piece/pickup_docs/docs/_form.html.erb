@@ -31,11 +31,9 @@
 
 <script type="text/javascript">
 $(function() {
-  $('#item_content_id').on('change', function(e) { get_articles() });
-  $('#group_id').on('change', function(e) { get_articles() });
-  $('#user_id').on('change', function(e) { get_articles() });
-  <%- unless @item.content_id.blank?  -%>
-  <%- end -%>
+  $('#item_content_id, #group_id, #user_id').on('change', function() {
+    getArticles();
+  });
 
   $('#group_id').on('change', function(e) {
     var group_id = parseInt(e.target.value);
@@ -48,24 +46,24 @@ $(function() {
       });
     }
   });
-});
 
-function get_articles() {
-  var content_id = parseInt($('#item_content_id').val());
-  var group_id = parseInt($('#group_id').val());
-  var user_id = parseInt($('#user_id').val());
-  var doc_select = $('#item_doc_id');
-
-  if (isNaN(content_id)) {
-    doc_select.html('<option value=""></option>');
-  } else {
-    doc_select.html('<option value="">更新中...</option>');
-    url = '<%= gp_article_docs_path(content: 'CONTENT_ID') %>?doc_options=true&state=public';
-    if (!isNaN(group_id)) { url = url + '&group_id=' + group_id; }
-    if (!isNaN(user_id)) { url = url + '&user_id=' + user_id; }
-    $.get(url.replace('CONTENT_ID', content_id), function(data) {
-      doc_select.html(data);
-    });
+  function getArticles() {
+    var content_id = parseInt($('#item_content_id').val());
+    var group_id = parseInt($('#group_id').val());
+    var user_id = parseInt($('#user_id').val());
+    var doc_select = $('#item_doc_id');
+  
+    if (isNaN(content_id)) {
+      doc_select.html('<option value=""></option>');
+    } else {
+      doc_select.html('<option value="">更新中...</option>');
+      url = '<%= gp_article_docs_path(content: 'CONTENT_ID') %>?doc_options=true&state=public';
+      if (!isNaN(group_id)) { url = url + '&group_id=' + group_id; }
+      if (!isNaN(user_id)) { url = url + '&user_id=' + user_id; }
+      $.get(url.replace('CONTENT_ID', content_id), function(data) {
+        doc_select.html(data);
+      });
+    }
   }
-}
+});
 </script>
