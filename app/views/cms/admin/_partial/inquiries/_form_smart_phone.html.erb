@@ -15,24 +15,24 @@ item.build_default_inquiry(group: group)
   <%- end -%>
 </div>
 
-<div id="inquiryForms">
+<div id="inquiry_forms">
 <%- item.inquiries.each_with_index do |inquiry, i| -%>
   <%= f.fields_for :inquiries, inquiry do |f2| -%>
-    <div class="inquiryForm">
-      <p class="form">連絡先<%= i+1 if i != 0 %></p>
-      <%= f2.hidden_field :state, class: "inquiryState" -%>
+    <div class="inquiry_form">
+      <p class="form">連絡先<%= i + 1 %></p>
+      <%= f2.hidden_field :state, class: 'inquiry_state' -%>
       <%= f2.hidden_field :_destroy -%>
-      <span id="inquiryTableA<%= i %>" style="<%= (Core.user.root? || Core.user.has_auth?(:manager)) ? '' : 'display: none;' %>">
+      <div class="inquiry_group_select" style="<%= 'display: none;' if i == 0 && !Core.user.has_auth?(:manager) %>">
+        <div class="label1"><%= f2.label :group_id -%></div>
+        <%= f2.select :group_id, groups_for_option, include_blank: true %>
+      </div>
+      <button type="button" class="delete_inquiry" style="margin: 10px 0; <%= 'display: none' if i == 0 %>">削除する</button>
+    </div>
+    <%- if i == 0 && !Core.user.has_auth?(:manager) -%>
+      <div>
         <div>
           <div class="label1"><%= f2.label :group_id -%></div>
-          <%= f2.select :group_id, groups_for_option, include_blank: true %>
-        </div>
-      </span>
-      <span id="inquiryTableB<%= i %>" style="<%= (Core.user.root? || Core.user.has_auth?(:manager)) ? 'display: none;' : '' %>">
-        <div>
-          <div class="label1"><%= f2.label :group_id -%></div>
-          <%- group = Sys::Group.find_by_id(inquiry.group_id) || Core.user_group -%>
-          <span id="inquiryGroupLabel<%= i %>"><%= group&.full_name if i == 0 && !Core.user.has_auth?(:manager) %></span>
+          <span id="inquiryGroupLabel<%= i %>"><%= inquiry.group&.full_name %></span>
         </div>
         <div>
           <div class="label1"><%= f2.label :address -%></div>
@@ -54,14 +54,13 @@ item.build_default_inquiry(group: group)
           <div class="label1"><%= f2.label :note -%></div>
           <%= inquiry.note %>
         </div>
-      </span>
-      <%= button_tag '削除する', type: :button, class: 'deleteInquiry', style: "margin: 10px 0; display: #{i == 0 ? 'none' : 'block'}" -%>
-    </div>
+      </div>
+    <%- end -%>
   <%- end -%>
 <%- end -%>
 </div>
 
 <hr />
-<%= button_tag '連絡先を追加する', type: :button, id: 'addInquiryForm' if Core.user.has_auth?(:manager) -%>
+<%= button_tag '連絡先を追加する', type: :button, id: 'add_inquiry' -%>
 
 <%= render 'cms/admin/_partial/inquiries/script', f: f, item: item %>

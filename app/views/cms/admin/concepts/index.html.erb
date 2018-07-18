@@ -1,9 +1,6 @@
 <div class="crudTree">
 <div class="tree">
-  <p>
-    <%= link_to :show, { action: :show, parent: @parent.parent_id, id: @parent } if @parent.id != 0 %>
-    <%= @parent.name %>
-  </p>
+  <p>コンセプト</p>
   <div class="links">
     <%= render 'concepts', items: @items, parent: nil %>
   </div>

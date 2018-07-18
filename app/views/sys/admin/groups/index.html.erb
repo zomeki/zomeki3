@@ -1,9 +1,9 @@
 <div class="crudTree">
 <div class="tree">
-  <%- if @parent -%>
+  <%- if @root -%>
   <p>
-    <%= link_to :show, { action: :show, parent: @parent.parent_id, id: @parent } %>
-    <%= @parent.name %>
+    <%= link_to :show, { action: :show, parent: @root.parent_id.to_i, id: @root } %>
+    <%= @root.name %>
   </p>
   <%- end -%>
   <div class="links">
