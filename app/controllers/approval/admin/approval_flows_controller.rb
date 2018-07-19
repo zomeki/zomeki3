@@ -52,12 +52,12 @@ class Approval::Admin::ApprovalFlowsController < Cms::Controller::Admin::Base
   end
 
   def set_approvals
-    return unless params[:approvals]
+    return unless params[:approvers]
 
-    indexes = params[:approvals].keys
+    indexes = params[:approvers].keys
     @item.approvals.each { |a| a.destroy unless indexes.include?(a.index.to_s) }
 
-    params[:approvals].each do |key, value|
+    params[:approvers].each do |key, value|
       next unless value.is_a?(Array)
 
       approval = @item.approvals.where(index: key).first_or_initialize
@@ -78,6 +78,6 @@ class Approval::Admin::ApprovalFlowsController < Cms::Controller::Admin::Base
   end
 
   def approval_params
-    params.require(:item).permit(:title, :group_id, :sort_no, :approval_types, :approvals)
+    params.require(:item).permit(:title, :group_id, :sort_no, :approval_types, :approvers)
   end
 end
