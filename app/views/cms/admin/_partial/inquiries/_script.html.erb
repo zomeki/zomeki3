@@ -7,6 +7,7 @@ $(function(){
       var idx = $('.inquiry_form').length;
       elem.find('p.form').html('連絡先' + String(idx));
       elem.find('.inquiry_group_select, .delete_inquiry').show();
+      elem.find('.inquiry_group_show').hide();
       elem.find('input[id$="__destroy"]').val('');
       elem.show();
     }

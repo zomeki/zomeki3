@@ -8,7 +8,7 @@
   <%- end -%>
   <%= link_to :show, { action: :show, parent: group.parent_id.to_i, id: group } %>
   <%= link_to group.name, { action: :index, parent: group }, class: "#{'current' if group.id == @parent&.id }" %>
-  <span class="remark"><%= group.sort_no %></span><br />
+  <span class="remark"><%= group.sort_no %></span>
   <%- if group.children.present? -%>
     <ul>
       <%= render 'groups', groups: group.children, parent: group %>
