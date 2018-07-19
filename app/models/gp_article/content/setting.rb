@@ -173,6 +173,17 @@ class GpArticle::Content::Setting < Cms::ContentSetting
     default_extra_values: {
       state: 'hidden'
     }
+  set_config :navigation_setting, menu: :page,
+    name: 'ルート案内',
+    form_type: :radio_buttons,
+    options: [['使用する', 'enabled'], ['使用しない', 'disabled']],
+    default_value: 'disabled',
+    extra_options: {
+      default_type_options: [['駅', 'train_station'], ['地下鉄駅', 'subway_station'],['空港', 'airport'],['バス停','bus_station']]
+    },
+    default_extra_values: {
+      types: ['train_station' , 'subway_station']
+    }
 
   # menu: :manage
   set_config :broken_link_notification, menu: :manage,
@@ -308,6 +319,8 @@ class GpArticle::Content::Setting < Cms::ContentSetting
       ex[:doc_publish_more_pages] = params[:doc_publish_more_pages]
     when 'pagination_label'
       ex[:next_label] = params[:next_label]
+    when 'navigation_setting'
+      ex[:types] = params[:types]
     end
     super(ex)
   end
