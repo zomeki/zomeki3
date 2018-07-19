@@ -13,7 +13,7 @@
   <tr class="<%= cycle '', 'cycle' %>">
     <td class="action_link"><%= link_to :show, { action: :show, id: item.id } %></td>
     <td><%= item.id %></td>
-    <td><%= link_to item.title, { action: :index, parent: item.id } %></td>
+    <td><%= link_to_if item.level_no <= 1, item.title, { action: :index, parent: item.id } %></td>
     <td><%= link_to item.url, item.url, target: '_blank' %></td>
     <td><%= item.sort_no %></td>
     <td style="text-align: center;"><%=l item.updated_at %></td>
