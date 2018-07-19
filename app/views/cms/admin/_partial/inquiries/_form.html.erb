@@ -26,16 +26,14 @@ item.build_default_inquiry(group: group)
       <p class="form">連絡先<%= i + 1 %></p>
       <%= f2.hidden_field :state, class: 'inquiry_state' -%>
       <%= f2.hidden_field :_destroy -%>
-      <table class="show inquiry_group_select" style="<%= 'display: none;' if i == 0 && !Core.user.has_auth?(:manager) %>">
+      <table class="show inquiry_group_select" style="<%= 'display: none;' if !Core.user.has_auth?(:manager) && (inquiry.persisted? || i == 0) %>">
         <tr>
           <th><%= f2.label :group_id -%></th>
           <td><%= f2.select :group_id, groups_for_option, include_blank: true %></td>
         </tr>
       </table>
-      <button type="button" class="delete_inquiry" style="margin: 10px 0; <%= 'display: none;' if i == 0 %>">削除する</button>
-    </div>
-    <%- if i == 0 && !Core.user.has_auth?(:manager) -%>
-      <table class="show">
+      <%- if !Core.user.has_auth?(:manager) && (inquiry.persisted? || i == 0) -%>
+      <table class="show inquiry_group_show">
         <tr>
           <th><%= f2.label :group_id -%></th>
           <td><%= inquiry.group&.full_name %></td>
@@ -61,7 +59,9 @@ item.build_default_inquiry(group: group)
           <td><%= inquiry.note %></td>
         </tr>
       </table>
-    <%- end -%>
+      <%- end -%>
+      <button type="button" class="delete_inquiry" style="margin: 10px 0; <%= 'display: none;' if i == 0 %>">削除する</button>
+    </div>
   <%- end -%>
 <%- end -%>
 </div>
