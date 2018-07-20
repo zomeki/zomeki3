@@ -13,15 +13,15 @@ class GpCategory::Public::Node::CategoriesController < GpCategory::Public::NodeC
     @category = @category_type.find_category_by_path_from_root_category(params[:category_names])
     return http_error(404) unless @category.try(:state_public?)
 
+    Page.current_item = @category
+    Page.title = @category.title
+
     if params[:format].in?(['rss', 'atom'])
       docs = @category.docs.order(display_published_at: :desc, published_at: :desc)
       docs = docs.date_after(:display_published_at, @content.feed_docs_period.to_i.days.ago) if @content.feed_docs_period.present?
       docs = docs.paginate(page: params[:page], per_page: @content.feed_docs_number)
       return render_feed(docs)
     end
-
-    Page.current_item = @category
-    Page.title = @category.title
 
     # template module
     if (template = @category.inherited_template)

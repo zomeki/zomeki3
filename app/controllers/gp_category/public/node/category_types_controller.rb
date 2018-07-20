@@ -23,6 +23,9 @@ class GpCategory::Public::Node::CategoryTypesController < GpCategory::Public::No
   def show
     @category_type = @content.public_category_types.find_by!(name: params[:name])
 
+    Page.current_item = @category_type
+    Page.title = @category_type.title
+
     if params[:format].in?(['rss', 'atom'])
       case @content.category_type_style
       when 'all_docs'
@@ -36,9 +39,6 @@ class GpCategory::Public::Node::CategoryTypesController < GpCategory::Public::No
         return http_error(404)
       end
     end
-
-    Page.current_item = @category_type
-    Page.title = @category_type.title
 
     # template module
     if (template = @category_type.template)
