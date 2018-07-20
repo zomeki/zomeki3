@@ -8,95 +8,6 @@ return if map.map_lat.blank? || map.map_lng.blank?
 <%= javascript_include_tag "https://maps.googleapis.com/maps/api/js?key=#{item.site.google_map_api_key}&region=jp&libraries=places" %>
 <script type="text/javascript">
 //<![CDATA[
-var map;
-<%- if item.content.try(:navigation_enabled?) -%>
-var directionPoint;
-var directionsRenderer;
-var placeIds = [];
-
-$(document).on('change', '#place', function(e) {
-  var target = $(this).val();
-  if(target==''){
-    google.maps.event.clearListeners(map, "click");
-    clearDirection();
-  }else if(target == 'click'){
-    google.maps.event.addListener(map, "click", function(e){
-      setNavigation(e.latLng, directionPoint);
-    });
-  }else if(target == 'current_position'){
-    google.maps.event.clearListeners(map, "click");
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        function(position) {
-         var origin = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-         setNavigation(origin, directionPoint);
-        },
-        function(error) {
-         switch(error.code) {
-           case 1:
-             alert("位置情報の利用が許可されていません");
-             break;
-           case 2:
-             alert("現在位置が取得できませんでした");
-             break;
-           case 3:
-             alert("タイムアウトしました");
-             break;
-           default:
-             alert("Error(code:"+error.code+")");
-             break;
-         }
-        }
-      )
-    }
-  }else{
-    google.maps.event.clearListeners(map, "click");
-    var position = target.split(/,/)
-    var origin = new google.maps.LatLng(position[0], position[1]);
-    setNavigation(origin, directionPoint);
-  }
-});
-
-function clearDirection(){
-  if(directionsRenderer != null){
-    directionsRenderer.setMap(null);
-  }
-}
-
-function setNavigation(origin, direction){
-  clearDirection();
-  var directionsService = new google.maps.DirectionsService;
-  directionsRenderer = new google.maps.DirectionsRenderer;
-
-  directionsService.route({
-      origin: origin,
-      destination: direction,
-      travelMode: google.maps.TravelMode.DRIVING
-  }, function(response, status) {
-      if (status === google.maps.DirectionsStatus.OK) {
-          directionsRenderer.setMap(map);
-          directionsRenderer.setDirections(response);
-      }
-  });
-}
-
-function setPlaceList(results, status) {
-  if (status == google.maps.places.PlacesServiceStatus.OK) {
-    for (var i = 0; i < results.length; i++) {
-      var place = results[i];
-      if ($.inArray(place.place_id, placeIds) == -1 ){
-        var target = $('#place');
-        var opt = $('<option>')
-              .val(place.geometry.location.lat() +","+place.geometry.location.lng())
-              .text(place.name);
-        target.append(opt);
-        placeIds.push(place.place_id);
-      }
-    }
-  }
-}
-<%- end -%>
-
 function addEvent(element, listener, func) {
   try {
     element.addEventListener(listener, func, false);
@@ -113,7 +24,7 @@ addEvent(window, 'load', function() {
     scaleControl: true,
     scrollwheel: false
   };
-  map = new google.maps.Map(document.getElementById("map1"), mapOptions);
+  var map = new google.maps.Map(document.getElementById("map1"), mapOptions);
 
   <% markers.each_with_index do |marker, idx| %>
     var marker<%= idx %> = new google.maps.Marker({
@@ -133,36 +44,116 @@ addEvent(window, 'load', function() {
       infowindow<%= idx %>.open(map, marker<%= idx %>);
     });
   <% end %>
-  <%- if item.content.try(:navigation_enabled?) -%>
+  <%- if item.content.try(:navigation_enabled?) && item.navigation_state_enabled? -%>
+    var directionsRenderer;
+    var placeIds = [];
     var location = new google.maps.LatLng(<%= map.map_lat.to_f %>, <%= map.map_lng.to_f %>);
     <%- if first_marker = markers.first -%>
-      directionPoint = new google.maps.LatLng(<%= first_marker.lat.to_f %>, <%= first_marker.lng.to_f %>);
+    var directionPoint = new google.maps.LatLng(<%= first_marker.lat.to_f %>, <%= first_marker.lng.to_f %>);
     <%- else -%>
-      directionPoint = location;
+    var directionPoint = location;
     <%- end -%>
     <%- item.content.navigation_target_types.each_with_index do |type, n| -%>
       var request<%= n %> = {
-        fields: ['place_id','name', 'geometry'],
+        fields: ['place_id', 'name', 'geometry'],
         location: location,
         type: '<%= type %>',
         rankBy: google.maps.places.RankBy.DISTANCE
       }
       var service<%= n %> = new google.maps.places.PlacesService(map);
-      service<%= n %>.nearbySearch(request<%= n %>, setPlaceList);
+      service<%= n %>.nearbySearch(request<%= n %>, function(results, status){
+        if (status == google.maps.places.PlacesServiceStatus.OK) {
+          for (var i = 0; i < results.length; i++) {
+            var place = results[i];
+            if ($.inArray(place.place_id, placeIds) == -1 ){
+              var target = $('#place');
+              var opt = $('<option>')
+                .val(place.geometry.location.lat() +","+place.geometry.location.lng())
+                .text(place.name);
+              target.append(opt);
+              placeIds.push(place.place_id);
+            }
+          }
+        }
+      });
     <%- end -%>
+    $('#place').on('change', function(e) {
+      var map = $("#map").map;
+      var target = $(this).val();
+      if (target=='') {
+        google.maps.event.clearListeners(map, "click");
+        clearDirection();
+      }else if (target == 'click') {
+        google.maps.event.addListener(map, "click", function(e){
+          setNavigation(e.latLng, directionPoint);
+        });
+      } else if (target == 'current_position') {
+        google.maps.event.clearListeners(map, "click");
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            function(position) {
+              var origin = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+              setNavigation(origin, directionPoint);
+            },
+            function(error) {
+             switch(error.code) {
+               case 1:
+                 alert("位置情報の利用が許可されていません");
+                 break;
+               case 2:
+                 alert("現在位置が取得できませんでした");
+                 break;
+               case 3:
+                 alert("タイムアウトしました");
+                 break;
+               default:
+                 alert("Error(code:"+error.code+")");
+                 break;
+             }
+            }
+          );
+        }
+      } else {
+        google.maps.event.clearListeners(map, "click");
+        var position = target.split(/,/);
+        var origin = new google.maps.LatLng(position[0], position[1]);
+        setNavigation(origin, directionPoint);
+      }
+    });
+
+    function clearDirection(){
+      if (directionsRenderer != null) {
+        directionsRenderer.setMap(null);
+      }
+    }
+
+    function setNavigation(origin, direction){
+      clearDirection();
+      var directionsService = new google.maps.DirectionsService;
+      directionsRenderer = new google.maps.DirectionsRenderer;
+      directionsService.route({
+        origin: origin,
+        destination: direction,
+        travelMode: google.maps.TravelMode.DRIVING
+      }, function(response, status) {
+        if (status === google.maps.DirectionsStatus.OK) {
+          directionsRenderer.setMap(map);
+          directionsRenderer.setDirections(response);
+        }
+      });
+    }
+
+    $("#place").show();
   <%- end -%>
 });
 //]]>
 </script>
 <%- end -%>
-
 <div class="maps">
   <h2>地図</h2>
   <% if !map.title.blank? %><h3><%= map.title %></h3><% end %>
-  <%- if item.content.try(:navigation_enabled?) -%>
-    <%= select_tag "place", options_for_select([['地図をクリック', 'click'], ['現在地', 'current_position']], nil),
-       id: 'place', class: 'placeSelect', include_blank: true %>
-  <%- end -%>
+  <%= select_tag "place", options_for_select([['地図をクリック', 'click'], ['現在地', 'current_position']], nil),
+     id: 'place', class: 'placeSelect', include_blank: true, style: 'display: none;' %>
   <div id="map1" class="map" style="width: 100%; height: 400px">
   <%- if item.state == 'closed' -%>
     <div style="width: 100%; display: table;">
