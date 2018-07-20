@@ -27,11 +27,9 @@ module Feed::Controller::Feed
     xml.gsub(/&#(?:(\d*?)|(?:[xX]([0-9a-fA-F]{4})));/) { [$1.nil? ? $2.to_i(16) : $1.to_i].pack('U') }
   end
 
-  def strimwidth(str, size, options = {})
-    suffix = options[:suffix] || '..'
-    str    = str.sub!(/<[^<>]*>/,"") while /<[^<>]*>/ =~ str
-    chars  = str.split(//u)
-    return chars.size <= size ? str : chars.slice(0, size).join('') + suffix
+  def strimwidth(str, size, suffix: '..')
+    str = Nokogiri::HTML(str).text
+    str.size <= size ? str : str[0..size-1] + suffix
   end
 
   def to_rss(docs)
@@ -49,7 +47,7 @@ module Feed::Controller::Feed
           xml.item do
             xml.title        entry.title
             xml.link         entry.public_full_uri
-            xml.description  strimwidth(entry.summary.to_s.gsub(/&nbsp;/, ' '), 500)
+            xml.description  strimwidth(entry.summary, 500)
             xml.pubDate      entry.entry_updated.rfc822
             unless entry.image_uri.blank?
               xml.enclosure url: entry.image_uri, type: entry.image_type, length: entry.image_length
