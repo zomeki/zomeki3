@@ -137,10 +137,12 @@
 }
 #navi .contentMenu {
   display: flex;
+  flex-wrap: wrap;
   height: 32px;
   background-color: #fff;
 }
 #navi .contentMenu li {
+  position: relative;
   flex: 0 0 auto;
   margin: 8px 0;
   padding: 0 20px;
@@ -151,11 +153,36 @@
 #navi .contentMenu li a {
   text-decoration: none;
   display: block;
-  height: 24px;
 }
 #navi .contentMenu a.current {
   color: #CC3300;
 }
+#navi .contentMenu li > ul {
+  position: absolute;
+  left: 10px;
+  display: flex;
+  flex-direction: column;
+  visibility: hidden;
+  z-index: 999;
+  padding: 8px 0 0;
+  background-color: #fff;
+  transition-property: visibility;
+  transition-delay: 0.3s;
+}
+#navi .contentMenu li:hover > ul {
+  visibility: visible;
+  transition-delay: 0.1s;
+}
+#navi .contentMenu li > ul > li {
+  flex: 0 0 auto;
+  width: 12em;
+  height: 100%;
+  margin: 0 0 6px;
+  padding: 0 6px 0 1em;
+  border-right: none;
+  text-align: left;
+}
+
 
 /* Main
 --------------------------------------------------------- */
