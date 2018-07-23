@@ -1,4 +1,4 @@
-/* =========================================================
+﻿/* =========================================================
    Navi
 ========================================================= */
 
@@ -47,6 +47,9 @@
 #naviConcepts li {
   margin: 0px;
   padding: 0px;
+}
+#naviConcepts li > ul > li {
+  margin-bottom: 2px;
 }
 #naviConcepts li .icon {
   display: inline-block;

@@ -1,4 +1,4 @@
-@charset "UTF-8";
+﻿@charset "UTF-8";
 
 /* =========================================================
     CRUD.
@@ -21,7 +21,6 @@ p.managerForm {
   border-bottom: 1px solid #bf1400;
   color: #bf1400;
 }
-
 .inlineForm {
   margin: 0px 0px 2px 0px;
   padding: 2px;
@@ -240,6 +239,12 @@ table.show td textarea.head {
 
 .crudTree .tree ul.root > li {
   margin-left: 0;
+}
+.crudTree .tree li:not(:last-child) {
+  margin-bottom: 2px;
+}
+.crudTree .tree li > ul {
+  margin-top: 2px;
 }
 .crudTree .tree li .icon {
   display: inline-block;
