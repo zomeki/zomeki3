@@ -1,8 +1,7 @@
 namespace :delayed_job do
   desc "Start delayed_job"
   task start: :environment do
-    config = "#{Rails.root}/config/delayed_job/delayed_job_master.rb"
-    sh "bundle exec bin/delayed_job_master -c #{config} -D RAILS_ENV=#{Rails.env}"
+    sh "bundle exec bin/delayed_job_master -c #{delayed_job_config_file} -D RAILS_ENV=#{Rails.env}"
   end
 
   desc "Stop delayed_job"
@@ -25,13 +24,23 @@ namespace :delayed_job do
     delayed_job_signal :USR1
   end
 
+  def delayed_job_config_file
+    Rails.root.join("config/delayed_job/delayed_job_master.rb").to_s
+  end
+
+  def delayed_job_config
+    require 'delayed/master'
+    dsl = Delayed::Master::DSL.new(delayed_job_config_file)
+    dsl.config
+  end
+
   def delayed_job_signal(signal)
     Process.kill(signal, delayed_job_pid)
   end
 
   def delayed_job_pid
     begin
-      File.read("#{Rails.root}/tmp/pids/delayed_job_master.pid").to_i
+      File.read(delayed_job_config[:pid_file]).to_i
     rescue Errno::ENOENT
       raise "Delayed_job doesn't seem to be running"
     end
