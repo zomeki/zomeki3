@@ -3,5 +3,5 @@
 </ul>
 
 <ul class="contentMenu">
-<%= content_tag('li') { link_to "#{Approval::ApprovalFlow.model_name.human}一覧", approval_approval_flows_path(content: @content), class: 'fixed' } -%>
+<%= content_tag('li') { link_to "承認フロー一覧", approval_approval_flows_path(content: @content), class: current == :approval_flow ? 'current' : '' } -%>
 </ul>

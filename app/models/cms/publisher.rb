@@ -39,6 +39,8 @@ class Cms::Publisher < ApplicationRecord
     def determine_priority(item)
       if item.is_a?(Cms::Node) && item.top_page?
         10
+      elsif item.is_a?(Cms::Node) && item.model == 'Cms::SitemapXml'
+        15
       elsif item.is_a?(GpCategory::Category)
         20
       else

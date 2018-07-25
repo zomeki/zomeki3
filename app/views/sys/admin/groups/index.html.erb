@@ -1,41 +1,25 @@
 <div class="crudTree">
 <div class="tree">
-  <%- if @parent -%>
+  <%- if @root -%>
   <p>
-    <%= link_to :show, { action: :show, parent: @parent.parent_id, id: @parent } %>
-    <%= @parent.name %>
+    <%= link_to :show, { action: :show, parent: @root.parent_id.to_i, id: @root } %>
+    <%= @root.name %>
   </p>
   <%- end -%>
   <div class="links">
-    <div><%= link_to :up, { action: :index, parent: @parent.parent_id } if @parent && @parent.level_no > 1 %></div>
-    <%- @groups.each do |group| -%>
-      <%= link_to :show, { action: :show, id: group } %>
-      <%= link_to h(group.name), { action: :index, parent: group } %>
-      <span class="remark"><%= group.sort_no %></span><br />
-    <%- end -%>
+    <%= render 'groups', groups: @groups, parent: nil %>
   </div>
 </div>
+
 <div class="content">
-
-<table class="index">
-  <tr>
-    <th style="width: 60px; text-align: center;">詳細</th>
-    <th style="width: 30%;">ユーザーID</th>
-    <th style="width: ;">氏名</th>
-    <th style="width: 60px; text-align: center;">状態</th>
-  </tr>
-  <%- if @parent -%>
-    <%- @users.each do |user| -%>
-    <tr class="<%= cycle '', 'cycle' %>">
-      <td style="text-align: center;"><%= link_to '詳細', sys_group_user_path(@parent, user) %></td>
-      <td><%= user.account %></td>
-      <td><%= user.name %></td>
-      <td style="text-align: center;"><%= user.state_text %></td>
-    </tr>
-    <%- end -%>
-  <%- end -%>
-</table>
-
+<%= render 'users', users: @users if @parent %>
 </div>
+
 <div class="footer"></div>
 </div>
+
+<script type="text/javascript">
+$(function() {
+  $('.tree .links').simpleTree();
+});
+</script>

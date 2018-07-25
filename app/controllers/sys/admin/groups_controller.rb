@@ -13,14 +13,14 @@ class Sys::Admin::GroupsController < Cms::Controller::Admin::Base
   end
 
   def index
-    if @parent
-      @groups = Core.site.groups.in_group(@parent).order(:sort_no, :code, :id)
-      @users = Core.site.users.in_group(@parent).order(:account)
-    else
-      @groups = Core.site.groups.where(parent_id: 0).order(:sort_no, :code, :id)
-      return redirect_to url_for(action: :index, parent: @groups.first.id) if @groups.size == 1
-      @users = []
-    end
+    @root = Core.site.groups.roots.first if Core.site.groups.roots.size == 1
+    return redirect_to url_for(action: :index, parent: @root.id) if @root && params[:parent] == '0'
+
+    @groups = Core.site.groups.order(:sort_no, :code, :id).to_tree
+    @groups = @groups.flat_map(&:children) if @root
+
+    @users = []
+    @users = Core.site.users.in_group(@parent).order(:account) if @parent
 
     _index @groups
   end
@@ -46,7 +46,7 @@ class Sys::Admin::GroupsController < Cms::Controller::Admin::Base
     @item.level_no = @item.parent.try!(:level_no).to_i + 1
     @item.sites << Core.site if @item.sites.empty?
     _create @item do
-      Organization::GroupRefreshJob.perform_now(@item.sites)
+      refresh_organization_groups(@item.sites)
     end
   end
 
@@ -57,7 +57,7 @@ class Sys::Admin::GroupsController < Cms::Controller::Admin::Base
     @item.sites << Core.site if @item.sites.empty?
     _update @item do
       update_level_no
-      Organization::GroupRefreshJob.perform_now(@item.sites)
+      refresh_organization_groups(@item.sites)
     end
   end
 
@@ -74,8 +74,10 @@ class Sys::Admin::GroupsController < Cms::Controller::Admin::Base
       return redirect_to action: :show
     end
 
+    sites = @item.sites.to_a
+
     _destroy @item do
-      Organization::GroupRefreshJob.perform_now(@item.sites)
+      refresh_organization_groups(sites)
     end
   end
 
@@ -91,6 +93,12 @@ class Sys::Admin::GroupsController < Cms::Controller::Admin::Base
   def update_level_no
     @item.descendants.each do |child|
       child.update_columns(level_no: child.ancestors.size)
+    end
+  end
+
+  def refresh_organization_groups(sites)
+    sites.each do |site|
+      Organization::GroupRefreshJob.perform_now(site)
     end
   end
 end

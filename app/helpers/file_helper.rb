@@ -31,4 +31,10 @@ module FileHelper
     return link if link.blank?
     link.sub(/\Afile_contents\//, "#{base}file_contents/")
   end
+
+  def file_mtime(path)
+    File.mtime(path)
+  rescue Errno::ENOENT
+    nil
+  end
 end

@@ -95,7 +95,7 @@ ZomekiCMS::Application.routes.draw do
 
   scope "#{ZomekiCMS::ADMIN_URL_PREFIX}/#{mod}/c:concept", :module => mod, :as => mod do
     match "stylesheets/(*path)" => "admin/stylesheets#index",
-      :as => :stylesheets, :format => false, via: [:get, :post, :put, :patch]
+      :as => :stylesheets, :format => false, via: [:get, :post, :put, :patch, :delete]
     resources :contents,
       :controller  => "admin/contents"
     resources :nodes,
@@ -149,6 +149,9 @@ ZomekiCMS::Application.routes.draw do
     resources :node_sitemaps,
       :controller  => "admin/node/sitemaps",
       :path        => ":parent/node_sitemaps"
+    resources :node_sitemap_xmls,
+      :controller  => "admin/node/sitemap_xmls",
+      :path        => ":parent/node_sitemap_xmls"
 
     ## piece
     resources :piece_frees,
@@ -180,6 +183,8 @@ ZomekiCMS::Application.routes.draw do
     get "node_pages/"    => "public/node/pages#index",
       :as => nil
     get "node_sitemaps/" => "public/node/sitemaps#index",
+      :as => nil
+    get "node_sitemap_xmls/" => "public/node/sitemap_xmls#index",
       :as => nil
   end
 

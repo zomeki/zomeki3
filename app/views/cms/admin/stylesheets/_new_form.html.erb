@@ -11,24 +11,25 @@
   padding: 12px 10px;
 }
 </style>
-<%= javascript_tag do %>
+
+<script type="text/javascript">
 $(function(){
-  $('a#newDir').click(function(){
+  $('a#newDir').on('click', function() {
     var html = $('#newForm table.dir').length ? '' : $('#newDirTemplate').html();
     $('#newForm').html(html);
     return false;
   });
-  $('a#newFile').click(function(){
+  $('a#newFile').on('click', function() {
     var html = $('#newForm table.file').length ? '' : $('#newFileTemplate').html();
     $('#newForm').html(html);
     return false;
   });
-  $('a#newUpload').click(function(){
+  $('a#newUpload').on('click', function() {
     var html = $('#newForm table.upload').length ? '' : $('#newUploadTemplate').html();
     $('#newForm').html(html);
     $('#newForm #sizeError').attr('id', "sizeErrorMsg");
 
-    $("#newForm input[type=file]").on('change', function () {
+    $("#newForm input[type=file]").on('change', function() {
       var files = $("#newForm input[type=file]")[0].files;
       var length = files.length;
       var total_size = 0;
@@ -51,14 +52,15 @@ $(function(){
     return false;
   });
 
-<%- if params.dig(:item, :new_directory).present? -%>
-  $('a#newDir').click();
-<%- end -%>
-<%- if params.dig(:item, :new_file).present? -%>
-  $('a#newFile').click();
+<%- if params.key?(:item) -%>
+  <%- if params[:item].key?(:new_directory) -%>
+    $('a#newDir').trigger('click');
+  <%- elsif params[:item].key?(:new_file) -%>
+    $('a#newFile').trigger('click');
+  <%- end -%>
 <%- end -%>
 });
-<% end %>
+</script>
 
 <%= form_for :item, url: "#" do |f| %>
 <div id="newDirTemplate" style="display: none;">

@@ -1,22 +1,18 @@
 module Cms::ConceptHelper
-  def concept_tree(concepts = nil)
-    concepts ||= Core.site.concepts.readable_for(Core.user).to_tree
-
+  def concept_tree(concepts, parent = nil)
     cont_paths = params[:controller].split('/')
     full_paths = request.fullpath.split('/')
 
     concepts.map do |concept|
-      children = concept.children
-
       icon_cls = ["icon"]
-      icon_cls << (children.size > 0) ? "openedChildren" : "noChildren"
-      icon_mark = (children.size > 0) ? "-" : " "
+      icon_cls << "opened" if concept.children.size > 0
+      icon_mark = concept.children.size > 0 ? "-" : " "
       item_cls = ["item"]
       item_cls << "current" if Core.concept && Core.concept.id == concept.id
 
       content_tag :li do
         html = ''
-        html << link_to(icon_mark, "#", id: "naviConceptIcon#{concept.id}", class: icon_cls.join(' '))
+        html << link_to(icon_mark, "#", class: icon_cls.join(' '))
         html << " "
 
         url = if cont_paths[0].in?(%w(sys cms)) || cont_paths[2].in?(%w(piece node))
@@ -26,12 +22,10 @@ module Cms::ConceptHelper
               else
                 main_app.cms_contents_path(concept: concept.id)
               end
-        html << link_to(concept.name, url, id: "naviConceptItem#{concept.id}", class: item_cls.join(' '))
+        html << link_to(concept.name, url, class: item_cls.join(' '))
 
-        if children.size > 0
-          html << content_tag(:ul, id: "naviConceptList#{concept.id}") do
-            concept_tree(children)
-          end
+        if concept.children.size > 0
+          html << content_tag(:ul) { concept_tree(concept.children, parent: concept) }
         end
 
         html.html_safe

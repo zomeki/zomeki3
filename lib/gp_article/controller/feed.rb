@@ -24,11 +24,9 @@ module GpArticle::Controller::Feed
     xml.gsub(/&#(?:(\d*?)|(?:[xX]([0-9a-fA-F]{4})));/) { [$1.nil? ? $2.to_i(16) : $1.to_i].pack('U') }
   end
 
-  def strimwidth(str, size, options = {})
-    suffix = options[:suffix] || '..'
-    str    = str.sub!(/<[^<>]*>/,"") while /<[^<>]*>/ =~ str
-    chars  = str.split(//u)
-    return chars.size <= size ? str : chars.slice(0, size).join('') + suffix
+  def strimwidth(str, size, suffix: '..')
+    str = Nokogiri::HTML(str).text
+    str.size <= size ? str : str[0..size-1] + suffix
   end
 
   def to_rss(docs)
@@ -47,7 +45,7 @@ module GpArticle::Controller::Feed
           xml.item do
             xml.title        doc.title
             xml.link         doc.public_full_uri
-            xml.description  strimwidth(doc.body.clone, 500)
+            xml.description  strimwidth(doc.body, 500)
             xml.pubDate      doc.display_published_at.rfc822
 
             if (file = helpers.doc_main_image_file(doc))
@@ -89,7 +87,7 @@ module GpArticle::Controller::Feed
           xml.title   doc.title
           xml.updated doc.display_published_at.strftime('%Y-%m-%dT%H:%M:%S%z').sub(/([0-9][0-9])$/, ':\1') #.rfc822
           xml.summary(type: 'html') do |p|
-            p.cdata! strimwidth(doc.body.clone, 500)
+            p.cdata! strimwidth(doc.body, 500)
           end
           xml.link    rel: 'alternate', href: doc.public_full_uri
 

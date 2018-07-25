@@ -113,7 +113,9 @@ class Sys::Admin::Groups::ImportController < Cms::Controller::Admin::Base
       user.name_en      = data[:name_en]
       user.password     = data[:password]
       user.email        = data[:email]
-      user.in_group_id  = group.id if group.id != user.group_id
+
+      ug = user.users_groups[0] || user.users_groups.build
+      ug.group = group
 
       if user.password == 'RANDOM'
         user.password = SecureRandom.base64(8).slice(0, 8)
@@ -122,9 +124,9 @@ class Sys::Admin::Groups::ImportController < Cms::Controller::Admin::Base
       if Core.user.root?
         user.admin_creatable = data[:admin_creatable] if data.include?(:admin_creatable)
       end
-      
-      next unless user.changed?
-      
+
+      next if !user.changed? && !ug.changed?
+
       status = user.new_record? ? 0 : 1
       status = 2 unless user.save
       

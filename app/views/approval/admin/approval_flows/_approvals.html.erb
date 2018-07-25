@@ -1,0 +1,182 @@
+<div style="margin-bottom: 10px;">
+  <%= select_tag 'groups', options_for_select(Core.site.groups_for_option), prompt: '-- グループを選択してください --', name: nil %>
+</div>
+<div>
+  ユーザー<br />
+  <%= select_tag 'candidates', options_for_select([]), multiple: true, style: 'height: 150px; width: 250px;' %>
+</div>
+<div style="margin: 10px;">
+  <span><%= button_tag '▼追加', type: :button, id: 'add_user' %></span>
+  <span><%= button_tag '▲除外', type: :button, id: 'remove_user' %></span>
+</div>
+
+<div id="approvals">
+  <%- approvals.each_with_index do |approval, index| -%>
+    <%-
+    ormap = approval.assignments.group_by(&:or_group_id)
+    approvers = ormap.map{ |_, ass| [ass.map(&:assigner_label).join("or"), ass.map(&:assigner_id).join(',')] }
+    -%>
+    <div class="approval" data-index="<%= index %>">
+      <div>
+        <span class="index"><%= index + 1 %></span>次
+        <span class="approval_types">
+          <% Approval::Approval.approval_type_options.each do |t| %>
+            <%= radio_button "approval_types", "#{index}", t[1], id: "approval_types_#{index}_#{t[1]}", class: "approval_type_#{t[1]}", checked: approval.approval_type == t[1] %>
+            <%= label "approval_types_#{index}", "#{t[1]}", t[0], class: "approval_type_#{t[1]}" %>
+          <% end %>
+        </span><br />
+        <%= select_tag "approvers[#{index}]", options_for_select(approvers), multiple: true, style: 'height: 150px; width: 600px;', class: 'approvers' %>
+        <%= button_tag 'ORにする', type: :button, class: 'make_or' %>
+        <%= button_tag 'ORをはずす', type: :button, class: 'clear_or' %>
+      </div>
+      <div style="margin: 10px;">
+        <span><%= button_tag '▼次へ', type: :button, class: 'move_users_next' %></span>
+        <span><%= button_tag '▲前へ', type: :button, class: 'move_users_prev' %></span>
+      </div>
+    </div>
+  <%- end -%>
+</div>
+
+<script type="text/javascript">
+$(function() {
+  $('#groups').on('change', function(e) {
+    var group_id = parseInt(e.target.value);
+    if (isNaN(group_id)) {
+      $('#candidates').html('<option value=""></option>');
+    } else {
+      $('#candidates').html('<option value="">更新中...</option>');
+      $.get('<%= url_for(action: :index, user_options: true) %>', { group_id: group_id }, function(data) {
+        $('#candidates').html(data);
+      });
+    }
+  });
+
+  $('#add_user').on('click', function() {
+    $('#approvers_0 > option').prop('selected', false);
+    $('#candidates > option:selected').prop('selected', true).appendTo($('#approvers_0'));
+  });
+  $('#remove_user').on('click', function() {
+    $('#candidates > option').prop('selected', false);
+    $('#approvers_0 > option:selected').appendTo($('#candidates'));
+  });
+
+  $('form').on('submit', function() {
+    $('#candidates > option').prop('selected', false);
+    $('#approvals select.approvers > option').prop('selected', true);
+  });
+
+  $('button.move_users_prev').on('click', function() {
+    var index = parseInt($(this).closest('div.approval').attr('data-index'));
+    moveUsers(index + 1, index);
+  });
+  $('button.move_users_next').on('click', function() {
+    var index = parseInt($(this).closest('div.approval').attr('data-index'));
+    moveUsers(index, index + 1);
+  });
+
+  $('button.make_or').on('click', function() {
+    var index = parseInt($(this).closest('div.approval').attr('data-index'));
+    makeOR(index);
+  });
+  $('button.clear_or').on('click', function() {
+    var index = parseInt($(this).closest('div.approval').attr('data-index'));
+    clearOR(index);
+  });
+
+  function makeOR(index) {
+    var list = $('#approvers_' + index);
+    var options = list.find('> option:selected');
+
+    if (options.length <= 1) { return; }
+
+    var users = [];
+    var values = [];
+    options.each(function() {
+      users = users.concat($(this).text().split('or'));
+      values = values.concat($(this).val().split(','));
+    });
+
+    options.remove();
+    list.append($('<option>').val(values.join(',')).text(users.join('or')));
+  }
+
+  function clearOR(index) {
+    var list = $('#approvers_' + index);
+    var options = list.find('option:selected');
+
+    var users = [];
+    var values = [];
+    options.each(function() {
+      users = users.concat($(this).text().split('or'));
+      values = values.concat($(this).val().split(','));
+    });
+
+    options.remove();
+    for (var i=0; i<users.length; i++) {
+      list.append($('<option>').val(values[i]).text(users[i]));
+    }
+  }
+
+  function moveUsers(from, to) {
+    var next_list = $('#approvers_' + (from + 1));
+    var from_list = $('#approvers_' + from);
+    var to_list   = $('#approvers_' + to);
+
+    if (from_list.find('> option:selected').length === 0) { return; }
+
+    if (from_list.find('> option:selected').length === from_list.find('> option').length &&
+        (from < to || (from > to && next_list[0]))) {
+      alert('最低1人は残す必要があります。');
+      return;
+    }
+
+    if (to_list[0] === undefined) {
+      increaseApproval();
+      to_list = $('#approvers_' + to);
+    }
+
+    to_list.find('> option').prop('selected', false);
+    from_list.find('> option:selected').appendTo(to_list);
+
+    if (from_list.find('> option').length === 0) { decreaseApproval(); }
+  }
+
+  function increaseApproval() {
+    var approvals = $('#approvals');
+    var approval = $('#approvals .approval:first').clone(true);
+    var index = $('#approvals .approval').length;
+
+    approval.attr('data-index', index);
+    approval.find('span.index').text(index + 1);
+    approval.find('select.approvers > option').remove();
+
+    var selectors = [
+      'select.approvers',
+      'input.approval_type_fix',
+      'label.approval_type_fix',
+      'input.approval_type_select',
+      'label.approval_type_select'
+    ];
+    selectors.forEach(function(selector) {
+      var elem = approval.find(selector);
+      if (elem.attr('id')) {
+        elem.attr('id', elem.attr('id').replace('_0', '_' + index));
+      }
+      if (elem.attr('name')) {
+        elem.attr('name', elem.attr('name').replace('[0]', '[' + index + ']'));
+      }
+      if (elem.attr('for')) {
+        elem.attr('for', elem.attr('for').replace('_0', '_' + index));
+      }
+    });
+
+    approvals.append(approval);
+  }
+  function decreaseApproval() {
+    var approvals = $('#approvals');
+    if (approvals.children().length > 1) {
+      approvals.children(':last-child').remove();
+    }
+  }
+});
+</script>

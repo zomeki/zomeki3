@@ -1,8 +1,4 @@
 <%
-in_name = "item[in_approval_assignment_ids][#{approval_flow.id}][#{approval.id}]"
-e1_name = "assignments1_#{approval.id}"
-e2_name = "assignments2_#{approval.id}"
-
 user_opts = approval.approvers_options(Core.user)
 
 e2_list =
@@ -18,63 +14,37 @@ e2_list =
 e1_opt, e2_opt = user_opts.partition { |opt| !e2_list.include?(opt[1].to_s) }
 %>
 
-<%= hidden_field_tag in_name %>
+<%= hidden_field_tag "item[in_approval_assignment_ids][#{approval_flow.id}][#{approval.id}]" %>
 <table class="noDesign">
   <tr>
     <td>
-      <%= select_tag e1_name, options_for_select(e1_opt), multiple: true, style: "width: 300px; height: 140px;" %>
+      <%= select_tag "assignments1_#{approval.id}", options_for_select(e1_opt), multiple: true, style: "width: 300px; height: 140px;" %>
     </td>
     <td>
-      <input type="button" value="追加 →" id="add_<%= e2_name %>" /><br /><br />
-      <input type="button" value="← 除外" id="remove_<%= e2_name %>" />
+      <input type="button" value="追加 →" id="add_approvers_<%= approval.id %>" /><br /><br />
+      <input type="button" value="← 除外" id="remove_approvers_<%= approval.id %>" />
     </td>
     <td>
-      <div class="<%= 'field_with_errors' if item.errors['承認者'].size > 0 %>" style="display:block;">
-        <%= select_tag e2_name, options_for_select(e2_opt), multiple: true, style: "width: 300px; height: 140px;" %>
-      </div>
+      <%= select_tag "assignments2_#{approval.id}", options_for_select(e2_opt), multiple: true, style: "width: 300px; height: 140px;" %>
     </td>
   </tr>
 </table>
 
-<%= javascript_tag do -%>
-$(document).ready(function () {
-  function moveSelectOptions(srcId, dstId) {
-    $(srcId + ' option:selected').each(function() {
-      var exist = false;
-      var srcOpt = $(this);
-  
-      $(dstId + ' option').each(function() {
-        if ($(this).val() == srcOpt.val()) {
-          exist = true;
-          return;
-        }
-      });
-      if (!exist) {
-        $(dstId).append('<option value="' + srcOpt.val() + '">' + srcOpt.text() + '</option>');
-        srcOpt.remove();
-      }
-    });
-  }
-
-  $('#<%= e1_name %>').on('dblclick', function() {
-    moveSelectOptions('#<%= e1_name %>', '#<%= e2_name %>');
-  }); 
-  $('#add_<%= e2_name %>').on('click', function() {
-    moveSelectOptions('#<%= e1_name %>', '#<%= e2_name %>');
-  }); 
-  $('#<%= e2_name %>').on('dblclick', function() {
-    moveSelectOptions('#<%= e2_name %>', '#<%= e1_name %>');
-  }); 
-  $('#remove_<%= e2_name %>').on('click', function() {
-    moveSelectOptions('#<%= e2_name %>', '#<%= e1_name %>');
-  }); 
+<script type="text/javascript">
+$(function() {
+  $('form').simpleMultiSelect({
+    source: '#assignments1_<%= approval.id %>',
+    destination: '#assignments2_<%= approval.id %>',
+    add: '#add_approvers_<%= approval.id %>',
+    remove: '#remove_approvers_<%= approval.id %>'
+  });
 
   $('form').on('submit', function(e) {
     var ids = [];
-    $('#<%= e2_name %> > option').each(function() {
+    $('#assignments2_<%= approval.id %> > option').each(function() {
       ids.push($(this).val());
     });
-    $('#<%= "item_in_approval_assignment_ids_#{approval_flow.id}_#{approval.id}" %>').val(ids.join(' '));
+    $('#item_in_approval_assignment_ids_<%= "#{approval_flow.id}_#{approval.id}" %>').val(ids.join(' '));
   });
 });
-<%- end -%>
+</script>

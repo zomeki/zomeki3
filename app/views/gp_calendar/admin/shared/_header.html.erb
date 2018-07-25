@@ -3,7 +3,7 @@
 </ul>
 
 <ul class="contentMenu">
-<%= content_tag('li') { link_to "#{GpCalendar::Event.model_name.human}一覧", gp_calendar_events_path, class: 'fixed' } -%>
-<%= content_tag('li') { link_to "休日一覧", gp_calendar_holidays_path, class: 'fixed' } -%>
-<%= content_tag('li') { link_to "#{GpCalendar::Event.model_name.human}設定", gp_calendar_content_settings_path, class: 'fixed' } if @content.editable? -%>
+<%= content_tag('li') { link_to "イベント一覧", gp_calendar_events_path, class: current == :event ? 'current' : '' } -%>
+<%= content_tag('li') { link_to "休日一覧", gp_calendar_holidays_path, class: current == :holiday ? 'current' : '' } -%>
+<%= content_tag('li') { link_to "イベント設定", gp_calendar_content_settings_path, class: current == :setting ? 'current' : '' } if @content.editable? -%>
 </ul>

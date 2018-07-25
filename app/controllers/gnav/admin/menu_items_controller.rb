@@ -29,17 +29,13 @@ class Gnav::Admin::MenuItemsController < Cms::Controller::Admin::Base
 
   def create
     @item = @content.menu_items.build(menu_item_params)
-    _create(@item) do
-      save_category_sets
-    end
+    _create @item
   end
 
   def update
     @item = @content.menu_items.find(params[:id])
     @item.attributes = menu_item_params
-    _update(@item) do
-      save_category_sets
-    end
+    _update @item
   end
 
   def destroy
@@ -49,25 +45,10 @@ class Gnav::Admin::MenuItemsController < Cms::Controller::Admin::Base
 
   private
 
-  def save_category_sets
-    categories = params[:categories]
-    layers = params[:layers]
-
-    if categories && layers
-      category_set_ids = @item.category_set_ids
-      categories.each do |key, value|
-        next unless (category = GpCategory::Category.where(id: value).first)
-        category_set = @item.category_sets.where(category_id: category.id).first || @item.category_sets.build
-        category_set.update_attributes(category: category, layer: layers[key])
-        category_set_ids.delete(category_set.id)
-      end
-      @item.category_sets.find(category_set_ids).each {|cs| cs.destroy }
-    end
-  end
-
   def menu_item_params
     params.require(:item).permit(
       :concept_id, :layout_id, :name, :sitemap_state, :sort_no, :state, :title,
+      :category_sets_attributes => [:id, :category_id, :layer],
       :creator_attributes => [:id, :group_id, :user_id]
     )
   end

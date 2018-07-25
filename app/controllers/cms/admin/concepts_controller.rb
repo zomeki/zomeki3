@@ -1,6 +1,6 @@
 class Cms::Admin::ConceptsController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
-  
+
   def pre_dispatch
     #return error_auth unless Core.user.has_auth?(:manager)
     return error_auth unless Core.user.has_auth?(:designer)#observe_field
@@ -15,7 +15,7 @@ class Cms::Admin::ConceptsController < Cms::Controller::Admin::Base
   end
   
   def index
-    @items = Core.site.concepts.where(parent_id: @parent.id)
+    @items = Core.site.concepts.to_tree
 
     _index @items
   end

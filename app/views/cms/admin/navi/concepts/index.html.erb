@@ -1,1 +1,3 @@
-<ul id="naviConcepts"><%= concept_tree %></ul>
+<ul id="naviConcepts">
+  <%= concept_tree(Core.site.concepts.readable_for(Core.user).to_tree) %>
+</ul>

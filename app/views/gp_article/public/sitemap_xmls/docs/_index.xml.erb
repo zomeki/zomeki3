@@ -1,0 +1,7 @@
+<%- node.content.docs.order(:name, :id).preload(content: :node).each do |doc| -%>
+<url>
+<loc><%= doc.public_full_uri %></loc>
+<lastmod><%= (file_mtime(doc.public_path) || Time.now).iso8601 %></lastmod>
+<priority>0.8</priority>
+</url>
+<%- end -%>

@@ -169,6 +169,23 @@ class Sys::Storage::Entry
     return false
   end
 
+  def related_node
+    return unless site
+    return @related_node if defined? @related_node
+
+    dir_path = relative_path_from(site.public_path)
+    dir_path.gsub!(/^(_mobile|_smartphone)\//, '')
+    dir_path.gsub!(/(.html.r|.html.mp3)$/, '.html')
+
+    nodes = Cms::Node.find_nodes_by_path(site, dir_path)
+    if nodes.last
+      @related_node = nodes.last
+    else
+      node = nodes.compact.last
+      @related_node = node && node.content_id.blank? ? nil : node
+    end
+  end
+
   private
 
   def set_defaults

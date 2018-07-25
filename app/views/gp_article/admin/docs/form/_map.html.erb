@@ -21,20 +21,31 @@
   <tr>
     <th><%= category_type.title %></th>
     <td>
-      <div id="marker_category_type_<%= category_type.id %>_categories">
+      <span id="marker_categories_<%= category_type.id %>">
         <%- category_ids = @item.in_marker_category_ids[category_type.id.to_s].to_a
             category_ids += [''] unless category_ids.include?('') -%>
         <%- category_ids.each do |cid| -%>
-          <span>
+          <span class="marker_category_<%= category_type.id %>">
             <%= select_tag "item[in_marker_category_ids][#{category_type.id}][]", 
                            options_for_select(@content.marker_category_type_categories_for_option(category_type), cid), include_blank: true %>
           </span>
         <%- end -%>
-        <span><%= button_tag '追加', type: 'button', class: 'add_category' %></span>
-      </div>
+      </span>
+      <span><%= button_tag '追加', type: 'button', id: "add_marker_category_#{category_type.id}" %></span>
     </td>
   </tr>
   <%- end -%>
 </table>
 
 <%= google_map_form f %>
+
+<script type="text/javascript">
+$(function() {
+  <%- @content.marker_category_types.each do |category_type| -%>
+  $("#add_marker_category_<%= category_type.id %>").addFields({
+    container: "#marker_categories_<%= category_type.id %>",
+    fields: ".marker_category_<%= category_type.id %>"
+  });
+  <%- end -%>
+});
+</script>

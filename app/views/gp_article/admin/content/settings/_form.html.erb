@@ -1,14 +1,14 @@
 <%= render 'shared/admin/content/settings/form', f: f, item: @item -%>
 
 <%= render 'gp_article/admin/shared/doc_style_tags' %>
-<%= javascript_tag do %>
+<script type="text/javascript">
 $(function() {
   $('a.show_dialog').on('click', function() {
     $('#doc_style_tags').dialog({width: 400});
     return false;
   });
 });
-<% end %>
+</script>
 
 <%- if @item.name == 'gp_category_content_category_type_id' -%>
 <%= render 'gp_category/admin/_partial/content/settings/category_type_id', f: f, item: @item %>
@@ -28,21 +28,22 @@ $(function() {
   </tr>
 </table>
 
-<%= javascript_tag do -%>
-$(document).ready(function () {
-  $('#item_value').on('change', function (event) {
-    var concept_id = parseInt(event.target.value);
+<script type="text/javascript">
+$(function() {
+  $('#item_value').on('change', function(e) {
+    var concept_id = parseInt(e.target.value);
+    var layout = $('#item_extra_values_default_layout_id');
     if (isNaN(concept_id)) {
-      $('#default_layout_id').html('<option value=""></option>');
+      layout.html('<option value=""></option>');
     } else {
-      $('#default_layout_id').html('<option value="">更新中...</option>');
-      $.get('<%= layouts_cms_concepts_path(parent: 0, concept_id: 'CONCEPT_ID') %>'.replace('CONCEPT_ID', concept_id), function (data) {
-        $('#default_layout_id').html(data);
+      layout.html('<option value="">更新中...</option>');
+      $.get('<%= layouts_cms_concepts_path(parent: 0, concept_id: 'CONCEPT_ID') %>'.replace('CONCEPT_ID', concept_id), function(data) {
+        layout.html(data);
       });
     }
   });
 });
-<%- end -%>
+</script>
 <%- end -%>
 
 <%- if @item.name == 'gp_template_content_template_id'
@@ -74,26 +75,26 @@ $(document).ready(function () {
   </tr>
 </table>
 
-<%= javascript_tag do -%>
-$(document).ready(function () {
-  $('#item_value').on('change', function (event) {
-    var content_id = parseInt(event.target.value);
+<script type="text/javascript">
+$(function() {
+  $('#item_value').on('change', function(e) {
+    var content_id = parseInt(e.target.value);
     if (isNaN(content_id)) {
       $('#templates').html('');
       $('#item_extra_values_default_template_id').html('<option value=""></option>');
     } else {
       $('#templates').html('更新中...');
       $('#item_extra_values_default_template_id').html('<option value="">更新中...</option>');
-      $.get('<%= gp_template_templates_path(content: 'CONTENT_ID') %>?check_boxes=true'.replace('CONTENT_ID', content_id), function (data) {
+      $.get('<%= gp_template_templates_path(content: 'CONTENT_ID') %>?check_boxes=true'.replace('CONTENT_ID', content_id), function(data) {
         $('#templates').html(data);
       });
-      $.get('<%= gp_template_templates_path(content: 'CONTENT_ID') %>?options=true'.replace('CONTENT_ID', content_id), function (data) {
+      $.get('<%= gp_template_templates_path(content: 'CONTENT_ID') %>?options=true'.replace('CONTENT_ID', content_id), function(data) {
         $('#item_extra_values_default_template_id').html(data);
       });
     }
   });
 });
-<%- end -%>
+</script>
 <%- end -%>
 
 <%- if @item.name == 'calendar_relation' -%>
@@ -151,14 +152,14 @@ $(document).ready(function () {
   </tr>
 </table>
 <%= render 'cms/admin/_partial/inquiries/style_tags' %>
-<%= javascript_tag do %>
+<script type="text/javascript">
 $(function() {
   $('#show_inquiry_dialog').on('click', function() {
     $('#inquiry_style_tags').dialog({width: 400});
     return false;
   });
 });
-<% end %>
+</script>
 <%- end -%>
 
 <%- if @item.name == 'approval_relation' -%>
@@ -213,19 +214,11 @@ $(function() {
   <tr>
     <th>フッター形式</th>
     <td>
-      <%= link_to '置き換えテキストを確認する', '#', id: 'show_dialog' %><br />
+      <%= link_to '置き換えテキストを確認する', '#', class: 'show_dialog' %><br />
       <%= text_area_tag 'item[extra_values][footer_style]', @item.extra_values[:footer_style], size: '100x10' %>
     </td>
   </tr>
 </table>
-<%= javascript_tag do %>
-$(function() {
-  $('#show_dialog').on('click', function() {
-    $('#doc_style_tags').dialog({width: 400});
-    return false;
-  });
-});
-<% end %>
 <%- end -%>
 
 <%- if @item.name == 'feature_settings' -%>

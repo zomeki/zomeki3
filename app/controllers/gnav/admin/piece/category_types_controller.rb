@@ -1,6 +1,5 @@
 class Gnav::Admin::Piece::CategoryTypesController < Cms::Admin::Piece::BaseController
   def edit
-    @item = model.find(params[:id])
     return error_auth unless @item.readable?
 
     unless @item.setting_value(:layer)

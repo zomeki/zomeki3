@@ -1,23 +1,12 @@
 <%= render 'shared/admin/piece/form', f: f do -%>
-<%= render 'gp_calendar/admin/shared/category_tags', f: f -%>
 <p class="form">詳細設定</p>
 
 <table class="show">
   <tr>
     <th>表示カテゴリ</th>
     <td>
-      <table class="show" id="categories">
-        <tbody>
-          <%= render 'gp_calendar/admin/shared/category', category: nil, index: nil, f: f -%>
-          <%- @item.categories.each_with_index do |category, index| -%>
-            <%= render 'gp_calendar/admin/shared/category', category: category, index: index, f: f -%>
-          <%- end -%>
-          <tr>
-            <td colspan="3">&nbsp;</td>
-            <td style="text-align: right;"><%= button_tag '追加', type: 'button', id: 'add_categories_line' %></td>
-          </tr>
-        </tbody>
-      </table>
+      <%- categories = @item.categories.presence || [nil] -%>
+      <%= render 'gp_calendar/admin/shared/categories', categories: categories %>
     </td>
   </tr>
   <tr>

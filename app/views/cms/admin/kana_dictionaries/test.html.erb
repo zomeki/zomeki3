@@ -26,7 +26,7 @@
 }
 </style>
 
-<%= javascript_tag do %>
+<script type="text/javascript">
 function writePreview(data) {
   var css = '';
   css += '<style>';
@@ -67,7 +67,7 @@ function previewTalk() {
     error: function() { alert('error'); }
   });
 }
-<% end %>
+</script>
 
 <%= form_for :item, url: { do: :test } do |f| %>
 <div id="convInput">

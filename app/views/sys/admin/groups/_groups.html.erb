@@ -1,0 +1,19 @@
+<ul class="<%= 'root' unless parent %>">
+<%- groups.each do |group| -%>
+<li>
+  <%- if group.children.present? -%>
+    <a class="icon opened" href="#">-</a>
+  <%- else -%>
+    <a class="icon" href="#"> </a>
+  <%- end -%>
+  <%= link_to :show, { action: :show, parent: group.parent_id.to_i, id: group } %>
+  <%= link_to group.name, { action: :index, parent: group }, class: "#{'current' if group.id == @parent&.id }" %>
+  <span class="remark"><%= group.sort_no %></span>
+  <%- if group.children.present? -%>
+    <ul>
+      <%= render 'groups', groups: group.children, parent: group %>
+    </ul>
+  <%- end -%>
+</li>
+<%- end -%>
+</ul>

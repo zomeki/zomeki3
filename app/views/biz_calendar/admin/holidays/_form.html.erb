@@ -83,13 +83,11 @@ types = @content.visible_types.order(:id).collect{|c| [c.title, c.id]}
 
 <%= creator_form f %>
 
-<%= javascript_tag do -%>
-
-$(document).ready(function () {
+<script type="text/javascript">
+$(function() {
   $('input.datepicker').datepicker();
 
-  $('#item_repeat_type').on('change', function (event) {
-    var repeat_type = event.target.value;
+  function changeRepeatTypeForm(repeat_type) {
     if (repeat_type == 'daily') {
       $('#intervalTr').show();
       $('#criterionTr').hide();
@@ -115,8 +113,11 @@ $(document).ready(function () {
       $('#criterionTr').hide();
       $('#weekTr').hide();
     }
-  });
-  $("#item_repeat_type").trigger("change");
-});
+  }
 
-<%- end -%>
+  $('#item_repeat_type').on('change', function(e) {
+    changeRepeatTypeForm(e.target.value);
+  });
+  changeRepeatTypeForm($("#item_repeat_type").val());
+});
+</script>

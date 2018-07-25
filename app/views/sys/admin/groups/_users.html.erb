@@ -1,0 +1,16 @@
+<table class="index">
+  <tr>
+    <th class="action_link">詳細</th>
+    <th style="width: 30%;">ユーザーID</th>
+    <th style="width: ;">氏名</th>
+    <th style="width: 60px; text-align: center;">状態</th>
+  </tr>
+  <%- users.each do |user| -%>
+    <tr class="<%= cycle '', 'cycle' %>">
+      <td  class="action_link"><%= link_to '詳細', { controller: :group_users, action: :show, parent: @parent, id: user } %></td>
+      <td><%= user.account %></td>
+      <td><%= user.name %></td>
+      <td style="text-align: center;"><%= user.state_text %></td>
+    </tr>
+  <%- end -%>
+</table>

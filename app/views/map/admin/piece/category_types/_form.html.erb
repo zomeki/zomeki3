@@ -5,15 +5,18 @@
   <tr>
     <th><%= GpCategory::CategoryType.model_name.human %></th>
     <td>
-      <div id="category_types">
-        <%= render 'category_type', category_type: nil,
-                                    category_types_for_option: @item.category_types_for_option %>
-        <%- @item.visible_category_types.each do |category_type| -%>
-        <%= render 'category_type', category_type: category_type,
-                                    category_types_for_option: @item.category_types_for_option %>
+      <%-
+      category_types_for_option = @item.category_types_for_option
+      category_type_ids = @item.visible_category_types.pluck(:id).presence || [nil]
+      -%>
+      <span id="category_types">
+        <%- category_type_ids.each do |category_type_id| -%>
+          <span class="category_type">
+            <%= select_tag 'category_types[]', options_for_select(category_types_for_option, category_type_id), include_blank: true, id: nil %>
+          </span>
         <%- end -%>
-        <span><%= button_tag '追加', type: 'button', id: "add_category_type" %></span>
-      </div>
+      </span>
+      <span><%= button_tag '追加', type: 'button', id: "add_category_type" %></span>
     </td>
   </tr>
   <tr>
@@ -24,14 +27,12 @@
   </tr>
 </table>
 
-<%= javascript_tag do -%>
-$(document).ready(function () {
-  $('#add_category_type').on('click', function () {
-    var category_types_wrapper = $('#category_types');
-    var new_category_type = category_types_wrapper.children(':first-child').clone(true);
-    new_category_type.find(':disabled').removeAttr('disabled');
-    new_category_type.insertBefore(category_types_wrapper.children(':last-child')).show();
-  }).trigger('click');
+<script type="text/javascript">
+$(function() {
+  $('#add_category_type').addFields({
+    container: '#category_types',
+    fields: '.category_type'
+  });
 });
-<%- end -%>
+</script>
 <%- end -%>

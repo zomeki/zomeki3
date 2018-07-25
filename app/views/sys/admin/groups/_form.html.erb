@@ -34,7 +34,7 @@
   </tr>
 </table>
 
-<br /><p class="form">グループ設定</p>
+<p class="form">グループ設定</p>
 
 <table class="show">
   <tr>
@@ -42,8 +42,7 @@
     <td><%= f.text_field :address, class: 'title' %></td>
   </tr><tr>
     <th><%= f.label :tel %></th>
-    <td><%= f.text_field :tel, class: 'number' %>
-        <%= f.text_field :tel_attend %></td>
+    <td><%= f.text_field :tel, class: 'number' %> <%= f.text_field :tel_attend %></td>
   </tr><tr>
     <th><%= f.label :fax %></th>
     <td><%= f.text_field :fax, class: 'number' %></td>

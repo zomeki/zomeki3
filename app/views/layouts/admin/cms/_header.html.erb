@@ -2,6 +2,7 @@
 <div class="menu">
   <span class="loginGroup"><%= Core.user_group.name if Core.user_group %></span>
   <span class="loginUser"><%= Core.user.name_with_account if Core.user %></span>
+  <a class="bookmark" href="<%= main_app.new_sys_bookmark_path(url: request.fullpath, parent: 0) %>" target="_blank">ブックマーク</a>
   <a class="preview" href="/_preview/<%= format('%04d', Core.site.id) if Core.site %>/" target="_blank">プレビュー</a>
   <a class="web" href="<%= Core.site.full_uri if Core.site %>" target="_blank">公開画面</a>
   <a class="logout" href="<%= main_app.admin_logout_path %>">ログアウト</a>

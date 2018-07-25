@@ -4,11 +4,11 @@
 
 <%- unless request.mobile? -%>
 <iframe title=<%= @form.title %> src="<%= "#{@form.public_uri}" %>?inlining=true&piece=<%= @piece.id %>&t=<%=CGI.escape Page.title %>&u=<%=CGI.escape Page.uri %>" style="width: 100%; height: 100%;" class="survey"></iframe>
-<%= javascript_tag do -%>
-$(document).ready(function () {
+<script type="text/javascript">
+$(function() {
   $('iframe.survey').iframeAutoHeight();
 });
-<%- end -%>
+</script>
 <%- else -%>
 回答ページは<%= link_to 'こちら', "#{@form.public_uri}" %>です。
 <%- end -%>

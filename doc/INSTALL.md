@@ -106,7 +106,7 @@ yumリポジトリに追加します。
 
 ユーザ認証方法を変更します。
 
-    # vim /var/lib/pgsql/9.5/data/pg_hba.conf
+    # vi /var/lib/pgsql/9.5/data/pg_hba.conf
 ```
 host    all             all             127.0.0.1/32            md5
 ```
@@ -185,6 +185,7 @@ uri: http://zomeki.example.com/    # すべて変更
     # ln -s /var/www/zomeki/config/nginx/nginx.conf /etc/nginx/conf.d/zomeki.conf
 
 デフォルトのnginx設定ファイルをリネームします。
+
     # mv /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf.org
 
 ## 10.ふりがな・読み上げ機能のインストール

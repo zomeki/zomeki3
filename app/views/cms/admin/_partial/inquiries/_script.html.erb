@@ -1,38 +1,31 @@
 <script type="text/javascript">
 $(function(){
-  $(document).on('click', '.deleteInquiry', function(e) {
+  $('#add_inquiry').addFields({
+    container: '#inquiry_forms',
+    fields: '.inquiry_form',
+    afterAdd: function(elem) {
+      var idx = $('.inquiry_form').length;
+      elem.find('p.form').html('連絡先' + String(idx));
+      elem.find('.inquiry_group_select, .delete_inquiry').show();
+      elem.find('.inquiry_group_show').hide();
+      elem.find('input[id$="__destroy"]').val('');
+      elem.show();
+    }
+  });
+
+  $(document).on('click', 'button.delete_inquiry', function(e) {
     if (!confirm('削除してよろしいですか？')) { return; }
-    $(this).siblings('input[id$=_destroy]').val(true);
-    $(this).closest('.inquiryForm').hide();
+    $(this).siblings('input[id$="__destroy"]').val('true');
+    $(this).closest('.inquiry_form').hide();
   });
-  $('#addInquiryForm').on('click', function(e) {
-    var no  = $('.inquiryForm').size();
-    var elm = $('.inquiryForm:last').clone();
-    elm.find('input, select').each(function() {
-      $(this).attr({
-        id: this.id.replace(/(\d+)/, no),
-        name: this.name.replace(/(\d+)/, no),
-        value: ''
-      });
-    });
-    elm.find('select option').each(function() {
-      $(this).attr({selected: false});
-    });
-    elm.find('p.form').show().html('連絡先' + String(no+1));
-    elm.find('[id^=item_inquiries_attributes][id$=group_id]').show();
-    elm.find('[id^=inquiryTableA]').show();
-    elm.find('[id^=inquiryTableB]').hide();
-    elm.find('[id^=inquiryGroupLabel]').hide();
-    elm.find('.deleteInquiry').show();
-    elm.show();
-    $('#inquiryForms').append(elm);
-  });
+
   $('form').on('submit', function(e) {
     var state = $('input[name=inquiry_state]:checked').val();
     if (state == undefined) { state = 'hidden'; }
-    $('input.inquiryState').val(state);
+    $('input.inquiry_state').val(state);
   });
 });
+
 <%- if Core.user.root? -%>
 // sync creator group and inquiry group
 $(function() {

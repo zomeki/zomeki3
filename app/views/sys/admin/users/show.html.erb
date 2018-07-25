@@ -1,6 +1,6 @@
 <table class="show">
   <tr>
-    <th><%= @item.class.human_attribute_name :in_group_id %></th>
+    <th><%= Sys::UsersGroup.human_attribute_name :group_id %></th>
     <td><%= @item.group.try!(:name) %></td>
   </tr><tr>
     <th><%= @item.class.human_attribute_name :account %></th>
@@ -20,7 +20,7 @@
   </tr><tr>
     <th><%= @item.class.human_attribute_name :auth_no %></th>
     <td>
-      <%= @item.auth_name %>
+      <%= @item.auth_no_text %>
       <%- if Core.user.root? && @item.auth_no == 5 -%>
       <table class="noDesign" style="margin-top: 10px;">
         <tr>

@@ -22,8 +22,8 @@
   <%= f.submit(submit_label) %>
 </div>
 
-<%= javascript_tag do %>
-$(document).ready(function () {
+<script type="text/javascript">
+$(function() {
   var row = '<tr>' +
     '<td>_NO_</td>' +
     '<td>① <%= text_field_tag 'names[]', '_NAME_', class: 'string fileName' %><br />' +
@@ -31,7 +31,7 @@ $(document).ready(function () {
     '③ <%= text_field_tag 'alts[]', '', class: 'string fileAlt' %></td>' +
   '</tr>';
 
-  $('#files').on('change', function (event) {
+  $('#files').on('change', function(e) {
     var filenames = [];
     if (window.File) {
       for (var i=0; i<this.files.length; i++) {
@@ -71,4 +71,4 @@ $(document).ready(function () {
     return false;
   });
 });
-<% end %>
+</script>

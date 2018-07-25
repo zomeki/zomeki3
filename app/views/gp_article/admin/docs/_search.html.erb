@@ -160,8 +160,8 @@ $(function() {
       $('#detail_flag').val('0');
       detailSearch.find('input[type="text"], input[type="checkbox"], select')
         .val('')
-        .removeAttr('checked')
-        .removeAttr('selected');
+        .prop('checked', false)
+        .prop('selected', false);
     }
     return false;
   });

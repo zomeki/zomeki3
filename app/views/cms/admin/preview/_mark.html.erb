@@ -26,7 +26,7 @@ terminals << ['携帯','m'] if Core.site.use_mobile_feature?
   <%- end -%>
 
   <%- unless Page.mobile? -%>
-  <%= javascript_tag do -%>
+  <script type="text/javascript">
   document.addEventListener('DOMContentLoaded', function() {
     flatpickr('input.datetimepicker', {
       locale: "ja",
@@ -35,7 +35,7 @@ terminals << ['携帯','m'] if Core.site.use_mobile_feature?
       plugins: [new scrollPlugin({})]
     });
   });
-  <%- end -%>
+  </script>
   <%- end -%>
   </span>
 <%- end -%>

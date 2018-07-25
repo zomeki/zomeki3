@@ -11,7 +11,7 @@ class Sys::Group < ApplicationRecord
   has_many :children, -> { order(:sort_no, :code) },
                       foreign_key: :parent_id, class_name: self.name, dependent: :destroy
 
-  has_many :users_groups, class_name: 'Sys::UsersGroup'
+  has_many :users_groups
   has_many :users, -> { order(:id) }, through: :users_groups
 
   has_many :site_belongings, class_name: 'Cms::SiteBelonging', dependent: :destroy
@@ -31,7 +31,7 @@ class Sys::Group < ApplicationRecord
 
   nested_scope :in_site, through: :site_belongings
 
-  scope :in_group, ->(group) { where(parent_id: group.id) }
+  scope :in_group, ->(group) { where(parent_id: group) }
 
   def deletable_group?
     group_ids = descendants.map(&:id)
@@ -84,20 +84,7 @@ class Sys::Group < ApplicationRecord
     return true
   end
 
-  def delete_users
-    users.each do |user|
-      if user.groups.size == 1
-        user.destroy
-      end
-    end
-    return true
-  end
-
   class << self
-    def readable
-      all
-    end
-
     def parent_options(site, origin = nil)
       groups = site.groups
       groups = groups.where.not(id: origin) if origin

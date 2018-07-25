@@ -12,8 +12,8 @@
 
   <%= stylesheet_link_tag '/_common/css/jquery-ui-themes/smoothness/jquery-ui.min.css', media: :all %>
   <%= javascript_include_tag '/_common/js/jquery-ui.min.js' %>
-  <%= stylesheet_link_tag '/_common/css/jquery-ui-timepicker-addon.css', media: :all %>
-  <%= javascript_include_tag '/_common/js/jquery-ui-timepicker-addon.js' %>
+  <%= stylesheet_link_tag '/_common/css/jquery-ui-timepicker-addon.min.css', media: :all %>
+  <%= javascript_include_tag '/_common/js/jquery-ui-timepicker-addon.min.js' %>
   <%= javascript_include_tag '/_common/js/jquery-ui-datepicker-ja.js' %>
   <%= javascript_include_tag '/_common/js/jquery-ui-timepicker-addon-ja.js' %>
 
@@ -24,13 +24,13 @@
   <%= csrf_meta_tags %>
 </head>
 <body style="margin: 0; padding: 0;">
-  <%= javascript_tag do -%>
-  $(function () {
+  <script type="text/javascript">
+  $(function() {
     if (cms && cms.Page) {
       cms.Page.smart_phone = <%= request.smart_phone? ? 'true' : 'false' %>;
     }
   });
-  <%- end -%>
+  </script>
   <div id="container">
     <header id="header">
       <div id="headerContainer" style="height: 40px;">

@@ -1,0 +1,15 @@
+<ul class="<%= 'root' unless parent %>">
+<%- items.each do |item| -%>
+<li>
+  <%- if item.children.present? -%>
+    <a class="icon opened" href="#">-</a>
+  <%- else -%>
+    <a class="icon" href="#"> </a>
+  <%- end -%>
+  <%= link_to :show, { action: :show, id: item } %>
+  <%= link_to item.name, { action: :index, parent: item }, class: "#{'current' if item.id == @parent.id }" %>
+  <span class="remark"><%= item.sort_no %></span>
+  <%= render 'concepts', items: item.children, parent: item if item.children.present? %>
+</li>
+<%- end -%>
+</ul>

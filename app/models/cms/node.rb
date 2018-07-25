@@ -55,7 +55,7 @@ class Cms::Node < ApplicationRecord
 
   scope :public_state, -> { where(state: 'public') }
   scope :sitemap_order, -> { order(:sitemap_sort_no, :name, :id) }
-  scope :rebuildable_models, -> { where(model: ['Cms::Page', 'Cms::Sitemap']) }
+  scope :rebuildable_models, -> { where(model: ['Cms::Page', 'Cms::Sitemap', 'Cms::SitemapXml']) }
   scope :dynamic_models, -> {
     models = Cms::Lib::Modules.modules.flat_map(&:directories).select { |d| d.options[:dynamic] }.map(&:model)
     where(model: models)
@@ -174,6 +174,13 @@ class Cms::Node < ApplicationRecord
       nodes = nodes.where.not(id: origin) if origin
       nodes.to_tree.flat_map(&:descendants).map { |node| [node.tree_title, node.id] }
     end
+
+    def find_nodes_by_path(site, path)
+      node = site.root_node
+      path.split('/').map do |path|
+        node = Cms::Node.where(site_id: site.id, parent_id: node.id, name: path).first if node
+      end
+    end
   end
 
   class Directory < Cms::Node
@@ -183,6 +190,9 @@ class Cms::Node < ApplicationRecord
   end
 
   class Sitemap < Cms::Node
+  end
+
+  class SitemapXml < Cms::Node
   end
 
   class Page < Cms::Node
@@ -222,7 +232,7 @@ class Cms::Node < ApplicationRecord
         item.title         = item.title.gsub(/^(【複製】)*/, "【複製】")
       end
 
-      item.in_recognizer_ids  = recognition.recognizer_ids if recognition
+      item.in_recognizer_ids  = in_recognizer_ids if in_recognizer_ids.present?
 
 #      if inquiry != nil && inquiry.group_id == Core.user.group_id
 #        item.in_inquiry = inquiry.attributes
@@ -270,7 +280,7 @@ class Cms::Node < ApplicationRecord
           rendered = Cms::RenderService.new(site).render_public(public_uri)
           return true unless publish_page(rendered, path: public_path)
 
-          if site.use_kana?
+          if site.use_kana? && name =~ /\.html$/i
             rendered = Cms::Lib::Navi::Kana.convert(rendered, site_id)
             publish_page(rendered, path: "#{public_path}.r", dependent: :ruby)
           end

@@ -20,10 +20,10 @@
 </table>
 <%- end -%>
 
-<%= javascript_tag do -%>
+<script type="text/javascript">
 $(function() {
-  $('#category_content_id').on('change', function(event) {
-    var category_content_id = $(event.target).val();
+  $('#category_content_id').on('change', function(e) {
+    var category_content_id = $(e.target).val();
     var category_type_id = $('#category_type_id');
     var category_id = $('#category_id');
     category_id.html('<option value="">すべて</option>');
@@ -32,9 +32,9 @@ $(function() {
       category_type_id.html(data);
     });
   });
-  $('#category_type_id').on('change', function(event) {
+  $('#category_type_id').on('change', function(e) {
     var category_content_id = $('#category_content_id').val();
-    var category_type_id = $(event.target).val();
+    var category_type_id = $(e.target).val();
     var category_id = $('#category_id');
     category_id.html('<option value="">更新中...</option>');
     $.get('<%= rank_ranks_path(content: @content) %>', { options: true, category_content_id: category_content_id, category_type_id: category_type_id }, function(data) {
@@ -42,4 +42,4 @@ $(function() {
     });
   });
 });
-<%- end -%>
+</script>

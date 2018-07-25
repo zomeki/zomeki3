@@ -2,4 +2,7 @@
 <%= render 'layouts/admin/cms/menu', current: :none %>
 </ul>
 
-<ul class="contentMenu"></ul>
+<ul class="contentMenu">
+<%= render 'layouts/admin/cms/bookmarks', bookmarks: @bookmarks %>
+<li><%= link_to '[ブックマーク管理]', sys_bookmarks_path(parent: 0) %></li>
+</ul>

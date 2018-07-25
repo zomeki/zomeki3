@@ -13,12 +13,12 @@
 </table>
 
 <%= render 'organization/admin/shared/group_list_style_tags' %>
-<%= javascript_tag do %>
+<script type="text/javascript">
 $(function() {
   $('a.show_group_list_style_dialog').on('click', function() {
     $('#group_list_style_tags').dialog({width: 400});
     return false;
   });
 });
-<%- end -%>
+</script>
 <%- end -%>
