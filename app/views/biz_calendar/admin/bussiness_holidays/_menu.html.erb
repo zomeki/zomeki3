@@ -9,7 +9,7 @@
 
 <% if params[:action] == 'index' %>
 <span class="separator"></span>
-<%= link_to '休業日一覧', biz_calendar_place_holidays_path(content: @content.id, place_id: @place.id), class: 'current' %>
+<%= link_to '休業日一覧', biz_calendar_place_bussiness_holidays_path(content: @content.id, place_id: @place.id), class: 'current' %>
 <%= link_to '例外休業日一覧', biz_calendar_place_exception_holidays_path(content: @content.id, place_id: @place.id) %>
 <% end %>
 </div>

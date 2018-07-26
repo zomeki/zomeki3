@@ -2,32 +2,21 @@ class Cms::Admin::DataFilesController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
   include Sys::Controller::Scaffold::Publication
 
+  keep_params :s_node_id, to: [:data_files, :data_file_nodes]
+
   def pre_dispatch
     return error_auth unless Core.user.has_auth?(:designer)
-
-    return redirect_to(url_for(action: :index, parent: 0)) if params[:reset] || (params['s_node_id'] == '' && params[:s_keyword] == '' && params[:s_target] == '')
-
-    if params[:parent] && params[:parent] != '0'
-      @parent = Cms::DataFileNode.find(params[:parent])
-    else
-      @parent = Cms::DataFileNode.new
-      @parent.id = 0
-    end
+    return redirect_to url_for(action: :index) if params[:reset]
   end
 
   def index
-    if params['s_node_id']
-      parent_id = params['s_node_id'] == '' ? 0 : params['s_node_id']
-      return redirect_to(url_for(action: :index, parent: parent_id, s_keyword: params[:s_keyword], s_target: params[:s_target], s_sort: params[:s_sort]))
-    end
-
     @nodes = Cms::DataFileNode.where(concept_id: Core.concept(:id)).order(:name)
 
     files = Cms::DataFile.arel_table
 
     rel = Cms::DataFile.order(params[:s_sort] == 'updated_at' ? {updated_at: :desc, id: :asc} : {name: :asc, id: :asc})
     rel = rel.search_with_text(:name, :title, params[:s_keyword]) if params[:s_keyword].present?
-    rel = rel.where(node_id: @parent.id) unless @parent.id.zero?
+    rel = rel.where(node_id: params[:s_node_id]) if params[:s_node_id].present?
     rel = unless Core.user.has_auth?(:manager) || params[:s_target] == 'current'
             rel.readable
           else

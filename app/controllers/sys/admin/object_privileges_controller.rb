@@ -3,13 +3,13 @@ class Sys::Admin::ObjectPrivilegesController < Cms::Controller::Admin::Base
   
   def pre_dispatch
     return error_auth unless Core.user.has_auth?(:manager)
-    @parent = Sys::RoleName.find(params[:parent])
-    return error_auth unless @parent.site_id == Core.site.id
+    @role = Sys::RoleName.find(params[:role_name])
+    return error_auth unless @role.site_id == Core.site.id
   end
   
   def index
     @items = Sys::ObjectPrivilege.joins(:concept)
-                                 .where(id: Sys::ObjectPrivilege.select('MIN(id) as id').where(role_id: @parent.id).group(:concept_id))
+                                 .where(id: Sys::ObjectPrivilege.select('MIN(id) as id').where(role_id: @role.id).group(:concept_id))
                                  .order(Cms::Concept.arel_table[:name].asc)
                                  .paginate(page: params[:page], per_page: params[:limit])
     _index @items
@@ -23,13 +23,13 @@ class Sys::Admin::ObjectPrivilegesController < Cms::Controller::Admin::Base
 
   def new
     @item = Sys::ObjectPrivilege.new(
-      role_id: @parent.id
+      role_id: @role.id
     )
   end
 
   def create
     @item = Sys::ObjectPrivilege.new(privilege_params)
-    @item.role_id = @parent.id
+    @item.role_id = @role.id
     @item.in_actions = {} unless privilege_params[:in_actions]
     _create @item
   end

@@ -1,4 +1,4 @@
-class BizCalendar::Admin::HolidaysController < Cms::Controller::Admin::Base
+class BizCalendar::Admin::BussinessHoursController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 
   def pre_dispatch
@@ -8,41 +8,42 @@ class BizCalendar::Admin::HolidaysController < Cms::Controller::Admin::Base
   end
 
   def index
-    @items = @place.holidays.paginate(page: params[:page], per_page: params[:limit])
+    @items = @place.hours.paginate(page: params[:page], per_page: params[:limit])
     _index @items
   end
 
   def show
-    @item = @place.holidays.find(params[:id])
+    @item = @place.hours.find(params[:id])
     _show @item
   end
 
   def new
-    @item = @place.holidays.build
+    @item = @place.hours.build
   end
 
   def create
-    @item = @place.holidays.build(holiday_params)
+    @item = @place.hours.build(hours_params)
     _create @item
   end
 
   def update
-    @item = @place.holidays.find(params[:id])
-    @item.attributes = holiday_params
+    @item = @place.hours.find(params[:id])
+    @item.attributes = hours_params
     _update @item
   end
 
   def destroy
-    @item = @place.holidays.find(params[:id])
+    @item = @place.hours.find(params[:id])
     _destroy @item
   end
 
   private
 
-  def holiday_params
+  def hours_params
     params.require(:item).permit(
-      :state, :type_id, :holiday_start_date, :holiday_end_date, :repeat_type,
-      :repeat_interval, :repeat_criterion, :start_date, :end_type, :end_times, :end_date,
+      :state, :fixed_start_date, :fixed_end_date, :repeat_type, :repeat_interval,
+      :repeat_criterion, :start_date, :end_type, :end_times, :end_date,
+      :business_hours_start_time, :business_hours_end_time,
       :repeat_week => [:_, :mon, :tue, :wed, :thurs, :fri, :sat, :sun],
       :creator_attributes => [:id, :group_id, :user_id]
     )

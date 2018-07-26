@@ -67,7 +67,7 @@ ZomekiCMS::Application.routes.draw do
       :controller  => "admin/role_names"
     resources :object_privileges,
       :controller  => "admin/object_privileges",
-      :path        => ":parent/object_privileges"
+      :path        => ":role_name/object_privileges"
     resources :inline_files,
       :controller  => "admin/inline/files",
       :path        => ":content/:parent/inline_files" do

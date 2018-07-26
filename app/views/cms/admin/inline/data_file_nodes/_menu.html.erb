@@ -1,7 +1,7 @@
 <div id="content">
 <div class="actionMenu" style="margin: 6px 0px 10px 0px;">
-<%= link_to 'ファイル', cms_inline_data_files_path %>
-<%= link_to 'フォルダ', cms_inline_data_file_nodes_path %>
+<%= link_to 'ファイル', { controller: :data_files } %>
+<%= link_to 'フォルダ', { controller: :data_file_nodes } %>
 <span class="separator"></span>
 <%= action_menu :new if Core.user.has_priv?(:create, item: Core.concept) %>
 <%= action_menu :index %>
