@@ -179,7 +179,7 @@ class GpArticle::Content::Setting < Cms::ContentSetting
     options: [['使用する', 'enabled'], ['使用しない', 'disabled']],
     default_value: 'disabled',
     extra_options: {
-      default_type_options: [['駅', 'train_station'], ['地下鉄駅', 'subway_station'],['空港', 'airport'],['バス停','bus_station']]
+      default_type_options: [['駅', 'train_station'], ['地下鉄駅', 'subway_station'], ['バス停','bus_station']]
     },
     default_extra_values: {
       types: ['train_station' , 'subway_station']

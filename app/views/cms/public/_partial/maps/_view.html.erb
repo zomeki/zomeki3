@@ -77,14 +77,7 @@ addEvent(window, 'load', function() {
         }
       });
     <%- end -%>
-    var defaultOptions = [
-      $('<option>').val('').text('出発地を選択'),
-      $('<option>').val('click').text('地図をクリック'),
-      $('<option>').val('current_position').text('現在地から')
-    ];
-    var placeList = $('<select>', { id: 'place' });
-    placeList.append(defaultOptions);
-    placeList.on('change', function(e) {
+    $("#place").on('change', function(e) {
       var target = $(this).val();
       if (target == '') {
         google.maps.event.clearListeners(map, "click");
@@ -159,6 +152,10 @@ addEvent(window, 'load', function() {
 <div class="maps">
   <h2>地図</h2>
   <% if !map.title.blank? %><h3><%= map.title %></h3><% end %>
+  <%- if item.content.try(:navigation_enabled?) && item.navigation_state_enabled? -%>
+    <%= select_tag "place", options_for_select([['地図をクリック', 'click'], ['現在地', 'current_position']], nil),
+       id: 'place', class: 'placeSelect', include_blank: true %>
+  <%- end -%>
   <div id="map1" class="map" style="width: 100%; height: 400px">
   <%- if item.state == 'closed' -%>
     <div style="width: 100%; display: table;">
