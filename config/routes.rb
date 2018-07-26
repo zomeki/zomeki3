@@ -70,6 +70,7 @@ Rails.application.routes.draw do
   post "#{admin}/password_reminders" => 'sys/admin/account#create_password_reminder', as: :admin_password_reminders
   get "#{admin}/password/edit" => 'sys/admin/account#edit_password', as: :edit_admin_password
   put "#{admin}/password" => 'sys/admin/account#update_password', as: :admin_password
+  get "#{admin}/redirect/:model/:id" => 'sys/admin/redirect#index'
 
   # Tool
   get "/_tools/captcha/index"  => "simple_captcha#index"
