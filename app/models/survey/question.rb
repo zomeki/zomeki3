@@ -15,6 +15,7 @@ class Survey::Question < ApplicationRecord
   belongs_to :form, required: true
   has_many :answers
 
+  delegate :site, to: :form
   delegate :content, to: :form
 
   validates :state, presence: true
