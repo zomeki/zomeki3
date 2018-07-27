@@ -12,7 +12,7 @@ module Sys::Model::Auth::Storage
 
   def editable?
     return false unless readable?
-    Core.user.has_auth?(:manager) || (Core.user.has_auth?(:designer) && related_node.blank?)
+    Core.user.has_auth?(:manager) || (Core.user.has_auth?(:designer) && !system_dir? && related_node.blank?)
   end
 
   def deletable?
