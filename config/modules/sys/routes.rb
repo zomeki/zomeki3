@@ -100,6 +100,23 @@ ZomekiCMS::Application.routes.draw do
     resources :bookmarks,
       :controller  => "admin/bookmarks",
       :path        => ":parent/bookmarks"
+
+    resources :reorg_groups,
+      :controller  => "admin/reorg/groups",
+      :path        => ":parent/reorg/groups"
+    resources :reorg_group_users,
+      :controller  => "admin/reorg/group_users",
+      :path        => ":parent/reorg/group_users"
+    resources :reorg_schedules,
+      :controller  => "admin/reorg/schedules",
+      :path        => ":parent/reorg/schedules"
+    resources :reorg_runners,
+      :controller  => "admin/reorg/runners",
+      :path        => ":parent/reorg/runners" do
+        collection do
+          post :init, :exec, :clear
+        end
+    end
   end
 
   get "#{ZomekiCMS::ADMIN_URL_PREFIX}/#{mod}/:parent/inline_files/files/:name.:format" => 'sys/admin/inline/files#download'

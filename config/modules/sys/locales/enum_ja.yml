@@ -1,13 +1,13 @@
 ja:
   enum_ish:
-    sys/group:
+    sys/group: &sys_group
       ldap_state:
         0: 非同期
         1: 同期
       web_state:
         public: 公開
         closed: 非公開
-    sys/user:
+    sys/user: &sys_user
       ldap_state:
         0: 非同期
         1: 同期
@@ -46,3 +46,15 @@ ja:
         running: 実行中
         closed: 完了
         stop: 停止
+    sys/reorg/group:
+      <<: *sys_group
+      change_state:
+        create: 新規
+        update: 更新
+        delete: 削除
+    sys/reorg/user:
+      <<: *sys_user
+      change_state:
+        create: 新規
+        update: 更新
+        delete: 削除

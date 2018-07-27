@@ -14,7 +14,8 @@ class Sys::Process < ApplicationRecord
     ["記事ページ書き出し", "gp_article/docs/publish_doc"],
     ["再構築", "/rebuild"],
     ["ファイル転送", "cms/file_transfers/exec"],
-    ["メール取り込み", "mailin/filters/exec"]
+    ["メール取り込み", "mailin/filters/exec"],
+    ["組織変更", "sys/reorgs/exec"]
   ]
 
   RUNNABLE_PROCESS_NAMES = [

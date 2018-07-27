@@ -1,0 +1,31 @@
+<%= render 'sys/admin/groups/form', f: f %>
+
+<p class="form">引き継ぎ設定</p>
+
+<%- @item.group_migrations.build if @item.group_migrations.blank? -%>
+
+<table class="show">
+  <tr>
+    <th><%= Sys::Reorg::GroupMigration.human_attribute_name :source_group_id %></th>
+    <td>
+      <span class="group_migrations">
+        <%= f.fields_for :group_migrations do |f2| %>
+          <span class="group_migration" style="margin: 3px 0;">
+            <%= f2.select :source_group_id, options_for_select(f2.object.class.source_group_options(Core.site), f2.object.source_group_id), include_blank: true %>
+          </span>
+        <%- end -%>
+      </span>
+      <button type="button" id="add_group_migration">追加</button>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+$(function() {
+  $('#add_group_migration').addFields({
+    container: 'span.group_migrations',
+    fields: 'span.group_migration'
+  });
+});
+</script>
+

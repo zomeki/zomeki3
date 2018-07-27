@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180704040450) do
+ActiveRecord::Schema.define(version: 20180704082814) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -578,6 +578,15 @@ ActiveRecord::Schema.define(version: 20180704040450) do
     t.index ["site_id"], name: "index_cms_publishers_on_site_id", using: :btree
   end
 
+  create_table "cms_reorg_site_belongings", force: :cascade do |t|
+    t.integer  "site_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer  "group_id"
+    t.index ["group_id"], name: "index_cms_reorg_site_belongings_on_group_id", using: :btree
+    t.index ["site_id"], name: "index_cms_reorg_site_belongings_on_site_id", using: :btree
+  end
+
   create_table "cms_search_indexers", force: :cascade do |t|
     t.integer  "site_id"
     t.string   "indexable_type"
@@ -1106,6 +1115,30 @@ ActiveRecord::Schema.define(version: 20180704040450) do
     t.index ["sys_group_code"], name: "index_organization_groups_on_sys_group_code", using: :btree
   end
 
+  create_table "organization_reorg_groups", force: :cascade do |t|
+    t.integer  "concept_id"
+    t.integer  "layout_id"
+    t.integer  "content_id"
+    t.string   "state"
+    t.string   "name"
+    t.string   "sys_group_code"
+    t.string   "sitemap_state"
+    t.string   "docs_order"
+    t.integer  "sort_no"
+    t.text     "business_outline"
+    t.text     "contact_information"
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
+    t.integer  "more_layout_id"
+    t.text     "outline"
+    t.string   "title"
+    t.string   "change_state"
+    t.index ["concept_id"], name: "index_organization_reorg_groups_on_concept_id", using: :btree
+    t.index ["content_id"], name: "index_organization_reorg_groups_on_content_id", using: :btree
+    t.index ["layout_id"], name: "index_organization_reorg_groups_on_layout_id", using: :btree
+    t.index ["more_layout_id"], name: "index_organization_reorg_groups_on_more_layout_id", using: :btree
+  end
+
   create_table "rank_categories", force: :cascade do |t|
     t.integer  "content_id"
     t.string   "page_path"
@@ -1591,6 +1624,101 @@ ActiveRecord::Schema.define(version: 20180704040450) do
     t.string   "recognizable_type"
     t.index ["recognizable_type", "recognizable_id"], name: "index_sys_recognitions_on_recognizable", using: :btree
     t.index ["user_id"], name: "index_sys_recognitions_on_user_id", using: :btree
+  end
+
+  create_table "sys_reorg_group_migrations", force: :cascade do |t|
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.integer  "group_id"
+    t.integer  "source_group_id"
+    t.index ["group_id"], name: "index_sys_reorg_group_migrations_on_group_id", using: :btree
+    t.index ["source_group_id"], name: "index_sys_reorg_group_migrations_on_source_group_id", using: :btree
+  end
+
+  create_table "sys_reorg_groups", force: :cascade do |t|
+    t.string   "state"
+    t.string   "web_state"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.integer  "parent_id"
+    t.integer  "level_no"
+    t.string   "code"
+    t.integer  "sort_no"
+    t.integer  "layout_id"
+    t.integer  "ldap"
+    t.string   "ldap_version"
+    t.string   "name"
+    t.string   "name_en"
+    t.string   "tel"
+    t.string   "outline_uri"
+    t.string   "email"
+    t.string   "fax"
+    t.string   "address"
+    t.string   "note"
+    t.string   "tel_attend"
+    t.integer  "sys_group_id"
+    t.string   "change_state"
+    t.index ["parent_id"], name: "index_sys_reorg_groups_on_parent_id", using: :btree
+    t.index ["sys_group_id"], name: "index_sys_reorg_groups_on_sys_group_id", using: :btree
+  end
+
+  create_table "sys_reorg_schedules", force: :cascade do |t|
+    t.integer  "site_id"
+    t.string   "state"
+    t.datetime "reserved_at"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.index ["site_id"], name: "index_sys_reorg_schedules_on_site_id", using: :btree
+  end
+
+  create_table "sys_reorg_user_migrations", force: :cascade do |t|
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+    t.integer  "user_id"
+    t.integer  "source_user_id"
+    t.index ["source_user_id"], name: "index_sys_reorg_user_migrations_on_source_user_id", using: :btree
+    t.index ["user_id"], name: "index_sys_reorg_user_migrations_on_user_id", using: :btree
+  end
+
+  create_table "sys_reorg_users", force: :cascade do |t|
+    t.string   "state"
+    t.datetime "created_at",                                      null: false
+    t.datetime "updated_at",                                      null: false
+    t.integer  "ldap"
+    t.string   "ldap_version"
+    t.integer  "auth_no"
+    t.string   "name"
+    t.string   "name_en"
+    t.string   "account"
+    t.string   "password"
+    t.string   "email"
+    t.text     "remember_token"
+    t.datetime "remember_token_expires_at"
+    t.boolean  "admin_creatable",                 default: false
+    t.boolean  "site_creatable",                  default: false
+    t.string   "reset_password_token"
+    t.datetime "reset_password_token_expires_at"
+    t.integer  "sys_user_id"
+    t.string   "change_state"
+    t.index ["sys_user_id"], name: "index_sys_reorg_users_on_sys_user_id", using: :btree
+  end
+
+  create_table "sys_reorg_users_groups", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer  "user_id"
+    t.integer  "group_id"
+    t.index ["group_id"], name: "index_sys_reorg_users_groups_on_group_id", using: :btree
+    t.index ["user_id"], name: "index_sys_reorg_users_groups_on_user_id", using: :btree
+  end
+
+  create_table "sys_reorg_users_roles", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "role_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["role_id"], name: "index_sys_reorg_users_roles_on_role_id", using: :btree
+    t.index ["user_id"], name: "index_sys_reorg_users_roles_on_user_id", using: :btree
   end
 
   create_table "sys_role_names", force: :cascade do |t|

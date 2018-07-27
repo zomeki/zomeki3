@@ -1,0 +1,30 @@
+<%= render 'sys/admin/users/form', f: f %>
+
+<p class="form">引き継ぎ設定</p>
+
+<%- @item.user_migrations.build unless @item.user_migrations.present? -%>
+
+<table class="show">
+  <tr>
+    <th><%= Sys::Reorg::UserMigration.human_attribute_name :source_user_id %></th>
+    <td>
+      <span class="user_migrations">
+        <%= f.fields_for :user_migrations do |f2| %>
+          <span class="user_migration" style="margin: 3px 0;">
+            <%= f2.select :source_user_id, options_for_select(f2.object.class.source_user_options(Core.site), f2.object.source_user_id), include_blank: true %>
+          </span>
+        <%- end -%>
+      </span>
+      <button type="button" id="add_user_migration">追加</button>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+$(function() {
+  $('#add_user_migration').addFields({
+    container: 'span.user_migrations',
+    fields: 'span.user_migration'
+  });
+});
+</script>

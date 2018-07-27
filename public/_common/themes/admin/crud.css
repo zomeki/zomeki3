@@ -30,6 +30,27 @@ form .note {
   color: #e00;
 }
 
+span.remark {
+  color: #777;
+}
+span.change_state {
+  margin: 0 4px;
+  padding: 0 2px;
+  border-radius: 3px;
+  background-color: #c33;
+  color: #fff;
+  font-size: 85%;
+}
+span.change_state.create {
+  background-color: #5a5;
+}
+span.change_state.update {
+  background-color: #55c;
+}
+span.change_state.delete {
+  background-color: #c55;
+}
+
 /* Index
 --------------------------------------------------------- */
 table.index {

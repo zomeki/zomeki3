@@ -8,6 +8,10 @@ class Sys::Recognition < ApplicationRecord
 
   nested_scope :in_site, through: :recognizable
 
+  scope :with_recognizer, ->(user_id) {
+    where(arel_table[:recognizer_ids].matches_regexp("[^\\d]?#{user_id}[^\\d]?"))
+  }
+
   def change_type(type)
     case type.to_s
     when 'with_admin'

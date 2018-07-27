@@ -1,0 +1,27 @@
+<table class="index">
+  <tr>
+    <th class="action_link">詳細</th>
+    <th style="width: 150px;">ユーザーID</th>
+    <th style="width: ;">氏名</th>
+    <th style="width: 60px; text-align: center;">状態</th>
+  </tr>
+  <%- users.each do |user| -%>
+  <tr class="<%= cycle '', 'cycle' %>">
+    <td class="action_link"><%= link_to :show, { controller: :group_users, action: :show, parent: @parent.id.to_i, id: user } %></td>
+    <td><%= user.account %></td>
+    <td>
+      <%= user.name %>
+      <%- if user.change_state -%>
+        <span class="change_state <%= user.change_state %>"><%= user.change_state_text %></span>
+      <%- end -%>
+      <%- if user.source_users.present? -%>
+        <span class="remark"><b>←</b><%= user.source_users.map(&:name).join(', ') %></span>
+      <%- end -%>
+      <%- if user.destination_users.present? -%>
+        <span class="remark"><b>→</b><%= user.destination_users.map(&:name).join(', ') %></span>
+      <%- end -%>
+    </td>
+    <td style="text-align: center;"><%= user.state_text %></td>
+  </tr>
+  <%- end -%>
+</table>
