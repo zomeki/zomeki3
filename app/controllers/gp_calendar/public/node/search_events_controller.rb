@@ -4,8 +4,10 @@ class GpCalendar::Public::Node::SearchEventsController < GpCalendar::Public::Nod
   def index
     http_error(404) if params[:page]
 
-    @start_date = Date.parse(params[:start_date]) rescue nil || Date.today
-    @end_date   = Date.parse(params[:end_date]) rescue nil || nil
+    params[:start_date] ||= Date.today.to_s
+
+    @start_date = Date.parse(params[:start_date]) rescue nil
+    @end_date   = Date.parse(params[:end_date]) rescue nil
     if params[:all] && params[:start_date].blank? && params[:end_date].blank?
       @start_date = nil
       @end_date   = nil
