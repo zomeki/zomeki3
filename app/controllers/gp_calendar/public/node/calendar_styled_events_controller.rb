@@ -1,18 +1,9 @@
-class GpCalendar::Public::Node::CalendarStyledEventsController < GpCalendar::Public::Node::BaseController
+class GpCalendar::Public::Node::CalendarStyledEventsController < GpCalendar::Public::NodeController
   def index
     http_error(404) if params[:page]
 
-    criteria = {year_month: @date.strftime('%Y%m')}
-    @events = GpCalendar::Event.public_state.content_and_criteria(@content, criteria).order(:started_on)
-      .preload(:categories).to_a
-
     start_date = @date.beginning_of_month.beginning_of_week(:sunday)
     end_date = @date.end_of_month.end_of_week(:sunday)
-
-    docs = @content.event_docs(start_date, end_date)
-    @events = merge_docs_into_events(docs, @events)
-
-    filter_events_by_specified_category(@events)
 
     @weeks = (start_date..end_date).inject([]) do |weeks, day|
         weeks.push([]) if weeks.empty? || day.wday.zero?
@@ -20,7 +11,15 @@ class GpCalendar::Public::Node::CalendarStyledEventsController < GpCalendar::Pub
         next weeks
       end
 
-    @holidays = GpCalendar::Holiday.public_state.content_and_criteria(@content, criteria)
+    events = @content.public_events.scheduled_between(start_date, end_date)
+    events = events.categorized_into(@specified_category.public_descendants) if @specified_category
+    events = events.preload(:categories)
 
+    docs = @content.event_docs.event_scheduled_between(start_date, end_date)
+    docs = docs.categorized_into(@specified_category.public_descendants, categorized_as: 'GpCalendar::Event') if @specified_category
+
+    @events = merge_events_and_docs(@content, events, docs)
+
+    @holidays = @content.public_holidays.scheduled_between(start_date, end_date)
   end
 end

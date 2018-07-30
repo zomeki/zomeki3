@@ -48,7 +48,7 @@ module GpCalendar::EventHelper
         table_style.each do |t|
           if t[:data] =~ %r|hold_date|
             class_str = 'date'
-            class_str += ' holiday' if @event.holiday.present?
+            class_str += ' holiday' if @event.public_holidays.present?
             concat content_tag(:td, t[:data].html_safe, class: class_str)
           else
             class_str = t[:data].scan(/@(\w+)@/).flatten.join(' ')
@@ -110,8 +110,8 @@ module GpCalendar::EventHelper
           html << content_tag(:span, ended_on, class: 'closeDate')
         end
       end
-      if @event.holiday.present?
-        html << content_tag(:span, @event.holiday, class: 'title')
+      if @event.public_holidays.present?
+        html << content_tag(:span, @event.public_holidays.first.title, class: 'title')
       end
       html.html_safe
     end

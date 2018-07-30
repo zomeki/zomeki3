@@ -25,6 +25,7 @@ class GpCalendar::Admin::HolidaysController < Cms::Controller::Admin::Base
   def create
     @item = @content.holidays.build(holiday_params)
     @item.date = parse_date(holiday_params[:date], (holiday_params[:repeat]=='1' ? '' : '%Y年') + '%m月%d日')
+    @item.kind = 'holiday'
     _create(@item) do
     end
   end
@@ -33,6 +34,7 @@ class GpCalendar::Admin::HolidaysController < Cms::Controller::Admin::Base
     @item = @content.holidays.find(params[:id])
     @item.attributes = holiday_params
     @item.date = parse_date(holiday_params[:date], (holiday_params[:repeat]=='1' ? '' : '%Y年') + '%m月%d日')
+    @item.kind = 'holiday'
     _update(@item) do
     end
   end
@@ -47,7 +49,7 @@ class GpCalendar::Admin::HolidaysController < Cms::Controller::Admin::Base
 
   def holiday_params
     params.require(:item).permit(
-      :date, :description, :kind, :repeat, :state, :title,
+      :date, :description, :repeat, :state, :title,
       :creator_attributes => [:id, :group_id, :user_id]
     )
   end

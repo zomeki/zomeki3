@@ -127,10 +127,9 @@ class GpArticle::Doc < ApplicationRecord
   scope :public_state, -> { where(state: 'public') }
   scope :mobile, ->(m) { m ? where(terminal_mobile: true) : where(terminal_pc_or_smart_phone: true) }
   scope :visible_in_list, -> { where(feature_1: true) }
-  scope :event_scheduled_between, ->(start_date, end_date, category_ids = nil) {
-    rel = dates_intersects(:event_started_on, :event_ended_on, start_date.try(:beginning_of_day), end_date.try(:end_of_day))
-    rel = rel.categorized_into(category_ids, categorized_as: 'GpCalendar::Event', alls: true) if category_ids.present?
-    rel
+  scope :event_scheduled_on, ->(date) { event_scheduled_between(date, date) }
+  scope :event_scheduled_between, ->(start_date, end_date) {
+    dates_intersects(:event_started_on, :event_ended_on, start_date.try(:beginning_of_day), end_date.try(:end_of_day))
   }
   scope :categorized_into, ->(categories, categorized_as: 'GpArticle::Doc', alls: false) {
     cats = GpCategory::Categorization.select(:categorizable_id)

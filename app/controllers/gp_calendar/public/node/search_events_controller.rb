@@ -1,4 +1,4 @@
-class GpCalendar::Public::Node::SearchEventsController < GpCalendar::Public::Node::BaseController
+class GpCalendar::Public::Node::SearchEventsController < GpCalendar::Public::NodeController
   skip_after_action :render_public_layout, only: [:file_content]
 
   def index
@@ -13,23 +13,15 @@ class GpCalendar::Public::Node::SearchEventsController < GpCalendar::Public::Nod
     @date =  @start_date.present? ? @start_date : Date.today
 
     categories = params[:categories].present? ? params[:categories].values.reject(&:blank?) : []
-    criteria = {}
-    @events = GpCalendar::Event.public_state.content_and_criteria(@content, criteria).order(:started_on)
-      .scheduled_between(@start_date, @end_date)
-      .preload(:categories).to_a
-    categories.each do |category|
-      @events.reject! {|c| c.categories && !c.categories.map{|ct| ct.id.to_s }.include?(category) }
-    end
 
-    docs = @content.event_docs(@start_date, @end_date, categories)
-    @events = merge_docs_into_events(docs, @events)
+    events = @content.public_events.scheduled_between(@start_date, @end_date)
+    events = events.categorized_into(categories, alls: true) if categories.present?
+    events = events.preload(:categories)
 
-    @holidays = GpCalendar::Holiday.public_state.content_and_criteria(@content, criteria).where(kind: :event)
-    @holidays.each do |holiday|
-      holiday.started_on = @date.year
-      @events << holiday if holiday.started_on
-    end
-    @events.sort_by! { |e| e.started_on || Time.new(0) }
+    docs = @content.event_docs.event_scheduled_between(@start_date, @end_date)
+    docs = docs.categorized_into(categories, alls: true, categorized_as: 'GpCalendar::Event') if categories.present?
+
+    @events = merge_events_and_docs(@content, events, docs)
   end
 
   def file_content
@@ -37,5 +29,4 @@ class GpCalendar::Public::Node::SearchEventsController < GpCalendar::Public::Nod
     file = @event.files.find_by!(name: "#{params[:basename]}.#{params[:extname]}")
     send_file file.upload_path, filename: file.name
   end
-
 end

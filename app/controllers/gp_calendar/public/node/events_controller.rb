@@ -1,14 +1,8 @@
-class GpCalendar::Public::Node::EventsController < GpCalendar::Public::Node::BaseController
+class GpCalendar::Public::Node::EventsController < GpCalendar::Public::NodeController
   skip_after_action :render_public_layout, only: [:file_content]
 
   def index
     http_error(404) if params[:page]
-
-    year_month = @year_only ? @date.strftime('%Y') : @date.strftime('%Y%m')
-
-    criteria = {year_month: year_month}
-    @events = GpCalendar::Event.public_state.content_and_criteria(@content, criteria).order(:started_on)
-      .preload(:categories).to_a
 
     start_date, end_date = if @year_only
                              boy = @date.beginning_of_year
@@ -19,17 +13,15 @@ class GpCalendar::Public::Node::EventsController < GpCalendar::Public::Node::Bas
                            else
                              [@date.beginning_of_month, @date.end_of_month]
                            end
-    docs = @content.event_docs(start_date, end_date)
-    @events = merge_docs_into_events(docs, @events)
 
-    @holidays = GpCalendar::Holiday.public_state.content_and_criteria(@content, criteria).where(kind: :event)
-    @holidays.each do |holiday|
-      holiday.started_on = @date.year
-      @events << holiday if holiday.started_on
-    end
-    @events.sort_by! { |e| e.started_on || Time.new(0) }
+    events = @content.public_events.scheduled_between(start_date, end_date)
+    events = events.categorized_into(@specified_category.public_descendants) if @specified_category
+    events = events.preload(:categories)
 
-    filter_events_by_specified_category(@events)
+    docs = @content.event_docs.event_scheduled_between(start_date, end_date)
+    docs = docs.categorized_into(@specified_category.public_descendants, categorized_as: 'GpCalendar::Event') if @specified_category
+
+    @events = merge_events_and_docs(@content, events, docs)
   end
 
   def file_content

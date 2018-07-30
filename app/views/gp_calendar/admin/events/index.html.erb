@@ -15,7 +15,7 @@
 
   <%- @items.each do |item| -%>
   <tr class="<%= cycle '', 'cycle' %>">
-    <td class="action_link"><%= link_to :show, (item.class == GpCalendar::Holiday ? gp_calendar_holiday_path(content: @content, id: item.id) : { action: :show, id: item}) %></td>
+    <td class="action_link"><%= link_to :show, { action: :show, id: item } %></td>
     <td style="text-align: center;"><%= item.id %></td>
     <td style="text-align: center;"><%=l item.started_on %></td>
     <td style="text-align: center;"><%=l item.ended_on %></td>

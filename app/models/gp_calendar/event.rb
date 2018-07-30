@@ -32,62 +32,15 @@ class GpCalendar::Event < ApplicationRecord
   validate :dates_range
 
   scope :public_state, -> { where(state: 'public') }
+  scope :scheduled_on, ->(date) { scheduled_between(date, date) }
   scope :scheduled_between, ->(start_date, end_date) {
     dates_intersects(:started_on, :ended_on, start_date.try(:beginning_of_day), end_date.try(:end_of_day))
   }
 
-  scope :content_and_criteria, ->(content, criteria){
-    events = self.arel_table
-
-    rel = self.where(events[:content_id].eq(content.id))
-    rel = rel.where(events[:name].matches("%#{criteria[:name]}%")) if criteria[:name].present?
-    rel = rel.where(events[:title].matches("%#{criteria[:title]}%")) if criteria[:title].present?
-    rel = rel.where(events[:started_on].lteq(criteria[:date])
-                    .and(events[:ended_on].gteq(criteria[:date]))) if criteria[:date].present?
-    rel = case criteria[:order]
-          when 'created_at_desc'
-            rel.except(:order).order(events[:created_at].desc)
-          when 'created_at_asc'
-            rel.except(:order).order(events[:created_at].asc)
-          else
-            rel
-          end
-
-    if (year_month = criteria[:year_month]) =~ /^(\d{6}|\d{4})$/
-      case year_month
-      when /^\d{6}$/
-        start_date = Date.new(year_month.slice(0, 4).to_i, year_month.slice(4, 2).to_i, 1)
-        end_date = start_date.end_of_month
-      when /^\d{4}$/
-        start_date = Date.new(year_month.to_i, 1, 1)
-        end_date = start_date.end_of_year
-      end
-
-      if start_date && end_date
-        rel = rel.where(events[:started_on].lteq(end_date)
-                        .and(events[:ended_on].gteq(start_date)))
-      end
-    end
-
-    if criteria[:categories].present?
-      rel = rel.distinct.includes(:categories)
-               .where(gp_category_categorizations: { category_id: criteria[:categories] })
-    end
-
-    rel = rel.where(events[:state].eq(criteria[:state])) if criteria[:state].present?
-
-    return rel
-  }
-
-  def kind
-    'event'
-  end
-
-  def holiday
-    return nil unless started_on
-    criteria = {date: started_on, kind: 'holiday'}
-    GpCalendar::Holiday.public_state.content_and_criteria(content, criteria).first.try(:title)
-  end
+  def public_holidays
+    return unless started_on
+    content.public_holidays.scheduled_on(started_on)
+   end
 
   def public_uri
     return unless node = content.node

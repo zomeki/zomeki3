@@ -1,6 +1,7 @@
-class GpCalendar::Public::Piece::CategoryDailyLinksController < GpCalendar::Public::Piece::BaseController
+class GpCalendar::Public::Piece::CategoryDailyLinksController < GpCalendar::Public::PieceController
   def pre_dispatch
     @piece = GpCalendar::Piece::CategoryDailyLink.find(Page.current_piece.id)
+    @content = @piece.content
     @item = Page.current_item
   end
 
@@ -23,24 +24,22 @@ class GpCalendar::Public::Piece::CategoryDailyLinksController < GpCalendar::Publ
 
     return unless (@node = @piece.target_node)
 
-    @calendar.day_uri   = "#{@node.public_uri}?start_date=:year-:month-:day&end_date=:year-:month-:day"
+    @calendar.day_uri = "#{@node.public_uri}?start_date=:year-:month-:day&end_date=:year-:month-:day"
 
-    events = @piece.content.events.public_state
-                   .scheduled_between(start_date, end_date)
-                   .content_and_criteria(@piece.content, {categories: @piece.category_ids}).to_a
-    docs = @piece.content.event_docs(start_date, end_date)
-    events = merge_docs_into_events(docs, events)
+    events = @content.public_events.scheduled_between(start_date, end_date)
+    events = events.categorized_into(@piece.category_ids) if @piece.category_ids.present?
+    event_dates = events.flat_map { |ev| to_dates(ev.started_on, ev.ended_on, start_date, end_date) }.uniq
 
-    days = docs.inject([]) do |dates, doc|
-             dates | (doc.event_started_on..doc.event_ended_on).to_a
-           end
+    docs = @content.event_docs.event_scheduled_between(start_date, end_date)
+    docs = docs.categorized_into(@piece.category_ids) if @piece.category_ids.present?
+    doc_dates = docs.flat_map { |doc| to_dates(doc.event_started_on, doc.event_ended_on, start_date, end_date) }.uniq
 
-    (start_date..end_date).each do |date|
-      if events.detect {|e| e.started_on <= date && date <= e.ended_on }
-        days << date unless days.include?(date)
-      end
-    end
+    @calendar.day_link = (event_dates | doc_dates).sort
+  end
 
-    @calendar.day_link = days.sort!
+  private
+
+  def to_dates(started_on, ended_on, min, max)
+    ([started_on, min].max..[ended_on, max].min).to_a
   end
 end

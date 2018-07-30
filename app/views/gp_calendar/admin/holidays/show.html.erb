@@ -15,10 +15,6 @@
     <th><%= @item.class.human_attribute_name :description %></th>
     <td><%= @item.description %></td>
   </tr>
-  <tr>
-    <th><%= @item.class.human_attribute_name :kind %></th>
-    <td><%= @item.kind_text %></td>
-  </tr>
 </table>
 
 <%= creator_view @item %>

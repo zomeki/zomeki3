@@ -1,6 +1,7 @@
-class GpCalendar::Public::Piece::CategoryTypesController < GpCalendar::Public::Piece::BaseController
+class GpCalendar::Public::Piece::CategoryTypesController < GpCalendar::Public::PieceController
   def pre_dispatch
     @piece = GpCalendar::Piece::CategoryType.find(Page.current_piece.id)
+    @content = @piece.content
     @item = Page.current_item
   end
 
@@ -13,6 +14,6 @@ class GpCalendar::Public::Piece::CategoryTypesController < GpCalendar::Public::P
                                         GpCalendar::CalendarStyledEvent!.include?(@item.model)
     end
 
-    @category_types = @piece.content.public_category_types
+    @category_types = @content.public_category_types
   end
 end

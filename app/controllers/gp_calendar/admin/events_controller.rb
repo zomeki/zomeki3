@@ -9,28 +9,10 @@ class GpCalendar::Admin::EventsController < Cms::Controller::Admin::Base
   end
 
   def index
-    require 'will_paginate/array'
-
-    criteria = params[:criteria] || {}
-    @items = GpCalendar::Event.content_and_criteria(@content, criteria).to_a
-
-    criteria[:date] = Date.parse(criteria[:date]) rescue nil
-    @events = GpCalendar::Holiday.content_and_criteria(@content, criteria).where(kind: :event)
-    @events.each do |event|
-      event.started_on = Time.now.year if event.repeat?
-      @items << event if event.started_on
-    end
-
-    case criteria[:order]
-      when 'created_at_desc'
-        @items.sort! {|a, b| a.created_at <=> b.created_at}
-      when 'created_at_asc'
-        @items.sort! {|a, b| b.created_at <=> a.created_at}
-      else
-        @items.sort! {|a, b| (a.started_on <=> b.started_on) * -1}
-    end
-
-    @items = @items.to_a.paginate(page: params[:page], per_page: params[:limit])
+    @items = GpCalendar::EventsFinder.new(@content.events)
+                                     .search(params[:criteria])
+                                     .order(started_on: :desc)
+                                     .paginate(page: params[:page], per_page: params[:limit])
 
     _index @items
   end
