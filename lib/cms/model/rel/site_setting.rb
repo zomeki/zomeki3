@@ -22,6 +22,10 @@ module Cms::Model::Rel::SiteSetting
     setting_value(:admin_mail_sender)
   end
 
+  def admin_mail_sender_for_approval?
+    setting_value(:admin_mail_sender_for_approval) == '1'
+  end
+
   def file_upload_max_size
     (setting_value(:file_upload_max_size).presence || 5).to_i
   end

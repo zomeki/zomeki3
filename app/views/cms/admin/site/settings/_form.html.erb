@@ -13,6 +13,13 @@
     <th><%= @site.class.human_attribute_name :in_setting_site_admin_mail_sender %></th>
     <td><%= f.text_field :in_setting_site_admin_mail_sender, class: 'name' %></td>
   </tr>
+  <tr>
+    <th><%= @site.class.human_attribute_name :in_setting_site_admin_mail_sender_for_approval %></th>
+    <td>
+      <%= f.check_box :in_setting_site_admin_mail_sender_for_approval %>
+      <%= f.label :in_setting_site_admin_mail_sender_for_approval, '承認メールの送信元をこのアドレスにする' %>
+    </td>
+  </tr>
 </table>
 <%- end -%>
 
