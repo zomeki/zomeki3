@@ -26,7 +26,7 @@
             category_ids += [''] unless category_ids.include?('') -%>
         <%- category_ids.each do |cid| -%>
           <span class="marker_category_<%= category_type.id %>">
-            <%= select_tag "item[in_marker_category_ids][#{category_type.id}][]", 
+            <%= select_tag "item[in_marker_category_ids][#{category_type.id}][]",
                            options_for_select(@content.marker_category_type_categories_for_option(category_type), cid), include_blank: true %>
           </span>
         <%- end -%>
@@ -34,6 +34,12 @@
       <span><%= button_tag '追加', type: 'button', id: "add_marker_category_#{category_type.id}" %></span>
     </td>
   </tr>
+  <%- end -%>
+  <%- if @content.navigation_enabled? -%>
+    <tr>
+      <th><%= f.label :navigation_state %></th>
+      <td><%= f.collection_radio_buttons :navigation_state, @item.class.navigation_state_options, :last, :first %></td>
+    </tr>
   <%- end -%>
 </table>
 

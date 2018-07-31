@@ -54,7 +54,7 @@ class GpArticle::DocCsvService < ApplicationService
     data += @event_category_types.map(&:title)
 
     # 地図
-    data += ['マップ表示', 'マップ並び順', 'マップ名', '座標', '縮尺', 'マーカー']
+    data += ['マップ表示', 'ルート案内', 'マップ並び順', 'マップ名', '座標', '縮尺', 'マーカー']
     data += @marker_category_types.map(&:title)
 
     # 携帯
@@ -108,6 +108,7 @@ class GpArticle::DocCsvService < ApplicationService
 
     # 地図
     data << doc.marker_state_text
+    data << doc.navigation_state_text
     data << doc.marker_sort_no
 
     map = doc.maps.first
@@ -115,6 +116,7 @@ class GpArticle::DocCsvService < ApplicationService
     data << (map && (map.map_lat.present? || map.map_lng.present?) ? "#{map.map_lat},#{map.map_lng}" : nil)
     data << (map ? map.map_zoom : nil)
     data << (map ? map.markers.map { |marker| "#{marker.name} (#{marker.lat},#{marker.lng})" }.join("\n") : nil)
+
 
     @marker_category_types.each do |category_type|
       data << doc.marker_categories.select { |cat| cat.category_type == category_type }.map(&:title).join("\n")
