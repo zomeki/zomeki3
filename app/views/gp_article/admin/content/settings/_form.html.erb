@@ -302,3 +302,20 @@ $(function() {
   </tr>
 </table>
 <%- end -%>
+
+<% if @item.name == 'navigation_setting'
+     navigation_target_types = @item.extra_values[:types] || []
+   -%>
+<table class="show">
+  <tr>
+    <th>検索対象</th>
+    <td>
+      <%- @item.extra_options[:default_type_options].each do |t| -%>
+      <span class="template">
+      <%= check_box_tag "type_#{t[1]}", t[1], navigation_target_types.include?(t[1]), name: 'item[extra_values][types][]' -%> <%= label_tag "type_#{t[1]}", t[0] -%>
+      </span>
+      <%- end -%>
+    </td>
+  </tr>
+</table>
+<%- end -%>
