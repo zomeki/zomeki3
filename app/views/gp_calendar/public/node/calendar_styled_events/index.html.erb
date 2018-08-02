@@ -29,11 +29,12 @@
           </ul>
           <%- end -%>
 
-          <%- unless (events = @events.select { |e| day.between?(e.started_on, e.ended_on) }).empty? -%>
+          <%- events = @events.select { |e| e.periods.any? { |p| day.between?(p.started_on, p.ended_on) } } -%>
+          <%- unless events.empty? -%>
           <ul>
             <%- events.each do |event| -%>
             <li>
-              <%= event_replace(event, @date, @content.calendar_list_style) %>
+              <%= event_replace(event, @date, list_style: @content.calendar_list_style) %>
             </li>
             <%- end -%>
           </ul>

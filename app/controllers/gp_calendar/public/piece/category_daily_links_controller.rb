@@ -28,18 +28,22 @@ class GpCalendar::Public::Piece::CategoryDailyLinksController < GpCalendar::Publ
 
     events = @content.public_events.scheduled_between(start_date, end_date)
     events = events.categorized_into(@piece.category_ids) if @piece.category_ids.present?
-    event_dates = events.flat_map { |ev| to_dates(ev.started_on, ev.ended_on, start_date, end_date) }.uniq
+    event_dates = events.flat_map { |event| to_dates(event, start_date, end_date) }.uniq
 
-    docs = @content.event_docs.event_scheduled_between(start_date, end_date)
+    docs = @content.event_docs.scheduled_between(start_date, end_date)
     docs = docs.categorized_into(@piece.category_ids) if @piece.category_ids.present?
-    doc_dates = docs.flat_map { |doc| to_dates(doc.event_started_on, doc.event_ended_on, start_date, end_date) }.uniq
+    doc_dates = docs.flat_map { |doc| to_dates(doc, start_date, end_date) }.uniq
 
     @calendar.day_link = (event_dates | doc_dates).sort
   end
 
   private
 
-  def to_dates(started_on, ended_on, min, max)
-    ([started_on, min].max..[ended_on, max].min).to_a
+  def to_dates(event, start_date, end_date)
+    range = start_date..end_date
+    event.periods.inject([]) do |dates, period|
+      period_range = period.started_on..period.ended_on
+      dates |= (range.to_a & period_range.to_a)
+    end
   end
 end

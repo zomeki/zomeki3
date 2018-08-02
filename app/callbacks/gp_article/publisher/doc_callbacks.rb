@@ -80,9 +80,9 @@ class GpArticle::Publisher::DocCallbacks < PublisherCallbacks
     calendar_content = @content.gp_calendar_content_event
     return unless calendar_content
 
-    changed_dates = [@doc.event_started_on, @doc.event_ended_on]
-    changed_dates += [@doc.prev_edition.event_started_on, @doc.prev_edition.event_ended_on] if @doc.prev_edition
-    changed_dates = changed_dates.uniq.compact
+    periods = @doc.periods.to_a
+    periods += @doc.prev_edition.periods.to_a if @doc.prev_edition
+    changed_dates = periods.flat_map { |period| [period.started_on, period.ended_on] }.uniq.compact
 
     if changed_dates.present?
       min_date = changed_dates.min.beginning_of_month

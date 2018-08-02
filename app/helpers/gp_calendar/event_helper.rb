@@ -1,10 +1,10 @@
 module GpCalendar::EventHelper
-  def event_replace(event, date, list_style)
-    Formatter.new(event, date).format(list_style, mobile: request.mobile?)
+  def event_replace(event, date, list_style: '')
+    Formatter.new(event, date, [], []).format(list_style, mobile: request.mobile?)
   end
 
-  def event_table_replace(event, date, table_style, date_style)
-    Formatter.new(event, date).format_table(table_style, date_style, mobile: request.mobile?)
+  def event_table_replace(event, date, range, holidays, table_style: '', date_style: '')
+    Formatter.new(event, date, range, holidays).format_table(table_style, date_style, mobile: request.mobile?)
   end
 
   class Formatter < ActionView::Base
@@ -13,9 +13,11 @@ module GpCalendar::EventHelper
     include GpArticle::DocHelper
     include GpArticle::DocImageHelper
 
-    def initialize(event, date)
+    def initialize(event, date, range, holidays)
       @event = event
       @date = date
+      @range = range
+      @holidays = holidays
     end
 
     def format(list_style, mobile: false)
@@ -48,7 +50,7 @@ module GpCalendar::EventHelper
         table_style.each do |t|
           if t[:data] =~ %r|hold_date|
             class_str = 'date'
-            class_str += ' holiday' if @event.public_holidays.present?
+            class_str += ' holiday' if @holidays.any? { |holiday| holiday.match?(@date) }
             concat content_tag(:td, t[:data].html_safe, class: class_str)
           else
             class_str = t[:data].scan(/@(\w+)@/).flatten.join(' ')
@@ -96,34 +98,41 @@ module GpCalendar::EventHelper
 
     def replace_hold_date(date_style)
       html = ''
-      if @event.started_on || @event.ended_on
-        started_on, ended_on = get_hold_date_text(date_style)
-        if @event.started_on && @event.ended_on && @event.started_on == @event.ended_on
-          html << content_tag(:span, started_on, class: 'startDate closeDate')
-        elsif @event.started_on && @event.ended_on
-          html << content_tag(:span, started_on, class: 'startDate')
-          html << content_tag(:span, '～', class: 'from')
-          html << content_tag(:span, ended_on, class: 'closeDate')
-        elsif @event.started_on
-          html << content_tag(:span, started_on, class: 'startDate')
-        elsif @event.ended_on
-          html << content_tag(:span, ended_on, class: 'closeDate')
+      @event.periods.each do |period|
+        if (period.started_on || period.ended_on) && period.intersect?(@range[0], @range[1])
+          started_on, ended_on = get_hold_date_text(period, date_style)
+          if period.started_on && period.ended_on && period.started_on == period.ended_on
+            html << content_tag(:p, content_tag(:span, started_on, class: 'startDate closeDate'))
+          elsif period.started_on && period.ended_on
+            html << content_tag(:p) do
+              content_tag(:span, started_on, class: 'startDate') + 
+                content_tag(:span, '～', class: 'from') + 
+                content_tag(:span, ended_on, class: 'closeDate')
+            end
+          elsif period.started_on
+            html << content_tag(:p, content_tag(:span, started_on, class: 'startDate'))
+          elsif period.ended_on
+            html << content_tag(:p, content_tag(:span, ended_on, class: 'closeDate'))
+          end
         end
       end
-      if @event.public_holidays.present?
-        html << content_tag(:span, @event.public_holidays.first.title, class: 'title')
+
+      holidays = @holidays.select { |holiday| holiday.match?(@date) }
+      holidays.each do |holiday|
+        html << content_tag(:span, holiday.title, class: 'title')
       end
+
       html.html_safe
     end
 
-    def get_hold_date_text(date_style)
-      if @event.started_on
-        s_style = localize_wday(date_style, @event.started_on.wday)
-        started_on = @event.started_on.strftime(s_style)
+    def get_hold_date_text(period, date_style)
+      if period.started_on
+        s_style = localize_wday(date_style, period.started_on.wday)
+        started_on = period.started_on.strftime(s_style)
       end
-      if @event.ended_on
-        e_style = localize_wday(date_style, @event.ended_on.wday)
-        ended_on = @event.ended_on.strftime(e_style)
+      if period.ended_on
+        e_style = localize_wday(date_style, period.ended_on.wday)
+        ended_on = period.ended_on.strftime(e_style)
       end
       return started_on, ended_on
     end

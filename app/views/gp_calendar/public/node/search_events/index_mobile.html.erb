@@ -16,10 +16,10 @@
   <fieldset class="date">
     <legend>期間</legend>
     <label for="start_date">開始日</label>
-    <%= text_field_tag :start_date, @start_date, class: "datepicker" %>
+    <%= text_field_tag :start_date, params[:start_date], class: "datepicker" %>
     <span>～</span>
     <label for="end_date">終了日</label>
-    <%= text_field_tag :end_date, @end_date, class: "datepicker" %>
+    <%= text_field_tag :end_date, params[:end_date], class: "datepicker" %>
   </fieldset>
   <div class="submitters">
   <%= submit_tag '検索', name: :search, data: { disable_with: false } %>
@@ -38,7 +38,9 @@
     </thead>
     <tbody>
       <%- @events.each do |event| -%>
-        <%= event_table_replace(event, @date, @content.search_list_style, @content.date_style) %>
+        <%= event_table_replace(event, @date, @range, @holidays,
+                                table_style: @content.search_list_style,
+                                date_style: @content.date_style) %>
       <%- end -%>
     </tbody>
   </table>

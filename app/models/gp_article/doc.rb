@@ -15,6 +15,7 @@ class GpArticle::Doc < ApplicationRecord
   include Cms::Model::Rel::PublishUrl
   include Cms::Model::Rel::SearchText
   include Cms::Model::Rel::Importation
+  include Cms::Model::Rel::Period
 
   include Cms::Model::Auth::Concept
   include Sys::Model::Auth::Trash
@@ -117,7 +118,6 @@ class GpArticle::Doc < ApplicationRecord
                               if: -> { site.use_mobile_feature? }
 
   validate :validate_name, if: -> { name.present? }
-  validate :validate_event_dates_range
   validate :validate_accessibility_check, if: -> { !state_draft? && errors.blank? }
   validate :validate_broken_link_existence, if: -> { !state_draft? && errors.blank? }
 
@@ -127,10 +127,6 @@ class GpArticle::Doc < ApplicationRecord
   scope :public_state, -> { where(state: 'public') }
   scope :mobile, ->(m) { m ? where(terminal_mobile: true) : where(terminal_pc_or_smart_phone: true) }
   scope :visible_in_list, -> { where(feature_1: true) }
-  scope :event_scheduled_on, ->(date) { event_scheduled_between(date, date) }
-  scope :event_scheduled_between, ->(start_date, end_date) {
-    dates_intersects(:event_started_on, :event_ended_on, start_date.try(:beginning_of_day), end_date.try(:end_of_day))
-  }
   scope :categorized_into, ->(categories, categorized_as: 'GpArticle::Doc', alls: false) {
     cats = GpCategory::Categorization.select(:categorizable_id)
                                      .where(categorized_as: categorized_as, categorizable_type: self.to_s)
@@ -285,6 +281,10 @@ class GpArticle::Doc < ApplicationRecord
       new_doc.inquiries.build(attrs)
     end
 
+    periods.each do |period|
+      new_doc.periods.build(period.attributes.slice('started_on', 'ended_on'))
+    end
+
     maps.each do |map|
       new_map = new_doc.maps.build(map.attributes.slice('name', 'title', 'map_lat', 'map_lng', 'map_zoom'))
       map.markers.each do |marker|
@@ -406,13 +406,6 @@ class GpArticle::Doc < ApplicationRecord
     doc = self.class.where(content_id: content_id, name: name)
     doc = doc.where.not(serial_no: serial_no) if serial_no
     errors.add(:name, :taken) if doc.exists?
-  end
-
-  def validate_event_dates_range
-    return if self.event_started_on.blank? && self.event_ended_on.blank?
-    self.event_started_on = self.event_ended_on if self.event_started_on.blank?
-    self.event_ended_on = self.event_started_on if self.event_ended_on.blank?
-    errors.add(:event_ended_on, "が#{self.class.human_attribute_name :event_started_on}を過ぎています。") if self.event_ended_on < self.event_started_on
   end
 
   def validate_broken_link_existence

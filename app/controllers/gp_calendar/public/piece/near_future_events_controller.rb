@@ -14,10 +14,10 @@ class GpCalendar::Public::Piece::NearFutureEventsController < GpCalendar::Public
     tomorrows_events = events.scheduled_on(@tomorrow)
 
     docs = @content.event_docs
-    todays_docs = docs.event_scheduled_on(@today)
-    tomorrows_docs = docs.event_scheduled_on(@tomorrow)
+    todays_docs = docs.scheduled_on(@today)
+    tomorrows_docs = docs.scheduled_on(@tomorrow)
 
-    @todays_events = merge_events_and_docs(@content, todays_events, todays_docs)
-    @tomorrows_events = merge_events_and_docs(@content, tomorrows_events, tomorrows_docs)
+    @todays_events = GpCalendar::EventMergeService.new(@content).merge(todays_events, todays_docs, [@today, @today])
+    @tomorrows_events = GpCalendar::EventMergeService.new(@content).merge(tomorrows_events, tomorrows_docs, [@tomorrow, @tomorrow])
   end
 end

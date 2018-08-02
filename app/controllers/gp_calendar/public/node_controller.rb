@@ -47,17 +47,4 @@ class GpCalendar::Public::NodeController < Cms::Controller::Public::Base
     return unless category_type
     category_type.find_category_by_path_from_root_category(category_path)
   end
-
-  def merge_events_and_docs(content, events, docs)
-    sort_events(events + docs_to_events(content, docs))
-  end
-
-  def docs_to_events(content, docs)
-    docs = GpArticle::DocsPreloader.new(docs).preload(:public_node_ancestors, :event_categories, :files)
-    docs.map { |doc| GpCalendar::Event.from_doc(doc, content) }
-  end
-
-  def sort_events(events)
-    events.sort_by { |e| e.started_on || Time.new(0) }
-  end
 end

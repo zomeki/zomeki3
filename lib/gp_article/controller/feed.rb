@@ -92,13 +92,15 @@ module GpArticle::Controller::Feed
           xml.link    rel: 'alternate', href: doc.public_full_uri
 
           doc.categories.each do |c|
-            xml.category term: c.name, scheme: c.public_full_uri,
-              label: "カテゴリ/#{c.category_type.try(:title)}/#{c.ancestors.map(&:title).join('/')}"
+            xml.category term: c.name,
+                         scheme: c.public_full_uri,
+                         label: "カテゴリ/#{c.category_type.try(:title)}/#{c.ancestors.map(&:title).join('/')}"
           end
 
-          if doc.event_state == 'visible' && doc.event_started_on && node = doc.content.try(:gp_calendar_content_event).try(:public_node)
-            xml.category term: 'event', scheme: node.public_full_uri,
-              label: "イベント/#{doc.event_started_on.strftime('%Y-%m-%dT%H:%M:%S%z').sub(/([0-9][0-9])$/, ':\1')}"
+          if doc.event_state == 'visible' && doc.periods.present? && node = doc.content.try(:gp_calendar_content_event).try(:public_node)
+            xml.category term: 'event',
+                         scheme: node.public_full_uri,
+                         label: "イベント/#{doc.periods.first.started_on.strftime('%Y-%m-%dT%H:%M:%S%z').sub(/([0-9][0-9])$/, ':\1')}"
           end
 
           doc.inquiries.each do |inquiry|

@@ -17,13 +17,29 @@ class GpCalendar::EventsFinder < ApplicationFinder
       @events = @events.scheduled_on(date) if date
     end
 
-    case criteria[:order]
-    when 'created_at_desc'
-      @events = @events.order(created_at: :desc)
-    when 'created_at_asc'
-      @events = @events.order(created_at: :asc)
+    @events = join_periods
+
+    if criteria[:sort_key].present?
+      @events = sort_by(criteria[:sort_key], criteria[:sort_order])
     end
 
-    @events
+    @events.order("min_started_on desc, min_ended_on desc")
+  end
+
+  private
+
+  def join_periods
+    events = GpCalendar::Event.arel_table
+    periods = Cms::Period.arel_table
+    subquery = @events.joins(:periods)
+                      .select(Arel.sql('gp_calendar_events.*'),
+                              periods[:started_on].minimum.as('min_started_on'),
+                              periods[:ended_on].minimum.as('min_ended_on'))
+                      .group(events[:id])
+    GpCalendar::Event.from("(#{subquery.to_sql}) AS gp_calendar_events")
+  end
+
+  def sort_by(key, order)
+    @events.order(key => (order.presence || :asc).to_sym)
   end
 end

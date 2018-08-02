@@ -50,7 +50,7 @@ class GpArticle::DocCsvService < ApplicationService
     data += ['連絡先表示', '連絡先']
 
     # イベント
-    data += ['イベントカレンダー表示', 'イベント開始日', 'イベント終了日', 'イベント備考']
+    data += ['イベントカレンダー表示', 'イベント期間', 'イベント備考']
     data += @event_category_types.map(&:title)
 
     # 地図
@@ -98,8 +98,7 @@ class GpArticle::DocCsvService < ApplicationService
 
     # イベント
     data << doc.event_state_text
-    data << localize_datetime(doc.event_started_on)
-    data << localize_datetime(doc.event_ended_on)
+    data << doc.periods.map { |p| "#{localize_datetime(p.started_on)} ～ #{p.ended_on}" }.join("\n")
     data << doc.event_note
 
     @event_category_types.each do |category_type|

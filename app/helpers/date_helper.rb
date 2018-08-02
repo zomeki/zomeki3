@@ -21,4 +21,15 @@ module DateHelper
     kr = context.exec("var date = new Date(#{tm.year}, #{tm.month-1}, #{tm.day}); var kr = new kyureki(date.getJD()); return kr;")
     sprintf(format, kr['month'].to_i, kr['day'].to_i)
   end
+
+  def display_short_period(period)
+    if period.started_on == period.ended_on
+      l(period.started_on)
+    else
+      html = l(period.started_on)
+      html << ' ～ '
+      html << l(period.ended_on)
+      html.html_safe
+    end
+  end
 end

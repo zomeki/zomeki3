@@ -4,24 +4,28 @@ class GpCalendar::Public::Node::SearchEventsController < GpCalendar::Public::Nod
   def index
     http_error(404) if params[:page]
 
-    @start_date = Date.parse(params[:start_date]) rescue nil || Date.today
-    @end_date   = Date.parse(params[:end_date]) rescue nil || nil
+    params[:start_date] ||= Date.today.to_s
+    start_date = Date.parse(params[:start_date]) rescue nil
+    end_date   = Date.parse(params[:end_date]) rescue nil
     if params[:all] && params[:start_date].blank? && params[:end_date].blank?
-      @start_date = nil
-      @end_date   = nil
+      start_date = nil
+      end_date   = nil
     end
-    @date =  @start_date.present? ? @start_date : Date.today
+    @date =  start_date.present? ? start_date : Date.today
+    @range = [start_date, end_date]
 
     categories = params[:categories].present? ? params[:categories].values.reject(&:blank?) : []
 
-    events = @content.public_events.scheduled_between(@start_date, @end_date)
+    events = @content.public_events.scheduled_between(start_date, end_date)
     events = events.categorized_into(categories, alls: true) if categories.present?
     events = events.preload(:categories)
 
-    docs = @content.event_docs.event_scheduled_between(@start_date, @end_date)
+    docs = @content.event_docs.scheduled_between(start_date, end_date)
     docs = docs.categorized_into(categories, alls: true, categorized_as: 'GpCalendar::Event') if categories.present?
 
-    @events = merge_events_and_docs(@content, events, docs)
+    @events = GpCalendar::EventMergeService.new(@content).merge(events, docs, @range)
+
+    @holidays = @content.public_holidays.scheduled_between(start_date, end_date)
   end
 
   def file_content

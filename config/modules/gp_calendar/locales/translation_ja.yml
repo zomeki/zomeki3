@@ -20,6 +20,10 @@ ja:
         sync_source_source_class: 同期元タイプ
         sync_exported: 同期状態
         note: 備考
+        periods: 期間
+      gp_calendar/event/periods:
+        started_on: 開始日
+        ended_on: 終了日
       gp_calendar/holiday:
         id: ID
         state: 状態

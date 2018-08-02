@@ -30,4 +30,8 @@ class GpCalendar::Holiday < ApplicationRecord
       none
     end
   }
+
+  def match?(target_date)
+    [date.month, date.day] == [target_date.month, target_date.day]
+  end
 end

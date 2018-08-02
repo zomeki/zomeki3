@@ -13,15 +13,19 @@ class GpCalendar::Public::Node::EventsController < GpCalendar::Public::NodeContr
                            else
                              [@date.beginning_of_month, @date.end_of_month]
                            end
+    @range = [start_date, end_date]
 
     events = @content.public_events.scheduled_between(start_date, end_date)
     events = events.categorized_into(@specified_category.public_descendants) if @specified_category
-    events = events.preload(:categories)
+    events = events.preload(:categories, :periods)
 
-    docs = @content.event_docs.event_scheduled_between(start_date, end_date)
+    docs = @content.event_docs.scheduled_between(start_date, end_date)
     docs = docs.categorized_into(@specified_category.public_descendants, categorized_as: 'GpCalendar::Event') if @specified_category
+    docs = docs.preload(:periods)
 
-    @events = merge_events_and_docs(@content, events, docs)
+    @events = GpCalendar::EventMergeService.new(@content).merge(events, docs, @range)
+
+    @holidays = @content.public_holidays.scheduled_between(start_date, end_date)
   end
 
   def file_content
