@@ -2,29 +2,27 @@ class GpCalendar::Public::Piece::CategoryDailyLinksController < GpCalendar::Publ
   def pre_dispatch
     @piece = GpCalendar::Piece::CategoryDailyLink.find(Page.current_piece.id)
     @content = @piece.content
-    @item = Page.current_item
+    @node = @piece.target_node
+    return render plain: '' unless @node
+
+    @today = Date.today
+    @min_date = 1.year.ago(@today.beginning_of_month)
+    @max_date = 11.months.since(@today.beginning_of_month)
+    return render plain: '' unless validate_date
   end
 
   def index
-    date     = params[:gp_calendar_event_date]
-    min_date = params[:gp_calendar_event_min_date]
-    max_date = params[:gp_calendar_event_max_date]
-
-    unless date
-      date = Date.today
-      min_date = 1.year.ago(date.beginning_of_month)
-      max_date = 11.months.since(date.beginning_of_month)
-    end
-
-    start_date = date.beginning_of_month.beginning_of_week(:sunday)
-    end_date = date.end_of_month.end_of_week(:sunday)
-
-    @calendar = Util::Date::Calendar.new(date.year, date.month)
+    @calendar = Util::Date::Calendar.new(@date.year, @date.month)
     @calendar.set_event_class = true
-
-    return unless (@node = @piece.target_node)
-
     @calendar.day_uri = "#{@node.public_uri}?start_date=:year-:month-:day&end_date=:year-:month-:day"
+    @calendar.day_link = calendar_link_dates
+  end
+
+  private
+
+  def calendar_link_dates
+    start_date = @date.beginning_of_month.beginning_of_week(:sunday)
+    end_date = @date.end_of_month.end_of_week(:sunday)
 
     events = @content.public_events.scheduled_between(start_date, end_date)
     events = events.categorized_into(@piece.category_ids) if @piece.category_ids.present?
@@ -34,10 +32,8 @@ class GpCalendar::Public::Piece::CategoryDailyLinksController < GpCalendar::Publ
     docs = docs.categorized_into(@piece.category_ids) if @piece.category_ids.present?
     doc_dates = docs.flat_map { |doc| to_dates(doc, start_date, end_date) }.uniq
 
-    @calendar.day_link = (event_dates | doc_dates).sort
+    (event_dates | doc_dates).uniq.sort
   end
-
-  private
 
   def to_dates(event, start_date, end_date)
     range = start_date..end_date

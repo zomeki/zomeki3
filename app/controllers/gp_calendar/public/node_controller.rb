@@ -12,11 +12,6 @@ class GpCalendar::Public::NodeController < Cms::Controller::Public::Base
     return http_error(404) unless validate_date
 
     @specified_category = find_category_by_specified_path(@content, params[:escaped_category])
-
-    # These params are used in pieces
-    params[:gp_calendar_event_date]     = @date
-    params[:gp_calendar_event_min_date] = @min_date
-    params[:gp_calendar_event_max_date] = @max_date
   end
 
   private
