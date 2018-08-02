@@ -121,10 +121,16 @@ class Core
     if path =~ /\/$/
       path += 'index.html'
     end
+
     ## layout preview
     if path =~ /^\/\*\.html(|\.r)$/
       return @@internal_uri = '/_public/cms/node_preview/'
     end
+    ## piece
+    if path =~ /^\/_pieces\//
+      return @@internal_uri = path
+    end
+
     node     = nil
     rest     = ''
     paths    = path.gsub(/\/+/, '/').split('/')
@@ -203,6 +209,10 @@ private
       Page.site       = @@site
       @@internal_uri  = search_node @@request_uri.sub(/^\/_ssl\/([0-9]+)/, '')
     when 'public'
+      @@site          = find_site_by_script_uri(@@script_uri)
+      Page.site       = @@site
+      @@internal_uri  = search_node @@request_uri
+    when 'pieces'
       @@site          = find_site_by_script_uri(@@script_uri)
       Page.site       = @@site
       @@internal_uri  = search_node @@request_uri

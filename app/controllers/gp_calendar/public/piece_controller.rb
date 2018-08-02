@@ -1,7 +1,11 @@
 class GpCalendar::Public::PieceController < Cms::Controller::Public::Piece
   include GpArticle::Controller::Public::Scoping
 
+  private
+
   def validate_date
+    set_year_and_month_from_path
+
     @year_only = params[:year].to_i.nonzero? && params[:month].to_i.zero?
 
     @month = params[:month].to_i
@@ -18,5 +22,14 @@ class GpCalendar::Public::PieceController < Cms::Controller::Public::Piece
     else
       @date.between?(@min_date, @max_date)
     end
+  end
+
+  def set_year_and_month_from_path
+    return if params[:path].blank?
+
+    paths = params[:path].split('/')
+    return if paths.size < 2
+
+    params[:year], params[:month] = paths[0], paths[1]
   end
 end

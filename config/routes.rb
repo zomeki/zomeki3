@@ -78,6 +78,9 @@ Rails.application.routes.draw do
   # Files
   get "_files/*path"           => "cms/public/files#down"
 
+  # Pieces
+  get "_pieces/:id/*path"      => "cms/public/pieces#index"
+
   # Talking
   %w(_public _preview).each do |mode|
     get "#{mode}/*path.html.mp3"         => "cms/public/talk#down_mp3"

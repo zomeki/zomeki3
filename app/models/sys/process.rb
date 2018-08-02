@@ -11,6 +11,7 @@ class Sys::Process < ApplicationRecord
     ["問合せ取り込み", "survey/answers/pull"],
     ["広告クリック数取り込み", "ad_banner/clicks/pull"],
     ["関連ページ書き出し", "cms/nodes/publish"],
+    ["関連ピース書き出し", "cms/pieces/publish"],
     ["記事ページ書き出し", "gp_article/docs/publish"],
     ["再構築", "/rebuild"],
     ["ファイル転送", "cms/file_transfers/exec"],

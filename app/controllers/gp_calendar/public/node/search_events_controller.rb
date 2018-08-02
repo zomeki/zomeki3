@@ -14,6 +14,9 @@ class GpCalendar::Public::Node::SearchEventsController < GpCalendar::Public::Nod
     @date =  start_date.present? ? start_date : Date.today
     @range = [start_date, end_date]
 
+    params[:year] = @date.year.to_s
+    params[:month] = @date.month.to_s
+
     categories = params[:categories].present? ? params[:categories].values.reject(&:blank?) : []
 
     events = @content.public_events.scheduled_between(start_date, end_date)
