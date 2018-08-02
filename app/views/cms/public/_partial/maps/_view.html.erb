@@ -5,9 +5,9 @@ return unless map
 return if map.map_lat.blank? || map.map_lng.blank?
 %>
 <%- if item.state != 'closed' -%>
-<%= javascript_include_tag "https://maps.googleapis.com/maps/api/js?key=#{item.site.google_map_api_key}&region=jp" %>
+<%= javascript_include_tag "https://maps.googleapis.com/maps/api/js?key=#{item.site.google_map_api_key}&region=jp&libraries=places" %>
 <script type="text/javascript">
-
+//<![CDATA[
 function addEvent(element, listener, func) {
   try {
     element.addEventListener(listener, func, false);
@@ -15,6 +15,110 @@ function addEvent(element, listener, func) {
     element.attachEvent('on' + listener, func);
   }
 }
+
+
+function enableNavigation(map) {
+  var directionsRenderer;
+  var targetTypes = JSON.parse($('#placeList').attr('data-json'));
+  var request = [];
+  var service = [];
+  var placeIds = [];
+  <%- if first_marker = markers.first -%>
+  var direction = new google.maps.LatLng(<%= first_marker.lat.to_f %>, <%= first_marker.lng.to_f %>);
+  <%- else -%>
+  var direction = new google.maps.LatLng(<%= map.map_lat.to_f %>, <%= map.map_lng.to_f %>);
+  <%- end -%>
+
+  for (var n = 0; n < targetTypes.length; n++) {
+    request[n] = {
+      fields: ['place_id', 'name', 'geometry'],
+      location: direction,
+      type: targetTypes[n],
+      rankBy: google.maps.places.RankBy.DISTANCE
+    };
+    service[n] = new google.maps.places.PlacesService(map);
+    service[n].nearbySearch(request[n], setOrigins);
+  }
+
+  $('#place').on('change', function(e) {
+    var target = $(this).val();
+    if (target == '') {
+      google.maps.event.clearListeners(map, 'click');
+      clearNavigation();
+    } else if (target == 'click') {
+      google.maps.event.addListener(map, 'click', function(e) {
+        setNavigation(e.latLng);
+      });
+    } else if (target == 'current_position') {
+      google.maps.event.clearListeners(map, 'click');
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+          var origin = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+          setNavigation(origin);
+        }, function(error) {
+          switch (error.code) {
+            case 1:
+              alert('位置情報の利用が許可されていません');
+              break;
+            case 2:
+              alert('現在位置が取得できませんでした');
+              break;
+            case 3:
+              alert('タイムアウトしました');
+              break;
+            default:
+              alert('Error(code:' + error.code + ')');
+              break;
+          }
+        });
+      }
+    } else {
+      google.maps.event.clearListeners(map, 'click');
+      var position = target.split(/,/);
+      var origin = new google.maps.LatLng(position[0], position[1]);
+      setNavigation(origin);
+    }
+  });
+
+  function clearNavigation() {
+    if (directionsRenderer != null) {
+      directionsRenderer.setMap(null);
+    }
+  }
+
+  function setOrigins(results, status) {
+    if (status == google.maps.places.PlacesServiceStatus.OK) {
+      var target = $('#place');
+      for (var i = 0; i < results.length; i++) {
+        var place = results[i];
+        if ($.inArray(place.place_id, placeIds) == -1) {
+          var location = place.geometry.location.lat() + ',' + place.geometry.location.lng();
+          var opt = $('<option>').val(location).text(place.name);
+          target.append(opt);
+          placeIds.push(place.place_id);
+        }
+      }
+    }
+  }
+
+  function setNavigation(origin) {
+    clearNavigation();
+    var directionsService = new google.maps.DirectionsService();
+    directionsRenderer = new google.maps.DirectionsRenderer();
+    directionsService.route({
+      origin: origin,
+      destination: direction,
+      travelMode: google.maps.TravelMode.DRIVING
+    }, function(response, status) {
+      if (status === google.maps.DirectionsStatus.OK) {
+        directionsRenderer.setMap(map);
+        directionsRenderer.setDirections(response);
+      }
+    });
+  }
+
+}
+
 
 addEvent(window, 'load', function() {
   var mapOptions = {
@@ -44,13 +148,23 @@ addEvent(window, 'load', function() {
       infowindow<%= idx %>.open(map, marker<%= idx %>);
     });
   <% end %>
+  <%- if item.content.try(:navigation_enabled?) && item.navigation_state_enabled? -%>
+  enableNavigation(map);
+  <% end %>
 });
+
+//]]>
 </script>
 <%- end -%>
-
 <div class="maps">
   <h2>地図</h2>
   <% if !map.title.blank? %><h3><%= map.title %></h3><% end %>
+  <%- if item.content.try(:navigation_enabled?) && item.navigation_state_enabled? -%>
+    <div id="placeList" data-json="<%= item.content.navigation_target_types.to_json %>">
+      <%= select_tag "place", options_for_select([['地図をクリック', 'click'], ['現在地', 'current_position']], nil),
+                     id: 'place', class: 'placeSelect', include_blank: true %>
+    </div>
+  <%- end -%>
   <div id="map1" class="map" style="width: 100%; height: 400px">
   <%- if item.state == 'closed' -%>
     <div style="width: 100%; display: table;">
