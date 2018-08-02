@@ -1,0 +1,2 @@
+class TaskScript < ParametersScript
+end
