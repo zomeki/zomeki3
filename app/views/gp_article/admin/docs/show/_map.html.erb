@@ -21,6 +21,12 @@
     <td><%= @item.marker_categories.where(category_type_id: category_type.id).map(&:title).join(', ') %></td>
   </tr>
   <%- end -%>
+  <%- if @content.navigation_enabled? -%>
+    <tr>
+      <th><%= @item.class.human_attribute_name :navigation_state %></th>
+      <td><%= @item.navigation_state_text %></td>
+    </tr>
+  <%- end -%>
 </table>
 
 <%= google_map_view @item %>
