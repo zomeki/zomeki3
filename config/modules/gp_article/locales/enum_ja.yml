@@ -19,7 +19,10 @@ ja:
         hidden: 非表示
       marker_state:
         visible: 表示
-        hidden: 非表示
+        hidden: 非表示      
+      navigation_state:
+        enabled: 使用する
+        disabled: 使用しない
       og_type:
         article: article
       feature_1:

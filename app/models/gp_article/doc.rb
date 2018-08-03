@@ -45,6 +45,7 @@ class GpArticle::Doc < ApplicationRecord
   enum_ish :target, ['', '_self', '_blank', 'attached_file'], default: ''
   enum_ish :event_state, [:visible, :hidden], default: :hidden
   enum_ish :marker_state, [:visible, :hidden], default: :hidden
+  enum_ish :navigation_state, [:enabled, :disabled], default: :disabled, predicate: true
   enum_ish :og_type, [:article]
   enum_ish :feature_1, [true, false], default: true
 
