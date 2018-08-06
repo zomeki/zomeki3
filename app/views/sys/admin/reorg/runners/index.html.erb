@@ -1,0 +1,12 @@
+<p class="form">変更予定グループ</p>
+
+<%= render 'groups', groups: @groups %>
+
+<p class="form">変更予定ユーザー</p>
+
+<%= render 'users', users: @users %>
+
+<%- if @group_unknown_users.present? %>
+  <p class="managerForm">削除予定グループに属するユーザーが検出されました。グループを確認してください。</p>
+  <%= render 'users', users: @group_unknown_users %>
+<%- end -%>

@@ -1,9 +1,15 @@
 ja:
   enum_ish:
-    organization/group:
+    organization/group: &organization_group
       docs_order:
         '': 上位設定を継承
         'display_published_at DESC, published_at DESC': 公開日（降順）
         'display_published_at ASC, published_at ASC': 公開日（昇順）
         'display_updated_at DESC, updated_at DESC': 更新日（降順）
         'display_updated_at ASC, updated_at ASC': 更新日（昇順）
+    organization/reorg/group:
+      <<: *organization_group
+      change_state:
+        create: 新規
+        update: 更新
+        delete: 削除

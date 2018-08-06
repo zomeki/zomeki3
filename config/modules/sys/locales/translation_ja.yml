@@ -31,7 +31,7 @@ ja:
         name: 内部名前
         title: 表示名称
 
-      sys/group:
+      sys/group: &sys_group
         state: 状態
         created_at: 作成日時
         updated_at: 更新日時
@@ -51,12 +51,12 @@ ja:
         outline_uri: 業務概要URL
         note: 備考
 
-      sys/users_group:
+      sys/users_group: &sys_users_group
         group_id: グループ
         created_at: 作成日時
         updated_at: 更新日時
 
-      sys/user:
+      sys/user: &sys_user
         id: ID
         created_at: 作成日時
         updated_at: 更新日時
@@ -76,7 +76,7 @@ ja:
         role_name: ロール権限
         admin_creatable: サイト管理者作成
         sites: 所属サイト
-      sys/user/users_groups:
+      sys/user/users_groups: &sys_user_users_groups
         group_id: グループ
 
       sys/role_name:
@@ -170,6 +170,25 @@ ja:
         url: リンクURL
         sort_no: 並び順
         updated_at: 更新日時
+
+      sys/reorg/group:
+        <<: *sys_group
+        change_state: 変更区分
+        group_migrations: 引き継ぎ
+      sys/reorg/user:
+        <<: *sys_user
+        change_state: 変更区分
+        user_migrations: 引き継ぎ
+      sys/reorg/user/users_groups:
+        <<: *sys_user_users_groups
+      sys/reorg/users_group:
+        <<: *sys_users_group
+      sys/reorg/group_migration:
+        source_group_id: 引き継ぎグループ
+      sys/reorg/user_migration:
+        source_user_id: 引き継ぎユーザー
+      sys/reorg/schedule:
+        reserved_at: 予約日時
 
   activemodel:
     attributes:

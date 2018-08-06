@@ -1,3 +1,7 @@
+<%- if (schedule = Sys::Reorg::Schedule.in_site(Core.site).first) && schedule.state == 'reserved' -%>
+  <div class="notice">組織変更が予約されています。現在のグループ・ユーザーを変更する場合は組織変更情報との整合性を確認してください。</div>
+<%- end -%>
+
 <div class="crudTree">
 <div class="tree">
   <%- if @root -%>

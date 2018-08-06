@@ -1,0 +1,21 @@
+<%= render file: 'sys/admin/groups/show' %>
+
+<p class="form">引き継ぎ設定</p>
+
+<table class="show">
+  <tr>
+    <th><%= Sys::Reorg::GroupMigration.human_attribute_name :source_group_id %></th>
+    <td><%= @item.source_groups.map(&:name).join(', ') %></td>
+  </tr>
+</table>
+
+<p class="form">組織コンテンツ</p>
+
+<table class="show">
+  <%- @organization_groups.each do |og| -%>
+  <tr>
+    <th><%= og.content.name %></td>
+    <td><%= link_to :show, organization_reorg_group_path(content: og.content, id: og, group_id: og.parent&.sys_group_code), target: '_blank' %></td>
+  </tr>
+  <%- end -%>
+</table>
