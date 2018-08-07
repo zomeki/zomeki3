@@ -23,12 +23,7 @@ ZomekiCMS::Application.routes.draw do
         end
       end
     resources :sites,
-      :controller  => "admin/sites" do
-        member do
-          get :show_portal
-          get :hide_portal
-        end
-      end
+      :controller  => "admin/sites"
     resources :site_access_controls,
       :controller  => "admin/site/access_controls",
       :path        => ":site/access_controls" do
