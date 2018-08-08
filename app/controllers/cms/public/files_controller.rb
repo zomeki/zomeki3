@@ -1,14 +1,15 @@
 class Cms::Public::FilesController < Cms::Controller::Public::Data
-  def down
-    paths = params[:path].to_s.split('/')
-    return http_error(404) if paths.size != 2 && paths.size != 3
-
-    id    = paths[0]
-    name  = "#{paths.last}.#{params[:format]}"
-    type  = paths.size == 3 ? paths[1] : nil
+  def index
+    id    = params[:id].to_s.chop
     return http_error(404) if id !~ /^[0-9]+$/
 
-    item = Cms::DataFile.public_state.where(id: id.chop, name: name).first
+    paths = params[:path].to_s.split('/')
+    return http_error(404) if paths.size != 1 && paths.size != 2
+
+    name  = paths.last
+    type  = paths.size == 2 ? paths[0] : nil
+
+    item = Cms::DataFile.public_state.where(id: id, name: name).first
     return http_error(404) unless item
 
     path = item.public_path

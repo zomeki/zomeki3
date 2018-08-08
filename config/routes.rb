@@ -54,12 +54,6 @@ Rails.application.routes.draw do
   #     resources :products
   #   end
 
-  # Common directory
-  match '/_common(/*path)' => 'exception#index', via: :all
-
-  # Themes directory
-  match '/_themes(/*path)' => 'exception#index', via: :all
-
   # Admin
   admin = ZomekiCMS::ADMIN_URL_PREFIX
   get admin => 'sys/admin/front#index', as: :admin_root
@@ -76,8 +70,10 @@ Rails.application.routes.draw do
   get "/_tools/captcha/index"  => "simple_captcha#index"
   get "/_tools/captcha/talk"   => "simple_captcha#talk"
 
-  # Files
-  get "_files/*path"           => "cms/public/files#down"
+  # Public
+  get '_common(/*path)'     => 'cms/public/common#index', format: false
+  get '_themes(/*path)'     => 'cms/public/themes#index', format: false
+  get '_files(/:id/*path)'  => 'cms/public/files#index', format: false
 
   # Talking
   %w(_public _preview).each do |mode|
