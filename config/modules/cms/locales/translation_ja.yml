@@ -2,6 +2,8 @@ ja:
   activerecord:
     models:
       cms/content: コンテンツ
+      cms/node: ディレクトリ
+      cms/node/page: 自由形式ページ
       cms/piece: ピース
       cms/layout: レイアウト
       cms/site: サイト
