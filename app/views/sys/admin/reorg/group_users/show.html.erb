@@ -1,0 +1,10 @@
+<%= render file: 'sys/admin/users/show' %>
+
+<p class="form">引き継ぎ設定</p>
+
+<table class="show">
+  <tr>
+    <th><%= Sys::Reorg::UserMigration.human_attribute_name :source_user_id %></th>
+    <td><%= @item.source_users.map(&:name).join(', ') %></td>
+  </tr>
+</table>

@@ -1,0 +1,33 @@
+<table class="index">
+  <tr>
+    <th class="action_link">詳細</th>
+    <th style="text-align: center; width: 60px;"><%= Sys::Reorg::User.human_attribute_name :change_state %></th>
+    <th style="width: 200px;"><%= Sys::Reorg::User.human_attribute_name :account %></th>
+    <th style="width: 200px;"><%= Sys::Reorg::User.human_attribute_name :name %></th>
+    <th style="width: 200px;">グループ</th>
+    <th style="text-align: center; width: 60px;"><%= Sys::Reorg::User.human_attribute_name :state %></th>
+    <th style="width: ;">備考</th>
+  </tr>
+  <%- users.each do |user| %>
+  <tr class="<%= cycle '', 'cycle' %>">
+    <td class="action_link"><%= link_to :show, { controller: :group_users, action: :show, parent: user.group_id.to_i, id: user } %></td>
+    <td style="text-align: center;">
+      <%- if user.change_state -%>
+        <span class="change_state <%= user.change_state %>"><%= user.change_state_text %></span>
+      <%- end -%>
+    </td>
+    <td><%= user.account %></td>
+    <td><%= user.name %></td>
+    <td><%= user.group.name if user.group %></td>
+    <td style="text-align: center;"><%= user.state_text %></td>
+    <td>
+      <%- if user.source_users.present? -%>
+        <b>←</b><%= user.source_users.map(&:name).join(', ') %>
+      <%- end -%>
+      <%- if user.destination_users.present? -%>
+        <b>→</b><%= user.destination_users.map(&:name).join(', ') %>
+      <%- end -%>
+    </td>
+  </tr>
+  <%- end -%>
+</table>

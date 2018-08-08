@@ -1,0 +1,34 @@
+<div class="navi">
+<%- if @parent -%>
+  <%- ancestors = @parent.ancestors; ancestors.each_with_index do |c, k| -%>
+  <%= link_to h(c.name), sys_groups_path(c) %>
+  <% if ancestors.size != k + 1 %><span class="separator">&gt;</span><% end %>
+  <%- end -%>
+<%- else -%>
+  グループ
+<%- end -%>
+</div>
+
+<div class="actionMenu">
+<%- case action_name -%>
+<%- when 'index' -%>
+  <%= link_to '初期化', init_sys_reorg_runners_path, method: :post, confirm: '現在のグループ情報をコピーします。よろしいですか？' %>
+  <%= link_to '確認', sys_reorg_runners_path %>
+  <%- reserved_at = "（#{l(@schedule.reserved_at)}）" if @schedule && @schedule.state == 'reserved' -%>
+  <%= link_to "予約#{reserved_at}", edit_sys_reorg_schedule_path(id: 0) %>
+  <%= link_to '実行', exec_sys_reorg_runners_path, method: :post, confirm: '即時実行してよろしいですか？' %>
+  <%= link_to '削除', clear_sys_reorg_runners_path, method: :post, confirm: '組織変更情報をすべて削除します。よろしいですか？' %>
+  <span class="separator"></span>
+  <%= link_to '新規グループ', { action: :new } %>
+  <%= link_to '新規ユーザー', new_sys_reorg_group_user_path %>
+<%- when 'show' -%>
+  <%= link_to :index, { action: :index } %>
+  <%= link_to :edit, { action: :edit } if @item.editable? %>
+  <%= link_to :destroy, { action: :destroy }, method: :delete, confirm: '削除してよろしいですか？' if @item.deletable? %>
+<%- when 'new', 'create' -%>
+  <%= link_to :index, { action: :index } %>
+<%- when 'edit', 'update' -%>
+  <%= link_to :index, { action: :index } %>
+  <%= link_to :show, { action: :show, id: @item } %>
+<%- end -%>
+</div>
