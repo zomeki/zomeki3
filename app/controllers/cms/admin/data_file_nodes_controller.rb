@@ -1,14 +1,15 @@
 class Cms::Admin::DataFileNodesController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 
+  keep_params :s_node_id, to: [:data_files, :data_file_nodes]
+
   def pre_dispatch
     return error_auth unless Core.user.has_auth?(:designer)
-    @parent = params[:parent] || '0'
   end
 
   def index
     @items = Cms::DataFileNode.readable.order(:name, :id)
-      .paginate(page: params[:page], per_page: params[:limit])
+                              .paginate(page: params[:page], per_page: params[:limit])
 
     _index @items
   end

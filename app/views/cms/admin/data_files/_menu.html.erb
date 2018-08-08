@@ -1,6 +1,6 @@
 <div class="actionMenu">
-<%= link_to 'ファイル', cms_data_files_path, class: 'current'%>
-<%= link_to 'フォルダ', cms_data_file_nodes_path %>
+<%= link_to 'ファイル', { controller: :data_files }, class: 'current'%>
+<%= link_to 'フォルダ', { controller: :data_file_nodes } %>
 <span class="separator"></span>
 <%= action_menu :new if Core.user.has_priv?(:create, item: Core.concept) %>
 <%= action_menu :index %>

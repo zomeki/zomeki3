@@ -6,16 +6,16 @@ ZomekiCMS::Application.routes.draw do
     resources(:places,
       :controller  => "admin/places",
       :path        => ":content/places") do
-      resources :hours,
-        :controller => 'admin/hours'
-      resources :holidays,
-        :controller => 'admin/holidays'
+      resources :bussiness_hours,
+        :controller => 'admin/bussiness_hours'
+      resources :bussiness_holidays,
+        :controller => 'admin/bussiness_holidays'
       resources :exception_holidays,
         :controller => 'admin/exception_holidays'
     end
-    resources :types,
-      :controller  => "admin/types",
-      :path        => ":content/types"
+    resources :holiday_types,
+      :controller  => "admin/holiday_types",
+      :path        => ":content/holiday_types"
     
     ## content
     resources :content_base,

@@ -1,4 +1,4 @@
-class BizCalendar::Admin::TypesController < Cms::Controller::Admin::Base
+class BizCalendar::Admin::HolidayTypesController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 
   def pre_dispatch

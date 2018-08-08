@@ -1,4 +1,4 @@
-class Feed::Admin::EntriesController < Cms::Controller::Admin::Base
+class Feed::Admin::FeedEntriesController < Cms::Controller::Admin::Base
   include Sys::Controller::Scaffold::Base
 
   def pre_dispatch
@@ -52,7 +52,7 @@ protected
     else
       flash[:notice] = "エントリの更新に失敗しました。"
     end
-    redirect_to feed_feed_entries_path
+    redirect_to url_for(action: :index)
   end
 
   def delete_entries
@@ -61,6 +61,6 @@ protected
     else
       flash[:notice] = "エントリの削除に失敗しました。"
     end
-    redirect_to feed_feed_entries_path
+    redirect_to url_for(action: :index)
   end
 end

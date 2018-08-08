@@ -120,24 +120,24 @@ ZomekiCMS::Application.routes.draw do
       :controller  => "admin/data_texts"
     resources :data_files,
       :controller  => "admin/data_files",
-      :path        => ":parent/data_files" do
+      :path        => "data_files" do
         member do
           get :download
         end
       end
     resources :data_file_nodes,
       :controller  => "admin/data_file_nodes",
-      :path        => ":parent/data_file_nodes"
+      :path        => "data_file_nodes"
     resources :inline_data_files,
       :controller  => "admin/inline/data_files",
-      :path        => ":parent/inline_data_files" do
+      :path        => "inline_data_files" do
         member do
           get :download
         end
       end
     resources :inline_data_file_nodes,
       :controller  => "admin/inline/data_file_nodes",
-      :path        => ":parent/inline_data_file_nodes"
+      :path        => "inline_data_file_nodes"
 
     ## node
     resources :node_directories,

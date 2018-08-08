@@ -12,6 +12,7 @@ class GpTemplate::Item < ApplicationRecord
 
   belongs_to :template, required: true
 
+  delegate :site, to: :template
   delegate :content, to: :template
 
   validates :state, presence: true

@@ -14,8 +14,8 @@ ZomekiCMS::Application.routes.draw do
     resources(:feeds,
       :controller => 'admin/feeds',
       :path       => ':content/feeds') do
-      resources :entries,
-        :controller => 'admin/entries'
+      resources :feed_entries,
+        :controller => 'admin/feed_entries'
     end
 
     ## nodes
