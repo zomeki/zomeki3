@@ -1,7 +1,6 @@
-require 'digest/sha1'
 class Sys::Reorg::User < ApplicationRecord
   include Sys::Model::Base
-  include Cms::Model::Auth::Site
+  include Sys::Model::Auth::Manager
 
   enum_ish :state, [:enabled, :disabled]
   enum_ish :auth_no, [2, 4, 5]
