@@ -1,10 +1,10 @@
 module GpCalendar::EventHelper
-  def event_replace(event, date, list_style: '')
-    Formatter.new(event, date, [], []).format(list_style, mobile: request.mobile?)
+  def event_replace(event, list_style: '')
+    Formatter.new(event).format(list_style, mobile: request.mobile?)
   end
 
-  def event_table_replace(event, date, range, holidays, table_style: '', date_style: '')
-    Formatter.new(event, date, range, holidays).format_table(table_style, date_style, mobile: request.mobile?)
+  def event_table_replace(event, range, table_style: '', date_style: '')
+    Formatter.new(event, range).format_table(table_style, date_style, mobile: request.mobile?)
   end
 
   class Formatter < ActionView::Base
@@ -13,11 +13,9 @@ module GpCalendar::EventHelper
     include GpArticle::DocHelper
     include GpArticle::DocImageHelper
 
-    def initialize(event, date, range, holidays)
+    def initialize(event, range = [])
       @event = event
-      @date = date
       @range = range
-      @holidays = holidays
     end
 
     def format(list_style, mobile: false)
@@ -38,6 +36,7 @@ module GpCalendar::EventHelper
         title: -> { replace_title },
         subtitle: -> { replace_subtitle },
         hold_date: -> { replace_hold_date(date_style) },
+        hold_date_all: -> { replace_hold_date_all(date_style) },
         summary: -> { replace_summary },
         unit: -> { replace_unit },
         category: -> { replace_category },
@@ -50,7 +49,6 @@ module GpCalendar::EventHelper
         table_style.each do |t|
           if t[:data] =~ %r|hold_date|
             class_str = 'date'
-            class_str += ' holiday' if @holidays.any? { |holiday| holiday.match?(@date) }
             concat content_tag(:td, t[:data].html_safe, class: class_str)
           else
             class_str = t[:data].scan(/@(\w+)@/).flatten.join(' ')
@@ -100,7 +98,8 @@ module GpCalendar::EventHelper
       html = ''
       @event.periods.each do |period|
         if (period.started_on || period.ended_on) && period.intersect?(@range[0], @range[1])
-          started_on, ended_on = get_hold_date_text(period, date_style)
+          started_on = get_date_text(period.started_on, date_style)
+          ended_on = get_date_text(period.ended_on, date_style)
           if period.started_on && period.ended_on && period.started_on == period.ended_on
             html << content_tag(:p, content_tag(:span, started_on, class: 'startDate closeDate'))
           elsif period.started_on && period.ended_on
@@ -117,24 +116,33 @@ module GpCalendar::EventHelper
         end
       end
 
-      holidays = @holidays.select { |holiday| holiday.match?(@date) }
-      holidays.each do |holiday|
-        html << content_tag(:span, holiday.title, class: 'title')
-      end
-
       html.html_safe
     end
 
-    def get_hold_date_text(period, date_style)
-      if period.started_on
-        s_style = localize_wday(date_style, period.started_on.wday)
-        started_on = period.started_on.strftime(s_style)
+    def replace_hold_date_all(date_style)
+      all_days = @event.periods.map { |period| [period.started_on, period.ended_on] }.flatten.compact
+      return '' if all_days.blank?
+
+      min = all_days.min
+      max = all_days.max
+
+      if min && max
+        started_on = get_date_text(min, date_style)
+        ended_on = get_date_text(max, date_style)
+        if min == max
+          content_tag(:p, content_tag(:span, started_on, class: 'startDate closeDate'))
+        else
+          content_tag(:span, started_on, class: 'startDate') + 
+            content_tag(:span, '～', class: 'from') + 
+            content_tag(:span, ended_on, class: 'closeDate')
+        end
+      else
+        ''
       end
-      if period.ended_on
-        e_style = localize_wday(date_style, period.ended_on.wday)
-        ended_on = period.ended_on.strftime(e_style)
-      end
-      return started_on, ended_on
+    end
+
+    def get_date_text(date, date_style)
+      date.strftime(localize_wday(date_style, date.wday))
     end
 
     def replace_summary
