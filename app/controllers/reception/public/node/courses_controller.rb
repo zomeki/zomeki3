@@ -16,6 +16,7 @@ class Reception::Public::Node::CoursesController < Reception::Public::NodeContro
 
   def show
     @course = @content.courses.find_by!(name: params[:name])
+    return http_error(404) unless @course.state_public?
 
     Page.current_item = @course
     Page.title = @course.title
