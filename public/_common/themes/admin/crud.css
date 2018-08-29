@@ -127,6 +127,38 @@ table.show td label {
   margin-right: 4px;
 }
 
+/* Tree
+--------------------------------------------------------- */
+table.tree .icon {
+  display: inline-block;
+  width: 14px;
+  background-color: #eee;
+  text-align: center;
+  text-decoration: none;
+  font-size: 80%;
+  cursor: pointer;
+}
+table.tree .indent.level2 {
+  margin-left: 16px;
+}
+table.tree .indent.level3 {
+  margin-left: 32px;
+}
+table.tree .indent.level4 {
+  margin-left: 48px;
+}
+table.tree .indent.level5 {
+  margin-left: 64px;
+}
+table.tree .indent.level6 {
+  margin-left: 80px;
+}
+table.tree .opened,
+table.tree .closed {
+  border: 1px solid #ccc;
+  height: 14px;
+}
+
 /* Form
 ------------------------------------- */
 div.submitters {
