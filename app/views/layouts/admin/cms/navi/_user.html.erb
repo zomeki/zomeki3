@@ -5,3 +5,4 @@
 <%#= content_tag('li') { link_to 'LDAP同期', main_app.sys_ldap_synchros_path, class: (current == :ldap_synchro ? 'current' : '') } -%>
 <%= content_tag('li') { link_to 'エクスポート', main_app.sys_export_groups_path, class: (current == :export ? 'current' : '') } -%>
 <%= content_tag('li') { link_to 'インポート', main_app.sys_import_groups_path, class: (current == :import ? 'current' : '') } -%>
+<%= content_tag('li') { link_to '組織変更', main_app.sys_reorg_groups_path(0), class: (current == :reorg_group ? 'current' : '') } -%>

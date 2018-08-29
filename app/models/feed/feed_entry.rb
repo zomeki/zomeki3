@@ -11,6 +11,8 @@ class Feed::FeedEntry < ApplicationRecord
 
   belongs_to :feed, class_name: 'Feed::Feed'
 
+  delegate :site, to: :feed
+
   nested_scope :in_site, through: :feed
 
   def source_title

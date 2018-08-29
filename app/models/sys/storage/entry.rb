@@ -4,6 +4,8 @@ class Sys::Storage::Entry
   include ActiveModel::Callbacks
   include Sys::Model::Auth::Storage
 
+  SYSTEM_DIRS = %w(_common _files _mobile _smartphone _themes)
+
   define_model_callbacks :initialize, :validation, :save_files, :remove_files
   define_attribute_methods :base_dir, :name
   attr_reader :base_dir, :name
@@ -112,6 +114,10 @@ class Sys::Storage::Entry
   def public_themes_uri
     return if path !~ /^#{themes_root_path}/
     "/_themes/#{path_from_themes_root}"
+  end
+
+  def system_dir?
+    site && SYSTEM_DIRS.any? { |dir| path.chomp('/') == "#{site.public_path}/#{dir}" }
   end
 
   def parent

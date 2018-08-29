@@ -172,6 +172,7 @@ class Sys::User < ApplicationRecord
   protected
 
   def validate_account_uniqueness_in_site
+    sites = users_groups.map(&:group).compact.flat_map(&:sites)
     users = self.class.in_site(sites).where(account: account)
     users = users.where.not(id: id) if persisted?
     root_users = self.class.where(account: account, id: ROOT_ID)

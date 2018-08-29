@@ -23,9 +23,13 @@ def error_log(message)
 end
 
 def build_log_message(message, level)
-  message = "[#{Time.now.strftime('%Y-%m-%d %H:%M:%S')}] #{level} #{message}" if Rails.env.development?
-  message = "#{message}: #{message.backtrace.join("\n")}" if message.is_a?(Exception) && message.backtrace.present?
-  message
+  log = if Rails.env.development?
+          "[#{Time.now.strftime('%Y-%m-%d %H:%M:%S')}] #{level} #{message}"
+        else
+          message.to_s
+        end
+  log = "#{log}: #{message.backtrace.join("\n")}" if message.is_a?(Exception) && message.backtrace.present?
+  log
 end
 
 class String

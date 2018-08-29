@@ -1,0 +1,25 @@
+<%- groups.each do |group| -%>
+<li>
+  <%- if group.children.present? -%>
+    <a class="icon opened" href="#">-</a>
+  <%- else -%>
+    <a class="icon" href="#"> </a>
+  <%- end -%>
+  <%= link_to :show, { action: :show, parent: group.parent_id.to_i, id: group } %>
+  <%= link_to group.name, { action: :index, parent: group }, class: "#{'current' if group.id == @parent&.id }" %>
+  <%- if group.change_state -%>
+    <span class="change_state <%= group.change_state %>"><%= group.change_state_text %></span>
+  <%- end -%>
+  <%- if group.source_groups.present? -%>
+    <span class="remark"><b>←</b><%= group.source_groups.map(&:name).join(', ') %></span>
+  <%- end -%>
+  <%- if group.destination_groups.present? -%>
+    <span class="remark"><b>→</b><%= group.destination_groups.map(&:name).join(', ') %></span>
+  <%- end -%>
+  <%- if group.children.present? -%>
+    <ul>
+      <%= render 'groups', groups: group.children %>
+    </ul>
+  <%- end -%>
+</li>
+<%- end -%>

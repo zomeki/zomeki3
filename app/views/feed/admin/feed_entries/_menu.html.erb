@@ -1,0 +1,12 @@
+<h2><%= menu_header @content.name, Feed::FeedEntry.model_name.human %></h2>
+
+<div class="actionMenu">
+  <%= action_menu :index %>
+  <%= action_menu :show %>
+  <%= action_menu :edit if @item.try(:editable?) %>
+
+  <%- if params[:action] == 'index' -%>
+  <%= link_to "エントリ更新", { do: 'update_entries' }, data: { confirm:  "エントリを更新してよろしいですか？" } %>
+  <%= link_to "エントリ削除", { do: 'delete_entries' }, data: { confirm:  "エントリを削除してよろしいですか？" } %>
+  <%- end -%>
+</div>

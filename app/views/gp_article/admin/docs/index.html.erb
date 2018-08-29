@@ -20,7 +20,7 @@
 </div>
 <table class="index">
   <tr>
-    <th class="checkbox"><%= check_box_tag "item[id][]", "1", false, id: "check_all" %></td>
+    <th class="checkbox"><%= check_box_tag "item[id][]", "1", false, id: "check_all" %></th>
     <th class="action_link">詳細</th>
     <th style="text-align: center; width: 80px;"><%= sort_link '記事番号', sort_key: 'serial_no', default: :desc %></th>
     <th><%= sort_link GpArticle::Doc.human_attribute_name(:title), sort_key: 'title' %></th>

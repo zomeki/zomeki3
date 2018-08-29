@@ -1,0 +1,38 @@
+<table class="index">
+  <tr>
+    <th class="action_link">詳細</th>
+    <th style="text-align: center; width: 60px;"><%= Sys::Reorg::Group.human_attribute_name :change_state %></th>
+    <th style="width: 200px;"><%= Sys::Reorg::Group.human_attribute_name :code %></th>
+    <th style="width: 200px;"><%= Sys::Reorg::Group.human_attribute_name :name %></th>
+    <th style="width: 200px;"><%= Sys::Reorg::Group.human_attribute_name :name_en %></th>
+    <th style="text-align: center; width: 60px;"><%= Sys::Reorg::Group.human_attribute_name :state %></th>
+    <th style="width: ;">備考</th>
+  </tr>
+  <%- groups.each do |group| %>
+  <tr class="<%= cycle '', 'cycle' %>">
+    <td class="action_link"><%= link_to :show, { controller: :groups, action: :show, parent: group.parent_id.to_i, id: group } %></td>
+    <td style="text-align: center;">
+      <%- if group.change_state -%>
+      <span class="change_state <%= group.change_state %>"><%= group.change_state_text %></span>
+      <%- end -%>
+    </td>
+    <td><%= group.code %></td>
+    <td><%= group.name %></td>
+    <td><%= group.name_en %></td>
+    <td style="text-align: center;"><%= group.state_text %></td>
+    <td>
+      <%- if group.source_groups.present? -%>
+        <p>←<%= group.source_groups.map(&:name).join(', ') %></p>
+      <%- end -%>
+      <%- if group.destination_groups.present? -%>
+        <p>→<%= group.destination_groups.map(&:name).join(', ') %></p>
+      <%- elsif group.change_state == 'delete' -%>
+        <p style="color: red;">引き継ぎ先が不明です。</p>
+      <%- end -%>
+      <%- if group.parent && group.parent.change_state == 'delete' && group.change_state != 'delete' -%>
+        <p style="color: red;">削除グループに所属しています。</p>
+      <%- end -%>
+    </td>
+  </tr>
+  <%- end -%>
+</table>

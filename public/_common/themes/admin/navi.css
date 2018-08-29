@@ -1,4 +1,4 @@
-﻿/* =========================================================
+/* =========================================================
    Navi
 ========================================================= */
 
@@ -18,6 +18,7 @@
   cursor: pointer;
 }
 #naviSites {
+  min-width: 200px;
   margin: 10px 20px 0 0;
   padding: 10px;
   border: 1px solid #ccc;
@@ -35,6 +36,7 @@
   color: #f0d;
 }
 #naviConcepts {
+  min-width: 200px;
   margin: 10px 20px 0 0;
   padding: 10px;
   border: 1px solid #ccc;
@@ -50,6 +52,9 @@
 }
 #naviConcepts li > ul > li {
   margin-bottom: 2px;
+}
+#naviConcepts li > ul > li > ul {
+  margin-top: 2px;
 }
 #naviConcepts li .icon {
   display: inline-block;

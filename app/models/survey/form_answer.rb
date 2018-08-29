@@ -9,6 +9,9 @@ class Survey::FormAnswer < ApplicationRecord
 
   has_many :answers, -> { order(:id) }, dependent: :destroy
 
+  delegate :site, to: :form
+  delegate :content, to: :form
+
   validate :validate_answers
 
   nested_scope :in_site, through: :form

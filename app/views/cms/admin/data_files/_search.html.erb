@@ -2,7 +2,7 @@
 <table>
   <tr>
     <th>フォルダ</th>
-    <td><%= select_tag :s_node_id, options_for_select(@nodes.map { |i| [i.name, i.id] }, @parent.id), include_blank: 'すべて' %></td>
+    <td><%= select_tag :s_node_id, options_for_select(@nodes.map { |i| [i.name, i.id] }, params[:s_node_id]), include_blank: 'すべて' %></td>
     <th>ファイル名</th>
     <td><%= text_field_tag :s_keyword, params[:s_keyword], style: 'width: 150px;' %></td>
     <% if Core.user.has_auth?(:manager) %>

@@ -358,4 +358,13 @@ class GpArticle::Content::Doc < Cms::Content
   def accessibility_check_enabled?
     setting_value(:accessibility_check) == 'enabled'
   end
+
+  def navigation_enabled?
+    setting_value(:navigation_setting) == 'enabled'
+  end
+
+  def navigation_target_types
+    setting_extra_value(:navigation_setting, :types)
+  end
+
 end

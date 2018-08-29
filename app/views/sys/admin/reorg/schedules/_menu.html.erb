@@ -1,0 +1,4 @@
+<div class="actionMenu">
+  <%= link_to '戻る', sys_reorg_groups_path(0) %>
+  <%= link_to '予約削除', { action: :destroy }, method: :delete, confirm: '予約を削除してよろしいですか？' if @item.persisted? %>
+</div>

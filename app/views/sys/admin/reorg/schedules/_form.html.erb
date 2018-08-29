@@ -1,0 +1,12 @@
+<table class="show">
+  <tr>
+    <th><%= f.label :reserved_at %></th>
+    <td><%= f.text_field :reserved_at, value: l(@item.reserved_at), class: 'datetimepicker' %></td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+$(function() {
+  $('input.datetimepicker').datetimepicker();
+});
+</script>
