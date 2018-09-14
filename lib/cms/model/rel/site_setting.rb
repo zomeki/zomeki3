@@ -91,6 +91,14 @@ module Cms::Model::Rel::SiteSetting
     setting_value(:datetime_preview) == 'enabled'
   end
 
+  def map_source
+    setting_value(:map_source)
+  end
+
+  def use_navigation?
+    setting_value(:map_source) == 'google'
+  end
+
   def load_site_settings
     Cms::SiteSetting.configs.keys.each do |name|
       instance_variable_set("@in_setting_site_#{name}", setting_value(name))

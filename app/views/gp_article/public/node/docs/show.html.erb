@@ -16,7 +16,7 @@
   <%- end -%>
 </div>
 
-<%= render 'cms/public/_partial/maps/view', item: @item %>
+<%= public_map_view(@item) %>
 
 <%- if @item.relate_docs.present? -%>
 <%= render 'gp_article/public/node/docs/show/rel_docs', item: @item, content: @content, rel_docs: @item.relate_docs %>

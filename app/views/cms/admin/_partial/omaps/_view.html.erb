@@ -1,0 +1,90 @@
+<%-
+map = item.maps.first || item.maps.build(name: '1')
+default_position = default_map_position(item.content)
+map_lat  = map.map_lat.presence || default_position[0]
+map_lng  = map.map_lng.presence || default_position[1]
+map_zoom = map.map_zoom.presence || 14
+markers = map.markers
+-%>
+<%= javascript_include_tag "/_common/js/openlayers/ol.js" %>
+<%= javascript_include_tag '/_common/modules/map/js/openlayers.js' %>
+<script type="text/javascript">
+var map = null;
+
+$(function() {
+  var mapLoaded = false;
+  $('#showMap').on('click', function() {
+    if (mapLoaded) {
+      showMap();
+    } else {
+      showMap();
+      mapLoaded = true;
+      $('#showMap').hide();
+    }
+  });
+
+  function showMap() {
+    map = new OpenLayersViewer('map1', '<%= @content.site.map_source %>', <%= map_lat.to_f %>, <%= map_lng.to_f %>, <%= map_zoom %>);
+
+    var markers = [];
+
+    <% map.markers.each_with_index do |marker, idx| %>
+      <%- next if marker.lat.blank? || marker.lng.blank? -%>
+      markers.push({
+        id: '<%= "#{marker.lat}_#{marker.lng}" %>',
+        lat: <%= marker.lat.to_f %>,
+        lng: <%= marker.lng.to_f %>,
+        content: '<%==j marker.name.gsub(/\r\n|\r|\n/, "<br />") %>',
+        icon: ''
+      });
+    <%- end -%>
+    map.create_markers(markers);
+  }
+});
+</script>
+
+<div id="mapForm" class="articleMapForm">
+  <div id="map1" class="mapCanvas">
+    <%= button_tag '地図を表示', type: :button, id: 'showMap' %>
+  </div>
+  <div id="popup" class="ol-popup" style="display: none;">
+    <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+    <div id="popup-content"></div>
+  </div>
+</div>
+
+<p class="form">マップの設定</p>
+<table class="show">
+  <tr>
+    <th>マップ名</th>
+    <td class="name"><%= map.title %></td>
+  </tr>
+  <tr>
+    <th>座標</th>
+    <td class="point">
+      <%- if map.map_lat.present? && map.map_lng.present? -%>
+        <%= map.map_lat %>, <%= map.map_lng %>
+      <%- end -%>
+    </td>
+  </tr>
+  <tr>
+    <th>縮尺</th>
+    <td class="zoom"><%= map.map_zoom %></td>
+  </tr>
+</table>
+
+<%- if markers.present? -%>
+<p class="form">マーカーの設定</p>
+<table class="show">
+  <tbody>
+  <%- markers.each do |marker| %>
+    <tr>
+      <th class="name">名称</th>
+      <td class="name"><%= marker.name %></td>
+      <th class="point">座標</th>
+      <td class="point"><%= marker.lat %>, <%= marker.lng %></td>
+    </tr>
+  <%- end -%>
+  </tbody>
+</table>
+<%- end -%>

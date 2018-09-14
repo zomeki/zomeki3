@@ -65,6 +65,12 @@ class Cms::SiteSetting < ApplicationRecord
              default_value: 'disabled',
              options: [['使用する', 'enabled'], ['使用しない', 'disabled']],
              index: true
+  set_config :map_source,
+             name: '背景地図',
+             default_value: 'osm',
+             options: [['Open Street Map', 'osm'], ['地理院地図', 'webtis'], ['Googleマップ', 'google']],
+             index: true
+
 
   validates :site_id, presence: true
   validates :name, presence: true,
