@@ -35,7 +35,7 @@
     </td>
   </tr>
   <%- end -%>
-  <%- if @content.navigation_enabled? -%>
+  <%- if @content.site.use_navigation? && @content.navigation_enabled? -%>
     <tr>
       <th><%= f.label :navigation_state %></th>
       <td><%= f.collection_radio_buttons :navigation_state, @item.class.navigation_state_options, :last, :first %></td>
@@ -43,7 +43,7 @@
   <%- end -%>
 </table>
 
-<%= google_map_form f %>
+<%= map_form f %>
 
 <script type="text/javascript">
 $(function() {

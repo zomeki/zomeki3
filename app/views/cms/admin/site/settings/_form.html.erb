@@ -119,3 +119,11 @@
   </tr>
 </table>
 <%- end -%>
+<%- if @item.name == 'map_source' -%>
+<table class="show">
+  <tr>
+    <th><%= @site.class.human_attribute_name :in_setting_site_map_source %></th>
+    <td><%= f.collection_radio_buttons :in_setting_site_map_source, @item.class.configs[:map_source][:options], :last, :first %></td>
+  </tr>
+</table>
+<%- end -%>
