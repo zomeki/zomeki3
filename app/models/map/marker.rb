@@ -59,7 +59,7 @@ class Map::Marker < ApplicationRecord
   end
 
   class << self
-    def from_doc(doc)
+    def from_doc(doc, map_content = nil)
       return [] unless doc.maps.first
 
       doc.maps.first.markers.map do |m|
@@ -73,6 +73,7 @@ class Map::Marker < ApplicationRecord
           created_at: doc.display_published_at,
           updated_at: doc.display_published_at
         )
+        marker.content = map_content
         marker.categories = doc.marker_categories
         marker.files = doc.files
         marker.icon_category = doc.marker_icon_category

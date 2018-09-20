@@ -44,46 +44,18 @@
 
   <%- unless @markers.empty? -%>
   <table>
-    <tr>
-      <th scope="col">カテゴリ</th>
-      <%- if @content.show_images? -%>
-      <th scope="col">画像</th>
+    <thead>
+      <tr>
+      <%- @content.list_style.each do |header| -%>
+        <th scope="col"><%= header[:header].html_safe %></th>
       <%- end -%>
-      <th scope="col">名称</th>
-      <th scope="col">地図</th>
-    </tr>
-    <%- @markers.each do |marker| -%>
-    <tr>
-      <td class="markerCategories">
-        <%- marker.categories.each do |category| -%>
-        <div class="<%= category.name -%>"><%= category.title %></div>
-        <%- end -%>
-      </td>
-      <%- if @content.show_images? -%>
-      <td class="markerImage">
-        <%- if marker.files.empty? -%>
-          <%- if @content.default_image.blank? -%>
-            画像がありません。
-          <%- else -%>
-            <%= image_tag @content.default_image %>
-          <%- end -%>
-        <%- else -%>
-          <%- unless (mi = marker_image(marker)).blank? -%>
-            <%= mi %>
-          <%- else -%>
-            <%- if @content.default_image.blank? -%>
-              画像がありません。
-            <%- else -%>
-              <%= image_tag @content.default_image %>
-            <%- end -%>
-          <%- end -%>
-        <%- end -%>
-      </td>
+      </tr>
+    </thead>
+    <tbody>
+      <%- @markers.each do |marker| -%>
+        <%= marker_table_replace(marker, @content.list_style) %>
       <%- end -%>
-      <td class="markerTitle"><%= marker.doc ? doc_replace(marker.doc, @content.title_style) : marker.title %></td>
-      <td class="marker"><%= link_to '表示', '#map_canvas', onclick: "map.move_to('#{marker.latitude}_#{marker.longitude}'); return false;" %></td>
-    </tr>
-    <%- end -%>
+    </tbody>
   </table>
   <%- end -%>
 

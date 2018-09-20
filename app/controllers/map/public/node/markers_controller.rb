@@ -17,7 +17,7 @@ class Map::Public::Node::MarkersController < Map::Public::NodeController
     docs = @content.marker_docs
     docs = docs.categorized_into(@specified_category.public_descendants, categorized_as: 'Map::Marker') if @specified_category
     doc_markers = docs.preload(:marker_categories, :files, :marker_icon_category)
-                      .flat_map { |doc| Map::Marker.from_doc(doc) }
+                      .flat_map { |doc| Map::Marker.from_doc(doc, @content) }
                       .compact
 
     @all_markers = @content.sort_markers(markers + doc_markers)
