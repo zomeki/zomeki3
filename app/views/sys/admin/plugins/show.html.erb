@@ -2,6 +2,10 @@
 
 <table class="show">
   <tr>
+    <th><%= @item.class.human_attribute_name :base_url %></th>
+    <td><%= @item.base_url %></td>
+  </tr>
+  <tr>
     <th><%= @item.class.human_attribute_name :name %></th>
     <td><%= @item.name %></td>
   </tr>

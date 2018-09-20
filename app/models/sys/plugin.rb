@@ -5,6 +5,8 @@ class Sys::Plugin < ApplicationRecord
   GITHUB_USER = 'zomeki'
   GITHUB_TOPIC = 'zomeki3-plugin'
 
+  column_attribute :base_url, default: 'https://github.com/'
+
   enum_ish :state, [:enabled, :disabled], predicate: true
 
   validates :name, presence: true, uniqueness: true,
@@ -29,6 +31,10 @@ class Sys::Plugin < ApplicationRecord
 
   def source_version
     version.split('/').last
+  end
+
+  def repository_url
+    "#{base_url}#{name}.git"
   end
 
   class << self

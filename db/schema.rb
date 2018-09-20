@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180720055809) do
+ActiveRecord::Schema.define(version: 20180919025147) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1564,6 +1564,7 @@ ActiveRecord::Schema.define(version: 20180720055809) do
     t.integer  "sort_no"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string   "base_url"
   end
 
   create_table "sys_process_logs", force: :cascade do |t|

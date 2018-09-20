@@ -151,6 +151,7 @@ ja:
         state: 状態
         note: 備考
         sort_no: 並び順
+        base_url: URL
         created_at: 作成日時
 
       sys/users_session:
