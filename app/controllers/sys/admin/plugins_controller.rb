@@ -68,7 +68,7 @@ class Sys::Admin::PluginsController < Cms::Controller::Admin::Base
   end
 
   def plugin_params
-    params.require(:item).permit(:name, :title, :version, :state, :note)
+    params.require(:item).permit(:base_url, :name, :title, :version, :state, :note)
   end
 
   def update_plugins
