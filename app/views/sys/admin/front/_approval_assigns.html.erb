@@ -1,0 +1,39 @@
+<div id="approvables" class="piace">
+<div class="piaceHeader">
+  <div class="title">承認待ち一覧</div>
+</div>
+
+<div class="piaceBody">
+<%- if @approval_assigns.present? -%>
+  <table class="index">
+    <tr>
+      <th class="action_link">詳細</th>
+      <th style="width: 200px;">コンテンツ</th>
+      <th>タイトル</th>
+      <th style="text-align: center; width: 120px">所属</th>
+      <th style="text-align: center; width: 120px">作成者</th>
+      <th style="text-align: center; width: 120px;">更新日時</th>
+      <th style="text-align: center; width: 100px;">プレビュー</th>
+    </tr>
+    <%- @approval_assigns.each do |item| -%>
+    <tr class="<%= cycle '', 'cycle' %>">
+      <td class="action_link"><%= link_to :show, item.admin_uri(active_tab: 'approval'), target: '_blank' %></td>
+      <td><%= item.content ? item.content.name : item.class.model_name.human %></td>
+      <td style="text-align: left;"><%= item.title %></td>
+      <td><%= item.creator&.group&.name %></td>
+      <td><%= item.creator&.user&.name %></td>
+      <td style="text-align: center;"><%=l item.updated_at %></td>
+      <td style="text-align: center;">
+        <%= preview_links(Core.site, item.preview_uri,
+                                     item.preview_uri(terminal: :smart_phone),
+                                     item.preview_uri(terminal: :mobile)) %>
+      </td>
+    </tr>
+    <%- end -%>
+  </table>
+<%- else -%>
+  <ul><li>承認待ちデータはありません。</li></ul>
+<%- end -%>
+</div>
+
+<div class="piaceFooter"></div>

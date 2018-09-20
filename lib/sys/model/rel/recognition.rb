@@ -4,6 +4,17 @@ module Sys::Model::Rel::Recognition
   included do
     has_one :recognition, class_name: 'Sys::Recognition', dependent: :destroy, as: :recognizable
     before_save :prepare_recognition
+
+    scope :recognition_requested_by, ->(user) {
+      all.joins(:recognition)
+         .where(state: 'recognize')
+         .where(Sys::Recognition.table_name => { user_id: user })
+    }
+    scope :recognizables_for, ->(user) {
+      all.joins(:recognition)
+         .where(state: 'recognize')
+         .where(Sys::Recognition.arel_table[:recognizer_ids].matches_regexp("[^\\d]?#{user.id}[^\\d]?"))
+    }
   end
 
   def in_recognizer_ids

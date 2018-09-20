@@ -1,0 +1,29 @@
+<p class="form"><%= @group.name %></p>
+
+<table class="index">
+  <tr>
+    <th style="width: 250px;"><%= Sys::User.human_attribute_name :name %></th>
+    <th style="width: ;"><%= Sys::User.human_attribute_name :account %></th>
+    <%- @state_options.each do |text, state| -%>
+      <th style="width: 80px; text-align: center;"><%= text %></th>
+    <%- end -%>
+    <th style="width: 80px; text-align: center;">計</th>
+  </tr>
+  <%- @users.each do |user| -%>
+    <tr class="<%= cycle '', 'cycle' %>">
+      <td><%= user.name %></td>
+      <td><%= user.account %></td>
+      <%- @state_options.each do |text, state| -%>
+        <td style="text-align: center;"><%= @user_count.dig(user.id, state) %></td>
+      <%- end -%>
+      <td style="text-align: center;"><%= @user_total[user.id] %></td>
+    </tr>
+  <%- end -%>
+  <tr class="<%= cycle '', 'cycle' %>">
+    <td colspan="2" style="text-align: center;">計</td>
+    <%- @state_options.each do |text, state| -%>
+      <td style="text-align: center;"><%= @state_total[state] %></td>
+    <%- end -%>
+    <td style="text-align: center;"><%= @user_total.values.sum %></td>
+  </tr>
+</table>

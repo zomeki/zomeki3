@@ -2,6 +2,8 @@ ja:
   activerecord:
     models:
       cms/content: コンテンツ
+      cms/node: ディレクトリ
+      cms/node/page: 自由形式ページ
       cms/piece: ピース
       cms/layout: レイアウト
       cms/site: サイト
@@ -51,6 +53,7 @@ ja:
         in_setting_site_transfer_dest_domain: 転送先サイトURL
         in_setting_site_common_ssl: 共有SSL
         in_setting_site_admin_mail_sender: 管理者メール送信元アドレス
+        in_setting_site_admin_mail_sender_for_approval: 承認メール
         in_setting_site_allowed_attachment_type: 添付ファイル/許可する種類
         in_setting_site_file_upload_max_size: 添付ファイル最大サイズ
         in_setting_site_extension_upload_max_size: 拡張子別アップロードサイズ

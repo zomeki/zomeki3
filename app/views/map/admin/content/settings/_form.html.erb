@@ -59,7 +59,7 @@ $(function() {
     }
   });
 
-  $('#categories > tbody > tr > td.category_type > select').on('change', function(e) {
+  $(document).on('change', '#categories > tbody > tr > td.category_type > select', function(e) {
     var content_id = parseInt($('#item_value').val());
     var category_type_select = $(e.target);
     var category_type_id = parseInt(category_type_select.val());

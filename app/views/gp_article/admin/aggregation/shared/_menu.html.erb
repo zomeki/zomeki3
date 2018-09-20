@@ -1,0 +1,6 @@
+<h2><%= menu_header @content.name, '記事集計', with_action_name: false %></h2>
+
+<div class="actionMenu">
+  <%= link_to 'グループ別集計', { controller: :groups }, class: current == :group ? 'current' : '' %>
+  <%= link_to 'カテゴリ別集計', { controller: :categories }, class: current == :category ? 'current' : '' %>
+</div>
