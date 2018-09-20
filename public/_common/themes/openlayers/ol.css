@@ -316,10 +316,6 @@
   position: relative;
   height: 10px;
 }
-.ol-touch .ol-zoomslider {
-  top: 5.5em;
-}
-
 .ol-zoom-in.ol-has-tooltip:hover [role=tooltip],
 .ol-zoom-in.ol-has-tooltip:focus [role=tooltip] {
   top: 3px;
