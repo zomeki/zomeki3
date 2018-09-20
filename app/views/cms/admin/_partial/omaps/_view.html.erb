@@ -13,7 +13,7 @@ var map = null;
 
 $(function() {
   var mapLoaded = false;
-  /*$('#showMap').on('click', function() {
+  $('#showMap').on('click', function() {
     if (mapLoaded) {
       showMap();
     } else {
@@ -21,8 +21,7 @@ $(function() {
       mapLoaded = true;
       $('#showMap').hide();
     }
-  });*/
-  showMap();
+  });
 
   function showMap() {
     map = new OpenLayersViewer('map1', '<%= @content.site.map_source %>', <%= map_lat.to_f %>, <%= map_lng.to_f %>, <%= map_zoom %>);
