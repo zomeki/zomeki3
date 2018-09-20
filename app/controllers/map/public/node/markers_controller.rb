@@ -23,6 +23,7 @@ class Map::Public::Node::MarkersController < Map::Public::NodeController
     @all_markers = @content.sort_markers(markers + doc_markers)
     @markers = @all_markers.paginate(page: params[:page], per_page: 30)
     return http_error(404) if @markers.current_page > @markers.total_pages
+    return render 'index_google' if @content.site.map_source == "google"
   end
 
   def file_content

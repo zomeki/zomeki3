@@ -59,13 +59,46 @@ module Cms::FormHelper
     render 'cms/admin/_partial/pieces/menu', {item: item}.merge(options)
   end
 
-  def google_map_form(form)
+  def map_form(form)
     item = form.object || instance_variable_get("@#{form.object_name}")
+    case item.content.site.map_source
+    when "google"
+      google_map_form(form, item)
+    else
+      open_layers_form(form, item)
+    end
+  end
+
+  def map_view(item)
+    if item.content.site.map_source == "google"
+      google_map_view(item)
+    else
+      open_layers_view(item)
+    end
+  end
+
+  def public_map_view(item)
+    if item.content.site.map_source == "google"
+      render 'cms/public/_partial/maps/view', item: @item
+    else
+      render 'cms/public/_partial/omaps/view', item: @item
+    end
+  end
+
+  def google_map_form(form, item)
     render 'cms/admin/_partial/maps/form', f: form, item: item
   end
 
   def google_map_view(item)
     render 'cms/admin/_partial/maps/view', item: item
+  end
+
+  def open_layers_form(form, item)
+    render 'cms/admin/_partial/omaps/form', f: form, item: item
+  end
+
+  def open_layers_view(item)
+    render 'cms/admin/_partial/omaps/view', item: item
   end
 
   def value_form(f, css = nil)
