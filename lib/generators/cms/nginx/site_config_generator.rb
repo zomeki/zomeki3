@@ -94,7 +94,7 @@ module Cms
         locations += make_public_error_locations if @site.smart_phone_layout_same_as_pc?
         locations += make_public_default_locations
 
-        append_request_uri_for_smartphone(locations) if @site.smart_phone_layout_same_as_pc?
+        append_original_uri_for_smartphone(locations) if @site.smart_phone_layout_same_as_pc?
 
         locations
       end
@@ -171,12 +171,12 @@ module Cms
         locations
       end
 
-      def append_request_uri_for_smartphone(locations)
+      def append_original_uri_for_smartphone(locations)
         locations.each do |location|
           if location.path =~ %r{/_smartphone} &&
              location.try_files.include?('@proxy') &&
              !location.try_files.include?('/404.html')
-            location.try_files = %W($request_uri $request_uri/index.html) + location.try_files
+            location.try_files = %W($original_uri $original_uri/index.html) + location.try_files
           end
         end
       end
