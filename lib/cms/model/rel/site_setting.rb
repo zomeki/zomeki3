@@ -22,6 +22,10 @@ module Cms::Model::Rel::SiteSetting
     setting_value(:admin_mail_sender)
   end
 
+  def admin_mail_sender_for_approval?
+    setting_value(:admin_mail_sender_for_approval) == '1'
+  end
+
   def file_upload_max_size
     (setting_value(:file_upload_max_size).presence || 5).to_i
   end
@@ -89,6 +93,14 @@ module Cms::Model::Rel::SiteSetting
 
   def use_datetime_preview?
     setting_value(:datetime_preview) == 'enabled'
+  end
+
+  def map_source
+    setting_value(:map_source)
+  end
+
+  def use_navigation?
+    setting_value(:map_source) == 'google'
   end
 
   def load_site_settings

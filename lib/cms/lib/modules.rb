@@ -47,9 +47,9 @@ module Cms::Lib::Modules
   end
 
   def self.available_contents
-    mods = Zomeki.config.application['cms.available_modules'].to_a
+    mods = Zomeki.config.application['cms.unavailable_modules'].to_a
     if mods.present?
-      contents.select { |arr| arr.last =~ /^#{mods.join('|')}/ }
+      contents.reject { |arr| arr.last =~ /^#{mods.join('|')}/ }
     else
       contents
     end

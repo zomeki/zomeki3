@@ -1,0 +1,54 @@
+<%
+map     = item.maps.first
+markers = map ? map.markers : []
+return unless map
+return if map.map_lat.blank? || map.map_lng.blank?
+%>
+
+<%= javascript_include_tag "/_common/js/openlayers/ol.js" %>
+<%= javascript_include_tag '/_common/modules/map/js/openlayers.js' %>
+<script type="text/javascript">
+//<![CDATA[
+function addEvent(element, listener, func) {
+  try {
+    element.addEventListener(listener, func, false);
+  } catch (e) {
+    element.attachEvent('on' + listener, func);
+  }
+}
+
+addEvent(window, 'load', function() {
+
+  map = new OpenLayersViewer('map1', '<%= item.content.site.map_source %>', <%= map.map_lat.to_f %>, <%= map.map_lng.to_f %>, <%= map.map_zoom.to_i %>);
+
+  var markers = [];
+
+  <% map.markers.each_with_index do |marker, idx| %>
+    <%- next if marker.lat.blank? || marker.lng.blank? -%>
+    markers.push({
+      id: '<%= "#{marker.lat}_#{marker.lng}" %>',
+      lat: <%= marker.lat.to_f %>,
+      lng: <%= marker.lng.to_f %>,
+      <%- if item.content.respond_to?(:map_content_marker) && (map_content = item.content.map_content_marker) -%>
+      icon: '<%==j map_content.icon_image(item.marker_icon_category || item.marker_categories.first) %>',
+      <%- end -%>
+      content: '<%==j marker.name.gsub(/\r\n|\r|\n/, "<br />") %>'
+    });
+  <%- end -%>
+
+  map.create_markers(markers);
+
+});
+
+//]]>
+</script>
+
+<div class="maps">
+  <h2>地図</h2>
+  <% if !map.title.blank? %><h3><%= map.title %></h3><% end %>
+  <div id="map1" class="map" style="width: 100%; height: 400px"></div>
+  <div id="popup" class="ol-popup" style="display: none;">
+    <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+    <div id="popup-content"></div>
+  </div>
+</div>

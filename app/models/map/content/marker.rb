@@ -19,6 +19,10 @@ class Map::Content::Marker < Cms::Content
     setting_value(:lat_lng)
   end
 
+  def gp_category_content_category_type
+    GpCategory::Content::CategoryType.find_by(id: setting_value(:gp_category_content_category_type_id))
+  end
+
   def categories
     setting = Map::Content::Setting.find_by(id: settings.find_by(name: 'gp_category_content_category_type_id').try(:id))
     return GpCategory::Category.none unless setting
@@ -68,16 +72,12 @@ class Map::Content::Marker < Cms::Content
     end
   end
 
-  def show_images?
-    setting_value(:show_images) == 'visible'
+  def list_style
+    setting_value(:list_style)
   end
 
   def default_image
     setting_value(:default_image).to_s
-  end
-
-  def title_style
-    setting_value(:title_style).to_s
   end
 
   def sort_markers(markers)

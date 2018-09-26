@@ -29,6 +29,15 @@ ZomekiCMS::Application.routes.draw do
     resources :related_docs,
       :controller => 'admin/related_docs', :only => [:show]
 
+    resources :groups,
+      :controller => 'admin/aggregation/groups',
+      :path => ':content/aggregation/groups', :as => 'aggregation_groups', :only => [:index] do
+      resources :users, :controller => 'admin/aggregation/users', :only => [:index]
+    end
+    resources :categories,
+      :controller => 'admin/aggregation/categories',
+      :path => ':content/aggregation/categories', :as => 'aggregation_categories', :only => [:index]
+
     ## nodes
     resources :node_docs,
       :controller => 'admin/node/docs',

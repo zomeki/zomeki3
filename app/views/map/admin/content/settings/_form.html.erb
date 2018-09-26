@@ -1,5 +1,15 @@
 <%= render 'shared/admin/content/settings/form', f: f, item: @item -%>
 
+<%= render 'map/admin/shared/doc_style_tags' %>
+<script type="text/javascript">
+$(function() {
+   $('a.show_dialog').on('click', function() {
+     $('#doc_style_tags').dialog({width: 450});
+     return false;
+   });
+});
+</script>
+
 <%- if @item.name == 'gp_category_content_category_type_id' -%>
 <table class="show" id="categories">
   <tbody>
@@ -59,7 +69,7 @@ $(function() {
     }
   });
 
-  $('#categories > tbody > tr > td.category_type > select').on('change', function(e) {
+  $(document).on('change', '#categories > tbody > tr > td.category_type > select', function(e) {
     var content_id = parseInt($('#item_value').val());
     var category_type_select = $(e.target);
     var category_type_id = parseInt(category_type_select.val());

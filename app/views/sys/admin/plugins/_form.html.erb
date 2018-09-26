@@ -2,6 +2,13 @@
 
 <table class="show">
   <tr>
+    <th><%= f.label :base_url %></th>
+    <td>
+      <%= f.text_field :base_url %>
+      <span>（例）HTTPSの場合：https://github.com/、SSHの場合：git@github.com:</span>
+    </td>
+  </tr>
+  <tr>
     <th><%= f.label :name %></th>
     <td>
       <%- if @item.new_record? -%>

@@ -1,0 +1,45 @@
+<%- @category_types.each do |ct| -%>
+  <p class="form"><%= ct.name %></p>
+
+  <table class="index tree">
+    <tr>
+      <th style="width: 250px;">カテゴリ名</th>
+      <th style="width: ;">カテゴリID</th>
+      <%- @state_options.each do |text, state| -%>
+        <th style="width: 80px; text-align: center;"><%= text %></th>
+      <%- end -%>
+      <th style="width: 80px; text-align: center;">計</th>
+    </tr>
+    <%- @category_map[ct.id].each do |category| -%>
+      <tr class="<%= cycle '', 'cycle' %>" data-tree-id="<%= category.ancestors[0..-2].map(&:id).join('.') %>">
+        <td>
+          <span class="indent level<%= category.level_no %>"></span>
+          <%- if category.children.present? -%>
+            <a class="icon opened" data-tree-id="<%= category.ancestors.map(&:id).join('.') %>">-</a>
+          <%- else -%>
+            <a class="icon"></a>
+          <%- end -%>
+          <%= category.title %>
+        </td>
+        <td><%= category.name %></td>
+        <%- @state_options.each do |text, state| -%>
+          <td style="text-align: center;"><%= @category_count[ct.id].dig(category.id, state) %></td>
+        <%- end -%>
+        <td style="text-align: center;"><%= @category_total[ct.id][category.id] %></td>
+      </tr>
+    <%- end -%>
+    <tr class="<%= cycle '', 'cycle' %>">
+      <td colspan="2" style="text-align: center;">計</td>
+      <%- @state_options.each do |text, state| -%>
+        <td style="text-align: center;"><%= @state_total[ct.id][state] %></td>
+      <%- end -%>
+      <td style="text-align: center;"><%= @category_total[ct.id].values.sum %></td>
+    </tr>
+  </table>
+<%- end -%>
+
+<script type="text/javascript">
+$(function() {
+  $('table.tree').tableTree();
+});
+</script>

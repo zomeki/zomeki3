@@ -45,24 +45,8 @@ cms:
   # 地図デフォルト座標
   default_map_coordinate: "35.702708,139.560831"
 
-  # 使用可能モジュール
-  available_modules:
-    - AdBanner
-    - Approval
-    - Feed
-    - Gnav
-    - GpArticle
-    - GpCalendar
-    - GpCategory
-    - GpTemplate
-    - Map
-    - Organization
-    - Rank
-    - Survey
-    - Tag
-    #- BizCalendar
-    #- Mailin
-    #- Reception
+  # 使用不可モジュール
+  unavailable_modules: ["BizCalendar", "Mailin", "Reception"]
 
 gp_article:
   # 本文文字数制限

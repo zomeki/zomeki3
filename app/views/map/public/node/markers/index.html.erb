@@ -1,11 +1,20 @@
 <div class="contentMapMarkers">
   <div id="map_canvas" style="height: 350px; width: 700px;"></div>
-
-  <%= javascript_include_tag "https://maps.googleapis.com/maps/api/js?key=#{@content.site.google_map_api_key}&region=jp" %>
-  <%= javascript_include_tag '/_common/modules/map/js/map.js' %>
+  <div id="popup" class="ol-popup">
+    <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+    <div id="popup-content"></div>
+  </div>
+  <%= javascript_include_tag "/_common/js/openlayers/ol.js" %>
+  <%= javascript_include_tag '/_common/modules/map/js/openlayers.js' %>
   <script type="text/javascript">
-  var map;
-  google.maps.event.addDomListener(window, 'load', function(e) {
+  function addEvent(element, listener, func) {
+    try {
+      element.addEventListener(listener, func, false);
+    } catch (e) {
+      element.attachEvent('on' + listener, func);
+    }
+  }
+  addEvent(window, 'load', function() {
     <%- unless @all_markers.empty?
           bounds = @all_markers.inject(min: {}, max: {}){|result, marker|
                      min = result[:min]
@@ -25,65 +34,44 @@
 
                      result
                    } -%>
-    map = new MapViewer('map_canvas', <%= bounds[:min][:lat] %>, <%= bounds[:min][:lon] %>,
-                                      <%= bounds[:max][:lat] %>, <%= bounds[:max][:lon] %>);
+    map = new OpenLayersViewer('map_canvas', '<%= @content.site.map_source %>',
+                                <%= bounds[:min][:lat] %>, <%= bounds[:min][:lon] %>, null,
+                                <%= bounds[:max][:lat] %>, <%= bounds[:max][:lon] %>);
     <%- else -%>
     <%- default_position = default_map_position(@content) -%>
-    map = new MapViewer('map_canvas', <%= default_position[0].to_f %>, <%= default_position[1].to_f %>);
+    map = new OpenLayersViewer('map_canvas', '<%= @content.site.map_source %>', <%= default_position[0].to_f %>, <%= default_position[1].to_f %>, null);
     <%- end -%>
 
-    <%- @all_markers.each do |marker| -%>
-      map.set_marker('<%= "#{marker.latitude}_#{marker.longitude}" %>', <%= marker.latitude.to_f %>, <%= marker.longitude.to_f %>, '<%==j marker.title %>',
-                     '<%==j br(marker.window_text) %>',
-                     '<%==j @content.icon_image(marker.icon_category || (marker.categories.include?(@specified_category) ? @specified_category
-                                                                                                                         : marker.categories.first), true) %>');
+    var markers = [];
 
+    <% @all_markers.each_with_index do |marker, idx| %>
+      <%- next if marker.latitude.blank? || marker.longitude.blank? -%>
+      markers.push({
+        id: '<%= "#{marker.latitude}_#{marker.longitude}" %>', lat: <%= marker.latitude.to_f %>, lng: <%= marker.longitude.to_f %>,
+        content: '<%==j br(marker.window_text) %>',
+        icon: '<%==j @content.icon_image(marker.icon_category || (marker.categories.include?(@specified_category) ? @specified_category
+                                                                                                                         : marker.categories.first), true) %>'
+      });
     <%- end -%>
+    map.create_markers(markers);
   });
+
   </script>
 
   <%- unless @markers.empty? -%>
   <table>
-    <tr>
-      <th scope="col">カテゴリ</th>
-      <%- if @content.show_images? -%>
-      <th scope="col">画像</th>
+    <thead>
+      <tr>
+      <%- @content.list_style.each do |header| -%>
+        <th scope="col"><%= header[:header].html_safe %></th>
       <%- end -%>
-      <th scope="col">名称</th>
-      <th scope="col">地図</th>
-    </tr>
-    <%- @markers.each do |marker| -%>
-    <tr>
-      <td class="markerCategories">
-        <%- marker.categories.each do |category| -%>
-        <div class="<%= category.name -%>"><%= category.title %></div>
-        <%- end -%>
-      </td>
-      <%- if @content.show_images? -%>
-      <td class="markerImage">
-        <%- if marker.files.empty? -%>
-          <%- if @content.default_image.blank? -%>
-            画像がありません。
-          <%- else -%>
-            <%= image_tag @content.default_image %>
-          <%- end -%>
-        <%- else -%>
-          <%- unless (mi = marker_image(marker)).blank? -%>
-            <%= mi %>
-          <%- else -%>
-            <%- if @content.default_image.blank? -%>
-              画像がありません。
-            <%- else -%>
-              <%= image_tag @content.default_image %>
-            <%- end -%>
-          <%- end -%>
-        <%- end -%>
-      </td>
+      </tr>
+    </thead>
+    <tbody>
+      <%- @markers.each do |marker| -%>
+        <%= marker_table_replace(marker, @content.list_style) %>
       <%- end -%>
-      <td class="markerTitle"><%= marker.doc ? doc_replace(marker.doc, @content.title_style) : marker.title %></td>
-      <td class="marker"><%= link_to '表示', '#map_canvas', onclick: "map.move_to('#{marker.latitude}_#{marker.longitude}'); return false;" %></td>
-    </tr>
-    <%- end -%>
+    </tbody>
   </table>
   <%- end -%>
 

@@ -1,0 +1,63 @@
+<div class="contentMapMarkers">
+  <div id="map_canvas" style="height: 350px; width: 700px;"></div>
+
+  <%= javascript_include_tag "https://maps.googleapis.com/maps/api/js?key=#{@content.site.google_map_api_key}&region=jp" %>
+  <%= javascript_include_tag '/_common/modules/map/js/map.js' %>
+  <script type="text/javascript">
+  var map;
+  google.maps.event.addDomListener(window, 'load', function(e) {
+    <%- unless @all_markers.empty?
+          bounds = @all_markers.inject(min: {}, max: {}){|result, marker|
+                     min = result[:min]
+                     max = result[:max]
+                     m_lat = marker.latitude.to_f
+                     m_lon = marker.longitude.to_f
+
+                     min[:lat] ||= m_lat
+                     min[:lon] ||= m_lon
+                     max[:lat] ||= m_lat
+                     max[:lon] ||= m_lon
+
+                     min[:lat] = m_lat if min[:lat] > m_lat
+                     min[:lon] = m_lon if min[:lon] > m_lon
+                     max[:lat] = m_lat if max[:lat] < m_lat
+                     max[:lon] = m_lon if max[:lon] < m_lon
+
+                     result
+                   } -%>
+    map = new MapViewer('map_canvas', <%= bounds[:min][:lat] %>, <%= bounds[:min][:lon] %>,
+                                      <%= bounds[:max][:lat] %>, <%= bounds[:max][:lon] %>);
+    <%- else -%>
+    <%- default_position = default_map_position(@content) -%>
+    map = new MapViewer('map_canvas', <%= default_position[0].to_f %>, <%= default_position[1].to_f %>);
+    <%- end -%>
+
+    <%- @all_markers.each do |marker| -%>
+      map.set_marker('<%= "#{marker.latitude}_#{marker.longitude}" %>', <%= marker.latitude.to_f %>, <%= marker.longitude.to_f %>, '<%==j marker.title %>',
+                     '<%==j br(marker.window_text) %>',
+                     '<%==j @content.icon_image(marker.icon_category || (marker.categories.include?(@specified_category) ? @specified_category
+                                                                                                                         : marker.categories.first), true) %>');
+
+    <%- end -%>
+  });
+  </script>
+
+  <%- unless @markers.empty? -%>
+  <table>
+    <thead>
+      <tr>
+      <%- @content.list_style.each do |header| -%>
+        <th scope="col"><%= header[:header].html_safe %></th>
+      <%- end -%>
+      </tr>
+    </thead>
+    <tbody>
+      <%- @markers.each do |marker| -%>
+        <%= marker_table_replace(marker, @content.list_style) %>
+      <%- end -%>
+    </tbody>
+  </table>
+  <%- end -%>
+
+  <%= paginate @markers %>
+</div>

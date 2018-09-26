@@ -12,7 +12,7 @@ class Map::Public::Node::NavigationsController < Map::Public::NodeController
 
     doc_markers = @content.marker_docs
                           .preload(:marker_categories, :files, :marker_icon_category)
-                          .flat_map { |doc| Map::Marker.from_doc(doc) }
+                          .flat_map { |doc| Map::Marker.from_doc(doc, @content) }
                           .compact
 
     @markers = @content.sort_markers(markers + doc_markers)

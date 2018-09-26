@@ -1,0 +1,45 @@
+<table class="index tree">
+  <tr>
+    <th style="width: 250px;"><%= Sys::Group.human_attribute_name :name %></th>
+    <th style="width: ;"><%= Sys::Group.human_attribute_name :code %></th>
+    <%- @state_options.each do |text, state| -%>
+      <th style="width: 80px; text-align: center;"><%= text %></th>
+    <%- end -%>
+    <th style="width: 80px; text-align: center;">計</th>
+  </tr>
+  <%- @groups.each do |group| -%>
+    <tr class="<%= cycle '', 'cycle' %>" data-tree-id="<%= group.ancestors[0..-2].map(&:id).join('.') %>">
+      <td>
+        <span class="indent level<%= group.level_no - 1 %>"></span>
+        <%- if group.children.present? -%>
+          <a class="icon opened" data-tree-id="<%= group.ancestors.map(&:id).join('.') %>">-</a>
+        <%- else -%>
+          <a class="icon"></a>
+        <%- end -%>
+        <%- if Core.user.has_auth?(:manager) || Core.user.group == group -%>
+          <%= link_to group.name, { controller: :users, aggregation_group_id: group } %>
+        <%- else -%>
+          <%= group.name %>
+        <%- end -%>
+      </td>
+      <td><%= group.code %></td>
+      <%- @state_options.each do |text, state| -%>
+        <td style="text-align: center;"><%= @group_count.dig(group.id, state) %></td>
+      <%- end -%>
+      <td style="text-align: center;"><%= @group_total[group.id] %></td>
+    </tr>
+  <%- end -%>
+  <tr class="<%= cycle '', 'cycle' %>">
+    <td colspan="2" style="text-align: center;">計</td>
+    <%- @state_options.each do |text, state| -%>
+      <td style="text-align: center;"><%= @state_total[state] %></td>
+    <%- end -%>
+    <td style="text-align: center;"><%= @group_total.values.sum %></td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+$(function() {
+  $('table.tree').tableTree();
+});
+</script>

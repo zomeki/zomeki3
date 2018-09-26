@@ -8,7 +8,7 @@ class Approval::Admin::Mailer < ApplicationMailer
     @preview_uri = preview_uri
     @approve_uri = approve_uri
 
-    mail from: @from.email, to: @to.email, subject: "#{subject_prefix}：承認依頼メール"
+    mail from: from_address, to: @to.email, subject: "#{subject_prefix}：承認依頼メール"
   end
 
   def approved_notification(options = {})
@@ -19,7 +19,7 @@ class Approval::Admin::Mailer < ApplicationMailer
     @content = @item.content
     @detail_uri = detail_uri
 
-    mail from: @from.email, to: @to.email, subject: "#{subject_prefix}：承認完了メール"
+    mail from: from_address, to: @to.email, subject: "#{subject_prefix}：承認完了メール"
   end
 
   def passbacked_notification(options = {})
@@ -31,7 +31,7 @@ class Approval::Admin::Mailer < ApplicationMailer
     @content = @item.content
     @detail_uri = detail_uri
 
-    mail from: @from.email, to: @to.email, subject: "#{subject_prefix}：差し戻しメール"
+    mail from: from_address, to: @to.email, subject: "#{subject_prefix}：差し戻しメール"
   end
 
   def pullbacked_notification(options = {})
@@ -43,10 +43,18 @@ class Approval::Admin::Mailer < ApplicationMailer
     @content = @item.content
     @detail_uri = detail_uri
 
-    mail from: @from.email, to: @to.email, subject: "#{subject_prefix}：引き戻しメール"
+    mail from: from_address, to: @to.email, subject: "#{subject_prefix}：引き戻しメール"
   end
 
   private
+
+  def from_address
+    if @content.site.admin_mail_sender_for_approval?
+      @content.site.admin_mail_sender
+    else
+      @from.email
+    end
+  end
 
   def subject_prefix
     "#{@content.name}（#{@content.site.name}）"
