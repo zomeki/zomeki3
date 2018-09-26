@@ -22,6 +22,19 @@ module DateHelper
     sprintf(format, kr['month'].to_i, kr['day'].to_i)
   end
 
+  def display_whole_period(periods)
+    all_days = periods.map { |period| [period.started_on, period.ended_on] }.flatten.compact
+    return '' if all_days.blank?
+
+    min = all_days.min
+    max = all_days.max
+    if min == max
+      l(min)
+    else
+      "#{l(min)} ～ #{l(max)}".html_safe
+    end
+  end
+
   def display_short_period(period)
     if period.started_on == period.ended_on
       l(period.started_on)

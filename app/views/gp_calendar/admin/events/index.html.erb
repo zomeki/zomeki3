@@ -16,14 +16,7 @@
   <tr class="<%= cycle '', 'cycle' %>">
     <td class="action_link"><%= link_to :show, { action: :show, id: item } %></td>
     <td style="text-align: center;"><%= item.id %></td>
-    <td>
-      <%- if period = item.periods.first -%>
-        <%= display_short_period(period) %>
-        <%- if item.periods.size > 1 -%>
-        <span title="<%= item.periods[1..-1].map { |period| display_short_period(period) }.join(', ') %>">...</span>
-        <%- end -%>
-      <%- end -%>
-    </td>
+    <td><%= display_whole_period(item.periods) %></td>
     <td style="text-align: left;"><%= item.title %></td>
     <td style="text-align: center;"><%=l item.created_at %></td>
     <td style="text-align: center;"><%= item.state_text %></td>
