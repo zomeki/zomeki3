@@ -1,4 +1,6 @@
-<h3 class="month <%= @calendar.month_name.downcase %>"><%= @calendar.month %>月</h3>
+<h3 class="month <%= @calendar.month_name.downcase %>">
+  <%= link_to "#{@calendar.month}月", "#{@node.public_uri}#{@date.strftime('%Y/%m/')}" %>
+</h3>
 
 <%= @calendar.to_html %>
 
@@ -7,3 +9,16 @@
   <%= @pagination.to_links(class: 'pagination lowerPagination') %>
   <%- end -%>
 </div>
+
+<script type="text/javascript">
+$(function() {
+  var piece = $('#<%= @piece.css_id %>');
+
+  piece.find('div.links').find('a.prev_page, a.current_page, a.next_page').on('click', function(e) {
+    e.preventDefault();
+    $.get($(this).attr('href'), function(data) {
+      piece.replaceWith(data);
+    });
+  });
+});
+</script>

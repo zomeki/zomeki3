@@ -7,7 +7,8 @@ class PublicationScript < ParametersScript
 
   def initialize_publication
     @node = params[:node] || Cms::Node.where(id: params[:node_id]).first
-    @site = @node.site if @node
+    @piece = params[:piece] || Cms::Piece.where(id: params[:piece_id]).first
+    @site = @node&.site || @piece&.site
   end
 
   def publish_page(item, options = {})

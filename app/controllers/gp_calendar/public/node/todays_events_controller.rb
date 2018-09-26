@@ -1,19 +1,14 @@
-class GpCalendar::Public::Node::TodaysEventsController < GpCalendar::Public::Node::BaseController
+class GpCalendar::Public::Node::TodaysEventsController < GpCalendar::Public::NodeController
   def index
     http_error(404) if params[:page]
 
-    criteria = {date: @today, kind: :event}
-    @events = GpCalendar::Event.public_state.content_and_criteria(@content, criteria).order(:started_on).to_a
+    @range = [@today, @today]
 
-    docs = @content.event_docs(@today, @today)
-    @events = merge_docs_into_events(docs, @events)
+    events = @content.public_events.scheduled_on(@today)
+    docs = @content.event_docs.scheduled_on(@today)
 
-    filter_events_by_specified_category(@events)
+    @events = GpCalendar::EventMergeService.new(@content).merge(events, docs, @range)
 
-    category_ids = @events.inject([]) {|i, e| i.concat(e.category_ids) }
-    @event_categories = GpCategory::Category.where(id: category_ids)
-
-    criteria = {date: @today, kind: :holiday}
-    @holidays = GpCalendar::Holiday.public_state.content_and_criteria(@content, criteria)
+    @holidays = @content.public_holidays.scheduled_on(@today)
   end
 end

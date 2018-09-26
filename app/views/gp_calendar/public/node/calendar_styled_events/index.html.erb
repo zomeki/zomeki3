@@ -21,19 +21,20 @@
         <%- week.each do |day| -%>
         <td id="<%= 'day%02d' % day.day if day.month == @date.month %>" class="day <%= %w!sun mon tue wed thu fri sat![day.wday] %><%= ' prevMonth' if day < @date.beginning_of_month %><%= ' nextMonth' if day > @date.end_of_month %>">
           <p class="date"><%= day.day %></p>
-          <%- unless (holidays = @holidays.select{|e| e.started_on = day.year; day == e.started_on }).empty? -%>
+          <%- unless (holidays = @holidays.select { |h| [h.date.month, h.date.day] == [day.month, day.day] }).empty? -%>
           <ul>
           <%- holidays.each do |holiday| -%>
-          <li class="<%= holiday.kind %>"><%= holiday.title %></li>
+          <li class="holiday"><%= holiday.title %></li>
           <%- end -%>
           </ul>
           <%- end -%>
 
-          <%- unless (events = @events.select{|e| day.between?(e.started_on, e.ended_on) }).empty? -%>
+          <%- events = @events.select { |e| e.periods.any? { |p| day.between?(p.started_on, p.ended_on) } } -%>
+          <%- unless events.empty? -%>
           <ul>
             <%- events.each do |event| -%>
             <li>
-              <%= event_replace(event, @date, @content.calendar_list_style) %>
+              <%= event_replace(event, list_style: @content.calendar_list_style) %>
             </li>
             <%- end -%>
           </ul>

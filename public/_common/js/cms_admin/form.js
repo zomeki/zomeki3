@@ -29,6 +29,7 @@
       var setting = $.extend({
         container: '.container',
         fields: '.fields',
+        cloneEvents: true,
         startIndex: 0,
         indexName: '_attributes',
         replaceTags: {
@@ -55,7 +56,7 @@
       $button.on('click', function(e) {
         e.preventDefault();
 
-        var $clone = $(setting.container).find(setting.fields + ':last').clone(true);
+        var $clone = $(setting.container).find(setting.fields + ':last').clone(setting.cloneEvents);
         clearInputValue($clone);
         replaceIndex($clone);
 

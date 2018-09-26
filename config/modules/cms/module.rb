@@ -33,6 +33,7 @@ Cms::Lib::Modules::ModuleSet.draw :cms, '標準機能', 1 do |mod|
   mod.public_model :map_markers
   mod.public_model :maps
   mod.public_model :nodes
+  mod.public_model :periods
   mod.public_model :piece_link_items
   mod.public_model :piece_settings
   mod.public_model :pieces

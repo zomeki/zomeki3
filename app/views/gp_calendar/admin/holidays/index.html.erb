@@ -6,7 +6,6 @@
     <th style="text-align: center; width: 150px;"><%= GpCalendar::Holiday.human_attribute_name :title %></th>
     <th style="text-align: center; width: 120px;"><%= GpCalendar::Holiday.human_attribute_name :date %></th>
     <th style="text-align: center; width: ;"><%= GpCalendar::Holiday.human_attribute_name :description %></th>
-    <th style="text-align: center; width: 80px;"><%= GpCalendar::Holiday.human_attribute_name :kind %></th>
     <th style="text-align: center; width: 60px;"><%= GpCalendar::Holiday.human_attribute_name :state %></th>
   </tr>
 
@@ -16,7 +15,6 @@
     <td style="text-align: center;"><%= item.title %></td>
     <td style="text-align: center;"><%=l item.date, format: (item.repeat ? '* %m月%d日': '%Y年%m月%d日') %></td>
     <td style="text-align: left;"><%= item.description %></td>
-    <td style="text-align: center;"><%= item.kind_text %></td>
     <td style="text-align: center;"><%= item.state_text %></td>
   </tr>
   <%- end -%>

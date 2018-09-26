@@ -6,14 +6,20 @@
   </tr>
   <%- end -%>
   <tr>
-    <th><%= f.label :event_started_on %></th>
-    <td><%= f.text_field :event_started_on, value: l(@item.event_started_on),
-                                            style: 'width: 150px;', class: 'datepicker' %></td>
-  </tr>
-  <tr>
-    <th><%= f.label :event_ended_on %></th>
-    <td><%= f.text_field :event_ended_on, value: l(@item.event_ended_on),
-                                          style: 'width: 150px;', class: 'datepicker' %></td>
+    <th><%= f.label :periods %></th>
+    <td>
+      <div id="event_periods">
+        <%- @item.periods.build if @item.periods.blank? -%>
+        <%= f.fields_for :periods do |f2| %>
+          <div class="event_period" style="margin: 5px 0;">
+            <%= f2.text_field :started_on, value: l(f2.object.started_on), style: 'width: 150px;', class: 'datepicker' %>
+            <span>～</span>
+            <%= f2.text_field :ended_on, value: l(f2.object.ended_on), style: 'width: 150px;', class: 'datepicker' %>
+          </div>
+        <%- end -%>
+      </div>
+      <button type="button" id="add_event_period">追加</button>
+    </td>
   </tr>
   <%- @content.event_category_types.each do |category_type| -%>
   <tr>
@@ -52,12 +58,29 @@ $(function() {
 
 <script type="text/javascript">
 $(function() {
-  function set_copy_date(from, to) {
-    $(from).on('change', function() {
-      if ($(to).val() === '') { $(to).val($(from).val()); }
-    });
+  $("#add_event_period").addFields({
+    container: "#event_periods",
+    fields: ".event_period",
+    cloneEvents: false,
+    afterAdd: function(elem) {
+      elem.find('input.datepicker')
+          .removeClass('hasDatepicker')
+          .datepicker();
+    }
+  });
+
+  $(document).on('change', 'input[id$="_started_on"], input[id$="_ended_on"]', function(e) {
+    var from = $(this);
+    var to = from.attr('id').replace(/_started_on$/, '_ended_on');
+    copyData(from, $('#' + to))
+  });
+  $(document).on('change', 'input[id$="_ended_on"]', function(e) {
+    var from = $(this);
+    var to = from.attr('id').replace(/_ended_on$/, '_started_on');
+    copyData(from, $('#' + to))
+  });
+  function copyData(from, to) {
+    if (to.val() === '') { to.val($(from).val()); }
   }
-  set_copy_date('#item_event_started_on', '#item_event_ended_on');
-  set_copy_date('#item_event_ended_on', '#item_event_started_on');
 });
 </script>

@@ -65,6 +65,19 @@ Navigation.initialize = function(settings) {
       return false;
     });
   }
+
+  # trigger navigation after updating piece
+  $(document).ajaxComplete(function(e, xhr) {
+    if (xhr.status == 200 || xhr.getResponseHeader("content-type").match(/^text\/html/)) {
+      if ($.cookie('navigation_ruby') == 'on') {
+        if ($.cookie('navigation_ruby_type') == 'roman') {
+          $(Navigation.settings['rubyRoman']).trigger('click');
+        } else {
+          $(Navigation.settings['rubyKana']).trigger('click');
+        }
+      }
+    }
+  });
 };
 
 Navigation.theme = function(theme) {

@@ -511,6 +511,16 @@ ActiveRecord::Schema.define(version: 20180919025147) do
     t.string   "url"
   end
 
+  create_table "cms_periods", force: :cascade do |t|
+    t.string   "periodable_type"
+    t.integer  "periodable_id"
+    t.date     "started_on"
+    t.date     "ended_on"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.index ["periodable_type", "periodable_id"], name: "index_cms_periods_on_periodable_type_and_periodable_id", using: :btree
+  end
+
   create_table "cms_piece_link_items", force: :cascade do |t|
     t.integer  "piece_id",   null: false
     t.string   "state"

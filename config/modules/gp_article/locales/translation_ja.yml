@@ -64,6 +64,10 @@ ja:
         inquiries/email: 連絡先（メールアドレス）
         inquiries/note: 連絡先（備考）
         related_docs: 関連記事
+        periods: 期間
+      gp_article/doc/periods:
+        started_on: 開始日
+        ended_on: 終了日
       gp_article/doc/maps:
         map_lat: 緯度
         map_lng: 経度

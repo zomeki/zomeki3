@@ -19,10 +19,6 @@
     <th><%= f.label :description %></th>
     <td><%= f.text_field :description, style: 'width: 700px;' %></td>
   </tr>
-  <tr>
-    <th><%= f.label :kind %></th>
-    <td><%= f.collection_radio_buttons :kind, @item.class.kind_options, :last, :first %></td>
-  </tr>
 </table>
 
 <%= creator_form f %>
