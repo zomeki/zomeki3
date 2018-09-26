@@ -1,5 +1,5 @@
 <h3 class="month <%= @calendar.month_name.downcase %>">
-  <%= link_to "#{@calendar.month}月", "#{@node.public_uri}?start_date=#{@date.strftime('%Y-%m-%d')}&end_date=#{@date.end_of_month.strftime('%Y-%m-%d')}" %>
+  <%= link_to "#{@calendar.year}年#{@calendar.month}月", "#{@node.public_uri}?start_date=#{@date.strftime('%Y-%m-%d')}&end_date=#{@date.end_of_month.strftime('%Y-%m-%d')}" %>
 </h3>
 
 <%= @calendar.to_html %>
