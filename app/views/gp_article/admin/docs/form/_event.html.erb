@@ -69,18 +69,17 @@ $(function() {
     }
   });
 
-  $(document).on('change', 'input[id$="_started_on"], input[id$="_ended_on"]', function(e) {
+  $(document).on('change', '#event_periods input.datepicker', function(e) {
     var from = $(this);
-    var to = from.attr('id').replace(/_started_on$/, '_ended_on');
-    copyData(from, $('#' + to))
-  });
-  $(document).on('change', 'input[id$="_ended_on"]', function(e) {
-    var from = $(this);
-    var to = from.attr('id').replace(/_ended_on$/, '_started_on');
-    copyData(from, $('#' + to))
-  });
-  function copyData(from, to) {
+    var toID = from.attr('id');
+    if (toID.match(/_started_on$/)) {
+      toID = toID.replace(/_started_on$/, '_ended_on')
+    } else {
+      toID = toID.replace(/_ended_on$/, '_started_on');
+    }
+
+    var to = $('#' + toID);
     if (to.val() === '') { to.val($(from).val()); }
-  }
+  });
 });
 </script>
