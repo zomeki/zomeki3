@@ -4,6 +4,7 @@ ja:
       cms/content: コンテンツ
       cms/node: ディレクトリ
       cms/node/page: 自由形式ページ
+      cms/period: 期間
       cms/piece: ピース
       cms/layout: レイアウト
       cms/site: サイト
@@ -22,6 +23,7 @@ ja:
         level_no: 階層
         sort_no: 並び順
         name: コンセプト名
+
 
       cms/site:
         state: 状態
@@ -115,6 +117,10 @@ ja:
         smart_phone_head: スマートフォン HEADタグ
         smart_phone_body: スマートフォン BODYタグ
         smart_phone_stylesheet: スマートフォン スタイルシート
+
+      cms/period:
+        started_on: 開始日
+        ended_on: 終了日
 
       cms/piece:
         concept_id: コンセプト

@@ -1,32 +1,33 @@
-class GpCalendar::Public::Piece::EventsController < GpCalendar::Public::Piece::BaseController
+class GpCalendar::Public::Piece::EventsController < GpCalendar::Public::PieceController
   def pre_dispatch
     @piece = GpCalendar::Piece::Event.find(Page.current_piece.id)
+    @content = @piece.content
     @item = Page.current_item
   end
 
   def index
     @date = Date.today
     start_date, end_date = case @piece.target_date
-    when 'near_future'
-      [Date.today, nil]
-    when 'this_month'
-      [Date.today.beginning_of_month, Date.today.end_of_month]
-    else
-      [Date.today, nil]
-    end
+                           when 'near_future'
+                             [Date.today, nil]
+                           when 'this_month'
+                             [Date.today.beginning_of_month, Date.today.end_of_month]
+                           else
+                             [Date.today, nil]
+                           end
+    @range = [start_date, end_date]
 
-    criteria = {}
-    events = GpCalendar::Event.public_state.content_and_criteria(@piece.content, criteria).order(:started_on)
-      .scheduled_between(start_date, end_date)
-    events = events.limit(@piece.docs_number) if @piece.docs_number
-    @events =  events.preload(:categories).to_a
+    events = @content.public_events.scheduled_between(start_date, end_date)
+    events = events.categorized_into(@piece.category_ids) if @piece.category_ids.present?
+    events = events.order(:started_on).preload(:categories, :periods).to_a
 
-    @piece.category_ids.each do |category|
-      @events.reject! {|c| c.categories && !c.categories.map{|ct| ct.id }.include?(category) }
-    end
+    docs = @piece.content.event_docs.scheduled_between(start_date, end_date)
+    docs = docs.categorized_into(@piece.category_ids) if @piece.category_ids.present?
+    docs = docs.preload(:periods)
 
-    docs = @piece.content.event_docs(start_date, end_date, @piece.category_ids)
-    @events = merge_docs_into_events(docs, @events)
+    @events = GpCalendar::EventMergeService.new(@content).merge(events, docs, @range)
     @events = @events.slice(0, @piece.docs_number) if @piece.docs_number
+
+    @holidays = @content.public_holidays.scheduled_between(start_date, end_date)
   end
 end

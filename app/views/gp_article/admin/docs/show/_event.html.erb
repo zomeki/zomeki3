@@ -6,12 +6,12 @@
   </tr>
   <%- end -%>
   <tr>
-    <th><%= @item.class.human_attribute_name :event_started_on %></th>
-    <td><%= @item.event_started_on %></td>
-  </tr>
-  <tr>
-    <th><%= @item.class.human_attribute_name :event_ended_on %></th>
-    <td><%= @item.event_ended_on %></td>
+    <th><%= @item.class.human_attribute_name :periods %></th>
+    <td>
+      <%- @item.periods.each do |period| -%>
+        <div><%= display_short_period(period) %></div>
+      <%- end -%>
+    </td>
   </tr>
   <%- @content.event_category_types.each do |category_type| -%>
   <tr>

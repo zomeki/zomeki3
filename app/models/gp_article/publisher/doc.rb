@@ -8,7 +8,7 @@ class GpArticle::Publisher::Doc < Cms::Publisher
 
       node_map = make_node_map(publishers)
       node_map.each do |node, pubs|
-        ::Script.run("gp_article/docs/publish_doc",
+        ::Script.run("gp_article/docs/publish",
           site_id: pubs.first.site_id,
           node_id: node.id,
           target_doc_id: pubs.map(&:publishable_id)

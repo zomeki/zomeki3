@@ -10,11 +10,11 @@ Cms::Lib::Modules::ModuleSet.draw :gp_calendar, 'カレンダー', 60 do |mod|
 
   ## pieces
   mod.piece :monthly_links, '月別リンク'
-  mod.piece :daily_links, '日別リンク'
+  mod.piece :daily_links, '日別リンク', publishable: true
   mod.piece :category_types, 'カテゴリ一覧'
   mod.piece :near_future_events, '本日と明日のイベント'
   mod.piece :events, 'イベント一覧'
-  mod.piece :category_daily_links, '日別リンク（イベント検索）'
+  mod.piece :category_daily_links, '日別リンク（イベント検索）', publishable: true
 
   ## public models
   mod.public_model :events

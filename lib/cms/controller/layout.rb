@@ -94,20 +94,10 @@ module Cms::Controller::Layout
       piece = Cms::Piece.find_by(id: params[:piece_id])
       pieces[piece.name] = piece if piece
     end
-    pieces.each do |name, item|
-      Page.current_piece = item
-      begin
-        next if item.content_id && !item.content
-        mnames= item.model.underscore.pluralize.split('/')
-        data = Sys::Lib::Controller.render("#{mnames[0]}/public/piece/#{mnames[1]}", 'index', request: request, params: params)
-        if data =~ /^<html/ && Rails.env.to_s == 'production'
-          # component error
-        else
-          body.gsub!("[[piece/#{name}]]") { piece_container_html(item, data) }
-        end
-      rescue => e
-        error_log e
-      end
+    pieces.each do |name, piece|
+      Page.current_piece = piece
+      data = Cms::PieceRenderService.new(piece).render(request, params)
+      body.gsub!("[[piece/#{name}]]") { data } if data
     end
 
     ## render the content
@@ -163,20 +153,5 @@ module Cms::Controller::Layout
     return body unless Page.site.use_common_ssl?
 
     Cms::SslLinkReplaceService.new(Page.site, Page.current_node.public_uri).run(body)
-  end
-
-  def piece_container_html(piece, body)
-    return "" if body.blank?
-
-    title = piece.view_title
-    return body if piece.model == 'Cms::Free' && title.blank?
-
-    html  = %Q(<div#{piece.css_attributes}>\n)
-    html += %Q(<div class="pieceContainer">\n)
-    html += %Q(<div class="pieceHeader"><h2>#{title}</h2></div>\n) if !title.blank?
-    html += %Q(<div class="pieceBody">#{body}</div>\n)
-    html += %Q(</div>\n)
-    html += %Q(<!-- end .piece --></div>\n)
-    html
   end
 end
