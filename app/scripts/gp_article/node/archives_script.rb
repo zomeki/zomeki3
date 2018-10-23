@@ -14,7 +14,7 @@ class GpArticle::Node::ArchivesScript < PublicationScript
 
     days = @node.content.docs.public_state
                         .group("TO_CHAR(display_published_at, 'YYYYMM01')")
-                        .pluck("TO_CHAR(display_published_at, 'YYYYMM01')")
+                        .pluck(Arel.sql("TO_CHAR(display_published_at, 'YYYYMM01')"))
                         .map{|d| Time.parse(d).beginning_of_month.to_date }
     # Not exist pages
     (all_days - days).each do |day|

@@ -18,7 +18,7 @@ class Cms::Content < ApplicationRecord
   validates :concept_id, :state, :model, :name, presence: true
   validates :code, presence: true,
                    uniqueness: { scope: [:site_id], case_sensitive: false },
-                   format: { with: /\A[0-9a-zA-Z\-_]+\z/, if: "name.present?", message: :invalid_bracket_name }
+                   format: { with: /\A[0-9a-zA-Z\-_]+\z/, if: -> { name.present? }, message: :invalid_bracket_name }
 
   before_create :set_default_settings_from_configs
   after_save :save_settings

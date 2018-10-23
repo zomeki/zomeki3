@@ -130,7 +130,7 @@ class GpArticle::Doc < ApplicationRecord
   scope :visible_in_list, -> { where(feature_1: true) }
   scope :categorized_into, ->(categories, categorized_as: 'GpArticle::Doc', alls: false) {
     cats = GpCategory::Categorization.select(:categorizable_id)
-                                     .where(categorized_as: categorized_as, categorizable_type: self.to_s)
+                                     .where(categorized_as: categorized_as, categorizable_type: self.name)
     if alls
       Array(categories).inject(all) { |rel, c| rel.where(id: cats.where(category_id: c)) }
     else

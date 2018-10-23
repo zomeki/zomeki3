@@ -8,7 +8,7 @@ module GpCategory::Model::Rel::Category
 
     scope :categorized_into, ->(categories, categorized_as: nil, alls: false) {
       cats = GpCategory::Categorization.select(:categorizable_id)
-                                       .where(categorizable_type: self.to_s, categorized_as: categorized_as)
+                                       .where(categorizable_type: self.name, categorized_as: categorized_as)
       if alls
         Array(categories).inject(all) { |rel, c| rel.where(id: cats.where(category_id: c)) }
       else

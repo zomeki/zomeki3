@@ -22,7 +22,7 @@ class Rank::TotalsFinder < ApplicationFinder
       ranks = ranks.where(Rank::Category.select(:page_path)
                                         .where(rank_cate_table[:content_id].eq(content.id))
                                         .where(rank_cate_table[:page_path].eq(rank_table[:page_path]))
-                                        .where(category_id: category_ids).exists)
+                                        .where(category_id: category_ids).arel.exists)
     end
 
     ranks = ranks.order(Arel.sql('accesses DESC'))

@@ -11,8 +11,8 @@ class Cms::PieceLinkItem < ApplicationRecord
 
   validates :state, :name, :uri, presence: true
 
-  def concept(flag = nil)
-    piece.concept(flag)
+  def concept
+    piece.concept
   end
   
   def creatable?
