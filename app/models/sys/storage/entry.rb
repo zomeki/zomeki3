@@ -4,7 +4,7 @@ class Sys::Storage::Entry
   include ActiveModel::Callbacks
   include Sys::Model::Auth::Storage
 
-  SYSTEM_DIRS = %w(_common _files _mobile _smartphone _themes)
+  SYSTEM_DIRS = %w(_common _files _mobile _smartphone _themes _pieces)
 
   define_model_callbacks :initialize, :validation, :save_files, :remove_files
   define_attribute_methods :base_dir, :name
