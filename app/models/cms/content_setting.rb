@@ -4,7 +4,7 @@ class Cms::ContentSetting < ApplicationRecord
 
   @@configs = {}
 
-  validates :content_id, :name, presence: true
+  validates :name, presence: true
 
   after_initialize :set_defaults_from_config
 

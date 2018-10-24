@@ -14,7 +14,7 @@ class MigrateCmsBrackets < ActiveRecord::Migration
             site_id: item.site_id,
             concept_id: item.concept_id,
             owner_id: item.id,
-            owner_type: item.class,
+            owner_type: item.class.name,
             name: "#{type}/#{name}"
           )
         end

@@ -32,7 +32,7 @@ module Cms::Lib::Layout
       rel = Cms::Piece.select(Cms::Piece.arel_table[Arel.star])
                       .select("#{Cms::Piece.connection.quote(name)}::text as bracket_description")
                       .public_state.ci_match(name: name_array[0])
-                      .order(concepts_order(concepts)).limit(1)
+                      .order(Arel.sql(concepts_order(concepts))).limit(1)
       if name_array.size > 1 # [[piece/name#id]]
         rel.where(id: name_array[1])
       else                   # [[piece/name]]
@@ -52,7 +52,7 @@ module Cms::Lib::Layout
                    .select("#{Cms::DataText.connection.quote(name)}::text as bracket_description")
                    .public_state.ci_match(name: name)
                    .where(concept_id: [nil] + concepts.to_a)
-                   .order(concepts_order(concepts)).limit(1)
+                   .order(Arel.sql(concepts_order(concepts))).limit(1)
     end
 
     relations.reduce(:union).index_by(&:bracket_description)
@@ -70,7 +70,7 @@ module Cms::Lib::Layout
                          .select("#{Cms::DataFile.connection.quote(name)}::text as bracket_description")
                          .public_state.ci_match(name: basename)
                          .where(concept_id: [nil] + concepts.to_a)
-                         .order(concepts_order(concepts, table_name: Cms::DataFile.table_name)).limit(1)
+                         .order(Arel.sql(concepts_order(concepts, table_name: Cms::DataFile.table_name))).limit(1)
       if dirname == '.'
         rel.where(node_id: nil)
       else
