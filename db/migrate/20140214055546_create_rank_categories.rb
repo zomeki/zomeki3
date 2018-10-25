@@ -1,4 +1,4 @@
-class CreateRankCategories < ActiveRecord::Migration
+class CreateRankCategories < ActiveRecord::Migration[4.2]
   def change
     remove_column :rank_totals, :category_id
 

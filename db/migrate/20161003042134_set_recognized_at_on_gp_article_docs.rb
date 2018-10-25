@@ -1,4 +1,4 @@
-class SetRecognizedAtOnGpArticleDocs < ActiveRecord::Migration
+class SetRecognizedAtOnGpArticleDocs < ActiveRecord::Migration[4.2]
   def up
     execute <<-SQL
       update gp_article_docs set recognized_at = (

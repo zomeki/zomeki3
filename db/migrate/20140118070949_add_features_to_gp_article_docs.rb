@@ -1,4 +1,4 @@
-class AddFeaturesToGpArticleDocs < ActiveRecord::Migration
+class AddFeaturesToGpArticleDocs < ActiveRecord::Migration[4.2]
   def up
     add_column :gp_article_docs, :feature_1, :boolean
     add_column :gp_article_docs, :feature_2, :boolean

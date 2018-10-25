@@ -1,4 +1,4 @@
-class CreateSnsShareAccounts < ActiveRecord::Migration
+class CreateSnsShareAccounts < ActiveRecord::Migration[4.2]
   def change
     create_table :sns_share_accounts do |t|
       t.belongs_to :content

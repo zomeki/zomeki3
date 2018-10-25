@@ -1,4 +1,4 @@
-class CreateSysTransferableFiles < ActiveRecord::Migration
+class CreateSysTransferableFiles < ActiveRecord::Migration[4.2]
   def up
     create_table :sys_transferable_files do |t|
       t.belongs_to :site

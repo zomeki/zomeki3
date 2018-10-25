@@ -1,4 +1,4 @@
-class AddFilenameBaseToGpArticleDocs < ActiveRecord::Migration
+class AddFilenameBaseToGpArticleDocs < ActiveRecord::Migration[4.2]
   def up
     add_column :gp_article_docs, :filename_base, :string
     GpArticle::Doc.where(filename_base: nil).update_all(filename_base: 'index')

@@ -1,4 +1,4 @@
-class AddIndexOnStateAndEventStateToGpArticleDocs < ActiveRecord::Migration
+class AddIndexOnStateAndEventStateToGpArticleDocs < ActiveRecord::Migration[4.2]
   def change
     add_index :gp_article_docs, :state
     add_index :gp_article_docs, :terminal_pc_or_smart_phone

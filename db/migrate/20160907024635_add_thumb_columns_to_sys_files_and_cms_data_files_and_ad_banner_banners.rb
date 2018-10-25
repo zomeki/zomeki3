@@ -1,4 +1,4 @@
-class AddThumbColumnsToSysFilesAndCmsDataFilesAndAdBannerBanners < ActiveRecord::Migration
+class AddThumbColumnsToSysFilesAndCmsDataFilesAndAdBannerBanners < ActiveRecord::Migration[4.2]
   def change
     [:sys_files, :cms_data_files, :ad_banner_banners].each do |table|
       add_column table, :thumb_width, :integer

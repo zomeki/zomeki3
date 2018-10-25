@@ -1,4 +1,4 @@
-class CreateToolConvertLinks < ActiveRecord::Migration
+class CreateToolConvertLinks < ActiveRecord::Migration[4.2]
   def up
     create_table :tool_convert_links do |t|
       t.belongs_to :concept

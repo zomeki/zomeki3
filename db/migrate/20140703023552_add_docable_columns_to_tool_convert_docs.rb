@@ -1,4 +1,4 @@
-class AddDocableColumnsToToolConvertDocs < ActiveRecord::Migration
+class AddDocableColumnsToToolConvertDocs < ActiveRecord::Migration[4.2]
   def change
     add_column :tool_convert_docs, :content_id, :integer, :after => :id
     add_column :tool_convert_docs, :docable_id, :integer, :after => :content_id

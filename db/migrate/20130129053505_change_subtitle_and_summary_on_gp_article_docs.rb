@@ -1,4 +1,4 @@
-class ChangeSubtitleAndSummaryOnGpArticleDocs < ActiveRecord::Migration
+class ChangeSubtitleAndSummaryOnGpArticleDocs < ActiveRecord::Migration[4.2]
   def up
     change_column :gp_article_docs, :subtitle, :text
     change_column :gp_article_docs, :summary, :text

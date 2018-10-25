@@ -1,4 +1,4 @@
-class CreateSurveyFormAnswers < ActiveRecord::Migration
+class CreateSurveyFormAnswers < ActiveRecord::Migration[4.2]
   def change
     create_table :survey_form_answers do |t|
       t.belongs_to :form

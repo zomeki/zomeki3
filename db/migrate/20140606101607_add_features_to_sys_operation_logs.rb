@@ -1,4 +1,4 @@
-class AddFeaturesToSysOperationLogs < ActiveRecord::Migration
+class AddFeaturesToSysOperationLogs < ActiveRecord::Migration[4.2]
   def change
     add_column :sys_operation_logs, :user_name, :string
     add_column :sys_operation_logs, :ipaddr, :string

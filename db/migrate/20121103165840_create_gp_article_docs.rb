@@ -1,4 +1,4 @@
-class CreateGpArticleDocs < ActiveRecord::Migration
+class CreateGpArticleDocs < ActiveRecord::Migration[4.2]
   def change
     create_table :gp_article_docs do |t|
       t.integer    :unid

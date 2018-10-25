@@ -1,4 +1,4 @@
-class CreateGpTemplateTemplates < ActiveRecord::Migration
+class CreateGpTemplateTemplates < ActiveRecord::Migration[4.2]
   def change
     create_table :gp_template_templates do |t|
       t.integer    :unid

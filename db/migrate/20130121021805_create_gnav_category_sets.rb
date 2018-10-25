@@ -1,4 +1,4 @@
-class CreateGnavCategorySets < ActiveRecord::Migration
+class CreateGnavCategorySets < ActiveRecord::Migration[4.2]
   def change
     create_table :gnav_category_sets do |t|
       t.references :menu_item

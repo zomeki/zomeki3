@@ -1,4 +1,4 @@
-class ReplaceUserWithGroupOnCmsSiteBelongings < ActiveRecord::Migration
+class ReplaceUserWithGroupOnCmsSiteBelongings < ActiveRecord::Migration[4.2]
   def up
     add_column :cms_site_belongings, :group_id, :integer
     add_index :cms_site_belongings, :group_id

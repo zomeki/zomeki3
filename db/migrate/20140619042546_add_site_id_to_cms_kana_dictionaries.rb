@@ -1,4 +1,4 @@
-class AddSiteIdToCmsKanaDictionaries < ActiveRecord::Migration
+class AddSiteIdToCmsKanaDictionaries < ActiveRecord::Migration[4.2]
   def change
     add_column :cms_kana_dictionaries, :site_id, :integer, :after => :unid
     site = Cms::Site.where(state: 'public').order(:id).first

@@ -1,4 +1,4 @@
-class CreateGpCategoryPublishers < ActiveRecord::Migration
+class CreateGpCategoryPublishers < ActiveRecord::Migration[4.2]
   def change
     create_table :gp_category_publishers do |t|
       t.belongs_to :category

@@ -1,4 +1,4 @@
-class AddSiteIdSysRoleNames < ActiveRecord::Migration
+class AddSiteIdSysRoleNames < ActiveRecord::Migration[4.2]
   def change
     add_column :sys_role_names, :site_id, :integer, :after => :id
 

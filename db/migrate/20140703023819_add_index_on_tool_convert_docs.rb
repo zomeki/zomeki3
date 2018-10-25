@@ -1,4 +1,4 @@
-class AddIndexOnToolConvertDocs < ActiveRecord::Migration
+class AddIndexOnToolConvertDocs < ActiveRecord::Migration[4.2]
   def change
     add_index :tool_convert_docs, :content_id
     add_index :tool_convert_docs, [:docable_id, :docable_type]

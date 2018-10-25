@@ -1,4 +1,4 @@
-class Existing20120215 < ActiveRecord::Migration
+class Existing20120215 < ActiveRecord::Migration[4.2]
   def change
     create_table "article_areas", :force => true do |t|
       t.integer  "unid"

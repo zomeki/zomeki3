@@ -1,4 +1,4 @@
-class MigrateSelectedIndexToApprovalAssignments < ActiveRecord::Migration
+class MigrateSelectedIndexToApprovalAssignments < ActiveRecord::Migration[4.2]
   def up
     Approval::ApprovalRequest.find_each do |request|
       next if request.select_assignments.blank?

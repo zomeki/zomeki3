@@ -1,4 +1,4 @@
-class AddCreatableToSysCreators < ActiveRecord::Migration
+class AddCreatableToSysCreators < ActiveRecord::Migration[4.2]
   KLASSES = [
     AdBanner::Banner,
     AdBanner::Group,

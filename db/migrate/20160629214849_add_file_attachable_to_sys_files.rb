@@ -1,4 +1,4 @@
-class AddFileAttachableToSysFiles < ActiveRecord::Migration
+class AddFileAttachableToSysFiles < ActiveRecord::Migration[4.2]
   KLASSES = [
     GpArticle::Doc,
     GpCalendar::Event,

@@ -1,4 +1,4 @@
-class CreateSysObjectRelations < ActiveRecord::Migration
+class CreateSysObjectRelations < ActiveRecord::Migration[4.2]
   def change
     create_table :sys_object_relations do |t|
       t.belongs_to :source, index: true, polymorphic: true

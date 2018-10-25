@@ -1,4 +1,4 @@
-class AddRecognizableToSysRecognitions < ActiveRecord::Migration
+class AddRecognizableToSysRecognitions < ActiveRecord::Migration[4.2]
   def up
     add_column :sys_recognitions, :recognizable_id, :integer
     add_column :sys_recognitions, :recognizable_type, :string

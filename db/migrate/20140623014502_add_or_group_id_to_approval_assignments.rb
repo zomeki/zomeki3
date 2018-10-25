@@ -1,4 +1,4 @@
-class AddOrGroupIdToApprovalAssignments < ActiveRecord::Migration
+class AddOrGroupIdToApprovalAssignments < ActiveRecord::Migration[4.2]
   def change
     add_column :approval_assignments, :or_group_id, :integer
     Approval::Approval.all.each do |approval|

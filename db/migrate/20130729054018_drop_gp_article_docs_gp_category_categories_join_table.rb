@@ -1,4 +1,4 @@
-class DropGpArticleDocsGpCategoryCategoriesJoinTable < ActiveRecord::Migration
+class DropGpArticleDocsGpCategoryCategoriesJoinTable < ActiveRecord::Migration[4.2]
   def up
     rows = ActiveRecord::Base.connection.select_all <<-SQL
         SELECT doc_id AS categorizable_id, 'GpArticle::Doc' AS categorizable_type, category_id

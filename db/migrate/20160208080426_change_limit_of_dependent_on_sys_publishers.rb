@@ -1,4 +1,4 @@
-class ChangeLimitOfDependentOnSysPublishers < ActiveRecord::Migration
+class ChangeLimitOfDependentOnSysPublishers < ActiveRecord::Migration[4.2]
   def up
     change_column :sys_publishers, :dependent, :string
   end

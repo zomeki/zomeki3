@@ -1,4 +1,4 @@
-class SetSiteIdToSysFilesAdBannerBanners < ActiveRecord::Migration
+class SetSiteIdToSysFilesAdBannerBanners < ActiveRecord::Migration[4.2]
   def up
     Sys::File.where(tmp_id: nil).each do |item|
       if item.file_attachable && item.file_attachable.content

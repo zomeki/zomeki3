@@ -1,4 +1,4 @@
-class AddInquirableToCmsInquiries < ActiveRecord::Migration
+class AddInquirableToCmsInquiries < ActiveRecord::Migration[4.2]
   KLASSES = [
     GpArticle::Doc,
   ]

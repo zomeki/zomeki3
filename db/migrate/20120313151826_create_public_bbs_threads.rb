@@ -1,4 +1,4 @@
-class CreatePublicBbsThreads < ActiveRecord::Migration
+class CreatePublicBbsThreads < ActiveRecord::Migration[4.2]
   def change
     create_table :public_bbs_threads do |t|
       t.integer :unid

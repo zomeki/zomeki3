@@ -1,4 +1,4 @@
-class ChangeHostAndUriPathOnToolConvertDocs < ActiveRecord::Migration
+class ChangeHostAndUriPathOnToolConvertDocs < ActiveRecord::Migration[4.2]
   def change
     change_column :tool_convert_docs, :host, :text, :after => :doc_public_uri
     change_column :tool_convert_docs, :uri_path, :text

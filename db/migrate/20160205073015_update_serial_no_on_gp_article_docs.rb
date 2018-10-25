@@ -1,4 +1,4 @@
-class UpdateSerialNoOnGpArticleDocs < ActiveRecord::Migration
+class UpdateSerialNoOnGpArticleDocs < ActiveRecord::Migration[4.2]
   def up
     GpArticle::Doc.unscoped.order(:id).each do |doc|
       if doc.prev_edition.present? && doc.prev_edition.serial_no.present?

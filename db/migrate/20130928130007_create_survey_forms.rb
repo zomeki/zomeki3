@@ -1,4 +1,4 @@
-class CreateSurveyForms < ActiveRecord::Migration
+class CreateSurveyForms < ActiveRecord::Migration[4.2]
   def change
     create_table :survey_forms do |t|
       t.integer    :unid

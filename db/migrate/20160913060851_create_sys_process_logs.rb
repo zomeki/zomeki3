@@ -1,4 +1,4 @@
-class CreateSysProcessLogs < ActiveRecord::Migration
+class CreateSysProcessLogs < ActiveRecord::Migration[4.2]
   def change
     create_table :sys_process_logs do |t|
       t.integer  "parent_id"

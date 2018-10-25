@@ -1,4 +1,4 @@
-class AddSiteIdToSysMaintenances < ActiveRecord::Migration
+class AddSiteIdToSysMaintenances < ActiveRecord::Migration[4.2]
   def up
     add_column :sys_maintenances, :site_id, :integer
 

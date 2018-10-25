@@ -1,4 +1,4 @@
-class CreateCmsPublishers < ActiveRecord::Migration
+class CreateCmsPublishers < ActiveRecord::Migration[4.2]
   def change
     create_table :cms_publishers do |t|
       t.references :site, index: true

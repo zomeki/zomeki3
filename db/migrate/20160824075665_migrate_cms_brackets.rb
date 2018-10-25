@@ -1,4 +1,4 @@
-class MigrateCmsBrackets < ActiveRecord::Migration
+class MigrateCmsBrackets < ActiveRecord::Migration[4.2]
   def up
     [Cms::Node, Cms::Piece, Cms::Layout].each do |model|
       model.all.each do |item|

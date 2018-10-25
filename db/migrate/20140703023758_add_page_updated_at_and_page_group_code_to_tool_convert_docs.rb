@@ -1,4 +1,4 @@
-class AddPageUpdatedAtAndPageGroupCodeToToolConvertDocs < ActiveRecord::Migration
+class AddPageUpdatedAtAndPageGroupCodeToToolConvertDocs < ActiveRecord::Migration[4.2]
   def change
     add_column :tool_convert_docs, :page_updated_at, :string, :after => :body
     add_column :tool_convert_docs, :page_group_code, :string, :after => :page_updated_at

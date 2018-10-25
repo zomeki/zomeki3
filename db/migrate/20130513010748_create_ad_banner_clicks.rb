@@ -1,4 +1,4 @@
-class CreateAdBannerClicks < ActiveRecord::Migration
+class CreateAdBannerClicks < ActiveRecord::Migration[4.2]
   def change
     create_table :ad_banner_clicks do |t|
       t.references :banner

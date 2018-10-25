@@ -1,4 +1,4 @@
-class AddConceptToSysObjectPrivileges < ActiveRecord::Migration
+class AddConceptToSysObjectPrivileges < ActiveRecord::Migration[4.2]
   def up
     add_column :sys_object_privileges, :concept_id, :integer
     add_index :sys_object_privileges, :concept_id
