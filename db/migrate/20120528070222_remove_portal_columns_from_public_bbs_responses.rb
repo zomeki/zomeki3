@@ -1,4 +1,4 @@
-class RemovePortalColumnsFromPublicBbsResponses < ActiveRecord::Migration
+class RemovePortalColumnsFromPublicBbsResponses < ActiveRecord::Migration[4.2]
   def up
     remove_column :public_bbs_responses, :portal_area_ids
     remove_column :public_bbs_responses, :portal_attribute_ids

@@ -3,7 +3,6 @@
   <tr>
     <th>イベント日</th>
     <th><%= GpCalendar::Event.human_attribute_name :title %></th>
-    <th>並び順</th>
     <th><%= GpCalendar::Event.human_attribute_name :state %></th>
     <td rowspan="2" class="submitters">
       <%= submit_tag '検索' %>
@@ -13,8 +12,6 @@
   <tr>
     <td><%= text_field_tag 'criteria[date]', params.dig(:criteria, :date), style: 'width: 100px;', class: 'datepicker' %></td>
     <td><%= text_field_tag 'criteria[title]', params.dig(:criteria, :title), style: 'width: 400px;' %></td>
-    <td><%= select_tag 'criteria[order]', options_for_select(GpCalendar::Event::ORDER_OPTIONS,
-                                                             params.dig(:criteria, :order)), include_blank: true %></td>
     <td><%= select_tag 'criteria[state]', options_for_select(GpCalendar::Event.state_options,
                                                              params.dig(:criteria, :state)), include_blank: true %></td>
   </tr>

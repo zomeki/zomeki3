@@ -1,4 +1,4 @@
-class RemoveSyncExportedFromCalendarEvents < ActiveRecord::Migration
+class RemoveSyncExportedFromCalendarEvents < ActiveRecord::Migration[4.2]
   def up
     remove_column :gp_calendar_events, :sync_exported
   end

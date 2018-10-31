@@ -1,4 +1,4 @@
-class CreateCmsLinkCheckLogs < ActiveRecord::Migration
+class CreateCmsLinkCheckLogs < ActiveRecord::Migration[4.2]
   def change
     create_table :cms_link_check_logs do |t|
       t.belongs_to :link_check

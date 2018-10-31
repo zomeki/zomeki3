@@ -1,4 +1,4 @@
-class CreateAdBannerBanners < ActiveRecord::Migration
+class CreateAdBannerBanners < ActiveRecord::Migration[4.2]
   def change
     create_table :ad_banner_banners do |t|
       t.string     :name                # Used in module "Sys::Model::Base::File"

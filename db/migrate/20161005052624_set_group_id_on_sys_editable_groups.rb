@@ -1,4 +1,4 @@
-class SetGroupIdOnSysEditableGroups < ActiveRecord::Migration
+class SetGroupIdOnSysEditableGroups < ActiveRecord::Migration[4.2]
   def up
     Sys::EditableGroup.where(group_ids: '', all: false).delete_all
 

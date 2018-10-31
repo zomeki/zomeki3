@@ -1,4 +1,4 @@
-class GpCalendar::Public::Piece::MonthlyLinksController < GpCalendar::Public::Piece::BaseController
+class GpCalendar::Public::Piece::MonthlyLinksController < GpCalendar::Public::PieceController
   def pre_dispatch
     @piece = GpCalendar::Piece::MonthlyLink.find(Page.current_piece.id)
     @node = @piece.target_node

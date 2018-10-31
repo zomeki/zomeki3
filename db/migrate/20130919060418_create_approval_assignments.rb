@@ -1,4 +1,4 @@
-class CreateApprovalAssignments < ActiveRecord::Migration
+class CreateApprovalAssignments < ActiveRecord::Migration[4.2]
   def change
     create_table :approval_assignments do |t|
       t.belongs_to :assignable, polymorphic: true

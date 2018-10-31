@@ -1,4 +1,4 @@
-class CreateBizCalendarBussinessHolidays < ActiveRecord::Migration
+class CreateBizCalendarBussinessHolidays < ActiveRecord::Migration[4.2]
   def up
     create_table :biz_calendar_bussiness_holidays do |t|
       t.integer    :unid

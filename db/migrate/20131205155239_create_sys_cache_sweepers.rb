@@ -1,4 +1,4 @@
-class CreateSysCacheSweepers < ActiveRecord::Migration
+class CreateSysCacheSweepers < ActiveRecord::Migration[4.2]
   def change
     create_table "sys_cache_sweepers", :force => true do |t|
       t.string   "state"

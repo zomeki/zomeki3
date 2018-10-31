@@ -1,4 +1,4 @@
-class AddCounterCacheToGpCategoryCategories < ActiveRecord::Migration
+class AddCounterCacheToGpCategoryCategories < ActiveRecord::Migration[4.2]
   def up
     add_column :gp_category_categories, :children_count, :integer, :null => false, :default => 0
 

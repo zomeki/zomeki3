@@ -1,4 +1,4 @@
-class DropObsoleteTables < ActiveRecord::Migration
+class DropObsoleteTables < ActiveRecord::Migration[4.2]
   def up
     drop_table :article_areas, if_exists: true
     drop_table :article_attributes, if_exists: true

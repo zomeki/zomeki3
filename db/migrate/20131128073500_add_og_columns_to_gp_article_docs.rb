@@ -1,4 +1,4 @@
-class AddOgColumnsToGpArticleDocs < ActiveRecord::Migration
+class AddOgColumnsToGpArticleDocs < ActiveRecord::Migration[4.2]
   def change
     add_column :gp_article_docs, :og_type, :string
     add_column :gp_article_docs, :og_title, :string

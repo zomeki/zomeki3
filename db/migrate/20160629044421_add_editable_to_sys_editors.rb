@@ -1,4 +1,4 @@
-class AddEditableToSysEditors < ActiveRecord::Migration
+class AddEditableToSysEditors < ActiveRecord::Migration[4.2]
   def up
     add_reference :sys_editors, :editable, index: true, polymorphic: true
     GpArticle::Doc.find_each {|d| d.editors << Sys::Editor.find_by(parent_unid: d.unid) }

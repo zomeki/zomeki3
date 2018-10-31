@@ -1,4 +1,4 @@
-class CreatePortalCalendarEvents < ActiveRecord::Migration
+class CreatePortalCalendarEvents < ActiveRecord::Migration[4.2]
   def up
 		create_table :portal_calendar_events do |t|
       t.integer  :unid

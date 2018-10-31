@@ -1,4 +1,4 @@
-class CreateToolConvertDownloads < ActiveRecord::Migration
+class CreateToolConvertDownloads < ActiveRecord::Migration[4.2]
   def up
     create_table :tool_convert_downloads do |t|
       t.string     :state

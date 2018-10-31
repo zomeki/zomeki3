@@ -1,4 +1,4 @@
-class RemoveEventDateFromGpArticleDocs < ActiveRecord::Migration
+class RemoveEventDateFromGpArticleDocs < ActiveRecord::Migration[4.2]
   def up
     GpArticle::Doc.all.each do |doc|
       doc.update_column(:event_started_on, doc.event_date)

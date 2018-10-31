@@ -1,4 +1,4 @@
-class RenameMobileToTerminalOnGpArticleDocs < ActiveRecord::Migration
+class RenameMobileToTerminalOnGpArticleDocs < ActiveRecord::Migration[4.2]
   def up
     rename_column :gp_article_docs, :mobile_smart, :terminal_pc_or_smart_phone
     rename_column :gp_article_docs, :mobile_feature, :terminal_mobile

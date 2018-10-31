@@ -1,4 +1,4 @@
-class AddMapAttachableToCmsMaps < ActiveRecord::Migration
+class AddMapAttachableToCmsMaps < ActiveRecord::Migration[4.2]
   KLASSES = [
     GpArticle::Doc,
   ]

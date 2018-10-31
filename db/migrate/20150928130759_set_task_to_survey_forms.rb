@@ -1,4 +1,4 @@
-class SetTaskToSurveyForms < ActiveRecord::Migration
+class SetTaskToSurveyForms < ActiveRecord::Migration[4.2]
   def change
 
     Survey::Form.all.each do |form|

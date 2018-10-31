@@ -1,4 +1,4 @@
-class AddSyncColumnsToGpCalendarEvents < ActiveRecord::Migration
+class AddSyncColumnsToGpCalendarEvents < ActiveRecord::Migration[4.2]
   def change
     add_column :gp_calendar_events, :sync_source_host, :string
     add_column :gp_calendar_events, :sync_source_content_id, :integer

@@ -1,4 +1,4 @@
-class CreateCmsBrackets < ActiveRecord::Migration
+class CreateCmsBrackets < ActiveRecord::Migration[4.2]
   def change
     create_table :cms_brackets do |t|
       t.references :site, index: true

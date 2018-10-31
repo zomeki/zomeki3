@@ -18,7 +18,7 @@ class GpCalendar::Content::Event < Cms::Content
   end
 
   def public_holidays
-    holidays.public_state
+    holidays.public_state.where(kind: 'holiday')
   end
 
   def piece_target_nodes
@@ -100,7 +100,7 @@ class GpCalendar::Content::Event < Cms::Content
     false
   end
 
-  def event_docs(start_date, end_date, categories = nil)
+  def event_docs
     doc_content_ids = Cms::ContentSetting.where(name: 'calendar_relation', value: 'enabled')
                                          .select { |cs| cs.extra_values[:calendar_content_id] == id }
                                          .map(&:content_id)
@@ -108,7 +108,6 @@ class GpCalendar::Content::Event < Cms::Content
       GpArticle::Doc.none
     else
       GpArticle::Doc.where(content_id: doc_content_ids, event_state: 'visible')
-                    .event_scheduled_between(start_date, end_date, categories)
     end
   end
 

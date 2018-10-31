@@ -1,4 +1,4 @@
-class CreateGpTemplateItems < ActiveRecord::Migration
+class CreateGpTemplateItems < ActiveRecord::Migration[4.2]
   def change
     create_table :gp_template_items do |t|
       t.belongs_to :template

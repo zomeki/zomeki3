@@ -1,4 +1,4 @@
-class CreateToolConvertDocs < ActiveRecord::Migration
+class CreateToolConvertDocs < ActiveRecord::Migration[4.2]
  def change 
    create_table :tool_convert_docs do |t| 
      t.string :name 

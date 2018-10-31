@@ -1,4 +1,4 @@
-class CreateGpArticleComments < ActiveRecord::Migration
+class CreateGpArticleComments < ActiveRecord::Migration[4.2]
   def change
     create_table :gp_article_comments do |t|
       t.belongs_to :doc

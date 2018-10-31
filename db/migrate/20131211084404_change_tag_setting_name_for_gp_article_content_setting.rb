@@ -1,4 +1,4 @@
-class ChangeTagSettingNameForGpArticleContentSetting < ActiveRecord::Migration
+class ChangeTagSettingNameForGpArticleContentSetting < ActiveRecord::Migration[4.2]
   def change
     GpArticle::Content::Setting.where(name: 'tag_content_tag_id').each do |item|
       tag_id = item.value

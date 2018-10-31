@@ -1,4 +1,4 @@
-class CreateApprovalApprovalRequestHistories < ActiveRecord::Migration
+class CreateApprovalApprovalRequestHistories < ActiveRecord::Migration[4.2]
   def change
     create_table :approval_approval_request_histories do |t|
       t.belongs_to :request

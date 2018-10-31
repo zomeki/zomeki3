@@ -1,4 +1,4 @@
-class CreatePublicBbsBoards < ActiveRecord::Migration
+class CreatePublicBbsBoards < ActiveRecord::Migration[4.2]
   def change
     create_table :public_bbs_boards do |t|
       t.integer :unid

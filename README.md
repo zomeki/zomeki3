@@ -11,7 +11,7 @@ ZOMEKI（ぞめき)は、自治体サイト向けに開発された国産オー�
 | Appサーバ | unicorn 5.4    |
 | Database  | PostgreSQL 9.5 |
 | Ruby      | 2.3            |
-| Rails     | 5.0            |
+| Rails     | 5.2            |
 
 ## デモ
 http://zomeki.jp/demo/

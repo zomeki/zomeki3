@@ -12,7 +12,7 @@ class Sys::ObjectPrivilege < ApplicationRecord
   after_destroy :destroy_actions
 
   validates :role_id, :concept_id, presence: true
-  validates :action, presence: true, if: %Q(in_actions.blank?)
+  validates :action, presence: true, if: -> { in_actions.blank? }
 
   attr_accessor :in_actions
 

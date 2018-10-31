@@ -1,4 +1,4 @@
-class AddSiteIdToSysMessages < ActiveRecord::Migration
+class AddSiteIdToSysMessages < ActiveRecord::Migration[4.2]
   def up
     add_column :sys_messages, :site_id, :integer
 

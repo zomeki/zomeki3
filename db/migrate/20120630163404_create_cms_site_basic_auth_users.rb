@@ -1,4 +1,4 @@
-class CreateCmsSiteBasicAuthUsers < ActiveRecord::Migration
+class CreateCmsSiteBasicAuthUsers < ActiveRecord::Migration[4.2]
   def change
     create_table :cms_site_basic_auth_users do |t|
       t.integer :unid

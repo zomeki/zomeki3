@@ -1,4 +1,4 @@
-class AddIndexOnStateAndParentIdAndSoOnToCmsNodes < ActiveRecord::Migration
+class AddIndexOnStateAndParentIdAndSoOnToCmsNodes < ActiveRecord::Migration[4.2]
   def change
     add_index :cms_nodes, :state
     add_index :cms_nodes, :site_id

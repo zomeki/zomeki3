@@ -1,4 +1,4 @@
-class CreatePublicBbsCategories < ActiveRecord::Migration
+class CreatePublicBbsCategories < ActiveRecord::Migration[4.2]
   def change
     create_table :public_bbs_categories do |t|
       t.integer :unid

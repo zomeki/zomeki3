@@ -1,4 +1,4 @@
-class CreateGpCategoryTemplates < ActiveRecord::Migration
+class CreateGpCategoryTemplates < ActiveRecord::Migration[4.2]
   def change
     create_table :gp_category_templates do |t|
       t.belongs_to :content

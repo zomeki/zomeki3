@@ -1,4 +1,4 @@
-class UpdatePreparedStateOnGpArticleDocs < ActiveRecord::Migration
+class UpdatePreparedStateOnGpArticleDocs < ActiveRecord::Migration[4.2]
   def up
     execute <<-SQL
       update gp_article_docs set state = 'prepared' from sys_tasks

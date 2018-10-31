@@ -1,4 +1,4 @@
-class CreateOrganizationGroups < ActiveRecord::Migration
+class CreateOrganizationGroups < ActiveRecord::Migration[4.2]
   def change
     create_table :organization_groups do |t|
       t.integer :unid

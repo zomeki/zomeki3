@@ -4,7 +4,7 @@
   </h2>
 
   <%- @holidays.each do |holiday| -%>
-  <div class="<%= holiday.kind %>">
+  <div class="holiday">
   <p class="title"><%= holiday.title %></p>
   <p class="summary"><%= holiday.description %></p>
   </div>
@@ -21,7 +21,8 @@
       </thead>
       <tbody>
         <%- @events.each do |event| -%>
-          <%= event_table_replace(event, @date, @content.today_list_style, @content.date_style) %>
+          <%= event_table_replace(event, [@today, @today], table_style: @content.today_list_style,
+                                                           date_style: @content.date_style) %>
         <%- end -%>
       </tbody>
     </table>

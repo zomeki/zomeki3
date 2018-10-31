@@ -1,4 +1,4 @@
-class CreateSysEditors < ActiveRecord::Migration
+class CreateSysEditors < ActiveRecord::Migration[4.2]
   def up
     create_table :sys_editors do |t|
       t.integer  :parent_unid

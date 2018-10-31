@@ -1,4 +1,4 @@
-class CreateMapMarkers < ActiveRecord::Migration
+class CreateMapMarkers < ActiveRecord::Migration[4.2]
   def change
     create_table :map_markers do |t|
       t.integer    :unid

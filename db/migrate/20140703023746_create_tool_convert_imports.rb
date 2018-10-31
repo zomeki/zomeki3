@@ -1,4 +1,4 @@
-class CreateToolConvertImports < ActiveRecord::Migration
+class CreateToolConvertImports < ActiveRecord::Migration[4.2]
   def up
     create_table :tool_convert_imports do |t|
       t.string     :state

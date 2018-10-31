@@ -13,7 +13,7 @@ class Sys::TasksScript < ParametersScript
         end
 
         begin
-          script_klass = "#{task.processable_type.pluralize}Script".constantize
+          script_klass = "#{task.processable_type.pluralize.sub('::', '::Task::')}Script".constantize
           processed = script_klass.new(params.merge(task: task)).public_send("#{task.name}_by_task", task.processable)
           task.update_attributes(state: 'performed') if processed
         rescue => e

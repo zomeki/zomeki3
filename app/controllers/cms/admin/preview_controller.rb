@@ -1,8 +1,8 @@
 class Cms::Admin::PreviewController < Cms::Controller::Admin::Base
   protect_from_forgery except: :index
 
-  after_action :add_preview_header, if: :preview_as_html?
-  after_action :replace_links_for_preview, if: :preview_as_html?
+  after_action :add_preview_header, if: -> { preview_as_html? && !request.xhr? }
+  after_action :replace_links_for_preview, if: -> { preview_as_html? }
 
   def pre_dispatch
     if params[:commit]

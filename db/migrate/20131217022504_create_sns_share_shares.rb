@@ -1,4 +1,4 @@
-class CreateSnsShareShares < ActiveRecord::Migration
+class CreateSnsShareShares < ActiveRecord::Migration[4.2]
   def change
     create_table :sns_share_shares do |t|
       t.belongs_to :sharable, polymorphic: true

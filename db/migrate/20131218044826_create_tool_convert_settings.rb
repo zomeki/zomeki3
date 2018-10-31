@@ -1,4 +1,4 @@
-class CreateToolConvertSettings < ActiveRecord::Migration
+class CreateToolConvertSettings < ActiveRecord::Migration[4.2]
   def change
     create_table :tool_convert_settings do |t|
       t.string :site_url

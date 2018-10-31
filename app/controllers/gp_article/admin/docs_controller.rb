@@ -270,7 +270,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
       :template_id, :title, :href, :target, :subtitle, :summary, :list_image,
       :lang, :body, :body_more, :body_more_link_text,
       :feature_1, :feature_2, :raw_tags, :qrcode_state, :display_published_at, :display_updated_at, :keep_display_updated_at,
-      :event_state, :event_started_on, :event_ended_on, :event_will_sync, :event_note,
+      :event_state, :event_will_sync, :event_note,
       :marker_state, :navigation_state, :marker_sort_no, :marker_icon_category_id, :mobile_title, :mobile_body,
       :concept_id, :layout_id, :name, :filename_base, :terminal_pc_or_smart_phone, :terminal_mobile,
       :meta_description, :meta_keywords, :og_type, :og_title, :og_description, :og_image, :remark,
@@ -282,6 +282,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
       :maps_attributes => [:id, :name, :title, :map_lat, :map_lng, :map_zoom, :markers_attributes => [:id, :name, :lat, :lng]],
       :editable_groups_attributes => [:id, :group_id],
       :related_docs_attributes => [:id, :name, :content_id, :_destroy],
+      :periods_attributes => [:id, :started_on, :ended_on],
       :in_approval_flow_ids => [],
     ).tap do |permitted|
       [:in_file_names, :in_category_ids, :in_event_category_ids, :in_marker_category_ids, :in_approval_assignment_ids].each do |key|

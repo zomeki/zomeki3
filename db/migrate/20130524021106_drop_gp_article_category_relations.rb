@@ -1,4 +1,4 @@
-class DropGpArticleCategoryRelations < ActiveRecord::Migration
+class DropGpArticleCategoryRelations < ActiveRecord::Migration[4.2]
   def up
     drop_table :gp_article_category_types
     drop_table :gp_article_categories

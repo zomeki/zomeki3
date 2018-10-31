@@ -1,4 +1,4 @@
-class CreateAdBannerGroups < ActiveRecord::Migration
+class CreateAdBannerGroups < ActiveRecord::Migration[4.2]
   def change
     create_table :ad_banner_groups do |t|
       t.integer    :unid

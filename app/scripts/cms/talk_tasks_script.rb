@@ -1,5 +1,5 @@
 require 'digest/md5'
-class Cms::TalkTasksScript < PublicationScript
+class Cms::TalkTasksScript < ParametersScript
   def exec
     task_ids = Cms::TalkTask.order(:id)
     task_ids = task_ids.where(site_id: ::Script.site.id) if ::Script.site

@@ -1,4 +1,4 @@
-class CreateGpArticleRelatedDocs < ActiveRecord::Migration
+class CreateGpArticleRelatedDocs < ActiveRecord::Migration[4.2]
   def up
     create_table :gp_article_related_docs do |t|
       t.integer :content_id

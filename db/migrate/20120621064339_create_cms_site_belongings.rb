@@ -1,4 +1,4 @@
-class CreateCmsSiteBelongings < ActiveRecord::Migration
+class CreateCmsSiteBelongings < ActiveRecord::Migration[4.2]
   def change
     create_table :cms_site_belongings do |t|
       t.references :site

@@ -1,4 +1,4 @@
-class CreateApprovalApprovalRequests < ActiveRecord::Migration
+class CreateApprovalApprovalRequests < ActiveRecord::Migration[4.2]
   def change
     create_table :approval_approval_requests do |t|
       t.belongs_to :user

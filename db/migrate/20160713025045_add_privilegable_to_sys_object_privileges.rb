@@ -1,4 +1,4 @@
-class AddPrivilegableToSysObjectPrivileges < ActiveRecord::Migration
+class AddPrivilegableToSysObjectPrivileges < ActiveRecord::Migration[4.2]
   def up
     add_column :sys_object_privileges, :privilegable_id, :integer
     add_column :sys_object_privileges, :privilegable_type, :string

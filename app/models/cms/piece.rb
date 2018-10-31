@@ -9,6 +9,7 @@ class Cms::Piece < ApplicationRecord
   include Cms::Model::Rel::Bracketee
   include Cms::Model::Auth::Concept
   include Cms::Model::Base::Piece
+  include Cms::Model::Base::Page
 
   enum_ish :state, [:public, :closed]
 
@@ -31,6 +32,11 @@ class Cms::Piece < ApplicationRecord
 
   def deletable?
     super && state != 'public'
+  end
+
+  def public_uri
+    dir = Util::String::CheckDigit.check(format('%07d', id))
+    "/_pieces/#{dir}/"
   end
 
   def owner_layouts
@@ -164,5 +170,11 @@ protected
       end
     end
     return true
+  end
+
+  class << self
+    def publishable_models
+      Cms::Lib::Modules.modules.flat_map(&:pieces).select { |d| d.options[:publishable] }.map(&:model)
+    end
   end
 end

@@ -1,4 +1,4 @@
-class CreateGpCalendarEvents < ActiveRecord::Migration
+class CreateGpCalendarEvents < ActiveRecord::Migration[4.2]
   def change
     create_table :gp_calendar_events do |t|
       t.integer    :unid

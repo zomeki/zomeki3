@@ -1,4 +1,4 @@
-class CreateSysProcesses < ActiveRecord::Migration
+class CreateSysProcesses < ActiveRecord::Migration[4.2]
   def change
     create_table :sys_processes do |t|
       t.timestamps

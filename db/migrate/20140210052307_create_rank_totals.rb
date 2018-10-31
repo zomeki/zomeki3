@@ -1,4 +1,4 @@
-class CreateRankTotals < ActiveRecord::Migration
+class CreateRankTotals < ActiveRecord::Migration[4.2]
   def change
     create_table :rank_totals do |t|
       t.references :content

@@ -1,4 +1,4 @@
-class CreateTagTags < ActiveRecord::Migration
+class CreateTagTags < ActiveRecord::Migration[4.2]
   def change
     create_table :tag_tags do |t|
       t.references :content

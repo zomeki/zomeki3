@@ -1,4 +1,4 @@
-class AddTalkProcessableToCmsTalkTasks < ActiveRecord::Migration
+class AddTalkProcessableToCmsTalkTasks < ActiveRecord::Migration[4.2]
   def up
     add_column :cms_talk_tasks, :talk_processable_type, :string
     add_column :cms_talk_tasks, :talk_processable_id, :integer

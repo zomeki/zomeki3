@@ -1,4 +1,4 @@
-class ChangeBodyOnGpArticleDocs < ActiveRecord::Migration
+class ChangeBodyOnGpArticleDocs < ActiveRecord::Migration[4.2]
   def up
     change_column :gp_article_docs, :body, :text
   end

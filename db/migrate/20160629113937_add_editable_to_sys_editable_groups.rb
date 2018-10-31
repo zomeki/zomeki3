@@ -1,4 +1,4 @@
-class AddEditableToSysEditableGroups < ActiveRecord::Migration
+class AddEditableToSysEditableGroups < ActiveRecord::Migration[4.2]
   KLASSES = [
     GpArticle::Doc,
   ]

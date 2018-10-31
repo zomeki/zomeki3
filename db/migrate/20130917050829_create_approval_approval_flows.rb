@@ -1,4 +1,4 @@
-class CreateApprovalApprovalFlows < ActiveRecord::Migration
+class CreateApprovalApprovalFlows < ActiveRecord::Migration[4.2]
   def change
     create_table :approval_approval_flows do |t|
       t.integer    :unid

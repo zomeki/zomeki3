@@ -1,4 +1,4 @@
-class CreateGnavMenuItems < ActiveRecord::Migration
+class CreateGnavMenuItems < ActiveRecord::Migration[4.2]
   def change
     create_table :gnav_menu_items do |t|
       t.integer    :unid

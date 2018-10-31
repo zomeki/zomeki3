@@ -1,4 +1,4 @@
-class CreateGpCategoryCategories < ActiveRecord::Migration
+class CreateGpCategoryCategories < ActiveRecord::Migration[4.2]
   def change
     create_table :gp_category_categories do |t|
       t.integer    :unid

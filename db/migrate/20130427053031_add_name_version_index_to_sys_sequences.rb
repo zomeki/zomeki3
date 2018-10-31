@@ -1,4 +1,4 @@
-class AddNameVersionIndexToSysSequences < ActiveRecord::Migration
+class AddNameVersionIndexToSysSequences < ActiveRecord::Migration[4.2]
   def up
     remove_index :sys_sequences, [:name, :version]
     add_index :sys_sequences, [:name, :version], :unique => true
