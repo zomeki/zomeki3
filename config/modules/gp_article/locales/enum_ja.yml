@@ -28,6 +28,9 @@ ja:
       feature_1:
         true: 表示
         false: 非表示
+      feed_state:
+        visible: 表示
+        hidden: 非表示
     gp_article/doc/criteria:
       target:
         user: 作成記事

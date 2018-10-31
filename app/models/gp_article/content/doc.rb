@@ -227,7 +227,8 @@ class GpArticle::Content::Doc < Cms::Content
 
   def feature_settings
     {feature_1: setting_extra_value(:feature_settings, :feature_1) != 'false',
-     feature_2: setting_extra_value(:feature_settings, :feature_2) != 'false'}
+     feature_2: setting_extra_value(:feature_settings, :feature_2) != 'false',
+     feed_state: setting_extra_value(:feature_settings, :feed_state)}
   end
 
   def wrapper_tag

@@ -105,10 +105,16 @@
     <td><%= @item.categories.where(category_type_id: category_type.id).map(&:title).join(', ') %></td>
   </tr>
   <%- end -%>
+  <%- if @content.feature_settings_enabled? -%>
   <tr>
     <th><%= @item.class.human_attribute_name :feature_1 %></th>
     <td><%= @item.feature_1_text %></td>
   </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :feed_state %></th>
+    <td><%= @item.feed_state_text %></td>
+  </tr>
+  <%- end -%>
   <%- if @content.tag_related? && @content.tag_content_tag.present? -%>
   <tr>
     <th><%= @item.class.human_attribute_name :raw_tags %></th>

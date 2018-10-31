@@ -137,6 +137,10 @@ $(function() {
     <th><%= f.label :feature_1 %></th>
     <td><%= f.collection_radio_buttons :feature_1, @item.class.feature_1_options, :last, :first %></td>
   </tr>
+  <tr>
+    <th><%= f.label :feed_state %></th>
+    <td><%= f.collection_radio_buttons :feed_state, @item.class.feed_state_options, :last, :first %></td>
+  </tr>
   <%- end -%>
   <%- if @content.tag_related? && @content.tag_content_tag.present? -%>
   <tr>

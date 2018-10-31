@@ -271,7 +271,8 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     params.require(:item).permit(
       :template_id, :title, :href, :target, :subtitle, :summary, :list_image,
       :lang, :body, :body_more, :body_more_link_text,
-      :feature_1, :feature_2, :raw_tags, :qrcode_state, :display_published_at, :display_updated_at, :keep_display_updated_at,
+      :feature_1, :feature_2, :feed_state, :raw_tags, :qrcode_state,
+      :display_published_at, :display_updated_at, :keep_display_updated_at,
       :event_state, :event_will_sync, :event_note,
       :marker_state, :navigation_state, :marker_sort_no, :marker_icon_category_id, :mobile_title, :mobile_body,
       :concept_id, :layout_id, :name, :filename_base, :terminal_pc_or_smart_phone, :terminal_mobile,
