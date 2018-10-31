@@ -2,6 +2,7 @@ class Cms::Admin::PreviewController < Cms::Controller::Admin::Base
   protect_from_forgery except: :index
 
   after_action :add_preview_header, if: -> { preview_as_html? && !request.xhr? }
+  after_action :convert_for_talk_order, if: -> { preview_as_html? && params[:talk_order] }
   after_action :replace_links_for_preview, if: -> { preview_as_html? }
 
   def pre_dispatch
@@ -71,6 +72,20 @@ private
 
     html = render_to_string(partial: 'cms/admin/preview/mark', formats: [:html])
     response.body = response.body.to_s.sub(/(<body[^>]*?>)/i) { $1.html_safe + html }
+  end
+
+  def convert_for_talk_order
+    nokogiri = Page.mobile? ? Nokogiri::XML : Nokogiri::HTML
+    doc = nokogiri.parse(response.body, nil, 'utf-8')
+    doc = Cms::Lib::Navi::Jtalk.filter_html_tags(doc)
+    return unless doc
+
+    doc.css('*').each do |node|
+      node.remove_attribute('class')
+      node.remove_attribute('style')
+    end
+
+    response.body = Page.mobile? ? doc.to_xhtml : doc.to_html
   end
 
   def replace_links_for_preview
