@@ -64,7 +64,8 @@ module Approval::Controller::Admin::Approval
         next if requester.email.blank? || approver.email.blank?
         Approval::Admin::Mailer.approval_request(from: requester,
                                                  to: approver,
-                                                 item: item).deliver_now
+                                                 item: item,
+                                                 approval_request: approval_request).deliver_now
       end
     end
   end

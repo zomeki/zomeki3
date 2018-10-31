@@ -9,3 +9,5 @@ ja:
         group_id: 対象グループ
         sort_no: 並び順
         updated_at: 更新日時
+      approval/approval_request_history:
+        comment: コメント
