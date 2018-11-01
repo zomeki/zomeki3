@@ -1,4 +1,9 @@
 <%= init_ckeditor baseHref: "#{gp_article_doc_path(@content, @item.id.to_i)}/" %>
+<%- if @content.editor_css.present? -%>
+<script type="text/javascript">
+CKEDITOR.config.contentsCss = [CKEDITOR.config.contentsCss, '<%= @content.editor_css %>'];
+</script>
+<%- end -%>
 <script type="text/javascript">
 $(function() {
   $('#tabs').tabs({

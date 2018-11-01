@@ -371,4 +371,7 @@ class GpArticle::Content::Doc < Cms::Content
     setting_extra_value(:navigation_setting, :types)
   end
 
+  def editor_css
+    setting_value(:editor_css)
+  end
 end
