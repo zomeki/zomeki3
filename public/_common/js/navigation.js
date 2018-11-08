@@ -66,7 +66,7 @@ Navigation.initialize = function(settings) {
     });
   }
 
-  # trigger navigation after updating piece
+  // trigger navigation after updating piece
   $(document).ajaxComplete(function(e, xhr) {
     if (xhr.status == 200 || xhr.getResponseHeader("content-type").match(/^text\/html/)) {
       if ($.cookie('navigation_ruby') == 'on') {
