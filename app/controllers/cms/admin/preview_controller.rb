@@ -80,6 +80,9 @@ private
     doc = Cms::Lib::Navi::Jtalk.filter_html_tags(doc)
     return unless doc
 
+    doc.css('link').each do |node|
+      node.remove
+    end
     doc.css('*').each do |node|
       node.remove_attribute('class')
       node.remove_attribute('style')
