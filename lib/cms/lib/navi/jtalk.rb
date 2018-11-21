@@ -84,13 +84,9 @@ class Cms::Lib::Navi::Jtalk
       apply_kana_dic(text, site_id)
     end
 
-    private
-
-    def html_to_text(html)
-      doc = Nokogiri::HTML(html.toutf8, nil, 'utf-8')
-
+    def filter_html_tags(doc)
       content = doc.css('div[@id="content"]').first || doc.css('body').first || doc.root
-      return '' unless content
+      return unless content
 
       content.xpath('.//comment()[.=" skip reading "]').each do |comment1|
         comment2 = comment1.xpath('following-sibling::comment()[.=" /skip reading "]').first
@@ -108,6 +104,16 @@ class Cms::Lib::Navi::Jtalk
 
       ## remove unnecessary tags
       content.css('style, script, noscript, iframe, rb, rp').remove
+
+      return doc
+    end
+
+    private
+
+    def html_to_text(html)
+      doc = Nokogiri::HTML(html.toutf8, nil, 'utf-8')
+      doc = filter_html_tags(doc)
+      return '' unless doc
 
       ## make end of sentence
       content.css('h1, h2, h3, h4, h5, p, div, pre, blockquote, ul, ol').each do |node|

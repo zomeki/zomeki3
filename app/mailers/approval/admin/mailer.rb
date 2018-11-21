@@ -3,6 +3,7 @@ class Approval::Admin::Mailer < ApplicationMailer
     @from = options[:from]
     @to = options[:to]
     @item = options[:item]
+    @comment = options[:approval_request].histories.where(reason: 'request').first.try(:comment)
 
     @content = @item.content
     @preview_uri = preview_uri

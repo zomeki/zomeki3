@@ -9,12 +9,17 @@ class GpArticle::Public::Node::DocsController < GpArticle::Public::NodeControlle
   end
 
   def index
-    @docs = @content.docs_for_list.order(@content.docs_order_as_hash)
+    @docs = @content.docs.order(@content.docs_order_as_hash)
+
     if params[:format].in?(['rss', 'atom'])
+      @docs = @docs.visible_in_feed
       @docs = @docs.date_after(@content.docs_order_column, @content.feed_docs_period.to_i.days.ago.beginning_of_day) if @content.feed_docs_period.present?
       @docs = @docs.paginate(page: params[:page], per_page: @content.feed_docs_number)
       return render_feed(@docs)
+    else
+      @docs = @docs.visible_in_list
     end
+
     @docs = GpArticle::DocsPreloader.new(@docs).preload(:public_node_ancestors)
 
     if @content.simple_pagination?

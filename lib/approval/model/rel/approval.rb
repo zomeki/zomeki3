@@ -1,7 +1,7 @@
 module Approval::Model::Rel::Approval
   extend ActiveSupport::Concern
 
-  attr_accessor :in_approval_flow_ids, :in_approval_assignment_ids
+  attr_accessor :in_approval_flow_ids, :in_approval_assignment_ids, :in_approval_comment
 
   included do
     has_many :approval_requests, class_name: 'Approval::ApprovalRequest', as: :approvable, dependent: :destroy
@@ -127,6 +127,8 @@ module Approval::Model::Rel::Approval
       request.user_id = Core.user.id
       request.save! if request.changed?
       request.reset
+
+      request.histories.create(user_id: Core.user.id, reason: 'request', comment: in_approval_comment)
     end
 
     approval_requests.where.not(approval_flow_id: in_approval_flow_ids).destroy_all

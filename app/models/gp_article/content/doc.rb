@@ -1,7 +1,7 @@
 class GpArticle::Content::Doc < Cms::Content
   default_scope { where(model: 'GpArticle::Doc') }
 
-  STATE_OPTIONS = [['下書き保存', 'draft'], ['承認依頼', 'approvable'], ['即時公開', 'public']]
+  STATE_OPTIONS = [['下書き保存', 'draft'], ['承認依頼', 'approvable'], ['公開待ち', 'approved'], ['即時公開', 'public']]
 
   has_many :settings, foreign_key: :content_id, class_name: 'GpArticle::Content::Setting', dependent: :destroy
   has_many :docs, foreign_key: :content_id, class_name: 'GpArticle::Doc', dependent: :destroy
@@ -102,8 +102,11 @@ class GpArticle::Content::Doc < Cms::Content
   def doc_state_options(user)
     options = STATE_OPTIONS.clone
     options.reject! { |o| o.last == 'public' } if !user.has_auth?(:manager) && !save_button_states.include?('public')
-    options.reject! { |o| o.last == 'approvable' } unless approval_related?
-    options
+    if approval_related?
+      options.reject { |o| o.last == 'approved' }
+    else
+      options.reject { |o| o.last == 'approvable' }
+    end
   end
 
   def display_dates(key)
@@ -224,7 +227,8 @@ class GpArticle::Content::Doc < Cms::Content
 
   def feature_settings
     {feature_1: setting_extra_value(:feature_settings, :feature_1) != 'false',
-     feature_2: setting_extra_value(:feature_settings, :feature_2) != 'false'}
+     feature_2: setting_extra_value(:feature_settings, :feature_2) != 'false',
+     feed_state: setting_extra_value(:feature_settings, :feed_state)}
   end
 
   def wrapper_tag

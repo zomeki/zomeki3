@@ -49,6 +49,7 @@ class GpArticle::Doc < ApplicationRecord
   enum_ish :navigation_state, [:enabled, :disabled], default: :disabled, predicate: true
   enum_ish :og_type, [:article]
   enum_ish :feature_1, [true, false], default: true
+  enum_ish :feed_state, [:visible, :hidden]
 
   # Content
   belongs_to :content, class_name: 'GpArticle::Content::Doc', required: true
@@ -123,11 +124,12 @@ class GpArticle::Doc < ApplicationRecord
   validate :validate_broken_link_existence, if: -> { !state_draft? && errors.blank? }
 
   validates_with Sys::TaskValidator, if: -> { !state_draft? }
-  validates_with Cms::ContentNodeValidator, if: -> { state_approvable? || state_public? }
+  validates_with Cms::ContentNodeValidator, if: -> { state_approvable? || state_approved? || state_prepared? || state_public? }
 
   scope :public_state, -> { where(state: 'public') }
   scope :mobile, ->(m) { m ? where(terminal_mobile: true) : where(terminal_pc_or_smart_phone: true) }
   scope :visible_in_list, -> { where(feature_1: true) }
+  scope :visible_in_feed, -> { where(feed_state: 'visible') }
   scope :categorized_into, ->(categories, categorized_as: 'GpArticle::Doc', alls: false) {
     cats = GpCategory::Categorization.select(:categorizable_id)
                                      .where(categorized_as: categorized_as, categorizable_type: self.name)
@@ -450,6 +452,7 @@ class GpArticle::Doc < ApplicationRecord
     self.qrcode_state = content.qrcode_default_state if self.has_attribute?(:qrcode_state) && self.qrcode_state.nil?
     self.feature_1 = content.feature_settings[:feature_1] if self.has_attribute?(:feature_1) && self.feature_1.nil?
     self.feature_2 = content.feature_settings[:feature_2] if self.has_attribute?(:feature_2) && self.feature_2.nil?
+    self.feed_state ||= content.feature_settings[:feed_state] if self.has_attribute?(:feed_state)
 
     if !content.setting_value(:basic_setting).blank?
       self.layout_id ||= content.setting_extra_value(:basic_setting, :default_layout_id).to_i

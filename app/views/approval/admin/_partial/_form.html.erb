@@ -29,6 +29,10 @@
         <%- end -%>
       </td>
     </tr>
+    <tr>
+      <th><%= Approval::ApprovalRequestHistory.human_attribute_name :comment %></th>
+      <td><%= text_area_tag 'item[in_approval_comment]', nil, size: '70x5' %></td>
+    </tr>
   </table>
 <%- else -%>
   <span class="note">承認フローが未設定です。使用する承認フローを設定してください。</span>

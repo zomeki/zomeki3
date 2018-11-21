@@ -19,6 +19,9 @@
 #cmsPreviewMark .datetimepicker {
   width: 150px;
 }
+#cmsPreviewForm input.current {
+  color: #c30;
+}
 
 /* previewPublicItem
 ----------------------------------------------- */
