@@ -77,6 +77,9 @@ class GpArticle::Content::Setting < Cms::ContentSetting
     form_type: :radio_buttons,
     options: [['使用する', 'enabled'], ['使用しない', 'disabled']],
     default_value: 'enabled'
+  set_config :editor_css, menu: :form,
+    name: 'エディターCSS',
+    form_type: :text_field
 
   # menu: :index
   set_config :pagination_label, menu: :index,

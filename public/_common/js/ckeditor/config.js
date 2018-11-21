@@ -37,9 +37,11 @@ CKEDITOR.editorConfig = function( config ) {
   }
 
   // 外部CSSを読み込み
-  var css = [config.contentsCss];
+  var css = config.contentsCss;
+  if (!(css instanceof Array)) { css = [css]; }
   css.push(css[0].substring(0, css[0].lastIndexOf('/')+1) + 'file_icons.css');
   css.push(css[0].substring(0, css[0].lastIndexOf('/')+1) + 'cms_contents.css');
+
   config.contentsCss = css;
 
   // フォントサイズをパーセンテージに変更
