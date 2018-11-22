@@ -39,7 +39,7 @@ class GpArticle::DocCsvService < ApplicationService
 
   def doc_header
     # 基本情報
-    data = ['_ID', '記事番号', '状態', '公開URL', 'タイトル', '記事一覧表示', 'フィード表示',
+    data = ['_ID', '記事番号', '状態', '公開URL', 'タイトル', '記事一覧表示', '記事フィード表示',
             'ディレクトリ名', '所属', '作成者', '作成日時', '更新日時']
     data += @category_types.map(&:title)
 
