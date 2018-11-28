@@ -230,6 +230,13 @@ $(function() {
       <%= radio_button_tag 'item[extra_values][feature_1]', 'false', @item.extra_values[:feature_1] == 'false' %><%= label_tag 'item_extra_values_feature_1_false', '非表示' %>
     </td>
   </tr>
+  <tr>
+    <th><%= GpArticle::Doc.human_attribute_name :feed_state %></th>
+    <td>
+      <%= radio_button_tag 'item[extra_values][feed_state]', 'visible', @item.extra_values[:feed_state] == 'visible' %><%= label_tag 'item_extra_values_feed_state_visible', '表示' %>
+      <%= radio_button_tag 'item[extra_values][feed_state]', 'hidden', @item.extra_values[:feed_state] == 'hidden' %><%= label_tag 'item_extra_values_feed_state_hidden', '非表示' %>
+    </td>
+  </tr>
 </table>
 <%- end -%>
 

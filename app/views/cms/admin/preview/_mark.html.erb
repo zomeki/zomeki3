@@ -8,21 +8,21 @@ terminals =  [['PC','']]
 terminals << ['スマホ','s'] if Core.site.use_smart_phone_feature?
 terminals << ['携帯','m'] if Core.site.use_mobile_feature?
 -%>
-<%- if terminals.size > 1 || Core.site.use_datetime_preview? -%>
-  <span class="previewSetting">
+<span class="previewSetting">
   <%= form_tag url_for(path: params[:path]), method: :get, id: 'cmsPreviewForm' do -%>
-    <%= hidden_field_tag :query_string, request.query_string %>
-    <%- if Core.site.use_datetime_preview? -%>
-      <%= text_field_tag :preview_at, l(Page.preview_at), class: 'datetimepicker', placeholder: 'プレビュー日時' %>
-    <%- end -%>
-    <%- if terminals.size == 1 -%>
-      <%= hidden_field_tag :preview_terminal, Page.preview_terminal %>
-    <%- else -%>
+    <%- queries = params.to_unsafe_h.except(:controller, :action, :site, :path, :query_string, :preview_terminal, :talk_order) -%>
+    <%= hidden_field_tag :query_string, queries.to_query %>
+    <%- if Core.site.use_datetime_preview? || terminals.size >= 2 -%>
+      <%- if Core.site.use_datetime_preview? -%>
+        <%= text_field_tag :preview_at, l(Page.preview_at), class: 'datetimepicker', placeholder: 'プレビュー日時' %>
+      <%- end -%>
       <%- terminals.each do |name, value| -%>
         <%= radio_button_tag :preview_terminal, value, value == Page.preview_terminal %><%= label_tag "preview_terminal_#{value}", name %>
       <%- end -%>
+      <%= submit_tag '設定' %>
+      <span class="separator">|</span>
     <%- end -%>
-    <%= submit_tag '設定' %>
+    <%= submit_tag '読み上げ順序確認', params.key?(:talk_order) ? { class: 'current' } : { name: :talk_order } %>
   <%- end -%>
 
   <%- unless Page.mobile? -%>
@@ -37,7 +37,6 @@ terminals << ['携帯','m'] if Core.site.use_mobile_feature?
   });
   </script>
   <%- end -%>
-  </span>
-<%- end -%>
+</span>
 </div>
 <!-- /skip reading -->

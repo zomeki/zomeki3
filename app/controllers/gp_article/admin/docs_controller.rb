@@ -62,7 +62,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
     return render :new if check_document
 
-    @item.state = new_state_from_params
+    @item.state = new_state_from_params(@item)
 
     _create(@item, location: location_after_save) do
       if @item.state_approvable?
@@ -83,7 +83,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
     return render :edit if check_document
 
-    @item.state = new_state_from_params
+    @item.state = new_state_from_params(@item)
 
     _update(@item, location: location_after_save) do
       if @item.state_approvable?
@@ -206,13 +206,15 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     end
   end
 
-  def new_state_from_params
+  def new_state_from_params(item)
     state = params.keys.detect { |k| k =~ /^commit_/ }.to_s.sub(/^commit_/, '')
-    if @content.doc_state_options(Core.user).map(&:last).include?(state)
-      state
-    else
-      nil
+    if !@content.doc_state_options(Core.user).map(&:last).include?(state)
+      state = nil
     end
+    if state == 'approved' && item.tasks.detect { |task| task.name == 'publish' && task.process_at.present? }
+      state = 'prepared'
+    end
+    state
   end
 
   def location_after_save
@@ -269,12 +271,14 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     params.require(:item).permit(
       :template_id, :title, :href, :target, :subtitle, :summary, :list_image,
       :lang, :body, :body_more, :body_more_link_text,
-      :feature_1, :feature_2, :raw_tags, :qrcode_state, :display_published_at, :display_updated_at, :keep_display_updated_at,
+      :feature_1, :feature_2, :feed_state, :raw_tags, :qrcode_state,
+      :display_published_at, :display_updated_at, :keep_display_updated_at,
       :event_state, :event_will_sync, :event_note,
       :marker_state, :navigation_state, :marker_sort_no, :marker_icon_category_id, :mobile_title, :mobile_body,
       :concept_id, :layout_id, :name, :filename_base, :terminal_pc_or_smart_phone, :terminal_mobile,
       :meta_description, :meta_keywords, :og_type, :og_title, :og_description, :og_image, :remark,
       :in_tmp_id, :in_ignore_link_check, :in_ignore_accessibility_check, :in_modify_accessibility_check,
+      :in_approval_comment,
       :template_values => params[:item][:template_values].try(:keys),
       :creator_attributes => [:id, :group_id, :user_id],
       :tasks_attributes => [:id, :name, :process_at],

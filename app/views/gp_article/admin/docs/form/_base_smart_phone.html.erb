@@ -100,10 +100,16 @@ $(function() {
 });
 </script>
 
+<%- if @content.feature_settings_enabled? -%>
 <div>
   <div class="label1"><%= f.label :feature_1 %></div>
   <%= f.collection_radio_buttons :feature_1, @item.class.feature_1_options, :last, :first %>
 </div>
+<div>
+  <div class="label1"><%= f.label :feed_state %></div>
+  <%= f.collection_radio_buttons :feed_state, @item.class.feed_state_options, :last, :first %>
+</div>
+<%- end -%>
 
 <%- if @content.tag_related? && @content.tag_content_tag.present? -%>
 <div>

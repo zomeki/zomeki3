@@ -21,7 +21,8 @@ class GpArticle::Content::Setting < Cms::ContentSetting
     options: [['使用する', 'enabled'], ['使用しない', 'disabled']],
     default_value: 'enabled',
     default_extra_values: {
-      feature_1: 'true'
+      feature_1: 'true',
+      feed_state: 'visible'
     }
   set_config :save_button_states, menu: :form,
     name: '即時公開ボタン',
@@ -76,6 +77,9 @@ class GpArticle::Content::Setting < Cms::ContentSetting
     form_type: :radio_buttons,
     options: [['使用する', 'enabled'], ['使用しない', 'disabled']],
     default_value: 'enabled'
+  set_config :editor_css, menu: :form,
+    name: 'エディターCSS',
+    form_type: :text_field
 
   # menu: :index
   set_config :pagination_label, menu: :index,
@@ -304,6 +308,7 @@ class GpArticle::Content::Setting < Cms::ContentSetting
     when 'feature_settings'
       ex[:feature_1] = params[:feature_1]
       ex[:feature_2] = params[:feature_2]
+      ex[:feed_state] = params[:feed_state]
     when 'list_style'
       ex[:wrapper_tag] = params[:wrapper_tag]
     when 'qrcode_settings'

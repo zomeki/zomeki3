@@ -132,7 +132,7 @@ class Cms::Node < ApplicationRecord
   end
 
   def validate_confliction
-    errors.add(:base, 'ファイルまたはディレクトリが既に存在します。') if ::File.exist?(public_path)
+    errors.add(:base, 'ファイルまたはディレクトリが既に存在します。') if public_path && ::File.exist?(public_path)
   end
 
   def move_directory
