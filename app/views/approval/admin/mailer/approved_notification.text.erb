@@ -1,6 +1,13 @@
 「<%= @item.title %>」についての承認が完了しました。
-<%- if @item.state == 'approved' -%>
+<%- if @item.state == 'approved' && @content.publish_after_approved? -%>
+次のURLで公開されました。
+
+  <%= @item.public_full_uri %>
+<%- elsif @item.state == 'approved' -%>
 次のURLから公開作業を行ってください。
-<%- end -%>
 
   <%= @detail_uri %>
+<%- elsif @item.state == 'prepared' -%>
+
+  <%= @detail_uri %>
+<%- end -%>
