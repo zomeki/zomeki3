@@ -61,7 +61,7 @@ class Cms::SiteSetting < ApplicationRecord
              default_value: nil,
              index: true
   set_config :zip_download_max_size,
-             name: 'ZIPダウンロード最大サイズ',
+             name: 'ファイル管理転送量制限',
              default_value: 100,
              index: true
   set_config :datetime_preview,
