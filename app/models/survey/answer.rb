@@ -8,7 +8,7 @@ class Survey::Answer < ApplicationRecord
   with_options unless: -> { question.blank? } do
     validate :validate_required
     validate :validate_text_length, if: -> { question.form_type.in?(%w(text_field text_area)) }
-    validate :validate_block_word, if: -> { question.form_type.in?(%w(text_field text_area)) }
+    validate :validate_block_word, if: -> { question.form_type.in?(%w(text_field text_area text_field_email)) }
     validate :validate_email_format, if: -> { question.form_type == 'text_field_email' }
     validate :validate_attachment, if: -> { question.form_type == 'attachment' }
   end
