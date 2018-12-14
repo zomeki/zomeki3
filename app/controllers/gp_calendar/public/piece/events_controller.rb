@@ -18,11 +18,11 @@ class GpCalendar::Public::Piece::EventsController < GpCalendar::Public::PieceCon
     @range = [start_date, end_date]
 
     events = @content.public_events.scheduled_between(start_date, end_date)
-    events = events.categorized_into(@piece.category_ids) if @piece.category_ids.present?
+    events = events.categorized_into(@piece.category_ids, alls: true) if @piece.category_ids.present?
     events = events.order(:started_on).preload(:categories, :periods).to_a
 
     docs = @piece.content.event_docs.scheduled_between(start_date, end_date)
-    docs = docs.categorized_into(@piece.category_ids) if @piece.category_ids.present?
+    docs = docs.categorized_into(@piece.category_ids, alls: true, categorized_as: 'GpCalendar::Event') if @piece.category_ids.present?
     docs = docs.preload(:periods)
 
     @events = GpCalendar::EventMergeService.new(@content).merge(events, docs, @range)
