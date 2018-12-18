@@ -12,7 +12,7 @@ class GpCategory::TemplateModule < ApplicationRecord
 
   belongs_to :content, class_name: 'GpCategory::Content::CategoryType', required: true
 
-  after_save     GpCategory::Publisher::TemplateModuleCallbacks.new, if: :changed?
+  after_save     GpCategory::Publisher::TemplateModuleCallbacks.new, if: :saved_changes?
   before_destroy GpCategory::Publisher::TemplateModuleCallbacks.new, prepend: true
 
   validates :name, presence: true, uniqueness: { scope: :content_id, case_sensitive: false },

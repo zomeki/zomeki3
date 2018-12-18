@@ -6,7 +6,7 @@ class Cms::PieceLinkItem < ApplicationRecord
   enum_ish :state, [:public, :closed]
   enum_ish :target, ['', '_blank'], default: ''
 
-  after_save     Cms::Publisher::PieceRelatedCallbacks.new, if: :changed?
+  after_save     Cms::Publisher::PieceRelatedCallbacks.new, if: :saved_changes?
   before_destroy Cms::Publisher::PieceRelatedCallbacks.new, prepend: true
 
   validates :state, :name, :uri, presence: true

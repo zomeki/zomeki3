@@ -8,7 +8,7 @@ class Cms::Layout < ApplicationRecord
 
   enum_ish :state, [:public, :closed], default: :public
 
-  after_save     Cms::Publisher::LayoutCallbacks.new, if: :changed?
+  after_save     Cms::Publisher::LayoutCallbacks.new, if: :saved_changes?
   before_destroy Cms::Publisher::LayoutCallbacks.new, prepend: true
 
   validates :concept_id, presence: true

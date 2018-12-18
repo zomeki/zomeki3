@@ -57,10 +57,10 @@ class Cms::Admin::DataFilesController < Cms::Controller::Admin::Base
   def update
     @item = Cms::DataFile.find(params[:id])
     @item.attributes = data_file_params
-    @item.node_id    = nil if @item.concept_id_changed?
+    @item.node_id    = nil if @item.will_save_change_to_concept_id?
     @item.image_resize = params[:image_resize]
     @item.allowed_types = Core.site.allowed_attachment_types
-    old_name = @item.name_changed? ? Cms::DataFile.find(params[:id]).try(:escaped_name) : nil
+    old_name = @item.will_save_change_to_name? ? Cms::DataFile.find(params[:id]).try(:escaped_name) : nil
 
     @item.skip_upload if @item.file.blank?
     _update @item do

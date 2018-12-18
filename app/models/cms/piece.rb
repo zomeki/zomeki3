@@ -25,7 +25,7 @@ class Cms::Piece < ApplicationRecord
   after_save :save_settings
   after_save :replace_new_piece
 
-  after_save     Cms::Publisher::PieceCallbacks.new, if: :changed?
+  after_save     Cms::Publisher::PieceCallbacks.new, if: :saved_changes?
   before_destroy Cms::Publisher::PieceCallbacks.new, prepend: true
 
   scope :public_state, -> { where(state: 'public') }
@@ -152,7 +152,7 @@ protected
         st = settings.find_by(name: name) || new_setting(name)
         st.value   = value
         st.sort_no = nil
-        st.save if st.changed?
+        st.save if st.has_changes_to_save?
         next
       end
 
@@ -161,7 +161,7 @@ protected
         st = _settings[idx] || new_setting(name)
         st.sort_no = data[0]
         st.value   = data[1]
-        st.save if st.changed?
+        st.save if st.has_changes_to_save?
       end
       (_settings.size - value.size).times do |i|
         idx = value.size + i - 1

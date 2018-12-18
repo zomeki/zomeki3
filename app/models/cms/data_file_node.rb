@@ -11,7 +11,7 @@ class Cms::DataFileNode < ApplicationRecord
   validates :name, presence: true, uniqueness: { scope: :concept_id, case_sensitive: false }
   validate :validate_name
 
-  after_save     Cms::Publisher::BracketeeCallbacks.new, if: :changed?
+  after_save     Cms::Publisher::BracketeeCallbacks.new, if: :saved_changes?
   before_destroy Cms::Publisher::BracketeeCallbacks.new, prepend: true
 
   after_destroy :remove_files
@@ -34,7 +34,7 @@ class Cms::DataFileNode < ApplicationRecord
   end
 
   def changed_bracket_names
-    names = [name, name_was].select(&:present?).uniq
+    names = [name, name_before_last_save].select(&:present?).uniq
     names.map { |name| files.map { |file| "file/#{name}/#{file.name}" } }.flatten
   end
 

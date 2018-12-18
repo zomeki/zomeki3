@@ -18,7 +18,7 @@ class Organization::Reorg::GroupRefreshJob < ApplicationJob
       group.name = sys_group.name_en
       group.title = sys_group.name
 
-      if group.changed?
+      if group.has_changes_to_save?
         group.change_state = group.detect_change_state
         group.save
       end

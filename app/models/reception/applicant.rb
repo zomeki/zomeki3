@@ -56,7 +56,7 @@ class Reception::Applicant < ApplicationRecord
   private
 
   def validate_capacity_for_admin
-    if changes.dig(:state, 1) == 'received' && !open.within_capacity?
+    if changes_to_save.dig(:state, 1) == 'received' && !open.within_capacity?
       errors.add(:base, '定員を超過したため受付できません。')
     end
   end

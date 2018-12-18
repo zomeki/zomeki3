@@ -79,7 +79,7 @@ class Sys::Admin::Groups::ImportController < Cms::Controller::Admin::Base
 
       group.sites << Core.site if group.new_record?
       
-      next unless group.changed?
+      next unless group.has_changes_to_save?
       status = group.new_record? ? 0 : 1
       if group.save
         @results[status] += 1
@@ -125,7 +125,7 @@ class Sys::Admin::Groups::ImportController < Cms::Controller::Admin::Base
         user.admin_creatable = data[:admin_creatable] if data.include?(:admin_creatable)
       end
 
-      next if !user.changed? && !ug.changed?
+      next if !user.has_changes_to_save? && !ug.has_changes_to_save?
 
       status = user.new_record? ? 0 : 1
       status = 2 unless user.save

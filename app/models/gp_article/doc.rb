@@ -95,10 +95,10 @@ class GpArticle::Doc < ApplicationRecord
   before_save :set_display_published_at
   before_save :set_display_updated_at
 
-  after_save     GpArticle::Publisher::DocCallbacks.new, if: :changed?
+  after_save     GpArticle::Publisher::DocCallbacks.new, if: :saved_changes?
   before_destroy GpArticle::Publisher::DocCallbacks.new, prepend: true
 
-  after_save     Cms::SearchIndexerCallbacks.new, if: :changed?
+  after_save     Cms::SearchIndexerCallbacks.new, if: :saved_changes?
   before_destroy Cms::SearchIndexerCallbacks.new, prepend: true
 
   after_save :replace_public
