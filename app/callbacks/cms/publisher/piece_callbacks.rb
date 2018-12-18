@@ -13,7 +13,7 @@ class Cms::Publisher::PieceCallbacks < PublisherCallbacks
   def enqueue?
     return unless super
     @pieces = Array(@pieces).select { |piece| piece.name.present? }
-    @pieces.present?
+    @pieces.any? { |piece| [piece.state, piece.state_before_last_save].include?('public') }
   end
 
   def enqueue_pieces
