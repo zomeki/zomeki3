@@ -9,7 +9,8 @@ class Cms::Publisher::SitemapCallbacks < PublisherCallbacks
 
   def enqueue?
     return unless super
-    [@item.state, @item.state_was].include?('public') && [@item.sitemap_state, @item.sitemap_state_was].include?('visible')
+    [@item.state, @item.state_before_last_save].include?('public') &&
+      [@item.sitemap_state, @item.sitemap_state_before_last_save].include?('visible')
   end
 
   def enqueue_sitemap_nodes

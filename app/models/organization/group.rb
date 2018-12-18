@@ -28,7 +28,7 @@ class Organization::Group < ApplicationRecord
   # Content
   belongs_to :content, class_name: 'Organization::Content::Group', required: true
 
-  after_save     Organization::Publisher::GroupCallbacks.new, if: :changed?
+  after_save     Organization::Publisher::GroupCallbacks.new, if: :saved_changes?
   before_destroy Organization::Publisher::GroupCallbacks.new, prepend: true
 
   validates :sys_group_code, presence: true, uniqueness: { scope: :content_id }

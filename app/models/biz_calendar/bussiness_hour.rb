@@ -20,7 +20,7 @@ class BizCalendar::BussinessHour < ApplicationRecord
   validate :repeat_setting
   validate :ended_setting
 
-  after_save     Cms::Publisher::ContentCallbacks.new(belonged: true), if: :changed?
+  after_save     Cms::Publisher::ContentCallbacks.new(belonged: true), if: :saved_changes?
   before_destroy Cms::Publisher::ContentCallbacks.new(belonged: true), prepend: true
 
   nested_scope :in_site, through: :place

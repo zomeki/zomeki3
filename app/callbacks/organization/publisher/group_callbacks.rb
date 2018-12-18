@@ -10,7 +10,7 @@ class Organization::Publisher::GroupCallbacks < PublisherCallbacks
 
   def enqueue?
     return unless super
-    [@group.state, @group.state_was].include?('public')
+    [@group.state, @group.state_before_last_save].include?('public')
   end
 
   def enqueue_pieces

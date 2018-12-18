@@ -24,7 +24,7 @@ class Map::Marker < ApplicationRecord
   before_save :set_name
   before_destroy :close_files
 
-  after_save     Cms::Publisher::ContentCallbacks.new(belonged: true), if: :changed?
+  after_save     Cms::Publisher::ContentCallbacks.new(belonged: true), if: :saved_changes?
   before_destroy Cms::Publisher::ContentCallbacks.new(belonged: true), prepend: true
 
   scope :public_state, -> { where(state: 'public') }

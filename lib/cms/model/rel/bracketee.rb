@@ -12,6 +12,6 @@ module Cms::Model::Rel::Bracketee
 
   def changed_bracket_names
     type = Cms::Bracket.bracket_type(self)
-    [name, name_was].select(&:present?).uniq.map { |n| "#{type}/#{n}" }
+    [name, name_before_last_save].select(&:present?).uniq.map { |n| "#{type}/#{n}" }
   end
 end

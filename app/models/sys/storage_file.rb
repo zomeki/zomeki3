@@ -4,7 +4,7 @@ class Sys::StorageFile < ApplicationRecord
 
   before_save :set_mime_type
 
-  after_save     Cms::SearchIndexerCallbacks.new, if: :changed?
+  after_save     Cms::SearchIndexerCallbacks.new, if: :saved_changes?
   before_destroy Cms::SearchIndexerCallbacks.new
 
   validates :path, presence: true, uniqueness: true
@@ -26,7 +26,7 @@ class Sys::StorageFile < ApplicationRecord
     path =~ %r|#{Rails.root.join('sites')}/\d+/public/| ? 'public' : 'closed'
   end
 
-  def state_was
+  def state_before_last_save
     nil
   end
 

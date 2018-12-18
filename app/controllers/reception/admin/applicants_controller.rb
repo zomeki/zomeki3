@@ -38,7 +38,7 @@ class Reception::Admin::ApplicantsController < Cms::Controller::Admin::Base
     @item = @open.applicants.build(applicant_params)
     @item.applied_from = 'admin'
     @item.in_register_from_admin = true
-    changes = @item.changes
+    changes = @item.changes_to_save
 
     _create @item do
       send_received_mail(@item) if changes.dig(:state, 1) == 'received'
@@ -49,7 +49,7 @@ class Reception::Admin::ApplicantsController < Cms::Controller::Admin::Base
     @item = @open.applicants.find(params[:id])
     @item.attributes = applicant_params
     @item.in_register_from_admin = true
-    changes = @item.changes
+    changes = @item.changes_to_save
 
     _update @item do
       send_received_mail(@item) if changes.dig(:state, 1) == 'received'

@@ -9,7 +9,7 @@ class GpCalendar::Holiday < ApplicationRecord
   # Content
   belongs_to :content, class_name: 'GpCalendar::Content::Event', required: true
 
-  after_save     Cms::Publisher::ContentCallbacks.new(belonged: true), if: :changed?
+  after_save     Cms::Publisher::ContentCallbacks.new(belonged: true), if: :saved_changes?
   before_destroy Cms::Publisher::ContentCallbacks.new(belonged: true), prepend: true
 
   validates :state, presence: true

@@ -13,10 +13,10 @@ class Cms::DataFile < ApplicationRecord
   belongs_to :concept
   belongs_to :node, class_name: 'Cms::DataFileNode'
 
-  after_save     Cms::Publisher::BracketeeCallbacks.new, if: :changed?
+  after_save     Cms::Publisher::BracketeeCallbacks.new, if: :saved_changes?
   before_destroy Cms::Publisher::BracketeeCallbacks.new, prepend: true
 
-  after_save     Cms::SearchIndexerCallbacks.new, if: :changed?
+  after_save     Cms::SearchIndexerCallbacks.new, if: :saved_changes?
   before_destroy Cms::SearchIndexerCallbacks.new, prepend: true
 
   validates :concept_id, presence: true

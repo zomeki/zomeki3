@@ -51,7 +51,7 @@ class GpCategory::Category < ApplicationRecord
 
   before_validation :set_attributes_from_parent
 
-  after_save     GpCategory::Publisher::CategoryCallbacks.new, if: :changed?
+  after_save     GpCategory::Publisher::CategoryCallbacks.new, if: :saved_changes?
   before_destroy GpCategory::Publisher::CategoryCallbacks.new, prepend: true
 
   scope :with_root, -> { where(parent_id: nil) }
@@ -199,8 +199,8 @@ class GpCategory::Category < ApplicationRecord
   end
 
   def move_published_files
-    return if changes[:name].blank?
-    old_name, new_name = changes[:name]
+    return if saved_changes[:name].blank?
+    old_name, new_name = saved_changes[:name]
     return if old_name.blank? || new_name.blank?
     rename_directory(new_path: public_path, old_name: old_name)
     rename_directory(new_path: public_smart_phone_path, old_name: old_name)

@@ -16,7 +16,7 @@ class Cms::SearchIndexerCallbacks < ApplicationCallbacks
   private
 
   def enqueue?(item)
-    Zomeki.config.application['cms.search_indexer'] && [item.state, item.state_was].include?('public')
+    Zomeki.config.application['cms.search_indexer'] && [item.state, item.state_before_last_save].include?('public')
   end
 
   def enqueue_self(item)

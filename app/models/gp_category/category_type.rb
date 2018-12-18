@@ -42,7 +42,7 @@ class GpCategory::CategoryType < ApplicationRecord
   validates :title, presence: true
   validates :state, presence: true
 
-  after_save     GpCategory::Publisher::CategoryTypeCallbacks.new, if: :changed?
+  after_save     GpCategory::Publisher::CategoryTypeCallbacks.new, if: :saved_changes?
   before_destroy GpCategory::Publisher::CategoryTypeCallbacks.new, prepend: true
 
   scope :public_state, -> { where(state: 'public') }
