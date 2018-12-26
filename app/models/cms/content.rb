@@ -103,7 +103,7 @@ class Cms::Content < ApplicationRecord
     in_settings.each do |name, value|
       st = settings.where(name: name).first || new_setting(name)
       st.value = value
-      st.save if st.changed?
+      st.save if st.has_changes_to_save?
     end
     return true
   end

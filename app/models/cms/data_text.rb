@@ -10,7 +10,7 @@ class Cms::DataText < ApplicationRecord
 
   belongs_to :concept
 
-  after_save     Cms::Publisher::BracketeeCallbacks.new, if: :changed?
+  after_save     Cms::Publisher::BracketeeCallbacks.new, if: :saved_changes?
   before_destroy Cms::Publisher::BracketeeCallbacks.new, prepend: true
 
   validates :concept_id, presence: true

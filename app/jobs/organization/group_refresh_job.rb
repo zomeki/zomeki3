@@ -17,7 +17,7 @@ class Organization::GroupRefreshJob < ApplicationJob
       group = group_map[code] || content.groups.build(sys_group_code: code)
       group.name = sys_group.name_en
       group.title = sys_group.name
-      group.save if group.changed?
+      group.save if group.has_changes_to_save?
     end
 
     group_map.each do |code, group|

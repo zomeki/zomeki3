@@ -15,7 +15,7 @@ class Cms::Publisher::ContentCallbacks < PublisherCallbacks
 
   def enqueue?
     return unless super
-    [@item.state, @item.state_was].include?('public')
+    [@item.state, @item.state_before_last_save].include?('public')
   end
 
   def enqueue_nodes

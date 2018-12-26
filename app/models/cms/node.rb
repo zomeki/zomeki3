@@ -41,13 +41,13 @@ class Cms::Node < ApplicationRecord
     errors.add :parent_id, :invalid if id != nil && id == parent_id
     errors.add :route_id, :invalid if id != nil && id == route_id
   }
-  validate :validate_confliction, if: :name_changed?
+  validate :validate_confliction, if: :saved_change_to_name?
 
   after_initialize :set_defaults
-  after_update :move_directory, if: :path_changed?
+  after_update :move_directory, if: :saved_changes_to_path?
   after_destroy :remove_file
 
-  after_save Cms::Publisher::NodeCallbacks.new, if: :changed?
+  after_save Cms::Publisher::NodeCallbacks.new, if: :saved_changes?
 
   define_model_callbacks :publish_files, :close_files
   after_publish_files Cms::FileTransferCallbacks.new([:public_path, :public_smart_phone_path])
@@ -150,21 +150,22 @@ class Cms::Node < ApplicationRecord
     end
   end
 
-  def path_changed?
-    return false if name.blank? || name_was.blank?
+  def saved_changes_to_path?
+    return false if name.blank? || name_before_last_save.blank?
     [:name, :parent_id].any? do |column|
-      changes[column].present? && changes[column][0].present? && changes[column][1].present?
+      saved_changes[column].present? && saved_changes[column][0].present? && saved_changes[column][1].present?
     end
   end
 
   def path_changes
-    return {} unless path_changed?
+    return {} unless saved_changes_to_path?
     parent = self.class.find_by(id: parent_id)
-    parent_was = self.class.find_by(id: parent_id_was)
-    return {} if parent.nil? || parent_was.nil?
+    parent_before = self.class.find_by(id: parent_id_before_last_save)
+    return {} if parent.nil? || parent_before.nil?
+    name_changes = saved_changes[:name]
     {
-      "#{parent_was.public_path}#{name_was}" => "#{parent.public_path}#{name}",
-      "#{parent_was.public_smart_phone_path}#{name_was}" => "#{parent.public_smart_phone_path}#{name}"
+      "#{parent_before.public_path}#{name_changes[0]}" => "#{parent.public_path}#{name_changes[1]}",
+      "#{parent_before.public_smart_phone_path}#{name_changes[0]}" => "#{parent.public_smart_phone_path}#{name_changes[1]}"
     }
   end
 
@@ -205,7 +206,7 @@ class Cms::Node < ApplicationRecord
 
     after_save :replace_public_page
 
-    after_save     Cms::SearchIndexerCallbacks.new, if: :changed?
+    after_save     Cms::SearchIndexerCallbacks.new, if: :saved_changes?
     before_destroy Cms::SearchIndexerCallbacks.new, prepend: true
 
     validate :validate_recognizers, if: -> { state == 'recognize' }

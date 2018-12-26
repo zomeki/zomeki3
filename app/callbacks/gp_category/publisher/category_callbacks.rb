@@ -11,7 +11,7 @@ class GpCategory::Publisher::CategoryCallbacks < PublisherCallbacks
 
   def enqueue?
     return unless super
-    [@category.state, @category.state_was].include?('public')
+    [@category.state, @category.state_before_last_save].include?('public')
   end
 
   def enqueue_pieces

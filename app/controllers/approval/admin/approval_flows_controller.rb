@@ -62,7 +62,7 @@ class Approval::Admin::ApprovalFlowsController < Cms::Controller::Admin::Base
 
       approval = @item.approvals.where(index: key).first_or_initialize
       approval.approval_type = params[:approval_types][key]
-      approval.save! if approval.changed?
+      approval.save! if approval.has_changes_to_save?
       approval.assignments.destroy_all
 
       value.each_with_index do |ids, ogid|

@@ -14,6 +14,9 @@
 
 <script type="text/javascript">
 $(function(){
+  var maxFileSize = <%= Core.site.zip_download_max_size %>;
+  var maxFileSizeText = '<%= number_to_human_size(Core.site.zip_download_max_size) %>';
+
   $('a#newDir').on('click', function() {
     var html = $('#newForm table.dir').length ? '' : $('#newDirTemplate').html();
     $('#newForm').html(html);
@@ -41,8 +44,8 @@ $(function(){
         for (var i = 0; i < length; i++) {
           total_size = total_size + files[i].size;
         }
-        if (total_size > 104857600) {
-          msg = "選択したファイルの合計サイズが容量制限を超えています。<br />一度にアップロードできる合計ファイルサイズは100MBまでです。";
+        if (total_size > maxFileSize) {
+          msg = "選択したファイルの合計サイズが容量制限を超えています。<br />一度にアップロードできる合計ファイルサイズは" + maxFileSizeText + "までです。";
           $("#sizeErrorMsg").html(msg);
           $('#newForm [type=submit]').prop('disabled', true);
         } else {

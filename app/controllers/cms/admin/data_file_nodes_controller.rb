@@ -36,7 +36,7 @@ class Cms::Admin::DataFileNodesController < Cms::Controller::Admin::Base
   def update
     @item = Cms::DataFileNode.find(params[:id])
     @item.attributes = file_node_params
-    @old_concept_id  = @item.concept_id_was
+    @old_concept_id  = @item.concept_id_in_database
 
     _update(@item) do
       if @old_concept_id != @item.concept_id

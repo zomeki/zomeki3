@@ -25,6 +25,6 @@ module Cms::Model::Rel::SearchText
       st.save
     end
 
-    search_texts.any? { |st| st.previous_changes.present? }
+    search_texts.any? { |st| st.saved_changes.present? }
   end
 end

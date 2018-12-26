@@ -17,7 +17,7 @@ class Sys::Group < ApplicationRecord
   has_many :site_belongings, class_name: 'Cms::SiteBelonging', dependent: :destroy
   has_many :sites, -> { order(:id) }, through: :site_belongings, class_name: 'Cms::Site'
 
-  before_save :disable_users, if: -> { state_changed? && state == 'disabled' }
+  before_save :disable_users, if: -> { will_save_change_to_state? && state == 'disabled' }
   before_destroy :disable_users
 
   validates :state, :level_no, :name, :ldap, presence: true
@@ -68,7 +68,7 @@ class Sys::Group < ApplicationRecord
   end
 
   def validate_disable_state
-    if state_changed? && state == 'disabled' && !disableable?
+    if will_save_change_to_state? && state == 'disabled' && !disableable?
       errors.add(:base, 'このグループは無効にできません。')
     end
   end

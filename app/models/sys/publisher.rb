@@ -40,7 +40,7 @@ class Sys::Publisher < ApplicationRecord
     transaction do
       self.path = path
       self.content_hash = hash
-      self.save if changed?
+      self.save if has_changes_to_save?
 
       if ::File.exist?(path) && ::File.new(path).read == content
         #FileUtils.touch([path])
@@ -64,7 +64,7 @@ class Sys::Publisher < ApplicationRecord
     transaction do
       self.path = dst
       self.content_hash = hash if hash
-      self.save if changed?
+      self.save if has_changes_to_save?
 
       if FileTest.exists?(dst) && ::File.mtime(dst) >= ::File.mtime(src)
         #FileUtils.touch([dst])
@@ -84,7 +84,7 @@ class Sys::Publisher < ApplicationRecord
   end
 
   def check_path
-    remove_files(path: path_was) if !path_was.blank? && path_changed?
+    remove_files(path: path_in_database) if will_save_change_to_path? && path_in_database.present?
     return true
   end
 

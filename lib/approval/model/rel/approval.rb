@@ -125,7 +125,7 @@ module Approval::Model::Rel::Approval
       end
 
       request.user_id = Core.user.id
-      request.save! if request.changed?
+      request.save! if request.has_changes_to_save?
       request.reset
 
       request.histories.create(user_id: Core.user.id, reason: 'request', comment: in_approval_comment)

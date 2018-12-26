@@ -9,7 +9,12 @@ class GpCalendar::Publisher::EventCallbacks < PublisherCallbacks
   private
 
   def enqueue_nodes
-    changed_dates = [@event.started_on, @event.started_on_was, @event.ended_on, @event.ended_on_was].compact.uniq
+    changed_dates = @event.periods.flat_map do |period|
+      [period.started_on,
+       period.started_on_before_last_save,
+       period.ended_on,
+       period.ended_on_before_last_save].compact.uniq
+    end
     return if changed_dates.blank?
 
     min_date = changed_dates.min.beginning_of_month
