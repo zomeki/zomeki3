@@ -91,9 +91,10 @@ class Sys::Publisher < ApplicationRecord
   def remove_files(options = {})
     up_path = options[:path] || path
     up_path = ::File.expand_path(path, Rails.root) if up_path.to_s.slice(0, 1) == '/'
-    FileUtils.rm(up_path) if FileTest.exist?(up_path)
-    #FileUtils.rm("#{up_path}.mp3") if FileTest.exist?("#{up_path}.mp3")
-    FileUtils.rmdir(::File.dirname(up_path)) rescue nil
+
+    pathnm = Pathname(up_path)
+    pathnm.delete if pathnm.exist?
+    pathnm.parent.delete if pathnm.parent.empty?
     return true
   end
 end
