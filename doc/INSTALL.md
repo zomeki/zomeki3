@@ -63,10 +63,6 @@ rubyをインストールします。
     # rbenv rehash
     # ruby -v
 
-bundlerをインストールします。
-
-    # gem install bundler
-
 ## 6.nginxのインストール
 
 外部からhttpでアクセス可能にします。

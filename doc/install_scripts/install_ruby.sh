@@ -30,7 +30,6 @@ centos() {
   ruby -v
 
   gem update --system
-  gem install bundler
 }
 
 others() {
