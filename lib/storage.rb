@@ -94,7 +94,7 @@ module Storage
   end
   
   def self.rmdir(path)
-    FileUtils.rmdir(path)
+    FileUtils.rmdir(path) if Dir.exist?(path) && Dir.empty?(path)
   end
   
   def self.rm_rf(path)
