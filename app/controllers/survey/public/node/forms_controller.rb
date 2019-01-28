@@ -35,9 +35,18 @@ class Survey::Public::Node::FormsController < Survey::Public::NodeController
     build_answer
 
     if @form_answer.form.confirmation?
-      return render :show unless @content.use_captcha? ? @form_answer.valid_with_captcha? : @form_answer.valid?
+      if @content.use_captcha?
+        return render :show unless @form_answer.valid_with_captcha?
+        SimpleCaptcha::SimpleCaptchaData.create(key: @form_answer.captcha_key, value: @form_answer.captcha)
+      else
+        return render :show unless @form_answer.valid?
+      end
     else
-      return render :show unless @content.use_captcha? ? @form_answer.save_with_captcha : @form_answer.save
+      if @content.use_captcha?
+        return render :show unless @form_answer.save_with_captcha
+      else
+        return render :show unless @form_answer.save
+      end
       return send_mail_and_redirect_to_finish
     end
   end
@@ -45,7 +54,9 @@ class Survey::Public::Node::FormsController < Survey::Public::NodeController
   def send_answers
     build_answer
 
-    if params[:edit_answers] || !@form_answer.save
+    if params[:edit_answers]
+      render :show
+    elsif (@content.use_captcha? && !@form_answer.save_with_captcha) || !@form_answer.save
       render :show
     else
       send_mail_and_redirect_to_finish

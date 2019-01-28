@@ -33,6 +33,11 @@
       <%- end -%>
     </div>
 
+    <%- if @content.use_captcha? -%>
+      <%= hidden_field_tag 'captcha', @form_answer.captcha %>
+      <%= hidden_field_tag 'captcha_key', @form_answer.captcha_key %>
+    <%- end -%>
+
     <div class="submit">
       <%= submit_tag '送信する' %>
       <%= submit_tag '変更する', name: 'edit_answers' %>
