@@ -40,7 +40,7 @@ class Sys::Storage::Directory < Sys::Storage::Entry
   end
 
   def compress_to_tmpfile
-    tmpname = '/tmp/' + Dir::Tmpname.make_tmpname([name, '.zip'], nil)
+    tmpname = Dir::Tmpname.create([name, '.zip']) {}
     `#{Shellwords.join(['cd', ::File.dirname(path)])} && #{Shellwords.join(['zip', '-r', tmpname, name])}`
     tmpname
   end

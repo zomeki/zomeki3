@@ -8,7 +8,7 @@
 * Webサーバ: nginx 1.12
 * Appサーバ: unicorn 5.4
 * Database: PostgreSQL 9.5
-* Ruby: 2.3
+* Ruby: 2.6
 * Rails: 5.2
 
 ### 設定
@@ -58,14 +58,10 @@ rbenvをインストールします。
 
 rubyをインストールします。
 
-    # rbenv install 2.3.7
-    # rbenv global 2.3.7
+    # rbenv install 2.6.0
+    # rbenv global 2.6.0
     # rbenv rehash
     # ruby -v
-
-bundlerをインストールします。
-
-    # gem install bundler
 
 ## 6.nginxのインストール
 

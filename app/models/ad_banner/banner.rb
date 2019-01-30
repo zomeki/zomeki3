@@ -107,8 +107,9 @@ class AdBanner::Banner < ApplicationRecord
         paths = [image_path]
         paths << image_smart_phone_path if content.site.publish_for_smart_phone?
         paths.each do |path|
-          FileUtils.rm path if ::File.exist?(path)
-          FileUtils.rmdir ::File.dirname(path)
+          pathnm = Pathname(path)
+          pathnm.delete if pathnm.exist?
+          pathnm.parent.delete if pathnm.parent.empty?
         end
       end
     end
