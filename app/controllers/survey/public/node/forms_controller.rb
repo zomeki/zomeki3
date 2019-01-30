@@ -37,7 +37,7 @@ class Survey::Public::Node::FormsController < Survey::Public::NodeController
     if @form_answer.form.confirmation?
       if @content.use_captcha?
         return render :show unless @form_answer.valid_with_captcha?
-        SimpleCaptcha::SimpleCaptchaData.create(key: @form_answer.captcha_key, value: @form_answer.captcha)
+        SimpleCaptcha::SimpleCaptchaData.create(key: @form_answer.captcha_key, value: @form_answer.captcha.upcase)
       else
         return render :show unless @form_answer.valid?
       end
