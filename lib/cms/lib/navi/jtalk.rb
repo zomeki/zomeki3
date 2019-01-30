@@ -85,7 +85,7 @@ class Cms::Lib::Navi::Jtalk
     end
 
     def filter_html_tags(doc)
-      content = doc.css('div[@id="content"]').first || doc.css('body').first || doc.root
+      content = doc.css('[@id="content"]').first || doc.css('body').first || doc.root
       return unless content
 
       content.xpath('.//comment()[.=" skip reading "]').each do |comment1|
