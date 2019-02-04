@@ -58,8 +58,8 @@ rbenvをインストールします。
 
 rubyをインストールします。
 
-    # rbenv install 2.6.0
-    # rbenv global 2.6.0
+    # rbenv install 2.6.1
+    # rbenv global 2.6.1
     # rbenv rehash
     # ruby -v
 
