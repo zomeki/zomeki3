@@ -5,24 +5,6 @@
 </span>
 <%- end -%>
 
-<%- if @piece.in_settings[:g_plusone] -%>
-<span class="g-wrapper">
-  <!-- Place this tag where you want the +1 button to render. -->
-  <div class="g-plusone" data-size="medium"></div>
-
-  <!-- Place this tag after the last +1 button tag. -->
-  <script type="text/javascript">
-    window.___gcfg = {lang: 'ja'};
-
-    (function() {
-      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-      po.src = 'https://apis.google.com/js/plusone.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-    })();
-  </script>
-</span>
-<%- end -%>
-
 <%- if @piece.in_settings[:fb_like] -%>
 <div class="fb-wrapper">
   <div class="fb-like" data-width="450" data-layout="button_count" data-action="like" data-show-faces="true" data-share="true"></div>

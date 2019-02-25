@@ -10,6 +10,6 @@ class Cms::Admin::Piece::SnsPartsController < Cms::Admin::Piece::BaseController
   private
 
   def base_params_item_in_settings
-    [:fb_like, :g_plusone, :line, :mixi, :mixi_data_key, :twitter]
+    [:fb_like, :line, :mixi, :mixi_data_key, :twitter]
   end
 end
