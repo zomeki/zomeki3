@@ -3,6 +3,6 @@ links = @piece.link_items.where(state: 'public').to_a
 return if links.size == 0
 %><ul>
 <% links.each do |item| %>
-  <li><%= link_to h(item.name), item.uri, target: item.target %></li>
+  <li><%= link_to h(item.name), item.uri, target: item.target.present? ? item.target : '_self' %></li>
 <% end %>
 </ul>
