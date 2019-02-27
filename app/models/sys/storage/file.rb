@@ -38,7 +38,7 @@ class Sys::Storage::File < Sys::Storage::Entry
   end
 
   def text_file?
-    mime_type.blank? || mime_type =~ /(text|javascript|application\/json)/i
+    mime_type.blank? || mime_type =~ /(text|javascript|ecmascript|application\/json)/i
   end
 
   def save(options = {})
