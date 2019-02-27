@@ -3,6 +3,8 @@ class Cms::Period < ApplicationRecord
 
   belongs_to :periodable, polymorphic: true
 
+  nested_scope :in_site, through: :periodable
+
   validate :validate_dates_range
 
   def intersect?(start_date, end_date)
