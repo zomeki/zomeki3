@@ -5,24 +5,6 @@
 </span>
 <%- end -%>
 
-<%- if @piece.in_settings[:g_plusone] -%>
-<span class="g-wrapper">
-  <!-- Place this tag where you want the +1 button to render. -->
-  <div class="g-plusone" data-size="medium"></div>
-
-  <!-- Place this tag after the last +1 button tag. -->
-  <script type="text/javascript">
-    window.___gcfg = {lang: 'ja'};
-
-    (function() {
-      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-      po.src = 'https://apis.google.com/js/plusone.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-    })();
-  </script>
-</span>
-<%- end -%>
-
 <%- if @piece.in_settings[:fb_like] -%>
 <div class="fb-wrapper">
   <div class="fb-like" data-width="450" data-layout="button_count" data-action="like" data-show-faces="true" data-share="true"></div>
@@ -44,14 +26,9 @@
 </div>
 <%- end -%>
 
-<%- if request.smart_phone? %>
 <%- if @piece.in_settings[:line] -%>
 <div class="line-wrapper">
-<script type="text/javascript" src="http://media.line.naver.jp/js/line-button.js?v=20130508" ></script>
-<script type="text/javascript">
-new jp.naver.line.media.LineButton({"pc":true,"lang":"ja","type":"a"});
-</script>
+<div class="line-it-button" style="display: none;" data-type="share-a" data-lang="ja"></div>
+<script src="//scdn.line-apps.com/n/line_it/thirdparty/loader.min.js" async="async" defer="defer"></script>
 </div>
 <%- end -%>
-<%- end -%>
-

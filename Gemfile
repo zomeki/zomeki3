@@ -113,7 +113,7 @@ gem 'whenever', '~> 0.10.0', require: false
 
 gem 'activerecord_nested_scope', '~> 1.0.4'
 gem 'logical_query_parser', '~> 0.2.0'
-gem 'params_keeper_rails', '~> 1.0.0'
+gem 'params_keeper_rails', '~> 1.1.1'
 gem 'datewari', '~> 1.0.2'
 gem 'enum_ish', '~> 1.1.0'
 gem 'slonik_migration', '~> 1.1.2'

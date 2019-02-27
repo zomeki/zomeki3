@@ -1,7 +1,7 @@
 <%= render 'search' -%>
 
 <%= form_tag url_for(action: :batch), method: :post, class: 'batch' do -%>
-<%- controller.keep_params_keys.each do |key| -%>
+<%- controller.keep_params_config[:keys].each do |key| -%>
   <%= hidden_field_tag key, params[key] %>
 <%- end -%>
 <div class="batchMenu">
