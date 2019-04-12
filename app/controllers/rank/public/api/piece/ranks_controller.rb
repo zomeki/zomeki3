@@ -9,7 +9,6 @@ class Rank::Public::Api::Piece::RanksController < Cms::Controller::Public::Api
     return render(json: {}) unless piece
 
     current_item = rank_current_item(params[:current_item_class], params[:current_item_id])
-    return render(json: {}) unless current_item
 
     ranks = Rank::TotalsFinder.new(piece.content.ranks)
                               .search(piece.content, piece.ranking_term, piece.ranking_target, category_option: piece.category_option, current_item: current_item)
