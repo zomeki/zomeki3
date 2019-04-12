@@ -108,6 +108,7 @@ class Cms::Piece < ApplicationRecord
 
     new_attributes = self.attributes
     new_attributes[:id] = nil
+    new_attributes[:state] = 'closed'
     new_attributes[:created_at] = nil
     new_attributes[:updated_at] = nil
     new_attributes[:recognized_at] = nil
@@ -118,8 +119,6 @@ class Cms::Piece < ApplicationRecord
     if rel_type == nil
       item.name  = nil
       item.title = item.title.gsub(/^(【複製】)*/, "【複製】")
-    elsif rel_type == :replace
-      item.state = "closed"
     end
 
     item.setting_save_skip = true
