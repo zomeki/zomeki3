@@ -16,7 +16,9 @@
       <th style="text-align: center; width: 120px;">更新日時</th>
       <th style="text-align: center; width: 100px;">プレビュー</th>
     </tr>
-    <%- @approval_requests.each do |item| -%>
+    <%- @approval_requests.each do |item|
+      params = item.class == Cms::Node::Page ? {params: { node_id: item.id }} : {}
+    -%>
     <tr class="<%= cycle '', 'cycle' %>">
       <td class="action_link"><%= link_to :show, item.admin_uri(active_tab: 'approval'), target: '_blank' %></td>
       <td><%= item.content ? item.content.name : item.class.model_name.human %></td>
@@ -25,9 +27,9 @@
       <td><%= item.creator&.user&.name %></td>
       <td style="text-align: center;"><%=l item.updated_at %></td>
       <td style="text-align: center;">
-        <%= preview_links(Core.site, item.preview_uri,
-                                     item.preview_uri(terminal: :smart_phone),
-                                     item.preview_uri(terminal: :mobile)) %>
+        <%= preview_links(Core.site, item.preview_uri(params),
+                                     item.preview_uri(params.merge(terminal: :smart_phone)),
+                                     item.preview_uri(params.merge(terminal: :mobile))) %>
       </td>
     </tr>
     <%- end -%>
