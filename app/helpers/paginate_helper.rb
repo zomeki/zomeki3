@@ -13,6 +13,8 @@ module PaginateHelper
                       previous_label: I18n.t('will_paginate.mobile_previous_label'),
                       next_label: I18n.t('will_paginate.mobile_next_label'))
     end
+    defaults[:previous_label] = options[:previous_label] if options[:previous_label].present?
+    defaults[:next_label]     = options[:next_label] if options[:next_label].present?
 
     will_paginate(items, defaults)
   end

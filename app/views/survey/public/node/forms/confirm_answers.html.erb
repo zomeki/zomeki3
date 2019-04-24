@@ -8,6 +8,10 @@
           <%= label_tag "question_answers_#{question.id}", question.title %>
         </div>
 
+        <%- if question.description.present? -%>
+          <div class="body"><%=raw question.description %></div>
+        <%- end -%>
+
         <%- if question.form_type != 'free' -%>
           <%- answer = @form_answer.answers.detect { |a| a.question_id == question.id } -%>
           <div class="answer_content">
@@ -24,10 +28,6 @@
               <%= answer&.content %>
             <%- end -%>
           </div>
-        <%- end -%>
-
-        <%- if question.description.present? -%>
-          <div class="body"><%=raw question.description %></div>
         <%- end -%>
       </div>
       <%- end -%>

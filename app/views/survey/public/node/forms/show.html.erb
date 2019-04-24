@@ -14,6 +14,10 @@
           <%- end -%>
         </div>
 
+        <%- if question.description.present? -%>
+          <div class="body"><%=raw question.description %></div>
+        <%- end -%>
+
         <div class="answer_content">
           <%- answer = @form_answer.answers.detect { |a| a.question_id == question.id } -%>
           <%- case question.form_type -%>
@@ -50,10 +54,6 @@
             <span class="max_length">（最大<%= question.form_file_max_size || 1 %> MB）</span>
           <%- end -%>
         </div>
-
-        <%- if question.description.present? -%>
-        <div class="body"><%=raw question.description %></div>
-        <%- end -%>
       </div>
       <%- end -%>
     </div>
