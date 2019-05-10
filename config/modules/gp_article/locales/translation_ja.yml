@@ -120,6 +120,7 @@ ja:
         authors_visibility: 投稿者表示
       gp_article/piece/search_doc:
         in_category_type_ids: カテゴリ種別
+        operator_type: カテゴリ種別間検索条件
       gp_article/comment:
         body: 内容
         author_name: 投稿者名

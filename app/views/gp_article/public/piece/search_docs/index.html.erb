@@ -17,6 +17,7 @@
     <label for="criteria_keyword">キーワードでさがす</label>
     <%= text_field_tag 'criteria[keyword]', @keyword %>
   </div>
+  <%= hidden_field_tag 'operator_type', @operator_type %>
   <div class="submitters">
     <input type="submit" value="検索" />
   </div>

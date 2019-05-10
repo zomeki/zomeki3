@@ -7,10 +7,22 @@ class GpArticle::Public::Node::SearchDocsController < GpArticle::Public::NodeCon
   def index
     @keyword = params.dig(:criteria, :keyword)
     @category_ids = params.dig(:criteria, :category_ids) || []
+    @category_type_ids = params.dig(:criteria, :category_type_ids) || {}
+    @operator_type = params[:operator_type] == 'or' ? 'or' : 'and'
 
     @docs = @content.docs
     @docs = @docs.search_with_text(:title, :body, @keyword) if @keyword.present?
-    @docs = @docs.categorized_into(@category_ids) if @category_ids.present?
+
+    if @operator_type == 'and' && @category_type_ids.present?
+      @category_ids = []
+      @category_type_ids.values.each{|c| @category_ids.concat(Array(c)) }
+      @category_type_ids.each do |key, val|
+        @docs = @docs.categorized_into(val, alls: false) if val.present?
+      end
+    else
+      @docs = @docs.categorized_into(@category_ids, alls: false) if @category_ids.present?
+    end
+
     @docs = @docs.order(@content.docs_order_as_hash)
                  .paginate(page: params[:page], per_page: 20)
 
