@@ -1,4 +1,3 @@
-require 'will_paginate/array'
 class GpArticle::Public::Node::SearchDocsController < GpArticle::Public::NodeController
   def pre_dispatch
     @content = GpArticle::Content::Doc.find(Page.current_node.content_id)
@@ -24,9 +23,7 @@ class GpArticle::Public::Node::SearchDocsController < GpArticle::Public::NodeCon
     end
 
     @docs = @docs.order(@content.docs_order_as_hash)
-                 .paginate(page: params[:page], per_page: 20)
 
     @docs = GpArticle::DocsPreloader.new(@docs).preload(:public_node_ancestors)
-    return http_error(404) if @docs.current_page > @docs.total_pages
   end
 end
