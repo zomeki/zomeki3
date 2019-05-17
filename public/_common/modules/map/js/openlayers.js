@@ -80,7 +80,7 @@ OpenLayersViewer.prototype.create_markers = function(markers) {
       'id': marker.id,
       'content': marker.content
     });
-    if (marker.icon != '') {
+    if (marker.icon != null && marker.icon != '') {
       var marker_style = new ol.style.Style({
         image: new ol.style.Icon({
           anchor: [0.5, 1],
