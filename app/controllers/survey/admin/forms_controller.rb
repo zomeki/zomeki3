@@ -33,7 +33,7 @@ class Survey::Admin::FormsController < Cms::Controller::Admin::Base
 
   def create
     @item = @content.forms.build(form_params)
-    @item.state = new_state_from_params
+    @item.state = new_state_from_params(@item)
 
     _create(@item, location: location_after_save) do
       send_approval_request_mail(@item) if @item.state_approvable?
@@ -42,7 +42,7 @@ class Survey::Admin::FormsController < Cms::Controller::Admin::Base
 
   def update
     @item.attributes = form_params
-    @item.state = new_state_from_params
+    @item.state = new_state_from_params(@item)
 
     _update(@item, location: location_after_save) do
       send_approval_request_mail(@item) if @item.state_approvable?
@@ -90,13 +90,15 @@ class Survey::Admin::FormsController < Cms::Controller::Admin::Base
 
   private
 
-  def new_state_from_params
+  def new_state_from_params(item)
     state = params.keys.detect { |k| k =~ /^commit_/ }.to_s.sub(/^commit_/, '')
-    if @content.form_state_options(Core.user).map(&:last).include?(state)
-      state
-    else
-      nil
+    if !@content.form_state_options(Core.user).map(&:last).include?(state)
+      state = nil
     end
+    if state == 'approved' && item.tasks.detect { |task| task.name == 'publish' && task.process_at.present? }
+      state = 'prepared'
+    end
+    state
   end
 
   def location_after_save

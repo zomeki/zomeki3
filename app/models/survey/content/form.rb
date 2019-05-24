@@ -1,7 +1,7 @@
 class Survey::Content::Form < Cms::Content
   default_scope { where(model: 'Survey::Form') }
 
-  FORM_STATE_OPTIONS = [['下書き保存', 'draft'], ['承認依頼', 'approvable'], ['即時公開', 'public']]
+  FORM_STATE_OPTIONS = [['下書き保存', 'draft'], ['承認依頼', 'approvable'], ['公開待ち', 'approved'], ['即時公開', 'public']]
 
   has_many :settings, foreign_key: :content_id, class_name: 'Survey::Content::Setting', dependent: :destroy
   has_many :forms, foreign_key: :content_id, class_name: 'Survey::Form', dependent: :destroy
@@ -65,7 +65,10 @@ class Survey::Content::Form < Cms::Content
   def form_state_options(user)
     options = FORM_STATE_OPTIONS.clone
     options.reject! { |o| o.last == 'public' } unless user.has_auth?(:manager)
-    options.reject! { |o| o.last == 'approvable' } unless approval_related?
-    options
+    if approval_related?
+      options.reject { |o| o.last == 'approved' }
+    else
+      options.reject { |o| o.last == 'approvable' }
+    end
   end
 end
