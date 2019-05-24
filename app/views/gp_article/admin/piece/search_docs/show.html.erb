@@ -6,5 +6,9 @@
     <th><%= @item.class.human_attribute_name :in_category_type_ids %></th>
     <td><%= @item.category_types.map(&:title).join(', ') %></td>
   </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :operator_type %></th>
+    <td><%= @item.operator_type_text %></td>
+  </tr>
 </table>
 <%- end -%>

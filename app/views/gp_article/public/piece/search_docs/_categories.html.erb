@@ -2,7 +2,11 @@
   <div><%= category.title %></div>
   <ul>
     <li class="category level<%= category.level_no %>">
+      <%- if @piece.operator_type == 'and' -%>
+      <%= check_box_tag "criteria[category_type_ids][#{category.category_type_id}][]", category.id, @category_ids.include?(category.id.to_s), id: "criteria_category_ids_#{category.id}" %>
+      <%- else -%>
       <%= check_box_tag 'criteria[category_ids][]', category.id, @category_ids.include?(category.id.to_s), id: "criteria_category_ids_#{category.id}" %>
+      <%- end -%>
       <%= label_tag "criteria_category_ids_#{category.id}", category.level_no == 1 ? "#{category.title} 全て" : category.title %>
       <%= render 'categories', categories: category.public_children if category.public_children.size > 0 -%>
     </li>
