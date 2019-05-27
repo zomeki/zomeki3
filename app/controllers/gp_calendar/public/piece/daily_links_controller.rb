@@ -22,7 +22,7 @@ class GpCalendar::Public::Piece::DailyLinksController < GpCalendar::Public::Piec
     if @min_date && @max_date
       @pagination = Util::Html::SimplePagination.new
       @pagination.prev_label = '前の月'
-      @pagination.separator  = %Q(<span class="separator">|</span> <a href="#{@piece.public_uri}#{@today.strftime('%Y/%m/')}" class="current_page"">今月</a> <span class="separator">|</span>)
+      @pagination.separator  = %Q(<span class="separator">|</span> <a href="#{@piece.public_uri}#{@today.strftime('%Y/%m/')}" class="current_page">今月</a> <span class="separator">|</span>)
       @pagination.next_label = '次の月'
       @pagination.prev_uri   = "#{@piece.public_uri}#{@date.prev_month.strftime('%Y/%m/')}" if @calendar.prev_month_date >= @min_date
       @pagination.next_uri   = "#{@piece.public_uri}#{@date.next_month.strftime('%Y/%m/')}" if @calendar.next_month_date <= @max_date
