@@ -8,7 +8,7 @@ def menu_link(key, label, uri, current)
 end
 %>
 
-<%- if Core.user.has_auth?(:creator) -%>
+<%- if (Core.concept || Core.user.has_auth?(:manager)) && Core.user.has_auth?(:creator) -%>
   <li>
     <%= menu_link :content, 'コンテンツ', main_app.cms_contents_path, current -%>
     <ul class="subMenu"><%= render 'layouts/admin/cms/navi/component', current: nil %></ul>

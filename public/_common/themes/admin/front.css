@@ -32,3 +32,9 @@ div.piace ul .body {
   border: 2px dashed #bbc;
   background-color: #fffff7;
 }
+div#roleErrors {
+  color: #f00;
+  padding: 10px 15px;
+  border: 1px solid #e61400;
+  margin: 15px 0px;  
+}
