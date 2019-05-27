@@ -81,5 +81,12 @@
 <script type="text/javascript">
 $(function() {
   $('input.datetimepicker').datetimepicker();
+
+  $('input[name="commit_approved"]').on('click', function() {
+    if ($('#item_tasks_attributes_0_process_at').val() == '' && !confirm('公開開始日時が設定されていません。公開待ちにしてよろしいですか？')) {
+      return false;
+    }
+    return true;
+  });
 });
 </script>
