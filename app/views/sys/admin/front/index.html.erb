@@ -1,3 +1,9 @@
+<%- unless Core.concept -%>
+<div id="roleErrors">
+ロールが設定されていないため、利用可能なメニューがありません。
+</div>
+<%- end -%>
+
 <%= render 'maintenances' %>
 <%= render 'messages' %>
 <%= render 'approval_assigns' %>
