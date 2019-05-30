@@ -47,17 +47,15 @@
 <p class="form">公開予約設定</p>
 
 <table class="show">
-  <%- if @content.approval_related? -%>
-    <%= f.fields_for :tasks, @item.task_for_form('publish') do |f2| -%>
-    <tr>
-      <th>公開開始日時</th>
-      <td>
-        <%= f2.hidden_field :name %>
-        <%= f2.text_field :process_at, value: l(f2.object.process_at),
-                                       style: 'width: 150px;', class: 'datetimepicker' %>
-      </td>
-    </tr>
-    <%- end -%>
+  <%= f.fields_for :tasks, @item.task_for_form('publish') do |f2| -%>
+  <tr>
+    <th>公開開始日時</th>
+    <td>
+      <%= f2.hidden_field :name %>
+      <%= f2.text_field :process_at, value: l(f2.object.process_at),
+                                     style: 'width: 150px;', class: 'datetimepicker' %>
+    </td>
+  </tr>
   <%- end -%>
   <%= f.fields_for :tasks, @item.task_for_form('close') do |f2| -%>
     <tr>
@@ -81,5 +79,12 @@
 <script type="text/javascript">
 $(function() {
   $('input.datetimepicker').datetimepicker();
+
+  $('input[name="commit_approved"]').on('click', function() {
+    if ($('#item_tasks_attributes_0_process_at').val() == '' && !confirm('公開開始日時が設定されていません。公開待ちにしてよろしいですか？')) {
+      return false;
+    }
+    return true;
+  });
 });
 </script>

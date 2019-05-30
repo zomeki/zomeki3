@@ -1,6 +1,8 @@
 class GpArticle::Piece::SearchDoc < Cms::Piece
   default_scope { where(model: 'GpArticle::SearchDoc') }
 
+  OPERATOR_OPTIONS = [['AND検索', 'and'], ['OR検索', 'or']]
+
   belongs_to :content, class_name: 'GpArticle::Content::Doc'
 
   after_initialize :set_default_settings
@@ -17,22 +19,21 @@ class GpArticle::Piece::SearchDoc < Cms::Piece
     YAML.load(in_settings['category_type_ids'].presence || '[]')
   end
 
-  def in_category_type_ids=(value)
-    category_type_ids = value.select(&:present?).map(&:to_i).uniq
-    ins = in_settings
-    ins['category_type_ids'] = YAML.dump(category_type_ids)
-    self.in_settings = ins
+  def operator_type
+    setting_value(:operator_type)
+  end
+
+  def operator_type_text
+    OPERATOR_OPTIONS.each{|so| return so.first if so.last == (in_settings[:operator_type] || setting_value(:operator_type)) }
+    return nil
   end
 
   private
 
   def set_default_settings
     settings = self.in_settings
-
-    # settings['date_style'] = '%Y年%m月%d日 %H時%M分' if setting_value(:date_style).nil?
-    # settings['docs_order'] = DOCS_ORDER_OPTIONS.first.last if setting_value(:docs_order).nil?
-    # settings['impl'] = IMPL_OPTIONS.first.last if setting_value(:impl).blank?
-
+    settings['operator_type'] = 'or' if setting_value(:operator_type).nil?
     self.in_settings = settings
   end
+
 end
