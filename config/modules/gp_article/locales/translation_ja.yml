@@ -79,6 +79,8 @@ ja:
       gp_article/content/setting/doc_list_pagination:
         doc_list_number: 一覧表示件数
         doc_publish_more_pages: 静的ページ数
+      gp_article/content/setting/gp_template_content_template_id:
+        default_template_id: 初期テンプレート
       gp_article/category_type:
         name: カテゴリ種別ID
         title: カテゴリ種別名
