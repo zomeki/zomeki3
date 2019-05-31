@@ -88,7 +88,7 @@
   </tr>
   <tr>
     <td colspan="2" class="cke_editor_wrapper">
-      <%= text_area_tag :body_more, @item.body_more, class: 'ckeditor' %>
+      <%= text_area_tag :body_more, replace_file_path(@item.body_more, base: @item.file_base_uri), class: 'ckeditor' %>
     </td>
   </tr>
 </table>

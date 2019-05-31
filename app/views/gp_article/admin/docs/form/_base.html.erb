@@ -1,5 +1,5 @@
 <%- if @content.template_available? -%>
-  <%- if @content.templates.size == 1 && @item.template -%>
+  <%- if @content.templates.size == 1 && @item.template && @content.default_template -%>
     <%= f.hidden_field :template_id %>
   <%- else -%>
     <table class="show">
