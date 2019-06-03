@@ -387,9 +387,9 @@ class GpArticle::Content::Setting < Cms::ContentSetting
   end
 
   def validate_gp_template_content_template_id
-    if extra_values[:default_template_id]
+    if extra_values[:default_template_id].to_i > 0
       unless extra_values[:template_ids].include?(extra_values[:default_template_id])
-        errors.add("#{name}.default_template_id", 'は利用テンプレートで選択されていません。')
+        errors.add("#{name}.default_template_id", 'は利用テンプレートの中から選択してください。')
       end
     end
   end
