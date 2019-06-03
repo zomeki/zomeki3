@@ -50,7 +50,7 @@ $(function() {
       content = GpTemplate::Content::Template.find_by_id(@item.value)
       templates = content ? content.templates.public_state : []
       template_ids = @item.extra_values[:template_ids] || []
-      templates_for_option = content ? content.templates.map {|t| [t.title, t.id] } : []
+      templates_for_option = content ? content.templates.public_state.map {|t| [t.title, t.id] } : []
     -%>
 <table class="show">
   <tr>
