@@ -111,10 +111,10 @@ class Survey::Admin::FormsController < Cms::Controller::Admin::Base
     if params[:target_public].blank?
       if Core.user.has_auth?(:manager)
         params[:target] = 'all' if params[:target].blank?
-        params[:target_state] = 'processing' if params[:target_state].blank?
+        params[:target_state] = 'all' if params[:target_state].blank?
       else
         params[:target] = 'user' if params[:target].blank? || params[:target] == 'all'
-        params[:target_state] = 'processing' if params[:target_state].blank?
+        params[:target_state] = 'all' if params[:target_state].blank?
       end
     end
 
