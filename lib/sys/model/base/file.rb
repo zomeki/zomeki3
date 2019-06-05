@@ -229,7 +229,7 @@ module Sys::Model::Base::File
   ## filter/aftar_save
   def upload_internal_file
     run_callbacks :save_files do
-      Util::File.put(upload_path, data: @file_content, mkdir: true) if @file_content.present?
+      Util::File.put(upload_path, data: @file_content, mkdir: true)
       Util::File.put(upload_path(type: :thumb), data: @thumbnail_image.to_blob, mkdir: true) if @thumbnail_image
       true
     end

@@ -34,11 +34,11 @@ class Gnav::Piece::CategoryType < Cms::Piece
       if layer == 'descendants'
         category_type.categories.find_by(id: category_id).try(:descendants) || []
       else
-        category_type.categories.where(id: category_id)
+        category_type.categories.where(id: category_id).to_a
       end
     else
-      category_type = GpCategory::CategoryTypesPreloader.new(category_type).preload(:root_categories_and_descendants)
-      category_type.root_categories.inject([]) {|r, c| r | c.descendants }
+      ct = GpCategory::CategoryTypesPreloader.new(category_type).preload(:root_categories_and_descendants)
+      ct.root_categories.inject([]) {|r, c| r | c.descendants }
     end
   end
 
@@ -54,11 +54,11 @@ class Gnav::Piece::CategoryType < Cms::Piece
       if layer == 'descendants'
         category_type.public_categories.find_by(id: category_id).try(:public_descendants) || []
       else
-        category_type.public_categories.where(id: category_id)
+        category_type.public_categories.where(id: category_id).to_a
       end
     else
-      category_type = GpCategory::CategoryTypesPreloader.new(category_type).preload(:public_root_categories_and_public_descendants)
-      category_type.public_root_categories.inject([]) {|r, c| r | c.public_descendants }
+      ct = GpCategory::CategoryTypesPreloader.new(category_type).preload(:public_root_categories_and_public_descendants)
+      ct.public_root_categories.inject([]) {|r, c| r | c.public_descendants }
     end
   end
 

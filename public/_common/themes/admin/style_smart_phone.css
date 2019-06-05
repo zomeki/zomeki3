@@ -34,9 +34,45 @@ li {
   background-color: #EDEDED;
   text-align: center;
 }
-
+div.submitters input {
+  margin: 0px 5px;
+}
+div.form_buttoms {
+  margin: 5px 0px;
+}
 .iframe-wrapper {
   overflow: auto;
+}
+
+/* Index
+--------------------------------------------------------- */
+table.index {
+  border-collapse: collapse;
+  border-spacing: 0;
+  empty-cells: show;
+  width: 100%;
+  border: 1px solid #ccc;
+}
+table.index th {
+  border: 1px solid #bbb;
+  background-color: #ddd;
+  color: #000;
+  font-weight: lighter;
+  text-align: left;
+  color: #000;
+}
+table.index th a {
+  color: #000;
+}
+table.index td {
+  border-left: 1px solid #ccc;
+}
+table.index td.approvable {
+  font-weight: bold;
+  color: #ee0000;
+}
+table.index tr.cycle td {
+  background-color: #f4f4f4;
 }
 
 /* outline
