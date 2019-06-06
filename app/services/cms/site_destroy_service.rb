@@ -7,7 +7,10 @@ class Cms::SiteDestroyService < ApplicationService
     scanned = Cms::SiteScanService.new(@site).scan
     scanned.each do |model, ids|
       next if model.in?([Sys::Group, Sys::UsersGroup, Sys::User, Sys::UsersSession])
-      model.unscoped.where(id: ids).delete_all if ids.present?
+      next unless ids.present?
+      ids.each_slice(50000) do |sliced_ids|
+        model.unscoped.where(id: sliced_ids).delete_all
+      end
     end
 
     # destroy isolated groups
