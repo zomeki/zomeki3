@@ -126,6 +126,18 @@ table.show td textarea {
 table.show td label {
   margin-right: 4px;
 }
+table.show ol,
+table.show li {
+  list-style: none;
+}
+table.show li {
+  display: inline-block;
+  margin-left: 0;
+}
+table.show li:not(:first-child):before {
+  content: ">";
+  margin: 0 5px;
+}
 
 /* Tree
 --------------------------------------------------------- */
