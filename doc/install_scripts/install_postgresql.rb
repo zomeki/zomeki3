@@ -11,7 +11,7 @@ require 'fileutils'
 def centos
   puts "It's CentOS!"
 
-  system 'yum -y install http://yum.postgresql.org/9.5/redhat/rhel-7-x86_64/pgdg-centos95-9.5-2.noarch.rpm'
+  system 'yum -y install http://yum.postgresql.org/9.5/redhat/rhel-7-x86_64/pgdg-centos95-9.5-3.noarch.rpm'
   system 'yum -y install postgresql95-server postgresql95-contrib postgresql95-devel'
 
   system 'export PGSETUP_INITDB_OPTIONS="--encoding=UTF8 --locale=ja_JP.UTF-8"; /usr/pgsql-9.5/bin/postgresql95-setup initdb'
