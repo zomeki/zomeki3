@@ -4,7 +4,7 @@ module Cms::Model::Base::Qrcode
   QRCODE_FILENAME = 'qrcode.png'
 
   included do
-    enum_ish :qrcode_state, [:visible, :hidden], default: :hidden
+    enum_ish :qrcode_state, [:visible, :hidden]
   end
 
   def qrcode_visible?
