@@ -22,8 +22,8 @@ display_embed_link = @content.respond_to?(:attachment_embed_link) ? @content.att
   <%- @items.each do |item| -%>
     <%-
       download_path = url_for(action: :download, id: item)
-      embed_path = "/_system/sys/#{params[:content]}/#{params[:parent]}/inline_files/#{item.id}/file_contents/#{item.escaped_name}"
-      thumb_embed_path = "/_system/sys/#{params[:content]}/#{params[:parent]}/inline_files/#{item.id}/file_contents/thumb/#{item.escaped_name}"
+      embed_path = "/#{ZomekiCMS::ADMIN_URL_PREFIX}/sys/#{params[:content]}/#{params[:parent]}/inline_files/#{item.id}/file_contents/#{item.escaped_name}"
+      thumb_embed_path = "/#{ZomekiCMS::ADMIN_URL_PREFIX}/sys/#{params[:content]}/#{params[:parent]}/inline_files/#{item.id}/file_contents/thumb/#{item.escaped_name}"
     -%>
     <tr>
       <td class="action_link"><%= link_to :show, { action: :show, id: item } %></td>

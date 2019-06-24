@@ -4,7 +4,7 @@ module Cms::Model::Base::Qrcode
   QRCODE_FILENAME = 'qrcode.png'
 
   included do
-    enum_ish :qrcode_state, [:visible, :hidden], default: :hidden
+    enum_ish :qrcode_state, [:visible, :hidden]
   end
 
   def qrcode_visible?
@@ -12,6 +12,10 @@ module Cms::Model::Base::Qrcode
   end
 
   concerning :Publication do
+    def qrcode_relative_uri
+      ::File.join('./', QRCODE_FILENAME)
+    end
+    
     def qrcode_public_uri
       uri = public_uri.end_with?('/') ? public_uri : ::File.dirname(public_uri)
       ::File.join(uri, QRCODE_FILENAME)

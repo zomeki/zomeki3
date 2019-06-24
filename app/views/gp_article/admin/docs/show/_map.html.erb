@@ -1,4 +1,5 @@
 <table class="show">
+<%- if @content.map_related? %>
   <%- if @content.map_content_marker -%>
     <tr>
       <th><%= @item.class.human_attribute_name :marker_state %></th>
@@ -21,6 +22,7 @@
     <td><%= @item.marker_categories.where(category_type_id: category_type.id).map(&:title).join(', ') %></td>
   </tr>
   <%- end -%>
+<%- end -%>
   <%- if @content.navigation_enabled? -%>
     <tr>
       <th><%= @item.class.human_attribute_name :navigation_state %></th>
