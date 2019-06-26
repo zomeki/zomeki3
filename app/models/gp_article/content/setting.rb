@@ -379,10 +379,10 @@ class GpArticle::Content::Setting < Cms::ContentSetting
 
   def validate_doc_list_pagination
     if extra_values[:doc_list_number].to_s !~ /\A\d+\z/
-      errors.add("#{name}.doc_list_number", I18n.t('activerecord.errors.messages.not_a_number'))
+      errors.add("#{name}.doc_list_number", errors.generate_message(:base, :not_a_number))
     end
     if extra_values[:doc_publish_more_pages].to_s !~ /\A\d+\z/
-      errors.add("#{name}.doc_publish_more_pages", I18n.t('activerecord.errors.messages.not_a_number'))
+      errors.add("#{name}.doc_publish_more_pages", errors.generate_message(:base, :not_a_number))
     end
   end
 

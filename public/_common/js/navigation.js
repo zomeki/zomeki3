@@ -184,9 +184,9 @@ Navigation.talk = function(flag) {
   var player = $(Navigation.settings['player']);
   var elem   = $(Navigation.settings['talk']);
   if (!player || !elem) return false;
-  
+
   Navigation.notice();
-  
+
   if (flag == 'off') {
     elem.removeClass('talkOn');
     elem.addClass('talkOff');
@@ -218,7 +218,7 @@ Navigation.talk = function(flag) {
       var type = xhr.getResponseHeader('Content-Type');
       if (type.match(/^audio/)) {
         $('#navigationTalkCreatingFileNotice').hide();
-      } else { 
+      } else {
         $('#navigationTalkCreatingFileNotice').show();
       }
     }});
@@ -235,18 +235,22 @@ Navigation.talk = function(flag) {
 Navigation.notice = function(flag) {
   var wrap   = Navigation.settings['notice'] || 'container';
   var notice = $('#navigationNotice');
-  
+
   if (flag == 'off') {
     notice.remove();
     return false;
   }
   if (notice.size()) return false;
-  
+
   var elem = $(Navigation.settings['notice']);
-  notice = document.createElement('div'); 
-  notice.id = 'navigationNotice'; 
-  notice.innerHTML = 'ふりがなと読み上げ音声は，' +
-    '人名，地名，用語等が正確に発音されない場合があります。';
+  notice = document.createElement('div');
+  notice.id = 'navigationNotice';
+  notice.innerHTML = 'ふりがなとよみあげ音声は、' +
+    '人名、地名、用語等が正確に発音されない場合があります。' +
+    'ふりがな機能の利用中は、よみあげ機能は利用できません。';
   // $(wrap + ' *:first').before(notice);
   $('#accessibilityTool').prepend(notice);
+  if ( location.pathname.match(/\.html\.r$/) ) {
+    $('#navigationTalk').parent().hide();
+  }
 };

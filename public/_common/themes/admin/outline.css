@@ -127,7 +127,11 @@
 }
 #navi .mainMenu li:hover > ul {
   visibility: visible;
-  transition-delay: 0.1s;
+  transition-delay: 0.7s;
+}
+#navi .mainMenu li a.current:hover + ul {
+  display:none;
+  
 }
 #navi .mainMenu li > ul > li {
   flex: 0 0 32px;
