@@ -80,6 +80,10 @@ class Cms::SiteSearchService < ApplicationService
         model.where(id: ids).replace_for_all(column, criteria[:keyword], criteria[:replace_word])
       end
     end
+    
+    if criteria[:target].include?('gp_article') || criteria[:target].include?('node_page')
+      Cms::RebuildLinkJob.perform_later(Core.site)
+    end
   end
 
   private
