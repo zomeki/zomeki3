@@ -26,7 +26,7 @@ class Cms::Admin::Tool::SearchController < Cms::Controller::Admin::Base
 
     @results = Cms::SiteSearchService.new(Core.site, Core.user, Core.concept).search(params)
     @results.each do |result|
-      result[:title] = display_title(result[:model], result[:content])
+      result[:title], result[:anchor] = display_title(result[:model], result[:content])
       result[:items] = display_items(result[:items], result[:content])
     end
 
@@ -38,17 +38,17 @@ class Cms::Admin::Tool::SearchController < Cms::Controller::Admin::Base
   def display_title(model, content)
     case model.to_s
     when 'GpArticle::Doc'
-      "記事：#{content.name}"
+      ["記事：#{content.name}", "result_docs#{content.id}"]
     when 'Cms::Node'
-      '固定ページ'
+      ['固定ページ', "result_pages"]
     when 'Cms::Piece'
-      'ピース'
+      ['ピース', "result_pieces"]
     when 'Cms::Layout'
-      'レイアウト'
+      ['レイアウト', "result_layouts"]
     when 'Cms::DataText'
-      'テキスト'
+      ['テキスト', "result_data_texts"]
     when 'Cms::DataFile'
-      'ファイル'
+      ['ファイル', "result_data_files"]
     end
   end
 
@@ -61,7 +61,9 @@ class Cms::Admin::Tool::SearchController < Cms::Controller::Admin::Base
         state_text: item.state_text,
         concept: content ? content.concept : item.concept,
         admin_uri: item.admin_uri,
-        public_uri: item.respond_to?(:public_full_uri) ? item.public_full_uri : nil
+        public_uri: item.respond_to?(:public_full_uri) ? item.public_full_uri : nil,
+        created_at: item.created_at,
+        updated_at: item.created_at
       }
     end
   end

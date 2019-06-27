@@ -10,17 +10,19 @@
 <%- @results.each do |result| -%>
   <%- next if result[:count] == 0 -%>
   <%- reset_cycle -%>
-  <p style="margin: 10px 0px; padding: 2px 5px; border-left: 4px solid #bbb;"><%= result[:title] %></p>
+  <p id="<%= result[:anchor] %>" style="margin: 10px 0px; padding: 2px 5px; border-left: 4px solid #bbb;"><%= result[:title] %></p>
   <%- if result[:count] > 0 -%>
   <div class="pageEntryInfo"><%= result[:count] %>件</div>
   <%- end -%>
   <table class="index">
     <tr>
-      <th style="width: 70px; text-align: right;">ID</th>
-      <th>タイトル</th>
-      <th style="width: 120px;">コンセプト</th>
-      <th style="width: 80px;">状態</th>
+      <th style="width: 70px; text-align: right;"><%= sort_link 'ID', anchor: result[:anchor], sort_key: 'id' %></th>
+      <th><%= sort_link 'タイトル', anchor: result[:anchor], sort_key: 'title' %></th>
+      <th style="width: 120px;"><%= sort_link 'コンセプト', anchor: result[:anchor], sort_key: 'concept_id' %></th>
+      <th style="width: 80px;"><%= sort_link '状態', anchor: result[:anchor], sort_key: 'state' %></th>
       <th style="width: 33%;">公開URL</th>
+      <th style="text-align: center; width: 120px;"><%= sort_link '作成日時', anchor: result[:anchor], sort_key: 'created_at' %></th>
+      <th style="text-align: center; width: 120px;"><%= sort_link '更新日時', anchor: result[:anchor], sort_key: 'updated_at' %></th>
     </tr>
     <%- result[:items].each do |item| -%>
       <tr class="<%= cycle '', 'cycle' %>">
@@ -29,6 +31,8 @@
         <td><%= item[:concept].name %></td>
         <td><%= item[:state_text] %></td>
         <td><%= link_to_if item[:state] == 'public', item[:public_uri], item[:public_uri], target: '_blank' if item[:public_uri] %></td>
+        <td style="text-align: center;"><%=l item[:created_at] %></td>
+        <td style="text-align: center;"><%=l item[:updated_at] %></td>
       </tr>
     <%- end -%>
   </table>
