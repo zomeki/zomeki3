@@ -20,7 +20,7 @@
       <th><%= sort_link 'タイトル', anchor: result[:anchor], sort_key: 'title' %></th>
       <th style="width: 120px;"><%= sort_link 'コンセプト', anchor: result[:anchor], sort_key: 'concept_id' %></th>
       <th style="width: 80px;"><%= sort_link '状態', anchor: result[:anchor], sort_key: 'state' %></th>
-      <th style="width: 33%;">公開URL</th>
+      <th style="width: 33%;"><%= sort_link '公開URL', anchor: result[:anchor], sort_key: 'public_uri' %></th>
       <th style="text-align: center; width: 120px;"><%= sort_link '作成日時', anchor: result[:anchor], sort_key: 'created_at' %></th>
       <th style="text-align: center; width: 120px;"><%= sort_link '更新日時', anchor: result[:anchor], sort_key: 'updated_at' %></th>
     </tr>
