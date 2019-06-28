@@ -1,7 +1,6 @@
 class Cms::RebuildLinkJob < ApplicationJob
-  def perform(site)
-    @site = site
-    rebuild_links(@site)
+  def perform(site = nil)
+    rebuild_links(site)
   end
 
   private
@@ -12,7 +11,7 @@ class Cms::RebuildLinkJob < ApplicationJob
                       .map { |type| type.sub('Cms::Node', 'Cms::Node::Page').constantize }
     models.each do |model|
       items = model
-      items = items.in_site(site.id)
+      items = items.in_site(site) if site
       items.find_each(&:save_links)
     end
   end
