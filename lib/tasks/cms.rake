@@ -100,14 +100,7 @@ namespace ZomekiCMS::NAME do
     namespace :links do
       desc 'Rebuild links (SITE_ID=int)'
       task :rebuild => :environment do
-        models = Cms::Link.group(:linkable_type)
-                          .pluck(:linkable_type)
-                          .map { |type| type.sub('Cms::Node', 'Cms::Node::Page').constantize }
-        models.each do |model|
-          items = model
-          items = items.in_site(ENV['SITE_ID']) if ENV['SITE_ID']
-          items.find_each(&:save_links)
-        end
+        Cms::RebuildLinkJob.perform_now(ENV['SITE_ID'])
       end
     end
 
