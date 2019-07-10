@@ -68,6 +68,9 @@
 #naviConcepts li .closed {
   background-color: #ddd;
 }
+#naviConcepts a {
+  text-decoration: none;
+}
 #naviConcepts li a.current {
   color: #f0d;
 }
