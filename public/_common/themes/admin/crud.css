@@ -101,13 +101,13 @@ table.show {
 }
 table.show th {
   width: 180px;
-  padding: 13px 5px 13px 15px;
+  padding: 8px 5px 8px 15px;
   border-top:5px solid #fff;
   border-bottom:1px solid #ccc;
   background-color: #ededed;
 }
 table.show td {
-  padding: 13px 5px 13px 15px;
+  padding: 8px 5px 8px 15px;
   border-top: 5px solid #fff;
   border-bottom:1px solid #ccc; 
 }
