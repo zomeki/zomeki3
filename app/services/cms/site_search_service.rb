@@ -17,13 +17,18 @@ class Cms::SiteSearchService < ApplicationService
 
   def search(criteria)
     concepts = load_target_concepts(criteria)
+    
+    sort = {
+        :key => (criteria[:sort_key].presence || :id).to_sym,
+        :order => (criteria[:sort_order].presence || :asc).to_sym
+      }
 
     results = []
 
     if criteria[:target].include?('gp_article')
       contents = load_gp_article_contents(concepts)
       contents.each do |content|
-        items = search_gp_article_docs(content, criteria)
+        items = search_gp_article_docs(content, criteria, sort)
         results << { model: GpArticle::Doc,
                      content: content,
                      items: items,
@@ -32,35 +37,35 @@ class Cms::SiteSearchService < ApplicationService
     end
 
     if criteria[:target].include?('node_page') && @user.has_auth?(:designer)
-      items = search_cms_nodes(concepts, criteria)
+      items = search_cms_nodes(concepts, criteria, sort)
       results << { model: Cms::Node,
                    items: items,
                    count: items.size }
     end
 
     if criteria[:target].include?('piece') && @user.has_auth?(:designer)
-      items = search_cms_pieces(concepts, criteria)
+      items = search_cms_pieces(concepts, criteria, sort)
       results << { model: Cms::Piece,
                    items: items,
                    count: items.size }
     end
 
     if criteria[:target].include?('layout') && @user.has_auth?(:designer)
-      items = search_cms_layouts(concepts, criteria)
+      items = search_cms_layouts(concepts, criteria, sort)
       results << { model: Cms::Layout,
                    items: items,
                    count: items.size }
     end
 
     if criteria[:target].include?('data_text')
-      items = search_cms_data_texts(concepts, criteria)
+      items = search_cms_data_texts(concepts, criteria, sort)
       results << { model: Cms::DataText,
                    items: items,
                    count: items.size }
     end
 
     if criteria[:target].include?('data_file')
-      items = search_cms_data_files(concepts, criteria)
+      items = search_cms_data_files(concepts, criteria, sort)
       results << { model: Cms::DataFile,
                    items: items,
                    count: items.size }
@@ -79,6 +84,10 @@ class Cms::SiteSearchService < ApplicationService
       @columns[model].each do |column|
         model.where(id: ids).replace_for_all(column, criteria[:keyword], criteria[:replace_word])
       end
+    end
+    
+    if criteria[:target].include?('gp_article') || criteria[:target].include?('node_page')
+      Cms::RebuildLinkJob.perform_later(Core.site)
     end
   end
 
@@ -100,7 +109,7 @@ class Cms::SiteSearchService < ApplicationService
                            .order(:id)
   end
 
-  def search_gp_article_docs(content, criteria)
+  def search_gp_article_docs(content, criteria, sort)
     docs = GpArticle::Doc.where(content_id: content.id)
     publics = docs.where(state: 'public')
     non_publics = docs.where.not(state: 'public')
@@ -109,41 +118,41 @@ class Cms::SiteSearchService < ApplicationService
              non_publics.editable,
              non_publics.creator_or_approvables(@user)].reduce(:union)
     items.search_with_text(@columns[GpArticle::Doc], criteria[:keyword])
-         .order(:id)
+         .order(sort[:key] => sort[:order])
   end
 
-  def search_cms_nodes(concepts, criteria)
+  def search_cms_nodes(concepts, criteria, sort)
     Cms::Node.in_site(@site)
              .where(model: "Cms::Page", concept_id: concepts.map(&:id))
              .search_with_text(@columns[Cms::Node], criteria[:keyword])
-             .order(:id)
+             .order(sort[:key] => sort[:order])
   end
 
-  def search_cms_pieces(concepts, criteria)
+  def search_cms_pieces(concepts, criteria, sort)
     Cms::Piece.in_site(@site)
               .where(concept_id: concepts.map(&:id))
               .search_with_text(@columns[Cms::Piece], criteria[:keyword])
-              .order(:id)
+              .order(sort[:key] => sort[:order])
   end
 
-  def search_cms_layouts(concepts, criteria)
+  def search_cms_layouts(concepts, criteria, sort)
     Cms::Layout.in_site(@site)
                .where(concept_id: concepts.map(&:id))
                .search_with_text(@columns[Cms::Layout], criteria[:keyword])
-               .order(:id)
+               .order(sort[:key] => sort[:order])
   end
 
-  def search_cms_data_texts(concepts, criteria)
+  def search_cms_data_texts(concepts, criteria, sort)
     Cms::DataText.in_site(@site)
                  .where(concept_id: concepts.map(&:id))
                  .search_with_text(@columns[Cms::DataText], criteria[:keyword])
-                 .order(:id)
+                 .order(sort[:key] => sort[:order])
   end
 
-  def search_cms_data_files(concepts, criteria)
+  def search_cms_data_files(concepts, criteria, sort)
     Cms::DataFile.in_site(@site)
                  .where(concept_id: concepts.map(&:id))
                  .search_with_text(@columns[Cms::DataFile], criteria[:keyword])
-                 .order(:id)
+                 .order(sort[:key] => sort[:order])
   end
 end

@@ -103,6 +103,7 @@ module LinkHelper
 
     link_options = options.merge(params.to_unsafe_h.symbolize_keys)
                           .merge(sort_key: options[:sort_key], sort_order: order)
+    link_options.merge(anchor: options[:anchor]) if options[:anchor].present?
     link_to "#{name}#{mark}".html_safe, link_options, html_options
   end
 end
