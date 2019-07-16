@@ -1,6 +1,12 @@
 ja:
   enum_ish:
     ad_banner/banner:
+      state:
+        draft: 下書き
+        approved: 公開待ち
+        prepared: 公開日時待ち
+        public: 公開
+        closed: 公開終了
       target:
         _self: 同一ウィンドウ
         _blank: 別ウィンドウ

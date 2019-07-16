@@ -34,18 +34,6 @@
 
 <table class="show">
   <tr>
-    <th><%= @item.class.human_attribute_name :state %></th>
-    <td><%= @item.state_text %></td>
-  </tr>
-  <tr>
-    <th><%= @item.class.human_attribute_name :published_at %></th>
-    <td><%=l @item.published_at %></td>
-  </tr>
-  <tr>
-    <th><%= @item.class.human_attribute_name :closed_at %></th>
-    <td><%=l @item.closed_at %></td>
-  </tr>
-  <tr>
     <th><%= @item.class.human_attribute_name :url %></th>
     <td><%= link_to @item.url, @item.url, target: '_blank' %></td>
   </tr>
@@ -62,6 +50,8 @@
     <td><%= @item.sort_no %></td>
   </tr>
 </table>
+
+<%= task_view @item %>
 
 <br /><p class="form">業者情報</p>
 

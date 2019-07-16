@@ -2,6 +2,7 @@ class AdBanner::Banner < ApplicationRecord
   include Sys::Model::Base
   include Sys::Model::Base::File
   include Sys::Model::Rel::Creator
+  include Sys::Model::Rel::Task
   include Cms::Model::Rel::Content
   include Cms::Model::Auth::Content
 
@@ -9,7 +10,7 @@ class AdBanner::Banner < ApplicationRecord
 
   column_attribute :sort_no, default: 10
 
-  enum_ish :state, [:public, :closed], default: :public
+  enum_ish :state, [:draft, :approved, :prepared, :public, :closed], predicate: true
   enum_ish :target, [:_self, :_blank], default: :_self
 
   # Content
@@ -23,6 +24,8 @@ class AdBanner::Banner < ApplicationRecord
   validates :advertiser_name, presence: true
   validates :url, presence: true
   validates :token, uniqueness: { scope: :content_id } 
+
+  validates_with Sys::TaskValidator, if: -> { !state_draft? }
 
   before_validation :set_token
 
@@ -62,6 +65,14 @@ class AdBanner::Banner < ApplicationRecord
     "#{content.public_node.public_uri}#{token}"
   end
 
+  def publishable?
+    state_prepared? && editable?
+  end
+
+  def closable?
+    state_public? && editable?
+  end
+
   def published?
     now = Time.now
     (state == 'public') && (published_at.nil? || published_at <= now) && (closed_at.nil? || closed_at > now)
@@ -69,6 +80,18 @@ class AdBanner::Banner < ApplicationRecord
 
   def closed?
     !published?
+  end
+
+  def publish
+    return if !state_prepared?
+    self.state = 'public'
+    save(validate: false)
+  end
+
+  def close
+    return unless state_public?
+    self.state = 'closed'
+    save(validate: false)
   end
 
   private
