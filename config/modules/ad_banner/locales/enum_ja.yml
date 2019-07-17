@@ -10,3 +10,9 @@ ja:
       target:
         _self: 同一ウィンドウ
         _blank: 別ウィンドウ
+      nofollow:
+        enabled: 使用する
+        disabled: 使用しない
+      lazyload:
+        enabled: 使用する
+        disabled: 使用しない

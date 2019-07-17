@@ -46,6 +46,14 @@
     <td><%= @item.target_text %></td>
   </tr>
   <tr>
+    <th><%= @item.class.human_attribute_name :nofollow %></th>
+    <td><%= @item.nofollow_text %></td>
+  </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :lazyload %></th>
+    <td><%= @item.lazyload_text %></td>
+  </tr>
+  <tr>
     <th><%= @item.class.human_attribute_name :sort_no %></th>
     <td><%= @item.sort_no %></td>
   </tr>

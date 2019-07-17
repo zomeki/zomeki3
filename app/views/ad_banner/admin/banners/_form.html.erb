@@ -46,6 +46,14 @@
     <td><%= f.collection_radio_buttons :target, @item.class.target_options, :last, :first %></td>
   </tr>
   <tr>
+    <th><%= f.label :nofollow %></th>
+    <td><%= f.collection_radio_buttons :nofollow, @item.class.nofollow_options, :last, :first %></td>
+  </tr>
+  <tr>
+    <th><%= f.label :lazyload %></th>
+    <td><%= f.collection_radio_buttons :lazyload, @item.class.lazyload_options, :last, :first %></td>
+  </tr>
+  <tr>
     <th><%= f.label :sort_no %></th>
     <td><%= f.text_field :sort_no, class: 'number' %></td>
   </tr>

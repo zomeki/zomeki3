@@ -12,6 +12,8 @@ class AdBanner::Banner < ApplicationRecord
 
   enum_ish :state, [:draft, :approved, :prepared, :public, :closed], predicate: true
   enum_ish :target, [:_self, :_blank], default: :_self
+  enum_ish :nofollow, [:enabled, :disabled], default: :enabled
+  enum_ish :lazyload, [:enabled, :disabled], default: :enabled
 
   # Content
   belongs_to :content, class_name: 'AdBanner::Content::Banner', required: true
@@ -63,6 +65,14 @@ class AdBanner::Banner < ApplicationRecord
   def link_uri
     return '' unless content.public_node
     "#{content.public_node.public_uri}#{token}"
+  end
+
+  def use_nofollow?
+    nofollow == 'enabled'
+  end
+
+  def use_lazyload?
+    lazyload == 'enabled'
   end
 
   def publishable?

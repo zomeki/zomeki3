@@ -22,6 +22,8 @@ ja:
         name: 保存ファイル名
         title: 表示ファイル名（TITLE）
         alt_text: 代替テキスト（ALT）
+        nofollow: nofollow属性
+        lazyload: 画像遅延読み込み
       ad_banner/group:
         name: グループID
         title: グループ名

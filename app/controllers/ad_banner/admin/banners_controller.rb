@@ -101,6 +101,7 @@ class AdBanner::Admin::BannersController < Cms::Controller::Admin::Base
     params.require(:item).permit(
       :advertiser_contact, :advertiser_email, :advertiser_name, :advertiser_phone,
       :file, :group_id, :name, :sort_no, :title, :alt_text, :url, :sp_url, :target,
+      :nofollow, :lazyload,
       :creator_attributes => [:id, :group_id, :user_id],
       :tasks_attributes => [:id, :name, :process_at]
     )
