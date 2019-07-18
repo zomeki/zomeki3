@@ -1,5 +1,5 @@
 <%= form_for @item, as: :item, url: { action: :update }, html: { method: :put } do |f| %>
   <%= error_messages_for :item %>
   <%= render 'form', f: f %>
-  <%= submit :update %>
+  <%= submit @content.banner_state_options(Core.user) %>
 <% end %>

@@ -16,6 +16,8 @@ ZomekiCMS::Application.routes.draw do
       :path       => ':content/banners') do
       member do
         get :file_content
+        post :publish
+        post :close
       end
       resources :clicks, :only => :index,
         :controller => 'admin/clicks'

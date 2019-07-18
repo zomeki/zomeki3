@@ -3,13 +3,13 @@
 <table class="index">
   <tr>
     <th class="action_link">詳細</th>
-    <th>サムネイル</th>
+    <th style="width: 120px;">サムネイル</th>
     <th><%= AdBanner::Group.model_name.human %></th>
     <th><%= AdBanner::Banner.human_attribute_name :advertiser_name %></th>
-    <th style="width: 120px;"><%= AdBanner::Banner.human_attribute_name :published_at %></th>
-    <th style="width: 120px;"><%= AdBanner::Banner.human_attribute_name :closed_at %></th>
+    <th style="width: 180px;"><%= AdBanner::Banner.human_attribute_name :published_at %></th>
+    <th style="width: 180px;"><%= AdBanner::Banner.human_attribute_name :closed_at %></th>
     <th style="width: 120px;"><%= AdBanner::Banner.human_attribute_name :created_at %></th>
-    <th style="text-align: center; width: 60px;"><%= AdBanner::Banner.human_attribute_name :state %></th>
+    <th style="text-align: center; width: 100px;"><%= AdBanner::Banner.human_attribute_name :state %></th>
     <th style="text-align: center; width: 60px;"><%= AdBanner::Banner.human_attribute_name :sort_no %></th>
   </tr>
 
@@ -19,8 +19,18 @@
     <td style="text-align: center;"><%= link_to image_tag(file_content_ad_banner_banner_path(content: @content, id: item.id), width: 100), item.url, target: '_blank' %></td>
     <td style="text-align: left;"><%= item.group.try(:title) %></td>
     <td style="text-align: left;"><%= item.advertiser_name %></td>
-    <td style="text-align: left;"><%=l item.published_at %></td>
-    <td style="text-align: left;"><%=l item.closed_at %></td>
+    <td style="text-align: left;">
+      <%- if (publish_task = item.tasks.detect(&:publish_task?)) -%>
+        <%=l publish_task.process_at %>
+        <%= '（処理済）' if publish_task.state_performed? %>
+      <%- end -%>
+    </td>
+    <td style="text-align: left;">
+      <%- if (close_task = item.tasks.detect(&:close_task?)) -%>
+        <%=l close_task.process_at %>
+        <%= '（処理済）' if close_task.state_performed? %>
+      <%- end -%>
+    </td>
     <td style="text-align: left;"><%=l item.created_at %></td>
     <td style="text-align: center;"><%= item.state_text %></td>
     <td style="text-align: center;"><%= item.sort_no %></td>

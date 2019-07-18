@@ -1,6 +1,8 @@
 class AdBanner::Content::Banner < Cms::Content
   default_scope { where(model: 'AdBanner::Banner') }
 
+  STATE_OPTIONS = [['下書き保存', 'draft'], ['公開待ち', 'approved'], ['即時公開', 'public']]
+
   has_many :settings, foreign_key: :content_id, class_name: 'AdBanner::Content::Setting', dependent: :destroy
   has_many :banners, foreign_key: :content_id, class_name: 'AdBanner::Banner', dependent: :destroy
   has_many :groups, foreign_key: :content_id, class_name: 'AdBanner::Group', dependent: :destroy
@@ -20,4 +22,9 @@ class AdBanner::Content::Banner < Cms::Content
   def image_display
     setting_value(:image_display)
   end
+
+  def banner_state_options(user)
+    STATE_OPTIONS
+  end
+
 end
