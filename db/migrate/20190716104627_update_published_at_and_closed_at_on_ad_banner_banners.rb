@@ -41,5 +41,6 @@ class UpdatePublishedAtAndClosedAtOnAdBannerBanners < ActiveRecord::Migration[5.
   end
 
   def down
+    AdBanner::Banner.find_each { |item| item.tasks.destroy_all }
   end
 end
