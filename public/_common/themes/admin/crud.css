@@ -80,6 +80,9 @@ table.index td.approvable {
 table.index tr.cycle td {
   background-color: #f4f4f4;
 }
+table.index tr.approvable_current td {
+  background-color: #ffefd5;
+}
 table.index th.action_link,
 table.index td.action_link {
   width: 45px;

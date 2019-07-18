@@ -19,7 +19,7 @@
     <%- @approval_assigns.each do |item|
       params = item.class == Cms::Node::Page ? {params: { node_id: item.id }} : {}
     -%>
-    <tr class="<%= cycle '', 'cycle' %>">
+    <tr class="<%= cycle '', 'cycle' %><%= ' approvable_current' if item.respond_to?(:approvable?) && item.approvable?(Core.user) %>">
       <td class="action_link"><%= link_to :show, item.admin_uri(active_tab: 'approval'), target: '_blank' %></td>
       <td><%= item.content ? item.content.name : item.class.model_name.human %></td>
       <td style="text-align: left;"><%= item.title %></td>
