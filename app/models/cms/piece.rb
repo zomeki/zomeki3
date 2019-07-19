@@ -11,7 +11,7 @@ class Cms::Piece < ApplicationRecord
   include Cms::Model::Base::Piece
   include Cms::Model::Base::Page
 
-  enum_ish :state, [:public, :closed]
+  enum_ish :state, [:public, :closed], default: :closed
 
   has_many :settings, -> { order(:sort_no) }, class_name: 'Cms::PieceSetting', dependent: :destroy
 
