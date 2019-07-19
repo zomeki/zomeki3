@@ -220,6 +220,7 @@ ja:
       ## node
       cms/node/page:
         name: ファイル名
+        recognizers: 承認者
       cms/node/sitemap:
         name: ファイル名
       cms/node/sitemap_xml:

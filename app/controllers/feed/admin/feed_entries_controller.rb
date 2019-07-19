@@ -5,15 +5,17 @@ class Feed::Admin::FeedEntriesController < Cms::Controller::Admin::Base
     @content = Feed::Content::Feed.find(params[:content])
     return error_auth unless Core.user.has_priv?(:read, item: @content.concept)
     @feed = @content.feeds.find(params[:feed_id])
+    return redirect_to(action: :index) if params[:reset]
   end
 
   def index
     return update_entries if params[:do] == "update_entries"
     return delete_entries if params[:do] == "delete_entries"
     
-    @items = Feed::FeedEntry.where(feed_id: @feed.id)
-                            .order(entry_updated: :desc, id: :desc)
-                            .paginate(page: params[:page], per_page: params[:limit])
+    @items = Feed::FeedEntriesFinder.new(@feed.entries)
+                                .search(params)
+                                .order(entry_updated: :desc, id: :desc)
+                                .paginate(page: params[:page], per_page: params[:limit])
     _index @items
   end
 

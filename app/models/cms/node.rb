@@ -162,7 +162,7 @@ class Cms::Node < ApplicationRecord
     parent = self.class.find_by(id: parent_id)
     parent_before = self.class.find_by(id: parent_id_before_last_save)
     return {} if parent.nil? || parent_before.nil?
-    name_changes = saved_changes[:name]
+    name_changes = saved_changes[:name] || [name, name]
     {
       "#{parent_before.public_path}#{name_changes[0]}" => "#{parent.public_path}#{name_changes[1]}",
       "#{parent_before.public_smart_phone_path}#{name_changes[0]}" => "#{parent.public_smart_phone_path}#{name_changes[1]}"
