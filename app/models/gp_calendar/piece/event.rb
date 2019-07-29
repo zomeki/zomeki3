@@ -43,7 +43,7 @@ class GpCalendar::Piece::Event < Cms::Piece
   end
 
   def date_style
-    setting_value(:date_style).to_s
+    setting_value(:date_style).presence || '%Y年%m月%d日'
   end
 
   def more_link_label
