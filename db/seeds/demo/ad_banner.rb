@@ -48,7 +48,9 @@ def create(content, file_path, mime_type, name, title, sort_no, group, advertise
     group_id: group.id,
     state: 'public',
     url: '#',
-    target: '_blank'
+    target: '_blank',
+    nofollow: 'enabled',
+    lazyload: 'enabled'
 end
 
 ## ---------------------------------------------------------

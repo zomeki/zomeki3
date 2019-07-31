@@ -57,7 +57,7 @@ module Sys::Model::Rel::Recognition
   private
 
   def validate_recognizers
-    errors["承認者"] = "を入力してください。" if in_recognizer_ids.blank?
+    errors.add(:recognizers, 'を選択してください。') if in_recognizer_ids.blank?
   end
 
   def prepare_recognition

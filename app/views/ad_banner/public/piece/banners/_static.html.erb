@@ -10,12 +10,19 @@
                banner.link_uri
              else
                request.smart_phone? && banner.sp_url.presence || banner.url
-             end %>
-    <%= link_to url, target: banner.target, data: { token: banner.token, sp_url: banner.sp_url } do %>
+             end
+
+       img_opt = {alt: banner.alt_text, title: banner.title}
+       img_opt[:loading] = 'lazy' if banner.use_lazyload?
+
+       link_opt = {target: banner.target, data: { token: banner.token, sp_url: banner.sp_url }}
+       link_opt[:rel] = 'nofollow' if banner.use_nofollow?
+    %>
+    <%= link_to url, link_opt do %>
       <%- if @piece.content.image_display == 'embed' && File.exist?(banner.upload_path) -%>
-        <%= image_tag data_uri(File.read(banner.upload_path), mime_type: banner.mime_type), alt: banner.alt_text, title: banner.title %>
+        <%= image_tag data_uri(File.read(banner.upload_path), mime_type: banner.mime_type), img_opt %>
       <%- else -%>
-        <%= image_tag banner.image_uri, alt: banner.alt_text, title: banner.title %>
+        <%= image_tag banner.image_uri, img_opt %>
       <%- end -%>
     <%- end -%>
   </li>

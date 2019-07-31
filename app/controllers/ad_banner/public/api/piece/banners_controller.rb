@@ -48,6 +48,8 @@ class AdBanner::Public::Api::Piece::BannersController < Cms::Controller::Public:
                 else
                   banner.image_uri
                 end
+    nofollow = banner.use_nofollow? ? 'nofollow' : ''
+    loading = banner.use_lazyload? ? 'lazy' : ''
     {
       id: banner.id,
       token: banner.token,
@@ -55,7 +57,9 @@ class AdBanner::Public::Api::Piece::BannersController < Cms::Controller::Public:
       image_url: image_url,
       alt_text: banner.alt_text,
       title: banner.title,
-      target: banner.target
+      target: banner.target,
+      nofollow: nofollow,
+      loading: loading
     }
   end
 end

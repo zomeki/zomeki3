@@ -69,7 +69,7 @@
   margin: 1px;
   padding: 1px;
   border: 1px solid #f00;
-  display: inline;
+  display: inline-block;
 }
 #errorExplanation {
   width: 600px;
