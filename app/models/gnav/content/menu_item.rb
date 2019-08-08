@@ -21,6 +21,6 @@ class Gnav::Content::MenuItem < Cms::Content
   end
 
   def category_types
-    gp_category_content_category_type.try(:category_types) || []
+    gp_category_content_category_type.try(:category_types) || GpCategory::CategoryType.none
   end
 end
