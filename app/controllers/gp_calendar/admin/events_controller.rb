@@ -28,13 +28,17 @@ class GpCalendar::Admin::EventsController < Cms::Controller::Admin::Base
 
   def create
     @item = @content.events.build(event_params)
-    _create(@item)
+    _create(@item) do
+      set_file
+    end
   end
 
   def update
     @item = @content.events.find(params[:id])
     @item.attributes = event_params
-    _update(@item)
+    _update(@item) do
+      set_file
+    end
   end
 
   def destroy
@@ -42,7 +46,28 @@ class GpCalendar::Admin::EventsController < Cms::Controller::Admin::Base
     _destroy(@item)
   end
 
+  def file_content
+    item = @content.events.find(params[:id])
+    file = item.files.first
+    return http_error(404) unless file
+
+    send_file file.upload_path, filename: file.name
+  end
+
   private
+
+  def set_file
+    if params[:delete_file]
+      @item.files.each {|f| f.destroy } unless @item.files.empty?
+    end
+    if (param_file = params[:file])
+      @item.files.each {|f| f.destroy } unless @item.files.empty?
+      filename = "image#{File.extname(param_file.original_filename)}"
+      file = @item.files.build(file: param_file, name: filename, title: filename, site_id: Core.site.id)
+      file.allowed_types = %w(gif jpg png)
+      file.save
+    end
+  end
 
   def event_criteria
     criteria = params[:criteria] || {}
