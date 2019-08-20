@@ -17,6 +17,12 @@
   description: "建国をしのび、国を愛する心を養う"
   kind: "holiday"
 -
+  title: "天皇誕生日"
+  date: "2月23日"
+  repeat: true
+  description: "天皇の誕生日を祝う"
+  kind: "holiday"
+-
   title: "春分の日"
   date: "春分日"
   repeat: false
@@ -53,6 +59,12 @@
   description: "海の恩恵に感謝するとともに、海洋国日本の繁栄を願う"
   kind: "holiday"
 -
+  title: "山の日"
+  date: "8月11日"
+  repeat: true
+  description: "山に親しむ機会を得て、山の恩恵に感謝する"
+  kind: "holiday"
+-
   title: "敬老の日"
   date: "9月の第3月曜日"
   repeat: false
@@ -81,10 +93,4 @@
   date: "11月23日"
   repeat: true
   description: "勤労をたっとび、生産を祝い、国民たがいに感謝しあう"
-  kind: "holiday"
--
-  title: "天皇誕生日"
-  date: "12月23日"
-  repeat: true
-  description: "天皇の誕生日を祝う"
   kind: "holiday"

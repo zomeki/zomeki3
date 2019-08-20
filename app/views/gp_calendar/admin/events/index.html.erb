@@ -16,7 +16,11 @@
   <tr class="<%= cycle '', 'cycle' %>">
     <td class="action_link"><%= link_to :show, { action: :show, id: item } %></td>
     <td style="text-align: center;"><%= item.id %></td>
-    <td><%= display_whole_period(item.periods) %></td>
+    <td>
+      <%- item.periods.each do |period| -%>
+        <div><%= display_short_period(period) %></div>
+      <%- end -%>
+    </td>
     <td style="text-align: left;"><%= item.title %></td>
     <td style="text-align: center;"><%=l item.created_at %></td>
     <td style="text-align: center;"><%= item.state_text %></td>

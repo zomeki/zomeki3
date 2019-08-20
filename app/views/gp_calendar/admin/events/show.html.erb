@@ -32,14 +32,20 @@
     <th><%= @item.class.human_attribute_name :note %></th>
     <td><%=simple_format @item.note %></td>
   </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :file %></th>
+    <td>
+      <%- unless @item.files.empty? -%>
+      <%= image_tag file_content_gp_calendar_event_path(content: @content, id: @item.id), width: 100 %>
+      <%- else -%>
+      なし
+      <%- end -%>
+    </td>
+  </tr>
 </table>
 
 <%- if @content.category_types.present? -%>
 <%= render 'gp_category/admin/_partial/categories/view', item: @item, category_types: @content.category_types %>
-<%- end -%>
-
-<%- if @item.files.present? -%>
-<%= render 'sys/admin/_partial/files/view', item: @item, content: @content %>
 <%- end -%>
 
 <%= creator_view @item %>
