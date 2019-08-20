@@ -5,17 +5,22 @@ class GpCalendar::DefaultHolidayJob < ApplicationJob
 
     file = "#{Rails.root}/config/holiday.yml"
     return unless File.exist?(file)
+    
+    year = Time.now.year
 
     yaml = YAML.load_file(file)
     yaml.each do |val|
-      item = content.holidays.build(val)
-      item.date ||= parse_date(val["date"]) || parse_date(val["date"], '%m-%d')
-      if item.date.blank?
-        if /(\d+)月の第(\d+)(\W+)曜日/ =~ val["date"]
-          item.date = specific_date($1, $2, $3)
+      if /(\d+)月の第(\d+)(\W+)曜日/ =~ val["date"]
+        (year..year+2).each do |y|
+          item = content.holidays.build(val)
+          item.date = specific_date($1, $2, $3, y)
+          item.save
         end
+      else
+        item = content.holidays.build(val)
+        item.date ||= parse_date(val["date"]) || parse_date(val["date"], '%m-%d')
+        item.save
       end
-      item.save
     end
   end
 
