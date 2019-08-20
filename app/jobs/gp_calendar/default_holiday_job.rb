@@ -6,7 +6,7 @@ class GpCalendar::DefaultHolidayJob < ApplicationJob
     file = "#{Rails.root}/config/holiday.yml"
     return unless File.exist?(file)
     
-    year = Time.now.year
+    year = Time.now.year-1
 
     yaml = YAML.load_file(file)
     yaml.each do |val|
