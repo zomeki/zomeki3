@@ -6,7 +6,7 @@
     <td colspan="2"><%= f.collection_radio_buttons :state, @item.class.state_options, :last, :first %></td>
   </tr>
   <tr>
-    <th><%= f.label :periods %></th>
+    <th><%= f.label :periods %> <span class="note">※</span></th>
     <td colspan="2">
       <div class="<%= 'field_with_errors' if @item.errors.messages.include?(:periods) && !@item.errors.messages[:periods].blank? %>">
       <div id="event_periods">
