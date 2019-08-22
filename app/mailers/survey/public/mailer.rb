@@ -9,7 +9,7 @@ class Survey::Public::Mailer < ApplicationMailer
       attachments[answer.content] = answer.attachment.data if answer.attachment
     end
 
-    mail from: from, to: to, subject: "#{@form_answer.form.title}（#{@content.site.name}）：回答メール"
+    mail from: from, to: to, subject: "#{@form_answer.form.title}（#{@content.site.name}）：投稿メール"
   end
 
   def survey_auto_reply(form_answer:, from:, to:)
