@@ -5,8 +5,10 @@ class Survey::Public::Mailer < ApplicationMailer
     @content = form_answer.form.content
     @form_answer = form_answer
 
-    @form_answer.answers.each do |answer|
-      attachments[answer.content] = answer.attachment.data if answer.attachment
+    if form_answer.form.mail_attachment
+      @form_answer.answers.each do |answer|
+        attachments[answer.content] = answer.attachment.data if answer.attachment
+      end
     end
 
     mail from: from, to: to, subject: "#{@form_answer.form.title}（#{@content.site.name}）：投稿メール"

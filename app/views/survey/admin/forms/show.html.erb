@@ -44,6 +44,10 @@
     <th><%= @item.class.human_attribute_name :mail_to %></th>
     <td><%= @item.mail_to %></td>
   </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :mail_attachment %></th>
+    <td><%= @item.mail_attachment_text %></td>
+  </tr>
 </table>
 
 <%= task_view @item %>
