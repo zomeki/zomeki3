@@ -14,6 +14,9 @@ ja:
       index_link:
         visible: 表示
         hidden: 非表示
+      mail_attachment:
+        true: 添付あり
+        false: 添付なし
     survey/question:
       form_type:
         text_field: 入力/1行（テキストフィールド）

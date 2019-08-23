@@ -96,14 +96,22 @@ class Survey::Public::Node::FormsController < Survey::Public::NodeController
   def send_mail_and_redirect_to_finish
     ## send mail to admin
     if @content.mail_from.present? && (mail_to = @form.mail_to.presence || @content.mail_to).present?
-      Survey::Public::Mailer.survey_receipt(form_answer: @form_answer, from: @content.mail_from, to: mail_to)
-                            .deliver_now
+      begin
+        Survey::Public::Mailer.survey_receipt(form_answer: @form_answer, from: @content.mail_from, to: mail_to)
+                              .deliver_now
+      rescue => e
+        error_log e
+      end
     end
 
     ## send mail to answer
     if @content.auto_reply? && @content.mail_from.present? && @form_answer.reply_to.present?
-      Survey::Public::Mailer.survey_auto_reply(form_answer: @form_answer, from: @content.mail_from, to: @form_answer.reply_to)
-                            .deliver_now
+      begin
+        Survey::Public::Mailer.survey_auto_reply(form_answer: @form_answer, from: @content.mail_from, to: @form_answer.reply_to)
+                              .deliver_now
+      rescue => e
+        error_log e
+      end
     end
 
     if Core.request_uri =~ /^\/_ssl\/([0-9]+).*/

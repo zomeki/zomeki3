@@ -20,6 +20,7 @@ class Survey::Form < ApplicationRecord
   enum_ish :state, [:draft, :approvable, :approved, :prepared, :public, :closed], predicate: true
   enum_ish :confirmation, [true, false], default: true
   enum_ish :index_link, [:visible, :hidden], default: :visible
+  enum_ish :mail_attachment, [true, false], default: false
 
   # Content
   belongs_to :content, class_name: 'Survey::Content::Form', required: true

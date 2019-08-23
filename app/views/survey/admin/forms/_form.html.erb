@@ -42,6 +42,10 @@
     <th><%= f.label :mail_to %></th>
     <td><%= f.text_field :mail_to, class: 'title' %></td>
   </tr>
+  <tr>
+    <th><%= f.label :mail_attachment %></th>
+    <td><%= f.collection_radio_buttons :mail_attachment, @item.class.mail_attachment_options, :last, :first %></td>
+  </tr>
 </table>
   
 <p class="form">公開予約設定</p>
