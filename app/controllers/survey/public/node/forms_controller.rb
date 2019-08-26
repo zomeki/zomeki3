@@ -101,6 +101,8 @@ class Survey::Public::Node::FormsController < Survey::Public::NodeController
                               .deliver_now
       rescue => e
         error_log e
+        Survey::Public::Mailer.survey_receipt(form_answer: @form_answer, from: @content.mail_from, to: mail_to, attachment_file: false)
+                              .deliver_now rescue nil
       end
     end
 
