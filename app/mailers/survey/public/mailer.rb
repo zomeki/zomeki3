@@ -1,11 +1,11 @@
 class Survey::Public::Mailer < ApplicationMailer
-  def survey_receipt(form_answer:, from:, to:)
+  def survey_receipt(form_answer:, from:, to:, attachment_file: true)
     raise ArgumentError.new("emails required. (from: #{from}, to: #{to})") if from.to_s.blank? || to.to_s.blank?
 
     @content = form_answer.form.content
     @form_answer = form_answer
 
-    if form_answer.form.mail_attachment
+    if attachment_file && form_answer.form.mail_attachment
       @form_answer.answers.each do |answer|
         attachments[answer.content] = answer.attachment.data if answer.attachment
       end

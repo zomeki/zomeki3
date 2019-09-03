@@ -42,7 +42,7 @@ class Survey::Question < ApplicationRecord
   
   def validate_file_max_size
     if form_file_max_size.to_i > 10
-      errors.add(:form_file_max_size, 'は10MB未満の値を入力してください。')
+      errors.add(:form_file_max_size, 'は10MB以下の値を入力してください。')
     end
   end
 end
