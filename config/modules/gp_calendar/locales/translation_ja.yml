@@ -21,6 +21,7 @@ ja:
         sync_exported: 同期状態
         note: 備考
         periods: 期間
+        file: 画像
       gp_calendar/event/periods:
         started_on: 開始日
         ended_on: 終了日

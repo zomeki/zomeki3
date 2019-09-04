@@ -21,6 +21,8 @@ class Survey::Question < ApplicationRecord
   validates :state, presence: true
   validates :title, presence: true
   validates :sort_no, presence: true
+  
+  validate :validate_file_max_size
 
   nested_scope :in_site, through: :form
 
@@ -36,5 +38,11 @@ class Survey::Question < ApplicationRecord
 
   def form_file_extensions
     form_file_extension.to_s.split(',').map(&:strip).select(&:present?)
+  end
+  
+  def validate_file_max_size
+    if form_file_max_size.to_i > 10
+      errors.add(:form_file_max_size, 'は10MB以下の値を入力してください。')
+    end
   end
 end

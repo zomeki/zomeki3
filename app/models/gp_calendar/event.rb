@@ -25,6 +25,7 @@ class GpCalendar::Event < ApplicationRecord
   validates :state, presence: true
   validates :title, presence: true
   validates :name, uniqueness: { scope: :content_id }, format: { with: /\A[\-\w]*\z/ }
+  validates :periods, presence: true
 
   scope :public_state, -> { where(state: 'public') }
 
