@@ -12,17 +12,19 @@
     <th style="width: 100px; text-align: center;">プレビュー</th>
   </tr>
   
-  <% @items.each do |item| %>
+  <% @items.each do |item|
+    params = item.directory? ? {} : { node_id: item.id }
+  %>
   <tr class="<%= cycle '', 'cycle' %>">
     <td class="action_link"><%= link_to :show, item.admin_uri %></td>
     <td><%= truncate(item.public_uri, length: 40) %></td>
-    <td><%= truncate(item.title, length: 30) %></td>
+    <td><%= truncate(item.title, length: 30) %><%= " （更新用）" if item.related_objects_for_replace.present? %></td>
     <td style="text-align: center;"><%=l item.updated_at %></td>
     <td style="text-align: center;"><%= item.state_text %></td>
     <td style="text-align: center;">
-      <%= preview_links(item.site, item.preview_uri,
-                                   item.preview_uri(terminal: :smart_phone),
-                                   item.preview_uri(terminal: :mobile)) %>
+      <%= preview_links(item.site, item.preview_uri(params: params),
+                                   item.preview_uri(terminal: :smart_phone, params: params),
+                                   item.preview_uri(terminal: :mobile, params: params)) %>
     </td>
   </tr>
   <% end %>
