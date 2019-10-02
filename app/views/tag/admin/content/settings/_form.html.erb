@@ -2,7 +2,7 @@
 
 <%- if @item.name == 'list_style' -%>
 <%= render 'gp_article/admin/shared/doc_style_tags' %>
-<script type="text/javascript">
+<script>
 $(function() {
   $('a.show_dialog').on('click', function() {
     $('#doc_style_tags').dialog({width: 400});

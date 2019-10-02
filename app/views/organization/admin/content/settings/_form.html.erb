@@ -1,7 +1,7 @@
 <%= render 'shared/admin/content/settings/form', f: f, item: @item -%>
 
 <%= render 'gp_article/admin/shared/doc_style_tags' %>
-<script type="text/javascript">
+<script>
 $(function() {
   $('a.show_dialog').on('click', function() {
     $('#doc_style_tags').dialog({width: 400});
@@ -30,7 +30,7 @@ $(function() {
 
 <%- if @item.name == 'list_style' -%>
 <%= render 'organization/admin/shared/group_list_style_tags' %>
-<script type="text/javascript">
+<script>
 $(function() {
   $('a.show_group_list_style_dialog').on('click', function() {
     $('#group_list_style_tags').dialog({width: 400});

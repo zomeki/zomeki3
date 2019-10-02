@@ -23,7 +23,7 @@
 
 <%= creator_form f %>
 
-<script type="text/javascript">
+<script>
 $(function() {
   $('input.datepicker').datepicker();
   datepicker('<%= 'yy年' unless @item.repeat %>');

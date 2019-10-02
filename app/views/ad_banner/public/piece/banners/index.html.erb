@@ -5,7 +5,7 @@
 <%- end -%>
 
 <%- if @piece.sort.last == 'random' -%>
-  <script type="text/javascript">
+  <script>
   $(function() {
     var parent = $('#<%= @piece.css_id %> ul.bannerImages');
     var children = parent.children();

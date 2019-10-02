@@ -1,7 +1,7 @@
 <%= render 'shared/admin/content/settings/form', f: f, item: @item -%>
 
 <%= render 'map/admin/shared/doc_style_tags' %>
-<script type="text/javascript">
+<script>
 $(function() {
    $('a.show_dialog').on('click', function() {
      $('#doc_style_tags').dialog({width: 450});
@@ -42,7 +42,7 @@ $(function() {
   <%= button_tag '追加', type: 'button', id: 'add_category' %>
 </div>
 
-<script type="text/javascript">
+<script>
 $(function() {
   $("#add_category").addFields({
     container: "#categories > tbody",

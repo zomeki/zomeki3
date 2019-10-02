@@ -24,7 +24,7 @@
   <%= csrf_meta_tags %>
 </head>
 <body style="margin: 0; padding: 0;">
-  <script type="text/javascript">
+  <script>
   $(function() {
     if (cms && cms.Page) {
       cms.Page.smart_phone = <%= request.smart_phone? ? 'true' : 'false' %>;

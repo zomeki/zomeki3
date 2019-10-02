@@ -1,7 +1,7 @@
 <%= render 'shared/admin/content/settings/form', f: f, item: @item -%>
 
 <%= render 'gp_article/admin/shared/doc_style_tags' %>
-<script type="text/javascript">
+<script>
 $(function() {
   $('a.show_dialog').on('click', function() {
     $('#doc_style_tags').dialog({width: 400});
@@ -28,7 +28,7 @@ $(function() {
   </tr>
 </table>
 
-<script type="text/javascript">
+<script>
 $(function() {
   $('#item_value').on('change', function(e) {
     var concept_id = parseInt(e.target.value);
@@ -75,7 +75,7 @@ $(function() {
   </tr>
 </table>
 
-<script type="text/javascript">
+<script>
 $(function() {
   $('#item_value').on('change', function(e) {
     var content_id = parseInt(e.target.value);
@@ -152,7 +152,7 @@ $(function() {
   </tr>
 </table>
 <%= render 'cms/admin/_partial/inquiries/style_tags' %>
-<script type="text/javascript">
+<script>
 $(function() {
   $('#show_inquiry_dialog').on('click', function() {
     $('#inquiry_style_tags').dialog({width: 400});
