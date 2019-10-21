@@ -30,7 +30,7 @@ class Cms::Admin::Tool::SearchController < Cms::Controller::Admin::Base
     @results = Cms::SiteSearchService.new(Core.site, Core.user, Core.concept).search(criteria)
     @results.each do |result|
       result[:title], result[:anchor] = display_title(result[:model], result[:content])
-      result[:items] = display_items(result[:items], result[:content])
+      result[:items] = display_items(result[:items], result[:model], result[:content])
     end
 
     @count = @results.map { |result| result[:count] }.sum
@@ -55,7 +55,7 @@ class Cms::Admin::Tool::SearchController < Cms::Controller::Admin::Base
     end
   end
 
-  def display_items(results, content)
+  def display_items(results, model, content)
     items = results.map do |item|
       {
         id: item.id,
@@ -64,7 +64,7 @@ class Cms::Admin::Tool::SearchController < Cms::Controller::Admin::Base
         state_text: item.state_text,
         concept: content ? content.concept : item.concept,
         admin_uri: item.admin_uri,
-        public_uri: item.respond_to?(:public_full_uri) ? item.public_full_uri : nil,
+        public_uri: item.respond_to?(:public_full_uri) && model.to_s != 'Cms::Piece' ? item.public_full_uri : nil,
         created_at: item.created_at,
         updated_at: item.created_at
       }
