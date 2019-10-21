@@ -26,7 +26,7 @@ blank = defined?(includ_blank) && includ_blank == false ? false : true
     <td><%= f.select :more_layout_id, layouts, include_blank: '　　　　' %></td>
   </tr>
   <%- end -%>
-  <script type="text/javascript">
+  <script>
   $(function() {
     $('#item_concept_id').on('change', function() {
       $.get('<%= main_app.layouts_cms_concepts_path(0) %>', { concept_id: $(this).val() }, function(data) {

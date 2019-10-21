@@ -3,7 +3,7 @@
 
 <%= javascript_include_tag "https://maps.googleapis.com/maps/api/js?key=#{@content.site.google_map_api_key}&region=jp" %>
 <%= javascript_include_tag '/_common/modules/map/js/navigations.js' %>
-<script type="text/javascript">
+<script>
 $(function() {
   $(window).on('load', function() {
     var marker_list = {};

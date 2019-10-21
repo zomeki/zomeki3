@@ -1,7 +1,7 @@
 <div id="bussinessTimeBox<%= @piece.id %>" class="bussinessTimeBox">
 </div>
 
-<script type="text/javascript">
+<script>
 $(function() {
   $.ajax({
     url: '<%= @biz_calendar_node_uri %><%= @piece.id %>/bussiness_times<%= "/#{@place_name}" if @place_name.present? %>',

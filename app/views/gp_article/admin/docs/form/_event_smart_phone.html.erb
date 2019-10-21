@@ -39,7 +39,7 @@
   <%= f.text_area :event_note, size: '100x3' %>
 </div>
 
-<script type="text/javascript">
+<script>
 $(function() {
   <%- @content.event_category_types.each do |category_type| -%>
   $("#add_event_category_<%= category_type.id %>").addFields({
@@ -50,7 +50,7 @@ $(function() {
 });
 </script>
 
-<script type="text/javascript">
+<script>
 $(function() {
   $("#add_event_period").addFields({
     container: "#event_periods",

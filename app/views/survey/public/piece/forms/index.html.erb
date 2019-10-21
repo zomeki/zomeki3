@@ -4,7 +4,7 @@
 
 <%- unless request.mobile? -%>
 <iframe title=<%= @form.title %> src="<%= "#{@form.public_uri}" %>?inlining=true&piece=<%= @piece.id %>&t=<%=CGI.escape Page.title %>&u=<%=CGI.escape Page.uri %>" style="width: 100%; height: 100%;" class="survey"></iframe>
-<script type="text/javascript">
+<script>
 $(function() {
   $('iframe.survey').iframeAutoHeight();
 });

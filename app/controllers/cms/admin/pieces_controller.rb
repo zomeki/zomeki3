@@ -18,7 +18,7 @@ class Cms::Admin::PiecesController < Cms::Controller::Admin::Base
     if params[:do] == 'preview'
       preview
     else
-      exit
+      return http_error(404)
     end
   end
 
