@@ -89,7 +89,7 @@
 <span><%= button_tag '追加', type: 'button', id: "add_category_#{category_type.id}" %></span>
 <%- end -%>
 
-<script type="text/javascript">
+<script>
 $(function() {
   <%- @content.visible_category_types.each do |category_type| -%>
   $("#add_category_<%= category_type.id %>").addFields({
@@ -161,7 +161,7 @@ $(function() {
 <%- end -%>
 
 <%- if @content.template_available? -%>
-<script type="text/javascript">
+<script>
 $(function() {
   var prevTemplateId;
   $('#item_template_id').on('click', function() {
@@ -197,7 +197,7 @@ $(function() {
   <%- end -%>
 </div>
 
-<script type="text/javascript">
+<script>
 $(function() {
   searchRelatedDocs();
 

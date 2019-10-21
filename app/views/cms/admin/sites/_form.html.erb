@@ -97,7 +97,7 @@
 
 <%= creator_form f %>
 
-<script type="text/javascript">
+<script>
 function confirm_smart_phone_deletion(radio) {
   if ($(radio).val() !== 'yes' && !confirm("書き出しずみのファイルはすべて削除されます。\nよろしいですか？")) {
     var selector = "input[name='" + $(radio).prop('name') + "'][value='yes']";

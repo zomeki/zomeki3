@@ -1,4 +1,4 @@
-<script type="text/javascript">
+<script>
 $(function() {
   $.ajax({
     url: '/_api/ad_banner/piece_banners',
@@ -47,7 +47,7 @@ $(function() {
 </script>
 
 <%- if !request.mobile? && @piece.content.click_count_related? -%>
-<script type="text/javascript">
+<script>
 $(function() {
   $(document).on('click', '#<%= @piece.css_id %> li.banner a', function() {
     $.get('/_api/ad_banner/piece_clicks', { piece_id: <%= @piece.id %>, token: $(this).data('token') });
