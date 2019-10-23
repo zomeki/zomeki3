@@ -16,7 +16,7 @@ class Rank::Admin::Content::SettingsController < Cms::Admin::Content::SettingsCo
 
   def import
     begin
-      result = Rank::RankFetchJob.perform_now(@content)
+      result = Rank::RankFetchJob.perform_now(@content, Time.now - 3.months)
       flash[:notice] = if result
                          "一括取込が完了しました。"
                        else
