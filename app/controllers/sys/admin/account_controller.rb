@@ -76,6 +76,9 @@ class Sys::Admin::AccountController < Sys::Controller::Admin::Base
                           reset_password_token: token)
 
       Sys::Admin::AccountMailer.password_reminder(Core.site, user: user).deliver_now
+    else
+      redirect_to new_admin_password_reminder_url, alert: 'ユーザーIDまたは登録されているメールアドレスが<br />一致しません。'.html_safe
+      return
     end
 
     redirect_to admin_login_url, notice: 'メールにてパスワード再設定手順をお送りしました。'
