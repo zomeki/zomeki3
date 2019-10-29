@@ -25,6 +25,9 @@ class Rank::Content::Setting < Cms::ContentSetting
     ex = extra_values
     case name
     when 'google_oauth'
+      old_client_id = ex[:client_id]
+      old_client_secret = ex[:client_secret]
+      
       ex[:client_id] = params[:client_id].to_s
       ex[:client_secret] = params[:client_secret].to_s
       ex[:auth_code] = params[:auth_code].to_s
@@ -36,7 +39,9 @@ class Rank::Content::Setting < Cms::ContentSetting
         credentials[:oauth2_scope] = 'https://www.googleapis.com/auth/analytics.readonly'
 
         setup = GoogleOauth2Installed::Setup.new(credentials)
-        ex[:auth_url] = setup.cms_get_auth_url if ex[:auth_url].blank?
+        if ex[:auth_url].blank? || old_client_id != ex[:client_id] || old_client_secret != ex[:client_secret]
+          ex[:auth_url] = setup.cms_get_auth_url
+        end
         if ex[:auth_code].present?
           token = setup.cms_get_access_token(ex[:auth_code])
           ex[:oauth2_token] = {access_token: token.token.to_s,
