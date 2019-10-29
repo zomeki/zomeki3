@@ -13,7 +13,7 @@ class Rank::TotalsFinder < ApplicationFinder
                      .where(content_id: content.id)
                      .where(term:       term)
                      .where(hostname:   hostname)
-                     .where(rank_table[:page_path].does_not_match_all(exclusion))
+    ranks = ranks.where(rank_table[:page_path].does_not_match_all(exclusion)) unless exclusion.blank?
 
     category_ids = load_category_ids(content, category_options)
 
