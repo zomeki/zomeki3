@@ -135,9 +135,9 @@ module Map::MarkerHelper
       if (doc = @marker.doc)
         GpArticle::DocHelper::Formatter.new(doc).format("@image_tag@")
       elsif (file = @marker.files.first) && @marker.content.public_node
-        image_tag("#{@marker.public_uri}file_contents/#{url_encode file.name}")
+        image_tag("#{@marker.public_uri}file_contents/#{url_encode file.name}", alt: '')
       elsif @marker.content.default_image.present?
-        image_tag(@marker.content.default_image)
+        image_tag(@marker.content.default_image, alt: '')
       end
     end
 

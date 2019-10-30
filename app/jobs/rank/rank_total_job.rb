@@ -53,8 +53,9 @@ class Rank::RankTotalJob < ApplicationJob
         cats = []
         docs = GpArticle::Doc.categorized_into(category).public_state
         docs.find_each do |doc|
+          page_path = doc.public_uri =~ /\/$/ ? ::File.join(doc.public_uri, 'index.html') : doc.public_uri
           cats << Rank::Category.new(content_id:  @content.id,
-                                     page_path:   doc.public_uri,
+                                     page_path:   page_path,
                                      category_id: category.id)
         end
         Rank::Category.bulk_import(cats)
