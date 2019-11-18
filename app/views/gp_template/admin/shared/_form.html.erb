@@ -1,14 +1,28 @@
 <%- return '' unless defined?(template) && defined?(template_values) -%>
 
-<%- template.items.public_state.each do |item| -%>
+<%- template.items.public_state.each do |item|
+  
+  is_error = false
+  if @item.errors.messages.include?(:base) && @item.errors.messages[:base].join(',') =~ /#{item.title}を/
+    is_error = true
+  end
+
+-%>
   <%- if item.item_type == 'rich_text' -%>
   <table class="show">
     <tr>
-      <th><%= item.title %></th>
+      <th>
+        <div class="<%= 'field_with_errors' if is_error %>">
+          <%= item.title %>
+        </div>
+        <% if item.required? %><span class="note">※</span><% end %>
+      </th>
     </tr>
     <tr>
       <td class="cke_editor_wrapper">
+        <div class="<%= 'field_with_errors' if is_error %>">
         <%= text_area_tag "item[template_values][#{item.name}]", template_values[item.name], style: item.style_attribute, class: 'body' %>
+        </div>
       </td>
     </tr>
   </table>
@@ -18,8 +32,14 @@
   <%- else -%>
   <table class="show">
     <tr>
-      <th><%= item.title %></th>
+      <th>
+        <div class="<%= 'field_with_errors' if is_error %>">
+          <%= item.title %>
+        </div>
+        <% if item.required? %><span class="note">※</span><% end %>
+      </th>
       <td>
+        <div class="<%= 'field_with_errors' if is_error %>">
         <%- case item.item_type -%>
         <%- when 'text_field' -%>
           <%= text_field_tag "item[template_values][#{item.name}]", template_values[item.name], style: item.style_attribute %>
@@ -37,6 +57,7 @@
         <%- when 'attachment_file' -%>
           <%= text_field_tag "item[template_values][#{item.name}]", template_values[item.name], style: item.style_attribute %>
         <%- end -%>
+        </div>
       </td>
     </tr>
   </table>
