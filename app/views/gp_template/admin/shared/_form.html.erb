@@ -1,6 +1,7 @@
 <%- return '' unless defined?(template) && defined?(template_values) -%>
 
 <%- template.items.public_state.each do |item|
+  next if item.item_type == 'attachment_file_list'
   
   is_error = false
   if @item.errors.messages.include?(:base) && @item.errors.messages[:base].join(',') =~ /#{item.title}を/

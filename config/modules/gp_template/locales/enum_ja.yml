@@ -8,6 +8,7 @@ ja:
         select: 選択/単数回答（プルダウン）
         radio_button: 選択/単数回答（ラジオボタン）
         attachment_file: 添付ファイル
+        attachment_file_list: 添付ファイル一覧
       required:
         true: 必須
         false: 任意
