@@ -10,6 +10,8 @@
   <%= link_to :edit, { action: :edit } if @item.editable? %>
   <%= link_to :destroy, { action: :destroy }, method: :delete, confirm: '削除してよろしいですか？' if @item.deletable? %>
   <%= link_to :duplicate, { do: :duplicate }, confirm: '複製してよろしいですか？' if Core.user.has_priv?(:create, item: Core.concept) %>
+  <span class="separator"></span>
+  <%= link_to '記事再構築', { action: :rebuild }, confirm: 'このテンプレートが設定されている記事を再構築してよろしいですか？' if @item.editable? %>
 <%- when 'new', 'create' -%>
   <%= link_to :index, { action: :index } %>
 <%- when 'edit', 'update' -%>
