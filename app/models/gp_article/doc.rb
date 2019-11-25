@@ -120,6 +120,7 @@ class GpArticle::Doc < ApplicationRecord
                               if: -> { site.use_mobile_feature? }
 
   validate :validate_name, if: -> { name.present? }
+  validate :validate_template_values, if: -> { !state_draft?}
   validate :validate_accessibility_check, if: -> { !state_draft? && errors.blank? }
   validate :validate_broken_link_existence, if: -> { !state_draft? && errors.blank? }
 

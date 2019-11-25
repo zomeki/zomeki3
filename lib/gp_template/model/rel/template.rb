@@ -8,7 +8,6 @@ module GpTemplate::Model::Rel::Template
     belongs_to :template, class_name: 'GpTemplate::Template'
     after_initialize :set_template_defaults
     before_validation :convert_template_values
-    validate :validate_template_values, if: -> { !state_draft?}
     after_save :set_template_values_to_body
   end
 
@@ -31,7 +30,7 @@ module GpTemplate::Model::Rel::Template
       next unless item.required?
       next if item.item_type == 'attachment_file_list'
       if self.template_values[item.name].to_s.blank?
-        errors.add(:base, "#{item.title}を入力してください。") 
+        errors.add(item.title, "を入力してください。") 
         self.error_template_items << item.name
       end
     end

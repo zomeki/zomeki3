@@ -47,7 +47,7 @@ class GpTemplate::Admin::TemplatesController < Cms::Controller::Admin::Base
 
     target_doc_ids = GpArticle::Doc.public_state.where(template_id: @item.id).pluck(:id)
     if target_doc_ids.blank?
-      return url_for(action: :show), notice: 'このテンプレートが設定されている記事はありません。'
+      return redirect_to url_for(action: :show), notice: 'このテンプレートが設定されている記事はありません。'
     end
     
     Cms::RebuildJob.perform_later(Core.site, target_doc_ids: target_doc_ids)
