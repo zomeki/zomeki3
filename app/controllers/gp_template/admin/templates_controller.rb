@@ -35,7 +35,7 @@ class GpTemplate::Admin::TemplatesController < Cms::Controller::Admin::Base
 
   def update
     @item.attributes = template_params
-    _update @item
+    _update @item, {location: url_for(action: :show)}
   end
 
   def destroy
