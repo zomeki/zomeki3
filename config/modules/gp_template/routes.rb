@@ -14,6 +14,9 @@ ZomekiCMS::Application.routes.draw do
     resources(:templates,
       :controller => 'admin/templates',
       :path       => ':content/templates') do
+        member do
+          get  :rebuild
+        end
       resources :items,
         :controller => 'admin/items'
       resources :forms,

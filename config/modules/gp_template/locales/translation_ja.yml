@@ -19,6 +19,7 @@ ja:
         title: アイテム名
         item_type: 種別
         item_options: 選択候補
+        required: 必須
         style_attribute: スタイルシート
         sort_no: 並び順
         created_at: 作成日時

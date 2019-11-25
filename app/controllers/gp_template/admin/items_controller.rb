@@ -40,6 +40,6 @@ class GpTemplate::Admin::ItemsController < Cms::Controller::Admin::Base
   private
 
   def item_params
-    params.require(:item).permit(:item_options, :item_type, :name, :sort_no, :state, :style_attribute, :title)
+    params.require(:item).permit(:item_options, :item_type, :name, :sort_no, :state, :required, :style_attribute, :title)
   end
 end

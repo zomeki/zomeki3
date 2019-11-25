@@ -19,6 +19,12 @@ module GpTemplate::TemplateHelper
           value = content_tag('a', file.united_name, href: "file_contents/#{file.name}", class: file.css_class)
         end
       end
+    when 'attachment_file_list'
+      value = ''
+      files.each do |f|
+        value += '<li>' + content_tag('a', f.united_name, href: "file_contents/#{f.name}", class: f.css_class) + '</li>'
+      end
+      value = "<ul>#{value}</ul>" unless value.blank?
     end
     value
   end

@@ -22,6 +22,10 @@
     <td><%= f.text_area :item_options, size: '100x5' %></td>
   </tr>
   <tr>
+    <th><%= f.label :required %></th>
+    <td><%= f.collection_radio_buttons :required, @item.class.required_options, :last, :first %></td>
+  </tr>
+  <tr>
     <th><%= f.label :style_attribute %><br />（style=）</th>
     <td><%= f.text_field :style_attribute, style: 'width: 600px;' %></td>
   </tr>

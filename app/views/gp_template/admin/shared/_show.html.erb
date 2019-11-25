@@ -1,6 +1,7 @@
 <%- return '' unless defined?(template) && defined?(template_values) -%>
 
-<%- template.items.public_state.each do |item| -%>
+<%- template.items.public_state.each do |item|
+  next if item.item_type == 'attachment_file_list' -%>
   <%- if item.item_type == 'rich_text' -%>
   <table class="show">
     <tr>

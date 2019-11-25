@@ -16,6 +16,10 @@ class Cms::RebuildJob < ApplicationJob
     if options[:target_node_ids].present?
       perform_nodes(options[:target_node_ids])
     end
+    
+    if options[:target_doc_ids].present?
+      perform_docs(options[:target_doc_ids])
+    end
   end
 
   private
@@ -36,5 +40,9 @@ class Cms::RebuildJob < ApplicationJob
 
   def perform_nodes(target_node_ids)
     ::Script.run("cms/tool/pages/rebuild", site_id: @site.id, node_id: target_node_ids)
+  end
+
+  def perform_docs(target_doc_ids)
+    ::Script.run("gp_article/tool/docs/rebuild", site_id: @site.id, doc_id:target_doc_ids)
   end
 end
