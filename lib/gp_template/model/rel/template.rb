@@ -1,6 +1,8 @@
 module GpTemplate::Model::Rel::Template
   extend ActiveSupport::Concern
 
+  attr_accessor :error_template_items
+
   included do
     serialize :template_values
     belongs_to :template, class_name: 'GpTemplate::Template'
@@ -23,11 +25,15 @@ module GpTemplate::Model::Rel::Template
   
   def validate_template_values
     return unless self.template
+    self.error_template_items = []
 
     self.template.items.each do |item|
       next unless item.required?
       next if item.item_type == 'attachment_file_list'
-      errors.add(:base, "#{item.title}を入力してください。") if self.template_values[item.name].to_s.blank?
+      if self.template_values[item.name].to_s.blank?
+        errors.add(:base, "#{item.title}を入力してください。") 
+        self.error_template_items << item.name
+      end
     end
   end
 
