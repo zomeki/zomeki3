@@ -69,7 +69,12 @@
   margin: 1px;
   padding: 1px;
   border: 1px solid #f00;
+}
+th .field_with_errors {
   display: inline-block;
+}
+td .field_with_errors {
+  display: block;
 }
 #errorExplanation {
   width: 600px;
