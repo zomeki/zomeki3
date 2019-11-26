@@ -23,7 +23,7 @@ class GpCalendar::Holiday < ApplicationRecord
       repeated = if start_date.year == end_date.year
                    where("repeat = true AND TO_CHAR(date, 'MMDD') >= ? AND TO_CHAR(date, 'MMDD') <= ?", start_date.strftime('%m%d'), end_date.strftime('%m%d'))
                  else
-                   where("repeat = true AND TO_CHAR(date, 'MMDD') >= ? OR TO_CHAR(date, 'MMDD') <= ?", start_date.strftime('%m%d'), end_date.strftime('%m%d'))
+                   where("repeat = true AND TO_CHAR(date, 'MMDD') >= ? AND TO_CHAR(date, 'MMDD') <= ?", start_date.strftime('%m%d'), end_date.strftime('%m%d'))
                  end
       [unrepeated, repeated].reduce(:or)
     else
