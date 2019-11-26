@@ -155,6 +155,7 @@ ja:
 
       cms/piece/bread_crumb:
         top_label: TOPリンク文字
+        top_link_uri: TOPリンクURL
 
       cms/node:
         parent_id: 親ディレクトリ

@@ -5,4 +5,7 @@ class Cms::Piece::BreadCrumb < Cms::Piece
     setting_value(:top_label).to_s
   end
 
+  def top_link_uri
+    setting_value(:top_link_uri).to_s
+  end
 end
