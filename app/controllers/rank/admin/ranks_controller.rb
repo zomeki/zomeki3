@@ -12,7 +12,7 @@ class Rank::Admin::RanksController < Cms::Controller::Admin::Base
   end
 
   def index
-    @terms   = [['すべて', 'all']] + Rank::Rank::TERMS
+    @terms   = Rank::Rank::TERMS
     @targets = Rank::Rank::TARGETS
     @term    = param_check(@terms,   params[:term])
     @target  = param_check(@targets, params[:target])

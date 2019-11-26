@@ -66,14 +66,11 @@ class Rank::RankTotalJob < ApplicationJob
   private
 
   def ranking_terms
-    [['すべて', 'all']] + Rank::Rank::TERMS
+    Rank::Rank::TERMS
   end
 
   def date_range(t, term)
     case term
-    when 'all'
-      from = Date.new(2005, 1, 1)
-      to   = t
     when 'previous_days'
       from = t.yesterday
       to   = t.yesterday
