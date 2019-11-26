@@ -7,11 +7,15 @@ class Cms::SiteSearchService < ApplicationService
     @columns = {
       Cms::Node => [:title, :body, :mobile_title, :mobile_body],
       Cms::Piece => [:name, :title, :view_title, :body],
+      Cms::PieceSetting => [:value],
       Cms::Layout => [:name, :title, :head, :body, :mobile_head, :mobile_body, :smart_phone_head, :smart_phone_body],
       Cms::DataText => [:name, :title, :body],
       Cms::DataFile => [:name, :title, :alt_text],
       GpArticle::Doc => [:title, :subtitle, :summary, :body, :body_more, :mobile_title, :mobile_body,
                          :event_note, :meta_description, :meta_keywords, :remark]
+    }
+    @setting_names = {
+      Cms::PieceSetting => ['upper_text', 'lower_text']
     }
   end
 
@@ -129,10 +133,24 @@ class Cms::SiteSearchService < ApplicationService
   end
 
   def search_cms_pieces(concepts, criteria, sort)
-    Cms::Piece.in_site(@site)
-              .where(concept_id: concepts.map(&:id))
-              .search_with_text(@columns[Cms::Piece], criteria[:keyword])
-              .order(sort[:key] => sort[:order])
+    pieces = Cms::Piece.in_site(@site).where(concept_id: concepts.map(&:id))
+                       .search_with_text(@columns[Cms::Piece], criteria[:keyword])
+
+    piece_setting_ids = search_cms_piece_settings(concepts, criteria, sort).pluck(:piece_id)
+
+    if piece_setting_ids
+      piece_ids = pieces.pluck(:id) | piece_setting_ids
+      pieces = Cms::Piece.in_site(@site).where(concept_id: concepts.map(&:id))
+                                        .where(id: piece_ids)
+    end
+
+    pieces.order(sort[:key] => sort[:order])
+  end
+
+  def search_cms_piece_settings(concepts, criteria, sort)
+    Cms::PieceSetting.in_site(@site)
+              .where(name: @setting_names[Cms::PieceSetting])
+              .search_with_text(@columns[Cms::PieceSetting], criteria[:keyword])
   end
 
   def search_cms_layouts(concepts, criteria, sort)
