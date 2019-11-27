@@ -133,24 +133,19 @@ class Cms::SiteSearchService < ApplicationService
   end
 
   def search_cms_pieces(concepts, criteria, sort)
-    pieces = Cms::Piece.in_site(@site).where(concept_id: concepts.map(&:id))
-                       .search_with_text(@columns[Cms::Piece], criteria[:keyword])
-
-    piece_setting_ids = search_cms_piece_settings(concepts, criteria, sort).pluck(:piece_id)
-
-    if piece_setting_ids
-      piece_ids = pieces.pluck(:id) | piece_setting_ids
-      pieces = Cms::Piece.in_site(@site).where(concept_id: concepts.map(&:id))
-                                        .where(id: piece_ids)
-    end
-
-    pieces.order(sort[:key] => sort[:order])
+    Cms::Piece.in_site(@site)
+          .where(concept_id: concepts.map(&:id))
+          .search_with_text(@columns[Cms::Piece], criteria[:keyword])
+          .or(Cms::Piece.where(id: search_cms_piece_settings(concepts, criteria).pluck(:piece_id)))
+          .order(sort[:key] => sort[:order])
   end
 
-  def search_cms_piece_settings(concepts, criteria, sort)
+  def search_cms_piece_settings(concepts, criteria)
     Cms::PieceSetting.in_site(@site)
-              .where(name: @setting_names[Cms::PieceSetting])
-              .search_with_text(@columns[Cms::PieceSetting], criteria[:keyword])
+                     .joins(:piece)
+                     .where(Cms::Piece.arel_table[:concept_id].in(concepts.map(&:id)))
+                     .where(name: @setting_names[Cms::PieceSetting])
+                     .search_with_text(@columns[Cms::PieceSetting], criteria[:keyword])
   end
 
   def search_cms_layouts(concepts, criteria, sort)
