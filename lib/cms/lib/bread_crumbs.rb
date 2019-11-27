@@ -17,12 +17,18 @@ class Cms::Lib::BreadCrumbs
                 else
                   'TOP'
                 end
+    top_link_uri = if options[:top_link_uri].present?
+                  options[:top_link_uri]
+                else
+                  Page.site.uri
+                end
 
     h = ''
     @crumbs.each do |r|
       links = ''
       if r.first[1] == Page.site.uri
         r.first[0] = top_label
+        r.first[1] = top_link_uri
       end
       if r.last[1] =~ /index\.html$/
         r.pop
