@@ -31,12 +31,14 @@ class AdBanner::Admin::BannersController < Cms::Controller::Admin::Base
   def create
     @item = @content.banners.build(banner_params)
     @item.state = new_state_from_params(@item)
+    @item.allowed_types = %w(gif jpg png)
     @item.site_id = Core.site.id
     _create @item
   end
 
   def update
     @item.attributes = banner_params
+    @item.allowed_types = %w(gif jpg png)
     @item.state = new_state_from_params(@item)
     @item.skip_upload if @item.file.blank? && ::File.exist?(@item.upload_path)
     _update @item
