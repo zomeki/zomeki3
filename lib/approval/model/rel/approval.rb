@@ -128,7 +128,7 @@ module Approval::Model::Rel::Approval
       request.save! if request.has_changes_to_save?
       request.reset
 
-      request.histories.create(user_id: Core.user.id, reason: 'request', comment: in_approval_comment)
+      request.histories.create(user_id: Core.user.id, reason: 'request', comment: in_approval_comment) if !state_draft?
     end
 
     approval_requests.where.not(approval_flow_id: in_approval_flow_ids).destroy_all
