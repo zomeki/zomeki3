@@ -474,7 +474,9 @@ class GpArticle::Doc < ApplicationRecord
   end
 
   def set_display_updated_at
-    self.display_updated_at ||= Time.now if state.in?(%w(approvable public))
+    if state == 'public' && (!keep_display_updated_at || display_updated_at.blank?)
+      self.display_updated_at = Time.now
+    end
   end
 
   def set_serial_no
