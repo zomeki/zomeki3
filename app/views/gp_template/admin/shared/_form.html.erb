@@ -4,7 +4,7 @@
   next if item.item_type == 'attachment_file_list'
   
   is_error = false
-  if @item.error_template_items && @item.error_template_items.include?(item.name)
+  if @item && @item.error_template_items && @item.error_template_items.include?(item.name)
     is_error = true
   end
 
