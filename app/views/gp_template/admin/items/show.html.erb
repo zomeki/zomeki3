@@ -20,6 +20,10 @@
     <td><%=simple_format @item.item_options %></td>
   </tr>
   <tr>
+    <th><%= @item.class.human_attribute_name :required %></th>
+    <td><%= @item.required_text %></td>
+  </tr>
+  <tr>
     <th><%= @item.class.human_attribute_name :style_attribute %><br />（style=）</th>
     <td><%= @item.style_attribute %></td>
   </tr>

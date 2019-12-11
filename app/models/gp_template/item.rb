@@ -7,8 +7,9 @@ class GpTemplate::Item < ApplicationRecord
   column_attribute :sort_no, default: 10
 
   enum_ish :state, [:public, :closed], default: :public, predicate: true
-  enum_ish :item_type, [:text_field, :text_area, :rich_text,
-                        :select, :radio_button, :attachment_file], default: :text_field
+  enum_ish :item_type, [:text_field, :text_area, :rich_text, :select,
+                        :radio_button, :attachment_file, :attachment_file_list], default: :text_field
+  enum_ish :required, [true, false], default: false
 
   belongs_to :template, required: true
 
@@ -27,5 +28,9 @@ class GpTemplate::Item < ApplicationRecord
 
   def item_options_for_select
     item_options.split(/[\r\n]+/)
+  end
+
+  def required?
+    self.required
   end
 end

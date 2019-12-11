@@ -11,6 +11,10 @@
     <th><%= f.label :top_label %></th>
     <td><%= f.array_text_field 'in_settings[top_label]', class: 'name' %></td>
   </tr>
+  <tr>
+    <th><%= f.label :top_link_uri %></th>
+    <td><%= f.array_text_field 'in_settings[top_link_uri]', class: 'name' %></td>
+  </tr>
 </table>
 
 <%= creator_form f %>

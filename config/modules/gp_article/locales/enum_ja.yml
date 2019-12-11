@@ -8,7 +8,7 @@ ja:
         prepared: 公開日時待ち
         public: 公開
         closed: 公開終了
-        trashed: 削除予定
+        trashed: 削除
       target:
         '': 無効
         _self: 同一ウィンドウ

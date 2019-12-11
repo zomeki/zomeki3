@@ -35,7 +35,7 @@ class Cms::Node < ApplicationRecord
                    uniqueness: { scope: [:site_id, :parent_id], if: -> { !replace_page? } },
                    format: { with: /\A[0-9A-Za-z@\.\-_\+]+\z/, message: :not_a_filename, if: -> { parent_id != 0 } }
   validates :model, presence: true,
-                    uniqueness: { scope: [:content_id], if: :content_id? }
+                    uniqueness: { scope: [:content_id], if: -> { content_id? && ( new_record? || state != 'closed' )} }
 
   validate {
     errors.add :parent_id, :invalid if id != nil && id == parent_id
@@ -219,7 +219,7 @@ class Cms::Node < ApplicationRecord
     validates_with Sys::TaskValidator, if: -> { state != 'draft' }
 
     def states
-      s = [['下書き保存','draft'],['承認待ち','recognize']]
+      s = [['下書き保存','draft'],['承認依頼','recognize']]
       s << ['公開保存','public'] if Core.user.has_auth?(:manager)
       s
     end

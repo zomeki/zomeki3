@@ -11,6 +11,10 @@
     <th><%= @item.class.human_attribute_name :top_label %></th>
     <td><%= @item.setting_value(:top_label) %></td>
   </tr>
+  <tr>
+    <th><%= @item.class.human_attribute_name :top_link_uri %></th>
+    <td><%= @item.setting_value(:top_link_uri) %></td>
+  </tr>
 </table>
 
 <%= creator_view @item %>

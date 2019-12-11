@@ -12,7 +12,11 @@ class GpCalendar::Public::Piece::DailyLinksController < GpCalendar::Public::Piec
   end
 
   def index
-    @calendar = Util::Date::Calendar.new(@date.year, @date.month)
+    start_date = @date.beginning_of_month.beginning_of_week(:sunday)
+    end_date = @date.end_of_month.end_of_week(:sunday)
+    holidays = @content.public_holidays.scheduled_between(start_date, end_date)
+
+    @calendar = Util::Date::Calendar.new(@date.year, @date.month, holidays)
     @calendar.set_event_class = true
     @calendar.year_uri  = "#{@node.public_uri}:year/"
     @calendar.month_uri = "#{@node.public_uri}:year/:month/"

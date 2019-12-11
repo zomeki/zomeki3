@@ -18,7 +18,7 @@ ja:
         sort_no: 表示順
         created_at: 作成日時
         state: 状態
-        file: ファイル
+        file: 画像
         name: 保存ファイル名
         title: 表示ファイル名（TITLE）
         alt_text: 代替テキスト（ALT）

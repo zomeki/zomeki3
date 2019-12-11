@@ -120,6 +120,7 @@ class GpArticle::Doc < ApplicationRecord
                               if: -> { site.use_mobile_feature? }
 
   validate :validate_name, if: -> { name.present? }
+  validate :validate_template_values, if: -> { !state_draft?}
   validate :validate_accessibility_check, if: -> { !state_draft? && errors.blank? }
   validate :validate_broken_link_existence, if: -> { !state_draft? && errors.blank? }
 
@@ -473,7 +474,9 @@ class GpArticle::Doc < ApplicationRecord
   end
 
   def set_display_updated_at
-    self.display_updated_at ||= Time.now if state.in?(%w(approvable public))
+    if state == 'public' && (!keep_display_updated_at || display_updated_at.blank?)
+      self.display_updated_at = Time.now
+    end
   end
 
   def set_serial_no

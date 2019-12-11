@@ -35,11 +35,24 @@ class GpTemplate::Admin::TemplatesController < Cms::Controller::Admin::Base
 
   def update
     @item.attributes = template_params
-    _update @item
+    _update @item, {location: url_for(action: :show)}
   end
 
   def destroy
     _destroy @item
+  end
+
+  def rebuild
+    return http_error(404) unless @item
+
+    target_doc_ids = GpArticle::Doc.public_state.where(template_id: @item.id).pluck(:id)
+    if target_doc_ids.blank?
+      return redirect_to url_for(action: :show), notice: 'このテンプレートが設定されている記事はありません。'
+    end
+    
+    Cms::RebuildJob.perform_later(Core.site, target_doc_ids: target_doc_ids)
+
+    redirect_to url_for(action: :show), notice: '記事再構築を開始しました。完了までに時間がかかる場合があります。'
   end
 
   def duplicate(item)
@@ -57,7 +70,7 @@ class GpTemplate::Admin::TemplatesController < Cms::Controller::Admin::Base
       end
     end
   end
-
+  
   private
 
   def template_params
