@@ -15,7 +15,7 @@ class Util::Date::Calendar
     { class: 'sat', label: "土" },
   ]
   
-  def initialize(year = nil, month = nil)
+  def initialize(year = nil, month = nil, holidays = nil)
     @cy = cy = year || Time.now.year
     @cm = cm = month || Time.now.month
     cd = 1
@@ -66,7 +66,7 @@ class Util::Date::Calendar
       day[:wday] = w
       day[:wday_label] = @@wday_specs[w][:label]
       
-      day[:holiday] = holiday?(day[:year], day[:month], day[:day]) || nil
+      day[:holiday] = holiday?(day[:year], day[:month], day[:day], holidays) || nil
       hclass = day[:holiday] ? ' holiday' : ''
       day[:class] += ' ' + @@wday_specs[w][:class] + hclass
       
@@ -84,8 +84,12 @@ class Util::Date::Calendar
     day
   end
   
-  def holiday?(year, month, day)
-    HolidayJp.holiday?(Date.new(year, month, day)).try(:name)
+  def holiday?(year, month, day, holidays)
+    if holidays
+      return true unless (holiday = holidays.select { |h| [h.date.month, h.date.day] == [month, day] }).empty?
+    else
+      return true if HolidayJp.holiday?(Date.new(year, month, day)).try(:name)
+    end
   end
   
   def year
