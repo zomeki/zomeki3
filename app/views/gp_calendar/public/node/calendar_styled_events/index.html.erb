@@ -18,10 +18,11 @@
     <tbody class="days">
       <%- @weeks.each do |week| -%>
       <tr class="week">
-        <%- week.each do |day| -%>
-        <td id="<%= 'day%02d' % day.day if day.month == @date.month %>" class="day <%= %w!sun mon tue wed thu fri sat![day.wday] %><%= ' prevMonth' if day < @date.beginning_of_month %><%= ' nextMonth' if day > @date.end_of_month %>">
+        <%- week.each do |day| 
+           is_holiday = (holidays = @holidays.select { |h| [h.date.month, h.date.day] == [day.month, day.day] }).present? -%>
+        <td id="<%= 'day%02d' % day.day if day.month == @date.month %>" class="day <%= %w!sun mon tue wed thu fri sat![day.wday] %><%= ' holiday' if is_holiday %><%= ' prevMonth' if day < @date.beginning_of_month %><%= ' nextMonth' if day > @date.end_of_month %>">
           <p class="date"><%= day.day %></p>
-          <%- unless (holidays = @holidays.select { |h| [h.date.month, h.date.day] == [day.month, day.day] }).empty? -%>
+          <%- if is_holiday -%>
           <ul>
           <%- holidays.each do |holiday| -%>
           <li class="holiday"><%= holiday.title %></li>
