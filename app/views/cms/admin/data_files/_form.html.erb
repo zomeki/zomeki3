@@ -9,6 +9,16 @@ $(function() {
     <%- end -%>
     $('#item_title').val(name.replace(/(.*)\.[a-z]+$/i, '$1'));
   });
+  $('form').on('submit', function() {
+    var filename = $('input#item_name').val();
+    var alt = $('input#item_alt_text').val();
+    if (filename.match(/\.(<%= Zomeki.config.application['upload.check_alt_mime_type'].join('|') -%>)$/i) && alt == '') {
+      if (!confirm("代替テキスト（ALT）が入力されていません。このまま保存してもよろしいですか？")){
+        return false;
+      }
+    }
+    return true;
+  });
 });
 </script>
 
