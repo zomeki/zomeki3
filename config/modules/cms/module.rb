@@ -6,7 +6,7 @@ Cms::Lib::Modules::ModuleSet.draw :cms, '標準機能', 1 do |mod|
   mod.directory :directories, 'ディレクトリ'
   
   ## pages
-  mod.page :pages, '自由形式'
+  mod.page :pages, '固定ページ'
   mod.page :sitemaps, 'サイトマップ'
   mod.page :sitemap_xmls, 'XMLサイトマップ'
   
