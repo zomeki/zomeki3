@@ -57,3 +57,5 @@ gp_article:
 upload:
   # アップロード時に日本語ファイル名を許可
   allow_japanese_filename: false
+  # 「代替テキスト（ALT）」入力チェック対象の拡張子
+  check_alt_mime_type: ["gif", "jpg", "png"]
