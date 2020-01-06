@@ -3,7 +3,7 @@ ja:
     models:
       cms/content: コンテンツ
       cms/node: ディレクトリ
-      cms/node/page: 自由形式ページ
+      cms/node/page: 固定ページ
       cms/period: 期間
       cms/piece: ピース
       cms/layout: レイアウト

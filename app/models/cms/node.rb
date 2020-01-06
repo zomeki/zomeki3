@@ -249,7 +249,7 @@ class Cms::Node < ApplicationRecord
       inquiries.each_with_index do |inquiry, i|
         attrs = inquiry.attributes
         attrs[:id] = nil
-        attrs[:group_id] = Core.user.group_id if i.zero?
+        attrs[:group_id] = Core.user.group_id if i.zero? && (rel_type.blank? || !Core.user.has_auth?(:manager))
         item.inquiries.build(attrs)
       end
 
