@@ -138,6 +138,10 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     items = GpArticle::Doc.where(id: params.dig(:item, :id)).order(:id)
 
     case params[:batch_action]
+    when 'approve'
+      batch_approve(items)
+    when 'close'
+      batch_close(items)
     when 'trash'
       batch_trash(items)
     when 'untrash'

@@ -1,4 +1,8 @@
 module Approval::Controller::Admin::Approval
+  def batch_approve(items)
+    _batch_approve(items)
+  end
+
   def _approve(item)
     if item.approvable?(Core.user)
       item.class.transaction do
@@ -103,4 +107,33 @@ module Approval::Controller::Admin::Approval
       end
     end
   end
+  
+  def _batch_approve(items)
+    num = 0
+    items.each do |item|
+      if item.approvable?(Core.user)
+        item.class.transaction do
+          item.approve(Core.user) do |approval_request|
+            send_approval_request_mail(item, approval_request: approval_request) unless approval_request.finished?
+          end
+  
+          if item.approval_requests.all?(&:finished?)
+            item.update_columns(state: (item.queued_tasks.where(name: 'publish').exists? ? 'prepared' : 'approved'),
+                                recognized_at: Time.now)
+            item.enqueue_tasks
+            Sys::OperationLog.log(request, item: item, do: 'approve')
+            num += 1
+            send_approved_notification_mail(item, approver: Core.user)
+          end
+        end
+  
+        if item.state_approved? && item.content.publish_after_approved?
+          item.publish
+          Sys::OperationLog.log(request, item: item, do: 'publish')
+        end
+      end
+    end
+    redirect_to url_for(action: :index), notice: "承認処理が完了しました。（#{num}件）（#{I18n.l Time.now}）"
+  end
+    
 end
