@@ -130,7 +130,12 @@ class GpArticle::Doc < ApplicationRecord
   scope :public_state, -> { where(state: 'public') }
   scope :mobile, ->(m) { m ? where(terminal_mobile: true) : where(terminal_pc_or_smart_phone: true) }
   scope :visible_in_list, -> { where(feature_1: true) }
-  scope :visible_in_feed, -> { where(feed_state: 'visible') }
+  scope :visible_in_feed, -> {
+    #target.present? && href.present?
+    where(arel_table[:feed_state].eq('visible')
+          .and(arel_table[:href].eq(nil).or(arel_table[:href].eq(''))
+          .and(arel_table[:target].eq(nil).or(arel_table[:target].eq('')))))
+  }
   scope :categorized_into, ->(categories, categorized_as: 'GpArticle::Doc', alls: false) {
     cats = GpCategory::Categorization.select(:categorizable_id)
                                      .where(categorized_as: categorized_as, categorizable_type: self.name)

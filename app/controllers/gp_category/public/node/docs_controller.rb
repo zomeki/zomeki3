@@ -13,6 +13,7 @@ class GpCategory::Public::Node::DocsController < GpCategory::Public::NodeControl
                           .order(display_published_at: :desc, published_at: :desc)
 
     if params[:format].in?(['rss', 'atom'])
+      @docs = @docs.visible_in_feed
       @docs = @docs.date_after(:display_published_at, @content.feed_docs_period.to_i.days.ago) if @content.feed_docs_period.present?
       @docs = @docs.paginate(page: params[:page], per_page: @content.feed_docs_number)
       return render_feed(@docs)

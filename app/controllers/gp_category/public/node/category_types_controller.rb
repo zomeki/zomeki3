@@ -32,6 +32,7 @@ class GpCategory::Public::Node::CategoryTypesController < GpCategory::Public::No
         category_ids = @category_type.public_categories.pluck(:id)
         @docs = GpArticle::Doc.categorized_into(category_ids).except(:order)
                               .order(display_published_at: :desc, published_at: :desc)
+        @docs = @docs.visible_in_feed
         @docs = @docs.date_after(:display_published_at, @content.feed_docs_period.to_i.days.ago) if @content.feed_docs_period.present?
         @docs = @docs.paginate(page: params[:page], per_page: @content.feed_docs_number)
         return render_feed(@docs)
