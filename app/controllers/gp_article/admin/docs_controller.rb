@@ -58,7 +58,6 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
   def create
     @item = @content.docs.build(doc_params)
-    @item.replace_words_with_dictionary
 
     return render :new if check_document
 
@@ -79,7 +78,6 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
 
   def update
     @item.attributes = doc_params
-    @item.replace_words_with_dictionary
 
     return render :edit if check_document
 
@@ -284,6 +282,7 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
       :concept_id, :layout_id, :name, :filename_base, :terminal_pc_or_smart_phone, :terminal_mobile,
       :meta_description, :meta_keywords, :og_type, :og_title, :og_description, :og_image, :remark,
       :in_tmp_id, :in_ignore_link_check, :in_ignore_accessibility_check, :in_modify_accessibility_check,
+      :in_ignore_words_with_dictionary_check, :in_replace_words_with_dictionary_check,
       :in_approval_comment,
       :template_values => params[:item][:template_values].try(:keys),
       :creator_attributes => [:id, :group_id, :user_id],

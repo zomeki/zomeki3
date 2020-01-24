@@ -13,4 +13,17 @@ class Cms::WordDictionaryService < ApplicationService
     @words.each { |src, dst| text = text.gsub(src) { dst } }
     text
   end
+  
+  def check(text)
+    return errors if text.blank?
+    
+    words = []
+    @words.each do |src, dst|
+      text.scan(/#{src}/).each do |c|
+        words << "#{src}　→ #{dst}"
+      end
+    end
+    
+    words.size == 0 ? nil : words
+  end
 end

@@ -24,7 +24,9 @@
   <table class="show">
     <tr>
       <th><%= f.label :href %></th>
-      <td><%= f.text_field :href, style: 'width: 500px;' %></td>
+      <td><%= f.text_field :href, style: 'width: 500px;' %>
+        <div>リンクURLを設定している場合フィードに表示されません</div>
+      </td>
       <td><%= f.collection_radio_buttons :target, @item.class.target_options, :last, :first %></td>
     </tr>
     <tr>
