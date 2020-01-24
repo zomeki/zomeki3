@@ -140,6 +140,8 @@ class GpArticle::Admin::DocsController < Cms::Controller::Admin::Base
     case params[:batch_action]
     when 'approve'
       batch_approve(items)
+    when 'publish'
+      batch_publish(items)
     when 'close'
       batch_close(items)
     when 'trash'

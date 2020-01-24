@@ -9,6 +9,7 @@
     <%-
       actions = []
       actions += [['承認', 'approve']] if params[:target_state].in?(%w(processing all))
+      actions += [['公開', 'publish']] if params[:target_state].in?(%w(processing)) && Core.user.has_auth?(:manager)
       actions += [['公開終了', 'close']] if params[:target_state].in?(%w(public all))
       actions += [['削除', 'trash']] if params[:target_state].in?(%w(processing closed all))
       actions += [['ごみ箱から復元', 'untrash'], ['ごみ箱から削除', 'destroy']] if params[:target_state].in?(%w(trashed))
