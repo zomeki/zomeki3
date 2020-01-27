@@ -3,7 +3,7 @@ module Approval::Controller::Admin::Approval
     _batch_approve(items)
   end
 
-  def _approve(item)
+  def _approve(item, is_batch: false)
     if item.approvable?(Core.user)
       item.class.transaction do
         item.approve(Core.user) do |approval_request|
@@ -20,9 +20,18 @@ module Approval::Controller::Admin::Approval
       end
 
       yield if block_given?
-      redirect_to url_for(action: :show), notice: '承認処理が完了しました。'
+      if is_batch
+        return true
+      else
+        redirect_to url_for(action: :show), notice: '承認処理が完了しました。'
+      end
     else
-      redirect_to url_for(action: :show), notice: '承認処理に失敗しました。'
+      if is_batch
+        return false 
+      else
+        redirect_to url_for(action: :show), notice: '承認処理に失敗しました。'
+      end
+        
     end
   end
 
@@ -111,22 +120,8 @@ module Approval::Controller::Admin::Approval
   def _batch_approve(items)
     num = 0
     items.each do |item|
-      if item.approvable?(Core.user)
-        item.class.transaction do
-          item.approve(Core.user) do |approval_request|
-            send_approval_request_mail(item, approval_request: approval_request) unless approval_request.finished?
-          end
-  
-          if item.approval_requests.all?(&:finished?)
-            item.update_columns(state: (item.queued_tasks.where(name: 'publish').exists? ? 'prepared' : 'approved'),
-                                recognized_at: Time.now)
-            item.enqueue_tasks
-            Sys::OperationLog.log(request, item: item, do: 'approve')
-            num += 1
-            send_approved_notification_mail(item, approver: Core.user)
-          end
-        end
-  
+      if _approve(item, is_batch: true)
+        num += 1
         if item.state_approved? && item.content.publish_after_approved?
           item.publish
           Sys::OperationLog.log(request, item: item, do: 'publish')
