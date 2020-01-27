@@ -10,7 +10,7 @@ class Cms::WordDictionaryService < ApplicationService
 
   def replace(text)
     return text if text.blank?
-    @words.each { |src, dst| text = text.gsub(src) { dst } }
+    @words.each { |src, dst| text = text.gsub(/#{src}/, dst) }
     text
   end
   
@@ -19,8 +19,8 @@ class Cms::WordDictionaryService < ApplicationService
     
     words = []
     @words.each do |src, dst|
-      text.scan(/#{src}/).each do |c|
-        words << "#{src}　→ #{dst}"
+      /#{src}/.match(text) do |m|
+        words << "#{m} → #{m.to_s.gsub(/#{src}/, dst)}"
       end
     end
     

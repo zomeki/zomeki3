@@ -1,0 +1,26 @@
+<%- if results.nil? -%>
+  <%= f.hidden_field :in_ignore_words_with_dictionary_check %>
+  <%= f.hidden_field :in_replace_words_with_dictionary_check %>
+<%- else -%>
+  <div class="noticeExplanation" id="noticeExplanation">
+   <h2>単語置換チェック結果</h2>
+    <%- if results.empty? -%>
+      <p>エラーはありませんでした。</p>
+    <%- else -%>
+      <p>以下の単語が保存時に置換されます。</p>
+
+      <%- results.each do |col,words| -%>
+      <p>【<%= @item.class.human_attribute_name col %>】</p>
+      <ul>
+        <%- words.each do |w| -%>
+        <li><%= w %></li>
+        <%- end -%>
+      </ul>
+      <%- end -%>
+      <div style="margin: 5px; text-align: right;">
+        <%= f.check_box :in_ignore_words_with_dictionary_check %><%= f.label :in_ignore_words_with_dictionary_check, '置換せずに保存' %>
+        <%= f.hidden_field :in_replace_words_with_dictionary_check, value: 1 %>
+      </div>
+    <%- end -%>
+  </div>
+<%- end -%>
