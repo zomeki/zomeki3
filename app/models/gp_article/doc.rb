@@ -105,6 +105,7 @@ class GpArticle::Doc < ApplicationRecord
 
   attr_accessor :link_check_results, :in_ignore_link_check
   attr_accessor :accessibility_check_results, :in_ignore_accessibility_check, :in_modify_accessibility_check
+  attr_accessor :words_with_dictionary_check_results, :in_ignore_words_with_dictionary_check, :in_replace_words_with_dictionary_check
 
   validates :name, format: { with: /\A[\-\w]*\z/ }
   validates :title, presence: true, length: { maximum: 200 }
@@ -123,6 +124,7 @@ class GpArticle::Doc < ApplicationRecord
   validate :validate_template_values, if: -> { !state_draft?}
   validate :validate_accessibility_check, if: -> { !state_draft? && errors.blank? }
   validate :validate_broken_link_existence, if: -> { !state_draft? && errors.blank? }
+  validate :validate_words_with_dictionary_check, if: -> { !state_draft? && errors.blank? }
 
   validates_with Sys::TaskValidator, if: -> { !state_draft? }
   validates_with Cms::ContentNodeValidator, if: -> { state_approvable? || state_approved? || state_prepared? || state_public? }
@@ -130,7 +132,12 @@ class GpArticle::Doc < ApplicationRecord
   scope :public_state, -> { where(state: 'public') }
   scope :mobile, ->(m) { m ? where(terminal_mobile: true) : where(terminal_pc_or_smart_phone: true) }
   scope :visible_in_list, -> { where(feature_1: true) }
-  scope :visible_in_feed, -> { where(feed_state: 'visible') }
+  scope :visible_in_feed, -> {
+    #target.present? && href.present?
+    where(arel_table[:feed_state].eq('visible')
+          .and(arel_table[:href].eq(nil).or(arel_table[:href].eq(''))
+          .and(arel_table[:target].eq(nil).or(arel_table[:target].eq('')))))
+  }
   scope :categorized_into, ->(categories, categorized_as: 'GpArticle::Doc', alls: false) {
     cats = GpCategory::Categorization.select(:categorizable_id)
                                      .where(categorized_as: categorized_as, categorizable_type: self.name)
@@ -346,6 +353,20 @@ class GpArticle::Doc < ApplicationRecord
     end
     results
   end
+  
+  def check_words_width_dictionary
+    return if content.word_dictionary.blank?
+    results = []
+    dic = Cms::WordDictionaryService.new(content.word_dictionary)
+    [:body, :mobile_body].each do |column|
+      text = read_attribute(column)
+      next if text.blank?
+      
+      result = dic.check(text) 
+      results.push([column, result]) if result
+    end
+    results
+  end
 
   def modify_accessibility
     self.body = Util::AccessibilityChecker.modify(body)
@@ -431,6 +452,17 @@ class GpArticle::Doc < ApplicationRecord
     if (results.present? && in_ignore_accessibility_check != '1') || errors.present?
       self.accessibility_check_results = results
       errors.add(:base, 'アクセシビリティチェック結果を確認してください。')
+    end
+  end
+
+  def validate_words_with_dictionary_check
+    return if content.word_dictionary.blank?
+
+    replace_words_with_dictionary if in_replace_words_with_dictionary_check == '1' && in_ignore_words_with_dictionary_check != '1'
+    results = check_words_width_dictionary
+    if (results.present? && in_ignore_words_with_dictionary_check != '1') || errors.present?
+      self.words_with_dictionary_check_results = results
+      errors.add(:base, '単語置換チェック結果を確認してください。')
     end
   end
 

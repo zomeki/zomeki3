@@ -53,7 +53,7 @@ class GpArticle::Content::Setting < Cms::ContentSetting
   set_config :word_dictionary, menu: :form,
     name: "本文/単語変換辞書",
     form_type: :text,
-    lower_text: "CSV形式（例　対象文字,変換後文字 ）"
+    lower_text: "CSV形式（例　対象文字,変換後文字 ）<br />正規表現も使用可能です（例　(\\d+)-(\\d+)-(\\d+),\\1年\\2月\\3日）"
   set_config :map_setting, menu: :form,
     name: '地図設定',
     form_type: :radio_buttons,

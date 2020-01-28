@@ -1,4 +1,9 @@
 <%= init_ckeditor readOnly: true %>
+<%- if @content.editor_css.present? -%>
+<script>
+CKEDITOR.config.contentsCss = [CKEDITOR.config.contentsCss, '<%= @content.editor_css %>'];
+</script>
+<%- end -%>
 <%= render 'gp_article/admin/docs/shared/replacement_notification' %>
 
 <script>
