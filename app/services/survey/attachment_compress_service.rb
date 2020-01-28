@@ -5,10 +5,10 @@ class Survey::AttachmentCompressService < ApplicationService
 
   def compress
     require 'zip'
-    steam = Zip::OutputStream.write_buffer(StringIO.new('')) do |out|
+    steam = Zip::OutputStream.write_buffer(StringIO.new('').set_encoding(Encoding::CP932)) do |out|
       @answers.preload(:attachment).find_each(batch_size: 10) do |answer|
         next unless attachment = answer.attachment
-        out.put_next_entry("#{answer.form_answer_id}_#{answer.question.title}_#{attachment.name}")
+        out.put_next_entry("#{answer.form_answer_id}_#{answer.question.title}_#{attachment.name}".encode(Encoding::CP932))
         out.write(attachment.data)
       end
     end
