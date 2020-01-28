@@ -33,11 +33,7 @@ module Cms::Lib::Layout
                       .select("#{Cms::Piece.connection.quote(name)}::text as bracket_description")
                       .public_state.ci_match(name: name_array[0])
                       .order(Arel.sql(concepts_order(concepts))).limit(1)
-      if name_array.size > 1 # [[piece/name#id]]
-        rel.where(id: name_array[1])
-      else                   # [[piece/name]]
-        rel.where(concept_id: [nil] + concepts.map(&:id))
-      end
+      rel.where(concept_id: [nil] + concepts.map(&:id))
     end
 
     relations.reduce(:union).index_by(&:bracket_description)
