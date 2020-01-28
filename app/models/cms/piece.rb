@@ -134,8 +134,11 @@ class Cms::Piece < ApplicationRecord
       dupe_setting = Cms::PieceSetting.new(setting_attributes)
       dupe_setting.save(validate: false)
     end
-
-    Sys::ObjectRelation.create(source: item, related: self, relation_type: 'replace') if rel_type == :replace
+    
+    if rel_type == :replace
+      item.update_column(:created_at, self.created_at) 
+      Sys::ObjectRelation.create(source: item, related: self, relation_type: 'replace')
+    end
 
     return item
   end

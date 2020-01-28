@@ -309,6 +309,8 @@ class GpArticle::Doc < ApplicationRecord
 
     transaction do
       new_doc.save(validate: false)
+      
+      new_doc.update_column(:created_at, self.created_at) if dup_for == :replace
 
       files.each do |f|
         f.duplicate(file_attachable: new_doc)
