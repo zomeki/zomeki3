@@ -13,6 +13,7 @@ class Cms::NodesScript < PublicationScript
       nodes.where(parent_id: 0).each do |node|
         publish_node(node)
       end
+      publish_pieces
     end
   end
 
@@ -71,6 +72,30 @@ class Cms::NodesScript < PublicationScript
     end
 
     info_log "Published node: #{node.model} #{node.name} #{node.title} in #{(Time.now - started_at).round(2)} [secs.]"
+  end
+  
+  def publish_pieces
+    models = Cms::Piece.publishable_models
+    
+    pieces = Cms::Piece.public_state.where(model: models).order(:name, :id)
+    pieces.where!(site_id: ::Script.site.id) if ::Script.site
+    
+    pieces.each do |piece|
+      begin
+        script_klass = "#{piece.model.pluralize.sub('::', '::Piece::')}Script".safe_constantize
+        if script_klass && script_klass.method_defined?(:publish)
+          script_klass.new(params.merge(piece: piece)).publish
+          file_transfer_callbacks(piece)
+        end
+      rescue ::Script::InterruptException => e
+        raise e
+      rescue Exception => e
+        ::Script.error "#{piece.class}##{piece.id} #{e}"
+        return
+      end
+    end
+
+    
   end
 
   def file_transfer_callbacks(node)
