@@ -122,9 +122,9 @@ class GpArticle::Doc < ApplicationRecord
 
   validate :validate_name, if: -> { name.present? }
   validate :validate_template_values, if: -> { !state_draft?}
+  validate :validate_words_with_dictionary_check, if: -> { !state_draft? }
   validate :validate_accessibility_check, if: -> { !state_draft? && errors.blank? }
   validate :validate_broken_link_existence, if: -> { !state_draft? && errors.blank? }
-  validate :validate_words_with_dictionary_check, if: -> { !state_draft? && errors.blank? }
 
   validates_with Sys::TaskValidator, if: -> { !state_draft? }
   validates_with Cms::ContentNodeValidator, if: -> { state_approvable? || state_approved? || state_prepared? || state_public? }
