@@ -122,9 +122,9 @@ class GpArticle::Doc < ApplicationRecord
 
   validate :validate_name, if: -> { name.present? }
   validate :validate_template_values, if: -> { !state_draft?}
+  validate :validate_words_with_dictionary_check, if: -> { !state_draft? }
   validate :validate_accessibility_check, if: -> { !state_draft? && errors.blank? }
   validate :validate_broken_link_existence, if: -> { !state_draft? && errors.blank? }
-  validate :validate_words_with_dictionary_check, if: -> { !state_draft? && errors.blank? }
 
   validates_with Sys::TaskValidator, if: -> { !state_draft? }
   validates_with Cms::ContentNodeValidator, if: -> { state_approvable? || state_approved? || state_prepared? || state_public? }
@@ -133,10 +133,8 @@ class GpArticle::Doc < ApplicationRecord
   scope :mobile, ->(m) { m ? where(terminal_mobile: true) : where(terminal_pc_or_smart_phone: true) }
   scope :visible_in_list, -> { where(feature_1: true) }
   scope :visible_in_feed, -> {
-    #target.present? && href.present?
     where(arel_table[:feed_state].eq('visible')
-          .and(arel_table[:href].eq(nil).or(arel_table[:href].eq(''))
-          .and(arel_table[:target].eq(nil).or(arel_table[:target].eq('')))))
+          .and(arel_table[:href].in([nil, '']).or(arel_table[:target].in([nil, '']))))
   }
   scope :categorized_into, ->(categories, categorized_as: 'GpArticle::Doc', alls: false) {
     cats = GpCategory::Categorization.select(:categorizable_id)
