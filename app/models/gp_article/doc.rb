@@ -134,8 +134,7 @@ class GpArticle::Doc < ApplicationRecord
   scope :visible_in_list, -> { where(feature_1: true) }
   scope :visible_in_feed, -> {
     where(arel_table[:feed_state].eq('visible')
-          .and(arel_table[:href].eq(nil).or(arel_table[:href].eq('')
-          .or(arel_table[:target].eq(nil).or(arel_table[:target].eq(''))))))
+          .and(arel_table[:href].in([nil, '']).or(arel_table[:target].in([nil, '']))))
   }
   scope :categorized_into, ->(categories, categorized_as: 'GpArticle::Doc', alls: false) {
     cats = GpCategory::Categorization.select(:categorizable_id)
