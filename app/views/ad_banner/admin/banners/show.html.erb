@@ -1,3 +1,4 @@
+<%- if @item.content.click_count_related? -%>
 <table class="show">
   <tr>
     <th><%= AdBanner::Click.model_name.human %></th>
@@ -5,7 +6,9 @@
   </tr>
 </table>
 
-<br /><p class="form">広告バナー</p>
+<br />
+<%- end -%>
+<p class="form">広告バナー</p>
 
 <table class="show">
   <tr>

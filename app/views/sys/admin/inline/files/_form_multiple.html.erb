@@ -58,11 +58,19 @@ $(function() {
 
   $('#file_form').on('submit', function() {
     var existings = [];
+    var not_entered = [];
     for (var i=0; i<$('input.fileName').length; i++) {
       var name = $('input.fileName')[i].value;
       if ($('.item_name[data-name="' + name + '"]').length > 0) {
         existings.push(name);
       }
+      if (name.match(/\.(<%= Zomeki.config.application['upload.check_alt_mime_type'].join('|') -%>)$/i) && $('input.fileAlt')[i].value == '') {
+        not_entered.push(name);
+      }
+    }
+    
+    if (not_entered.length > 0 && !confirm("次のファイルは代替テキスト（ALT）が入力されていません。このままアップロードしてもよろしいですか？\n" + not_entered.join("\n"))){
+      return false;
     }
     if (existings.length == 0 || confirm("次のファイルは既に存在しています。上書きしてもよろしいですか？\n" + existings.join("\n"))) {
       return true;

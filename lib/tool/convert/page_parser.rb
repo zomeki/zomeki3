@@ -47,7 +47,7 @@ class Tool::Convert::PageParser
   end
 
   def parse_as_date(html, xpath, regexp)
-    strs = parse_as_array_text(html, @setting.updated_at_xpath, @setting.updated_at_regexp)
+    strs = parse_as_array_text(html, xpath, regexp)
     [strs[0..2].to_a.join('-'), strs[3..4].to_a.join(':')].select(&:present?).join(' ') if strs
   end
 

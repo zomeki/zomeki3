@@ -1,5 +1,9 @@
 module Approval::Controller::Admin::Approval
-  def _approve(item)
+  def batch_approve(items)
+    _batch_approve(items)
+  end
+
+  def _approve(item, is_batch: false)
     if item.approvable?(Core.user)
       item.class.transaction do
         item.approve(Core.user) do |approval_request|
@@ -16,9 +20,18 @@ module Approval::Controller::Admin::Approval
       end
 
       yield if block_given?
-      redirect_to url_for(action: :show), notice: '承認処理が完了しました。'
+      if is_batch
+        return true
+      else
+        redirect_to url_for(action: :show), notice: '承認処理が完了しました。'
+      end
     else
-      redirect_to url_for(action: :show), notice: '承認処理に失敗しました。'
+      if is_batch
+        return false 
+      else
+        redirect_to url_for(action: :show), notice: '承認処理に失敗しました。'
+      end
+        
     end
   end
 
@@ -103,4 +116,19 @@ module Approval::Controller::Admin::Approval
       end
     end
   end
+  
+  def _batch_approve(items)
+    num = 0
+    items.each do |item|
+      if _approve(item, is_batch: true)
+        num += 1
+        if item.state_approved? && item.content.publish_after_approved?
+          item.publish
+          Sys::OperationLog.log(request, item: item, do: 'publish')
+        end
+      end
+    end
+    redirect_to url_for(action: :index), notice: "承認処理が完了しました。（#{num}件）（#{I18n.l Time.now}）"
+  end
+    
 end

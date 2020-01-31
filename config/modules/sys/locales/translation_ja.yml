@@ -90,7 +90,7 @@ ja:
 
       sys/maintenance:
         created_at: 作成日時
-        updated_at: 編集日時
+        updated_at: 更新日時
         published_at: 公開日時
         state: 状態
         title: タイトル
@@ -98,7 +98,7 @@ ja:
 
       sys/message:
         created_at: 作成日時
-        updated_at: 編集日時
+        updated_at: 更新日時
         published_at: 公開日時
         state: 状態
         title: タイトル

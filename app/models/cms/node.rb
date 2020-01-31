@@ -249,13 +249,16 @@ class Cms::Node < ApplicationRecord
       inquiries.each_with_index do |inquiry, i|
         attrs = inquiry.attributes
         attrs[:id] = nil
-        attrs[:group_id] = Core.user.group_id if i.zero?
+        attrs[:group_id] = Core.user.group_id if i.zero? && (rel_type.blank? || !Core.user.has_auth?(:manager))
         item.inquiries.build(attrs)
       end
 
       return false unless item.save(validate: false)
 
-      Sys::ObjectRelation.create(source: item, related: self, relation_type: 'replace') if rel_type == :replace
+      if rel_type == :replace
+        item.update_column(:created_at, self.created_at)
+        Sys::ObjectRelation.create(source: item, related: self, relation_type: 'replace')
+      end
 
       return item
     end

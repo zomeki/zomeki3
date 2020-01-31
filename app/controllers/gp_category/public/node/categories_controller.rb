@@ -17,7 +17,8 @@ class GpCategory::Public::Node::CategoriesController < GpCategory::Public::NodeC
     Page.title = @category.title
 
     if params[:format].in?(['rss', 'atom'])
-      docs = @category.docs.order(display_published_at: :desc, published_at: :desc)
+      docs = @category.docs.visible_in_feed
+      docs = docs.order(display_published_at: :desc, published_at: :desc)
       docs = docs.date_after(:display_published_at, @content.feed_docs_period.to_i.days.ago) if @content.feed_docs_period.present?
       docs = docs.paginate(page: params[:page], per_page: @content.feed_docs_number)
       return render_feed(docs)
