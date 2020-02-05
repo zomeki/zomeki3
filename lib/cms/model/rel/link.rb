@@ -43,7 +43,7 @@ module Cms::Model::Rel::Link
 
   def backlinks
     source_url = public_uri.sub(/index\.html$/, '').sub(/\/$/, '')
-    links.klass.where(linkable_type: self.class.name)
+    links.klass.in_site(site.id).where(linkable_type: self.class.name)
          .where(links.table[:url].matches("%#{source_url}%"))
   end
 
