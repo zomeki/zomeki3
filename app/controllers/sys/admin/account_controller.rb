@@ -72,7 +72,7 @@ class Sys::Admin::AccountController < Sys::Controller::Admin::Base
 
     if user && user.email.present?
       token = Util::String::Token.generate_unique_token(Sys::User, :reset_password_token)
-      user.update_columns(reset_password_token_expires_at: 12.hours.since,
+      user.update_columns(reset_password_token_expires_at: 1.hours.since,
                           reset_password_token: token)
 
       Sys::Admin::AccountMailer.password_reminder(Core.site, user: user).deliver_now
