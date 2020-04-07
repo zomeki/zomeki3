@@ -11,6 +11,8 @@ class Tool::ConvertImport < ActiveRecord::Base
   belongs_to :content, class_name: 'Cms::Content'
   belongs_to :creator_group, class_name: 'Sys::Group'
 
+  has_many :logs, class_name: 'Tool::ConvertImportLog', dependent: :destroy
+
   after_initialize :set_defaults
 
   validates :site_url, presence: true
@@ -53,7 +55,7 @@ class Tool::ConvertImport < ActiveRecord::Base
   end
 
   def dump(msg)
-    self.class.where(id: id).concat_text_for_all(:log, "#{msg}\n")
+    logs.create(message: "#{msg}")
   end
 
 private

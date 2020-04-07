@@ -34,7 +34,9 @@ class Cms::Admin::Tool::ConvertImportsController < Cms::Controller::Admin::Base
   end
 
   def download(item)
-    send_data item.log, type: 'text/plain', filename: "convert_imports_#{@item.id}.txt"
+    str = ''
+    item.logs.each { |log| str << "#{log.message}\n" }
+    send_data str, type: 'text/plain', filename: "convert_imports_#{@item.id}.txt"
   end
 
   def filename_options
