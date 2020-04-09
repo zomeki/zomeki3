@@ -7,7 +7,7 @@ class Sys::Admin::UsersSessionsController < Cms::Controller::Admin::Base
   end
 
   def index
-    @items = Sys::UsersSession.date_after(:updated_at, Rails.application.config.session_options[:expire_after].ago)
+    @items = Sys::UsersSession.date_after(:updated_at, Sys::UsersSession.expire_after.ago)
                               .order(updated_at: :desc)
                               .paginate(page: params[:page], per_page: params[:limit])
                               .preload(:user)
