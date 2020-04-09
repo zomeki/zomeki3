@@ -34,7 +34,7 @@ ja:
         terminal_pc_or_smart_phone: PC・スマートフォン
         terminal_mobile: 携帯
         editable_groups: 編集可能グループ
-        marker_state: マップ表示
+        marker_state: 地図コンテンツに表示
         navigation_state: ルート案内
         marker_sort_no: 並び順
         meta_description: 説明文
