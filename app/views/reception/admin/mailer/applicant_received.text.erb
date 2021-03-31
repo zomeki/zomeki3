@@ -4,6 +4,6 @@
 
 以下のURLからお申込みをキャンセルできます。
 キャンセルには上記の受付番号が必要となります。
-<%= "#{@course.public_full_uri}/applicants/#{@applicant.token}/cancel" %>
+<%= "#{@content.site.full_uri}#{@course.public_uri.sub(/^\//, '')}applicants/#{@applicant.token}/cancel" %>
 
 <%= @content.received_lower_reply_text if @content.received_lower_reply_text.present? %>
