@@ -18,6 +18,7 @@ class BizCalendar::BussinessHoliday < ApplicationRecord
 
   validates :state, :type_id, presence: true
   validate :dates_range
+  validate :holiday_date_setting
   validate :repeat_setting
   validate :ended_setting
 
@@ -345,6 +346,12 @@ class BizCalendar::BussinessHoliday < ApplicationRecord
       end
     end
     return ''
+  end
+  
+  def holiday_date_setting
+    if self.holiday_start_date.blank? && self.holiday_end_date.blank? && self.repeat_type.blank?
+      errors.add(:holiday_start_date, "または#{self.class.human_attribute_name :repeat_type}を入力してください。")
+    end
   end
 
   def dates_range
