@@ -5,9 +5,9 @@
 ### システム
 
 * OS: CentOS 7.2
-* Webサーバ: nginx 1.12
+* Webサーバ: nginx 1.20
 * Appサーバ: unicorn 5.4
-* Database: PostgreSQL 9.5
+* Database: PostgreSQL 12
 * Ruby: 2.6
 * Rails: 5.2
 
@@ -69,6 +69,7 @@ rubyをインストールします。
 ※ファイアーウォール設定は環境に応じて適切に設定してください。
 
     # firewall-cmd --add-service=http --zone=public --permanent
+
     # firewall-cmd --reload
 
 yumリポジトリに追加します。
@@ -89,27 +90,28 @@ enabled=1
 ## 7.PostgreSQLのインストール
 
 yumリポジトリに追加します。
+    # yum -y install http://yum.postgresql.org/9.5/redhat/rhel-7-x86_64/pgdg-redhat-repo-42.0-11.noarch.rpm
 
-    # yum -y install http://yum.postgresql.org/9.5/redhat/rhel-7-x86_64/pgdg-centos95-9.5-2.noarch.rpm
 
 インストールします。
 
-    # yum -y install postgresql95-server postgresql95-contrib postgresql95-devel
+    # yum  install epel-release centos-release-scl
+    # yum -y install postgresql12-server postgresql12-contrib postgresql12-devel
 
 データベースを初期化します。
 
-    # export PGSETUP_INITDB_OPTIONS="--encoding=UTF8 --locale=ja_JP.UTF-8"; /usr/pgsql-9.5/bin/postgresql95-setup initdb
+    # export PGSETUP_INITDB_OPTIONS="--encoding=UTF8 --locale=ja_JP.UTF-8"; /usr/pgsql-12/bin/postgresql-12-setup initdb
 
 ユーザ認証方法を変更します。
 
-    # vi /var/lib/pgsql/9.5/data/pg_hba.conf
+    # vi /var/lib/pgsql/12/data/pg_hba.conf
 ```
 host    all             all             127.0.0.1/32            md5
 ```
 
 データベースを起動します。
 
-    # systemctl start postgresql-9.5
+    # systemctl start postgresql-12
 
 ZOMEKI用のユーザを作成します。
 ※パスワードは任意の文字列を設定してください。（ここでは「zomekipass」とします。）
@@ -135,7 +137,7 @@ ZOMEKIをインストールします。
 
     # git clone https://github.com/zomeki/zomeki3.git /var/www/zomeki
     # chown -R zomeki:zomeki /var/www/zomeki
-    # su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle config build.pg --with-pg-config=/usr/pgsql-9.5/bin/pg_config'
+    # su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle config build.pg --with-pg-config=/usr/pgsql-12/bin/pg_config'
     # su - zomeki -c 'export LANG=ja_JP.UTF-8; cd /var/www/zomeki && bundle install --path vendor/bundle --without development test'
 
     # cp /var/www/zomeki/config/samples/logrotate /etc/logrotate.d/zomeki_logrotate
@@ -245,7 +247,7 @@ libmecabのパスを設定します。
 
 postgresqlを起動します。
 
-    # systemctl start postgresql-9.5 && systemctl enable postgresql-9.5
+    # systemctl start postgresql-12 && systemctl enable postgresql-12
 
 nginxを起動します。
 

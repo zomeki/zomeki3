@@ -1,6 +1,6 @@
 [Unit]
 Description=delayed_job for ZOMEKI
-After=postgresql-9.5.service
+After=postgresql-12.service
 
 [Service]
 Type=simple
