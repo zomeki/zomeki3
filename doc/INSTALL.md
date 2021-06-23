@@ -92,7 +92,6 @@ enabled=1
 yumリポジトリに追加します。
     # yum -y install http://yum.postgresql.org/9.5/redhat/rhel-7-x86_64/pgdg-redhat-repo-42.0-11.noarch.rpm
 
-
 インストールします。
 
     # yum  install epel-release centos-release-scl
