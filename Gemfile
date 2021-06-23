@@ -96,7 +96,7 @@ gem 'timecop', '~> 0.9.1'
 gem 'browser', '~> 2.5.3'
 gem 'dynamic_form', '~> 1.1.4'
 gem 'rails-i18n', '~> 5.1.1'
-gem 'sanitize', '~> 4.6.4'
+gem 'sanitize', '~> 5.2.1'
 
 gem 'delayed_job', '~> 4.1.5'
 gem 'delayed_job_active_record', '~> 4.1.3'
