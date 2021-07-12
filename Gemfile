@@ -76,7 +76,7 @@ gem 'tamtam', '0.0.3'
 
 gem 'active_record_union', '~> 1.3.0'
 gem 'activerecord-import', '~> 0.27.0'
-gem 'addressable', '~> 2.5.2'
+gem 'addressable', '~> 2.8.0'
 gem 'holiday_jp', '~> 0.7.0'
 gem 'jpmobile', '~> 5.2.2'
 gem 'mail', '~> 2.7.0'
