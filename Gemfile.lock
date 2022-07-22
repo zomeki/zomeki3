@@ -349,7 +349,7 @@ GEM
     timecop (0.9.4)
     treetop (1.6.11)
       polyglot (~> 0.3)
-    tzinfo (1.2.9)
+    tzinfo (1.2.10)
       thread_safe (~> 0.1)
     uglifier (4.2.0)
       execjs (>= 0.3.0, < 3)
